@@ -1,0 +1,11 @@
+{
+  "src/app.c": "3d587e43ecac57fc4d995086e958e46acd7c6be5a4ca71b75865ad4f312fb805",
+  "src/listing.inc": "4d4e3b62d0d145cf9f3129c790a70bf072415dd5e0d9cce8a35b51ba3bc3e8e2",
+  "src/commands/core.c": "fa36909e7c344315a410671535e3b03bcd1decf80349e0e3d9165ff87413abda",
+  "src/commands/decimal.c": "4e01b8065a81b063829565b694c02c002ede0976f79cd1e51423a0616e5eee30",
+  "src/commands/created.c": "1f68ee50267f286a7be855c639c637950afc92c9e0964759ebc813e18fc0fcc1",
+  "scripts/build.sh": "001556cfd31030e96f623821ab71734628b6ff674a88f0f1dee2d33ab9c075de",
+  "work/build/core.clx": "befb1ccd9f4b859471c589b709499fc0d78d15c6bd5f1b1b7a86cfaeff58b441",
+  "outputs/namespace/Clarice.bin": "f9393dc8d017c4f44ccb6d5cfed8f97c6a8244ce0d91ef21c23d070c89739e08",
+  "outputs/namespace/Clarice.dsk": "5fadd18d74a3b27a15a5d2d943720ccbc4350059ca87b705d7e16186c7e9a400"
+}

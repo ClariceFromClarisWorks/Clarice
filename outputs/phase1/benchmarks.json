@@ -1,0 +1,168 @@
+{
+  "date": "2026-11-08",
+  "environment": {
+    "emulator": "Snow 1.5.0-a921b10",
+    "model": "Macintosh Plus",
+    "ram_bytes": 4194304,
+    "cpu": "68000",
+    "system_reported": "6.0.7",
+    "multifinder": true,
+    "fast_forward": false,
+    "overclock": null,
+    "timer": "guest TickCount; 60 ticks/second"
+  },
+  "measurements": [
+    {
+      "build": "initial full-row redraw",
+      "entries": 10,
+      "total_ticks": [
+        41,
+        162,
+        159
+      ],
+      "notes": "First run started in a relatively empty terminal. First-entry values were metadata-ready, not painted."
+    },
+    {
+      "build": "ScrollRect and corrected yield accounting",
+      "entries": 10,
+      "first_painted_ticks": [
+        5,
+        6,
+        6
+      ],
+      "total_ticks": [
+        21,
+        31,
+        27
+      ]
+    },
+    {
+      "build": "ScrollRect and corrected yield accounting",
+      "entries": 1000,
+      "first_painted_ticks": [
+        7,
+        11,
+        12
+      ],
+      "total_ticks": [
+        2582,
+        2525,
+        2856
+      ],
+      "notes": "Includes a manual Finder switch during the three runs."
+    },
+    {
+      "build": "catalog only, no entry formatting/rendering",
+      "entries": 1000,
+      "total_ticks": [
+        308,
+        290,
+        291
+      ]
+    },
+    {
+      "build": "batched output and manual decimal formatter",
+      "entries": 1000,
+      "first_painted_ticks": [
+        5,
+        12,
+        17
+      ],
+      "total_ticks": [
+        1269,
+        1259,
+        1282
+      ]
+    },
+    {
+      "build": "consolidated CopyBits",
+      "entries": 1000,
+      "first_painted_ticks": [
+        5,
+        16,
+        17
+      ],
+      "total_ticks": [
+        1234,
+        1230,
+        1230
+      ]
+    },
+    {
+      "build": "consolidated CopyBits",
+      "entries": 10,
+      "first_painted_ticks": [
+        10,
+        14,
+        14
+      ],
+      "total_ticks": [
+        15,
+        17,
+        17
+      ]
+    },
+    {
+      "build": "consolidated CopyBits, 8-tick work interval",
+      "entries": 100,
+      "first_painted_ticks": [
+        10,
+        17,
+        18
+      ],
+      "total_ticks": [
+        122,
+        129,
+        131
+      ]
+    },
+    {
+      "build": "final; 32-tick bulk work interval",
+      "entries": 1000,
+      "first_painted_ticks": [
+        6,
+        17,
+        17
+      ],
+      "total_ticks": [
+        651,
+        660,
+        660
+      ]
+    },
+    {
+      "build": "final; 32-tick bulk work interval",
+      "entries": 100,
+      "first_painted_ticks": [
+        12,
+        17,
+        17
+      ],
+      "total_ticks": [
+        71,
+        77,
+        76
+      ]
+    },
+    {
+      "build": "final; 32-tick bulk work interval",
+      "entries": 10,
+      "first_painted_ticks": [
+        11,
+        14,
+        14
+      ],
+      "total_ticks": [
+        15,
+        18,
+        17
+      ]
+    }
+  ],
+  "limitations": [
+    "Emulator measurements only; no physical Plus timing claim.",
+    "Not isolated cold-cache trials.",
+    "Total excludes final idle-loop paint and command history write; first-painted timing starts inside list.",
+    "No OS cache settings changed."
+  ]
+}

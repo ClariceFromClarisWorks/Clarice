@@ -1,0 +1,76 @@
+$ selftest
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+selftest: PASS; 10000 scans, 146 ticks
+$ pwd
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+Sys6Unix:
+$ ls -la
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+-        0  Desktop
+d        0  Documents/
+-      337  Phase1 Report
+-     5148  Sys6 History
+-        0  Sys6Unix
+d        0  System Folder/
+$ echo 'alpha beta' > Documents/result.txt
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+$ cat Documents/result.txt
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+alpha beta
+$ grep -F beta Documents/result.txt
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+alpha beta
+$ export TEST=ready
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+$ echo "$TEST" >> Documents/result.txt
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+$ cd Documents
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+$ pwd
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+Sys6Unix:Documents:
+$ cd ..
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+$ status
+history GetEOF
+history SetEOF
+history SetEOF done
+history write sequence
+CPU code 1; System 0607; RAM top 564012
+Free heap 247332; launch free 247280
+Launch-to-ready 29 ticks; commands 14
+History: disk ring 128 entries; 1 KiB retrieval
+PHASE1_CHECKS PASS

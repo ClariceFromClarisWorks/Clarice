@@ -1,0 +1,23 @@
+{
+  "platform": "Snow Plus / 4 MB / System 6.0.8 / MultiFinder",
+  "total_ticks": [
+    713,
+    700,
+    702
+  ],
+  "first_ticks": [
+    16,
+    27,
+    27
+  ],
+  "paint_ticks": 587,
+  "event_ticks": 30,
+  "median_seconds": 11.7,
+  "previous_median_seconds": 14.45,
+  "notes": [
+    "80 columns, Monaco 9, same geometry as previous report.",
+    "Creation times retained; no date cache or extra allocation.",
+    "Excludes PATH/module load/final prompt, disables paging for full-output timing.",
+    "Emulator, not real hardware."
+  ]
+}

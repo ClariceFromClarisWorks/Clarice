@@ -1,0 +1,4 @@
+# Clarice startup profile; sourced once at launch.
+export PATH=/bin:/usr/bin
+# Optional local hostname (no networking required):
+# export HOSTNAME=macplus

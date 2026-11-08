@@ -1,0 +1,11 @@
+{
+  "guest": "Macintosh Plus, 4 MB, System 6.0.8, MultiFinder",
+  "physical_hardware_test": false,
+  "sha256": {
+    "src/app.c": "54bcc4e69a5d64ed0eae6f7b4bd18fe3fe8b54ab23005f2f81f8a14e6a275e2b",
+    "src/App.r": "5a229740a705fa1609ac643a0d06b3875c5b4785de89d513f8957f44eba3fb70",
+    "outputs/namespace/Clarice.bin": "a485ece684522b4bf09b12215f1ed7ad06481e9c0cf92b49248f25487664f228",
+    "outputs/namespace/Clarice.dsk": "02d412ae8e4199de286d6db6d5ac5637809e3a4bc5cb8686f19279dd5284dd91",
+    "work/emulator/Sys6Snow.app/Contents/MacOS/Snow": "c71efc9c3926dce1a46ab4ec0a2118201df1ede0c25cee96f4da9ade101ef744"
+  }
+}

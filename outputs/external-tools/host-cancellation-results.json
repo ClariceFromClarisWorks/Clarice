@@ -1,0 +1,17 @@
+[
+  {
+    "source": "while true; do echo active; done; echo BAD",
+    "status": 130,
+    "pass": true
+  },
+  {
+    "source": "sh -c 'while true; do echo nested; done'; echo BAD",
+    "status": 130,
+    "pass": true
+  },
+  {
+    "source": "while true; do true; done | cat; echo BAD",
+    "status": 130,
+    "pass": true
+  }
+]

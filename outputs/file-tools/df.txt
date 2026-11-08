@@ -1,0 +1,2 @@
+     Size-KB      Used-KB     Avail-KB Use% Mounted on
+       32247         1756        30491   6% /mnt/Sys6Unix

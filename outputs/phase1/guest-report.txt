@@ -1,0 +1,188 @@
+$ selftest
+selftest: PASS; 10000 scans, 150 ticks
+[status 0; 154 ticks]
+$ pwd
+Sys6Unix:
+[status 0; 4 ticks]
+$ ls -la
+d        0  Bench/
+-        0  Desktop
+d        0  Documents/
+-      179  Phase1 Report
+-   131592  Sys6 History
+-        0  Sys6Unix
+d        0  System Folder/
+[status 0; 18 ticks]
+$ echo 'alpha beta' > Documents/result.txt
+[status 0; 5 ticks]
+$ cat Documents/result.txt
+alpha beta
+[status 0; 5 ticks]
+$ grep -F beta Documents/result.txt
+alpha beta
+[status 0; 5 ticks]
+$ export TEST=ready
+[status 0; 3 ticks]
+$ echo "$TEST" >> Documents/result.txt
+[status 0; 6 ticks]
+$ cd Documents
+[status 0; 4 ticks]
+$ pwd
+Sys6Unix:Documents:
+[status 0; 4 ticks]
+$ cd ..
+[status 0; 4 ticks]
+$ echo preserved > Documents/fork-test
+[status 0; 6 ticks]
+$ cat "Documents/with space.txt"
+alpha betasecond line
+third line
+[status 0; 5 ticks]
+$ status
+CPU code 1; System 0607; App memory top 564012
+Free heap 241740; launch free 241688
+Launch-to-ready 27 ticks; commands 18
+History: disk ring 128 entries; 1 KiB retrieval
+[status 0; 5 ticks]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+History wrap: 140 commands; heap before 241740 after 241740
+PHASE1_CHECKS PASS

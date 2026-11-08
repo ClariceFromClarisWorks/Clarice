@@ -1,0 +1,7 @@
+{
+  "src/app.c": "d9836a8259d1d84b13eb1a97946f4be5cab1ed4e50d04b6fc7e10a64d9bb9a0f",
+  "src/shell.c": "32344e7cd29968d44e882a3aaad6a93842f10211fd0623bd7d72b0aef940cc28",
+  "src/listing.inc": "8b36a52cb4f54e29e50077abff082705be2a93df0ede7df112d20729bc13207c",
+  "src/sys6.h": "e5c3de4842d758d5b36a1148b8e7660ffce8bb830a77123375c8738c2e56a953",
+  "outputs/namespace/Clarice.bin": "49bb1f4749fd1ff1613b3dc0b6b7766cdf7aa9189eeb6c1e1967fa3fd14e8d1c"
+}

@@ -1,0 +1,19 @@
+Using multiversal interfaces
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/core.clx: 11200 bytes, imports strcmp, cli_read, emit, app_yield, output_error, FSCLOSE, open_path, error, FSREAD, say, term_present, app_page, is_link, format_size, memcpy, strlen, memset, snprintf, app_columns, resolve_ex, output_ref, script_depth, app_page_begin, info, resolve, encode_name, volume_name, strcpy, parent_path, strrchr, app_output_batch, errsay, strchr, same_name, __muldi3, __udivsi3, app_profile
+Using multiversal interfaces
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Clarice
+Consolidate compiler generated dependencies of target Clarice
+[  5%] Building C object CMakeFiles/Clarice.dir/app.c.obj
+[ 11%] Linking C executable Clarice.code.bin
+[ 77%] Built target Clarice
+[ 83%] Generating Commands.r.rsrc.bin
+[ 88%] Generating Clarice.bin, Clarice.APPL, Clarice.dsk, Clarice.ad, %Clarice.ad
+[100%] Built target Clarice_APPL
+Using multiversal interfaces
+Volume name is "Clarice"
+Volume was created on Sun Nov  8 13:52:05 2026
+Volume was last modified on Sun Nov  8 13:52:05 2026
+Volume has 642560 bytes free

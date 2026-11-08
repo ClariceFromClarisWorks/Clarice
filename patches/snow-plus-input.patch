@@ -1,0 +1,214 @@
+diff --git a/core/src/keymap/akm0110.rs b/core/src/keymap/akm0110.rs
+index be9d0f5..e298a8d 100644
+--- a/core/src/keymap/akm0110.rs
++++ b/core/src/keymap/akm0110.rs
+@@ -111,6 +111,11 @@ pub(super) fn translate(sc: Scancode) -> Option<Scancode> {
+         // 0x69
+         0x7C => Some(0x75),
+ 
++        // M0120/M0110A keypad prefix, tagged internally with bit 7.
++        0x3B => Some(0x80 | 0x0D), // left
++        0x3C => Some(0x80 | 0x05), // right
++        0x3D => Some(0x80 | 0x11), // down
++        0x3E => Some(0x80 | 0x1B), // up
+         _ => None,
+     }
+ }
+diff --git a/core/src/mac/pluskbd.rs b/core/src/mac/pluskbd.rs
+index 1afc2a2..9daf26c 100644
+--- a/core/src/mac/pluskbd.rs
++++ b/core/src/mac/pluskbd.rs
+@@ -11,6 +11,8 @@ use crate::keymap::{KeyEvent, Keymap};
+ #[derive(Serialize, Deserialize)]
+ pub struct PlusKeyboard {
+     event_queue: VecDeque<KeyEvent>,
++    #[serde(default)]
++    pending_keypad: Option<u8>,
+ 
+     #[serde(with = "BigArray")]
+     keystate: [bool; 256],
+@@ -20,6 +22,7 @@ impl Default for PlusKeyboard {
+     fn default() -> Self {
+         Self {
+             event_queue: Default::default(),
++            pending_keypad: None,
+             keystate: [false; 256],
+         }
+     }
+@@ -39,7 +42,7 @@ impl PlusKeyboard {
+     const KEYMAP: Keymap = Keymap::AkM0110;
+ 
+     pub fn pending_events(&self) -> bool {
+-        !self.event_queue.is_empty()
++        self.pending_keypad.is_some() || !self.event_queue.is_empty()
+     }
+ 
+     pub fn event(&mut self, ev: KeyEvent) {
+@@ -47,6 +50,7 @@ impl PlusKeyboard {
+     }
+ 
+     pub fn release_all(&mut self) {
++        self.event_queue.clear();
+         for (sc, _) in self.keystate.iter().enumerate().filter(|(_, s)| **s) {
+             self.event_queue
+                 .push_back(KeyEvent::KeyUp(sc.try_into().unwrap(), Self::KEYMAP));
+@@ -57,22 +61,22 @@ impl PlusKeyboard {
+         match cmd {
+             // Inquire/Instant
+             0x10 | 0x14 => {
++                if let Some(byte) = self.pending_keypad.take() { return Ok(byte); }
+                 if let Some(ev) = self
+                     .event_queue
+                     .pop_front()
+                     .and_then(|ke| ke.translate_scancode(Self::KEYMAP))
+                 {
+-                    let result = match ev {
+-                        KeyEvent::KeyDown(sc, _) => {
+-                            self.keystate[sc as usize] = true;
+-                            sc
+-                        }
+-                        KeyEvent::KeyUp(sc, _) => {
+-                            self.keystate[sc as usize] = false;
+-                            0x80 | sc
+-                        }
++                    let (sc, down) = match ev {
++                        KeyEvent::KeyDown(sc, _) => (sc, true),
++                        KeyEvent::KeyUp(sc, _) => (sc, false),
+                     };
+-                    Ok(result | 0x01)
++                    self.keystate[sc as usize] = down;
++                    let result = (sc & 0x7F) | if down { 0 } else { 0x80 } | 1;
++                    if sc & 0x80 != 0 {
++                        self.pending_keypad = Some(result);
++                        Ok(0x79)
++                    } else { Ok(result) }
+                 } else {
+                     // Null
+                     Ok(0x7B)
+@@ -93,3 +97,59 @@ impl PlusKeyboard {
+         }
+     }
+ }
++
++#[cfg(test)]
++mod clarice_input_tests {
++    use super::*;
++    #[test]
++    fn arrow_packets_preserve_make_break_and_order() {
++        let mut k = PlusKeyboard::default();
++        for (key, byte) in [(0x3E,0x1B),(0x3D,0x11),(0x3B,0x0D),(0x3C,0x05)] {
++            k.event(KeyEvent::KeyDown(key,Keymap::Universal));
++            k.event(KeyEvent::KeyUp(key,Keymap::Universal));
++            assert_eq!(k.cmd(0x10).unwrap(),0x79);
++            assert_eq!(k.cmd(0x14).unwrap(),byte);
++            assert_eq!(k.cmd(0x10).unwrap(),0x79);
++            assert_eq!(k.cmd(0x14).unwrap(),byte|0x80);
++            assert_eq!(k.cmd(0x10).unwrap(),0x7B);
++        }
++    }
++    #[test]
++    fn focus_release_finishes_partial_arrow_packet() {
++        let mut k = PlusKeyboard::default();
++        k.event(KeyEvent::KeyDown(0x3E,Keymap::Universal));
++        assert_eq!(k.cmd(0x10).unwrap(),0x79);
++        k.release_all();
++        for byte in [0x1B,0x79,0x9B,0x7B] { assert_eq!(k.cmd(0x14).unwrap(),byte); }
++        assert!(k.keystate.iter().all(|state| !state));
++    }
++    #[test]
++    fn ordinary_keys_and_mac_modifiers_are_unchanged() {
++        let mut k = PlusKeyboard::default();
++        for (key,byte) in [(0x00,0x01),(0x38,0x71),(0x3A,0x75),(0x37,0x6F)] {
++            k.event(KeyEvent::KeyDown(key,Keymap::Universal));
++            k.event(KeyEvent::KeyUp(key,Keymap::Universal));
++            assert_eq!(k.cmd(0x10).unwrap(),byte);
++            assert_eq!(k.cmd(0x10).unwrap(),byte|0x80);
++        }
++    }
++    #[test]
++    fn option_c_preserves_both_key_releases() {
++        let mut k = PlusKeyboard::default();
++        k.event(KeyEvent::KeyDown(0x3A,Keymap::Universal));
++        k.event(KeyEvent::KeyDown(0x08,Keymap::Universal));
++        k.event(KeyEvent::KeyUp(0x08,Keymap::Universal));
++        k.event(KeyEvent::KeyUp(0x3A,Keymap::Universal));
++        for byte in [0x75,0x11,0x91,0xF5,0x7B] { assert_eq!(k.cmd(0x10).unwrap(),byte); }
++    }
++    #[test]
++    fn focus_release_does_not_leave_keys_down() {
++        let mut k = PlusKeyboard::default();
++        k.event(KeyEvent::KeyDown(0x3A,Keymap::Universal));
++        assert_eq!(k.cmd(0x10).unwrap(),0x75);
++        k.event(KeyEvent::KeyDown(0x08,Keymap::Universal));
++        k.release_all();
++        assert_eq!(k.cmd(0x10).unwrap(),0xF5);
++        assert_eq!(k.cmd(0x10).unwrap(),0x7B);
++    }
++}
+diff --git a/frontend_egui/src/app.rs b/frontend_egui/src/app.rs
+index a081fe8..7fbecbe 100644
+--- a/frontend_egui/src/app.rs
++++ b/frontend_egui/src/app.rs
+@@ -184,6 +184,7 @@ pub struct SnowGui {
+     mouse_grab_hint_shown: bool,
+     mouse_button_down: bool,
+ 
++    host_modifiers: [bool; 4],
+     wev_recv: crossbeam_channel::Receiver<egui_winit::winit::event::WindowEvent>,
+ 
+     toasts: egui_toast::Toasts,
+@@ -363,6 +364,7 @@ impl SnowGui {
+             mouse_grab_hint_shown: false,
+             mouse_button_down: false,
+ 
++            host_modifiers: [false; 4],
+             wev_recv,
+             mode_toast_hide_requested: mode_toast_hide_requested.clone(),
+             toasts: {
+@@ -2513,9 +2515,30 @@ impl SnowGui {
+                 continue;
+             }
+ 
+-            if !self.ui_active {
++            // macOS reports modifiers separately, rather than as physical key events.
++            #[cfg(target_os = "macos")]
++            if let WindowEvent::ModifiersChanged(mods) = &wevent {
++                let state = mods.state();
++                // The non-ADB Plus has no physical Control key. Use Option as
++                // its terminal control modifier; Clarice handles Option-C.
++                let plus = self.emu.get_model().is_some_and(|model| !model.has_adb());
++                let desired = if self.ui_active && !ctx.wants_keyboard_input() {
++                    [state.shift_key(), state.alt_key() || (plus && state.control_key()),
++                     state.super_key(), !plus && state.control_key()]
++                } else { [false; 4] };
++                for (i, key) in [0x38, 0x3A, 0x37, 0x36].iter().enumerate() {
++                    if desired[i] != self.host_modifiers[i] {
++                        self.emu.update_key(*key, desired[i]);
++                    }
++                }
++                self.host_modifiers = desired;
+                 continue;
+             }
++            if let WindowEvent::Focused(false) = &wevent {
++                self.emu.release_all_inputs();
++                self.host_modifiers = [false; 4];
++            }
++            if !self.ui_active { continue; }
+ 
+             match wevent {
+                 WindowEvent::KeyboardInput {
+@@ -2533,6 +2556,14 @@ impl SnowGui {
+                     }
+ 
+                     if let Some(k) = map_winit_keycode(kc, self.settings.cmd_key_mapping) {
++                        // Keep the non-ADB host extension limited to guest-verified
++                        // Up/Down. System 6's legacy horizontal translation needs
++                        // separate work; previously these keys were ignored.
++                        if matches!(k, 0x3B | 0x3C)
++                            && self.emu.get_model().is_some_and(|model| !model.has_adb())
++                        { continue; }
++                        #[cfg(target_os = "macos")]
++                        if matches!(k, 0x38 | 0x7B | 0x3A | 0x7C | 0x37 | 0x36 | 0x7D) { continue; }
+                         self.emu.update_key(k, state.is_pressed());
+                         if state.is_pressed() {
+                             self.on_user_input();

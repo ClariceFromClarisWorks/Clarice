@@ -1,0 +1,15 @@
+{
+  "guest": "Macintosh Plus, 4194304 bytes RAM, System 6.0.8, MultiFinder",
+  "clock": "native emulator speed; no overclock or fast-forward",
+  "source_restored_after_diagnostic": true,
+  "emulator_mouse_experiment_accepted": false,
+  "thumb_drag_verified": true,
+  "sha256": {
+    "src/app.c": "98123bd879177988d9d5a7a3c0ad86661b5a172e8dc67a9d5c87149841aba563",
+    "outputs/namespace/Clarice.bin": "8479bc7990f5cb47d8cfb9541f65033c3ec674a4da86eee1ce55ba940884a59a",
+    "outputs/namespace/Clarice.dsk": "e9247d6ce7290b458f2f3991794a283703bd21008e1ddd069a062cf5959ec39e",
+    "work/emulator/Sys6Snow.app/Contents/MacOS/Snow": "c71efc9c3926dce1a46ab4ec0a2118201df1ede0c25cee96f4da9ade101ef744",
+    "patches/snow-plus-input.patch": "c192bbf0fdd936080421b92b754e117392d11bd13db1294e9084391d54afcc22"
+  },
+  "thumb_drag_verification": "User reports: Dragging works manually. Automated drag delivery remains unverified."
+}

@@ -1,0 +1,11 @@
+Using multiversal interfaces
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Sys6Unix
+Consolidate compiler generated dependencies of target Sys6Unix
+[ 16%] Building C object CMakeFiles/Sys6Unix.dir/app.c.obj
+[ 33%] Linking C executable Sys6Unix.code.bin
+[ 66%] Built target Sys6Unix
+[ 83%] Generating Sys6Unix.bin, Sys6Unix.APPL, Sys6Unix.dsk, Sys6Unix.ad, %Sys6Unix.ad
+[100%] Built target Sys6Unix_APPL

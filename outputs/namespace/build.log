@@ -1,0 +1,17 @@
+Using multiversal interfaces
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Clarice
+Consolidate compiler generated dependencies of target Clarice
+[  5%] Building C object CMakeFiles/Clarice.dir/app.c.obj
+[ 11%] Linking C executable Clarice.code.bin
+[ 77%] Built target Clarice
+[ 83%] Generating Commands.r.rsrc.bin
+[ 88%] Generating Clarice.bin, Clarice.APPL, Clarice.dsk, Clarice.ad, %Clarice.ad
+[100%] Built target Clarice_APPL
+Using multiversal interfaces
+Volume name is "Clarice"
+Volume was created on Sun Nov  8 13:54:27 2026
+Volume was last modified on Sun Nov  8 13:54:27 2026
+Volume has 642560 bytes free

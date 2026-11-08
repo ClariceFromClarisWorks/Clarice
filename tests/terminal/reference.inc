@@ -1,0 +1,2 @@
+/* Previous byte-at-a-time terminal writer, retained as an executable oracle. */
+void reference_write(const char *s,long n){long i;if(test_ref>=0){long k=n;FSWrite(test_ref,&k,s);}for(i=0;i<n;i++){unsigned char c=s[i];if(c=='\n'){if(!last_cr)newline();last_cr=0;}else if(c=='\r'){newline();last_cr=1;}else if(c=='\t'){int k=4-(out_col%4);while(k--){if(out_col>=columns)newline();text[current_line%ROWS][out_col++]=' ';}}else if(c>=32){last_cr=0;if(out_col>=columns)newline();text[current_line%ROWS][out_col++]=(char)c;}}dirty=1;}

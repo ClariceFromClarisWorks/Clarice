@@ -1,0 +1,79 @@
+[
+  {
+    "source": "echo alpha > in; cat < in | cat > out; cat out",
+    "actual": "alpha\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo a >&2 2> err; cat err",
+    "actual": "",
+    "stderr": "a\n",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo alpha > in; cat in 1>&-; echo $?; echo after",
+    "actual": "1\nafter\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo out 2> err 1>&2; cat err",
+    "actual": "out\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo out > combined 2>&1; cat combined",
+    "actual": "out\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo out 1>&-; echo $?; echo restored",
+    "actual": "1\nrestored\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo out 2>&- 1>&2; echo $?",
+    "actual": "1\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "false | cat; echo $?; true | false; echo $?; ! false | cat; echo $?",
+    "actual": "0\n1\n1\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo out >&- | cat; echo $?",
+    "actual": "0\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo first > file; echo second >> file; cat file",
+    "actual": "first\nsecond\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "source": "echo word > file; read x < file; echo \"$x\"",
+    "actual": "word\n",
+    "stderr": "",
+    "status": 0,
+    "passed": true
+  }
+]

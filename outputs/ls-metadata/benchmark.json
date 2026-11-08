@@ -1,0 +1,24 @@
+{
+  "platform": "Snow Plus / 4 MB / System 6.0.8 / MultiFinder",
+  "entries": 1000,
+  "timer_hz": 60,
+  "total_ticks": [
+    871,
+    843,
+    867
+  ],
+  "first_entry_ticks": [
+    17,
+    32,
+    38
+  ],
+  "paint_ticks": 895,
+  "event_ticks": 39,
+  "median_seconds": 14.45,
+  "notes": [
+    "80 columns, Monaco 9, same current geometry as prior external-tools baseline.",
+    "Includes creation-time formatting, excludes PATH/module loading and final prompt.",
+    "14.45 seconds vs 13.27 before creation dates; 17.72 for rejected general division version.",
+    "Emulator results, not physical hardware. No date cache."
+  ]
+}

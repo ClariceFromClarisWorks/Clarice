@@ -1,0 +1,16 @@
+{
+  "total_ticks": [
+    743,
+    733,
+    734
+  ],
+  "first_ticks": [
+    16,
+    28,
+    29
+  ],
+  "paint_ticks": 591,
+  "event_ticks": 24,
+  "median_seconds": 12.233333333333333,
+  "changes": "Narrow changed spans on misaligned windows, native DIVU decimal sizes, skip unused type/creator formatting"
+}

@@ -1,0 +1,115 @@
+## 2.3 Performance-First, Assembly-First Engineering Philosophy
+
+This project is an experimental, performance-focused software engineering effort targeting Motorola 68k Macintosh hardware.
+
+**Maximum practical execution performance and minimum memory consumption take precedence over source-code readability, portability, conventional maintainability and general-purpose software design principles.**
+
+This is not intended to be a conventional, human-maintained FOSS project. Code clarity, abstraction and architectural elegance are secondary to measurable performance.
+
+### Assembly as the preferred implementation language
+
+Motorola 68000 assembly should be strongly preferred for performance-critical functionality and considered the default starting point for new low-level components.
+
+This preference applies throughout the system, including:
+
+- Shell command dispatch and execution.
+- Memory allocation and management.
+- String manipulation and parsing.
+- Text processing and search algorithms.
+- Terminal rendering, scrolling and screen updates.
+- Filesystem buffering and data movement.
+- POSIX compatibility routines.
+- Command loading and unloading.
+- Data structures and iteration.
+- Networking buffers and protocol handling.
+- Resource fork manipulation where appropriate.
+
+Do not restrict assembly to small optimisation routines within an otherwise C-based architecture.
+
+Investigate entire subsystems written directly in assembly where doing so may reduce execution time, memory usage, code size or abstraction overhead.
+
+### C is an interoperability tool, not the required implementation language
+
+C remains important for compiling existing Unix and GNU utilities and providing familiar application interfaces.
+
+However, the compatibility runtime itself does not need to be predominantly written in C.
+
+The preferred architecture is:
+
+**68k assembly runtime → C-compatible ABI → existing Unix/GNU applications**
+
+Use C when it demonstrably provides equivalent or better performance, reduces development complexity without meaningful runtime overhead, or is required for compatibility.
+
+Do not introduce C wrappers, extra abstraction layers or duplicated data conversions merely to follow conventional development practices.
+
+### AI-assisted development changes the trade-offs
+
+The project assumes AI-assisted code generation, analysis, debugging and maintenance.
+
+Consequently, human source-code readability is not a primary design constraint.
+
+Dense assembly, processor-specific optimisations, specialised memory layouts and unconventional algorithms are acceptable where they produce measurable advantages.
+
+However, AI-generated assembly must be independently validated through executable tests, profiling and comparison against reference implementations.
+
+Correctness, ABI compatibility, filesystem integrity and reproducible builds remain mandatory.
+
+AI assistance does not replace measurement.
+
+### Architecture before instruction optimisation
+
+The greatest performance improvement may come from eliminating operations rather than accelerating individual instructions.
+
+Challenge the necessity of:
+
+- Intermediate buffers.
+- Repeated memory copies.
+- Generic dispatch mechanisms.
+- Unnecessary filesystem calls.
+- Excessive allocations.
+- Repeated conversions between Macintosh and Unix representations.
+- Redundant abstraction layers.
+- Generic algorithms that perform poorly on the 68000.
+
+Prefer specialised 68k implementations when they materially outperform general-purpose approaches.
+
+### Processor-specific optimisation
+
+The Motorola 68000 is the baseline target.
+
+Investigate:
+
+- Instruction cycle costs.
+- Register allocation.
+- Addressing modes.
+- Alignment.
+- Loop unrolling.
+- Memory access patterns.
+- Precomputed lookup tables.
+- Direct buffer manipulation.
+- Instruction and data locality.
+- Code-size versus execution-speed trade-offs.
+
+Develop separate 68030 optimisations where worthwhile, retaining a fully functional 68000 path.
+
+### Benchmarking requirements
+
+For significant routines and subsystems:
+
+1. Establish a correct reference implementation.
+2. Develop an assembly implementation or alternative algorithm.
+3. Measure execution time, code size and memory consumption.
+4. Compare results on the 68000 and, where relevant, the 68030.
+5. Retain the implementation that best serves the project's measured performance and memory goals.
+
+Do not automatically retain C because it is more readable.
+
+Equally, do not retain assembly merely because it is handwritten.
+
+A simpler algorithm that eliminates work is preferable to a highly optimised routine performing unnecessary work.
+
+### Guiding principle
+
+**Treat the Motorola 68k as the native language of the project. C exists primarily to provide compatibility with the wider Unix software ecosystem.**
+
+The objective is not to demonstrate conventional software engineering practices. It is to discover how much functionality and performance can be extracted from early Macintosh hardware while preserving System 6 as the host operating system.

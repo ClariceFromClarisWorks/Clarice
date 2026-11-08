@@ -1,0 +1,1 @@
+PASS: 75540 actual M68000 decimal conversions; exact bytes, odd destination, guards, preserved registers and stack

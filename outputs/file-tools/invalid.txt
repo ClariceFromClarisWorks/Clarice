@@ -1,0 +1,1 @@
+usage: ls [-lah1P] [--] [path ...]

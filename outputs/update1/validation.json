@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "guest_regression_pass": true,
+    "guest_statuses_zero": true,
+    "guest_30_scripts_exact": true,
+    "host_30_scripts_pass": true,
+    "heap_140_commands_stable": true,
+    "data_fork_result": true,
+    "resource_fork_unchanged": true,
+    "type_creator_unchanged": true,
+    "redirect_append_result": true,
+    "history_size_capped": true,
+    "history_header_and_sequences": true,
+    "history_clean_exit": true,
+    "preferences_valid": true,
+    "saved_font_monaco_9": true,
+    "saved_light_theme_screen_pager": true
+  },
+  "pass": true,
+  "heap_before_after": [
+    163178,
+    163178
+  ],
+  "history_bytes": 131592,
+  "history_sequence": 695,
+  "preferences_bytes": 44,
+  "resource_fork_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+  "macbinary_bytes": 117888
+}

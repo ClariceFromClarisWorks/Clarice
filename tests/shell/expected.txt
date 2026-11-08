@@ -1,0 +1,112 @@
+case00
+hello world
+status=0
+case01
+hello $x
+status=0
+case02
+b
+status=0
+case03
+yes
+status=0
+case04
+yes
+status=0
+case05
+1 7
+status=0
+case06
+2
+<a>
+<b c>
+status=0
+case07
+a b  x y
+status=0
+case08
+hello world
+status=0
+case09
+1
+yes
+fallback
+status=0
+case10
+yes
+status=0
+case11
+a
+b c
+d
+status=0
+case12
+0
+1
+2
+status=0
+case13
+3
+status=0
+case14
+a
+c
+status=0
+case15
+a
+status=0
+case16
+a b
+7
+status=0
+case17
+matched
+status=0
+case18
+new
+old
+status=0
+case19
+hello
+world
+status=0
+case20
+first
+status=0
+case21
+hello:4
+world:5
+status=0
+case22
+default
+saved
+saved
+status=0
+case23
+bcabc abcab ab
+status=0
+case24
+14 0 7
+status=0
+case25
+a
+b c
+status=0
+case26
+<a>
+<b>
+<a b>
+status=0
+case27
+<a b>
+<>
+<c>
+status=0
+case28
+okay
+status=0
+case29
+file
+file
+append
+status=0

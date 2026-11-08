@@ -1,0 +1,190 @@
+$ selftest
+selftest: PASS; 10000 scans, 147 ticks
+[status 0; 156 ticks]
+$ pwd
+Sys6Unix:
+[status 0; 7 ticks]
+$ ls -la
+d---- 0100          0          0 ---- ---- Bench/
+--I-- 4000          0       1966 FNDR ERIK Desktop
+d---- 0100          0          0 ---- ---- Documents/
+----- 0100        272          0 TEXT S6UX Phase1 Report
+d---- 0100          0          0 ---- ---- shcases/
+----- 0100     131592          0 DATA S6UX Sys6 History
+----- 0100         44          0 PREF S6UX Sys6 Preferences
+----- 0100          0     117634 APPL S6UX Sys6Unix
+d---- 0100          0          0 ---- ---- System Folder/
+[status 0; 31 ticks]
+$ echo 'alpha beta' > Documents/result.txt
+[status 0; 19 ticks]
+$ cat Documents/result.txt
+alpha beta
+[status 0; 12 ticks]
+$ grep -F beta Documents/result.txt
+alpha beta
+[status 0; 14 ticks]
+$ export TEST=ready
+[status 0; 9 ticks]
+$ echo "$TEST" >> Documents/result.txt
+[status 0; 14 ticks]
+$ cd Documents
+[status 0; 9 ticks]
+$ pwd
+Sys6Unix:Documents:
+[status 0; 7 ticks]
+$ cd ..
+[status 0; 8 ticks]
+$ echo preserved > Documents/fork-test
+[status 0; 13 ticks]
+$ cat "Documents/with space.txt"
+alpha betasecond line
+third line
+[status 0; 20 ticks]
+$ status
+CPU code 1; System 0607; App memory top 564012
+Free heap 158510; launch free 167756
+Launch-to-ready 52 ticks; commands 17
+History: disk ring 128 entries; 1 KiB retrieval
+[status 0; 9 ticks]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+History wrap: 140 commands; heap before 163178 after 163178
+PHASE1_CHECKS PASS

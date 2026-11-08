@@ -1,0 +1,16 @@
+{
+  "sha256": {
+    "src/app.c": "ae48c8da26c1f5b00bb3ff1e5ae5ed9262c1879c55ade80c9ef85798ece6d4bd",
+    "src/shell.c": "51141cd6f0bb8ca1f97d5331df51946b55e361c4517e32fee32a566cbded70cb",
+    "src/listing.inc": "4c05f184a0fdd5a2f79f6db7aace1af5769b24c3c11c6614a36724b7ddf23acb",
+    "src/sizes.c": "f83faa55bdd284d326d6a5205cfe5a97663ff4b19635be663d8d8cd46008a73e",
+    "src/sys6.h": "adfc8008280c7ad0367ed3ff7fca12c98342761e779ade823252e364edfceea1",
+    "src/namespace.inc": "856260c7e4923ea3e8ef7a3480167fb9fb438dbbc401aecc38aefa7f0bdce8e1",
+    "work/build/Clarice.bin": "7e80ddc614779641fd9fe44385093433cb49cd3331117e46f60dfa793f6efa30",
+    "outputs/namespace/Clarice.bin": "7e80ddc614779641fd9fe44385093433cb49cd3331117e46f60dfa793f6efa30",
+    "work/system608/plus.snoww": "9327f08c9e920fc6040bc50befb67510ad4e603f647357657c9ed53838dd2500"
+  },
+  "toolchain": "ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae819583eecb0ddd1837da6943c",
+  "guest": "Plus / 4 MB / System 6.0.8 / MultiFinder",
+  "original_media_modified": false
+}

@@ -1,0 +1,8 @@
+Using multiversal interfaces
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Sys6Unix
+Consolidate compiler generated dependencies of target Sys6Unix
+[ 85%] Built target Sys6Unix
+[100%] Built target Sys6Unix_APPL

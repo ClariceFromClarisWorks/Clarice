@@ -1,0 +1,14 @@
+# Local tooling, emulator media, build products and research stay private.
+/work/
+.DS_Store
+__pycache__/
+*.pyc
+*.dSYM/
+/outputs/**/*.bin
+/outputs/**/*.dsk
+/outputs/**/*.zip
+/outputs/toolchain/image.json
+/outputs/research-sources.json
+*.hda
+*.ROM
+*.rom

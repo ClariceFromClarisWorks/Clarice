@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/twvd/snow",
+  "base_commit": "a921b108ef8bce8ba43fce121d46df0ea9d219af",
+  "original_binary_sha256": "51bf3aa1120245e8eba0dee97edf0afcf50a7717b4641aa11e4568387827328b",
+  "guest": "Macintosh Plus, 4 MB, System 6.0.7, MultiFinder",
+  "compiler": "Rust 1.95.0",
+  "original_roms_and_system_images_modified": false,
+  "patched_binary_sha256": "c71efc9c3926dce1a46ab4ec0a2118201df1ede0c25cee96f4da9ade101ef744",
+  "patch_sha256": "c192bbf0fdd936080421b92b754e117392d11bd13db1294e9084391d54afcc22",
+  "host_control_mapping": "macOS host Control aliases guest Option on non-ADB models; Command unchanged",
+  "bundle_packaging": "Unused copied hdd0.img preserved at work/emulator/bundle-hdd0-preserved.img so the app bundle could be ad-hoc signed; guest uses system.hda."
+}

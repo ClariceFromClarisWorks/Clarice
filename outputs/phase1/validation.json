@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "guest_suite_pass": true,
+    "guest_selftest_pass": true,
+    "all_reported_statuses_zero": true,
+    "redirect_append_exact": true,
+    "data_fork_replaced_exactly": true,
+    "resource_fork_preserved": true,
+    "finder_type_creator_preserved": true,
+    "history_header_valid": true,
+    "history_fixed_size": true,
+    "history_latest_exit": true,
+    "history_128_committed_slots": true,
+    "history_wrap_heap_stable": true
+  },
+  "pass": true,
+  "history_bytes": 131592,
+  "history_sequence": 364,
+  "resource_fork_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+  "application_macbinary_bytes": 70912
+}

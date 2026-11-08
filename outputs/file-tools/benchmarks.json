@@ -1,0 +1,47 @@
+{
+  "platform": "Snow Macintosh Plus, 4 MB, System 6.0.8, MultiFinder",
+  "timer_hz": 60,
+  "entries": 1000,
+  "initial_candidate": {
+    "first_entry_ticks": [
+      38,
+      27,
+      27
+    ],
+    "total_ticks": [
+      2658,
+      2742,
+      2706
+    ]
+  },
+  "manual_formatter_and_32_tick_bulk_paints": {
+    "first_entry_ticks": [
+      19,
+      33,
+      25
+    ],
+    "total_ticks": [
+      1027,
+      1028,
+      1020
+    ]
+  },
+  "notes": [
+    "Guest TickCount measurements, not real hardware.",
+    "Three consecutive runs; no cache reset.",
+    "Full long listings exclude parsing/history and final prompt repaint; paging disabled.",
+    "Synthetic equal-length names and repeated metadata benefit from changed-span rendering."
+  ],
+  "final": {
+    "first_entry_ticks": [
+      14,
+      28,
+      34
+    ],
+    "total_ticks": [
+      1027,
+      1008,
+      1029
+    ]
+  }
+}

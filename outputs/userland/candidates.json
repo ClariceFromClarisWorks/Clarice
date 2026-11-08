@@ -1,0 +1,14 @@
+{
+  "sbase": {
+    "commit": "c546c3a5724c81cee9a11d816a38ccdf17472129",
+    "url": "https://git.suckless.org/sbase"
+  },
+  "musl": {
+    "commit": "7813e9119eb5fe681b6750b8a033a0490bca0941",
+    "url": "https://git.musl-libc.org/git/musl"
+  },
+  "awk": {
+    "commit": "72e9b56caddb4a6f8d1405315a5183c26b8650a4",
+    "url": "https://github.com/onetrueawk/awk"
+  }
+}

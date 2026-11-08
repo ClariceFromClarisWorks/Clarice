@@ -1,0 +1,48 @@
+{
+  "platform": "Snow Plus / 4 MB / System 6.0.8 / MultiFinder",
+  "timer_hz": 60,
+  "entries": 1000,
+  "prior_release": [
+    1027,
+    1008,
+    1029
+  ],
+  "catalog_only": [
+    323,
+    325,
+    326
+  ],
+  "scrollbar_composition_profile": {
+    "total": [
+      1063,
+      1026,
+      1012
+    ],
+    "first": [
+      15,
+      28,
+      28
+    ],
+    "three_run_paint": 890,
+    "three_run_events": 95
+  },
+  "printable_runs_and_single_row_emit": {
+    "total": [
+      739,
+      723,
+      722
+    ],
+    "first": [
+      15,
+      32,
+      31
+    ],
+    "three_run_paint": 614,
+    "three_run_events": 48
+  },
+  "notes": [
+    "Three consecutive runs, no cache reset, synthetic equal metadata fixture.",
+    "Total excludes command parsing/history and final prompt repaint.",
+    "Guest ticks, not physical hardware timings."
+  ]
+}

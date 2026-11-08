@@ -1,0 +1,1 @@
+start 496,240 end 496,240 minmax 240,240 initial 35 final 35 limit 35 travel 216 loops 905 ticks 140

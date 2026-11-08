@@ -1,0 +1,45 @@
+{
+  "platform": "Snow 1.5.0-a921b10, Macintosh Plus, 4 MiB, MultiFinder, System 6.0.7",
+  "timer_hz": 60,
+  "entries": 1000,
+  "monaco_9_white_background": {
+    "first_entry_ticks": [
+      5,
+      10,
+      11
+    ],
+    "full_listing_ticks": [
+      713,
+      713,
+      719
+    ]
+  },
+  "intermediate_native_rows_32_tick_batch": {
+    "full_listing_ticks": [
+      915,
+      928,
+      927
+    ]
+  },
+  "intermediate_native_rows_64_tick_batch_dark": {
+    "full_listing_ticks": [
+      819,
+      835,
+      837
+    ]
+  },
+  "historical_bitmap_renderer_less_metadata": {
+    "full_listing_ticks": [
+      651,
+      660,
+      660
+    ]
+  },
+  "notes": [
+    "No physical hardware results.",
+    "Synthetic fixture repeats sizes/type/creator; changed-character rendering benefits from common columns.",
+    "Full listing includes catalog and terminal work; excludes command parsing/history and final prompt repaint.",
+    "Interactive ls stops at each screen by default.",
+    "Bulk paints coalesce at 64 ticks; first entry, paging and interactive key draws bypass that delay."
+  ]
+}

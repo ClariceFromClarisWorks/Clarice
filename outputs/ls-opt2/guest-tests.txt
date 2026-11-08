@@ -1,0 +1,2 @@
+PASS: default filtering, -a invisible files/folders/dot names, explicit hidden operand, leap-day creation (not modification), blank directory sizes, --full and --help
+PASS: 1,000 distinct complete rows, both fork lengths and creation dates; light/dark native pixel reports and quick renderer regression

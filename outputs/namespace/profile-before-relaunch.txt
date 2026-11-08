@@ -1,0 +1,4 @@
+# Profile installed by namespace regression test.
+export PATH=/usr/bin:/bin
+export HOSTNAME=plus-test
+export PROFILE_TEST=loaded

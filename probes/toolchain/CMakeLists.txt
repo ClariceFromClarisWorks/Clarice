@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(Sys6Probe C ASM)
+add_application(Sys6Probe probe.c abi_probe.S TYPE APPL CREATOR S6UX)
+target_compile_options(Sys6Probe PRIVATE -Os -m68000 -Wall -Wextra -Werror -ffunction-sections -fdata-sections)
+set_target_properties(Sys6Probe PROPERTIES LINK_FLAGS "-Wl,-gc-sections -Wl,--mac-single")

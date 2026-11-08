@@ -1,0 +1,1 @@
+Guest output assertions PASS: dots, mounts, empty directory, errors, 1000 distinct rows, forks, df, multiple operands.

@@ -1,0 +1,158 @@
+[
+  {
+    "file": "copy.txt",
+    "passed": true,
+    "actual": "alpha\nbeta\n",
+    "expected": "alpha\nbeta\n"
+  },
+  {
+    "file": "pipe.txt",
+    "passed": true,
+    "actual": "alpha\n",
+    "expected": "alpha\n"
+  },
+  {
+    "file": "out.txt",
+    "passed": true,
+    "actual": "",
+    "expected": ""
+  },
+  {
+    "file": "error-status.txt",
+    "passed": true,
+    "actual": "1\n",
+    "expected": "1\n"
+  },
+  {
+    "file": "ordered.txt",
+    "passed": true,
+    "actual": "",
+    "expected": ""
+  },
+  {
+    "file": "closed-status.txt",
+    "passed": true,
+    "actual": "1\n",
+    "expected": "1\n"
+  },
+  {
+    "file": "after-closed.txt",
+    "passed": true,
+    "actual": "okay\n",
+    "expected": "okay\n"
+  },
+  {
+    "file": "closed-input-status.txt",
+    "passed": true,
+    "actual": "1\n",
+    "expected": "1\n"
+  },
+  {
+    "file": "false-pipe.txt",
+    "passed": true,
+    "actual": "",
+    "expected": ""
+  },
+  {
+    "file": "last-status.txt",
+    "passed": true,
+    "actual": "0\n",
+    "expected": "0\n"
+  },
+  {
+    "file": "false-status.txt",
+    "passed": true,
+    "actual": "1\n",
+    "expected": "1\n"
+  },
+  {
+    "file": "no-path-status.txt",
+    "passed": true,
+    "actual": "127\n",
+    "expected": "127\n"
+  },
+  {
+    "file": "usage-status.txt",
+    "passed": true,
+    "actual": "2\n",
+    "expected": "2\n"
+  },
+  {
+    "file": "shadow.txt",
+    "passed": true,
+    "actual": "shadow\n",
+    "expected": "shadow\n"
+  },
+  {
+    "file": "probe1.txt",
+    "passed": true,
+    "actual": "1\n",
+    "expected": "1\n"
+  },
+  {
+    "file": "probe2.txt",
+    "passed": true,
+    "actual": "2\n",
+    "expected": "2\n"
+  },
+  {
+    "file": "bad-status.txt",
+    "passed": true,
+    "actual": "126\n",
+    "expected": "126\n"
+  },
+  {
+    "file": "missing-command-status.txt",
+    "passed": true,
+    "actual": "127\n",
+    "expected": "127\n"
+  },
+  {
+    "file": "interrupt.txt",
+    "passed": true,
+    "actual": "130\n",
+    "expected": "130\n"
+  },
+  {
+    "file": "repeat.txt",
+    "passed": true,
+    "actual": "alpha\n",
+    "expected": "alpha\n"
+  },
+  {
+    "file": "err.txt",
+    "passed": true
+  },
+  {
+    "file": "combined.txt",
+    "passed": true
+  },
+  {
+    "file": "order-err.txt",
+    "passed": true
+  },
+  {
+    "file": "bin-list.txt",
+    "passed": true
+  },
+  {
+    "file": "usage.txt",
+    "passed": true
+  },
+  {
+    "file": "df-human.txt",
+    "passed": true
+  },
+  {
+    "file": "explicit.txt",
+    "passed": true
+  },
+  {
+    "file": "closed-input.txt",
+    "passed": true
+  },
+  {
+    "file": "missing-command.txt",
+    "passed": true
+  }
+]

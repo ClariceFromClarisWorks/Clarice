@@ -1,0 +1,22 @@
+[
+  {
+    "test": "links",
+    "pass": true,
+    "bytes": 144
+  },
+  {
+    "test": "path",
+    "pass": true,
+    "bytes": 145
+  },
+  {
+    "test": "paths",
+    "pass": true,
+    "bytes": 122
+  },
+  {
+    "test": "profile",
+    "pass": true,
+    "bytes": 199
+  }
+]

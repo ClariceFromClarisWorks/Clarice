@@ -1,0 +1,17 @@
+usage: ls [-lah1P] [--full] [--] [path ...]
+-l columns: kind+LI  data-bytes  resource-bytes  created  name
+Created: YYYY-MM-DD HH:MM, from the HFS catalog.
+Kind: d directory, l Clarice link, - ordinary file.
+L: locked; I: Finder-invisible; -: flag clear.
+Fork sizes are logical bytes; -h uses KiB/MiB; zero is empty.
+Directories have blank fork sizes: these are not applicable.
+Virtual entries leave unavailable sizes/dates blank.
+--full adds N/B flag bits, raw Finder hex, type and creator.
+N: name-locked bit; B: bundle bit (OS-dependent meaning).
+Type/creator: stored codes; '.' replaces nonprintable bytes.
+Stored ???? is literal metadata, not our placeholder.
+Directory type/creator use ---- ---- (not applicable).
+-a includes Finder-invisible entries, dot names, . and ..
+Explicit path operands are shown even when hidden.
+-1 one entry per line; -P no paging; catalog order.
+No invented owners, groups or Unix access permissions.

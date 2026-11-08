@@ -1,0 +1,7 @@
+badcommand
+benchls
+benchscan
+cat
+df
+ls
+probe

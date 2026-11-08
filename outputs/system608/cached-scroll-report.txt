@@ -1,0 +1,1 @@
+CACHED_SCROLL_TEST PASS; 20 burst sizes; 0 pixel mismatches

@@ -1,0 +1,1 @@
+NATIVE_SCROLL_TEST PASS; 19 burst sizes; 0 pixel mismatches

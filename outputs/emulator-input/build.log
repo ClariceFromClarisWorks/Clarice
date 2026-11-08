@@ -1,0 +1,4 @@
+   Compiling snow_floppy v1.5.0 (/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/emulator/snow-source/floppy)
+   Compiling snow_core v1.5.0 (/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/emulator/snow-source/core)
+   Compiling snow_frontend_egui v1.5.0 (/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/emulator/snow-source/frontend_egui)
+    Finished `release` profile [optimized] target(s) in 2m 35s

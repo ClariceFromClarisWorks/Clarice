@@ -1,0 +1,36 @@
+{
+  "machine": "Macintosh Plus",
+  "ram_bytes": 4194304,
+  "system_file_version": "6.0.8",
+  "finder_version": "6.1.8",
+  "sysenvirons_report": "0607",
+  "workspace": "work/system608/plus.snoww",
+  "method": "Disposable copy of existing disk; System and Finder from local 800K System Tools disk, MultiFinder from Utilities 1. Original media unmodified.",
+  "files": {
+    "work/system608/System.bin": "e52d9e27eae49ea7a126e4999a2b8dd1f6fac460c8f354c7af857c3a61dab726",
+    "work/system608/Finder.bin": "f75d5f5853fb3a1cd985fc0f41ac776a44da41d8dc85a8830a3a3dbaba9a2f17",
+    "work/system608/MultiFinder.bin": "686ebf526a92e07ee1f547e26c8b7db8372cda47073d5487691dad005fb6c9f4",
+    "work/system608/plus.snoww": "9327f08c9e920fc6040bc50befb67510ad4e603f647357657c9ed53838dd2500",
+    "outputs/namespace/Clarice.bin": "d4ae54f064315b0f96841cc2c16481f108f7c26ed71109553f482121a8611c7e",
+    "work/emulator/Sys6Snow.app/Contents/MacOS/Snow": "c71efc9c3926dce1a46ab4ec0a2118201df1ede0c25cee96f4da9ade101ef744"
+  },
+  "installed_clarice_forks_match_package": true,
+  "installed_clarice_fork_sha256": [
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "a29e51023ac9061ed9d665b38d7d59a1144c8643e392b570d37f47ca1eb8a30b"
+  ],
+  "version_resources": {
+    "System": {
+      "1": "06088000000005362e302e3825362e302e382c20a9204170706c6520436f6d70757465722c20496e632e20313938332d3930",
+      "2": "06088000000005362e302e381553797374656d20536f66747761726520362e302e38"
+    },
+    "Finder": {
+      "1": "06188000000005362e312e3825362e312e382c20a9204170706c6520436f6d70757465722c20496e632e20313938332d3930",
+      "2": "06088000000005362e302e381553797374656d20536f66747761726520362e302e38"
+    },
+    "MultiFinder": {
+      "1": "06088000000005362e302e3825362e302e382c20a9204170706c6520436f6d70757465722c20496e632e20313938372d3930",
+      "2": "06088000000005362e302e381553797374656d20536f66747761726520362e302e38"
+    }
+  }
+}

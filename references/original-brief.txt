@@ -1,0 +1,510 @@
+# Project Design Brief: System 6 Unix Environment
+
+**Working title:** Sys6Unix  
+**Target platform:** Classic Macintosh, System 6.0.8  
+**Primary performance target:** Macintosh SE — 8 MHz Motorola 68000  
+**Secondary target:** PowerBook 180 — 33 MHz Motorola 68030  
+**Development environment:** Modern cross-compilation toolchain, emulator and real Macintosh hardware
+
+## 1. Project Vision
+
+Develop a lightweight, high-performance Unix-like command-line environment that runs natively as a Macintosh application under System 6.
+
+The objective is to bring practical Unix/Linux functionality to early Macintosh computers without replacing, emulating or duplicating the underlying operating system.
+
+System 6 must retain responsibility for memory management, filesystem access, hardware interaction, application execution and graphical interfaces.
+
+The environment should provide:
+
+- An interactive Unix-style terminal and shell.
+- Familiar Unix commands and scripting functionality.
+- A portable C/POSIX compatibility library.
+- Direct access to Macintosh HFS filesystems.
+- Native support for Macintosh resource forks and Finder metadata.
+- The ability to cross-compile and port existing Unix/GNU utilities.
+- Networking through the Macintosh TCP/IP interface, preferably MoofTCP.
+- Integration with Finder and, where available, MultiFinder.
+
+The ultimate goal is to make a Macintosh SE behave like a useful, network-capable Unix workstation while remaining entirely a System 6 Macintosh.
+
+## 2. Fundamental Architectural Principles
+
+### 2.1 No replacement kernel
+
+Do not port Linux, MINIX or another Unix kernel.
+
+Do not implement a second operating system, virtual machine or general-purpose Unix process manager.
+
+Instead, implement the smallest practical compatibility layer between Unix applications and the existing Macintosh operating system.
+
+Existing Macintosh OS facilities must be preferred over duplicated functionality.
+
+Study historical implementations including:
+
+- Macintosh Programmer's Workshop (MPW).
+- Mac06.
+- MacRelix.
+- MacMINIX.
+- Relevant classic Macintosh POSIX compatibility libraries.
+
+Investigate their source code, architecture, licensing and suitability for System 6.
+
+Do not assume an existing implementation is optimal merely because it already works.
+
+### 2.2 Minimise resource consumption
+
+The Macintosh SE has a 4 MB maximum RAM capacity. The project should aim to function within substantially less memory.
+
+Initial engineering targets, subject to measurement:
+
+| Component | Target memory |
+|---|---:|
+| Shell and terminal | 48–96 KB |
+| POSIX compatibility layer | 16–40 KB |
+| Command execution and buffers | 16–32 KB |
+| **Core environment** | **80–168 KB** |
+
+These are aspirational targets for the application's relevant resident allocations, not validated estimates of total system memory use.
+
+Measure actual application heap, stack, code resources, system heap consumption and dynamically loaded commands.
+
+Prioritise memory efficiency over feature completeness where necessary.
+
+Avoid unnecessarily large buffers, duplicated libraries, excessive allocations and persistent background processes.
+
+### 2.3 Performance is a primary design constraint
+
+Do not simply translate Unix system calls into Macintosh Toolbox calls without considering the cost.
+
+Investigate whether operations can be redesigned to eliminate unnecessary work.
+
+Explore:
+
+- Motorola 68000 assembly optimisation.
+- Faster memory copying and buffer manipulation.
+- Efficient terminal text rendering and scrolling.
+- Reduced filesystem metadata lookups.
+- Filesystem buffering and caching.
+- Efficient command loading and unloading.
+- Minimising repeated memory allocations.
+- Avoiding excessive context switching and copying.
+- Exploiting direct Macintosh APIs where appropriate.
+
+Compare C implementations against hand-optimised assembly.
+
+Assembly optimisations must demonstrate measurable benefits and preserve compatibility with the 68000.
+
+The PowerBook 180 may have separately optimised 68030 implementations, but the SE must remain fully supported.
+
+Do not optimise speculatively. Establish benchmarks and identify actual bottlenecks first.
+
+## 3. Shell and Terminal
+
+Implement a native System 6 application providing a Unix-style terminal.
+
+Required initial features:
+
+- Command prompt and interactive editing.
+- Command history.
+- Environment variables.
+- Working directory.
+- Standard input, output and error streams.
+- File redirection.
+- Command pipelines.
+- Quoting and argument parsing.
+- Exit statuses.
+- Basic shell scripting.
+
+The terminal must integrate with the Macintosh Window Manager and behave correctly under Finder and MultiFinder.
+
+Rendering should be optimised for monochrome QuickDraw and the SE's 512 × 342 display.
+
+Investigate efficient text scrolling, dirty-region rendering and low-overhead keyboard processing.
+
+Avoid unnecessary screen redraws.
+
+Full terminal emulation, including ANSI/VT100 functionality, may be introduced incrementally.
+
+## 4. Command Execution Model
+
+Investigate an MPW-style executable command model.
+
+Prefer executing commands as dynamically loaded Macintosh-compatible modules within the shell's address space.
+
+The shell should:
+
+1. Locate a command module.
+2. Load and initialise it.
+3. Provide command arguments and runtime services.
+4. Execute the command.
+5. Capture its exit status.
+6. Release temporary memory and resources.
+
+Each command must have isolated logical state and reliable cleanup, even though commands share an address space.
+
+Avoid requiring a Unix-style `fork()` implementation.
+
+Initially, pipelines may use memory buffers or temporary files between sequential commands.
+
+Investigate cooperative streaming pipelines later if they offer meaningful advantages.
+
+Document the incompatibilities this execution model introduces for applications expecting Unix processes, signals or concurrency.
+
+## 5. POSIX Compatibility Library
+
+Develop a compact compatibility library that maps commonly used Unix/POSIX interfaces onto System 6 and the Macintosh Toolbox.
+
+Initial coverage:
+
+**Filesystem**
+- `open`, `close`, `read`, `write`, `lseek`
+- `stat`, `fstat`
+- `rename`, `remove`
+- `mkdir`, `rmdir`
+- `opendir`, `readdir`, `closedir`
+- Current working directory and path resolution
+
+**Runtime**
+- `malloc`, `calloc`, `realloc`, `free`
+- `getenv`, `setenv`
+- `errno`
+- Time and date functions
+- Standard C library facilities
+
+**Terminal and descriptors**
+- `stdin`, `stdout`, `stderr`
+- File descriptor abstraction
+- Console input/output
+- Redirection and pipeline support
+- Terminal capability handling
+
+**Networking**
+- A selected subset of BSD socket interfaces implemented using Macintosh networking APIs.
+
+Do not claim full POSIX compliance.
+
+Provide explicit documentation of implemented, partially implemented and unsupported functionality.
+
+Compatibility functions should be reusable by multiple ported applications without requiring individually rewritten filesystem or terminal code.
+
+## 6. Macintosh Filesystem Integration
+
+Use the existing Macintosh File Manager and HFS filesystem.
+
+Do not require a separate Unix filesystem or disk image.
+
+Implement path translation between Unix-style paths and Macintosh filesystem paths.
+
+Address:
+
+- HFS volume names.
+- Colon-separated Macintosh paths.
+- Working directories.
+- Case-insensitive filenames.
+- Filename length limitations.
+- Data forks and resource forks.
+- Finder file types and creator codes.
+- Unsupported Unix permissions and symbolic links.
+
+Preserve Macintosh metadata when copying or modifying files.
+
+Avoid silently altering or discarding resource forks.
+
+Where Unix semantics cannot be faithfully supported, provide clearly documented behaviour rather than unsafe approximations.
+
+## 7. Macintosh-Specific Command-Line Utilities
+
+Implement a command-line resource editor inspired by ResEdit.
+
+Proposed commands include:
+
+- Listing resources within a file.
+- Viewing resource types, IDs, names and sizes.
+- Extracting resources.
+- Replacing and adding resources.
+- Removing resources.
+- Inspecting and editing Finder metadata.
+- Reading and changing file type and creator codes.
+- Hexadecimal inspection of data and resource forks.
+
+Design these operations to be scriptable.
+
+Use the Macintosh Resource Manager where appropriate.
+
+For destructive operations, provide backups, validation and safe failure behaviour.
+
+Ensure resource manipulation does not unnecessarily damage applications or existing Macintosh metadata.
+
+## 8. Unix and GNU Tool Support
+
+The objective is to port existing software with minimal source modifications.
+
+Initial utility targets:
+
+- `ls`
+- `cat`
+- `cp`
+- `mv`
+- `rm`
+- `grep`
+- `sed`
+- `awk`
+- `find`
+- `sort`
+- `uniq`
+- `diff`
+- `wc`
+- `head`
+- `tail`
+
+Later targets:
+
+- `vi`
+- `nano`
+- `less`
+- More advanced shell implementations.
+- Selected GNU Coreutils.
+- Portable C libraries.
+- Additional Unix applications.
+
+Investigate historically appropriate GNU releases alongside modern alternatives.
+
+Do not assume contemporary GNU source code can compile unchanged on System 6.
+
+Document each port's dependencies, required compatibility functions, memory consumption and performance.
+
+The long-term objective is a reusable cross-compilation environment capable of building a growing ecosystem of Unix-derived Macintosh applications.
+
+## 9. Networking
+
+Networking must remain under the Macintosh operating environment.
+
+Use a MacTCP-compatible networking interface, preferably through MoofTCP, rather than introducing a second TCP/IP stack.
+
+Reference project:
+
+https://github.com/matthewmrichter/mooftcp
+
+Initial features:
+
+- `ping`
+- DNS lookup.
+- Network interface status.
+- Connection diagnostics.
+- A lightweight `netstat`-style utility.
+- TCP and UDP socket compatibility where supported.
+
+Determine which information MoofTCP exposes through its existing APIs and which features require optional extensions or instrumentation.
+
+Avoid making the Unix runtime dependent on undocumented MoofTCP internals.
+
+Networking must be optional and should not inflate the memory footprint of an offline shell.
+
+**BlueSCSI v2 Pico W** provides the intended network hardware via DaynaPORT-compatible emulation.
+
+Advanced networking features, such as SSH clients, SSH servers and cryptographic acceleration through BlueSCSI, are stretch goals.
+
+Do not implement or prioritise SSH during the initial development phases.
+
+Similarly, Linux-specific facilities such as `iptables` are outside initial scope. A small platform-specific firewall interface may be considered later.
+
+## 10. Background Services and MultiFinder
+
+Investigate a minimal background command service that can coexist with Finder under MultiFinder.
+
+Potential future capabilities include:
+
+- Remote command execution.
+- File access.
+- Resource fork operations.
+- Background network services.
+- Application launch and status reporting.
+
+Respect System 6's cooperative multitasking model.
+
+Do not assume Unix-style preemptive processes or thread scheduling.
+
+Avoid permanent INITs, system patches or background drivers unless their benefits justify the additional complexity and memory consumption.
+
+A resident service must be optional.
+
+The basic shell must operate without MultiFinder.
+
+## 11. Development Toolchain
+
+Investigate and establish a modern, reproducible cross-compilation workflow.
+
+Preferred starting point:
+
+https://github.com/autc04/Retro68
+
+Support building 68000-compatible System 6 applications and command modules.
+
+Use an emulator such as Mini vMac for automated development and testing.
+
+Validate on real hardware:
+
+- Macintosh SE.
+- PowerBook 180.
+
+Preserve compatibility with the SE's 68000 processor.
+
+Any 68020/68030-specific optimisations must have a compatible 68000 fallback.
+
+Prefer portable C for maintainability, with assembly confined to verified performance-critical routines.
+
+## 12. Benchmarking and Performance Regression
+
+Build performance measurement into the project from the beginning.
+
+Benchmark:
+
+- Application startup.
+- Shell prompt responsiveness.
+- Command loading and execution.
+- Memory allocation.
+- File read/write throughput.
+- Directory traversal.
+- Path resolution.
+- Text rendering and scrolling.
+- Pipeline performance.
+- Networking latency and throughput.
+- Total memory consumption.
+
+Compare equivalent operations against native Macintosh implementations wherever practical.
+
+Track both emulator and physical-hardware results.
+
+Do not treat emulator performance as representative of the real Macintosh SE without validation.
+
+Maintain a performance history and investigate regressions.
+
+Optimisation must not compromise filesystem integrity or correctness.
+
+## 13. Development Strategy
+
+Use incremental, demonstrable milestones.
+
+### Phase 0 — Research and architecture
+
+Before implementing the runtime:
+
+1. Review existing Unix-like environments for classic Macintosh.
+2. Inspect source code where available.
+3. Investigate System 6 APIs and technical constraints.
+4. Evaluate executable loading models.
+5. Evaluate C runtime and filesystem strategies.
+6. Identify areas where assembly could provide measurable advantages.
+7. Compare feasible architectures.
+8. Recommend the simplest maintainable design meeting the requirements.
+
+Produce an architecture document outlining decisions, trade-offs, risks and alternatives.
+
+### Phase 1 — Minimal working proof
+
+Build a System 6 application that:
+
+- Displays an interactive command prompt.
+- Accesses native HFS files.
+- Executes `ls`, `cat` and `grep`.
+- Supports basic output redirection.
+- Returns safely to Finder.
+
+Measure startup time, memory usage and performance.
+
+### Phase 2 — Runtime and portability
+
+Implement the reusable compatibility library.
+
+Demonstrate compilation of an existing Unix C utility against the runtime with minimal source changes.
+
+Introduce loadable command modules.
+
+### Phase 3 — Shell and filesystem tooling
+
+Implement pipes, scripting, additional Unix utilities and Macintosh resource-fork commands.
+
+### Phase 4 — Networking
+
+Integrate MacTCP-compatible networking through MoofTCP.
+
+Implement `ping`, DNS and connection diagnostics.
+
+### Phase 5 — Optimisation and ecosystem expansion
+
+Profile the implementation on real hardware.
+
+Investigate assembly optimisations, more efficient algorithms and redesigned resource access.
+
+Expand GNU utility and library compatibility.
+
+### Phase 6 — Stretch goals
+
+Investigate SSH, BlueSCSI cryptographic offloading and MultiFinder background command services.
+
+These must not obstruct delivery of the core Unix environment.
+
+## 14. Non-Goals
+
+The project must not become:
+
+- A Linux or MINIX port.
+- A replacement operating system.
+- A complete Unix kernel emulator.
+- A virtual machine.
+- A mandatory separate filesystem.
+- A full recreation of POSIX process management.
+- A framework that requires large amounts of RAM merely to run simple commands.
+
+Avoid overengineering or implementing abstractions that do not provide concrete benefits.
+
+## 15. Definition of Success
+
+The project is successful when a Macintosh SE running System 6.0.8 can:
+
+1. Launch a responsive Unix-like terminal from Finder.
+2. Run familiar Unix utilities against actual Macintosh files.
+3. Use redirection, pipes and basic scripts.
+4. Manipulate HFS metadata and resource forks safely.
+5. Compile and run selected existing Unix applications using a reusable compatibility library.
+6. Access the network through MoofTCP without duplicating the networking stack.
+7. Operate with a small, measured memory footprint and acceptable performance on an 8 MHz 68000.
+8. Exit cleanly and return control to System 6.
+
+Additional capabilities should build on this foundation without fundamentally changing the architecture.
+
+---
+
+## Initial Instructions to Codex
+
+**Do not begin by implementing the entire specification.**
+
+Start with a thorough technical feasibility and architectural review.
+
+Inspect the source code and documentation of the relevant historical projects, identify reusable components and verify the assumptions in this brief.
+
+Specifically investigate whether an MPW-style in-process command model is the best solution or whether another existing implementation offers a more efficient approach.
+
+Assess System 6 memory limitations, executable loading, Macintosh filesystem behaviour, compatibility library requirements and network integration.
+
+Investigate assembly-level optimisation opportunities, but distinguish measured bottlenecks from speculative improvements.
+
+Deliver:
+
+1. A recommended architecture with alternatives and trade-offs.
+2. A list of verified System 6 technical constraints.
+3. An assessment of existing reusable code and relevant licences.
+4. A proposed executable and command-loading model.
+5. A proposed minimal POSIX API surface.
+6. A realistic memory budget with measurement methodology.
+7. A benchmark strategy.
+8. A concrete Phase 1 implementation plan.
+9. Major technical risks and proposed experiments to resolve them.
+
+Challenge any assumptions in this brief that conflict with the hardware, System 6 or established software engineering practice.
+
+Optimise for **minimal RAM, responsiveness, compatibility and maintainability**, in that order.
+
+Do not fabricate benchmarks or assume unverified technical capabilities.
+
+The immediate objective is to determine the best architecture and establish a reproducible path to a working proof of concept—not to write a large, speculative framework.

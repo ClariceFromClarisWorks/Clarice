@@ -1,0 +1,13 @@
+Using multiversal interfaces
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Sys6Unix
+Consolidate compiler generated dependencies of target Sys6Unix
+gmake[2]: Warning: File 'CMakeFiles/Sys6Unix.dir/compiler_depend.make' has modification time 0.019 s in the future
+[  7%] Building C object CMakeFiles/Sys6Unix.dir/app.c.obj
+[ 14%] Linking C executable Sys6Unix.code.bin
+gmake[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[ 85%] Built target Sys6Unix
+[ 92%] Generating Sys6Unix.bin, Sys6Unix.APPL, Sys6Unix.dsk, Sys6Unix.ad, %Sys6Unix.ad
+[100%] Built target Sys6Unix_APPL

@@ -1,0 +1,14 @@
+   Compiling snow_floppy v1.5.0 (/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/emulator/snow-source/floppy)
+   Compiling snow_core v1.5.0 (/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/emulator/snow-source/core)
+    Finished `release` profile [optimized] target(s) in 52.16s
+     Running unittests src/lib.rs (target/release/deps/snow_core-cc54b615c060849e)
+
+running 5 tests
+test mac::pluskbd::clarice_input_tests::focus_release_does_not_leave_keys_down ... ok
+test mac::pluskbd::clarice_input_tests::arrow_packets_preserve_make_break_and_order ... ok
+test mac::pluskbd::clarice_input_tests::focus_release_finishes_partial_arrow_packet ... ok
+test mac::pluskbd::clarice_input_tests::option_c_preserves_both_key_releases ... ok
+test mac::pluskbd::clarice_input_tests::ordinary_keys_and_mac_modifiers_are_unchanged ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 427 filtered out; finished in 0.00s
+

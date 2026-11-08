@@ -1,0 +1,9 @@
+SCROLL_TEST PASS (0 failures)
+90 frames per run; 60 ticks/sec; 80 columns, 22 rows
+native ticks: 526 525 526; max frame ticks: 5 6 5
+cached C ticks: 694 693 693; max frame ticks: 7 7 7
+cached ASM ticks: 567 567 567; max frame ticks: 6 6 6
+ASM phase ticks screen/shift/paint/present: 131 350 524 353
+Cache allocation heap delta 29704; four release cycles stable
+Presentation totals: direct 578, clipped QuickDraw 0
+System 0607; processor 1; free heap 107334

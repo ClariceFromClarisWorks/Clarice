@@ -1,0 +1,10 @@
+
+/src/work/build-probe/CMakeFiles/Sys6Probe.dir/abi_probe.S.obj:     file format elf32-m68k
+
+
+Disassembly of section .text:
+
+00000000 <sys6_abi_probe>:
+   0:	202f 0004      	movel %sp@(4),%d0
+   4:	5280           	addql #1,%d0
+   6:	4e75           	rts

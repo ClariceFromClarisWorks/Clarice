@@ -1,0 +1,10 @@
+{
+  "src/commands/created.c": "1f68ee50267f286a7be855c639c637950afc92c9e0964759ebc813e18fc0fcc1",
+  "src/listing.inc": "ca406eff9e383e9ad2333fab244519b7518bd169738ef40964badf0e4e3fe3a8",
+  "src/module.inc": "a371c48f6406ba5879a325cfa97bf9fbaa4acc936f2e5b2e3e1c1a98ad2b5344",
+  "src/shell.c": "c81a2edec8207133eeecef04a7356bde37ad8912e42cd10ddfeea8c57d2cbc85",
+  "scripts/build.sh": "cd2639da548f0344dce9329c47de505c8b7d7e137100a12bbd5861290c9c9fc8",
+  "work/build/core.clx": "4a6f3f0c257e5694bbbd8a7d11b44b6e8c96bf47b594def18182fdd557911de8",
+  "outputs/namespace/Clarice.bin": "ca3a61c8bbac8a8478413781821fcfca7405808eb54225a12a8693ebb4034ab5",
+  "outputs/namespace/Clarice.dsk": "4a95083843ec7dff9f0107a405d1d5d50b5ad7a094c5e698a495935049f2dc35"
+}

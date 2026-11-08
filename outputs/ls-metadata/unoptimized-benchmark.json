@@ -1,0 +1,19 @@
+{
+  "platform": "Snow Plus / 4 MB / System 6.0.8 / MultiFinder",
+  "entries": 1000,
+  "timer_hz": 60,
+  "total_ticks": [
+    1068,
+    1040,
+    1063
+  ],
+  "first_entry_ticks": [
+    18,
+    32,
+    38
+  ],
+  "paint_ticks": 1088,
+  "event_ticks": 54,
+  "median_seconds": 17.716666666666665,
+  "notes": "Initial general 32-bit division formatter, replaced after regression. Same 80-column Monaco 9 window."
+}

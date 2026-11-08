@@ -1,0 +1,24 @@
+{
+  "platform": "Snow Macintosh Plus / 4 MB / System 6.0.8 / MultiFinder",
+  "entries": 1000,
+  "timer_hz": 60,
+  "total_ticks": [
+    812,
+    791,
+    796
+  ],
+  "first_entry_ticks": [
+    17,
+    32,
+    37
+  ],
+  "three_run_paint_ticks": 812,
+  "three_run_event_ticks": 45,
+  "median_seconds": 13.266666666666667,
+  "notes": [
+    "80 columns, Monaco 9, native renderer, current taller window and four-pixel text inset.",
+    "Timing starts inside external benchls; excludes PATH resolution, module loading and final prompt redraw.",
+    "Prior 12.05-second result used earlier geometry/alignment; this is not an isolated module-overhead comparison.",
+    "Emulator observations, not physical hardware."
+  ]
+}

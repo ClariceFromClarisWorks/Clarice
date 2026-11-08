@@ -1,0 +1,12 @@
+/bin:/usr/bin
+bin first
+usr second
+bin link
+command not found: local.sh
+status:127
+local
+local
+/tmp
+command not found: hello
+status:127
+function

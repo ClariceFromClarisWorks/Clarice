@@ -1,0 +1,12 @@
+d          7 items               Nov  8 12:51 bin
+f  TEXT/S6UX         0        66 Nov  8  2026 Cached Scroll Report
+f  DATA/S6UX         0    131592 Nov  8  2026 Clarice History
+f  PREF/S6UX         0        52 Nov  8  2026 Clarice Preferences
+d          0 items               Nov  8  2026 dev
+f  TEXT/S6UX         0       101 Nov  8  2026 Drag Report
+d          5 items               Nov  8 12:47 etc
+d          0 items               Nov  8  2026 mnt
+f  TEXT/S6UX         0       124 Nov  8  2026 Native Scroll Report
+f  TEXT/S6UX         0       440 Nov  8  2026 Scroll Report
+d         43 items               Nov  8  2026 tmp
+d          1 item                Nov  8  2026 usr
