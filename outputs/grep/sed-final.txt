@@ -1,0 +1,19 @@
+SED-START
+Runtime: heap=75972 largest=75964 image=26680 ticks=117 load=91 owned-peak=7900 remaining=0
+A
+Beta
+Abet
+123
+word word
+last
+substitution:0
+Beta
+123
+pipeline:0
+alpha
+Beta
+write:0
+invalid:1
+sed: 1: missing second delimiter
+Runtime: heap=75972 largest=75964 image=39888 ticks=153 load=137 owned-peak=2870 remaining=0
+SED-END

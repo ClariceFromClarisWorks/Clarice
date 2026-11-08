@@ -13,3 +13,7 @@ static void newline(void){current_line++;if(current_line-retained+1>oldest_line)
 
 static unsigned char wrapped[ROWS];
 static void soft_newline(void){wrapped[current_line%ROWS]=1;newline();}
+
+static unsigned long activity_output_tick;
+static void activity_hide(void){}
+static unsigned long TickCount(void){return 0;}

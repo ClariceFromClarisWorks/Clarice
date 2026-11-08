@@ -1,0 +1,446 @@
+[
+  {
+    "args": [
+      "alpha"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-E",
+      "^(alpha|Beta)$"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-F",
+      "alpha"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-i",
+      "beta"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-v",
+      "alpha"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-n",
+      "alpha"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-c",
+      "alpha"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-q",
+      "alpha"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-q",
+      "missing"
+    ],
+    "status": 1,
+    "passed": true
+  },
+  {
+    "args": [
+      "-x",
+      "alpha"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-e",
+      "alpha",
+      "-e",
+      "123"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-f",
+      "patterns"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-f",
+      "empty"
+    ],
+    "status": 1,
+    "passed": true
+  },
+  {
+    "args": [
+      "-E",
+      "[[:digit:]]+"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "\\(word\\) \\1"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-E",
+      "a{1,3}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-H",
+      "alpha",
+      "a"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-h",
+      "alpha",
+      "a",
+      "b"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-l",
+      "alpha",
+      "a",
+      "b"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "alpha",
+      "a",
+      "b"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-s",
+      "alpha",
+      "missing"
+    ],
+    "status": 2,
+    "passed": true
+  },
+  {
+    "args": [
+      "alpha",
+      "missing"
+    ],
+    "status": 2,
+    "passed": true
+  },
+  {
+    "args": [
+      "-E",
+      "["
+    ],
+    "status": 2,
+    "passed": true
+  },
+  {
+    "args": [
+      "--bad-option"
+    ],
+    "status": 2,
+    "passed": true
+  },
+  {
+    "args": [
+      "-e",
+      "alpha\n123"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "alpha",
+      "-"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 0,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 1,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 2,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 3,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 4,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 5,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 6,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 7,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 8,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 9,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 10,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 11,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 12,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 13,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 14,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 15,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 16,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 17,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 18,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 19,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 20,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 21,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 22,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 23,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 24,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 25,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 26,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 27,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 28,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 29,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 30,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 31,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 32,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 33,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 34,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 35,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 36,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 37,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 38,
+    "passed": true
+  },
+  {
+    "test": "buffer boundaries",
+    "case": 39,
+    "passed": true
+  },
+  {
+    "test": "empty pattern",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "test": "word boundaries",
+    "status": 0,
+    "passed": true
+  },
+  {
+    "test": "long line",
+    "status": 2,
+    "passed": true
+  },
+  {
+    "test": "cancel",
+    "status": 130,
+    "passed": true
+  },
+  {
+    "test": "write error",
+    "status": 2,
+    "passed": true
+  },
+  {
+    "test": "allocation bound",
+    "status": 2,
+    "passed": true
+  }
+]

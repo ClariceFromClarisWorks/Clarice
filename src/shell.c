@@ -8,6 +8,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <errno.h>
+#include <setjmp.h>
+#include <wctype.h>
+#include <wchar.h>
+#include <strings.h>
 
 char shell_cwd[PATH_CAP];
 int shell_status;
@@ -19,7 +24,7 @@ static char home_path[PATH_CAP];
 static char root_path[PATH_CAP],unix_cwd[PATH_CAP]="/";
 static char env_names[16][32],env_values[16][128];
 static unsigned long history_count;
-static const char *commands[]={"ln","readlink","mkdir","rm","help","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","grep","echo","export","history","clear","status","selftest","checks","exit",0};
+static const char *commands[]={"ln","readlink","mkdir","rm","help","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
 static void pstr(unsigned char *p,const char *s) {size_t n=strlen(s); if(n>255)n=255;p[0]=(unsigned char)n;memcpy(p+1,s,n);}
 #include "streams.inc"
 static void say(const char *s){emit(s,(long)asm_length(s));}
@@ -38,10 +43,6 @@ static int command_path(const char *name,char *out){char native[PATH_CAP];CInfoP
  if(rejected)errsay("PATH command found, but it is not an executable command\n");return rejected?-1:0;
 }
 static int redirect(const char *s,int append){char p[PATH_CAP];unsigned char n[256];int e=resolve(s,p);if(e)return e;pstr(n,p);e=HOpen(0,0,n,fsWrPerm,&output_ref);if(e==fnfErr){e=HCreate(0,0,n,'S6UX','TEXT');if(!e)e=HOpen(0,0,n,fsWrPerm,&output_ref);}if(e){output_ref=-1;return e;}e=append?SetFPos(output_ref,fsFromLEOF,0):SetEOF(output_ref,0);if(e){FSClose(output_ref);output_ref=-1;}return e;}
-static int grep_file(const char *pattern,const char *s){char b[1024],line[2048];int used=0,found=0,lastcr=0,status=0;short ref;int e=0;if(!strcmp(s,"-")){ref=input_ref;if(ref<0)return 2;}else e=open_path(s,fsRdPerm,&ref);if(e){error("grep",e);return 2;}for(;;){long n=sizeof b,i;e=FSRead(ref,&n,b);for(i=0;i<n;i++){unsigned char c=b[i];if(c=='\r'||c=='\n'){if(c=='\n'&&lastcr){lastcr=0;continue;}line[used]=0;if(asm_contains(line,pattern)){emit(line,used);say("\n");found=1;}used=0;lastcr=c=='\r';}else {lastcr=0;if(!c){term_puts("grep: binary input is unsupported\n");status=2;goto done;}if(used==(int)sizeof(line)-1){term_puts("grep: line exceeds 2047 bytes\n");status=2;goto done;}line[used++]=(char)c;}}
- if(e==eofErr||(!e&&!n))break;if(e){error("grep read",e);status=2;goto done;}if(output_error){status=2;goto done;}if(app_yield()){status=130;goto done;}}
- if(used){line[used]=0;if(asm_contains(line,pattern)){emit(line,used);say("\n");found=1;}}status=found?0:1;
- done:if(strcmp(s,"-"))FSClose(ref);return status;}
 /* Fixed-slot disk ring: 128 x 1028 byte records + header. A record is committed by writing its sequence last. */
 #define HISTORY_SLOTS 128
 #define HISTORY_SLOT (LINE_CAP+4)
@@ -87,18 +88,20 @@ static int selftest(void){unsigned long t=TickCount(),n;int fail=0;char b[2048],
  {char line[LINE_CAP]="ec";int pos=2;if(shell_complete(line,&pos)!=1||strcmp(line,"echo ")||pos!=5)fail++;}
  for(n=0;n<10000;n++){if(!asm_contains("0123456789abcdefghijk","efgh"))fail++;if((n&255)==0)app_yield();}
  {char text[128];snprintf(text,sizeof text,"selftest: %s; 10000 scans, %lu ticks\n",fail?"FAIL":"PASS",(unsigned long)(TickCount()-t));say(text);}return fail?1:0;}
+#include "port-files.inc"
 #include "module.inc"
 static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  shell_commands++;
- if(!strcmp(av[0],"help"))say("Clarice / Plus edition\nNative HFS: pwd cd ls df cat grep -F\nls -l: kind/Locked/Invisible, fork sizes, creation date, name.\nls --full adds raw flags and type/creator metadata.\nls --help explains fields, flags and placeholders.\nls: -1 single column; -a includes invisible files and dot names\nls -lh: human-readable fork sizes. df [-h]: volume space.\nls pauses by screen; -P disables paging. View sets page size.\nShell: echo export clear history status exit\nTab completes commands and paths. Ctrl-P/N history.\nCtrl-A/E start/end; Ctrl-W/U/K/Y edit; Ctrl-R search.\nQuotes, $NAME, $? and > / >> supported.\nPaths: relative, /mnt/name/path, native:Disk:Path\nHistory: 128 disk records; history off/on/clear.\nGrep requires -F (literal text). sh file runs scripts.\nselftest runs ABI/parser/scan checks.\n");
+ if(!strcmp(av[0],"help"))say("Clarice / Plus edition\nNative HFS: pwd cd ls df cat grep\nls -l: kind/Locked/Invisible, fork sizes, creation date, name.\nls --full adds raw flags and type/creator metadata.\nls --help explains fields, flags and placeholders.\nls: -1 single column; -a includes invisible files and dot names\nls -lh: human-readable fork sizes. df [-h]: volume space.\nls pauses by screen; -P disables paging. View sets page size.\nShell: echo export clear history status exit\nTab completes commands and paths. Ctrl-P/N history.\nCtrl-A/E start/end; Ctrl-W/U/K/Y edit; Ctrl-R search.\nQuotes, $NAME, $? and > / >> supported.\nPaths: relative, /mnt/name/path, native:Disk:Path\nHistory: 128 disk records; history off/on/clear.\nGrep: upstream BRE/ERE (-E) or fixed text (-F). sh file runs scripts.\nselftest runs ABI/parser/scan checks.\n");
  else if(!strcmp(av[0],"ln")||!strcmp(av[0],"readlink")||!strcmp(av[0],"mkdir")||!strcmp(av[0],"rm"))status=namespace_command(argc,av);
  else if(!strcmp(av[0],"pwd")){say(unix_cwd);say("\n");}
  else if(!strcmp(av[0],"echo")){for(i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");}
  else if(!strcmp(av[0],"cd")){char path[PATH_CAP];short v;long id;const char *to=argc>1?av[1]:"~";int e=directory(to,&v,&id);char canonical[PATH_CAP];if(!e)e=resolve_ex(to,path,canonical,1);if(e){error("cd",e);status=1;}else {strcpy(unix_cwd,canonical);strcpy(shell_cwd,path);size_t len=strlen(shell_cwd);if(shell_cwd[len-1]!=':'){shell_cwd[len]=':';shell_cwd[len+1]=0;}}}
- else if(!strcmp(av[0],"grep")){if((argc!=3&&argc!=4)||strcmp(av[1],"-F")){say("usage: grep -F literal file (no regex yet)\n");status=2;}else status=grep_file(av[2],argc==4?av[3]:"-");}
+
  else if(!strcmp(av[0],"export")){if(argc==1){for(i=0;i<16;i++)if(env_names[i][0]){say(env_names[i]);say("=");say(env_values[i]);say("\n");}}for(i=1;i<argc;i++)if(env_set(av[i])){term_puts("export: invalid name/value or environment full\n");status=2;}}
  else if(!strcmp(av[0],"history")){if(argc>1&&!strcmp(av[1],"off"))history_enabled=0;else if(argc>1&&!strcmp(av[1],"on"))history_enabled=1;else if(argc>1&&!strcmp(av[1],"clear")){if(history_ref>=0&&!SetEOF(history_ref,0))history_count=0;else status=1;}else{char line[LINE_CAP];for(i=HISTORY_SLOTS;i>=1;i--)if(history_get(i,line)){say(line);say("\n");if(app_yield()){status=130;break;}}}}
  else if(!strcmp(av[0],"clear"))app_clear();
+ else if(!strcmp(av[0],"status")&&argc==2&&!strcmp(av[1],"runtime")){char b[240];snprintf(b,sizeof b,"Runtime: heap=%ld largest=%ld image=%lu ticks=%lu load=%lu owned-peak=%lu remaining=%lu\n",FreeMem(),MaxBlock(),module_bytes,module_ticks,module_load_ticks,port_peak,port_remaining);say(b);}
  else if(!strcmp(av[0],"status")){if(argc>2||(argc==2&&strcmp(av[1],"-h"))){say("usage: status [-h]\n");status=2;}else app_metrics(argc==2);}
  else if(!strcmp(av[0],"scrollbench"))status=app_scroll_bench(argc>1&&!strcmp(av[1],"cached")?3:argc>1&&!strcmp(av[1],"native")?2:argc>1&&!strcmp(av[1],"quick"));
  else if(!strcmp(av[0],"prefs"))status=app_preferences(argc,av);

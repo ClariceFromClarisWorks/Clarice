@@ -12,12 +12,12 @@ Verified baseline: Snow emulating a Macintosh Plus with 4 MB, System 6.0.8 and M
 | --- | --- | --- |
 | Terminal | Window resizing, solid block cursor, bounded scrollback, history, completion, saved preferences | Installed-font dropdown replacing the Font menu; broader font/geometry coverage |
 | Native files | HFS access, `/mnt`, symlinks, editable `/etc/profile`, PATH | More external file utilities and filesystem error tests |
-| External programs | Actual loadable `/bin/ls`, `/bin/df`, `/bin/cat` | Move remaining ordinary utility builtins out of the shell |
-| Streams and shell | stdin/stdout/stderr, redirection, statuses, finite spool pipelines, tested sh subset | Reusable C stdio runtime, broader POSIX semantics; concurrent pipes are not implemented |
-| Text tools | Local literal-only `grep -F` builtin | Faithful upstream grep, sed and awk ports, with source and licences |
+| External programs | Actual loadable `/bin/ls`, `/bin/df`, `/bin/cat`, `/bin/grep`, `/bin/sed` | Move remaining ordinary utility builtins out of the shell |
+| Streams and shell | stdin/stdout/stderr, redirection, statuses, finite spool pipelines, tested sh subset | Broader POSIX and C runtime coverage; concurrent pipes are not implemented |
+| Text tools | Pinned upstream sbase grep/sed with musl regex, bounded stdio runtime and retained licences | Awk, broader compatibility and large-input performance |
 | Connections/editors | No implementation yet | Serial client plus host test server, then networking and a faithful editor port |
 
-Next priority is the C runtime needed by upstream text tools: buffered streams, regular expressions, bounded allocation ownership, exit cleanup and cooperative cancellation. Candidate source revisions have been recorded in [the research manifest](outputs/userland/candidates.json); they are **not linked or installed**. Candidate implementations include sbase and One True Awk, not completed GNU ports. Each port must pass upstream behaviour comparisons, repeated-run memory checks and Plus guest tests before it is advertised as working. Serial work follows the base tools. Native compilation on the Mac remains a separate stretch goal.
+Grep and sed now build from preserved upstream source as separate `/bin` images. They share bounded stream/allocation adapters, regular expressions and cooperative cancellation; they are sbase ports, not GNU tools. See [port tests and limits](outputs/grep/TEST-REPORT.md) and [source notices](THIRD_PARTY.md). The Plus partition remains 384 KiB. Awk has a successful 68000 compile probe, but no runnable port yet: its unlinked code/data already totals about 89 KiB, before its runtime and working memory. A separate worker partition needs design before larger tools can fit responsibly. Serial follows the base tools; native compilation remains a separate stretch goal.
 
 ## Build
 
@@ -34,7 +34,9 @@ The project reuses SkiFree’s pinned toolchain; it does not require a SkiFree c
 
 Launch Clarice from Finder to install its data folders automatically, then use the shell. The application can remain outside the System Folder. Move/resize its normal document window. MultiFinder's upper-right application icon switches between Finder and Clarice while commands run.
 
-Commands: `ln -s target link`, `readlink link`, `rm file`, `mkdir directory`, `help`, `pwd`, `cd`, `ls [-laP] [path]`, `cat file ...`, `grep -F literal file`, `echo`, `export NAME=value`, `history [off|on|clear]`, `clear`, `status`, `prefs`, `sh file [args]`, `. file`, `test`, `printf`, `true`, `false`, `exit`.
+Commands: `ln -s target link`, `readlink link`, `rm file`, `mkdir directory`, `help`, `pwd`, `cd`, `ls [-laP] [path]`, `cat file ...`, `grep [-EFivnclqx] pattern [file ...]`, `sed [-n] script [file ...]`, `echo`, `export NAME=value`, `history [off|on|clear]`, `clear`, `status`, `prefs`, `sh file [args]`, `. file`, `test`, `printf`, `true`, `false`, `exit`.
+
+Help is not yet uniform: `ls --help` explains its options and columns; `help` gives a shell overview. df, cat, grep and sed currently provide short usage diagnostics for unsupported options, not complete `--help` pages. Per-command builtin help remains to do. `-h` retains its human-readable-size meaning where supported.
 
 The scripting adapter implements a tested subset of POSIX sh: lists, `&&`/`||`, quoting and variable expansion, `if`, `for`, `while`/`until`, `case`, functions/return, positional parameters, `set --`, shift, command substitution, arithmetic, here-documents, input/output redirection and finite pipelines. Run `sh path/file.sh` or `./file.sh`; no executable permission bit is required. **This is not yet a complete POSIX sh implementation.** See the detailed limits below. Bash/zsh remain later targets.
 
@@ -74,7 +76,7 @@ See `outputs/scrolling/TEST-REPORT.md` for scrolling/preferences and `outputs/up
 
 Thirty selected script fixtures match the host reference and the Plus guest transcript. They are regression coverage, not a POSIX conformance certification. The shell uses mrsh's parser with an original Mac execution adapter; it does not provide Unix processes.
 
-Pipelines run sequentially through temporary native HFS files, with cleanup on normal completion/cancellation. Infinite producers, concurrent pipeline interactions, signals/traps, job control, process IDs, descriptors beyond 0–2, general Unix executable formats and complete standard utilities are not implemented. GNU grep/awk/sed and an upstream editor remain separate ports. `grep` still requires `-F` and is not GNU grep.
+Pipelines run sequentially through temporary native HFS files, with cleanup on normal completion/cancellation. Infinite producers, concurrent pipeline interactions, signals/traps, job control, process IDs, descriptors beyond 0–2, general Unix executable formats and complete standard utilities are not implemented. GNU-specific options, awk and an upstream editor remain future work. The installed grep/sed are sbase ports; consult their bundled manual pages for upstream options and the port report for limits.
 
 Other known gaps include shell options (`set -e/-u`), aliases, readonly/export attributes and exact environment inheritance, full IFS edge cases, embedded quoted `$@`, wildcard parent-directory components, locale/collation, all arithmetic assignment forms, all `test`/`printf`/`read` variants, compound-command/function redirection and full subshell positional-parameter isolation. Several unsupported forms report an explicit error; remaining semantic differences mean arbitrary portable scripts cannot yet be assumed to work unchanged. Pathname globbing is limited to the final component and at most 32 total arguments. A standalone quoted `"$@"` preserves separate/empty arguments.
 
@@ -115,7 +117,7 @@ Standard input, output and error support `<`, `>`, `>>`, `2>`, `2>>`, descriptor
 
 `cat [-u] [--] [file ...]` reads stdin when no file is given or an operand is `-`. Terminal stdin uses a fixed 1 KiB canonical line queue: Return submits a line, Ctrl+D ends input on an empty line, and Ctrl+C cancels. On original Plus keyboards Option+D/Option+C are substitutes; the test emulator maps host Control to those guest keys. This is not a raw-terminal/termios implementation or a complete portable C stdio library. `read` remains limited to one variable and 127 characters.
 
-The loader uses a fresh bounded allocation per invocation and frees it on return. CLX1 commands share Clarice's address space and must cooperate with cancellation; they are not protected processes. See `outputs/COMMAND-ABI.md` and `outputs/external-tools/TEST-REPORT.md`. Grep is still the earlier literal-only builtin; a faithful upstream port and awk/sed remain follow-up work.
+The loader uses a fresh bounded allocation per invocation and frees it on return. CLX1 commands share Clarice's address space and must cooperate with cancellation; they are not protected processes. See `outputs/COMMAND-ABI.md` and `outputs/external-tools/TEST-REPORT.md`. Grep and sed now use this loader and a bounded source-port runtime. Their owned allocations are capped at 96 KiB, including buffers and an 8 KiB reuse cache, and freed on return. This cap is not reserved memory; actual available application memory can be lower. There are at most 12 streams and 16 KiB per input line. Data forks are read without CR/LF conversion. ASCII/C-locale input is the tested baseline.
 
 
 ### Reading ls -l
@@ -147,9 +149,15 @@ Host checks (C compiler and Python 3 required):
 python3 tests/commands/host-streams.py
 python3 tests/commands/pack.py
 python3 tests/terminal/check.py
+./tests/ports/build-host.sh
+python3 tests/ports/grep.py
+./tests/ports/build-sed-host.sh
+python3 tests/ports/sed.py
 python3 tests/commands/listing-output.py
 ```
 
 Run the build first for the packer check. The last command checks saved guest evidence; it does not start an emulator. Emulator helpers expect a privately prepared local workspace and legally obtained ROM/System media. Host checks do not substitute for guest testing.
 
 Original project briefs are preserved in `references/`; later decisions in this README and `AGENTS.md` supersede historical proposals. Third-party source and notices retain their own licences; see `THIRD_PARTY.md`. No blanket project licence is granted by making this development repository public.
+
+A clockwise one-cell activity indicator appears at the top right after five seconds without visible output, advancing every half-second. Output, completion or cancellation removes it. Input waiting and paging suppress it; future interactive programs must explicitly claim screen ownership. It does not enter command output or scrollback. See [validation](outputs/grep/ACTIVITY-TEST.md).

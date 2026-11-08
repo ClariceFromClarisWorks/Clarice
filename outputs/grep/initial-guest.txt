@@ -1,0 +1,18 @@
+GREP-START
+1:alpha
+3:alphabet
+match:0
+alpha
+Beta
+regex:0
+nomatch:1
+invalid:2
+/bin/grep: invalid regex: Missing ']'
+pipeline:0
+2
+redirected:0
+missing:2
+grep: fopen /tmp/no-such-file: No such file or directory
+quiet:0
+closed:2
+long:2

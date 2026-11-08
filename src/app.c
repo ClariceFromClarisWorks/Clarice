@@ -78,6 +78,7 @@ static int drawn_prompt=-1;
 static void draw(void);
 static void handle(EventRecord *ev);
 static void execute(void);
+#include "activity.inc"
 /* Prompt is made only from cached shell state, with room left for input. */
 static int prompt_prefix(char *out){if(tty_reading){out[0]=0;return 0;}char full[132];shell_prompt(full,sizeof full);int n=strlen(full),limit=columns/2;if(limit<2)limit=2;if(n>limit){memcpy(out,full+n-limit,limit);out[0]='~';out[limit]=0;return limit;}strcpy(out,full);return n;}
 static int input_offset(int prefix){int room=columns-prefix-1;return cursor>room?cursor-room:0;}
@@ -95,7 +96,7 @@ static void pstr(unsigned char *p,const char *s){size_t n=strlen(s);if(n>255)n=2
 static void newline(void){current_line++;if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;out_col=0;memset(text[current_line%ROWS],0,COLS);wrapped[current_line%ROWS]=0;if(scrollback){scrollback++;if(scrollback>scroll_limit())scrollback=scroll_limit();}}
 static void soft_newline(void){wrapped[current_line%ROWS]=1;newline();}
 /* Copy printable runs with one bounded operation per terminal row. */
-void term_write(const char *s,long n){long i=0;if(test_ref>=0){long k=n;FSWrite(test_ref,&k,s);}while(i<n){unsigned char c=s[i++];if(c=='\n'){if(!last_cr)newline();last_cr=0;}else if(c=='\r'){newline();last_cr=1;}else if(c=='\t'){int k=4-(out_col%4);while(k--){if(out_col>=columns)soft_newline();text[current_line%ROWS][out_col++]=' ';}}else if(c>=32){last_cr=0;if(out_col>=columns)soft_newline();i--;long room=columns-out_col;if(room>n-i)room=n-i;long k=0;char *dst=text[current_line%ROWS]+out_col;while(k<room&&(unsigned char)s[i+k]>=32){dst[k]=s[i+k];k++;}out_col+=k;i+=k;}}dirty=1;}
+void term_write(const char *s,long n){if(n>0){activity_hide();activity_output_tick=TickCount();}long i=0;if(test_ref>=0){long k=n;FSWrite(test_ref,&k,s);}while(i<n){unsigned char c=s[i++];if(c=='\n'){if(!last_cr)newline();last_cr=0;}else if(c=='\r'){newline();last_cr=1;}else if(c=='\t'){int k=4-(out_col%4);while(k--){if(out_col>=columns)soft_newline();text[current_line%ROWS][out_col++]=' ';}}else if(c>=32){last_cr=0;if(out_col>=columns)soft_newline();i--;long room=columns-out_col;if(room>n-i)room=n-i;long k=0;char *dst=text[current_line%ROWS]+out_col;while(k<room&&(unsigned char)s[i+k]>=32){dst[k]=s[i+k];k++;}out_col+=k;i+=k;}}dirty=1;}
 void term_puts(const char *s){term_write(s,(long)asm_length(s));}
 void app_clear(void){memset(text,0,sizeof text);memset(wrapped,0,sizeof wrapped);current_line=oldest_line=0;out_col=scrollback=0;dirty=force_draw=1;}
 void app_quit(void){done=1;cancelled=1;}
@@ -105,7 +106,7 @@ void app_metrics(int human){char b[256],free_size[32],launch_size[32];
  else{snprintf(free_size,sizeof free_size,"%ld KB",FreeMem()/1024);snprintf(launch_size,sizeof launch_size,"%ld KB",initial_free/1024);}
  snprintf(b,sizeof b,"CPU code %d; System API %04x\nFree app heap: %s; launch: %s\nLaunch-to-ready %lu ticks; commands %lu\nHistory: disk ring 128 entries; 1 KB retrieval\nKB = 1024 bytes\n",system_info.processor,(unsigned short)system_info.systemVersion,free_size,launch_size,start_tick,shell_commands);term_puts(b);
 }
-static void layout(void){Rect r=win->portRect;int previous_columns=columns,previous_visible=visible;columns=(r.right-TEXT_LEFT-16)/cell_w;if(columns>COLS-2)columns=COLS-2;if(columns<1)columns=1;
+static void layout(void){activity_hide();Rect r=win->portRect;int previous_columns=columns,previous_visible=visible;columns=(r.right-TEXT_LEFT-16)/cell_w;if(columns>COLS-2)columns=COLS-2;if(columns<1)columns=1;
  /* Use every complete row, from the content top through the bottom prompt. */
  visible=(r.bottom-TEXT_TOP)/line_h-1;if(visible<1)visible=1;if(visible>37)visible=37;
  if(previous_columns!=columns){TerminalReflow *next=(TerminalReflow*)NewPtr(sizeof *next);if(next){long anchor=current_line-previous_visible+1-scrollback;if(anchor<oldest_line)anchor=oldest_line;
@@ -260,7 +261,7 @@ static void draw_cached(void){
 }
 static unsigned long paint_ticks,event_ticks;
 void app_profile(unsigned long *paint,unsigned long *events){*paint=paint_ticks;*events=event_ticks;}
-static void draw(void){if(!win)return;unsigned long start=TickCount();int full=force_draw;hide_caret();unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(render_mode&&frame_pixels)draw_cached();else draw_native();if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}sync_history_bar(full);show_caret();paint_ticks+=TickCount()-start;}
+static void draw(void){if(!win)return;activity_hide();unsigned long start=TickCount();int full=force_draw;hide_caret();unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(render_mode&&frame_pixels)draw_cached();else draw_native();if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}sync_history_bar(full);show_caret();paint_ticks+=TickCount()-start;}
 
 static int native_scroll_check(int cached){
  Rect r;SetRect(&r,TEXT_LEFT,TEXT_TOP,TEXT_LEFT+columns*cell_w,TEXT_TOP+visible*line_h);int stride=win->portBits.rowBytes&0x3fff,px=r.left-win->portBits.bounds.left,py=r.top-win->portBits.bounds.top,width=((px&7)+r.right-r.left+7)/8,height=r.bottom-r.top;
@@ -360,11 +361,11 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
  else if(argc==3&&!strcmp(argv[1],"columns")){int n=preference_number(argv[2]),width=n*cell_w+TEXT_LEFT+16;if(n<20||n>130||width>qd.screenBits.bounds.right-8){term_puts("Requested columns do not fit this screen/font.\n");return 2;}SizeWindow(win,width,win->portRect.bottom,1);}
  else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | scrollback 32/64/128 | cache on/off | paging off/screen/100 | columns N | fill]\n");return 2;}
  font_layout();save_preferences();return 0;}
-int app_yield(void){EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return cancelled||done;if(dirty&&now-last_paint>=output_paint_ticks)draw();unsigned long t=TickCount();if(WaitNextEvent(everyEvent,&ev,0,0))handle(&ev);event_ticks+=TickCount()-t;last_yield=TickCount();return cancelled||done;}
+int app_yield(void){EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return cancelled||done;if(dirty&&now-last_paint>=output_paint_ticks)draw();unsigned long t=TickCount();if(WaitNextEvent(everyEvent,&ev,0,0))handle(&ev);event_ticks+=TickCount()-t;last_yield=TickCount();activity_tick(last_yield);return cancelled||done;}
 /* Canonical terminal stdin: fixed 1 KiB queue, EOF on Ctrl-D, cancellable. */
 long app_terminal_read(void *data,unsigned long count){
  if(!count)return 0;
- if(tty_offset>=tty_count){EventRecord ev;tty_count=tty_offset=tty_ready=0;input[0]=0;cursor=0;tty_reading=1;dirty=1;
+ if(tty_offset>=tty_count){EventRecord ev;tty_count=tty_offset=tty_ready=0;input[0]=0;cursor=0;tty_reading=1;activity_hide();dirty=1;
   while(!tty_ready&&!cancelled&&!done){if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);}
   tty_reading=0;dirty=1;if(cancelled||done){input[0]=0;cursor=0;return -1;}
  }
@@ -402,7 +403,7 @@ static void key(unsigned char c,unsigned short mods){int n=strlen(input);if(pagi
  case 12:app_clear();break;
  default:if(c>=32)insert_char(c);break;
  }dirty=1;}
-static void execute(void){char command[LINE_CAP];strcpy(command,input);if(out_col)newline();char prefix[132];shell_prompt(prefix,sizeof prefix);term_puts(prefix);term_puts(command);term_puts("\n");input[0]=0;cursor=history_back=0;busy=1;cancelled=interrupted=0;dirty=1;draw();shell_run(command);busy=0;if(out_col)newline();if(interrupted){term_puts("^C\n");shell_status=130;}dirty=1;}
+static void execute(void){char command[LINE_CAP];strcpy(command,input);if(out_col)newline();char prefix[132];shell_prompt(prefix,sizeof prefix);term_puts(prefix);term_puts(command);term_puts("\n");input[0]=0;cursor=history_back=0;busy=1;cancelled=interrupted=0;dirty=1;draw();activity_command=1;activity_interactive=0;activity_output_tick=TickCount();shell_run(command);activity_command=0;activity_interactive=0;activity_hide();busy=0;if(out_col)newline();if(interrupted){term_puts("^C\n");shell_status=130;}dirty=1;}
 void app_run_checks(void){unsigned char pn[256];char path[PATH_CAP];int i,failed=0;static const char *cases[]={"selftest","pwd","ls -la","echo 'alpha beta' > Documents/result.txt","cat Documents/result.txt","grep -F beta Documents/result.txt","export TEST=ready","echo \"$TEST\" >> Documents/result.txt","cd Documents","pwd","cd ..","echo preserved > Documents/fork-test","cat \"Documents/with space.txt\"","status",0};
  snprintf(path,sizeof path,"%.490sPhase1 Report",shell_cwd);pstr(pn,path);HCreate(0,0,pn,'S6UX','TEXT');if(!HOpen(0,0,pn,fsWrPerm,&test_ref))SetEOF(test_ref,0);busy=1;cancelled=0;
  for(i=0;cases[i]&&!cancelled;i++){term_puts("$ ");term_puts(cases[i]);term_puts("\n");{char result[96];unsigned long t=TickCount();int rc=shell_run(cases[i]);if(rc)failed++;snprintf(result,sizeof result,"[status %d; %lu ticks]\n",rc,TickCount()-t);term_puts(result);}app_yield();}
@@ -416,7 +417,7 @@ static void menu(long choice){short id=(short)(choice>>16),item=(short)choice;if
  if(id==133){if(item==1)inverse=!inverse;if(item==2)fill_window();if(item==4)font_size=9;if(item==5)font_size=12;if(item==6)font_size=14;if(item>=8&&item<=10)page_mode=item-8;font_layout();save_preferences();}
  HiliteMenu(0);dirty=1;}
 static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible)y=visible-1;return y*columns+x;}
-static void handle(EventRecord *ev){WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow){Rect bounds;long size;SetRect(&bounds,180,100,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-40);size=GrowWindow(win,ev->where,&bounds);if(size){SizeWindow(win,(short)size,(short)(size>>16),1);layout();save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(p.v<TEXT_TOP+visible*line_h){select_start=select_end=cell(p);while(StillDown()){GetMouse(&p);select_end=cell(p);force_draw=dirty=1;draw();}force_draw=dirty=1;}}}}break;}
+static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow){Rect bounds;long size;SetRect(&bounds,180,100,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-40);size=GrowWindow(win,ev->where,&bounds);if(size){SizeWindow(win,(short)size,(short)(size>>16),1);layout();save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(p.v<TEXT_TOP+visible*line_h){select_start=select_end=cell(p);while(StillDown()){GetMouse(&p);select_end=cell(p);force_draw=dirty=1;draw();}force_draw=dirty=1;}}}}break;}
  case keyDown:case autoKey:{unsigned char c=(unsigned char)(ev->message&charCodeMask);/* On the Plus, shifted M0110A arrow packets translate to keypad / and =.
      Normalize their physical codes before character editing; main keyboard
      slash/equal use different codes. ADB machines retain their OS translation. */

@@ -1,0 +1,23 @@
+GREP-START
+Runtime: heap=66606 largest=66598 image=100 ticks=861 load=7 owned-peak=0 remaining=0
+1:alpha
+3:alphabet
+match:0
+alpha
+Beta
+regex:0
+nomatch:1
+invalid:2
+/bin/grep: invalid regex: Missing ']'
+Beta
+pipeline:0
+2
+redirected:0
+missing:2
+grep: fopen /tmp/no-such-file: Success
+quiet:0
+closed:2
+long:2
+text tool: allocation limit reached
+Runtime: heap=66606 largest=66598 image=26680 ticks=117 load=91 owned-peak=7900 remaining=0
+GREP-END

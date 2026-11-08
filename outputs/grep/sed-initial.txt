@@ -1,0 +1,22 @@
+SED-START
+Runtime: heap=77448 largest=77440 image=0 ticks=0 load=0 owned-peak=0 remaining=0
+A
+Beta
+Abet
+123
+word word
+last
+substitution:0
+pipeline:1
+alpha
+Beta
+write:0
+invalid:1
+sed: zu: ø
+FAIL
+FAIL
+FAIL
+FAIL
+FAIL
+Runtime: heap=76568 largest=39780 image=39240 ticks=9 load=0 owned-peak=0 remaining=0
+SED-END

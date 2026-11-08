@@ -1,0 +1,18 @@
+PERF-START
+1000
+Runtime: heap=72104 largest=34710 image=26032 ticks=293 load=188 owned-peak=2748 remaining=0
+1000
+Runtime: heap=72104 largest=34710 image=26032 ticks=295 load=191 owned-peak=2748 remaining=0
+1000
+Runtime: heap=72104 largest=34710 image=26032 ticks=298 load=194 owned-peak=2748 remaining=0
+1000
+Runtime: heap=72104 largest=34710 image=26032 ticks=933 load=191 owned-peak=6900 remaining=0
+1000
+Runtime: heap=72104 largest=34710 image=26032 ticks=928 load=190 owned-peak=6900 remaining=0
+1000
+Runtime: heap=72104 largest=34710 image=26032 ticks=928 load=190 owned-peak=6900 remaining=0
+MEMORY-START
+Runtime: heap=76348 largest=38954 image=26032 ticks=928 load=190 owned-peak=6900 remaining=0
+Runtime: heap=76348 largest=38954 image=26032 ticks=211 load=191 owned-peak=6900 remaining=0
+Runtime: heap=76348 largest=38954 image=26032 ticks=211 load=190 owned-peak=6900 remaining=0
+PERF-END

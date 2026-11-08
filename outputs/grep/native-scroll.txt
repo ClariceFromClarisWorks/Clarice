@@ -1,0 +1,2 @@
+NATIVE_SCROLL_TEST PASS; 24 bursts + 20 views; 0 pixel mismatches
+Scrollbar staging: 153 checks, 0 premature screen changes

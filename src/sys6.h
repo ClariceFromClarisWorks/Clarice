@@ -37,3 +37,6 @@ unsigned long asm_length(const char *s);
 int asm_contains(const char *s, const char *needle);
 void asm_glyph(unsigned char *dest,const unsigned char *src,unsigned long stride,unsigned long height);
 #endif
+
+/* Interactive screen owners suppress the passive busy overlay. */
+void app_activity_interactive(int);

@@ -1,0 +1,161 @@
+[
+  {
+    "args": [
+      "s/alpha/A/"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "s/a/X/g"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-n",
+      "2,4p"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "/alpha/d"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "1q"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-n",
+      "/alpha/p"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "y/ab/AB/"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-e",
+      "s/alpha/A/",
+      "-e",
+      "s/Beta/B/"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-f",
+      "program"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "s/alpha/A/",
+      "input"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "N;s/\\n/:/"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-n",
+      "1h;2{g;p;}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      ":again;s/aa/a/;t again"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-n",
+      "$p"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "s/[[:digit:]]/X/g"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "s/\\(word\\) \\1/\\1/"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-n",
+      "1,2w saved"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "bad"
+    ],
+    "status": 1,
+    "passed": true
+  },
+  {
+    "args": [
+      "p",
+      "missing"
+    ],
+    "status": 1,
+    "passed": true
+  },
+  {
+    "test": "cancel loop",
+    "status": 130,
+    "passed": true
+  },
+  {
+    "test": "long line",
+    "status": 2,
+    "passed": true
+  },
+  {
+    "test": "write error",
+    "status": 2,
+    "passed": true
+  }
+]
