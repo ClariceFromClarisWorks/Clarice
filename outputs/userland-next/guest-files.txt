@@ -1,0 +1,57 @@
+FILES-START
+mkdir (Mac OS error -120)
+mkdir:1
+touch (Mac OS error -120)
+hfsattr (Mac OS error -120)
+hfsattr (Mac OS error -120)
+touch (Mac OS error -120)
+hfsattr (Mac OS error -120)
+cp (Mac OS error -120)
+copy:1
+/tmp/ul-test/copy (Mac OS error -120)
+cp (Mac OS error -120)
+overwrite:1
+/tmp/ul-test/copy (Mac OS error -120)
+cp (Mac OS error -120)
+mv (Mac OS error -120)
+rename:1
+mv (Mac OS error -120)
+move:1
+/tmp/ul-test/sub/renamed (Mac OS error -120)
+ln (Mac OS error -120)
+readlink (Mac OS error -120)
+cat (Mac OS error -120)
+hfsattr (Mac OS error -120)
+rm (Mac OS error -120)
+locked:1
+hfsattr (Mac OS error -120)
+hfsattr (Mac OS error -120)
+rmdir (Mac OS error -120)
+nonempty:1
+chmod: command not found; did you mean hfsattr?
+chmod:127
+FILES-END
+INSPECT-START
+recursive:0
+/tmp/ul-copy/sub/renamed (Mac OS error -120)
+readlink (Mac OS error -120)
+/tmp/ul-copy
+0	/tmp/ul-copy
+0B	/tmp/ul-copy
+/tmp/ul-copy/link (Mac OS error -120)
+0000000 6f 72 69 67 69 6e 61 6c 20 64 61 74
+000000c
+0000009   d   a   t   a  \n
+0000014
+file
+/mnt/volume/folder
+40 /tmp/ul-more
+cp (Mac OS error -120)
+selfcopy:1
+cp (Mac OS error -120)
+descendant:1
+remove:0
+/tmp/ul-absent (Mac OS error -43)
+absent:1
+rmdir:0
+INSPECT-END

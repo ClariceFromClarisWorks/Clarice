@@ -1,0 +1,1 @@
+PASS: extracted data and resource forks match the source byte-for-byte after copy, rename, move and interrupted replacement.

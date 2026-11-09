@@ -1,0 +1,43 @@
+AWK-START
+Runtime: heap=441296 largest=441288 image=0 ticks=0 load=0 owned-peak=0 remaining=0
+apple 2
+pear 3
+apple 4
+fields:0
+15.75
+sum:0
+apple:2
+pear:3
+apple:4
+separator:0
+6 3
+arrays:0
+4
+6
+8
+functions:0
+1.41421 8
+0 0000
+maths:0
+pear
+pipeline:0
+9
+program:0
+present
+environment:0
+written
+write:0
+written
+getline:0
+exit:7
+syntax:2
+awk: syntax error at source line 1
+ context is
+	BEGIN >>>  { <<< 
+awk: illegal statement at source line 1
+	missing }
+unsupported:2
+awk: system() is not supported by the Clarice runtime
+Runtime: heap=439736 largest=294936 image=6952 ticks=50 load=43 owned-peak=0 remaining=0
+Runtime: heap=439736 largest=294936 image=127916 ticks=503 load=394 owned-peak=11098 remaining=0
+AWK-END

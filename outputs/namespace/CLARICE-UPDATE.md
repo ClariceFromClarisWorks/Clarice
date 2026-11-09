@@ -1,5 +1,7 @@
 # Clarice identity update
 
+Historical report, superseded by outputs/system608, outputs/emulator-input and outputs/interaction. The current verified guest is System 6.0.8 and host Ctrl+C works through the project-local Snow patch.
+
 The current product name is Clarice. New UI, build artifacts and first-run data use Clarice / Clarice Data. Historical reports and original briefs retain their names. Previous development data is preserved and is not automatically migrated.
 
 The original monochrome icon depicts a command window, output lines, a chevron and a solid block cursor. It is drawn separately at 32×32 and 16×16 pixels. `scripts/make-icon.py` reproduces the resource artwork and preview without third-party artwork. The application creator is CLRC; existing S6UX shell-file metadata is retained for format compatibility. Packaging sets the Finder hasBundle flag and updates the MacBinary header checksum, then copies that application onto its HFS distribution disk.

@@ -25,6 +25,17 @@ static unsigned long spare_bytes;
 static unsigned long owned,peak;
 extern void cli_port_stats(unsigned long,unsigned long);
 static Stream streams[FILE_LIMIT];
+#define FD_LIMIT 12
+#define TEMP_LIMIT 20
+static int descriptors[FD_LIMIT]; /* zero means unused; stores native ref + 1 */
+static char temporary[TEMP_LIMIT][96];
+extern long cli_file_size(int);
+extern long cli_file_seek(int,long,int);
+extern long cli_stream_size(int);
+extern int cli_pause_ticks(unsigned long);
+extern int cli_temp_create(char *,unsigned long);
+extern int cli_remove(const char *);
+
 static jmp_buf escape;
 static int exit_status,cleaning,write_failed;
 static unsigned poll_count;
@@ -58,8 +69,8 @@ void *port_calloc(size_t n,size_t size){if(size&&n>SIZE_MAX/size){errno=ENOMEM;r
 void *port_realloc(void *ptr,size_t n){if(!ptr)return port_malloc(n);if(!n){port_free(ptr);return NULL;}Allocation *p=(Allocation*)ptr-1;void *q=port_malloc(n);if(q){memcpy(q,ptr,n<p->size?n:p->size);port_free(ptr);}return q;}
 char *port_strndup(const char *s,size_t n){size_t len=0;while(len<n&&s[len])len++;char *p=port_malloc(len+1);if(p){memcpy(p,s,len);p[len]=0;}return p;}
 char *port_strdup(const char *s){return port_strndup(s,strlen(s));}
-static int stream_read(void *cookie,char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long got=s->kind==1?cli_file_read(s->fd,buf,n):cli_read(s->fd,buf,n);if(got<0)errno=EIO;else errno=saved;return got;}
-static int stream_write(void *cookie,const char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long put=s->kind==1?cli_file_write(s->fd,buf,n):cli_write(s->fd,buf,n);if(put<0){errno=EIO;write_failed=1;}else errno=saved;return put;}
+static int stream_read(void *cookie,char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long got=s->kind==3?0:s->kind==1?cli_file_read(s->fd,buf,n):cli_read(s->fd,buf,n);if(got<0)errno=EIO;else errno=saved;return got;}
+static int stream_write(void *cookie,const char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long put=s->kind==3?n:s->kind==1?cli_file_write(s->fd,buf,n):cli_write(s->fd,buf,n);if(put<0){errno=EIO;write_failed=1;}else errno=saved;return put;}
 static int stream_close(void *cookie){Stream *s=cookie;int rc=s->kind==1?cli_file_close(s->fd):0;if(rc)errno=EIO;return rc;}
 static FILE *open_stream(int slot,int fd,int kind,int read_ok,int write_ok){
  Stream *s=&streams[slot];s->fd=fd;s->kind=kind;s->buffer=port_malloc(512);if(!s->buffer)return NULL;
@@ -100,11 +111,18 @@ ssize_t port_getline(char **line,size_t *cap,FILE *fp){
 int clarice_main(int argc,char **argv){
  if(!setjmp(escape)){
   if(!open_stream(0,0,0,1,0)||!open_stream(1,1,0,0,1)||!open_stream(2,2,0,0,1))exit_status=2;
-  else exit_status=upstream_main(argc,argv);
+  else {
+#ifdef PORT_AWK
+   extern void port_awk_init(void);port_awk_init();
+#endif
+   exit_status=upstream_main(argc,argv);
+  }
  }
  cleaning=1;
  /* Output flush errors must survive both normal return and upstream exit(0). */
  for(int i=FILE_LIMIT-1;i>=0;i--)if(streams[i].fp&&port_fclose(streams[i].fp))write_failed=1;
+ for(int i=3;i<FD_LIMIT;i++)if(descriptors[i]&&port_close(i))write_failed=1;
+ for(int i=0;i<TEMP_LIMIT;i++)if(temporary[i][0]&&cli_remove(temporary[i]))write_failed=1;
  while(allocations)port_free(allocations+1);discard_spares();
  cli_port_stats(peak,owned);
  if(write_failed&&exit_status!=130)exit_status=2;
@@ -118,14 +136,63 @@ void port_abort(void){fputs("text tool: internal assertion failed\n",port_standa
 
 /* Pinned newlib lacks the C99 z/t printf length modifiers. The ABI uses
    equally sized size_t/ptrdiff_t and long; adapt formats, never argument data. */
-int port_vfprintf(FILE *fp,const char *fmt,va_list ap){
- char converted[512];size_t i=0,j=0;int conversion=0;
+static void convert_format(char converted[512],const char *fmt){
+ size_t i=0,j=0;int conversion=0;
  for(;fmt[i];i++){
-  if(j==sizeof converted-1){fputs("text tool: format exceeds 511 bytes\n",port_standard(2));port_exit(2);}
+  if(j>=510){fputs("text tool: format exceeds 510 bytes\n",port_standard(2));port_exit(2);}
   char c=fmt[i];if(!conversion){if(c=='%')conversion=1;}
-  else {if(c=='z'||c=='t')c='l';else if(strchr("diouxXfFeEgGaAcspn%",c))conversion=0;}
+  else {if(c=='z'||c=='t')c='l';else if(c=='j'){converted[j++]='l';c='l';}else if(strchr("diouxXfFeEgGaAcspn%",c))conversion=0;}
   converted[j++]=c;
  }
- converted[j]=0;return vfprintf(fp,converted,ap);
+ converted[j]=0;
 }
+int port_vfprintf(FILE *fp,const char *fmt,va_list ap){char converted[512];convert_format(converted,fmt);return vfprintf(fp,converted,ap);}
+int port_snprintf(char *dst,size_t n,const char *fmt,...){char converted[512];convert_format(converted,fmt);va_list ap;va_start(ap,fmt);int rc=vsnprintf(dst,n,converted,ap);va_end(ap);return rc;}
+
 int port_fprintf(FILE *fp,const char *fmt,...){va_list ap;va_start(ap,fmt);int rc=port_vfprintf(fp,fmt,ap);va_end(ap);return rc;}
+
+/* awk close("/dev/stdout") redirects that stream to the null device. */
+FILE *port_null_reopen(const char *path,const char *mode,FILE *fp){
+ if(strcmp(path,"/dev/null")||strcmp(mode,"r+")){errno=EINVAL;return NULL;}
+ for(int i=0;i<3;i++)if(streams[i].fp==fp){if(fflush(fp))return NULL;streams[i].kind=3;clearerr(fp);return fp;}
+ errno=EBADF;return NULL;
+}
+
+int port_putchar(int c){return fputc(c,port_standard(1));}
+
+/* Descriptor I/O shares the same command streams without leaking host handles.
+   Never pass a Macintosh file reference directly to a portable caller. */
+int port_open(const char *path,int flags,...){
+ const char *mode;
+ if(flags==O_RDONLY)mode="r";
+ else if(flags==(O_WRONLY|O_CREAT|O_TRUNC))mode="w";
+ else if(flags==(O_WRONLY|O_CREAT|O_APPEND))mode="a";
+ else {errno=EINVAL;return -1;}
+ yield_now();int i;for(i=3;i<FD_LIMIT&&descriptors[i];i++);
+ if(i==FD_LIMIT){errno=EMFILE;return -1;}
+ int ref=cli_file_open(path,mode);if(ref<0)return -1;descriptors[i]=ref+1;return i;
+}
+int port_close(int fd){if(fd<3||fd>=FD_LIMIT||!descriptors[fd]){errno=EBADF;return -1;}int ref=descriptors[fd]-1;descriptors[fd]=0;return cli_file_close(ref);}
+ssize_t port_read(int fd,void *p,size_t n){yield_now();if(fd==0)return cli_read(0,p,n);if(fd<3||fd>=FD_LIMIT||!descriptors[fd]){errno=EBADF;return -1;}return cli_file_read(descriptors[fd]-1,p,n);}
+ssize_t port_write(int fd,const void *p,size_t n){
+ yield_now();long rc;
+ if(fd==1||fd==2){if(fflush(port_standard(fd)))return -1;rc=cli_write(fd,p,n);}
+ else if(fd>=3&&fd<FD_LIMIT&&descriptors[fd])rc=cli_file_write(descriptors[fd]-1,p,n);
+ else {errno=EBADF;return -1;}
+ if(rc<0)write_failed=1;return rc;
+}
+int port_fstat(int fd,struct stat *st){
+ memset(st,0,sizeof *st);long n;
+ if(fd>=0&&fd<3){if(cli_isatty(fd)){st->st_mode=S_IFCHR;return 0;}n=cli_stream_size(fd);}
+ else if(fd>=3&&fd<FD_LIMIT&&descriptors[fd])n=cli_file_size(descriptors[fd]-1);
+ else {errno=EBADF;return -1;}
+ if(n<0)return -1;st->st_mode=S_IFREG;st->st_size=n;return 0;
+}
+off_t port_lseek(int fd,off_t offset,int whence){if(fd<3||fd>=FD_LIMIT||!descriptors[fd]){errno=EBADF;return -1;}return cli_file_seek(descriptors[fd]-1,offset,whence);}
+unsigned port_sleep(unsigned seconds){while(seconds--){if(cli_pause_ticks(60))port_exit(130);}return 0;}
+const char *port_temp_new(void){
+ yield_now();for(int i=0;i<TEMP_LIMIT;i++)if(!temporary[i][0]){
+  if(cli_temp_create(temporary[i],sizeof temporary[i])){temporary[i][0]=0;return NULL;}return temporary[i];
+ }errno=EMFILE;return NULL;
+}
+void port_temp_remove(const char *name){for(int i=0;i<TEMP_LIMIT;i++)if(temporary[i]==name){if(cli_remove(name)){fputs("sort: cannot remove temporary file\n",port_standard(2));port_exit(2);}temporary[i][0]=0;return;}port_abort();}

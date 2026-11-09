@@ -1,0 +1,2 @@
+81c314ce938d81479e125638ace641a8a3cf863b997fb9bbb27e7bbff96a59f5  work/build/Clarice.bin
+20e78a6c6db50e428b27fe73c900dbadf44a9c75ca67f365399ef3cc9181a6d2  work/build/Clarice.dsk

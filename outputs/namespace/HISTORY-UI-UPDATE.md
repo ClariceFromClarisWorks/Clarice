@@ -1,5 +1,7 @@
 # History and bottom-bar update
 
+Historical report: current keyboard delivery is verified in outputs/emulator-input; the verified current baseline is System 6.0.8.
+
 Removed the permanent bottom hint/status row from native and cached renderers, reclaimed one text row, and removed its invisible click-to-cancel region. Paging alone displays a temporary More line. File > Cancel command now uses the same interrupt path as Ctrl-C, including clearing pending input at an idle prompt.
 
 The pinned 68000 build passes. In the 4 MB Plus / MultiFinder / System 6.0.7 guest, visually verified the absence of the bar with cache off and on; restored cache off. No hardware results claimed.

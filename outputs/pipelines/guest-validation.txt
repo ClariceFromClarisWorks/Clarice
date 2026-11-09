@@ -1,0 +1,1 @@
+PASS: exact Plus output/status fixtures, stable free heap/largest block after 25 repeated tool runs, Ctrl+C status 130, zero retained invocation allocations, no pipeline spools left.

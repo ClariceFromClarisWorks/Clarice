@@ -38,3 +38,6 @@ Latest user requirements override the original brief:
 - Move ordinary external utilities (ls, df, cat, grep and others) into independently loadable programs under /bin or /usr/bin, resolved by PATH. Retain shell-state builtins such as cd. Do not use placeholder wrappers to claim executable separation.
 - Use a faithful, updateable upstream source port for grep, with licences and author credits. Consider awk and sed next. Preserve performance and bounded memory on the Plus.
 - External-program work must cover standard streams, redirection, pipes and exit statuses with explicit tests and documented gaps; do not equate sequential temporary-file pipelines with concurrent Unix pipes.
+
+- Next milestone after the utility release: faithful upstream nano port before serial client or host-server setup. Evaluate upstream tiny configuration and preserve licences/authorship.
+- Nano must use the real upstream ncurses dependency; do not substitute a nano-specific curses imitation. Port the required Macintosh terminal/runtime services.

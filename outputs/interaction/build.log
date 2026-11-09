@@ -1,0 +1,189 @@
+Using multiversal interfaces
+In file included from /src/src/commands/inspect.c:2:
+/src/src/commands/mac-files.h:24:12: warning: 'checked' defined but not used [-Wunused-function]
+   24 | static int checked(const char *path,char *native,char *canonical,int follow){int e=resolve_ex(path,native,canonical,follow);if(!e&&protected_path(canonical))e=paramErr;return e;}
+      |            ^~~~~~~
+In file included from /src/src/commands/misc.c:2:
+/src/src/commands/mac-files.h:24:12: warning: 'checked' defined but not used [-Wunused-function]
+   24 | static int checked(const char *path,char *native,char *canonical,int follow){int e=resolve_ex(path,native,canonical,follow);if(!e&&protected_path(canonical))e=paramErr;return e;}
+      |            ^~~~~~~
+/src/src/commands/mac-files.h:23:12: warning: 'join_path' defined but not used [-Wunused-function]
+   23 | static int join_path(const char *parent,const char *leaf,char *out){size_t n=strlen(parent),m=strlen(leaf);if(n+m+2>=PATH_CAP)return bdNamErr;strcpy(out,parent);if(n&&out[n-1]!='/')strcat(out,"/");strcat(out,leaf);return 0;}
+      |            ^~~~~~~~~
+/src/src/commands/mac-files.h:22:12: warning: 'isdir' defined but not used [-Wunused-function]
+   22 | static int isdir(const CInfoPBRec *pb){return !!(pb->hFileInfo.ioFlAttrib&16);}
+      |            ^~~~~
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/core.clx: 12088 bytes, imports strcmp, cli_read, emit, app_yield, output_error, FSCLOSE, open_path, error, FSREAD, say, term_present, app_page, is_link, format_size, memcpy, strlen, memset, snprintf, app_columns, resolve_ex, output_ref, script_depth, app_page_begin, info, resolve, encode_name, volume_name, strcpy, parent_path, strrchr, app_output_batch, errsay, strchr, same_name, __muldi3, __udivsi3, app_profile
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/serial.clx: 4904 bytes, imports FSWRITE, app_yield, strlen, cli_write, strcmp, cli_isatty, OPENDRIVER, app_activity_interactive, SERRESET, SERHSHAKE, SERSETBUF, app_serial_input, cli_ticks, SERGETBUF, FSREAD, KILLIO, CLOSEDRIVER, snprintf, app_serial_key
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/files.clx: 12132 bytes, imports strcmp, say, strlen, strcpy, strcat, cli_native_open, cli_native_read, cli_native_write, cli_native_close, app_yield, strrchr, cli_ticks, snprintf, cli_native_create, resolve_ex, protected_path, info, same_name, strchr, strncasecmp, memcpy, cli_native_set, cli_native_delete, cli_native_rename, errsay, cli_native_lock, cli_native_mkdir, cli_native_nth, encode_name, error, resolve, cli_native_move, output_error, link_target, cli_mac_time
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/inspect.clx: 8716 bytes, imports strcmp, say, resolve_ex, info, error, is_link, strrchr, cli_native_nth, encode_name, strlen, strcpy, strcat, app_yield, errsay, format_size, output_error, snprintf, link_target, strchr, strtol
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/misc.clx: 5848 bytes, imports strcmp, say, error, cli_read, open_path, cli_native_read, cli_native_close, snprintf, strtoul, strrchr, strlen, strchr, cli_isatty, app_pager_begin, emit, output_error, app_page, app_pager_end, app_yield, errsay
+Using multiversal interfaces
+         U __errno
+         U __mulsi3
+         U _ctype_
+         U app_yield
+         U bsearch
+         U cli_alloc
+         U cli_file_close
+         U cli_file_open
+         U cli_file_read
+         U cli_file_seek
+         U cli_file_size
+         U cli_file_write
+         U cli_free
+         U cli_isatty
+         U cli_pause_ticks
+         U cli_port_stats
+         U cli_read
+         U cli_remove
+         U cli_stream_size
+         U cli_temp_create
+         U cli_write
+         U fclose
+         U fflush
+         U fgetc
+         U fmemopen
+         U fprintf
+         U fputc
+         U fputs
+         U funopen
+         U fwrite
+         U iswalnum
+         U iswctype
+         U iswlower
+         U iswupper
+         U longjmp
+         U mbtowc
+         U memchr
+         U memcpy
+         U memmove
+         U memset
+         U qsort
+         U setjmp
+         U setvbuf
+         U strcat
+         U strchr
+         U strcmp
+         U strcpy
+         U strcspn
+         U strerror
+         U strlen
+         U strncmp
+         U strnlen
+         U strpbrk
+         U strrchr
+         U strstr
+         U strtol
+         U towlower
+         U towupper
+         U ungetc
+         U vfprintf
+         U vsnprintf
+         U wctype
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/grep.clx: 43216 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, __mulsi3, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, strcasecmp, strstr, sprintf, strncmp, strncasecmp, _ctype_, mbtowc, wctype, iswlower, towupper, iswupper, towlower, qsort, strnlen, iswctype, iswalnum
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/sed.clx: 62452 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, __mulsi3, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, strcat, strcpy, ungetc, memmove, strtol, fwrite, strpbrk, strncmp, strcspn, _ctype_, bsearch, mbtowc, wctype, iswlower, towupper, iswupper, towlower, qsort, strnlen, iswctype, iswalnum
+Using multiversal interfaces
+   text	   data	    bss	    dec	    hex	filename
+ 129619	    737	   4152	 134508	  20d6c	work/build/awk.o
+         U __errno
+         U _ctype_
+         U app_yield
+         U atof
+         U atoi
+         U bsearch
+         U cli_alloc
+         U cli_environment
+         U cli_file_close
+         U cli_file_open
+         U cli_file_read
+         U cli_file_seek
+         U cli_file_size
+         U cli_file_write
+         U cli_free
+         U cli_isatty
+         U cli_path_kind
+         U cli_pause_ticks
+         U cli_port_stats
+         U cli_read
+         U cli_remove
+         U cli_stream_size
+         U cli_temp_create
+         U cli_unix_time
+         U cli_write
+         U fclose
+         U fflush
+         U fgetc
+         U fmemopen
+         U fprintf
+         U fputc
+         U fputs
+         U funopen
+         U fwrite
+         U getc
+         U isalnum
+         U isalpha
+         U iscntrl
+         U isdigit
+         U isgraph
+         U islower
+         U isprint
+         U ispunct
+         U isspace
+         U isupper
+         U isxdigit
+         U longjmp
+         U mbtowc
+         U memchr
+         U memcpy
+         U memset
+         U putc
+         U qsort
+         U setjmp
+         U setvbuf
+         U sprintf
+         U strchr
+         U strcmp
+         U strcpy
+         U strerror
+         U strlen
+         U strncasecmp
+         U strncmp
+         U strncpy
+         U strtod
+         U strtol
+         U tolower
+         U toupper
+         U towlower
+         U towupper
+         U ungetc
+         U vfprintf
+         U vsnprintf
+         U wctomb
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/awk.clx: 185980 bytes, imports cli_environment, strlen, strncmp, cli_path_kind, memset, cli_unix_time, strcmp, memcpy, bsearch, _ctype_, qsort, getc, ungetc, isalnum, isalpha, iscntrl, isdigit, isgraph, islower, isprint, ispunct, isspace, isupper, isxdigit, strchr, strtod, putc, fflush, strcpy, strncpy, strncasecmp, __errno, atoi, mbtowc, wctomb, setjmp, longjmp, strtol, atof, towupper, toupper, towlower, tolower, fwrite, fputs, cli_free, cli_file_close, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, cli_file_open, fclose, fputc, vfprintf, vsnprintf, cli_remove, cli_port_stats, sprintf
+Using multiversal interfaces
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/wc.clx: 16492 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, bsearch, strncmp
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/head.clx: 15728 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, fwrite, strncmp, strtoll
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/cut.clx: 18984 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, memcmp, fwrite, strtoul, strncmp, _ctype_
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/tr.clx: 34132 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, fwrite, bsearch, strncmp, _ctype_
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/uniq.clx: 16828 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, _ctype_, memcmp, fwrite, strncmp, strtoll
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/tee.clx: 14428 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, strncmp
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/tail.clx: 18268 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, memmove, strncmp, strtoll
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/sort.clx: 39316 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, _ctype_, strtol, fwrite, strtod, qsort, bsearch, strncmp, memcmp
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/basename.clx: 14284 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, strncmp, strrchr
+/Users/williamprestwich/Documents/ChatGPT/System6Unix/work/build/dirname.clx: 14128 bytes, imports cli_free, __errno, cli_file_close, longjmp, fputs, strchr, app_yield, cli_file_read, cli_read, cli_file_write, cli_write, cli_alloc, funopen, cli_isatty, setvbuf, memset, memcpy, strlen, cli_file_open, fmemopen, fclose, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, setjmp, cli_remove, cli_port_stats, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, strncmp, strrchr
+Using multiversal interfaces
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Clarice
+Consolidate compiler generated dependencies of target Clarice
+[ 78%] Built target Clarice
+[ 84%] Generating Commands.r.rsrc.bin
+[ 89%] Generating Clarice.bin, Clarice.APPL, Clarice.dsk, Clarice.ad, %Clarice.ad
+[100%] Built target Clarice_APPL
+Using multiversal interfaces
+Volume name is "Clarice"
+Volume was created on Mon Nov  9 01:12:59 2026
+Volume was last modified on Mon Nov  9 01:12:59 2026
+Volume has 57856 bytes free

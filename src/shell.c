@@ -1,5 +1,7 @@
 #include "sys6.h"
 #include <Files.h>
+#include <Serial.h>
+#include <Devices.h>
 #include <Errors.h>
 #include <MacMemory.h>
 #include <Resources.h>
@@ -24,7 +26,7 @@ static char home_path[PATH_CAP];
 static char root_path[PATH_CAP],unix_cwd[PATH_CAP]="/";
 static char env_names[16][32],env_values[16][128];
 static unsigned long history_count;
-static const char *commands[]={"ln","readlink","mkdir","rm","help","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
+static const char *commands[]={"help","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
 static void pstr(unsigned char *p,const char *s) {size_t n=strlen(s); if(n>255)n=255;p[0]=(unsigned char)n;memcpy(p+1,s,n);}
 #include "streams.inc"
 static void say(const char *s){emit(s,(long)asm_length(s));}
@@ -57,7 +59,7 @@ void shell_init(void){unsigned char vol[256];short vr;WDPBRec pb;unsigned long h
  /* GetVol may return a working-directory reference; resolve its actual volume name. */
  memset(&pb,0,sizeof pb);pb.ioVRefNum=vr;pb.ioWDIndex=0;if(!PBGetWDInfoSync(&pb))vr=pb.ioWDVRefNum;
  {HParamBlockRec vp;memset(&vp,0,sizeof vp);vp.volumeParam.ioNamePtr=vol;vp.volumeParam.ioVRefNum=vr;if(!PBHGetVInfoSync(&vp)){memcpy(shell_cwd,vol+1,vol[0]);shell_cwd[vol[0]]=':';shell_cwd[vol[0]+1]=0;}}
- {int e=namespace_install();if(e)error("System Folder installation failed",e);}strcpy(shell_cwd,root_path);strcpy(home_path,root_path);{int e=install_commands();if(e)error("Command installation",e);}env_set("PATH=/bin:/usr/bin");snprintf(path,sizeof path,"%.490sClarice History",home_path);pstr(pn,path);
+ {int e=namespace_install();if(e)error("System Folder installation failed",e);}strcpy(shell_cwd,root_path);strcpy(home_path,root_path);migrate_reports();{int e=install_commands();if(e)error("Command installation",e);}env_set("PATH=/bin:/usr/bin");shell_state_path(path,"clarice.history","Clarice History");pstr(pn,path);
  {int e=HOpen(0,0,pn,fsRdWrPerm,&history_ref);if(e==fnfErr){e=HCreate(0,0,pn,'S6UX','DATA');if(!e)e=HOpen(0,0,pn,fsRdWrPerm,&history_ref);}if(e)history_ref=-1;}
  if(history_ref>=0){if(FSRead(history_ref,&n,head)||n!=8||head[0]!=0x53364831){SetEOF(history_ref,0);history_count=0;}else history_count=head[1];}
  else term_puts("History disk unavailable; session remains usable.\n");
@@ -90,10 +92,10 @@ static int selftest(void){unsigned long t=TickCount(),n;int fail=0;char b[2048],
  {char text[128];snprintf(text,sizeof text,"selftest: %s; 10000 scans, %lu ticks\n",fail?"FAIL":"PASS",(unsigned long)(TickCount()-t));say(text);}return fail?1:0;}
 #include "port-files.inc"
 #include "module.inc"
+#include "help.inc"
 static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  shell_commands++;
- if(!strcmp(av[0],"help"))say("Clarice / Plus edition\nNative HFS: pwd cd ls df cat grep\nls -l: kind/Locked/Invisible, fork sizes, creation date, name.\nls --full adds raw flags and type/creator metadata.\nls --help explains fields, flags and placeholders.\nls: -1 single column; -a includes invisible files and dot names\nls -lh: human-readable fork sizes. df [-h]: volume space.\nls pauses by screen; -P disables paging. View sets page size.\nShell: echo export clear history status exit\nTab completes commands and paths. Ctrl-P/N history.\nCtrl-A/E start/end; Ctrl-W/U/K/Y edit; Ctrl-R search.\nQuotes, $NAME, $? and > / >> supported.\nPaths: relative, /mnt/name/path, native:Disk:Path\nHistory: 128 disk records; history off/on/clear.\nGrep: upstream BRE/ERE (-E) or fixed text (-F). sh file runs scripts.\nselftest runs ABI/parser/scan checks.\n");
- else if(!strcmp(av[0],"ln")||!strcmp(av[0],"readlink")||!strcmp(av[0],"mkdir")||!strcmp(av[0],"rm"))status=namespace_command(argc,av);
+ if(!strcmp(av[0],"help"))status=help_command(argc,av);
  else if(!strcmp(av[0],"pwd")){say(unix_cwd);say("\n");}
  else if(!strcmp(av[0],"echo")){for(i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");}
  else if(!strcmp(av[0],"cd")){char path[PATH_CAP];short v;long id;const char *to=argc>1?av[1]:"~";int e=directory(to,&v,&id);char canonical[PATH_CAP];if(!e)e=resolve_ex(to,path,canonical,1);if(e){error("cd",e);status=1;}else {strcpy(unix_cwd,canonical);strcpy(shell_cwd,path);size_t len=strlen(shell_cwd);if(shell_cwd[len-1]!=':'){shell_cwd[len]=':';shell_cwd[len+1]=0;}}}

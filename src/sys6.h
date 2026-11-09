@@ -11,6 +11,8 @@ long app_terminal_read(void *,unsigned long);
 void app_page_begin(void);
 int app_page(void);
 int app_yield(void);
+int app_serial_input(int enabled);
+int app_serial_key(void);
 void app_clear(void);
 void app_quit(void);
 void app_metrics(int human);
@@ -40,3 +42,12 @@ void asm_glyph(unsigned char *dest,const unsigned char *src,unsigned long stride
 
 /* Interactive screen owners suppress the passive busy overlay. */
 void app_activity_interactive(int);
+
+int shell_state_path(char *out,const char *file,const char *legacy);
+
+int shell_rename(const unsigned char *source,const unsigned char *newname);
+void shell_temp_path(char *out,const char *file);
+
+int cli_pause_ticks(unsigned long ticks);
+
+int app_pager_begin(void),app_pager_end(int);

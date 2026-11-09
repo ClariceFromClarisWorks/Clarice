@@ -31,3 +31,13 @@ text='#include <errno.h>\n'+text
 text=text.replace('xvprintf(const char *fmt, va_list ap)\n{', 'xvprintf(const char *fmt, va_list ap)\n{\n\tint saved_errno = errno;')
 text=text.replace('\t\tperror(NULL);', '\t\terrno = saved_errno;\n\t\tperror(NULL);')
 (root/'work/build/ports/eprintf.c').write_text(text)
+
+# Explicit long help without changing the preserved upstream source files.
+import json
+helps={
+ 'grep':'grep [-EFHchilnqsvwx] [-e pattern] [-f patterns] [pattern] [file ...]\nBRE by default; -E extended, -F fixed text, -i ignore case, -v invert.\n-n line numbers, -c count, -l matching filenames, -q quiet, -s suppress errors.\n-w words, -x whole lines, -H/-h filename prefixes.\nStatus: 0 match, 1 no match, 2 error, 130 interrupted. No recursive -r or GNU option parity.\n',
+ 'sed':'sed [-nE] [-e script] [-f scriptfile] [script] [file ...]\n-n quiet; -E/-r extended regular expressions.\nSupports upstream sbase addresses, substitutions, hold/pattern space and branching.\nNo GNU -i in-place editing. See the supplied sed manual for the script language.\nStatus: 0 success, nonzero error, 130 interrupted.\n'}
+for name,help in helps.items():
+ p=root/'work/build/ports'/f'{name}.c';s=p.read_text();marker='main(int argc, char *argv[])\n{';assert marker in s
+ s=s.replace(marker,marker+'\n if(argc==2&&!strcmp(argv[1],"--help")){puts('+json.dumps(help+'sbase port: 96 KiB allocation cap; 16 KiB input-line cap.\n')+');return 0;}')
+ p.write_text(s)

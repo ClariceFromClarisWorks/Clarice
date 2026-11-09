@@ -17,6 +17,8 @@ export HOSTNAME=macplus
 
 The prompt then shows `macplus directory >`. Without HOSTNAME it shows `directory >`. `pwd` prints the full path. Networking-based hostname discovery is not implemented in this build.
 
-This development build uses a 384 KiB application partition and targets the Macintosh Plus with 4 MB and MultiFinder. The tested guest is System 6.0.8, confirmed by Finder and installation media despite SysEnvirons reporting 0607. See outputs/system608/TEST-REPORT.md and outputs/ls-opt2/TEST-REPORT.md. No System software, ROM or emulator is included.
+This development build uses a 768 KiB application partition and targets the Macintosh Plus with 4 MB and MultiFinder. The tested guest is System 6.0.8, confirmed by Finder and installation media despite SysEnvirons reporting 0607. See outputs/system608/TEST-REPORT.md and outputs/ls-opt2/TEST-REPORT.md. No System software, ROM or emulator is included.
 
 Earlier development folders named Sys6Unix or Terminal Data are not automatically moved or deleted. Existing personal data is not migrated or replaced by this installer. New data uses Clarice Data exclusively.
+
+Preferences and history migrate from legacy root-level files into `/etc/clarice/clarice.conf` and `/etc/clarice/clarice.history`, preserving an existing destination. Preferences are bounded editable text; history remains a capped binary ring. Monaco 9 and native rendering are the baseline defaults.

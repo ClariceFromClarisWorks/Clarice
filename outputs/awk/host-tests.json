@@ -1,0 +1,257 @@
+[
+  {
+    "args": [
+      "{print $1, $2}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "{s += $2*$3} END {printf \"%.2f\\n\",s}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "$2>2 {print NR, NF, $0}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {FS=\"[ ]+\"; OFS=\":\"} {print $1,$2}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "/apple/ {n++} END {print n}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "{a[$1]+=$2} END {print a[\"apple\"],a[\"pear\"];delete a[\"apple\"]; print (\"apple\" in a)}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "function twice(x) {return 2*x} {print twice($2)}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {for(i=0;i<4;i++) print i; while(i>2) i--; do i--; while(i>0); print i}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {print substr(\"abcdef\",2,3), index(\"abcdef\",\"de\"), length(\"abc\"); print toupper(\"abc\"),tolower(\"XYZ\")}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "{gsub(/p/,\"P\",$1);sub(/a/,\"A\",$1);print $1}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {n=split(\"a:b:c\",a,\":\"); print n,a[2]; print match(\"abc123\",/[0-9]+/),RSTART,RLENGTH}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "NR==2 {next} {print $1}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "{print $1;exit 7} END {print \"end\"}"
+    ],
+    "status": 7,
+    "passed": true
+  },
+  {
+    "args": [
+      "-v",
+      "x=7",
+      "BEGIN {print x+1}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-F",
+      ":",
+      "{print NF,$2}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "-f",
+      "prog",
+      "data"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "{print FNR,NR,FILENAME} END {print ARGC,ARGV[1]}",
+      "data",
+      "extra"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {while ((getline x < \"extra\")>0) print x;close(\"extra\")}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "{print $1 > \"out\"} END {close(\"out\"); while ((getline x < \"out\")>0) print x;close(\"out\")}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {printf \"%d %.3f %s %x\\n\",42,sqrt(2),\"yes\",255; print int(-2.9),sin(0),cos(0),log(1),exp(0),atan2(0,1); print 2^3,5%2}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {print ENVIRON[\"AWK_TEST\"]}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {srand(1);a=rand();srand(1);print a==rand(),a>=0 && a<1}"
+    ],
+    "status": 2,
+    "passed": true
+  },
+  {
+    "args": [
+      "--csv",
+      "{print NF,$1,$2}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "{print $1}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {print \"unterminated}"
+    ],
+    "status": 2,
+    "passed": true
+  },
+  {
+    "args": [
+      "{print $1}",
+      "absent"
+    ],
+    "status": 2,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {print (3>2?\"yes\":\"no\"), (\"1\"+2), sprintf(\"%04d\",7)}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {RS=\"\"} {print NR,NF}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {FS=\"\"} {print NF,$2}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "args": [
+      "BEGIN {print \"ok\";fflush()}"
+    ],
+    "status": 0,
+    "passed": true
+  },
+  {
+    "test": "cancel loop",
+    "status": 130,
+    "passed": true
+  },
+  {
+    "test": "owned allocation cap",
+    "status": 2,
+    "passed": true
+  },
+  {
+    "test": "text cap",
+    "status": 2,
+    "passed": true
+  },
+  {
+    "test": "recursive calls",
+    "status": 2,
+    "passed": true
+  },
+  {
+    "test": "unsupported system",
+    "status": 2,
+    "passed": true
+  },
+  {
+    "test": "unsupported command pipe",
+    "status": 2,
+    "passed": true
+  },
+  {
+    "test": "write failure",
+    "status": 2,
+    "passed": true
+  }
+]

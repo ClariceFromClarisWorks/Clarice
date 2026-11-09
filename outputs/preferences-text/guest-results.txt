@@ -1,0 +1,6 @@
+PREFERENCES-CLI-START
+invalid-size:2
+invalid-scrollback:2
+invalid-columns:2
+missing-font:2
+PREFERENCES-CLI-END

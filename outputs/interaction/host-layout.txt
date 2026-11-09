@@ -1,0 +1,2 @@
+PASS: wrapped input and cursor bounds across widths 3..130 and 0..1023 input bytes
+PASS: escaped, quoted and chained line continuation cases

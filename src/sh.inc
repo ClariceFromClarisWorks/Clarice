@@ -38,7 +38,7 @@ strcpy(unix_cwd,s->unixdir);
 #endif
 for(int i=0;i<16;i++){mrsh_command_destroy(sh_functions[i].body);strcpy(sh_functions[i].name,s->function_names[i]);sh_functions[i].body=s->functions[i];}free(s);}
 static unsigned long sh_temp_serial;
-static int sh_temp(short *ref,unsigned char *name){char path[PATH_CAP];int e,i;for(i=0;i<100;i++){snprintf(path,sizeof path,"%.470sClarice temp %lu",home_path,++sh_temp_serial);pstr(name,path);e=HCreate(0,0,name,'S6UX','TEXT');if(!e){e=HOpen(0,0,name,fsRdWrPerm,ref);if(e)HDelete(0,0,name);return e;}if(e!=dupFNErr)return e;}return dupFNErr;}
+static int sh_temp(short *ref,unsigned char *name){char path[PATH_CAP];int e,i;for(i=0;i<100;i++){snprintf(path,sizeof path,"%.220stmp:clarice-pipe-%lu",home_path,++sh_temp_serial);pstr(name,path);e=HCreate(0,0,name,'S6UX','TEXT');if(!e){e=HOpen(0,0,name,fsRdWrPerm,ref);if(e)HDelete(0,0,name);return e;}if(e!=dupFNErr)return e;}return dupFNErr;}
 static void sh_temp_close(short ref,unsigned char *name){if(ref>=0)FSClose(ref);HDelete(0,0,name);}
 static int sh_arith(struct mrsh_arithm_expr *e,long *v){long a,b;char num[32];if(!e)return 0;switch(e->type){
 case MRSH_ARITHM_LITERAL:*v=((struct mrsh_arithm_literal*)e)->value;return 1;
@@ -136,6 +136,7 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
  for(i=0;commands[i];i++)if(!strcmp(commands[i],v[0]))return run_args(n,v);
  char candidate[PATH_CAP];int found=command_path(v[0],candidate);
  if(found<0)return 126;if(found){shell_commands++;return program_kind(candidate)==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
+ if(!strcmp(v[0],"chmod")){errsay("chmod: command not found; did you mean hfsattr?\n");return 127;}
  errsay("command not found: ");errsay(v[0]);errsay("\n");return 127;}
 #endif
 

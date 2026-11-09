@@ -1,0 +1,35 @@
+PIPELINES-START
+4 8 40 /tmp/pipeline-data
+wc:0
+alpha one
+beta two
+head:0
+one
+two
+two
+three
+cut:0
+ALPHA ONE
+BETA TWO
+BETA TWO
+GAMMA THREE
+tr:0
+      1 alpha one
+      2 beta two
+      1 gamma three
+uniq:0
+3
+pipe:0
+19
+redirect:0
+invalid:1
+missing:1
+bound:2
+help:wc:0
+help:head:0
+help:cut:0
+help:tr:0
+help:uniq:0
+Runtime: heap=431800 largest=431112 image=7160 ticks=50 load=45 owned-peak=1596 remaining=0
+Runtime: heap=431800 largest=431112 image=7160 ticks=62 load=45 owned-peak=2466 remaining=0
+PIPELINES-END

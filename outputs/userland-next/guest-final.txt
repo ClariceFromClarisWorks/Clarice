@@ -1,0 +1,51 @@
+FILES-START
+mkdir:0
+/tmp/ul-test/new: type='....' creator='....' flags=0000 locked=off invisible=off
+/tmp/ul-test/new: type='TEXT' creator='TEST' flags=0000 locked=off invisible=off
+copy:0
+/tmp/ul-test/copy: HFS file, type 'TEXT', creator 'TEST', data 14 bytes, resource 36 bytes
+overwrite:0
+/tmp/ul-test/copy: HFS file, type '????', creator 'UNIX', data 40 bytes, resource 0 bytes
+rename:0
+move:0
+/tmp/ul-test/sub/renamed: HFS file, type 'TEXT', creator 'TEST', data 14 bytes, resource 36 bytes
+sub/renamed
+original data
+rm (Mac OS error -45)
+locked:1
+/tmp/ul-test/new: type='TEXT' creator='TEST' flags=4000 locked=off invisible=on
+rmdir (Mac OS error -47)
+nonempty:1
+chmod: command not found; did you mean hfsattr?
+chmod:127
+FILES-END
+touch (Mac OS error -43)
+missing-parent:1
+/tmp/ul-missing (Mac OS error -43)
+parent-absent:1
+INSPECT-START
+recursive:0
+/tmp/ul-copy/sub/renamed: HFS file, type 'TEXT', creator 'TEST', data 14 bytes, resource 36 bytes
+sub/renamed
+/tmp/ul-copy/new
+/tmp/ul-copy/sub/renamed
+/tmp/ul-copy/sub/renamed
+3	/tmp/ul-copy
+1.5KiB	/tmp/ul-copy
+/tmp/ul-copy/link: Clarice symbolic link to sub/renamed
+0000000 6f 72 69 67 69 6e 61 6c 20 64 61 74
+000000c
+0000009   d   a   t   a  \n
+0000014
+file
+/mnt/volume/folder
+40 /tmp/ul-more
+cp (Mac OS error -50)
+selfcopy:1
+cp (Mac OS error -50)
+descendant:1
+remove:0
+/tmp/ul-absent (Mac OS error -43)
+absent:1
+rmdir:0
+INSPECT-END

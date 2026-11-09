@@ -1,0 +1,2 @@
+PASS: 26 upstream comparisons, 5 help, 5 cancellation, 5 write-error, 3 line-limit and 4 invalid-option checks. Runtime checks allocation cap and complete release on every invocation.
+PASS: 5 additional file-operand/output comparisons.

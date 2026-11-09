@@ -23,6 +23,9 @@ static int cat_file(const char *s){char b[2048];short ref=-1;int e=0,status=0,st
  if(!standard)FSClose(ref);return status;}
 
 int clarice_main(int argc,char **av){int i,status=0;const char *name=strrchr(av[0],'/');name=name?name+1:av[0];
+ if(argc==2&&!strcmp(av[1],"--help")&&!strcmp(name,"cat")){say("cat [-u] [--] [file ...]\nCopy data forks to stdout; - reads stdin. -u is accepted (output is unbuffered).\nResource forks are preserved by cp, not included in cat output.\nStatus: 0 success, 1 file error, 2 usage, 130 interrupted.\n");return 0;}
+ if(argc==2&&!strcmp(av[1],"--help")&&!strcmp(name,"df")){say("df [-h|-k] [--] [path ...]\nShow mounted HFS volume space; default KiB, -h readable sizes.\nNo path lists every mounted HFS volume. No Unix inode/ownership statistics.\nStatus: 0 success, 1 file error, 2 usage, 130 interrupted.\n");return 0;}
+ if(argc==2&&!strcmp(av[1],"--help")&&(!strcmp(name,"benchls")||!strcmp(name,"benchscan"))){say("benchls [directory] | benchscan [directory]\nRun three listing or catalog-only timing passes; emulator ticks are not real-hardware benchmarks.\n");return 0;}
  if(!strcmp(name,"ls"))return ls_command(argc,av);
  if(!strcmp(name,"df"))return df_command(argc,av);
  if(!strcmp(name,"cat")){int files=0,options=1;for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&!strcmp(av[i],"-u"))continue;if(options&&av[i][0]=='-'&&av[i][1]){errsay("usage: cat [-u] [--] [file ...]\n");return 2;}files++;int e=cat_file(av[i]);if(e==130)return e;if(e)status=e;}return files?status:cat_file("-");}

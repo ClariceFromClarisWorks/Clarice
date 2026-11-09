@@ -1,0 +1,6 @@
+d          9 items               Nov  9  2026 bin
+d          0 items               Nov  8 19:52 dev
+d          7 items               Nov  9  2026 etc
+d          0 items               Nov  8 19:52 mnt
+d         97 items               Nov  9  2026 tmp
+d          1 item                Nov  8 19:52 usr

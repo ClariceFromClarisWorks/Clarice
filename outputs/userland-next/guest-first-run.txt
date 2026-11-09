@@ -1,0 +1,147 @@
+FILES-START
+mkdir (Mac OS error -43)
+mkdir:1
+hfsattr (Mac OS error -120)
+hfsattr (Mac OS error -120)
+touch (Mac OS error -120)
+hfsattr (Mac OS error -120)
+cp (Mac OS error -120)
+copy:1
+/tmp/ul-test/copy (Mac OS error -120)
+cp (Mac OS error -120)
+overwrite:1
+/tmp/ul-test/copy (Mac OS error -120)
+cp (Mac OS error -120)
+mv (Mac OS error -120)
+rename:1
+mv (Mac OS error -120)
+move:1
+/tmp/ul-test/sub/renamed (Mac OS error -120)
+ln (Mac OS error -120)
+readlink (Mac OS error -120)
+cat (Mac OS error -120)
+hfsattr (Mac OS error -120)
+rm (Mac OS error -120)
+locked:1
+hfsattr (Mac OS error -120)
+hfsattr (Mac OS error -120)
+rmdir (Mac OS error -120)
+nonempty:1
+chmod: command not found; did you mean hfsattr?
+chmod:127
+FILES-END
+INSPECT-START
+recursive:0
+/tmp/ul-copy/sub/renamed (Mac OS error -120)
+readlink (Mac OS error -120)
+/tmp/ul-copy
+0	/tmp/ul-copy
+0B	/tmp/ul-copy
+/tmp/ul-copy/link (Mac OS error -120)
+0000000 6f 72 69 67 69 6e 61 6c 20 64 61 74
+000000c
+0000009   d   a   t   a  \n
+0000014
+file
+/mnt/volume/folder
+40 /tmp/ul-more
+cp (Mac OS error -120)
+selfcopy:1
+cp (Mac OS error -120)
+descendant:1
+remove:0
+/tmp/ul-absent (Mac OS error -43)
+absent:1
+rmdir:0
+INSPECT-END
+AWK-FORMAT-START
+42 0007 ff 4294967295
+-0000042  077
+1.41421 8
+1.25
+awk:0
+AWK-FORMAT-END
+MORE-PIPELINES-START
+beta two
+gamma three
+tail:0
+three
+beta two
+beta two
+gamma three
+4
+tee:0
+appended
+5 /tmp/ul-tee
+sort:0
+sorted:0
+0000 sort fixture line abcdefghijklmnop
+0001 sort fixture line abcdefghijklmnop
+0518 sort fixture line abcdefghijklmnop
+0519 sort fixture line abcdefghijklmnop
+-1
+3
+10
+20
+alpha one
+beta two
+gamma three
+Runtime: heap=422830 largest=419436 image=29800 ticks=127 load=102 owned-peak=2637 remaining=0
+Runtime: heap=422830 largest=419436 image=8972 ticks=67 load=53 owned-peak=1624 remaining=0
+MORE-PIPELINES-END
+HELP-START
+ls:0
+df:0
+cat:0
+grep:0
+sed:0
+awk:0
+wc:0
+head:0
+tail:0
+cut:0
+tr:0
+sort:0
+uniq:0
+tee:0
+cp:0
+mv:0
+touch:0
+mkdir:0
+rmdir:0
+rm:0
+ln:0
+readlink:0
+hfsattr:0
+find:0
+du:0
+file:0
+od:0
+basename:0
+dirname:0
+more:0
+builtin:cd:0
+builtin:pwd:0
+builtin:echo:0
+builtin:printf:0
+builtin:export:0
+builtin:unset:0
+builtin:set:0
+builtin:shift:0
+builtin:read:0
+builtin:sh:0
+builtin:.:0
+builtin:test:0
+builtin:true:0
+builtin:false:0
+builtin:break:0
+builtin:continue:0
+builtin:return:0
+builtin:exit:0
+builtin:history:0
+builtin:prefs:0
+builtin:status:0
+builtin:clear:0
+help: unknown builtin; try command --help for an external utility
+unknown:1
+HELP-END

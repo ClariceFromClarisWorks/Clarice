@@ -1,3 +1,5 @@
+/* Multiversal declares KillIO but does not supply its 68K glue. */
+static pascal OSErr module_kill_io(short ref){ParamBlockRec pb;memset(&pb,0,sizeof pb);pb.ioParam.ioRefNum=ref;return PBKillIOSync(&pb);}
 extern unsigned long asm_fnv1a(unsigned long,const unsigned char *,unsigned long);
 /* CLX1: bounded, relocatable native commands, independently loaded per run. */
 static unsigned long clx_u32(const unsigned char *p){return ((unsigned long)p[0]<<24)|((unsigned long)p[1]<<16)|((unsigned long)p[2]<<8)|p[3];}
@@ -9,10 +11,15 @@ extern unsigned long __umodsi3(unsigned long,unsigned long);
 static void *clx_import(const char *name){
 #define EXPORT(symbol) if(!strcmp(name,#symbol))return (void*)symbol
 #define DATA(symbol) if(!strcmp(name,#symbol))return (void*)&symbol
+ EXPORT(app_pager_begin);EXPORT(app_pager_end);EXPORT(cli_mac_time);EXPORT(cli_native_create);EXPORT(cli_native_delete);EXPORT(cli_native_mkdir);EXPORT(cli_native_open);EXPORT(cli_native_close);EXPORT(cli_native_read);EXPORT(cli_native_write);EXPORT(cli_native_set);EXPORT(cli_native_lock);EXPORT(cli_native_nth);EXPORT(cli_native_rename);EXPORT(cli_native_move);EXPORT(link_target);EXPORT(protected_path);
+ EXPORT(app_serial_input);EXPORT(app_serial_key);
+ EXPORT(cli_environment);EXPORT(cli_path_kind);EXPORT(cli_unix_time);
+ EXPORT(memcmp);EXPORT(strtoll);EXPORT(strtoul);EXPORT(atof);EXPORT(atoi);EXPORT(strtod);EXPORT(strncpy);EXPORT(getc);EXPORT(putc);EXPORT(wctomb);EXPORT(vsnprintf);
+ EXPORT(isalnum);EXPORT(isalpha);EXPORT(iscntrl);EXPORT(isdigit);EXPORT(isgraph);EXPORT(islower);EXPORT(isprint);EXPORT(ispunct);EXPORT(isspace);EXPORT(isupper);EXPORT(isxdigit);EXPORT(tolower);EXPORT(toupper);
  EXPORT(cli_ticks);EXPORT(cli_isatty);EXPORT(memchr);EXPORT(bsearch);EXPORT(memmove);EXPORT(fwrite);EXPORT(strcat);EXPORT(strtol);EXPORT(strpbrk);EXPORT(strcspn);EXPORT(ungetc);
  EXPORT(app_activity_interactive);
  EXPORT(cli_port_stats);EXPORT(cli_alloc);EXPORT(cli_free);
- EXPORT(cli_file_open);EXPORT(cli_file_read);EXPORT(cli_file_write);EXPORT(cli_file_close);
+ EXPORT(cli_file_size);EXPORT(cli_file_seek);EXPORT(cli_stream_size);EXPORT(cli_pause_ticks);EXPORT(cli_temp_create);EXPORT(cli_remove);EXPORT(cli_file_open);EXPORT(cli_file_read);EXPORT(cli_file_write);EXPORT(cli_file_close);
  EXPORT(funopen);EXPORT(setvbuf);EXPORT(__errno);EXPORT(longjmp);EXPORT(setjmp);
  EXPORT(malloc);EXPORT(free);EXPORT(__mulsi3);EXPORT(fmemopen);EXPORT(fclose);EXPORT(fgetc);EXPORT(fputs);
  EXPORT(strcasecmp);EXPORT(strncasecmp);EXPORT(strstr);EXPORT(strncmp);EXPORT(strnlen);EXPORT(strerror);
@@ -24,6 +31,10 @@ static void *clx_import(const char *name){
  EXPORT(memset);EXPORT(strcpy);EXPORT(snprintf);EXPORT(app_columns);EXPORT(resolve_ex);EXPORT(app_page_begin);
  EXPORT(info);EXPORT(resolve);EXPORT(encode_name);EXPORT(volume_name);EXPORT(parent_path);EXPORT(strrchr);
  EXPORT(app_output_batch);EXPORT(strchr);EXPORT(same_name);EXPORT(__muldi3);EXPORT(__udivsi3);EXPORT(__umodsi3);EXPORT(app_profile);
+ if(!strcmp(name,"OPENDRIVER"))return (void*)OpenDriver;if(!strcmp(name,"CLOSEDRIVER"))return (void*)CloseDriver;
+ if(!strcmp(name,"KILLIO"))return (void*)module_kill_io;if(!strcmp(name,"SERRESET"))return (void*)SerReset;
+ if(!strcmp(name,"SERSETBUF"))return (void*)SerSetBuf;if(!strcmp(name,"SERGETBUF"))return (void*)SerGetBuf;
+ if(!strcmp(name,"SERHSHAKE"))return (void*)SerHShake;if(!strcmp(name,"FSWRITE"))return (void*)FSWrite;
  if(!strcmp(name,"FSREAD"))return (void*)FSRead;if(!strcmp(name,"FSCLOSE"))return (void*)FSClose;
 #undef DATA
 #undef EXPORT
@@ -49,7 +60,7 @@ static int module_run(const char *path,int argc,char **argv){
  for(unsigned long i=0;i<nr;i++){unsigned char *r=records+i*12;unsigned long at=clx_u32(r),kind=clx_u32(r+4),target=clx_u32(r+8);clx_put32(file+at,kind==1?(unsigned long)file+target:(unsigned long)imports[target]+clx_u32(file+at));}
  DisposePtr((Ptr)meta);meta=0;FSClose(ref);ref=-1;executed=1;module_load_ticks=TickCount()-started;status=((int (*)(int,char**))(file+entry))(argc,argv)&255;
 close:
- if(ref>=0)FSClose(ref);if(meta)DisposePtr((Ptr)meta);if(file)DisposePtr((Ptr)file);if(!executed&&status!=130)errsay("command: cannot execute this image\n");app_activity_interactive(0);module_ticks=TickCount()-started;return status;
+ if(ref>=0)FSClose(ref);if(meta)DisposePtr((Ptr)meta);if(file)DisposePtr((Ptr)file);if(!executed&&status!=130)errsay("command: cannot execute this image\n");app_activity_interactive(0);app_serial_input(0);module_ticks=TickCount()-started;return status;
 }
 
 /* Packaged command images are resources only for installation; executions read /bin. */
@@ -72,5 +83,21 @@ static int install_commands(void){
  static const char *const core[]={"ls","df","cat","benchls","benchscan",0};
  static const char *const grep[]={"grep",0};
  static const char *const sed[]={"sed",0};
- int e=install_command_set(200,core);if(!e)e=install_command_set(201,grep);return e?e:install_command_set(202,sed);
+ static const char *const awk[]={"awk",0};
+ static const char *const serial[]={"serial",0};
+ int e=install_command_set(200,core);if(!e)e=install_command_set(201,grep);if(!e)e=install_command_set(202,sed);if(!e)e=install_command_set(203,awk);if(!e)e=install_command_set(204,serial);
+ static const char *const wc[]={"wc",0};if(!e)e=install_command_set(205,wc);
+ static const char *const head[]={"head",0};if(!e)e=install_command_set(206,head);
+ static const char *const cut[]={"cut",0};if(!e)e=install_command_set(207,cut);
+ static const char *const tr[]={"tr",0};if(!e)e=install_command_set(208,tr);
+ static const char *const uniq[]={"uniq",0};if(!e)e=install_command_set(209,uniq);
+ static const char *const tee[]={"tee",0};if(!e)e=install_command_set(210,tee);
+ static const char *const tail[]={"tail",0};if(!e)e=install_command_set(211,tail);
+ static const char *const sort[]={"sort",0};if(!e)e=install_command_set(212,sort);
+ static const char *const files[]={"cp","mv","touch","rmdir","mkdir","rm","ln","readlink","hfsattr",0};if(!e)e=install_command_set(213,files);
+ static const char *const inspect[]={"find","du","file",0};if(!e)e=install_command_set(214,inspect);
+ static const char *const misc[]={"od","more",0};if(!e)e=install_command_set(215,misc);
+ static const char *const bn[]={"basename",0};if(!e)e=install_command_set(216,bn);
+ static const char *const dn[]={"dirname",0};if(!e)e=install_command_set(217,dn);
+ return e;
 }

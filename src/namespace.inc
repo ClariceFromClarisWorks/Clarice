@@ -37,12 +37,6 @@ static int resolve_ex(const char *s,char *native,char *canonical,int follow){cha
 static int resolve(const char *s,char *out){return resolve_ex(s,out,0,1);}
 static int protected_path(const char *canonical){if(!strcmp(canonical,"/")||!strcmp(canonical,"/mnt"))return 1;if(!strncmp(canonical,"/mnt/",5)&&!strchr(canonical+5,'/'))return 1;return 0;}
 static int create_dir(const unsigned char *name,long *id){HParamBlockRec pb;memset(&pb,0,sizeof pb);pb.fileParam.ioNamePtr=(unsigned char*)name;int e=PBDirCreateSync(&pb);if(!e)*id=pb.fileParam.ioDirID;return e;}
-static int namespace_command(int argc,char **av){char native[PATH_CAP],canonical[PATH_CAP],target[PATH_CAP];unsigned char name[256];int e;
- if(!strcmp(av[0],"ln")){if(argc!=4||strcmp(av[1],"-s")){say("usage: ln -s target link (hard links unsupported)\n");return 2;}if(!*av[2]||strlen(av[2])>=PATH_CAP)return 2;e=resolve_ex(av[3],native,canonical,0);if(!e&&protected_path(canonical))e=paramErr;if(!e){short ref;pstr(name,native);e=HCreate(0,0,name,'S6UX','S6LK');if(!e){e=HOpen(0,0,name,fsWrPerm,&ref);if(!e){long n=5;e=FSWrite(ref,&n,"S6L1\n");if(!e&&n!=5)e=ioErr;if(!e){n=strlen(av[2]);e=FSWrite(ref,&n,av[2]);if(!e&&n!=(long)strlen(av[2]))e=ioErr;}FSClose(ref);}if(e)HDelete(0,0,name);}}}
- else if(!strcmp(av[0],"readlink")){if(argc!=2)return 2;e=resolve_ex(av[1],native,canonical,0);if(!e)e=link_target(native,target);if(!e){say(target);say("\n");}}
- else {if(argc!=2){say("usage: mkdir directory | rm file\n");return 2;}e=resolve_ex(av[1],native,canonical,0);if(!e&&protected_path(canonical))e=paramErr;if(!e){pstr(name,native);if(!strcmp(av[0],"mkdir")){long id;e=create_dir(name,&id);}else{CInfoPBRec pb;e=info(native,&pb);if(!e&&(pb.hFileInfo.ioFlAttrib&16))e=paramErr;if(!e)e=HDelete(0,0,name);}}}
- if(e){error(av[0],e);return 1;}return 0;
-}
 void shell_prompt(char *out,size_t cap){const char *dir=strrchr(unix_cwd,'/');dir=dir&&dir[1]?dir+1:"/";const char *host=env_get("HOSTNAME");char safe[33];int n=0;while(*host&&n<32){unsigned char c=*host++;if(isalnum(c)||c=='-'||c=='_'||c=='.')safe[n++]=c;}safe[n]=0;if(n)snprintf(out,cap,"%s %s > ",safe,dir);else snprintf(out,cap,"%s > ",dir);}
 /* First-run installer. Locate the running System's actual directory by WD ID,
    never by assuming its folder name or the application's launch volume. */
@@ -52,6 +46,41 @@ static int namespace_install(void){SysEnvRec sys;WDPBRec wd;HParamBlockRec vp;CI
  id=wd.ioWDDirID;if(id<=2)id=vp.volumeParam.ioVFndrInfo[0];if(id<=2)return dirNFErr;
  for(int depth=0;id>2&&depth<32;depth++){memset(&cat,0,sizeof cat);cat.dirInfo.ioNamePtr=name;cat.dirInfo.ioVRefNum=wd.ioWDVRefNum;cat.dirInfo.ioDrDirID=id;cat.dirInfo.ioFDirIndex=-1;e=PBGetCatInfoSync(&cat);if(e)return e;if(name[0]+strlen(tail)+2>=sizeof part)return bdNamErr;memcpy(part,name+1,name[0]);part[name[0]]=':';strcpy(part+name[0]+1,tail);strcpy(tail,part);id=cat.dirInfo.ioDrParID;}
  if(id!=2||strlen(root_path)+strlen(tail)+32>255)return bdNamErr;strcat(root_path,tail);strcat(root_path,"Clarice Data:");
- static const char *dirs[]={"","bin","etc","tmp","dev","mnt","usr","usr:bin",0};for(int i=0;dirs[i];i++){snprintf(part,sizeof part,"%s%s",root_path,dirs[i]);size_t n=strlen(part);if(part[n-1]==':')part[n-1]=0;pstr(name,part);e=create_dir(name,&id);if(e==dupFNErr){e=info(part,&cat);if(!e&&!(cat.hFileInfo.ioFlAttrib&16))e=dirNFErr;}if(e)return e;}
+ static const char *dirs[]={"","bin","etc","etc:clarice","tmp","dev","mnt","usr","usr:bin",0};for(int i=0;dirs[i];i++){snprintf(part,sizeof part,"%s%s",root_path,dirs[i]);size_t n=strlen(part);if(part[n-1]==':')part[n-1]=0;pstr(name,part);e=create_dir(name,&id);if(e==dupFNErr){e=info(part,&cat);if(!e&&!(cat.hFileInfo.ioFlAttrib&16))e=dirNFErr;}if(e)return e;}
  snprintf(part,sizeof part,"%.240setc:profile",root_path);pstr(name,part);e=HCreate(0,0,name,'S6UX','TEXT');if(e==dupFNErr)return 0;if(e)return e;short ref;e=HOpen(0,0,name,fsWrPerm,&ref);if(!e){static const char profile[]="# Clarice startup profile; sourced once at launch.\nexport PATH=/bin:/usr/bin\n# Optional local hostname (no networking required):\n# export HOSTNAME=macplus\n";long n=sizeof profile-1;e=FSWrite(ref,&n,profile);if(!e&&n!=sizeof profile-1)e=ioErr;FSClose(ref);}if(e)HDelete(0,0,name);FlushVol(0,0);return e;
+}
+
+/* Rename within a catalog directory: System 6 rejects a full source path
+   for this operation on some HFS drivers. Resolve volume and parent first. */
+int shell_rename(const unsigned char *source,const unsigned char *newname){
+ char path[256];unsigned char volume[256],leaf[256];CInfoPBRec cat;HParamBlockRec pb;
+ memcpy(path,source+1,source[0]);path[source[0]]=0;char *colon=strchr(path,':'),*last=strrchr(path,':');if(!colon||!last||!last[1])return bdNamErr;
+ int e=info(path,&cat);if(e)return e;int len=colon-path;volume[0]=len;memcpy(volume+1,path,len);pstr(leaf,last+1);
+ memset(&pb,0,sizeof pb);pb.volumeParam.ioNamePtr=volume;e=PBHGetVInfoSync(&pb);if(e)return e;
+ short vr=pb.volumeParam.ioVRefNum;long parent=cat.hFileInfo.ioFlParID;
+ memset(&pb,0,sizeof pb);pb.fileParam.ioVRefNum=vr;pb.fileParam.ioDirID=parent;pb.fileParam.ioNamePtr=leaf;pb.ioParam.ioMisc=(Ptr)newname;return PBHRenameSync(&pb);
+}
+void shell_temp_path(char *out,const char *file){snprintf(out,PATH_CAP,"%.220stmp:%.31s",root_path,file);}
+/* Copy migration commits by rename, never overwrites an existing destination.
+   Failure leaves the legacy file usable. Fixed 512-byte transfer buffer. */
+static int migrate_private_file(char *out,const char *folder,const char *file,const char *legacy){
+ char old[PATH_CAP],temp[PATH_CAP];unsigned char dest[256],src[256],tmp[256],base[256];CInfoPBRec pb;short in=-1,to=-1;long size=0;int e;
+ if(strlen(root_path)+strlen(folder)+strlen(file)>255){out[0]=0;return bdNamErr;}strcpy(out,root_path);strcat(out,folder);strcat(out,file);
+ e=info(out,&pb);if(!e)return 0;if(e!=fnfErr)return e;
+ snprintf(old,sizeof old,"%s%s",root_path,legacy);e=info(old,&pb);if(e==fnfErr)return 0;if(e)goto fail;if((pb.hFileInfo.ioFlAttrib&16)||pb.hFileInfo.ioFlRLgLen){e=paramErr;goto fail;}
+ pstr(src,old);pstr(dest,out);strcpy(temp,root_path);strcat(temp,folder);strcat(temp,"migrate.tmp");pstr(tmp,temp);pstr(base,file);
+ e=HOpen(0,0,src,fsRdPerm,&in);if(e)goto fail;e=GetEOF(in,&size);if(e||size>132000){e=paramErr;goto fail;}
+ e=HCreate(0,0,tmp,'S6UX','DATA');if(e)goto fail;
+ e=HOpen(0,0,tmp,fsWrPerm,&to);if(!e){char buffer[512];while(size&&!e){long n=size>512?512:size,want=n;e=FSRead(in,&n,buffer);if(!e&&n!=want)e=ioErr;if(!e){e=FSWrite(to,&n,buffer);if(!e&&n!=want)e=ioErr;}size-=want;}}
+ if(to>=0){int close=FSClose(to);to=-1;if(!e)e=close;}if(!e)e=FlushVol(0,0);
+ if(!e)e=shell_rename(tmp,base);if(e)HDelete(0,0,tmp);
+ if(in>=0){FSClose(in);in=-1;}if(!e){HDelete(0,0,src);FlushVol(0,0);return 0;}
+ fail:if(in>=0)FSClose(in);strcpy(out,old);{char msg[100];snprintf(msg,sizeof msg,"State migration deferred (%d); original file retained.\n",e);term_puts(msg);}return e;
+}
+
+int shell_state_path(char *out,const char *file,const char *legacy){return migrate_private_file(out,"etc:clarice:",file,legacy);}
+static void migrate_reports(void){
+ static const char *old[]={"Cached Scroll Report","Native Scroll Report","Scroll Report","Phase1 Report","Drag Report"};
+ static const char *names[]={"legacy-cached-scroll.txt","legacy-native-scroll.txt","legacy-scroll.txt","legacy-phase1.txt","legacy-drag.txt"};
+ for(int i=0;i<5;i++){char path[PATH_CAP];migrate_private_file(path,"tmp:",names[i],old[i]);}
 }

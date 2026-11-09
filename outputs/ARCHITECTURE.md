@@ -300,3 +300,116 @@ Short-lived allocation reuse is capped at 8 KiB within the same 96 KiB ownership
 A passive activity overlay occupies the top-right text cell, never the scrollback model or output stream. It appears after 300 ticks without terminal output and cycles clockwise through vertical, slash, horizontal and backslash at 30-tick intervals. Output, return or cancellation removes it and restores underlying pixels. Canonical input, paging and interactive screen ownership suppress it. Future full-screen tool adapters must explicitly claim ownership with app_activity_interactive; mere long-running loops do not identify an editor.
 
 Larger tools may justify a separate MultiFinder worker application with its own partition. Current /bin programs execute within Clarice's partition. System 6 temporary-memory handles cannot be treated like System 7 handles across event processing; do not adopt that as an untested workaround.
+
+## Awk port and initial serial milestone, 9 November 2026
+
+The pinned One True Awk source is a separately loaded /bin image, retaining its own parser, evaluator and regex engine. The shared ownership ceiling remains96 KiB, with dynamic small initial text/regex buffers, a16 KiB text-buffer limit, parser stack128 entries and evaluation depth64. Mathematical routines use software floating point linked into the disposable command image. Clarice's SIZE partition is being tested at768 KiB on the4 MB Plus; the extra image and working memory cannot be promised inside the earlier384 KiB partition. system() and command pipes inside awk fail explicitly; ordinary shell pipelines around awk use the existing sequential HFS spool. Host comparisons are necessary but guest validation remains the release gate.
+
+Initial serial access uses the installed System6 Serial Driver, modem port A,8N1 at selected standard rates, with a fixed1 KiB receive buffer and bounded transfers. It must restore driver buffers and close references on success, error, timeout and cancellation. No replacement TCP stack or direct SCC programming is needed. A separate /bin/serial program may use an explicit bounded keyboard queue for a simple text session; this is not yet VT/ANSI emulation, Telnet, SSH, file transfer or a general /dev device layer.
+
+The host test uses Snow's local PTY serial bridge, whose peer is a bounded Python responder. It exposes no network listener and executes no host shell commands. A fixed ping/pong probe verifies guest-to-host and host-to-guest bytes; a short text session checks interactive input and clean disconnect. Physical cabling, handshaking and real hardware remain unverified. Printer/AppleTalk ownership is outside this initial modem-only scope.
+
+## Preferences and utility priority, 9 November 2026
+
+Preferences now use a bounded, non-executable text configuration at
+`/etc/clarice/clarice.conf`; history retains its capped binary ring at
+`/etc/clarice/clarice.history`. Existing root-level Clarice Preferences/History
+are migrated without replacing an existing destination. The native dialog
+exposes every `prefs` setting, including installed fonts via a popup list,
+colours, size, columns, paging, retention, renderer/cache and reversible fill.
+The top-level Font menu is removed. Guest verification is recorded separately
+in outputs/preferences-text; implementation is not itself execution evidence.
+
+After preferences, the agreed order is:
+1. Everyday pipelines: wc, head, tail, cut, tr, sort, uniq, tee.
+2. File operations: cp, mv, touch, rmdir; move mkdir, rm, ln and readlink to /bin.
+3. Inspection: find, du, file, od, basename, dirname.
+4. Consistent --help, help for builtins, and standalone more.
+5. Serial client, then a faithful small vi or nano port; Telnet/SSH separately.
+
+Use sbase where suitable, preserving authors, per-file notices, licence and
+pinned provenance. Get correct bounded implementations working first; measure
+and optimise each subsequently. Sort must spill to disk when necessary, and
+tail -f must remain cancellable. Ownership/process tools require meaningful
+Macintosh behaviour rather than invented Unix semantics. Previously started
+serial work remains unfinished and is deferred behind these utility groups.
+
+Private temporary files and diagnostics belong under /tmp, never loose in the
+Clarice root. Pipeline/substitution files are deleted on completion and normal
+cancellation. Do not wipe arbitrary /tmp contents on exit: user scripts may
+have deliberately saved files there. Crash-orphan recovery remains future work.
+Settings/history remain in /etc/clarice; future persistent logs should use
+/var/log/clarice. Known old root-level diagnostic reports migrate to /tmp with
+legacy-prefixed names, preserving content and refusing destination collisions.
+
+## Everyday pipeline ports (9 November 2026)
+
+`wc`, `head`, `cut`, `tr` and `uniq` are separate CLX1 programs installed in
+`/bin` and resolved by PATH. Their pinned sbase source files remain pristine;
+`prepare-pipelines.py` adds explicit help and a cooperative poll in `tr`.
+The common runtime redirects `putchar` as well as formatted output to the
+active command's stdout. This is required for newlines/separators to follow
+redirections and pipeline spools correctly. The shell exports `memcmp`,
+`strtoul` and `strtoll` for these ports. No CPU beyond the 68000 is required.
+
+Retain 96 KiB invocation allocation and 16 KiB line bounds. `wc` and `tr`
+stream input without retaining complete lines. Unicode classification is
+upstream UTF-8; font encoding/serial terminal emulation is a separate concern.
+Do not claim GNU option parity or concurrent pipelines. Disk-spilling `sort`,
+`tail` with cooperative follow, and `tee` remain the next work.
+
+
+## Current utility completion work (9 November 2026)
+
+The remaining pipeline tools use the same pinned sbase source: tee/tail receive
+owned descriptor I/O and cooperative sleep; sort retains upstream option/key
+comparison code with a bounded external merge driver. Private sort runs live in
+/tmp and are owned through completion/error/cancellation. Tail -m and tee -i are
+explicitly unsupported, not silently approximated.
+
+File operations and catalog inspection use original native HFS implementations
+inside independently loadable files/inspect command images. cp stages both
+forks before replacing an existing file. Metadata editing is hfsattr; chmod has
+no meaningful permission model here and remains absent, with a command-not-found
+hint pointing to hfsattr. touch does not infer type or creator for new files.
+Ordinary mkdir/rm/ln/readlink implementations move out of the shell, leaving only
+shared platform/namespace primitives in the host application. Native od/more
+and upstream basename/dirname complete the planned inspection/pager names.
+Help must describe actual supported options and limits, not claim full Unix or
+GNU parity. Publication waits for guest validation of all four requested groups.
+
+## Interactive editing update (9 November 2026)
+
+The command editor wraps by terminal columns and keeps its cursor in view when
+an editable line occupies more rows than the window. A cursor marker in the
+bounded screen model makes the inverse block part of each offscreen row/frame;
+typing no longer removes a visible cursor before painting its replacement.
+Both native and optional cached renderers consume the same compositor.
+
+Busy-command typeahead uses 1024 key slots and fixed modifier storage (3 KiB),
+replayed by the outer event loop without recursive command execution. A full
+queue beeps and refuses further keys. Pager, serial and canonical-input owners
+retain their keys; cancellation still takes effect immediately. Explicit
+backslash-Return continuation uses a separate bounded 1 KiB assembly buffer
+and `> ` prompt. The escaped newline is removed before parsing, including
+within double quotes; single-quoted backslashes remain literal. Ctrl+C clears
+the unfinished command. This does not claim automatic continuation for every
+incomplete shell grammar construct.
+
+The activity clock retains overdue half-second deadlines, presenting one next
+clockwise frame per cooperative visit rather than selecting a frame directly
+from elapsed time. Painting commits a deadline; inaccessible/dirty views do
+not consume frames. Completion and interactive screen ownership suppress it.
+No interrupt-time drawing or extra animation allocation is introduced.
+
+## Priority update, 9 November 2026
+
+After the utility release, prioritise a faithful upstream nano port (evaluate
+tiny configuration) ahead of further serial client/host-server work. Preserve
+nano source, licences and authorship; implement only the required native
+screen/input and file/runtime adapters, and validate editing/saving/cancellation
+and bounded memory on Plus/4 MB. A source assessment or host build is not a
+completed Macintosh port. Serial work stays deferred.
+
+Nano dependency decision: use upstream ncurses, with native Macintosh platform
+services beneath it. Do not replace curses with a nano-specific imitation.
