@@ -1,0 +1,2 @@
+command: native:Sys6Unix:System Folder:Clarice Data:bin:.clx-task2bad.new: incompatible runtime requirement (host is 1.0)
+appinstall (Mac OS error -50)

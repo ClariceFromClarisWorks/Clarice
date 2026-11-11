@@ -1,0 +1,2 @@
+PASS: explicit refs, case/spaces, indexed lookup, absent/ambiguous/invalid/error fail closed
+PASS: regression rejects previous zero-reference behavior

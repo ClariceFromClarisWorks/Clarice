@@ -1,0 +1,27 @@
+Clarice 0.4.0 - Macintosh Plus / System 6.0.8 / 4 MB
+
+This is an APPLICATION disk, not a bootable System disk.
+BlueSCSI: copy HD60_512_Clarice-0.4.0.hda onto the SD card.
+ZuluSCSI: use HD6_Clarice-0.4.0.hda for the same image.
+These names use SCSI ID 6. Choose a different unused ID if 6 is occupied.
+Keep your existing System disk and boot from it.
+Open the Clarice 0.4 disk, copy Clarice to your normal application folder,
+on your BOOT disk, then launch it. Running directly from a secondary disk
+can report preferences-save error -43; the previous preferences are retained.
+Quit the previous Clarice before replacing the application.
+Clarice Data remains in your existing System Folder.
+
+Existing /bin commands and configuration are preserved at startup.
+Use appinstall --help for explicit repair/replacement/recovery operations.
+New empty installations receive bundled commands automatically.
+
+Includes selection/input responsiveness fixes, multi-volume HFS correction,
+and safe independent command updates. Nano is not bundled as a working editor.
+The application requests 768 KB; baseline machine RAM is 4 MB.
+
+Tested in Snow emulating Plus/System 6.0.8; physical hardware unverified.
+The device image includes an Apple_Driver43 SCSI driver partition (Apple).
+It contains no System, Finder, MultiFinder, ROM or emulator.
+
+Source, licences and full reports accompany the GitHub release:
+https://github.com/ClariceFromClarisWorks/Clarice/releases/tag/v0.4.0

@@ -1,0 +1,14 @@
+{
+  "Clarice.bin": {
+    "bytes": 765184,
+    "sha256": "0a1dd642e94332d9273544816604d91fa3eb41a938f25b40712f8ef66e180d97"
+  },
+  "Clarice.dsk": {
+    "bytes": 819200,
+    "sha256": "b5a66e7be16d533bf53c791f891eb417fa13d2a53d1033424626ff873cc70749"
+  },
+  "Task2.dsk": {
+    "bytes": 819200,
+    "sha256": "9cd471779f52a9a178e47ad0664567b3abcd4e3c744002f754d2ac9a535919de"
+  }
+}

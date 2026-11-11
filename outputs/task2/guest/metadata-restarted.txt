@@ -1,0 +1,2 @@
+/bin/grep: type='TEST' creator='TST2' flags=4100 locked=off invisible=on
+/bin/.clx-grep.old: type='TEST' creator='TST2' flags=4100 locked=off invisible=on

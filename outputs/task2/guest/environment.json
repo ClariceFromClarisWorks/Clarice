@@ -1,0 +1,13 @@
+{
+  "emulator": "Snow v1.5.0-a921b10 with existing Plus input patch",
+  "model": "Plus",
+  "ram_bytes": 4194304,
+  "overclock": null,
+  "fastforward": false,
+  "speed_log": "Emulation speed: Video",
+  "system_resource_version": "6.0.8",
+  "system_api_version": "0607",
+  "multifinder": "active; Finder and Clarice coexist, see screenshots",
+  "test_disk": "work/task2/automated/system.hda",
+  "build_reused": "outputs/task2/Clarice.bin"
+}

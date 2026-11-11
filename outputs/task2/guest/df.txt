@@ -1,0 +1,3 @@
+        Size         Used        Avail Use% Mounted on
+       31MiB       6.7MiB        24MiB  22% /mnt/Sys6Unix
+      785KiB        53KiB       731KiB   7% /mnt/Task2

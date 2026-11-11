@@ -1,0 +1,1 @@
+PASS: four guest rates, 20 safety checks, exact physical-keyboard output

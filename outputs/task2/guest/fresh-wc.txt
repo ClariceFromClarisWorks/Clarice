@@ -1,0 +1,7 @@
+wc [-l] [-w] [-c|-m] [file ...]
+Count lines, words, bytes (-c) or UTF-8 characters (-m). Default: lines words bytes.
+sbase port for Clarice. Status: 0 success; nonzero error; 130 interrupted.
+96 KiB allocation cap; line-based tools limit each line to 16 KiB.
+UTF-8 processing does not convert the terminal font from MacRoman.
+GNU-only long options are not implemented; --help is a Clarice addition.
+

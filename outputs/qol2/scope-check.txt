@@ -1,0 +1,4 @@
+src/CMakeLists.txt
+src/app.c
+src/editor-screen.inc
+tests/terminal/input-layout.py

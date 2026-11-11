@@ -1,0 +1,6 @@
+{
+  "prebuilt_artifact_hashes": "all match Task 2 manifest",
+  "preexisting_files_outside_Task2_edits_unchanged": 290,
+  "application_or_emulator_rebuilds": 0,
+  "physical_hardware_tested": false
+}

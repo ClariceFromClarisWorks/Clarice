@@ -1,0 +1,53 @@
+[
+  {
+    "heap": 405306,
+    "largest": 400880,
+    "image": 103300,
+    "ticks": 1734,
+    "load": 313,
+    "owned-peak": 40526,
+    "remaining": 0,
+    "read": 39,
+    "validate": 199,
+    "imports": 10,
+    "relocations": 36,
+    "prepare": 29,
+    "run": "first",
+    "source": "tmoe.txt",
+    "seconds": 5.216666666666667
+  },
+  {
+    "heap": 405308,
+    "largest": 400880,
+    "image": 103300,
+    "ticks": 1254,
+    "load": 279,
+    "owned-peak": 40526,
+    "remaining": 0,
+    "read": 33,
+    "validate": 198,
+    "imports": 10,
+    "relocations": 37,
+    "prepare": 1,
+    "run": "repeat 1",
+    "source": "tmt.txt",
+    "seconds": 4.65
+  },
+  {
+    "heap": 405306,
+    "largest": 400880,
+    "image": 103300,
+    "ticks": 1931,
+    "load": 278,
+    "owned-peak": 40526,
+    "remaining": 0,
+    "read": 34,
+    "validate": 198,
+    "imports": 10,
+    "relocations": 36,
+    "prepare": 0,
+    "run": "repeat 2",
+    "source": "timing-third.txt",
+    "seconds": 4.633333333333334
+  }
+]

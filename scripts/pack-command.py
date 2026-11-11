@@ -3,7 +3,7 @@
 from pathlib import Path
 import struct,sys
 u=lambda b,o:struct.unpack_from('>I',b,o)[0]
-def pack(source):
+def pack(source, runtime=None, capabilities=1):
  b=Path(source).read_bytes()
  if b[:7]!=b'\x7fELF\x01\x02\x01' or struct.unpack_from('>HH',b,16)!=(1,4):raise ValueError('requires ELF32 big-endian m68k ET_REL')
  if u(b,36)!=0x1000000:raise ValueError('requires baseline m68000 object')
@@ -61,7 +61,28 @@ def pack(source):
  checksum=2166136261
  for c in payload:checksum=((checksum^c)*16777619)&0xffffffff
  header=struct.pack('>4s7I',b'CLX1',1,len(image),entry,len(relocs),len(imports),checksum,0)
+ if runtime is not None:
+  major,minor=runtime
+  if not 0<=major<=0xffffffff or not 0<=minor<=0xffffffff or not 0<=capabilities<=0xffffffff:
+   raise ValueError('runtime/capabilities must be unsigned 32-bit values')
+  header=struct.pack('>4s10I',b'CLX1',2,len(image),entry,len(relocs),len(imports),checksum,0,major,minor,capabilities)
+  h=2166136261
+  for c in header:h=((h^c)*16777619)&0xffffffff
+  header+=struct.pack('>I',h)
  return header+payload,imports
 if __name__=='__main__':
- data,imports=pack(sys.argv[1]);Path(sys.argv[2]).write_bytes(data)
- print(f'{sys.argv[2]}: {len(data)} bytes, imports '+', '.join(s.decode() for s in imports))
+ import argparse
+ parser=argparse.ArgumentParser(description=__doc__)
+ parser.add_argument('source');parser.add_argument('output')
+ parser.add_argument('--runtime',help='required runtime MAJOR.MINOR; emits CLX format 2 (default: legacy format 1)')
+ parser.add_argument('--capabilities',type=lambda s:int(s,0),default=1,help='required capability mask; bit 0 = native-clx1 (default: 1)')
+ args=parser.parse_args()
+ runtime=None
+ if args.runtime:
+  try:
+   runtime=tuple(int(x) for x in args.runtime.split('.'))
+   if len(runtime)!=2:raise ValueError()
+  except ValueError:parser.error('--runtime must be MAJOR.MINOR')
+ elif args.capabilities!=1:parser.error('--capabilities requires --runtime')
+ data,imports=pack(args.source,runtime,args.capabilities);Path(args.output).write_bytes(data)
+ print(f'{args.output}: {len(data)} bytes, imports '+', '.join(s.decode() for s in imports))

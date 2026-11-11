@@ -1,0 +1,5 @@
+PASS host utility smoke: work/ports-host/grep -n alpha
+PASS host utility smoke: work/ports-host/grep missing
+PASS host utility smoke: work/sed-host/sed s/alpha/beta/
+PASS host utility smoke: work/awk-host/awk {print $2}
+PASS host utility smoke: work/pipelines-host/wc -l

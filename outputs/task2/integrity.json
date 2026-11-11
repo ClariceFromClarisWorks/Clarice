@@ -1,0 +1,11 @@
+{
+  "preexisting_implementation_changes": [
+    "src/shell.c",
+    "src/help.inc",
+    "src/module.inc",
+    "scripts/pack-command.py"
+  ],
+  "preserved_preexisting_files": 290,
+  "markdown_links": "pass",
+  "diff_whitespace": "pass"
+}

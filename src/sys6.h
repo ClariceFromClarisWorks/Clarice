@@ -51,3 +51,12 @@ void shell_temp_path(char *out,const char *file);
 int cli_pause_ticks(unsigned long ticks);
 
 int app_pager_begin(void),app_pager_end(int);
+
+int app_screen_active(void);
+int app_screen_open(void);
+void app_screen_close(void);
+int app_screen_rows(void);
+int app_screen_pending(void);
+void app_screen_flush_input(void);
+long app_screen_read(void *,unsigned long);
+long app_screen_write(const void *,unsigned long);

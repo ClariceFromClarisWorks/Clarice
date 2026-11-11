@@ -1,0 +1,2 @@
+appinstall: unfinished update or retained previous version; inspect .clx-*.new/.old before replacing
+appinstall (Mac OS error -48)

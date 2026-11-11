@@ -1,0 +1,56 @@
+/mnt/Test 2
+sentinel.txt
+sub/
+d--                       2026-11-11 05:33 .
+d--                                        ..
+--I          0        345 2026-11-11 16:09 Desktop
+---         14          0 2026-11-11 05:33 sentinel.txt
+d--                       2026-11-11 05:33 sub/
+/mnt/Test 2
+SECOND-VOLUME
+second.txt
+second.txt
+/mnt/Test 2/sub
+SECOND-VOLUME
+/mnt/Test 2
+/mnt/Sys6Unix
+guard
+BOOT-GUARD
+SECOND
+SECOND
+guard
+renamed
+touched
+SECOND
+SECOND
+BOOT-GUARD
+from-second
+guard
+cd (Mac OS error -35)
+invalid-cd=1
+/mnt/Test 2
+ls (Mac OS error -35)
+invalid-ls=1
+sh: output redirection failed
+invalid-write=2
+rm (Mac OS error -35)
+invalid-rm=1
+cd (Mac OS error -43)
+absent-cd=1
+/mnt/Test 2
+ls (Mac OS error -43)
+absent-ls=1
+sh: output redirection failed
+absent-write=2
+BOOT-GUARD
+SECOND
+guard
+ls -la benchmark: 4 entries, 3 runs
+First entry ticks: 3 3 4
+Total ticks: 4 4 4 (60 ticks/sec)
+Three-run paint 0 ticks; events 0 ticks
+ls -la benchmark: 1000 entries, 3 runs
+First entry ticks: 9 11 11
+Total ticks: 331 333 333 (60 ticks/sec)
+Three-run paint 0 ticks; events 10 ticks
+QOL-REGRESSION-DONE

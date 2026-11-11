@@ -1,0 +1,13 @@
+{
+  "changed_preexisting_source_files": [
+    "src/shell.c",
+    "src/port-files.inc",
+    "src/namespace.inc"
+  ],
+  "unchanged_preexisting_source_script_test_files": 298,
+  "artifacts": {
+    "outputs/task2/Clarice.bin": "0a1dd642e94332d9273544816604d91fa3eb41a938f25b40712f8ef66e180d97",
+    "outputs/qol1/Clarice.bin": "f79413ff654eb9530bb090b6f2e99eb2d02927ee525b771569f04511d688ff87",
+    "outputs/qol1/Test 2.dsk": "9ee8e861825d170832edb5b34181eda60f92cacacd287dd73597cc5209e0ba0a"
+  }
+}

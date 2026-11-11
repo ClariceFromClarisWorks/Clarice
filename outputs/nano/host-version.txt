@@ -1,0 +1,2 @@
+ GNU nano, version 9.2
+ Compiled options: --enable-tiny --disable-nls --disable-utf8

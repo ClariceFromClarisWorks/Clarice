@@ -1,6 +1,7 @@
 /* Builtin help is explicit; do not change echo/printf/test argument semantics. */
 static int builtin_help(const char *topic){
  static const struct {const char *name,*text;} entries[]={
+ {"appinstall","Use appinstall --help for explicit command checking, replacement, repair and recovery.\n"},
  {"cd","cd [directory]\nChange shell directory; default is the Clarice root. Paths may use /mnt.\n"},
  {"pwd","pwd\nPrint the full current shell path.\n"},
  {"echo","echo [word ...]\nPrint arguments separated by spaces and a newline; no option processing.\n"},
@@ -27,4 +28,4 @@ static int builtin_help(const char *topic){
  for(unsigned i=0;i<sizeof entries/sizeof entries[0];i++)if(!strcmp(topic,entries[i].name)){say(entries[i].text);return 0;}
  errsay("help: unknown builtin; try command --help for an external utility\n");return 1;
 }
-static int help_command(int argc,char **av){if(argc>2)return 2;if(argc==2)return builtin_help(!strcmp(av[1],"--help")?"help":av[1]);say("Clarice: native System 6 command shell\nBuiltins: cd pwd echo printf export unset set shift read sh . test\n          true false : break continue return exit history prefs status clear\nUse help NAME for builtin details; command --help for external tools.\n/bin: ls df cat grep sed awk wc head tail cut tr sort uniq tee\n      cp mv touch mkdir rmdir rm ln readlink hfsattr\n      find du file od basename dirname more\nUp/Down: history; Tab: completion; Ctrl+C/Option-C/Cmd-period: interrupt.\nPOSIX sh is a compatibility target; current scripting/pipes are bounded.\nchmod is not implemented: hfsattr handles meaningful HFS metadata.\n");return 0;}
+static int help_command(int argc,char **av){if(argc>2)return 2;if(argc==2)return builtin_help(!strcmp(av[1],"--help")?"help":av[1]);say("Clarice: native System 6 command shell\nBuiltins: cd pwd echo printf export unset set shift read sh . test\n          true false : break continue return exit history prefs status clear appinstall\nUse help NAME for builtin details; command --help for external tools.\n/bin: ls df cat grep sed awk wc head tail cut tr sort uniq tee\n      cp mv touch mkdir rmdir rm ln readlink hfsattr\n      find du file od basename dirname more\nUp/Down: history; Tab: completion; Ctrl+C/Option-C/Cmd-period: interrupt.\nPOSIX sh is a compatibility target; current scripting/pipes are bounded.\nchmod is not implemented: hfsattr handles meaningful HFS metadata.\n");return 0;}

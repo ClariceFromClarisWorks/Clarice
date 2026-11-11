@@ -1,0 +1,3 @@
+PASS: 41 loader/installer scenarios; no leaked allocations or descriptors
+CLX1 verified: 12088 bytes, 7708 image bytes, 165 relocations, 37 imports
+PASS: production loader validated 21 actual command images and imports (no execution)

@@ -1,0 +1,13 @@
+original
+original
+original
+/tmp/ns/dir
+/tmp/ns
+dir/data
+changed
+target-preserved
+link-type
+dangling-link
+dangling-not-file
+created
+loop-bounded

@@ -10,10 +10,11 @@ static int port_errno(int e){
 }
 static int cli_file_open(const char *path,const char *mode){
  short ref;char p[PATH_CAP];unsigned char name[256];int e;
- if(!mode||!strchr("rwa",mode[0])||!mode[0]||(mode[1]&&strcmp(mode+1,"b"))){errno=EINVAL;return -1;}
+ if(!mode||!mode[0]||!strchr("rwax",mode[0])||(mode[1]&&strcmp(mode+1,"b")&&strcmp(mode+1,"+"))){errno=EINVAL;return -1;}
  e=resolve(path,p);if(e)return port_errno(e);pstr(name,p);
- e=HOpen(0,0,name,mode[0]=='r'?fsRdPerm:fsWrPerm,&ref);
- if(e==fnfErr&&mode[0]!='r'){e=HCreate(0,0,name,'CLRC','TEXT');if(!e)e=HOpen(0,0,name,fsWrPerm,&ref);}
+ short permission=strchr(mode,'+')?fsRdWrPerm:mode[0]=='r'?fsRdPerm:fsWrPerm;
+ if(mode[0]=='x'){e=HCreate(0,0,name,'CLRC','TEXT');if(e==dupFNErr){errno=EEXIST;return -1;}if(e)return port_errno(e);e=HOpen(0,0,name,permission,&ref);}
+ else {e=HOpen(0,0,name,permission,&ref);if(e==fnfErr&&mode[0]!='r'){e=HCreate(0,0,name,'CLRC','TEXT');if(!e)e=HOpen(0,0,name,permission,&ref);}}
  if(e)return port_errno(e);
  if(mode[0]=='w')e=SetEOF(ref,0);else if(mode[0]=='a')e=SetFPos(ref,fsFromLEOF,0);
  if(e){FSClose(ref);return port_errno(e);}return ref;
@@ -64,7 +65,6 @@ static int cli_native_read(short ref,void *buf,long *n){return FSRead(ref,n,buf)
 static int cli_native_write(short ref,const void *buf,long *n){return FSWrite(ref,n,buf);}
 static int cli_native_set(const char *path,CInfoPBRec *pb){unsigned char p[256];pstr(p,path);pb->hFileInfo.ioNamePtr=p;pb->hFileInfo.ioVRefNum=0;pb->hFileInfo.ioDirID=0;pb->hFileInfo.ioFDirIndex=0;return PBSetCatInfoSync(pb);}
 static int cli_native_lock(const char *path,int locked){unsigned char p[256];pstr(p,path);HParamBlockRec pb;memset(&pb,0,sizeof pb);pb.fileParam.ioNamePtr=p;return locked?PBHSetFLockSync(&pb):PBHRstFLockSync(&pb);}
-static int cli_native_volume(const char *path,short *ref){char volume[32];const char *end=strchr(path,':');if(!end||end-path>31)return bdNamErr;memcpy(volume,path,end-path);volume[end-path]=0;for(int i=1;;i++){HParamBlockRec pb;unsigned char name[256];memset(&pb,0,sizeof pb);pb.volumeParam.ioNamePtr=name;pb.volumeParam.ioVolIndex=i;int e=PBHGetVInfoSync(&pb);if(e)return e;name[name[0]+1]=0;if(same_name(volume,(char*)name+1)){*ref=pb.volumeParam.ioVRefNum;return 0;}}}
 static int cli_native_nth(const char *path,int index,char *leaf,CInfoPBRec *pb){CInfoPBRec dir;int e=info(path,&dir);unsigned char p[256];if(e)return e;if(!(dir.hFileInfo.ioFlAttrib&16))return dirNFErr;memset(pb,0,sizeof *pb);pb->hFileInfo.ioNamePtr=p;e=cli_native_volume(path,&pb->hFileInfo.ioVRefNum);if(e)return e;pb->hFileInfo.ioDirID=dir.dirInfo.ioDrDirID;pb->hFileInfo.ioFDirIndex=index;e=PBGetCatInfoSync(pb);if(!e){memcpy(leaf,p+1,p[0]);leaf[p[0]]=0;}return e;}
 static int cli_native_rename(const char *oldpath,const char *newpath){CInfoPBRec pb;unsigned char oldname[256],newname[256];char parent1[PATH_CAP],parent2[PATH_CAP];strcpy(parent1,oldpath);strcpy(parent2,newpath);char *a=strrchr(parent1,':'),*b=strrchr(parent2,':');if(!a||!b)return bdNamErr;*a=0;*b=0;if(!same_name(parent1,parent2))return paramErr;int e=info(oldpath,&pb);if(e)return e;pstr(oldname,a+1);pstr(newname,b+1);short vol;e=cli_native_volume(oldpath,&vol);return e?e:HRename(vol,pb.hFileInfo.ioFlParID,oldname,newname);}
 static int cli_native_move(const char *oldpath,const char *newpath){char parent[PATH_CAP];unsigned char src[256],dst[256];strcpy(parent,newpath);char *leaf=strrchr(parent,':');const char *oldleaf=strrchr(oldpath,':');if(!leaf||!oldleaf||!same_name(leaf+1,oldleaf+1))return paramErr;leaf[1]=0;pstr(src,oldpath);pstr(dst,parent);CMovePBRec pb;memset(&pb,0,sizeof pb);pb.ioNamePtr=src;pb.ioNewName=dst;return PBCatMoveSync(&pb);}

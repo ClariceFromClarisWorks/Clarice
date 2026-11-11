@@ -25,6 +25,8 @@ static unsigned long spare_bytes;
 static unsigned long owned,peak;
 extern void cli_port_stats(unsigned long,unsigned long);
 static Stream streams[FILE_LIMIT];
+int port_fileno(FILE *fp){for(int i=0;i<FILE_LIMIT;i++)if(streams[i].fp==fp)return i<3?i:streams[i].kind==4?streams[i].fd:-1;errno=EBADF;return -1;}
+
 #define FD_LIMIT 12
 #define TEMP_LIMIT 20
 static int descriptors[FD_LIMIT]; /* zero means unused; stores native ref + 1 */
@@ -69,9 +71,9 @@ void *port_calloc(size_t n,size_t size){if(size&&n>SIZE_MAX/size){errno=ENOMEM;r
 void *port_realloc(void *ptr,size_t n){if(!ptr)return port_malloc(n);if(!n){port_free(ptr);return NULL;}Allocation *p=(Allocation*)ptr-1;void *q=port_malloc(n);if(q){memcpy(q,ptr,n<p->size?n:p->size);port_free(ptr);}return q;}
 char *port_strndup(const char *s,size_t n){size_t len=0;while(len<n&&s[len])len++;char *p=port_malloc(len+1);if(p){memcpy(p,s,len);p[len]=0;}return p;}
 char *port_strdup(const char *s){return port_strndup(s,strlen(s));}
-static int stream_read(void *cookie,char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long got=s->kind==3?0:s->kind==1?cli_file_read(s->fd,buf,n):cli_read(s->fd,buf,n);if(got<0)errno=EIO;else errno=saved;return got;}
-static int stream_write(void *cookie,const char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long put=s->kind==3?n:s->kind==1?cli_file_write(s->fd,buf,n):cli_write(s->fd,buf,n);if(put<0){errno=EIO;write_failed=1;}else errno=saved;return put;}
-static int stream_close(void *cookie){Stream *s=cookie;int rc=s->kind==1?cli_file_close(s->fd):0;if(rc)errno=EIO;return rc;}
+static int stream_read(void *cookie,char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long got=s->kind==3?0:s->kind==4?port_read(s->fd,buf,n):s->kind==1?cli_file_read(s->fd,buf,n):cli_read(s->fd,buf,n);if(got<0)errno=EIO;else errno=saved;return got;}
+static int stream_write(void *cookie,const char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long put=s->kind==3?n:s->kind==4?port_write(s->fd,buf,n):s->kind==1?cli_file_write(s->fd,buf,n):cli_write(s->fd,buf,n);if(put<0){errno=EIO;write_failed=1;}else errno=saved;return put;}
+static int stream_close(void *cookie){Stream *s=cookie;int rc=s->kind==4?port_close(s->fd):s->kind==1?cli_file_close(s->fd):0;if(rc)errno=EIO;return rc;}
 static FILE *open_stream(int slot,int fd,int kind,int read_ok,int write_ok){
  Stream *s=&streams[slot];s->fd=fd;s->kind=kind;s->buffer=port_malloc(512);if(!s->buffer)return NULL;
  s->fp=funopen(s,read_ok?stream_read:NULL,write_ok?stream_write:NULL,NULL,stream_close);
@@ -82,6 +84,8 @@ static FILE *open_stream(int slot,int fd,int kind,int read_ok,int write_ok){
 FILE *port_standard(int fd){return streams[fd].fp;}
 static int free_slot(void){for(int i=3;i<FILE_LIMIT;i++)if(!streams[i].fp)return i;errno=EMFILE;return -1;}
 FILE *port_fopen(const char *name,const char *mode){int slot=free_slot();if(slot<0)return NULL;yield_now();int fd=cli_file_open(name,mode);if(fd<0)return NULL;FILE *fp=open_stream(slot,fd,1,mode[0]=='r',mode[0]!='r');if(!fp)cli_file_close(fd);return fp;}
+/* fdopen transfers descriptor ownership to the stream, as in POSIX. */
+FILE *port_fdopen(int fd,const char *mode){if(fd<3||fd>=FD_LIMIT||!descriptors[fd]){errno=EBADF;return NULL;}if(!mode||!strchr("rwa",*mode)){errno=EINVAL;return NULL;}int slot=free_slot();if(slot<0)return NULL;return open_stream(slot,fd,4,*mode=='r'||strchr(mode,'+'),*mode!='r'||strchr(mode,'+'));}
 FILE *port_fmemopen(void *p,size_t n,const char *mode){int slot=free_slot();if(slot<0)return NULL;FILE *fp=fmemopen(p,n,mode);streams[slot].fp=fp;streams[slot].kind=2;return fp;}
 int port_fclose(FILE *fp){for(int i=0;i<FILE_LIMIT;i++)if(fp&&streams[i].fp==fp){int rc=fclose(fp);streams[i].fp=NULL;port_free(streams[i].buffer);streams[i].buffer=NULL;return rc;}errno=EBADF;return EOF;}
 static void reserve_line(char **line,size_t *cap,size_t need){
@@ -167,6 +171,9 @@ int port_open(const char *path,int flags,...){
  if(flags==O_RDONLY)mode="r";
  else if(flags==(O_WRONLY|O_CREAT|O_TRUNC))mode="w";
  else if(flags==(O_WRONLY|O_CREAT|O_APPEND))mode="a";
+ else if(flags==(O_WRONLY|O_CREAT|O_EXCL))mode="x";
+ else if(flags==(O_RDWR|O_CREAT|O_EXCL))mode="x+";
+ else if(flags==O_RDWR)mode="r+";
  else {errno=EINVAL;return -1;}
  yield_now();int i;for(i=3;i<FD_LIMIT&&descriptors[i];i++);
  if(i==FD_LIMIT){errno=EMFILE;return -1;}
@@ -196,3 +203,5 @@ const char *port_temp_new(void){
  }errno=EMFILE;return NULL;
 }
 void port_temp_remove(const char *name){for(int i=0;i<TEMP_LIMIT;i++)if(temporary[i]==name){if(cli_remove(name)){fputs("sort: cannot remove temporary file\n",port_standard(2));port_exit(2);}temporary[i][0]=0;return;}port_abort();}
+
+int port_track_temp(const char *name){if(strlen(name)>=sizeof temporary[0]){errno=ENAMETOOLONG;return -1;}for(int i=0;i<TEMP_LIMIT;i++)if(!temporary[i][0]){strcpy(temporary[i],name);return 0;}errno=EMFILE;return -1;}

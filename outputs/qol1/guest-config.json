@@ -1,0 +1,112 @@
+{
+  "log_open": false,
+  "disassembly_open": false,
+  "registers_open": false,
+  "breakpoints_open": false,
+  "memory_open": false,
+  "watchpoints_open": false,
+  "instruction_history_open": false,
+  "systrap_history_open": false,
+  "peripheral_debug_open": false,
+  "terminal_open": [
+    false,
+    false
+  ],
+  "viewport_scale": 2.0,
+  "rom_path": "/Users/williamprestwich/Desktop/Hardware ROMs/Old_World_Mac_Roms/128KB ROMs/1986-03 - 4D1F8172 - MacPlus v3.ROM",
+  "display_card_rom_path": null,
+  "pram_path": "/Users/williamprestwich/Documents/ChatGPT/Clarice/work/qol1/plus.pram",
+  "extension_rom_path": null,
+  "scsi_targets": [
+    {
+      "Disk": "/Users/williamprestwich/Documents/ChatGPT/Clarice/work/qol1/system.hda"
+    },
+    "None",
+    "None",
+    "None",
+    "None",
+    "None",
+    "None"
+  ],
+  "windows": {},
+  "init_args": {
+    "audio_disabled": true,
+    "monitor": null,
+    "mouse_mode": "Absolute",
+    "start_fastforward": false,
+    "ram_size": 4194304,
+    "override_fdd_type": null,
+    "pmmu_enabled": false,
+    "fpu_enabled": false,
+    "vram_size": null,
+    "video_card": "Mdc12",
+    "overclock": null
+  },
+  "model": "Plus",
+  "scaling_algorithm": "NearestNeighbor",
+  "pause_on_state_load": false,
+  "shared_dir": null,
+  "disassembly_labels": true,
+  "floppy_images": [],
+  "custom_datetime": null,
+  "framebuffer_mode": "Centered",
+  "shader_enabled": false,
+  "shader_configs": [
+    {
+      "id": "ImageAdjustment",
+      "enabled": false,
+      "parameters": {
+        "ia_ZOOM": 1.0,
+        "ia_FLIP_HORZ": 0.0,
+        "ia_saturation": 1.0,
+        "ia_overscan_percent_y": 0.0,
+        "ia_R": 1.0,
+        "ia_B": 1.0,
+        "ia_LMASK": 0.0,
+        "ia_RMASK": 0.0,
+        "ia_contrast": 1.0,
+        "ia_luminance": 1.0,
+        "ia_bright_boost": 0.0,
+        "ia_GRAIN_STR": 0.0,
+        "ia_SHARPEN": 0.0,
+        "ia_target_gamma": 2.2,
+        "ia_G": 1.0,
+        "ia_black_level": 0.0,
+        "ia_BOTMASK": 0.0,
+        "ia_TOPMASK": 0.0,
+        "ia_YPOS": 0.0,
+        "ia_FLIP_VERT": 0.0,
+        "ia_XPOS": 0.0,
+        "ia_monitor_gamma": 2.2,
+        "ia_overscan_percent_x": 0.0
+      }
+    },
+    {
+      "id": "GdvScanlines",
+      "enabled": true,
+      "parameters": {
+        "SCANLINE": 1.0,
+        "BEAM": 5.0
+      }
+    },
+    {
+      "id": "CrtLottes",
+      "enabled": true,
+      "parameters": {
+        "CRT_GAMMA": 2.1,
+        "MASK_INTENSITY": 0.0,
+        "SCANLINE_THINNESS": 0.7,
+        "TRINITRON_CURVE": 0.0,
+        "SCAN_BLUR": 1.6,
+        "CORNER": 2.0,
+        "MASK": 0.0,
+        "CURVATURE": 0.0
+      }
+    }
+  ],
+  "ethernet_link_type": "NAT",
+  "serial_bridges": [
+    null,
+    null
+  ]
+}

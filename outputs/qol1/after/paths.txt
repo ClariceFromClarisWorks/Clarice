@@ -1,0 +1,12 @@
+/
+/mnt
+Sys6Unix/
+Test 2/
+/mnt/Sys6Unix/Documents
+alpha betasecond line
+third line
+/mnt/Sys6Unix/Documents
+spaces
+encoded
+/mnt
+/

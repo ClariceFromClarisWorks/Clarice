@@ -1,0 +1,27 @@
+QOL2 INPUT PROBE
+stage=0 chars=240 posted=240 received=240 retained=240 correct=1 elapsed=1685 paint=1021 age_sum=36 age_max=4 heap_delta=26
+stage=1 chars=240 posted=240 received=240 retained=240 correct=1 elapsed=1205 paint=876 age_sum=22 age_max=1 heap_delta=26
+stage=2 chars=240 posted=240 received=240 retained=240 correct=1 elapsed=245 paint=175 age_sum=197 age_max=2 heap_delta=26
+stage=3 chars=240 posted=240 received=240 retained=240 correct=1 elapsed=136 paint=71 age_sum=460 age_max=4 heap_delta=26
+PASS paste inserts at cursor
+PASS 900 byte paste intact, not executed
+PASS repeated paste releases temporary heap
+PASS multiline CRLF preserved without automatic execution
+PASS explicit Return executes multiline script
+PASS oversized paste blocks submission
+PASS overflow suffix cannot execute
+PASS Ctrl+C explicitly resets blocked input
+PASS typed overflow cannot execute truncated line
+PASS embedded control byte rejects whole paste
+PASS continued command overflow blocked
+PASS pending queue overflow fails closed
+PASS left, insert, backspace editing
+PASS history Up
+PASS history Down restores draft
+PASS Tab completion
+PASS ncurses screen ownership
+PASS ncurses arrow, text, Ctrl+C bytes preserved
+PASS ncurses queue overflow reported and cancelled
+PASS upstream ncurses demo consumes arrows/text/Ctrl+C/q
+SAFETY-DONE failures=0 heap=404912
+PROBE-DONE

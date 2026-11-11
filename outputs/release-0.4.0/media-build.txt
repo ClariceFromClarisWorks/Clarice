@@ -1,0 +1,16 @@
+Using multiversal interfaces
+Volume name is "Clarice 0.4"
+Volume was created on Wed Nov 11 11:31:55 2026
+Volume was last modified on Wed Nov 11 11:31:55 2026
+Volume has 33020416 bytes free
+/src/outputs/release-0.4.0/HD60_512_Clarice-0.4.0.hda: contains 1 HFS partition
+Volume name is "Clarice 0.4"
+Volume was created on Wed Nov 11 11:31:55 2026
+Volume was last modified on Wed Nov 11 11:31:55 2026
+Volume has 33020416 bytes free
+f  APPL/CLRC    766468         0 Nov 11 06:28 Clarice
+f  TEXT/UNIX         0      1326 Nov 11 11:31 Read Me
+Volume name is "Clarice"
+Volume was created on Wed Nov 11 06:28:31 2026
+Volume was last modified on Wed Nov 11 06:28:31 2026
+Volume has 36864 bytes free

@@ -1,0 +1,1 @@
+PASS: independent legacy/v2 commands executed three times each on a 68000 CPU model; output/status correct

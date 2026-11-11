@@ -1,0 +1,31 @@
+[2026-11-11T06:24:47Z INFO  snowemu] Snow v1.5.0-a921b10 (aarch64-apple-darwin release) [DEFAULT, ETHERNET, ETHERNET_NAT, ETHERNET_NAT_HTTPS_STRIPPING, ETHERNET_NAT_MACTCP_HELPERS, ETHERNET_TAP, PRINTER]
+[2026-11-11T06:24:47Z DEBUG eframe] Using the glow renderer
+[2026-11-11T06:24:47Z DEBUG eframe::native::glow_integration] Event::Resumed
+[2026-11-11T06:24:47Z DEBUG eframe::native::glow_integration] trying to create glutin Display with config: ConfigTemplateBuilder { template: ConfigTemplate { color_buffer_type: Rgb { r_size: 8, g_size: 8, b_size: 8 }, alpha_size: 8, depth_size: 0, stencil_size: 0, num_samples: None, min_swap_interval: None, max_swap_interval: None, config_surface_types: ConfigSurfaceTypes(WINDOW), api: None, transparency: false, single_buffering: false, stereoscopy: None, float_pixels: false, max_pbuffer_width: None, hardware_accelerated: None, max_pbuffer_height: None, native_window: None } }
+[2026-11-11T06:24:47Z DEBUG eframe::native::glow_integration] using the first config from config picker closure. config: Cgl(Config { inner: Config { id: <NSOpenGLPixelFormat: 0xcbcd786c0> } })
+[2026-11-11T06:24:48Z DEBUG eframe::native::glow_integration] successfully created GL Display with version: Apple CGL and supported features: DisplayFeatures(FLOAT_PIXEL_FORMAT | SWAP_CONTROL | MULTISAMPLING_PIXEL_FORMATS | SRGB_FRAMEBUFFERS)
+[2026-11-11T06:24:48Z DEBUG eframe::native::glow_integration] creating gl context using raw window handle: Some(AppKit(AppKitWindowHandle { ns_view: 0xcbd3e9b00 }))
+[2026-11-11T06:24:48Z DEBUG eframe::native::glow_integration] Initializing egui_winit for viewport "FFFF"
+[2026-11-11T06:24:48Z DEBUG eframe::native::glow_integration] Creating a gl_surface for viewport "FFFF"
+[2026-11-11T06:24:48Z DEBUG egui_glow::painter] 
+    opengl version: 4.1 Metal - 90.5
+    opengl renderer: Apple M1
+    opengl vendor: Apple
+[2026-11-11T06:24:48Z DEBUG egui_glow::shader_version] Shader version: Gl140 ("4.10").
+[2026-11-11T06:24:48Z DEBUG egui_glow::painter] Shader header: "#version 140\n".
+[2026-11-11T06:24:48Z DEBUG egui_glow::painter] SRGB framebuffer Support: false
+[2026-11-11T06:24:48Z DEBUG egui_glow::vao] GL version: "4.1 Metal - 90.5".
+[2026-11-11T06:24:48Z INFO  snowemu::settings] Loaded settings from /Users/williamprestwich/Library/Application Support/snowemu/Snow/settings.json
+[2026-11-11T06:24:48Z INFO  snow_core::mac::compact::bus] Skipping memory test
+[2026-11-11T06:24:48Z INFO  snow_core::cpu_m68k::cpu] Reset - SSP: 4D1F8172, PC: 0040002A
+[2026-11-11T06:24:48Z INFO  snowemu::emulator] SCSI ID #0: loaded image file /Users/williamprestwich/Documents/ChatGPT/Clarice/work/qol3a/system.hda
+[2026-11-11T06:24:48Z INFO  snow_core::mac::rtc] Persisting PRAM in /Users/williamprestwich/Documents/ChatGPT/Clarice/work/qol3a/plus.pram
+[2026-11-11T06:24:48Z INFO  snow_core::mac::compact::bus] Emulation speed: Video
+[2026-11-11T06:24:48Z INFO  snow_core::emulator] Running
+[2026-11-11T06:24:51Z DEBUG snow_core::cpu_m68k::cpu] Illegal instruction PC 00400594: 4E7B 0100111001111011 Cannot decode instruction: 0100111001111011
+[2026-11-11T06:24:51Z WARN  snow_core::cpu_m68k::cpu] Illegal instruction at PC $00400594
+[2026-11-11T06:24:51Z WARN  snow_core::mac::scc] B unimplemented wr reg 4 4C
+[2026-11-11T06:24:51Z WARN  snow_core::mac::scc] A unimplemented wr reg 4 4C
+[2026-11-11T06:24:51Z INFO  snow_core::mac::pluskbd] Keyboard reset
+[2026-11-11T06:25:50Z WARN  snow_core::cpu_m68k::bus] Unaligned access: address 00348599
+[2026-11-11T06:25:50Z DEBUG snow_core::cpu_m68k::cpu] Address error: read = true, address = 00348599 PC = 003198DC

@@ -1,0 +1,4 @@
+mode=0 scrollback=0 inverse=0 updates=12 ticks=4 worst=1 stationary_ticks=0 pixel_valid=1 mismatches=0 heap_delta=0
+mode=0 scrollback=35 inverse=1 updates=12 ticks=4 worst=1 stationary_ticks=0 pixel_valid=1 mismatches=0 heap_delta=0
+mode=2 scrollback=0 inverse=0 updates=12 ticks=5 worst=1 stationary_ticks=0 pixel_valid=1 mismatches=0 heap_delta=0
+mode=2 scrollback=35 inverse=1 updates=12 ticks=7 worst=1 stationary_ticks=0 pixel_valid=1 mismatches=0 heap_delta=0

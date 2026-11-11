@@ -1,0 +1,1 @@
+/bin/acceptprobe: type='TEST' creator='TST2' flags=4000 locked=off invisible=on

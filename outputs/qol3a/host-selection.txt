@@ -1,0 +1,1 @@
+PASS selection delta: forward/reverse/anchor crossing/stationary, 1–130 columns, 1–37 rows, native and cache

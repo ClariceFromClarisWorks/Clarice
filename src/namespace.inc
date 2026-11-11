@@ -5,7 +5,22 @@ static int encode_name(const char *s,char *out,size_t cap){size_t n=0;while(*s){
 static int decode_name(const char *s,size_t n,char *out){size_t i,j=0;for(i=0;i<n;i++){unsigned char c=s[i];if(c=='%'&&i+2<n&&isxdigit((unsigned char)s[i+1])&&isxdigit((unsigned char)s[i+2])){char h[3]={s[i+1],s[i+2],0};c=strtol(h,0,16);i+=2;}if(!c||c==':'||j>=31)return bdNamErr;out[j++]=c;}out[j]=0;return 0;}
 static int volume_name(int index,char *name){HParamBlockRec pb;unsigned char n[256];memset(&pb,0,sizeof pb);pb.volumeParam.ioNamePtr=n;pb.volumeParam.ioVolIndex=index;int e=PBHGetVInfoSync(&pb);if(e)return e;memcpy(name,n+1,n[0]);name[n[0]]=0;return 0;}
 /* Volume labels are never silently resolved to the wrong duplicate volume. */
-static int volume_unique(const char *name){int i,hits=0,e;char label[32];for(i=1;!(e=volume_name(i,label));i++){if(same_name(name,label))hits++;}if(e!=nsvErr)return e;return hits==1?0:hits?dupFNErr:nsvErr;}
+static int volume_lookup(const char *name,short *ref){
+ int hits=0,e;short found=0;
+ for(int i=1;;i++){HParamBlockRec pb;unsigned char label[256];memset(&pb,0,sizeof pb);pb.volumeParam.ioNamePtr=label;pb.volumeParam.ioVolIndex=i;
+  e=PBHGetVInfoSync(&pb);if(e)break;label[label[0]+1]=0;
+  if(same_name(name,(char*)label+1)){hits++;found=pb.volumeParam.ioVRefNum;}
+ }
+ if(e!=nsvErr)return e;if(hits!=1)return hits?dupFNErr:nsvErr;
+ if(!found)return nsvErr; /* Never return the default-volume selector. */
+ if(ref)*ref=found;return 0;
+}
+static int volume_unique(const char *name){return volume_lookup(name,0);}
+static int cli_native_volume(const char *path,short *ref){
+ char volume[32];const char *end=strchr(path,':');
+ if(!end||end==path||end-path>31)return bdNamErr;
+ memcpy(volume,path,end-path);volume[end-path]=0;return volume_lookup(volume,ref);
+}
 static int native_path(const char *u,char *out){const char *p=u;char part[32];size_t len;
  if(!strncmp(p,"/mnt/",5)){p+=5;const char *end=strchr(p,'/');size_t n=end?(size_t)(end-p):strlen(p);int e=decode_name(p,n,part);if(e)return e;if((e=volume_unique(part)))return e;strcpy(out,part);strcat(out,":");p+=n;if(*p=='/')p++;}
  else {strcpy(out,root_path);if(*p=='/')p++;}

@@ -1,0 +1,7 @@
+appinstall check FILE | replace FILE NAME | repair NAME | recover NAME
+NAME is a /bin leaf (1..20 letters, digits, _ or -).
+check validates without executing; replace validates before installing.
+repair explicitly installs the bundled copy; recover restores .clx-NAME.old.
+Previous files retain both forks. Existing Finder metadata is preserved.
+Replacement is a CLX data file (resource fork stays with the previous version).
+Existing .old/.new files block updates: inspect and move them before retrying.

@@ -1,0 +1,24 @@
+Using multiversal interfaces
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Clarice
+Consolidate compiler generated dependencies of target Clarice
+[  5%] Building C object CMakeFiles/Clarice.dir/shell.c.obj
+[ 10%] Building C object CMakeFiles/Clarice.dir/app.c.obj
+[ 15%] Building C object CMakeFiles/Clarice.dir/sizes.c.obj
+[ 21%] Building C object CMakeFiles/Clarice.dir/reflow.c.obj
+[ 26%] Building ASM object CMakeFiles/Clarice.dir/kernels.S.obj
+[ 31%] Building ASM object CMakeFiles/Clarice.dir/checksum.S.obj
+[ 36%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/ast.c.obj
+[ 42%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/array.c.obj
+[ 47%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/buffer.c.obj
+[ 52%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/arithm.c.obj
+[ 57%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/parser.c.obj
+[ 63%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/program.c.obj
+[ 68%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/word.c.obj
+[ 73%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/arithm.c.obj
+[ 78%] Linking C executable Clarice.code.bin
+[ 78%] Built target Clarice
+[ 84%] Generating Clarice.bin, Clarice.APPL, Clarice.dsk, Clarice.ad, %Clarice.ad
+[100%] Built target Clarice_APPL

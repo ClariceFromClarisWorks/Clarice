@@ -2,9 +2,21 @@
 
 A native System 6 command prompt for a Macintosh Plus with 4 MB, built using the existing SkiFree Retro68 toolchain. This is a working Phase 1 prototype, not a Unix kernel, bash implementation or collection of completed GNU ports.
 
-## Current build and priorities
+## Current engineering direction
 
-Download the application disk or MacBinary package from [GitHub Releases](https://github.com/ClariceFromClarisWorks/Clarice/releases). The initial published build is a development snapshot with the limitations below, not a claim of POSIX conformance. No ROM, operating system or emulator is included.
+The [current-state summary](outputs/CURRENT-STATE.md), [roadmap](outputs/ROADMAP.md),
+[portability matrix](outputs/PORTABILITY.md) and [feasibility review](outputs/FEASIBILITY.md)
+describe the current implementation and remaining work. **v0.4.0** adds safe independent
+command updates, correct mounted-volume resolution, faster keyboard input and
+selection, and explicit input-overflow protection. See [release evidence](outputs/release-0.4.0/TEST-REPORT.md).
+Experimental ncurses/nano adapters are retained in source; no working nano editor
+is bundled. Nano editing/saving and the three-second startup target remain unverified.
+
+## Released build and limitations
+
+Download the application disk or MacBinary package from [GitHub Releases](https://github.com/ClariceFromClarisWorks/Clarice/releases). This build is a development snapshot with the limitations below, not a claim of POSIX conformance. No ROM, System/Finder or emulator is included. The optional physical-device HDA includes an Apple SCSI driver partition.
+
+For a physical Mac, download `HD60_512_Clarice-0.4.0.hda` and place it on the BlueSCSI/ZuluSCSI SD card using an unused SCSI ID. This is a separate **application disk**, not a boot disk. Boot your existing System disk and copy Clarice to it before launching. Direct launch from a secondary volume can report preferences-save error -43; the prior preferences file is retained. See [installation notes](outputs/release-0.4.0/READ-ME.txt).
 
 Verified baseline: Snow emulating a Macintosh Plus with 4 MB, System 6.0.8 and MultiFinder. Physical hardware remains unverified. Clarice requests a **768 KiB application partition**, including its 64 KiB stack reservation; command working allocations are demand-driven within that partition. The source-port allocation ceiling is 96 KiB per invocation, separate from loaded code and shared runtime memory.
 
@@ -70,7 +82,7 @@ History uses at most 128 fixed 1,028-byte records plus an 8-byte header (131,592
 
 `checks` / Tests > Run checks is for the disposable fixture only: it writes `/tmp/phase1-report.txt`, `Documents/result.txt`, and `Documents/fork-test`, and overwrites the bounded history with 140 test commands. Do not run it against personal files. Prepare fixtures with `scripts/fixtures.py` only with the project emulator stopped. `scripts/emulator.py` controls only the copied project Snow instance and disk. Original ROMs and disks are never modified or bundled.
 
-See `outputs/scrolling/TEST-REPORT.md` for scrolling/preferences and `outputs/update1/TEST-REPORT.md` for the earlier scripting update and `outputs/phase1/TEST-REPORT.md` for the historical baseline. Architecture and later GNU tools/editor/compiler work are in `outputs/ARCHITECTURE.md`.
+See `outputs/scrolling/TEST-REPORT.md` for scrolling/preferences and `outputs/update1/TEST-REPORT.md` for the earlier scripting update and `outputs/phase1/TEST-REPORT.md` for the historical baseline. Current architecture is in `outputs/ARCHITECTURE.md`; earlier proposals are archived and do not define the current roadmap.
 
 ## Scripting limits in this development build
 
@@ -111,7 +123,7 @@ Interactive `ls` streams names across the current terminal width in catalog orde
 
 ## External commands
 
-`ls`, `df` and `cat` now execute native 68000 CLX1 images from `/bin`, found through `PATH` (default `/bin:/usr/bin`). Their utility implementations are outside the shell executable. The build packages a small multicall image; installation writes it under each command name and also installs `benchls`/`benchscan`. These files can be replaced independently. The installer updates only files bearing its CLRC/CLX1 metadata and preserves other files occupying those paths.
+`ls`, `df` and `cat` now execute native 68000 CLX1 images from `/bin`, found through `PATH` (default `/bin:/usr/bin`). Their utility implementations are outside the shell executable. The build packages a small multicall image; installation writes it under each command name and also installs `benchls`/`benchscan`. The local Task 2 implementation preserves every existing command at startup and provides explicit `appinstall check`, `replace`, `repair` and `recover` operations. New format-2 commands can declare runtime/capability requirements while legacy commands remain supported. See [update behaviour and evidence](outputs/task2/TEST-REPORT.md).
 
 Standard input, output and error support `<`, `>`, `>>`, `2>`, `2>>`, descriptor duplication such as `2>&1`, and closing with `>&-`/`<&-`. Redirections apply left to right and restore after each command. Finite pipelines remain sequential HFS spools, not concurrent Unix pipes. Pipeline status is the last command's status; a user interrupt stops the complete pipeline with 130. Missing commands return 127 and invalid native images return 126. Utilities report their own success/failure statuses. UI/diagnostic builtins such as `prefs`, `status` and `scrollbench` currently write directly to the terminal; redirecting their display does not capture it.
 

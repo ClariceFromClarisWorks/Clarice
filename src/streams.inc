@@ -6,7 +6,7 @@ static long stream_write(short ref,const void *data,unsigned long count){
 #ifdef SH_HOST_TEST
  fwrite(data,1,count,ref==-3?stderr:stdout);
 #else
- term_write(data,count);
+ if(app_screen_active())return app_screen_write(data,count);term_write(data,count);
 #endif
  return count;}
  unsigned long done=0;while(done<count){long n=count-done;int e=FSWrite(ref,&n,(const char*)data+done);done+=n;if(e||!n){output_error=1;return -1;}}return done;
@@ -22,7 +22,7 @@ static long cli_read(int fd,void *data,unsigned long count){
 #ifdef SH_HOST_TEST
  return fread(data,1,count,stdin);
 #else
- return app_terminal_read(data,count);
+ return app_screen_active()?app_screen_read(data,count):app_terminal_read(data,count);
 #endif
  }
  long n=count;int e=FSRead(input_ref,&n,data);return e&&e!=eofErr?-1:n;

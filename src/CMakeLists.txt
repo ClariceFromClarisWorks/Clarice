@@ -7,3 +7,19 @@ set_target_properties(Clarice PROPERTIES LINK_FLAGS "-Wl,-gc-sections -Wl,--mac-
 target_sources(Clarice PRIVATE vendor/mrsh/ast.c vendor/mrsh/array.c vendor/mrsh/buffer.c vendor/mrsh/arithm.c vendor/mrsh/parser/parser.c vendor/mrsh/parser/program.c vendor/mrsh/parser/word.c vendor/mrsh/parser/arithm.c)
 target_include_directories(Clarice PRIVATE vendor/mrsh/include)
 set_source_files_properties(vendor/mrsh/parser/parser.c PROPERTIES COMPILE_OPTIONS -Wno-unused-parameter)
+
+# Opt-in guest diagnostics; absent from ordinary application builds.
+if(CLARICE_INPUT_DIAGNOSTICS)
+ target_compile_definitions(Clarice PRIVATE CLARICE_INPUT_DIAGNOSTICS=1)
+endif()
+
+if(CLARICE_INPUT_SAFETY_TEST)
+ target_compile_definitions(Clarice PRIVATE CLARICE_INPUT_SAFETY_TEST=1)
+endif()
+
+if(CLARICE_SELECTION_DIAGNOSTICS)
+ target_compile_definitions(Clarice PRIVATE CLARICE_SELECTION_DIAGNOSTICS=1)
+endif()
+if(CLARICE_SELECTION_FIXED)
+ target_compile_definitions(Clarice PRIVATE CLARICE_SELECTION_FIXED=1)
+endif()

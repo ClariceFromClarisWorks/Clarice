@@ -14,6 +14,8 @@
 #include <setjmp.h>
 #include <wctype.h>
 #include <wchar.h>
+#include <locale.h>
+#include <langinfo.h>
 #include <strings.h>
 
 char shell_cwd[PATH_CAP];
@@ -26,14 +28,21 @@ static char home_path[PATH_CAP];
 static char root_path[PATH_CAP],unix_cwd[PATH_CAP]="/";
 static char env_names[16][32],env_values[16][128];
 static unsigned long history_count;
-static const char *commands[]={"help","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
+static const char *commands[]={"help","appinstall","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
 static void pstr(unsigned char *p,const char *s) {size_t n=strlen(s); if(n>255)n=255;p[0]=(unsigned char)n;memcpy(p+1,s,n);}
 #include "streams.inc"
 static void say(const char *s){emit(s,(long)asm_length(s));}
 static const char *env_get(const char *key){int i;if(!strcmp(key,"HOME"))return "/";if(!strcmp(key,"PWD"))return unix_cwd;for(i=0;i<16;i++)if(!strcmp(env_names[i],key))return env_values[i];return "";}
 static int env_set(const char *s){const char *eq=strchr(s,'=');int i;size_t n;if(!eq)return -1;n=(size_t)(eq-s);if(!n||n>=32||strlen(eq+1)>=128)return -1;for(i=0;i<(int)n;i++)if(!(isalnum((unsigned char)s[i])||s[i]=='_')||(i==0&&isdigit((unsigned char)s[i])))return -1;for(i=0;i<16;i++)if(!env_names[i][0]||(strlen(env_names[i])==n&&!strncmp(env_names[i],s,n))){memcpy(env_names[i],s,n);env_names[i][n]=0;strcpy(env_values[i],eq+1);return 0;}return -1;}
 #include "namespace.inc"
-static int info(const char *path,CInfoPBRec *pb){unsigned char n[256];pstr(n,path);memset(pb,0,sizeof *pb);pb->hFileInfo.ioNamePtr=n;pb->hFileInfo.ioVRefNum=0;pb->hFileInfo.ioDirID=0;pb->hFileInfo.ioFDirIndex=0;return PBGetCatInfoSync(pb);}
+/* GetCatInfo resolves a full pathname but ioVRefNum is an input, not a
+   resolved-volume output. Bind it before callers reuse the directory ID. */
+static int info(const char *path,CInfoPBRec *pb){
+ unsigned char n[256];short vol;memset(pb,0,sizeof *pb);
+ int e=cli_native_volume(path,&vol);if(e)return e;
+ pstr(n,path);pb->hFileInfo.ioNamePtr=n;pb->hFileInfo.ioVRefNum=vol;
+ return PBGetCatInfoSync(pb);
+}
 static int directory(const char *s,short *vol,long *id){char p[PATH_CAP];CInfoPBRec pb;int e=resolve(s,p);if(e)return e;e=info(p,&pb);if(e)return e;if(!(pb.hFileInfo.ioFlAttrib&16))return dirNFErr;*id=pb.dirInfo.ioDrDirID;*vol=pb.dirInfo.ioVRefNum;return 0;}
 static int open_path(const char *s,short perm,short *ref){char p[PATH_CAP];unsigned char n[256];int e=resolve(s,p);if(e)return e;pstr(n,p);return HOpen(0,0,n,perm,ref);}
 /* Accept CLX1 native commands and explicitly supported shell scripts. */
@@ -96,6 +105,7 @@ static int selftest(void){unsigned long t=TickCount(),n;int fail=0;char b[2048],
 static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  shell_commands++;
  if(!strcmp(av[0],"help"))status=help_command(argc,av);
+ else if(!strcmp(av[0],"appinstall"))status=appinstall_command(argc,av);
  else if(!strcmp(av[0],"pwd")){say(unix_cwd);say("\n");}
  else if(!strcmp(av[0],"echo")){for(i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");}
  else if(!strcmp(av[0],"cd")){char path[PATH_CAP];short v;long id;const char *to=argc>1?av[1]:"~";int e=directory(to,&v,&id);char canonical[PATH_CAP];if(!e)e=resolve_ex(to,path,canonical,1);if(e){error("cd",e);status=1;}else {strcpy(unix_cwd,canonical);strcpy(shell_cwd,path);size_t len=strlen(shell_cwd);if(shell_cwd[len-1]!=':'){shell_cwd[len]=':';shell_cwd[len+1]=0;}}}
@@ -103,7 +113,7 @@ static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  else if(!strcmp(av[0],"export")){if(argc==1){for(i=0;i<16;i++)if(env_names[i][0]){say(env_names[i]);say("=");say(env_values[i]);say("\n");}}for(i=1;i<argc;i++)if(env_set(av[i])){term_puts("export: invalid name/value or environment full\n");status=2;}}
  else if(!strcmp(av[0],"history")){if(argc>1&&!strcmp(av[1],"off"))history_enabled=0;else if(argc>1&&!strcmp(av[1],"on"))history_enabled=1;else if(argc>1&&!strcmp(av[1],"clear")){if(history_ref>=0&&!SetEOF(history_ref,0))history_count=0;else status=1;}else{char line[LINE_CAP];for(i=HISTORY_SLOTS;i>=1;i--)if(history_get(i,line)){say(line);say("\n");if(app_yield()){status=130;break;}}}}
  else if(!strcmp(av[0],"clear"))app_clear();
- else if(!strcmp(av[0],"status")&&argc==2&&!strcmp(av[1],"runtime")){char b[240];snprintf(b,sizeof b,"Runtime: heap=%ld largest=%ld image=%lu ticks=%lu load=%lu owned-peak=%lu remaining=%lu\n",FreeMem(),MaxBlock(),module_bytes,module_ticks,module_load_ticks,port_peak,port_remaining);say(b);}
+ else if(!strcmp(av[0],"status")&&argc==2&&!strcmp(av[1],"runtime")){char b[240];snprintf(b,sizeof b,"Runtime: heap=%ld largest=%ld image=%lu ticks=%lu load=%lu owned-peak=%lu remaining=%lu\n",FreeMem(),MaxBlock(),module_bytes,module_ticks,module_load_ticks,port_peak,port_remaining);say(b);snprintf(b,sizeof b,"Loader ticks: read=%lu validate=%lu imports=%lu relocations=%lu prepare=%lu (successful execution only)\n",module_read_ticks,module_validate_ticks,module_import_ticks,module_reloc_ticks,module_prepare_ticks);say(b);}
  else if(!strcmp(av[0],"status")){if(argc>2||(argc==2&&strcmp(av[1],"-h"))){say("usage: status [-h]\n");status=2;}else app_metrics(argc==2);}
  else if(!strcmp(av[0],"scrollbench"))status=app_scroll_bench(argc>1&&!strcmp(av[1],"cached")?3:argc>1&&!strcmp(av[1],"native")?2:argc>1&&!strcmp(av[1],"quick"));
  else if(!strcmp(av[0],"prefs"))status=app_preferences(argc,av);

@@ -1,0 +1,1 @@
+PASS: reproduced old cross-volume listings; corrected roots/nested paths, quoting, cd/pwd, safe mutations, links, errors and existing namespace fixtures

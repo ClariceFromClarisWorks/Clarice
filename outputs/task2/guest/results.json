@@ -1,0 +1,174 @@
+[
+  {
+    "check": "fresh-wc-status.txt",
+    "passed": true
+  },
+  {
+    "check": "recover-status.txt",
+    "passed": true
+  },
+  {
+    "check": "probe-recover-status.txt",
+    "passed": true
+  },
+  {
+    "check": "repair-status.txt",
+    "passed": true
+  },
+  {
+    "check": "damaged-before-status.txt",
+    "passed": true
+  },
+  {
+    "check": "damaged-restarted-status.txt",
+    "passed": true
+  },
+  {
+    "check": "old-damage-status.txt",
+    "passed": true
+  },
+  {
+    "check": "ls-status.txt",
+    "passed": true
+  },
+  {
+    "check": "df-status.txt",
+    "passed": true
+  },
+  {
+    "check": "incompatible-status.txt",
+    "passed": true
+  },
+  {
+    "check": "accept-install-status.txt",
+    "passed": true
+  },
+  {
+    "check": "accept-replace-status.txt",
+    "passed": true
+  },
+  {
+    "check": "accept-recover-status.txt",
+    "passed": true
+  },
+  {
+    "check": "grep-before.txt",
+    "passed": true
+  },
+  {
+    "check": "grep-restarted.txt",
+    "passed": true
+  },
+  {
+    "check": "grep-repaired.txt",
+    "passed": true
+  },
+  {
+    "check": "sed.txt",
+    "passed": true
+  },
+  {
+    "check": "awk.txt",
+    "passed": true
+  },
+  {
+    "check": "probe-before.txt",
+    "passed": true
+  },
+  {
+    "check": "probe-restarted.txt",
+    "passed": true
+  },
+  {
+    "check": "probe-recovered.txt",
+    "passed": true
+  },
+  {
+    "check": "accept-one.txt",
+    "passed": true
+  },
+  {
+    "check": "accept-two.txt",
+    "passed": true
+  },
+  {
+    "check": "accept-recovered.txt",
+    "passed": true
+  },
+  {
+    "check": "updated-grep.clx",
+    "passed": true
+  },
+  {
+    "check": "restarted-grep.clx",
+    "passed": true
+  },
+  {
+    "check": "retained-grep.clx",
+    "passed": true
+  },
+  {
+    "check": "damaged-before.clx",
+    "passed": true
+  },
+  {
+    "check": "damaged-restarted.clx",
+    "passed": true
+  },
+  {
+    "check": "old-damage.clx",
+    "passed": true
+  },
+  {
+    "check": "recovered original grep bytes",
+    "passed": true
+  },
+  {
+    "check": "fresh bundled wc bytes",
+    "passed": true
+  },
+  {
+    "check": "metadata-before.txt",
+    "passed": true
+  },
+  {
+    "check": "metadata-replaced.txt",
+    "passed": true
+  },
+  {
+    "check": "metadata-restarted.txt",
+    "passed": true
+  },
+  {
+    "check": "metadata-recovered.txt",
+    "passed": true
+  },
+  {
+    "check": "fresh replacement Finder metadata",
+    "passed": true
+  },
+  {
+    "check": "repeat refusal replace-status.txt",
+    "passed": true
+  },
+  {
+    "check": "repeat refusal probe-install-status.txt",
+    "passed": true
+  },
+  {
+    "check": "repeat refusal probe-replace-status.txt",
+    "passed": true
+  },
+  {
+    "check": "repeat refusal diagnostic replace.txt",
+    "passed": true
+  },
+  {
+    "check": "repeat refusal diagnostic probe-install.txt",
+    "passed": true
+  },
+  {
+    "check": "repeat refusal diagnostic probe-replace.txt",
+    "passed": true
+  }
+]
