@@ -35,6 +35,22 @@ necessary work, not merely to making an expensive design run faster:
 - Keep ports faithful and reusable across single Finder and MultiFinder/System 7, sharing upstream implementations and practical services while respecting native execution differences. Preserve independent packaging and the documented third-party SDK/porting goal; build shared interfaces from demonstrated port needs, within authorised scope.
 - Fix routine defects autonomously within the authorised task. Stop and escalate material architecture, compatibility, security, data-safety or performance/memory tradeoffs with concise evidence and a recommendation. Minimise unnecessary tool calls, rebuilds, test runs and credit use: reuse evidence, test focused affected cases, and broaden only for demonstrated risk or required acceptance.
 
+## Native Macintosh First — An Environment, Not an Operating System
+
+Clarice is a Unix-like userland layered over System 6/7, not a replacement
+operating system. Extend the Macintosh with a command-line environment, faithful
+utilities and practical compatibility services; build upon the host system
+rather than duplicating its responsibilities.
+
+- Prefer documented native Macintosh Toolbox, Operating System and Memory Manager facilities when they suitably meet the requirement. Where they do not, evaluate proven existing implementations before introducing Clarice-specific infrastructure, following Research Before Reinvention below.
+- Native-first does not mean native at any cost. Measured algorithms, data-layout improvements or focused 68000 assembly may outperform a native API. Choose on demonstrated complete-operation benefit, compatibility and resource costs under the performance policy above, not on native status alone.
+- Introduce custom mechanisms only for a demonstrated capability gap or a compelling measured advantage. Keep them minimal, interoperable and reusable; CLX's single-Finder execution role does not justify an independent operating-system layer or predetermine the eventual external-application design.
+- Do not recreate modern kernel services, process management, memory isolation or security models merely because Unix systems have them. Provide only demonstrated, authorised capabilities and describe the host's actual limits truthfully. Preserve necessary structural and memory-safety checks, safe HFS operations, recovery and authentication; this principle does not authorise an integrity-policy change.
+- Assess both new and existing infrastructure by practical benefit, complexity, startup and ongoing CPU/RAM/I/O costs, and compatibility with single Finder, MultiFinder and System 7. Challenge unnecessary machinery before optimising it; use the smallest useful measurements and retain the independent packaging and porting goals.
+
+This principle guides decisions within authorised work; it grants no new
+implementation scope and does not reopen completed or paused tasks.
+
 ## Research Before Reinvention
 
 Before substantial features, ports or performance work, research proven historical
