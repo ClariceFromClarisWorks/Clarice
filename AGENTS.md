@@ -35,6 +35,17 @@ necessary work, not merely to making an expensive design run faster:
 - Keep ports faithful and reusable across single Finder and MultiFinder/System 7, sharing upstream implementations and practical services while respecting native execution differences. Preserve independent packaging and the documented third-party SDK/porting goal; build shared interfaces from demonstrated port needs, within authorised scope.
 - Fix routine defects autonomously within the authorised task. Stop and escalate material architecture, compatibility, security, data-safety or performance/memory tradeoffs with concise evidence and a recommendation. Minimise unnecessary tool calls, rebuilds, test runs and credit use: reuse evidence, test focused affected cases, and broaden only for demonstrated risk or required acceptance.
 
+## Research Before Reinvention
+
+Before substantial features, ports or performance work, research proven historical
+Macintosh/Unix implementations, modern systems algorithms, and demoscene and 68k
+techniques for relevant starting points. Study available source for ideas, then
+implement Clarice-specific solutions independently rather than copying verbatim;
+this does not replace the requirement to retain genuine upstream code in ports.
+Respect licences and attribute useful references. Keep research proportional to
+the task, evaluate approaches against the stock 8 MHz 68000 / System 6 / 4 MB
+baseline, and measure on physical hardware under the performance policy above.
+
 ## Unix familiarity and compatibility
 
 Clarice is a native System 6/7 Macintosh Unix-like environment that should feel
