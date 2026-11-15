@@ -1,0 +1,18 @@
+{
+  "outputs/nano-startup/build/nano.clx": {
+    "file_bytes": 267744,
+    "image_bytes": 198288,
+    "relocations": 5380,
+    "imports": 76,
+    "metadata_bytes": 69424,
+    "version": 1
+  },
+  "outputs/nano-startup/diagnostic-build/nano.clx": {
+    "file_bytes": 268092,
+    "image_bytes": 198488,
+    "relocations": 5387,
+    "imports": 77,
+    "metadata_bytes": 69572,
+    "version": 1
+  }
+}

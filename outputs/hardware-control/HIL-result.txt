@@ -1,0 +1,1 @@
+before=1 after=1 post=0 received=120 latency_ticks=3 capture_ticks=1 idle=3830 final=26358

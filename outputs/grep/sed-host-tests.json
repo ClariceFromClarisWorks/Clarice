@@ -150,7 +150,7 @@
   },
   {
     "test": "long line",
-    "status": 2,
+    "status": 0,
     "passed": true
   },
   {

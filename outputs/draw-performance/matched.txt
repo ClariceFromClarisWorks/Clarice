@@ -1,0 +1,26 @@
+DRAW_PROFILE cols=80 rows=26 cell=6 line=11 font=4/9 inverse=0
+new=0 mode=0 kind=ls100 total=526 paint=121 frames=12 compose=7 shift=18 raster=96 copy=19 bar=0 worst=0 heap=423842
+ls100 passes=180,173,173 ticks
+new=0 mode=0 kind=output total=189 paint=168 frames=24 compose=18 shift=58 raster=90 copy=7 bar=1 worst=7 heap=423842
+new=0 mode=0 kind=history total=231 paint=231 frames=24 compose=19 shift=54 raster=83 copy=14 bar=75 worst=10 heap=423842
+new=1 mode=0 kind=ls100 total=519 paint=121 frames=12 compose=10 shift=15 raster=96 copy=13 bar=0 worst=0 heap=423842
+ls100 passes=175,172,172 ticks
+new=1 mode=0 kind=output total=190 paint=167 frames=24 compose=16 shift=59 raster=91 copy=11 bar=1 worst=7 heap=423842
+new=1 mode=0 kind=history total=199 paint=199 frames=24 compose=17 shift=59 raster=76 copy=10 bar=46 worst=9 heap=423842
+new=0 mode=1 kind=ls100 total=579 paint=172 frames=12 compose=7 shift=26 raster=69 copy=69 bar=0 worst=0 heap=394138
+ls100 passes=198,190,191 ticks
+new=0 mode=1 kind=output total=382 paint=360 frames=24 compose=13 shift=59 raster=82 copy=205 bar=1 worst=15 heap=394138
+new=0 mode=1 kind=history total=296 paint=295 frames=24 compose=18 shift=3 raster=161 copy=33 bar=78 worst=20 heap=394138
+new=1 mode=1 kind=ls100 total=533 paint=136 frames=12 compose=7 shift=33 raster=70 copy=25 bar=1 worst=0 heap=394138
+ls100 passes=179,177,177 ticks
+new=1 mode=1 kind=output total=226 paint=204 frames=24 compose=16 shift=91 raster=85 copy=11 bar=1 worst=9 heap=394138
+new=1 mode=1 kind=history total=264 paint=263 frames=24 compose=15 shift=5 raster=165 copy=31 bar=46 worst=20 heap=394138
+new=0 mode=2 kind=ls100 total=559 paint=163 frames=12 compose=9 shift=21 raster=58 copy=74 bar=0 worst=0 heap=394138
+ls100 passes=187,186,186 ticks
+new=0 mode=2 kind=output total=353 paint=329 frames=24 compose=16 shift=35 raster=76 copy=202 bar=0 worst=14 heap=394138
+new=0 mode=2 kind=history total=281 paint=279 frames=24 compose=16 shift=3 raster=148 copy=34 bar=78 worst=17 heap=394138
+new=1 mode=2 kind=ls100 total=521 paint=124 frames=12 compose=9 shift=29 raster=61 copy=25 bar=0 worst=0 heap=394138
+ls100 passes=174,173,174 ticks
+new=1 mode=2 kind=output total=197 paint=174 frames=24 compose=15 shift=72 raster=75 copy=11 bar=0 worst=8 heap=394138
+new=1 mode=2 kind=history total=218 paint=217 frames=24 compose=13 shift=71 raster=65 copy=23 bar=45 worst=18 heap=394138
+heap_delta=-2 (native raster includes copy)

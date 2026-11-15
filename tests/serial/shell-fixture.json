@@ -1,0 +1,15 @@
+[
+ {"local":"serial -b 57600 /dev/tty.modem\n","wait":2},
+ {"input":"\r","expect":"MACBOOK> "},
+ {"input":"pwd\r","expect":"clarice-remote-"},
+ {"input":"ls\r","expect":"sample.txt"},
+ {"input":"echo hello\r","expect":"\r\nhello\r\nMACBOOK> ","once":"echo hello"},
+ {"input":"echo bad\u007f\u007f\u007fgood\r","expect":"\r\ngood\r\nMACBOOK> "},
+ {"input":"sleep 20\r","expect":"sleep 20\r\n"},
+ {"input":"\u0003echo after interrupt\r","expect":"after interrupt\r\nMACBOOK> "},
+ {"input":"cat sample.txt\r","expect":"remote fixture\r\nMACBOOK> "},
+ {"local":"\u001dq","wait":1},
+ {"local":"serial -b 57600 /dev/tty.modem\n","wait":2},
+ {"input":"\recho reconnected\r","expect":"reconnected\r\nMACBOOK> "},
+ {"local":"\u001dq","wait":1}
+]

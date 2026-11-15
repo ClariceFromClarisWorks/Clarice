@@ -1,0 +1,22 @@
+Using multiversal interfaces
+/src/work/se-control-graphical/system.hda: contains 1 HFS partition
+Volume name is "Sys6Unix"
+Volume was created on Sun Nov  8 05:23:44 2026
+Volume was last modified on Sat Nov 14 07:56:30 2026
+Volume has 25698304 bytes free
+d          3 items               Nov  8 05:53 Bench
+f  TEXT/S6UX         0        60 Nov  8 18:58 Cached Scroll Report
+f  APPL/CLRC    815629         0 Nov 14 07:50 Clarice
+d          5 items               Nov  8 17:26 Documents
+f  ????/UNIX         0       435 Nov 14 10:20 HIL Script
+f  TEXT/S6UX         0        60 Nov  8 18:36 Native Scroll Report
+d          5 items               Nov  8 08:55 ns-tests
+f  TEXT/S6UX         0      1595 Nov  8 17:34 Phase1 Report
+d          2 items               Nov 11 16:11 qol-safe
+f  TEXT/S6UX         0       457 Nov  8 18:27 Scroll Report
+f  APPL/SECT     95687         0 Nov 14 10:19 SEControl
+d         32 items               Nov  8 06:53 shcases
+f  DATA/S6UX         0    131592 Nov  8 19:00 Sys6 History
+f  PREF/S6UX         0        48 Nov  8 19:00 Sys6 Preferences
+d          7 items               Nov  8 09:59 System Folder
+f  APPL/S6UX    138047         0 Nov  8 09:05 Terminal

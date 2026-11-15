@@ -1,0 +1,1 @@
+PASS: 15 command selection/type checks; one resolve/open for first PATH match; descriptors closed

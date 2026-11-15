@@ -4,8 +4,7 @@
 #include "compat.h"
 #include <setjmp.h>
 #include <stdint.h>
-#define PORT_LIMIT (96UL*1024)
-#define LINE_LIMIT (16UL*1024)
+#include <limits.h>
 #define FILE_LIMIT 12
 extern void *cli_alloc(unsigned long);
 extern void cli_free(void *);
@@ -18,11 +17,10 @@ extern long cli_file_write(int,const void *,unsigned long);
 extern int cli_file_close(int);
 extern int app_yield(void);
 extern int upstream_main(int,char **);
-typedef struct Allocation {struct Allocation *prev,*next;size_t size;double align;} Allocation;
+#include "alloc-pages.inc"
 typedef struct Stream {FILE *fp;int fd,kind;char *buffer;} Stream;
 static Allocation *allocations,*spares;
 static unsigned long spare_bytes;
-static unsigned long owned,peak;
 extern void cli_port_stats(unsigned long,unsigned long);
 static Stream streams[FILE_LIMIT];
 int port_fileno(FILE *fp){for(int i=0;i<FILE_LIMIT;i++)if(streams[i].fp==fp)return i<3?i:streams[i].kind==4?streams[i].fd:-1;errno=EBADF;return -1;}
@@ -44,55 +42,61 @@ static unsigned poll_count;
 void port_exit(int status){exit_status=status;longjmp(escape,1);}
 void port_poll(void){int saved=errno;if(!cleaning&&!(++poll_count&255)&&app_yield())port_exit(130);errno=saved;}
 static void yield_now(void){int saved=errno;if(!cleaning&&app_yield())port_exit(130);errno=saved;}
-static void discard_spares(void){while(spares){Allocation *p=spares;spares=p->next;owned-=sizeof(*p)+p->size;cli_free(p);}spare_bytes=0;}
+static void discard_spares(void){while(spares){Allocation *p=spares;spares=p->next;allocation_delete(p);}spare_bytes=0;}
 void *port_malloc(size_t n){
  Allocation *p=NULL;port_poll();if(!n)n=1;
- if(n>PORT_LIMIT-sizeof(*p)){errno=ENOMEM;return NULL;}
+ if(n>SIZE_MAX-sizeof(*p)){errno=ENOMEM;return NULL;}
  /* Reuse short-lived regex scratch blocks within this invocation only. */
  Allocation **best=NULL;for(Allocation **link=&spares;*link;link=&(*link)->next)
   if((*link)->size>=n&&(*link)->size-n<=256&&(!best||(*link)->size<(*best)->size))best=link;
  if(best){p=*best;*best=p->next;spare_bytes-=sizeof(*p)+p->size;}
  else {
-  if(owned>PORT_LIMIT-n-sizeof(*p))discard_spares();
-  if(owned>PORT_LIMIT-n-sizeof(*p)){errno=ENOMEM;return NULL;}
-  p=cli_alloc(sizeof(*p)+n);if(!p&&spares){discard_spares();p=cli_alloc(sizeof(*p)+n);}
+  if(owned>ULONG_MAX-n-sizeof(*p)){errno=ENOMEM;return NULL;}
+  p=allocation_new(n);if(!p&&spares){discard_spares();p=allocation_new(n);}
   if(!p){errno=ENOMEM;return NULL;}
-  p->size=n;owned+=sizeof(*p)+n;if(owned>peak)peak=owned;
+  if(owned>peak)peak=owned;
  }
  p->prev=NULL;p->next=allocations;if(allocations)allocations->prev=p;allocations=p;return p+1;
 }
 void port_free(void *ptr){
  if(!ptr)return;Allocation *p=(Allocation*)ptr-1;
  if(p->prev)p->prev->next=p->next;else allocations=p->next;if(p->next)p->next->prev=p->prev;
- if(!cleaning&&sizeof(*p)+p->size<=8192-spare_bytes){p->next=spares;spares=p;spare_bytes+=sizeof(*p)+p->size;}
- else {owned-=sizeof(*p)+p->size;cli_free(p);}
+ if(!p->page&&!cleaning&&sizeof(*p)+p->size<=8192-spare_bytes){p->next=spares;spares=p;spare_bytes+=sizeof(*p)+p->size;}
+ else {allocation_delete(p);}
 }
 void *port_calloc(size_t n,size_t size){if(size&&n>SIZE_MAX/size){errno=ENOMEM;return NULL;}size*=n;void *p=port_malloc(size);if(p)memset(p,0,size);return p;}
 void *port_realloc(void *ptr,size_t n){if(!ptr)return port_malloc(n);if(!n){port_free(ptr);return NULL;}Allocation *p=(Allocation*)ptr-1;void *q=port_malloc(n);if(q){memcpy(q,ptr,n<p->size?n:p->size);port_free(ptr);}return q;}
 char *port_strndup(const char *s,size_t n){size_t len=0;while(len<n&&s[len])len++;char *p=port_malloc(len+1);if(p){memcpy(p,s,len);p[len]=0;}return p;}
 char *port_strdup(const char *s){return port_strndup(s,strlen(s));}
-static int stream_read(void *cookie,char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long got=s->kind==3?0:s->kind==4?port_read(s->fd,buf,n):s->kind==1?cli_file_read(s->fd,buf,n):cli_read(s->fd,buf,n);if(got<0)errno=EIO;else errno=saved;return got;}
-static int stream_write(void *cookie,const char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();long put=s->kind==3?n:s->kind==4?port_write(s->fd,buf,n):s->kind==1?cli_file_write(s->fd,buf,n):cli_write(s->fd,buf,n);if(put<0){errno=EIO;write_failed=1;}else errno=saved;return put;}
-static int stream_close(void *cookie){Stream *s=cookie;int rc=s->kind==4?port_close(s->fd):s->kind==1?cli_file_close(s->fd):0;if(rc)errno=EIO;return rc;}
+static int stream_read(void *cookie,char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();errno=0;long got=s->kind==3?0:s->kind==4?port_read(s->fd,buf,n):s->kind==1?cli_file_read(s->fd,buf,n):cli_read(s->fd,buf,n);if(got<0){if(!errno)errno=EIO;}else errno=saved;return got;}
+static int stream_write(void *cookie,const char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();errno=0;long put=s->kind==3?n:s->kind==4?port_write(s->fd,buf,n):s->kind==1?cli_file_write(s->fd,buf,n):cli_write(s->fd,buf,n);if(put<0){if(!errno)errno=EIO;write_failed=1;}else errno=saved;return put;}
+static int stream_close(void *cookie){Stream *s=cookie;int rc=s->kind==4?port_close(s->fd):s->kind==1?cli_file_close(s->fd):0;if(rc&&!errno)errno=EIO;return rc;}
+static fpos_t stream_seek(void *cookie,fpos_t offset,int whence){
+ Stream *s=cookie;yield_now();
+ if(offset>LONG_MAX||offset<LONG_MIN){errno=EOVERFLOW;return -1;}
+ if(s->kind==4)return port_lseek(s->fd,(off_t)offset,whence);
+ if(s->kind==1)return cli_file_seek(s->fd,(long)offset,whence);
+ errno=ESPIPE;return -1;
+}
 static FILE *open_stream(int slot,int fd,int kind,int read_ok,int write_ok){
  Stream *s=&streams[slot];s->fd=fd;s->kind=kind;s->buffer=port_malloc(512);if(!s->buffer)return NULL;
- s->fp=funopen(s,read_ok?stream_read:NULL,write_ok?stream_write:NULL,NULL,stream_close);
+ s->fp=funopen(s,read_ok?stream_read:NULL,write_ok?stream_write:NULL,(kind==1||kind==4)?stream_seek:NULL,stream_close);
  if(!s->fp){port_free(s->buffer);s->buffer=NULL;return NULL;}
  int buffering=kind==0&&fd==2?_IONBF:kind==0&&fd==1&&cli_isatty(1)?_IOLBF:_IOFBF;
  setvbuf(s->fp,s->buffer,buffering,512);return s->fp;
 }
 FILE *port_standard(int fd){return streams[fd].fp;}
 static int free_slot(void){for(int i=3;i<FILE_LIMIT;i++)if(!streams[i].fp)return i;errno=EMFILE;return -1;}
-FILE *port_fopen(const char *name,const char *mode){int slot=free_slot();if(slot<0)return NULL;yield_now();int fd=cli_file_open(name,mode);if(fd<0)return NULL;FILE *fp=open_stream(slot,fd,1,mode[0]=='r',mode[0]!='r');if(!fp)cli_file_close(fd);return fp;}
+FILE *port_fopen(const char *name,const char *mode){if(!mode||!*mode){errno=EINVAL;return NULL;}int slot=free_slot();if(slot<0)return NULL;yield_now();int fd=cli_file_open(name,mode);if(fd<0)return NULL;FILE *fp=open_stream(slot,fd,1,mode[0]=='r'||strchr(mode,'+'),mode[0]!='r'||strchr(mode,'+'));if(!fp)cli_file_close(fd);return fp;}
 /* fdopen transfers descriptor ownership to the stream, as in POSIX. */
 FILE *port_fdopen(int fd,const char *mode){if(fd<3||fd>=FD_LIMIT||!descriptors[fd]){errno=EBADF;return NULL;}if(!mode||!strchr("rwa",*mode)){errno=EINVAL;return NULL;}int slot=free_slot();if(slot<0)return NULL;return open_stream(slot,fd,4,*mode=='r'||strchr(mode,'+'),*mode!='r'||strchr(mode,'+'));}
 FILE *port_fmemopen(void *p,size_t n,const char *mode){int slot=free_slot();if(slot<0)return NULL;FILE *fp=fmemopen(p,n,mode);streams[slot].fp=fp;streams[slot].kind=2;return fp;}
 int port_fclose(FILE *fp){for(int i=0;i<FILE_LIMIT;i++)if(fp&&streams[i].fp==fp){int rc=fclose(fp);streams[i].fp=NULL;port_free(streams[i].buffer);streams[i].buffer=NULL;return rc;}errno=EBADF;return EOF;}
 static void reserve_line(char **line,size_t *cap,size_t need){
- if(need>LINE_LIMIT+1){fputs("text tool: line exceeds 16384-byte limit\n",port_standard(2));port_exit(2);}
+ if(need>(size_t)LONG_MAX){fputs("text tool: line size overflow\n",port_standard(2));port_exit(2);}
  if(need<=*cap)return;
- size_t next=*cap?*cap:256;while(next<need){next*=2;if(next>LINE_LIMIT+1)next=LINE_LIMIT+1;}
- char *p=port_realloc(*line,next);if(!p){fputs("text tool: allocation limit reached\n",port_standard(2));port_exit(2);}*line=p;*cap=next;
+ size_t next=*cap?*cap:256;while(next<need){if(next>SIZE_MAX/2){next=need;break;}next*=2;}
+ char *p=port_realloc(*line,next);if(!p){fputs("text tool: insufficient memory\n",port_standard(2));port_exit(2);}*line=p;*cap=next;
 }
 ssize_t port_getline(char **line,size_t *cap,FILE *fp){
  size_t n=0;int c;yield_now();
@@ -113,6 +117,10 @@ ssize_t port_getline(char **line,size_t *cap,FILE *fp){
  if(!n)return -1;(*line)[n]=0;return n;
 }
 int clarice_main(int argc,char **argv){
+#ifdef PORT_NANO_PERF
+ extern void app_nano_mark(int);app_nano_mark(1);
+#endif
+ exit_status=cleaning=write_failed=0;poll_count=0;peak=0;
  if(!setjmp(escape)){
   if(!open_stream(0,0,0,1,0)||!open_stream(1,1,0,0,1)||!open_stream(2,2,0,0,1))exit_status=2;
   else {

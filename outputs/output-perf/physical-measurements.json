@@ -1,0 +1,158 @@
+{
+  "machine": {
+    "physical": "Macintosh SE, user-reported 8 MHz stock mode, 4 MB, System 6.0.8, MultiFinder, BlueSCSI",
+    "cpu_code": 1,
+    "system_api": "0607 (existing resource/API discrepancy, user System 6.0.8)",
+    "font": "Monaco 9",
+    "columns": 80,
+    "rows": 24,
+    "scrollback": 128,
+    "renderer_before": "cache off / native"
+  },
+  "fixture": {
+    "directory": "/tmp/perf1514",
+    "files": 452,
+    "generation": "Awk setup stopped after bounded wait; Ctrl+C=130. Completed files retained unchanged for both tests.",
+    "note": "Not identical to Snow 1000-file dataset; sizes 36 bytes and creation dates vary."
+  },
+  "before": {
+    "build": 2026111506,
+    "benchls_total_ticks": [
+      506,
+      482,
+      542
+    ],
+    "benchls_first_ticks": [
+      41,
+      46,
+      44
+    ],
+    "three_run_paint_ticks": 505,
+    "three_run_events_ticks": 205,
+    "median_seconds": 8.433333333333334,
+    "evidence": "se-baseline-bench.png",
+    "counter_scope": "Listing loop, excludes command load and final report/prompt paint; separate normal invocation follows.",
+    "ordinary_ls_invocation_ticks": 602,
+    "ordinary_ls_load_ticks": 35,
+    "ordinary_ls_free_heap": 424920,
+    "ordinary_ls_owned_remaining": 0,
+    "ordinary_ls_evidence": "se-before-runtime.png",
+    "ordinary_scope": "loader start through execution/cleanup; excludes PATH lookup and final shell prompt presentation"
+  },
+  "after": {
+    "build": 2026111514,
+    "benchls_total_ticks": [
+      373,
+      323,
+      328
+    ],
+    "benchls_first_ticks": [
+      22,
+      33,
+      36
+    ],
+    "three_run_paint_ticks": 163,
+    "three_run_events_ticks": 137,
+    "median_seconds": 5.466666666666667,
+    "listing_median_reduction_percent": 35.177865612648226,
+    "ordinary_ls_invocation_ticks": 366,
+    "ordinary_ls_load_ticks": 42,
+    "ordinary_ls_free_heap": 425970,
+    "ordinary_ls_owned_remaining": 0,
+    "ordinary_invocation_reduction_percent": 39.202657807308974,
+    "evidence": [
+      "se-after-bench.png",
+      "se-after-runtime.png"
+    ],
+    "comparison": "Cumulative deployed improvements 1506 to 1514, not isolated current 1513-to-1514 optimisation.",
+    "native_scroll_check": {
+      "bursts": 22,
+      "views": 20,
+      "pixel_mismatches": 0,
+      "scrollbar_checks": 147,
+      "scrollbar_mismatches": 0
+    },
+    "scroll_quick": {
+      "frames": 30,
+      "native_ticks": 249,
+      "cached_c_ticks": 324,
+      "cached_asm_ticks": 262,
+      "native_worst_frame_ticks": 8,
+      "native_fps": 7.228915662650602,
+      "failures": 0,
+      "cache_bytes": 29704,
+      "cache_release_cycles": 4,
+      "evidence": "se-scroll-speed.png"
+    },
+    "ctrl_c_status": {
+      "output": 130,
+      "pager": 130
+    },
+    "final_after_other_tools": {
+      "free_heap": 425742,
+      "largest_block": 423070,
+      "owned_remaining": 0,
+      "evidence": "se-final-runtime.png",
+      "note": "Different final command (head); not the matched ls heap sample."
+    }
+  },
+  "update": {
+    "source": "http://<MACBOOK_LAN_IP>:8080/p14/update.txt",
+    "from_build": 2026111506,
+    "to_build": 2026111514,
+    "download_seconds": 63,
+    "staging_ticks": 4344,
+    "staged_verification_ticks": 2063,
+    "confirmation_sent": true,
+    "installation_result": "Build 2026111514 confirmed by --check after automatic relaunch",
+    "automatic_relaunch": true,
+    "evidence": "se-after-update.png",
+    "error28_reproduced": false,
+    "command_replacement": {
+      "ls": "appinstall repair passed; /bin/.clx-ls.old retained",
+      "benchls": "appinstall repair passed; /bin/.clx-benchls.old retained",
+      "evidence": "se-command-install.png"
+    },
+    "version_verified": true,
+    "backup_path": "/mnt/Macintosh HD/.cu-000001c6-78c4021a.old",
+    "backup_data_bytes": 0,
+    "backup_resource_bytes": 939251,
+    "backup_evidence": "se-recovery-files.png"
+  },
+  "display_report": {
+    "user_observation": "A complete section of the scrollbar is missing, not just stray pixels.",
+    "reproduced_in_old_build": true,
+    "evidence": [
+      "se-update-download.png",
+      "se-update-confirm.png"
+    ],
+    "latest_build_result": "Missing section not reproduced after output, pager, history thumb drag, moving/covering/reactivating and resizing. Complete track in captured screens; no claim all future redraws are proven.",
+    "latest_evidence": [
+      "se-after-bench.png",
+      "se-drag-history.png",
+      "se-helper-front.png",
+      "se-redraw-return.png",
+      "se-resized.png",
+      "se-build-verified.png"
+    ]
+  },
+  "matched_snow_scroll": {
+    "build": 2026111514,
+    "machine": "Snow Plus/68000/4 MB/System 6.0.8 image, normal speed",
+    "geometry": "Monaco 9, 80 columns, 24 rows, windowed",
+    "frames": 30,
+    "native_ticks": 225,
+    "native_worst_frame_ticks": 7,
+    "cached_c_ticks": 268,
+    "cached_asm_ticks": 233,
+    "failures": 0,
+    "native_fps": 8.0,
+    "physical_native_elapsed_ratio": 1.1066666666666667,
+    "physical_native_throughput_ratio": 0.9036144578313253,
+    "evidence": [
+      "snow-scroll-complete.png",
+      "snow-scroll-report.txt"
+    ],
+    "limits": "One matched 30-frame run on each; SEControl resident/quiet on SE. Not a general CPU, I/O or emulator calibration factor."
+  }
+}

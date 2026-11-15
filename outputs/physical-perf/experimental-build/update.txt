@@ -1,0 +1,8 @@
+CLARICE-UPDATE 2
+build=2026111507
+version=dev-2026111507
+system=1536
+cpu=68000
+package=Clarice-2026111507.bin
+bytes=938368
+crc32=10fa652a

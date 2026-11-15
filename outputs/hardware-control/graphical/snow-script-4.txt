@@ -1,0 +1,35 @@
+EVENT 8 00394988 0081
+EVENT 6 00394988 0080
+SAVE :HIL Results:HIL-g0.pbm 1
+QUEUED
+EVENT 1 00000000 0000
+SAVE :HIL Results:HIL-g1.pbm 1
+PONG 2709 24924 bg=0 active=0 down=0 error=0 state=314
+QUEUED
+QUEUED
+EVENT 1 00000000 0000
+SAVE :HIL Results:HIL-finder.pbm 1
+PONG 2903 24924 bg=0 active=0 down=0 error=0 state=314
+QUEUED
+QUEUED
+SAVE :HIL Results:HIL-app.pbm 1
+PONG 3595 24924 bg=0 active=0 down=0 error=0 state=314
+QUEUED
+QUEUED
+QUEUED
+QUEUED
+SAVE :HIL Results:HIL-pwd.pbm 1
+QUEUED
+SAVE :HIL Results:HIL-closed.pbm 1
+QUEUED
+SAVE :HIL Results:HIL-reopen.pbm 1
+QUEUED
+PONG 4811 24924 bg=0 active=0 down=0 error=0 state=314
+QUEUED
+SAVE :HIL Results:HIL-menu.pbm 1
+PONG 5068 24924 bg=0 active=0 down=0 error=0 state=314
+QUEUED
+CANCELLING
+PONG 5376 24924 bg=0 active=0 down=0 error=0 state=314
+SAVE :HIL Results:HIL-cancel.pbm 1
+BYE

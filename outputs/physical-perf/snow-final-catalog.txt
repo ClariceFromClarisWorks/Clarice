@@ -1,0 +1,43 @@
+f  APPL/CLRC    930122         0 Nov 14 13:02 .cu-000007c8-78c401ab.old
+f  APPL/CLRC    941423         0 Nov 14 14:07 .cu-000007f1-78c4020d.old
+f  APPL/CLRC    940638         0 Nov 14 13:45 .cu-000007f1-78c4020e.old
+f  APPL/CLRC    941423         0 Nov 14 14:07 .cu-00000801-78c4020e.old
+f  APPL/CLRC    941423         0 Nov 14 14:07 .cu-00000818-78c4020f.old
+f  APPL/CLRC    941423         0 Nov 14 14:07 .cu-0000082c-78c40212.old
+d          3 items               Nov  8 05:53 Bench
+f  TEXT/S6UX         0        60 Nov  8 18:58 Cached Scroll Report
+f  APPL/CLRC    939251         0 Nov 14 15:27 Clarice
+f  APPL/CLRC    930122         0 Nov 14 13:02 CRC Probe
+fi FNDR/ERIK      2369         0 Nov 14  2026 Desktop
+d          5 items               Nov  8 17:26 Documents
+f  APPL/CLRC     56520         0 Nov 14 11:53 GuardAfter
+f  ????/UNIX         0       240 Nov 14 14:15 handoff.clx
+f  APPL/CLRC     61029         0 Nov 14 12:54 HashBench
+f  APPL/CLUP     76823         0 Nov 14 13:41 HelperProbe
+d         27 items               Nov 15  2026 HIL Results
+f  ????/UNIX         0       565 Nov 14 14:15 HIL Script disabled
+f  TEXT/????         0       473 Nov 15  2026 HIL-script-result.txt
+f  APPL/CLRC     59072         0 Nov 14 12:24 LaunchProbe
+f  TEXT/S6UX         0        60 Nov  8 18:36 Native Scroll Report
+f  APPL/CLRC     72406         0 Nov 14 12:44 NativeTxn
+f  APPL/CLRC     59405         0 Nov 14 14:06 NestedLaunch
+d          5 items               Nov  8 08:55 ns-tests
+f  APPL/SECT     96497         0 Nov 14 10:41 o
+f  TEXT/S6UX         0      1595 Nov  8 17:34 Phase1 Report
+f  APPL/CLRC    946284         0 Nov 14 15:04 Profile3
+d          2 items               Nov 11 16:11 qol-safe
+f  APPL/CLRC     60007         0 Nov 14 13:13 ResourceCRC
+f  APPL/CLRC     60501         0 Nov 14 12:54 ResourceProbe
+f  TEXT/S6UX         0       457 Nov  8 18:27 Scroll Report
+d         32 items               Nov  8 06:53 shcases
+f  DATA/S6UX         0    131592 Nov  8 19:00 Sys6 History
+f  PREF/S6UX         0        48 Nov  8 19:00 Sys6 Preferences
+d          7 items               Nov  8 09:59 System Folder
+f  APPL/S6UX    138047         0 Nov  8 09:05 Terminal
+f  APPL/CLRC    942043         0 Nov 14 14:15 Trace
+d          4 items               Nov 14  2026 Txn fixture
+f  ????/UNIX         0     97804 Nov 14 15:21 ucheck.clx
+d          7 items               Nov 14 15:27 Update fixture
+f  ????/UNIX         0     10100 Nov 14 11:24 wget.clx
+f  ????/UNIX         0     11700 Nov 14 11:44 wtest.clx
+f  ????/UNIX         0      1124 Nov 14 11:55 zguard.clx

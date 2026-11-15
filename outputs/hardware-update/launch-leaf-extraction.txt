@@ -1,0 +1,19 @@
+Using multiversal interfaces
+/src/work/hardware-update/system.hda: contains 1 HFS partition
+Volume name is "Sys6Unix"
+Volume was created on Sun Nov  8 05:23:44 2026
+Volume was last modified on Sat Nov 14 12:28:23 2026
+Volume has 25225728 bytes free
+f  TEXT/????         0     21899 Nov 14  2026 boot.pbm
+f  TEXT/CLRC         0        15 Nov 14  2026 guard-after-first.txt
+f  TEXT/????         0     21899 Nov 14  2026 guard-after-only.pbm
+f  TEXT/????         0     21899 Nov 14  2026 guard-after.pbm
+f  TEXT/CLRC         0        15 Nov 14  2026 guard-after.txt
+f  TEXT/????         0     21899 Nov 14  2026 guard-before.pbm
+f  TEXT/????         0     21899 Nov 14  2026 http-errors.pbm
+f  TEXT/????         0        37 Nov 14  2026 launch-before-first.txt
+f  TEXT/????         0        37 Nov 14  2026 launch-before.txt
+f  TEXT/CLRC         0        15 Nov 14  2026 launch-target-first.txt
+f  TEXT/????         0     21899 Nov 14  2026 progress.pbm
+f  TEXT/????         0     21899 Nov 14  2026 serial-new.pbm
+f  TEXT/????         0     21899 Nov 14  2026 wget.pbm

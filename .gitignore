@@ -12,3 +12,35 @@ __pycache__/
 *.hda
 *.ROM
 *.rom
+
+# Development checkpoint: generated executables/media and private sessions.
+/outputs/**/*.clx
+/outputs/**/*.macbin
+/outputs/**/*.dat
+/outputs/**/*.pbm
+/outputs/**/*.log
+/outputs/**/*.jsonl
+/outputs/**/*.png
+/outputs/**/se-connection.json
+/outputs/**/*-build.txt
+/outputs/**/*.moof
+/outputs/**/*.snoww
+/outputs/**/SE Control.cfg
+/outputs/**/token
+/outputs/**/token.txt
+/outputs/auto-render/saved.conf
+# Primary build-1517 evidence (all other captures remain local).
+!/outputs/jump-perf/se-paired-summary.png
+!/outputs/jump-perf/se-paired-tail.png
+!/outputs/jump-perf/se-glyph-complete.png
+!/outputs/jump-perf/se-normal-cancel-pager.png
+!/outputs/jump-perf/se-normal-thumb-drag.png
+!/outputs/jump-perf/se-normal-selection.png
+!/outputs/jump-perf/se-normal-memory.png
+!/outputs/jump-perf/se-recovery-files.png
+!/outputs/jump-perf/se-final.png
+!/outputs/jump-perf/glyph-pixels-light.png
+!/outputs/jump-perf/glyph-pixels-dark.png
+!/outputs/jump-perf/normal-after-nano.png
+!/outputs/jump-perf/normal-selection.png
+!/outputs/jump-perf/normal-memory.png

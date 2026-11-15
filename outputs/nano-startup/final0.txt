@@ -1,0 +1,5 @@
+130
+Runtime: heap=397102 largest=392616 image=198488 ticks=2416 load=555 owned-peak=78548 remaining=0
+Nano ticks: 2376 2956 2956 2957 2998 3059 3144 3188 3196 3108 3108 0 0; input batches=1 sum=4 max=4; initial-heap=403398
+Native ticks: allocs=139 FreeMem=1 NewPtr=50 reads=1 read=0 stdio=3 image-alloc=89 meta-alloc=30
+Loader ticks: read=63 validate=331 imports=17 relocations=22 prepare=122 events=26 (events included above)

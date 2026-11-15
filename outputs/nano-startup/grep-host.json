@@ -1,0 +1,25 @@
+[
+  {
+    "args": [
+      "alpha"
+    ],
+    "status": 0,
+    "stdout": "alpha\n"
+  },
+  {
+    "args": [
+      "-E",
+      "^(a|b)+$"
+    ],
+    "status": 0,
+    "stdout": "abba\n"
+  },
+  {
+    "args": [
+      "-v",
+      "x"
+    ],
+    "status": 0,
+    "stdout": "y\n"
+  }
+]

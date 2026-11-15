@@ -1,0 +1,6 @@
+mode=0 cadence=96 files=100 pass=0 total=158 paint=30 frames=3 events=3 partial=0 status=0 heap=420560
+mode=0 cadence=96 files=100 pass=1 total=144 paint=32 frames=3 events=3 partial=0 status=0 heap=420560
+mode=0 cadence=96 files=100 pass=2 total=143 paint=31 frames=3 events=3 partial=0 status=0 heap=420560
+mode=0 cadence=96 files=1000 pass=0 total=582 paint=83 frames=7 events=5 partial=0 status=0 heap=420560
+mode=0 cadence=96 files=1000 pass=1 total=569 paint=82 frames=7 events=8 partial=0 status=0 heap=420560
+mode=0 cadence=96 files=1000 pass=2 total=568 paint=82 frames=7 events=5 partial=0 status=0 heap=420560

@@ -1,0 +1,1 @@
+PASS: 20000 pixel comparisons across widths, inverse patterns and existing cursor states; full inverse row 80 calls -> 1; no allocation

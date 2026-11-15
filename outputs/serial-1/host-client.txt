@@ -1,0 +1,1 @@
+PASS: 4096 TX / 2048 RX ordered concurrent bytes, both ports, escapes, 12 faults, cancel, timeouts, overflow, short write, bad path/TTY, probe, cleanup

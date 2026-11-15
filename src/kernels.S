@@ -10,6 +10,33 @@ asm_length:
  addq.l #1,%d0
  bra 1b
 2: rts
+.globl asm_copy_printable
+/* Copy at most 132 bytes, stopping before the first byte below 32.
+   High MacRoman bytes are printable. Byte accesses permit odd source/dest.
+   Return the copied count; do not read beyond the supplied bound. */
+asm_copy_printable:
+ move.l 4(%sp),%a0
+ move.l 8(%sp),%a1
+ move.l 12(%sp),%d1
+ tst.l %d1
+ ble 2f
+ subq.w #1,%d1
+1: cmpi.b #32,(%a1)
+ bcs 2f
+ move.b (%a1)+,(%a0)+
+ dbra %d1,1b
+2: move.l %a1,%d0
+ sub.l 8(%sp),%d0
+ rts
+.globl asm_clear_terminal_row
+/* Terminal rows are even-aligned and exactly 132 bytes. */
+asm_clear_terminal_row:
+ move.l 4(%sp),%a0
+ moveq #0,%d0
+ .rept 33
+ move.l %d0,(%a0)+
+ .endr
+ rts
 .globl asm_glyph
 asm_glyph:
  move.l 4(%sp),%a0
@@ -47,12 +74,26 @@ sys6_memtop:
  rts
 
 /* Packed monochrome cell compositor, 68000 C ABI. Glyph stride is 32. */
+.globl asm_ascii_cells
+asm_ascii_cells:
+ cmpi.l #6,24(%sp)
+ bne .Lascii_generic
+ cmpi.l #11,20(%sp)
+ bne .Lascii_generic
+ cmpi.l #4,16(%sp)
+ bcc .Lascii_four
+.Lascii_generic:
+ move.l #1024,%d0
+ bra .Lcells_enter
 .globl asm_cells
 asm_cells:
+ moveq #0,%d0
+.Lcells_enter:
  movem.l %d2-%d7/%a2-%a5,-(%sp)
  move.l 44(%sp),%a0
  move.l 48(%sp),%a1
  move.l 52(%sp),%a2
+ suba.l %d0,%a2
  move.l 56(%sp),%d7
  move.l 60(%sp),%d6
  move.l 64(%sp),%d5
@@ -88,6 +129,74 @@ asm_cells:
  subq.l #1,%d7
  bne 1b
 4: movem.l (%sp)+,%d2-%d7/%a2-%a5
+ rts
+
+/* Four six-pixel cells form three complete bytes. Compose those bytes once,
+   avoiding per-cell variable shifts and read/modify/write of overlapping pixels.
+   Exact Monaco geometry only; remainder uses the bounded generic compositor. */
+.Lascii_four:
+ movem.l %d2-%d7/%a2-%a6,-(%sp)
+ move.l 48(%sp),%a0
+ move.l 52(%sp),%a1
+ move.l 56(%sp),%a2
+ suba.l #1024,%a2
+ move.l 60(%sp),%d7
+ move.l %d7,%d6
+ lsr.l #2,%d6
+ andi.w #3,%d7
+.Lascii_group:
+ moveq #0,%d0
+ move.b (%a1)+,%d0
+ lsl.w #5,%d0
+ lea (%a2,%d0.w),%a3
+ move.b (%a1)+,%d0
+ andi.w #255,%d0
+ lsl.w #5,%d0
+ lea (%a2,%d0.w),%a4
+ move.b (%a1)+,%d0
+ andi.w #255,%d0
+ lsl.w #5,%d0
+ lea (%a2,%d0.w),%a5
+ move.b (%a1)+,%d0
+ andi.w #255,%d0
+ lsl.w #5,%d0
+ lea (%a2,%d0.w),%a6
+ moveq #10,%d5
+.Lascii_scan:
+ move.b (%a3)+,%d0
+ move.b (%a4)+,%d1
+ move.b %d1,%d2
+ lsr.b #6,%d2
+ or.b %d2,%d0
+ move.b %d0,(%a0)
+ lsl.b #2,%d1
+ move.b (%a5)+,%d2
+ move.b %d2,%d3
+ lsr.b #4,%d3
+ or.b %d3,%d1
+ move.b %d1,1(%a0)
+ lsl.b #4,%d2
+ move.b (%a6)+,%d3
+ lsr.b #2,%d3
+ or.b %d3,%d2
+ move.b %d2,2(%a0)
+ lea 64(%a0),%a0
+ dbra %d5,.Lascii_scan
+ lea -701(%a0),%a0
+ subq.w #1,%d6
+ bne .Lascii_group
+ tst.w %d7
+ beq .Lascii_done
+ move.l #6,-(%sp)
+ move.l #11,-(%sp)
+ move.l %d7,-(%sp)
+ pea 1024(%a2)
+ move.l %a1,-(%sp)
+ move.l %a0,-(%sp)
+ jsr asm_ascii_cells
+ lea 24(%sp),%sp
+.Lascii_done:
+ movem.l (%sp)+,%d2-%d7/%a2-%a6
  rts
 
 /* Even-aligned row transfer. Width can be any positive number of bytes. */
@@ -131,4 +240,20 @@ asm_copy_rows:
  subq.l #1,%d3
  bne 1b
 5: movem.l (%sp)+,%d2-%d5/%a2-%a3
+ rts
+
+/* Equality only, for even-aligned 132-byte terminal model rows.
+   General libc memcmp uses byte loops at 2-mod-4 addresses on 68000.
+   Check every byte including the cursor marker, without reading past the row. */
+.globl asm_terminal_row_changed
+asm_terminal_row_changed:
+ move.l 4(%sp),%a0
+ move.l 8(%sp),%a1
+ .rept 33
+ cmpm.l (%a0)+,(%a1)+
+ bne 1f
+ .endr
+ moveq #0,%d0
+ rts
+1: moveq #1,%d0
  rts

@@ -1,0 +1,6 @@
+Using multiversal interfaces
+/src/outputs/hardware-control/graphical/build/SE-Control.hda: contains 1 HFS partition
+Volume name is "SE Control"
+Volume was created on Sat Nov 14 10:37:14 2026
+Volume was last modified on Sat Nov 14 10:40:31 2026
+Volume has 32847360 bytes free

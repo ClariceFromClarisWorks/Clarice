@@ -1,0 +1,17 @@
+{
+  "backup_data_exact": true,
+  "backup_resource_content_exact": true,
+  "installed_data_exact": true,
+  "installed_resource_content_exact": true,
+  "type_creator_preserved": true,
+  "creation_preserved": true,
+  "flags_preserved": true,
+  "installed_build": 2026111506,
+  "nano_save": {
+    "data_exact": true,
+    "resource_exact": true,
+    "type_creator_preserved": true,
+    "flags_preserved": true,
+    "creation_preserved": true
+  }
+}

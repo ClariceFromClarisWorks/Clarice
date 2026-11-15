@@ -134,8 +134,19 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
  return run_args(n,v);}
 #else
  for(i=0;commands[i];i++)if(!strcmp(commands[i],v[0]))return run_args(n,v);
- char candidate[PATH_CAP];int found=command_path(v[0],candidate);
- if(found<0)return 126;if(found){shell_commands++;return program_kind(candidate)==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
+ char candidate[PATH_CAP];int kind=0;
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+ unsigned long dispatch_start=TickCount();
+#endif
+ int found=command_path(v[0],candidate,&kind);
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+ dispatch_path_ticks=TickCount()-dispatch_start;dispatch_start=TickCount();
+#endif
+ if(found>0&&dispatch_legacy)kind=program_kind(candidate);
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+ dispatch_kind_ticks=TickCount()-dispatch_start;
+#endif
+ if(found<0)return 126;if(found){shell_commands++;return kind==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
  if(!strcmp(v[0],"chmod")){errsay("chmod: command not found; did you mean hfsattr?\n");return 127;}
  errsay("command not found: ");errsay(v[0]);errsay("\n");return 127;}
 #endif

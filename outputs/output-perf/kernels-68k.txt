@@ -1,0 +1,2 @@
+PASS: 75540 actual M68000 decimal fields, exact padding/digits, odd destination, guards and ABI
+PASS: 8911 bounded printable-copy cases, all lengths/control positions, high bytes, odd addresses, no overread; 8 row-clear alignments, guards and ABI

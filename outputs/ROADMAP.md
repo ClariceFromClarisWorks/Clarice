@@ -40,3 +40,20 @@ Do not keep nano/ncurses resident merely to hide first-launch cost.
 
 Separate future possibilities: SSH server, background services, native compiler
 and BlueSCSI-assisted cryptography. None is required for independent updates.
+
+
+## Agreed physical performance programme — 15 November 2026
+
+The current user-authorised programme supersedes earlier historical stop markers:
+measure stock SE startup, shared command/loader costs, input/display, HFS I/O,
+nano empty/8 KiB stages, memory and updater handoff; optimise demonstrated shared
+bottlenecks and record physical before/after evidence in CURRENT-STATE.md.
+Updater installation/relaunch currently looks frozen: add a pre-exit do-not-reset
+warning and simple visible helper status, then investigate measured verification
+costs while preserving both forks, metadata and recovery. No speculative worker
+rewrite or additional nano version port is authorised merely by this entry.
+
+Agreed updater follow-up, 15 November: keep confirmation visible within the
+terminal viewport, use familiar `Y/n` interaction, and support explicit `-y`
+auto-acceptance. Preserve verification, recovery and no silent updates. Recorded
+during the frame-performance task; not implemented as part of that task.

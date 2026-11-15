@@ -7,7 +7,7 @@ static const struct {const char *name;short resource;} bundled_commands[]={
  {"tail",211},{"sort",212},{"cp",213},{"mv",213},{"touch",213},
  {"rmdir",213},{"mkdir",213},{"rm",213},{"ln",213},{"readlink",213},
  {"hfsattr",213},{"find",214},{"du",214},{"file",214},{"od",215},
- {"more",215},{"basename",216},{"dirname",217},{0,0}};
+ {"more",215},{"basename",216},{"dirname",217},{"kermit",218},{"wget",219},{"clarice",220},{0,0}};
 static int command_paths(const char *name,char *dest,char *stage,char *backup){
  size_t n=strlen(name);if(!n||n>20)return bdNamErr;
  for(size_t i=0;i<n;i++)if(!((name[i]>='a'&&name[i]<='z')||(name[i]>='A'&&name[i]<='Z')||(name[i]>='0'&&name[i]<='9')||name[i]=='_'||name[i]=='-'))return bdNamErr;
@@ -54,11 +54,13 @@ static int command_replace(const char *name,const char *source,const unsigned ch
  if((e=command_flush(stage)))goto done;
  /* No yields between renames: cancellation cannot strand an ordinary update.
     Flush after saving the old entry makes recovery survive a later failure. */
+ if((e=clx_receipt_forget(dest)))goto done;
  if(exists){e=cli_native_rename(dest,backup);if(e)goto done;
   e=command_flush(backup);if(e){command_restore(backup,dest);goto done;}}
  e=cli_native_rename(stage,dest);
  if(e){if(exists)command_restore(backup,dest);goto done;}
  owned=0;e=command_flush(dest);if(exists)command_recovery(backup);
+ if(!e){int valid=command_check_native(dest);if(valid)e=valid==130?userCanceledErr:paramErr;}
 done:
  if(in>=0)FSClose(in);if(out>=0)FSClose(out);
  if(owned){int cleanup=HDelete(0,0,pn);if(cleanup)command_recovery(stage);}
@@ -75,6 +77,7 @@ static int command_recover(const char *name){
  /* Recovery restores the exact old file, even if it was damaged/incompatible.
     Never execute it here, and never discard the current installed candidate. */
  e=info(dest,&pb);int exists=!e;if(e&&e!=fnfErr)return e;
+ if((e=clx_receipt_forget(dest)))return e;
  if(exists){if(pb.hFileInfo.ioFlAttrib&16)return paramErr;if((e=command_absent(stage)))return e;
   if((e=cli_native_rename(dest,stage)))return e;
   if((e=command_flush(stage))){command_restore(stage,dest);return e;}}
@@ -86,7 +89,10 @@ static int appinstall_command(int argc,char **av){
  if(argc==2&&!strcmp(av[1],"--help")){
   say("appinstall check FILE | replace FILE NAME | repair NAME | recover NAME\n"
       "NAME is a /bin leaf (1..20 letters, digits, _ or -).\n"
-      "check validates without executing; replace validates before installing.\n"
+      "check fully validates without executing and records verified /bin files.\n"
+      "export CLX_VERIFY=strict always verifies executable contents at launch.\n"
+      "export CLX_VERIFY=installed enables recognised installed-file fast launch.\n"
+      "replace validates before installing.\n"
       "repair explicitly installs the bundled copy; recover restores .clx-NAME.old.\n"
       "Previous files retain both forks. Existing Finder metadata is preserved.\nReplacement is a CLX data file (resource fork stays with the previous version).\n"
       "Existing .old/.new files block updates: inspect and move them before retrying.\n");return 0;

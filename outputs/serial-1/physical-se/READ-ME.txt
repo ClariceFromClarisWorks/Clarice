@@ -1,0 +1,77 @@
+Clarice Serial-1 - physical Macintosh SE test build
+68000, 4 MB RAM, System 6.0.8. Development snapshot, not a published release.
+
+INSTALL
+The HDA is an application disk, not a boot disk. Keep your existing System disk.
+HD60_512_Clarice-Serial1.hda selects SCSI ID 6. Use an unused ID; do not replace
+an existing system image. ZuluSCSI also accepts HD6_Clarice-Serial1.hda.
+
+1. Quit Clarice. Mount this disk through BlueSCSI/ZuluSCSI.
+2. In Finder, keep your old Clarice application as a backup and copy the new
+   Clarice onto your BOOT disk. Launch that copy. Running from a secondary
+   disk has a known preferences-save limitation.
+3. Existing /bin commands are intentionally never overwritten at startup.
+   Update ONLY serial explicitly, using the new application's bundled copy:
+
+     appinstall repair serial
+     serial --help
+
+   The previous command is retained as /bin/.clx-serial.old. If an earlier
+   .clx-serial.old or .clx-serial.new already exists, inspect and move it to
+   a separate backup folder first; do not blindly delete recovery files.
+   If necessary: appinstall recover serial
+   serial.clx is supplied separately for independent replacement:
+     appinstall replace "/mnt/Clarice Serial/serial.clx" serial
+   Choose repair OR replace, not both. Preferences/history remain intact.
+
+MACBOOK ECHO SERVICE
+Use the already verified cable/USB serial adapter, connected to the SE modem
+port. Close other programs using either serial port. In macOS Terminal, change
+into the folder containing serial-echo.py, then run:
+
+  python3 -m venv .venv
+  .venv/bin/python -m pip install pyserial==3.5
+  .venv/bin/python -m serial.tools.list_ports -v
+  .venv/bin/python serial-echo.py /dev/cu.usbserial-YOUR-ADAPTER -b 57600 --log echo.jsonl
+
+Replace /dev/cu.usbserial-YOUR-ADAPTER with the adapter's actual /dev/cu.* name
+from list_ports. Do not select Bluetooth or a debug port. Settings are 57600,
+8 data bits, no parity, one stop bit, no RTS/CTS, XON/XOFF or DSR/DTR flow control.
+The service echoes bytes immediately. It is not a login shell or a line editor.
+Ctrl+C in the MacBook Terminal stops the service. After unplugging USB, reconnect
+and rerun it (the device name can change).
+
+ON THE SE
+  serial -b 57600 /dev/tty.modem
+Type: hello from se
+Press Return; text should echo once. There is no local echo.
+For the printer port, use /dev/tty.printer and disable AppleTalk on that port.
+
+Exit locally: Ctrl+] then release the keys and press q.
+On a keyboard without Control, use Option+] then q.
+Ctrl+] twice sends a literal Ctrl+]. Ctrl+C, Option+C or Command-period cancels
+locally rather than sending Ctrl+C to the remote peer.
+After normal local exit, echo $? should show 0; after cancellation, 130.
+
+SHORT HARDWARE ACCEPTANCE
+- Type several lines slowly and rapidly; compare with the MacBook echo.jsonl.
+- Exit and reconnect three times; confirm ordinary shell typing still works.
+- Stop/restart the echo service; verify echo resumes and local exit still works.
+- Disconnect/reconnect the verified cable; exit locally, reopen and verify echo.
+- Repeat with printer port only if AppleTalk is disabled and that port is free.
+
+LIMITS
+Snow Macintosh Plus/4 MB/System 6.0.8 and host tests are separate from physical
+SE validation. USB adapter, cable wiring and real 57600-baud error rate require
+this hardware check. A basic cable supplies no carrier-loss indication; unplug
+can look like silence. A stopped transmitter times out after five seconds.
+Receive overruns/framing/parity errors end the session explicitly. Keyboard
+queue overflow ends it and requires Ctrl+C to resume shell input. No unbounded
+queues; no guarantee of lossless sustained line-rate output without flow control.
+Uses the existing text renderer: CR/LF/tab and ordinary characters, no VT100,
+remote cursor addressing, general ANSI editing or UTF-8 conversion.
+No Kermit, file transfers, Telnet, SSH, background server or PTY shell integration.
+
+The HDA's Apple_Driver43 partition is Apple software, retained from the existing
+formatted template; no System, Finder or ROM is included. Clarice and bundled
+upstream tool authors/licences remain as recorded in the project THIRD_PARTY.md.

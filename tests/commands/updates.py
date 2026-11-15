@@ -24,8 +24,8 @@ assert struct.unpack_from('>III',b,32)==(1,0,1)
 h=2166136261
 for c in b[:44]:h=((h^c)*16777619)&0xffffffff
 assert struct.unpack_from('>I',b,44)[0]==h
-s=Path('src/module.inc').read_text()
-names=set(re.findall(r'(?:EXPORT|DATA)\((\w+)\)',s))|set(re.findall(r'!strcmp\(name,"([^"]+)"\)',s));names.discard('symbol')
+s=Path('src/clx-imports.inc').read_text()
+names=set(re.findall(r'CLX_IMPORT\("([^"\n]+)"',s))
 (work/'exports.txt').write_text('\n'+'\n'.join(sorted(names))+'\n')
 images=sorted(Path('work/build').glob('*.clx'))+sorted(work.glob('*.clx'))
 log+=run([str(work/'update-host'),str(work/'exports.txt'),*map(str,images)])

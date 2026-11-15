@@ -1,0 +1,24 @@
+/mnt/Test 2/catalog-test
+guard
+percent%25name
+space name
+sub/
+d--                       2026-11-15 11:52 .
+d--                       2026-11-11 05:33 ..
+---          0          0 2026-11-15 11:52 .hidden
+---          7          0 2026-11-15 11:52 guard
+---          0          0 2026-11-15 11:52 percent%25name
+---          0          0 2026-11-15 11:52 space name
+d--                       2026-11-15 11:52 sub/
+guard
+guard
+percent%25name
+space name
+sub/
+SECOND
+BOOT
+absent=1
+missing=1
+/tmp/catalog-test
+BOOT
+CATALOG-GUEST-DONE

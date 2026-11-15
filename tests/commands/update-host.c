@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <assert.h>
+#include <ctype.h>
 #include <setjmp.h>
 #define CLX_HOST_TEST 1
 #define PATH_CAP 256
@@ -24,6 +25,11 @@ typedef struct {struct {int ioFlAttrib,ioFlFndrInfo,ioFlXFndrInfo;} hFileInfo;} 
 static char root_path[PATH_CAP]="Disk:Clarice Data:";
 static unsigned long port_peak,port_remaining,module_bytes,module_load_ticks,module_ticks;
 static unsigned long ticks;
+static const char *verify_policy="";
+static const char *env_get(const char *name){(void)name;return verify_policy;}
+static int executions;
+static int clx_test_execute(const unsigned char *p,unsigned long n){(void)p;(void)n;executions++;return 0;}
+static int resolve(const char *p,char *out){if(!strncmp(p,"native:",7))p+=7;strcpy(out,p);return 0;}
 static unsigned long TickCount(void){return ticks++;}
 static char diagnostics[8192];
 static void errsay(const char *s){if(strlen(diagnostics)+strlen(s)<sizeof diagnostics)strcat(diagnostics,s);}
@@ -45,19 +51,21 @@ static unsigned long asm_fnv1a(unsigned long h,const unsigned char *p,unsigned l
 static void pstr(unsigned char *p,const char *s){assert(strlen(s)<256);p[0]=strlen(s);memcpy(p+1,s,p[0]);}
 static const char *unpascal(const unsigned char *p){static char s[256];memcpy(s,p+1,p[0]);s[p[0]]=0;return s;}
 #define MAXFILES 96
-struct file {char name[256];unsigned char data[524288];long len,pos;int open,dir,identity,resource_fork,finder;};
+struct file {char name[256];unsigned char data[524288];long len,pos;int open,dir,identity,resource_fork,finder,modified;};
 static struct file files[MAXFILES];
+static int generation;
 static int writes,fail_write,short_write,closes,fail_close,renames,fail_rename,fail_rename_again,flushes,fail_flush,crash_flush;
 static jmp_buf crash;
 static int find(const char *p){for(int i=0;i<MAXFILES;i++)if(*files[i].name&&!strcmp(p,files[i].name))return i;return -1;}
 static int info(const char *p,CInfoPBRec *pb){int i=find(p);if(i<0)return fnfErr;pb->hFileInfo.ioFlAttrib=files[i].dir?16:0;pb->hFileInfo.ioFlFndrInfo=files[i].finder;pb->hFileInfo.ioFlXFndrInfo=0;return 0;}
 static int cli_native_set(const char *p,CInfoPBRec *pb){int i=find(p);if(i<0)return fnfErr;files[i].finder=pb->hFileInfo.ioFlFndrInfo;return 0;}
-static int HCreate(int v,int d,const unsigned char *p,unsigned long creator,unsigned long type){(void)v;(void)d;(void)creator;(void)type;const char *s=unpascal(p);if(find(s)>=0)return dupFNErr;for(int i=0;i<MAXFILES;i++)if(!*files[i].name){memset(&files[i],0,sizeof files[i]);strcpy(files[i].name,s);files[i].identity=i+1;files[i].finder=11;return 0;}return ioErr;}
+static int HCreate(int v,int d,const unsigned char *p,unsigned long creator,unsigned long type){(void)v;(void)d;(void)creator;(void)type;const char *s=unpascal(p);if(find(s)>=0)return dupFNErr;for(int i=0;i<MAXFILES;i++)if(!*files[i].name){memset(&files[i],0,sizeof files[i]);strcpy(files[i].name,s);files[i].identity=++generation;files[i].modified=1;files[i].finder=11;return 0;}return ioErr;}
 static int HOpen(int v,int d,const unsigned char *p,int perm,short *ref){(void)v;(void)d;(void)perm;int i=find(unpascal(p));if(i<0)return fnfErr;files[i].pos=0;files[i].open++;*ref=i+1;return 0;}
 static int open_path(const char *p,int perm,short *ref){unsigned char pn[256];if(!strncmp(p,"native:",7))p+=7;pstr(pn,p);return HOpen(0,0,pn,perm,ref);}
 static int FSRead(short ref,long *n,void *out){struct file *f=&files[ref-1];long want=*n;if(*n>f->len-f->pos)*n=f->len-f->pos;memcpy(out,f->data+f->pos,*n);f->pos+=*n;return *n<want?eofErr:0;}
-static int FSWrite(short ref,long *n,const void *in){struct file *f=&files[ref-1];writes++;if(writes==fail_write)return ioErr;if(writes==short_write)(*n)--;assert(f->pos+*n<=524288);memcpy(f->data+f->pos,in,*n);f->pos+=*n;if(f->pos>f->len)f->len=f->pos;return 0;}
+static int FSWrite(short ref,long *n,const void *in){struct file *f=&files[ref-1];writes++;if(writes==fail_write)return ioErr;if(writes==short_write)(*n)--;assert(f->pos+*n<=524288);memcpy(f->data+f->pos,in,*n);f->pos+=*n;f->modified++;if(f->pos>f->len)f->len=f->pos;return 0;}
 static int FSClose(short ref){assert(files[ref-1].open>0);files[ref-1].open--;return ++closes==fail_close?ioErr:0;}
+static int SetEOF(short ref,long n){files[ref-1].len=n;files[ref-1].modified++;return 0;}
 static int GetEOF(short ref,long *n){*n=files[ref-1].len;return 0;}
 static int HDelete(int v,int d,const unsigned char *p){(void)v;(void)d;int i=find(unpascal(p));if(i<0)return fnfErr;assert(!files[i].open);files[i].name[0]=0;return 0;}
 static int cli_native_volume(const char *p,short *v){(void)p;*v=1;return 0;}
@@ -69,9 +77,14 @@ static long GetHandleSize(Handle h){(void)h;return bundle_len;}
 static void HLock(Handle h){(void)h;}
 static void HUnlock(Handle h){(void)h;}
 static void ReleaseResource(Handle h){(void)h;}
+static int clx_identity(short ref,const char *native,unsigned char out[32]){
+ int i=find(native);if(i<0||ref!=i+1)return 0;memset(out,0,32);
+ uint32_t values[]={123,(uint32_t)files[i].identity,45,1,(uint32_t)files[i].modified,(uint32_t)files[i].len,(uint32_t)files[i].resource_fork,0};
+ for(int j=0;j<8;j++){uint32_t x=values[j];out[j*4]=x>>24;out[j*4+1]=x>>16;out[j*4+2]=x>>8;out[j*4+3]=x;}return 1;
+}
 #include "../../src/module.inc"
 static int cases;
-static void reset(void){assert(!allocs);for(int i=0;i<MAXFILES;i++)assert(!files[i].open);memset(files,0,sizeof files);diagnostics[0]=0;writes=closes=renames=flushes=yields=0;fail_write=short_write=fail_close=fail_rename=fail_rename_again=fail_flush=crash_flush=cancel_at=0;cases++;}
+static void reset(void){assert(!allocs);for(int i=0;i<MAXFILES;i++)assert(!files[i].open);memset(files,0,sizeof files);diagnostics[0]=0;writes=closes=renames=flushes=yields=0;fail_write=short_write=fail_close=fail_rename=fail_rename_again=fail_flush=crash_flush=cancel_at=0;verify_policy="";executions=0;clx_fast_blocked=0;cases++;}
 static long make_image(unsigned char *b,int version,int value){memset(b,0,256);memcpy(b,"CLX1",4);clx_put32(b+4,version);clx_put32(b+8,4);int h=version==2?48:32;b[h]=value;clx_put32(b+24,asm_fnv1a(2166136261UL,b+h,4));if(version==2){clx_put32(b+32,1);clx_put32(b+40,1);clx_put32(b+44,asm_fnv1a(2166136261UL,b,44));}return h+4;}
 static int put(const char *path,const unsigned char *data,long len){unsigned char pn[256];pstr(pn,path);assert(!HCreate(0,0,pn,0,0));int i=find(path);memcpy(files[i].data,data,len);files[i].len=len;files[i].resource_fork=567;files[i].finder=123;return i;}
 static const char *dest="Disk:Clarice Data:bin:grep",*old="Disk:Clarice Data:bin:.clx-grep.old",*stage="Disk:Clarice Data:bin:.clx-grep.new",*source="Disk:upgrade";
@@ -88,7 +101,8 @@ int main(int argc,char **argv){
  reset();int i=setup();assert(!install_commands());same_old(i,dest);
  reset();i=put(dest,updated,updated_len);assert(!install_commands());assert(find(dest)==i&&!memcmp(files[i].data,updated,updated_len));
  reset();i=put(dest,(const unsigned char*)"damaged",7);assert(!install_commands());assert(files[i].len==7);assert(command_check_native(dest)==126);assert(strstr(diagnostics,"damaged"));
- reset();unsigned char bad[256];memcpy(bad,updated,updated_len);clx_put32(bad+36,1);clx_put32(bad+44,asm_fnv1a(2166136261UL,bad,44));i=put(dest,bad,updated_len);assert(!install_commands());assert(command_check_native(dest)==126);assert(strstr(diagnostics,"incompatible runtime"));assert(!memcmp(files[i].data,bad,updated_len));
+ reset();unsigned char bad[256];memcpy(bad,updated,updated_len);clx_put32(bad+36,CLX_RUNTIME_MINOR+1);clx_put32(bad+44,asm_fnv1a(2166136261UL,bad,44));i=put(dest,bad,updated_len);assert(!install_commands());assert(command_check_native(dest)==126);assert(strstr(diagnostics,"incompatible runtime"));assert(!memcmp(files[i].data,bad,updated_len));
+ reset();memcpy(bad,updated,updated_len);clx_put32(bad+36,CLX_RUNTIME_MINOR);clx_put32(bad+44,asm_fnv1a(2166136261UL,bad,44));put(dest,bad,updated_len);assert(!command_check_native(dest));
  reset();memcpy(bad,updated,updated_len);clx_put32(bad+40,2);clx_put32(bad+44,asm_fnv1a(2166136261UL,bad,44));put(dest,bad,updated_len);assert(command_check_native(dest)==126);assert(strstr(diagnostics,"capabilities"));
  reset();memcpy(bad,updated,updated_len);bad[48]^=1;put(dest,bad,updated_len);assert(command_check_native(dest)==126);assert(strstr(diagnostics,"checksum"));
  reset();i=setup();assert(!command_replace("grep",source,0,0,1));same_old(i,old);assert(!command_check_native(dest));int installed=find(dest);assert(files[installed].finder==123);assert(!install_commands());assert(find(dest)==installed);assert(command_replace("grep",source,0,0,1)==dupFNErr);assert(!command_recover("grep"));same_old(i,dest);assert(find(stage)==installed);
@@ -113,5 +127,43 @@ int main(int argc,char **argv){
  reset();i=setup();put(stage,(const unsigned char*)"unrelated",9);assert(command_replace("grep",source,0,0,1)==dupFNErr);same_old(i,dest);assert(files[find(stage)].len==9);
  reset();i=setup();files[i].dir=1;assert(command_replace("grep",source,0,0,1));same_old(i,dest);
  reset();assert(command_replace("../grep",source,0,0,1)==bdNamErr);assert(command_replace("this-command-name-is-over-twenty",source,0,0,1)==bdNamErr);
+
+ /* Fast policy: the host callback stands in for executing validated 68000 code. */
+ reset();i=put(dest,updated,updated_len);assert(!module_run(dest,0,0)&&!module_fast);assert(!module_run(dest,0,0)&&module_fast);assert(executions==2);
+ char receipt_name[PATH_CAP];assert(clx_record_path(dest,receipt_name));int rec=find(receipt_name);assert(rec>=0&&files[rec].len==CLX_RECORD_BYTES);
+ assert(!install_commands());assert(!module_run(dest,0,0)&&module_fast);
+ verify_policy="strict";assert(!module_run(dest,0,0)&&!module_fast);verify_policy="typo";assert(!module_run(dest,0,0)&&!module_fast);verify_policy="";
+ assert(!command_check_native(dest)&&!module_fast);assert(!module_run(dest,0,0)&&module_fast);
+ /* Deliberately demonstrate the documented undetectable-content-change risk. */
+ files[i].data[48]^=1;assert(!module_run(dest,0,0)&&module_fast);
+ verify_policy="strict";assert(module_run(dest,0,0)==126);assert(find(receipt_name)<0);verify_policy="";assert(module_run(dest,0,0)==126);
+ reset();i=put(dest,updated,updated_len);assert(!command_check_native(dest));files[i].modified++;files[i].data[48]^=1;assert(module_run(dest,0,0)==126);
+ reset();i=put(dest,updated,updated_len);assert(!command_check_native(dest));files[i].identity++;assert(!module_run(dest,0,0)&&!module_fast);assert(!module_run(dest,0,0)&&module_fast);
+ reset();i=put(source,updated,updated_len);assert(!module_run(source,0,0)&&!module_fast);assert(!module_run(source,0,0)&&!module_fast);
+ reset();i=put(dest,updated,updated_len);assert(!command_check_native(dest));rec=find(receipt_name);files[rec].data[100]^=1;assert(!module_run(dest,0,0)&&!module_fast);
+ reset();i=put(dest,updated,updated_len);assert(!command_check_native(dest));files[i].len--;assert(module_run(dest,0,0)==126&&executions==0);assert(find(receipt_name)<0);
+ reset();i=setup();assert(!command_check_native(dest));assert(!command_replace("grep",source,0,0,1));assert(!module_run(dest,0,0)&&module_fast);assert(!command_recover("grep"));assert(find(receipt_name)<0);assert(!module_run(dest,0,0)&&!module_fast);assert(!module_run(dest,0,0)&&module_fast);
+ reset();i=setup();assert(!command_check_native(dest));assert(!command_bundle("grep",201,1));assert(!module_run(dest,0,0)&&module_fast);
+ reset();i=put(dest,updated,updated_len);fail_write=1;assert(!command_check_native(dest));assert(!module_run(dest,0,0)&&!module_fast);assert(!module_run(dest,0,0)&&!module_fast); /* torn record remains untrusted */
+ reset();i=setup();assert(!command_check_native(dest));fail_rename=2;assert(command_replace("grep",source,0,0,1));same_old(i,dest);assert(find(receipt_name)<0);assert(!module_run(dest,0,0)&&!module_fast);
+ /* Metadata checksum and bounds both remain mandatory, even with a forged
+    matching receipt. Receipts are not an authenticity/security mechanism. */
+ for(int fault=0;fault<3;fault++){
+  reset();make_image(bad,1,1);clx_put32(bad+16,1);clx_put32(bad+36,0);clx_put32(bad+40,1);clx_put32(bad+44,0);long len=48;clx_put32(bad+24,asm_fnv1a(2166136261UL,bad+32,16));i=put(dest,bad,len);assert(!command_check_native(dest));rec=find(receipt_name);
+  clx_put32(files[i].data+36,fault==0?2:8);
+  if(fault==2){clx_put32(files[rec].data+344,asm_fnv1a(2166136261UL,files[i].data+36,12));clx_put32(files[rec].data+348,asm_fnv1a(2166136261UL,files[rec].data,348));}
+  assert(module_run(dest,0,0)==126&&executions==0);
+ }
+
+ reset();i=put(dest,updated,updated_len);assert(!command_check_native(dest));files[i].modified++;assert(!module_run(dest,0,0)&&!module_fast);assert(!module_run(dest,0,0)&&module_fast);
+ reset();i=put(dest,updated,updated_len);assert(!command_check_native(dest));files[i].data[48]^=1;clx_put32(files[i].data+24,asm_fnv1a(2166136261UL,files[i].data+48,4));clx_put32(files[i].data+44,asm_fnv1a(2166136261UL,files[i].data,44));assert(!module_run(dest,0,0)&&!module_fast);assert(!module_run(dest,0,0)&&module_fast);
+ reset();i=put(dest,updated,updated_len);assert(!command_check_native(dest));rec=find(receipt_name);files[rec].len=11;assert(!module_run(dest,0,0)&&!module_fast);
+ reset();i=put(dest,updated,updated_len);put(receipt_name,(const unsigned char*)"user data",9);assert(!command_check_native(dest));assert(files[find(receipt_name)].len==9);assert(!module_run(dest,0,0)&&!module_fast);
+ /* Valid receipt checksum cannot excuse invalid import names or symbols. */
+ for(int fault=0;fault<2;fault++){
+  reset();make_image(bad,1,1);clx_put32(bad+20,1);memcpy(bad+36,"present",8);long len=100;clx_put32(bad+24,asm_fnv1a(2166136261UL,bad+32,len-32));i=put(dest,bad,len);assert(!command_check_native(dest));rec=find(receipt_name);
+  if(fault)memset(files[i].data+36,'x',64);else memcpy(files[i].data+36,"missing",8);
+  clx_put32(files[rec].data+344,asm_fnv1a(2166136261UL,files[i].data+36,64));clx_put32(files[rec].data+348,asm_fnv1a(2166136261UL,files[rec].data,348));assert(module_run(dest,0,0)==126&&!executions);
+ }
  reset();printf("PASS: %d loader/installer scenarios; no leaked allocations or descriptors\n",cases-1);return 0;
 }

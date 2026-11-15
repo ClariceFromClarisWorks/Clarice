@@ -16,10 +16,10 @@ for name,args in [('wc',[]),('head',['-n','100000']),('cut',['-b','1-']),('tr',[
  p=run(name,args,b'a\n'*10000,env=dict(os.environ,CLARICE_CANCEL_AFTER='4'));assert p.returncode==130,(name,p)
  p=run(name,args,b'a\n'*10000,env=dict(os.environ,CLARICE_FAIL_WRITE='1'));assert p.returncode!=0,(name,p)
 for name,args in [('head',[]),('cut',['-b','1']),('uniq',[])]:
- p=run(name,args,b'a'*17000+b'\n');assert p.returncode==2 and b'16384' in p.stderr,(name,p)
+ p=run(name,args,b'a'*17000+b'\n');q=run(name,args,b'a'*17000+b'\n',True);assert (p.returncode,p.stdout)==(q.returncode,q.stdout),(name,p)
 for name,args in [('head',['-n','bad']),('cut',['-b','0']),('uniq',['-f','bad']),('tr',['a',''])]:
  p=run(name,args,b'');assert p.returncode!=0,(name,p)
-print(f'PASS: {len(cases)} upstream comparisons, 5 help, 5 cancellation, 5 write-error, 3 line-limit and 4 invalid-option checks. Runtime checks allocation cap and complete release on every invocation.')
+print(f'PASS: {len(cases)} upstream comparisons, 5 help, 5 cancellation, 5 write-error, 3 long-line and 4 invalid-option checks. Runtime checks complete release on every invocation.')
 # File operands, multiple-file headers/totals and explicit output files.
 import tempfile
 with tempfile.TemporaryDirectory(dir=root/'work') as td:

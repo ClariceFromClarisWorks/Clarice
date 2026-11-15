@@ -1,0 +1,34 @@
+[
+  {
+    "renderer": "native",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "verified-cancel-native-off-status.png",
+    "note": "Screenshot inspected; host script time is not guest interrupt latency.",
+    "result": "PASS: screenshot shows ^C, exit status 130, restored prompt"
+  },
+  {
+    "renderer": "native",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "verified-cancel-native-screen-status.png",
+    "note": "Screenshot inspected; host script time is not guest interrupt latency.",
+    "result": "PASS: screenshot shows ^C, exit status 130, restored prompt"
+  },
+  {
+    "renderer": "asm",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "verified-cancel-asm-off-status.png",
+    "note": "Screenshot inspected; host script time is not guest interrupt latency.",
+    "result": "PASS: screenshot shows ^C, exit status 130, restored prompt"
+  },
+  {
+    "renderer": "asm",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "verified-cancel-asm-screen-status.png",
+    "note": "Screenshot inspected; host script time is not guest interrupt latency.",
+    "result": "PASS: screenshot shows ^C, exit status 130, restored prompt"
+  }
+]

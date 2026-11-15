@@ -1,0 +1,11 @@
+EVENT 8 0038c994 0081
+EVENT 6 0038c994 0080
+CHECK-CANCEL started=1 held=1 active=0 down=0 button=128 elapsed=15 error=0
+EVENT 1 00000000 0000
+EVENT 2 00000000 0080
+CHECK-NOHOST started=1 held=1 active=0 down=0 button=128 elapsed=180 error=0
+EVENT 1 00000000 0000
+EVENT 2 00000000 0080
+PONG 2507 1618 bg=0 active=0 down=0 error=0 state=314
+CHECK-EXIT started=1 held=1
+CLEANUP active=0 down=0 button=128 mb_delta=0

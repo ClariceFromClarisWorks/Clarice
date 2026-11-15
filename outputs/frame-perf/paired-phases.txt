@@ -1,0 +1,20 @@
+FRAME_PROFILE cols=80 rows=24 cell=6 line=11 font=4/9 inverse=0
+run=0 new=0 kind=output total=181 paint=159 frames=24 compose=15 shift=55 pixels=33 model=20 raster=89 copy=8 bar=0 worst=7
+run=0 new=0 kind=history1 total=202 paint=201 frames=24 compose=19 shift=52 pixels=30 model=21 raster=88 copy=8 bar=42 worst=9
+run=0 new=0 kind=history4 total=309 paint=309 frames=24 compose=13 shift=49 pixels=27 model=19 raster=200 copy=39 bar=44 worst=14
+run=0 new=1 kind=output total=126 paint=102 frames=24 compose=16 shift=38 pixels=30 model=6 raster=48 copy=12 bar=0 worst=5
+run=0 new=1 kind=history1 total=145 paint=143 frames=24 compose=16 shift=35 pixels=33 model=1 raster=51 copy=5 bar=40 worst=7
+run=0 new=1 kind=history4 total=261 paint=261 frames=24 compose=16 shift=34 pixels=26 model=5 raster=166 copy=39 bar=42 worst=12
+run=1 new=0 kind=output total=181 paint=160 frames=24 compose=16 shift=55 pixels=33 model=22 raster=87 copy=9 bar=1 worst=7
+run=1 new=0 kind=history1 total=201 paint=200 frames=24 compose=15 shift=54 pixels=31 model=21 raster=87 copy=10 bar=43 worst=9
+run=1 new=0 kind=history4 total=310 paint=310 frames=24 compose=17 shift=49 pixels=26 model=20 raster=201 copy=34 bar=43 worst=14
+run=1 new=1 kind=output total=126 paint=103 frames=24 compose=13 shift=40 pixels=34 model=4 raster=49 copy=11 bar=0 worst=5
+run=1 new=1 kind=history1 total=145 paint=145 frames=24 compose=17 shift=36 pixels=31 model=5 raster=46 copy=9 bar=46 worst=7
+run=1 new=1 kind=history4 total=260 paint=260 frames=24 compose=17 shift=33 pixels=29 model=3 raster=166 copy=32 bar=44 worst=12
+run=2 new=0 kind=output total=181 paint=159 frames=24 compose=15 shift=55 pixels=32 model=21 raster=87 copy=8 bar=0 worst=7
+run=2 new=0 kind=history1 total=201 paint=201 frames=24 compose=15 shift=53 pixels=30 model=22 raster=86 copy=10 bar=45 worst=9
+run=2 new=0 kind=history4 total=310 paint=309 frames=24 compose=16 shift=49 pixels=28 model=19 raster=201 copy=33 bar=43 worst=14
+run=2 new=1 kind=output total=126 paint=103 frames=24 compose=17 shift=36 pixels=31 model=5 raster=49 copy=7 bar=0 worst=5
+run=2 new=1 kind=history1 total=145 paint=144 frames=24 compose=13 shift=38 pixels=33 model=4 raster=49 copy=9 bar=42 worst=7
+run=2 new=1 kind=history4 total=261 paint=260 frames=24 compose=16 shift=32 pixels=25 model=3 raster=166 copy=34 bar=44 worst=12
+heap_delta=0; raster includes copy, shift includes pixels/model

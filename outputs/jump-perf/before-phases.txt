@@ -1,0 +1,8 @@
+JUMP_PROFILE cols=80 rows=24 cell=6 line=11 inverse=0
+run=0 kind=listing ticks=318 worst=15 frames=24 compose=14 shift=1 raster=260 copy=61 bar=43 plan=35 prepare=56 text=86 rows=576
+run=0 kind=varied ticks=1064 worst=45 frames=24 compose=15 shift=1 raster=1000 copy=214 bar=45 plan=6 prepare=85 text=658 rows=569
+run=1 kind=listing ticks=321 worst=15 frames=24 compose=16 shift=2 raster=256 copy=54 bar=45 plan=31 prepare=50 text=93 rows=576
+run=1 kind=varied ticks=1062 worst=45 frames=24 compose=15 shift=1 raster=1000 copy=224 bar=46 plan=7 prepare=89 text=659 rows=569
+run=2 kind=listing ticks=320 worst=14 frames=24 compose=16 shift=3 raster=254 copy=58 bar=46 plan=37 prepare=49 text=95 rows=576
+run=2 kind=varied ticks=1063 worst=45 frames=24 compose=16 shift=1 raster=999 copy=226 bar=46 plan=6 prepare=85 text=654 rows=569
+heap_delta=0; phases overlap; total is sum of completed draw calls

@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "data_exact": true,
+    "resource_exact": true,
+    "type_creator": true,
+    "finder_flags": true,
+    "exported_location_folder": true,
+    "creation_time": true
+  },
+  "passed": true,
+  "resource_sha256": "f7c15f91b8d907942953059537cba1998947e2cab29e44b24d37a58966073af7",
+  "limitation": "Location/folder fields are zeroed by hfsutils MacBinary roundtrip even without guest execution; nonzero location preservation is not validated. Control fixture imported/exported offline."
+}

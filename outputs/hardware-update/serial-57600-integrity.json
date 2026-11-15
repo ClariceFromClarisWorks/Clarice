@@ -1,0 +1,8 @@
+{
+  "baud": 57600,
+  "expected_hex": "534535373630302d6162633132335245434f4e4e4543543537363030",
+  "rx_hex": "534535373630302d6162633132335245434f4e4e4543543537363030",
+  "tx_hex": "534535373630302d6162633132335245434f4e4e4543543537363030",
+  "equal": true,
+  "hardware_acceleration": "MiniPerformer+ installed, actual acceleration unverified"
+}

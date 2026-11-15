@@ -1,0 +1,4 @@
+Using multiversal interfaces
+   text	   data	    bss	    dec	    hex	filename
+   6970	      0	      0	   6970	   1b3a	/src/work/physical-perf/import-before.o
+   3438	      0	      0	   3438	    d6e	/src/work/physical-perf/import-after.o

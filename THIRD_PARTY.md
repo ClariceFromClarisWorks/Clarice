@@ -31,3 +31,23 @@ The development/test emulator is Snow by Thomas W. (https://github.com/twvd/snow
 ## Physical-device application disk
 
 The optional v0.4.0 HDA contains an unchanged Apple_Driver43 SCSI driver partition, copyright Apple, from the existing local formatted device template. It is separate from Clarice, not covered by Clarice or upstream utility licences. `outputs/release-0.4.0/HDA-PROVENANCE.json` records its checksum. The HFS partition is newly formatted; no System/Finder/ROM, user files or free-space contents from the template are copied.
+
+## Development checkpoint additions (no new release)
+
+- **E-Kermit 1.8**, Frank da Cruz / Trustees of Columbia University, revised
+  three-clause BSD. Unmodified upstream source and COPYING are retained in
+  `src/ports/ekermit/upstream`; bounds/transport adaptations and archive checksum
+  are recorded in `src/ports/ekermit/README.md`.
+- **Macinclaude MacTCP adapter**, Bart Decrem, MIT; pinned revision and local
+  changes in `src/commands/vendor/mactcp/README.md`, full LICENSE beside source.
+- **SEControl** is separate development infrastructure. Its MiniVNC-derived
+  mouse technique and integration are GPL-3.0-or-later, with Marcio Teixeira's
+  notices and source revision in `tools/se-control/vendor/`. Macinclaude network
+  files retain their MIT licence. None of this helper's mouse code is linked
+  into Clarice.
+- Nano's accepted generated target configuration and GNU helper headers are
+  preserved under `src/ports/nano/prepared/`, with original notices and GPL COPYING.
+  `scripts/prepare-nano.py` verifies nano 9.2's pinned source archive and restores
+  this preparation before the separately maintained adaptation scripts run.
+- Updater SHA-256 reference source retains sbase's public-domain notices and
+  revision in `src/update/vendor/README.md`; current LAN updates use CRC-32.

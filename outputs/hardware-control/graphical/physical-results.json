@@ -1,0 +1,128 @@
+{
+  "machine": "Physical Macintosh SE, user-provided System 6.0.8/MultiFinder, 4 MB",
+  "peer": "<SE_LAN_IP>",
+  "host": "<MACBOOK_LAN_IP>",
+  "capture_measurements": [
+    {
+      "stage": "start",
+      "seconds": 2.147506791,
+      "copy_ticks": 1,
+      "heap_with_snapshot": 4314
+    },
+    {
+      "stage": "finder",
+      "seconds": 2.741553042,
+      "copy_ticks": 2,
+      "heap_with_snapshot": 4280
+    },
+    {
+      "stage": "clarice-open",
+      "seconds": 10.837981,
+      "copy_ticks": 2,
+      "heap_with_snapshot": 4314
+    },
+    {
+      "stage": "pwd",
+      "seconds": 1.263747375,
+      "copy_ticks": 3,
+      "heap_with_snapshot": 4314
+    },
+    {
+      "stage": "drag",
+      "seconds": 0.997184625,
+      "copy_ticks": 3,
+      "heap_with_snapshot": 4314
+    },
+    {
+      "stage": "menu",
+      "seconds": 1.122278375,
+      "copy_ticks": 3,
+      "heap_with_snapshot": 4314
+    },
+    {
+      "stage": "closed",
+      "seconds": 2.750215292,
+      "copy_ticks": 2,
+      "heap_with_snapshot": 4280
+    },
+    {
+      "stage": "finder-ready",
+      "seconds": 1.538337333,
+      "copy_ticks": 2,
+      "heap_with_snapshot": 4280
+    },
+    {
+      "stage": "reopened",
+      "seconds": 11.170034959,
+      "copy_ticks": 1,
+      "heap_with_snapshot": 4314
+    },
+    {
+      "stage": "cancelled",
+      "seconds": 1.122432833,
+      "copy_ticks": 3,
+      "heap_with_snapshot": 4314
+    },
+    {
+      "stage": "before-disconnect",
+      "seconds": 2.544350083,
+      "copy_ticks": 1,
+      "heap_with_snapshot": 4280
+    },
+    {
+      "stage": "reconnected",
+      "seconds": 1.410311333,
+      "copy_ticks": 3,
+      "heap_with_snapshot": 4314
+    },
+    {
+      "stage": "reconnected-input",
+      "seconds": 1.186520583,
+      "copy_ticks": 3,
+      "heap_with_snapshot": 4314
+    }
+  ],
+  "observed": [
+    "Finder foreground screenshot",
+    "Click Clarice icon and Command-O opens Clarice",
+    "pwd Return produces / and new prompt",
+    "Clarice title drag moves down 15 pixels",
+    "File menu Cancel command produces ^C and fresh prompt",
+    "Command-Q closes Clarice",
+    "Click and Command-O reopens Clarice",
+    "cancel after queued drag returns active=0/down=0/error=0"
+  ],
+  "idle_heap_observations": [
+    26176,
+    26210
+  ],
+  "disconnect": {
+    "gesture_queued": true,
+    "host_disconnected": true,
+    "guest_exit_and_physical_mouse": "PASS: user confirmed normal physical mouse and helper exit",
+    "reconnect": "PASS: new authenticated connection, screenshot and visually confirmed x input after manual relaunch"
+  },
+  "screenshots": {
+    "SE-reconnected.png": "c9d6b814767ba147bbee19a9c5d00348cd72b922b169a816c44bd4b9368fe032",
+    "SE-finder.png": "88b2ef8fc4282c123e46d9511a6ad823d1f522bf4c6a820cd889ed10c79090a8",
+    "SE-closed.png": "feeb7ad196a5d4cf1be808f93ca06ae0f904c38bb223a325c33b4ecb94b61977",
+    "SE-drag.png": "fd3236c337ab9c8e1432d20a7a3dff0d853171e13f914ed754335d3b77bbb38d",
+    "SE-finder-ready.png": "7b57437176a30061cb0f117e512ae5bfefcd4ace5fab15bf5b722057059fcc84",
+    "SE-reopened.png": "1df96e8d418c1df04fe9c21f557f377789817792593d6bd600fbf9000553c0ed",
+    "SE-reconnected-input.png": "31ae24a534e2b68bd711244eebd2756e897979b51b6646f74a6280512a0d2fe2",
+    "SE-menu.png": "65b9e352d48b3d8720deeddf1dbf86a232003061c50bac799eeeeb70573f338b",
+    "SE-cancelled.png": "545c623baf49bf1a5371bf9932d4771bda472019192122978fa61a57ee3ba046",
+    "SE-before-disconnect.png": "f6dc4cdb5370617b305dd2b8d3209b5bea3fd2d06a3f0bbe070cec57c7ffc767",
+    "SE-pwd.png": "d1cd7a263636de5de59c7c2233c457684ad2e542f31ac98a94bf5e099373c973",
+    "SE-clarice-open.png": "9150d8161990d8c38c18d8052513cfd298165272d1b7d59364b4aded3c7b0023",
+    "SE-graphical-start.png": "097ceb93fc1bbb0bc35a72e61eb5f37cab20763f03b975c4806312b69fcdb2f2"
+  },
+  "final_status": {
+    "ticks": 25386,
+    "free_heap": 26210,
+    "active": 0,
+    "down": 0,
+    "error": 0,
+    "state_bytes": 314
+  }
+}

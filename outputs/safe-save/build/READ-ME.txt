@@ -1,0 +1,24 @@
+Local normal 68000 build, 14 November 2026; not a release.
+Clarice.bin is the MacBinary application. nano.clx is the experimental GNU nano
+9.2 tiny command, linked with genuine ncurses 6.5 and the explicit safe-save API.
+Install the application, place nano.clx on an HFS volume, then explicitly use:
+  appinstall replace /mnt/VOLUME/path/nano.clx nano
+Old Clarice builds reject the new required imports. Startup never silently
+replaces independently installed commands.
+
+Use nano /path/file; Control-O saves, Return confirms, Control-X exits.
+On a Macintosh Plus, Option-O and Option-X provide those editor controls.
+Command-period cancels the foreground application; unsaved edits are discarded.
+
+The editor remains experimental: byte/C-locale tiny configuration, no full nano
+feature parity or three-second startup claim. Numeric %zu status formatting is
+still imperfect in the existing port. Safe replacement is recoverable, NOT
+atomic or power-loss safe. Inspect reported .clarice-*.old/.new recovery files;
+do not blindly delete them. See ../IMPLEMENTATION.md and ../TEST-REPORT.md.
+
+GNU nano retains its original authorship and GPLv3+ licence (NANO-COPYING.txt).
+Exact source archive: work/nano/nano-9.2.tar.xz. Adapted sources:
+work/nano/cross/nano-9.2; reusable adapters: src/ports/nano, src/ports/runtime.c,
+src/ports/terminal, src/safe-save.inc. Save patch: scripts/patch-nano-save.py.
+Build entry point: scripts/link-nano-probe.sh (existing pinned Retro68 toolchain).
+All corresponding source remains in the shared checkout; nothing published.

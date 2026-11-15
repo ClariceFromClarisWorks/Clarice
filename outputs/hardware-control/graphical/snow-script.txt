@@ -1,0 +1,18 @@
+SAVE HIL-g0.pbm 1
+QUEUED
+SAVE HIL-g1.pbm 1
+PONG 13572 25008 bg=0 active=0 down=0 error=0 state=314
+QUEUED
+QUEUED
+SAVE HIL-finder.pbm 1
+PONG 13758 25008 bg=0 active=0 down=0 error=0 state=314
+QUEUED
+QUEUED
+SAVE HIL-app.pbm 1
+PONG 14466 25008 bg=0 active=0 down=0 error=0 state=314
+QUEUED
+QUEUED
+QUEUED
+QUEUED
+SAVE HIL-pwd.pbm 1
+QUEUED

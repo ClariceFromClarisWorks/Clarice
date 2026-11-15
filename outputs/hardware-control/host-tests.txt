@@ -1,0 +1,10 @@
+test_bad_header (__main__.Protocol) ... ok
+test_capture_fragmentation_and_disconnect (__main__.Protocol) ... ok
+test_deadline (__main__.Protocol) ... ok
+test_local_only (__main__.Protocol) ... ok
+test_png_pixels (__main__.Protocol) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.031s
+
+OK

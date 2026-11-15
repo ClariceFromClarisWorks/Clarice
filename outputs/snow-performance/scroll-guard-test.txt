@@ -1,0 +1,1 @@
+PASS: 1560 cursor positions/view heights; prompt and stale hidden rows cannot disable history pixel scrolling; cursors inside moved area still block it

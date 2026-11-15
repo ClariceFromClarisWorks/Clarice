@@ -1,0 +1,86 @@
+[
+  {
+    "test": "empty",
+    "pass_": true,
+    "bytes": 0,
+    "seconds": 0.729013166,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false,
+    "maximum_short": false
+  },
+  {
+    "test": "all-bytes",
+    "pass_": true,
+    "bytes": 4096,
+    "seconds": 0.3639164170000001,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false,
+    "maximum_short": false
+  },
+  {
+    "test": "repeat",
+    "pass_": true,
+    "bytes": 4097,
+    "seconds": 0.28307541599999997,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false,
+    "maximum_short": false
+  },
+  {
+    "test": "boundary",
+    "pass_": true,
+    "bytes": 513,
+    "seconds": 0.2907202500000001,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false,
+    "maximum_short": false
+  },
+  {
+    "test": "checksum-retry",
+    "pass_": true,
+    "bytes": 2048,
+    "seconds": 0.3199968750000002,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": true,
+    "maximum_short": false
+  },
+  {
+    "test": "cancel",
+    "pass_": true,
+    "bytes": 131072,
+    "seconds": 0.2794105830000002,
+    "codes": [
+      130,
+      130
+    ],
+    "corruption_injected": false,
+    "maximum_short": false
+  },
+  {
+    "test": "recovery",
+    "pass_": true,
+    "bytes": 2048,
+    "seconds": 0.34358579199999983,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false,
+    "maximum_short": false
+  }
+]

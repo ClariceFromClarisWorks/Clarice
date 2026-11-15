@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 project(Clarice C ASM)
 add_application(Clarice app.c shell.c sizes.c reflow.c kernels.S checksum.S App.r Icons.r ../work/build/Commands.r TYPE APPL CREATOR CLRC)
+# Retro68's Rez rule tracks App.r itself, but not its included build stamp.
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/App.r.rsrc.bin" APPEND
+ DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/update/version.h")
 target_compile_options(Clarice PRIVATE -Os -m68000 -Wall -Wextra -Werror -Wno-multichar -Wno-misleading-indentation -ffunction-sections -fdata-sections)
 set_target_properties(Clarice PROPERTIES LINK_FLAGS "-Wl,-gc-sections -Wl,--mac-single")
 
@@ -22,4 +25,16 @@ if(CLARICE_SELECTION_DIAGNOSTICS)
 endif()
 if(CLARICE_SELECTION_FIXED)
  target_compile_definitions(Clarice PRIVATE CLARICE_SELECTION_FIXED=1)
+endif()
+
+if(CLARICE_USABILITY_DIAGNOSTICS)
+ target_compile_definitions(Clarice PRIVATE CLARICE_USABILITY_DIAGNOSTICS=1)
+endif()
+
+if(CLARICE_NANO_PERF)
+ target_compile_definitions(Clarice PRIVATE CLARICE_NANO_PERF=1)
+endif()
+
+if(CLARICE_DRAW_DIAGNOSTICS)
+ target_compile_definitions(Clarice PRIVATE CLARICE_DRAW_DIAGNOSTICS=1)
 endif()

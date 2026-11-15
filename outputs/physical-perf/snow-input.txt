@@ -1,0 +1,6 @@
+QOL2 INPUT PROBE
+stage=0 chars=240 posted=240 received=240 retained=240 correct=1 elapsed=1680 paint=1140 age_sum=73 age_max=35 heap_delta=26
+stage=1 chars=240 posted=240 received=240 retained=240 correct=1 elapsed=1204 paint=983 age_sum=41 age_max=1 heap_delta=26
+stage=2 chars=240 posted=240 received=216 retained=216 correct=0 elapsed=244 paint=178 age_sum=268 age_max=5 heap_delta=26
+stage=3 chars=240 posted=240 received=240 retained=240 correct=1 elapsed=191 paint=146 age_sum=472 age_max=4 heap_delta=26
+PROBE-DONE

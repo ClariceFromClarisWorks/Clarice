@@ -1,0 +1,7 @@
+{
+  "bytes": 16384,
+  "exact": true,
+  "sha256": "a1f259d4365ed4320c377ce26f5c8c56dcdc9a89e7b641bfd8eabfbbeac86654",
+  "method": "HTTP download to physical HFS; Kermit return with host-to-SE ACK pacing 2 ms/byte",
+  "return_seconds": 21.357918958
+}

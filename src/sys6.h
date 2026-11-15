@@ -7,14 +7,19 @@
 void term_write(const char *s, long n);
 void term_puts(const char *s);
 void term_present(void);
+void app_progress(const char *,int);
 long app_terminal_read(void *,unsigned long);
 void app_page_begin(void);
 int app_page(void);
 int app_yield(void);
+/* 0 release; 1 legacy local Ctrl+C; 2 remote tty CR/BS and Ctrl+C. */
 int app_serial_input(int enabled);
+int app_serial_tty(int enabled);
+/* Serial ownership: byte 0..255, -1 empty, -2 overflow (stop session). */
 int app_serial_key(void);
 void app_clear(void);
 void app_quit(void);
+int app_update_handoff(const char *);
 void app_metrics(int human);
 int app_columns(void);
 void app_output_batch(int bulk);
@@ -60,3 +65,8 @@ int app_screen_pending(void);
 void app_screen_flush_input(void);
 long app_screen_read(void *,unsigned long);
 long app_screen_write(const void *,unsigned long);
+
+#ifdef CLARICE_NANO_PERF
+void app_nano_mark(int);
+void app_nano_stats(char *,unsigned long);
+#endif

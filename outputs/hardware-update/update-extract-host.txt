@@ -1,0 +1,1 @@
+PASS: binary preservation of both forks, empty data fork, every seek/open/read/write/poll/close failure; no open writer retained

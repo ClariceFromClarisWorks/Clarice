@@ -1,0 +1,8 @@
+cleanup begin
+cleanup done
+native launch entry
+Sys6Unix:System Folder:Clarice Data:etc:clarice:Updater-c0105490b25b
+catalog
+resource FCB
+working directory
+Launch trap

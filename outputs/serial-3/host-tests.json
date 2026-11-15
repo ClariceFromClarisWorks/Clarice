@@ -1,0 +1,79 @@
+[
+  {
+    "test": "empty",
+    "pass_": true,
+    "bytes": 0,
+    "seconds": 0.47725462499999993,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false
+  },
+  {
+    "test": "all-bytes",
+    "pass_": true,
+    "bytes": 4096,
+    "seconds": 0.15037274999999994,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false
+  },
+  {
+    "test": "repeat",
+    "pass_": true,
+    "bytes": 4097,
+    "seconds": 0.05992845899999999,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false
+  },
+  {
+    "test": "boundary",
+    "pass_": true,
+    "bytes": 513,
+    "seconds": 0.06559837499999999,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false
+  },
+  {
+    "test": "checksum-retry",
+    "pass_": true,
+    "bytes": 2048,
+    "seconds": 0.09375908399999999,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": true
+  },
+  {
+    "test": "cancel",
+    "pass_": true,
+    "bytes": 131072,
+    "seconds": 0.053102749999999865,
+    "codes": [
+      130,
+      130
+    ],
+    "corruption_injected": false
+  },
+  {
+    "test": "recovery",
+    "pass_": true,
+    "bytes": 2048,
+    "seconds": 0.10206445899999994,
+    "codes": [
+      0,
+      0
+    ],
+    "corruption_injected": false
+  }
+]

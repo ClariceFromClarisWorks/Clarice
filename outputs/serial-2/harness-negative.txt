@@ -1,0 +1,1 @@
+PASS: impossible-output fixture returns 1 with bounded timeout and peer cleanup 130; unsupported device rejected with status 1.

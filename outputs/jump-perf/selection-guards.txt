@@ -1,0 +1,3 @@
+Executed in this task:
+PASS selection delta: forward/reverse/anchor crossing/stationary, 1–130 columns, 1–37 rows, native and cache
+PASS: 1560 cursor positions/view heights; prompt and stale hidden rows cannot disable history pixel scrolling; cursors inside moved area still block it

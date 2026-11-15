@@ -1,0 +1,10 @@
+Using multiversal interfaces
+Volume name is "Clarice Dev"
+Volume was created on Sat Nov 14 11:09:28 2026
+Volume was last modified on Sat Nov 14 11:09:28 2026
+Volume has 33020416 bytes free
+/src/outputs/hardware-update/bootstrap/Clarice-Dev.hda: contains 1 HFS partition
+Volume name is "Clarice Dev"
+Volume was created on Sat Nov 14 11:09:28 2026
+Volume was last modified on Sat Nov 14 11:09:28 2026
+Volume has 33020416 bytes free

@@ -45,12 +45,21 @@ static int info(const char *path,CInfoPBRec *pb){
 }
 static int directory(const char *s,short *vol,long *id){char p[PATH_CAP];CInfoPBRec pb;int e=resolve(s,p);if(e)return e;e=info(p,&pb);if(e)return e;if(!(pb.hFileInfo.ioFlAttrib&16))return dirNFErr;*id=pb.dirInfo.ioDrDirID;*vol=pb.dirInfo.ioVRefNum;return 0;}
 static int open_path(const char *s,short perm,short *ref){char p[PATH_CAP];unsigned char n[256];int e=resolve(s,p);if(e)return e;pstr(n,p);return HOpen(0,0,n,perm,ref);}
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+static int dispatch_legacy;
+static unsigned long dispatch_path_ticks,dispatch_kind_ticks;
+void shell_dispatch_legacy(int old){dispatch_legacy=old;}
+#else
+#define dispatch_legacy 0
+#endif
 /* Accept CLX1 native commands and explicitly supported shell scripts. */
-static int program_kind(const char *path){short ref;char head[96];long n=sizeof head-1;int e=open_path(path,fsRdPerm,&ref);if(e)return 0;e=FSRead(ref,&n,head);FSClose(ref);if(e&&e!=eofErr)return 0;head[n]=0;if(n>=4&&!memcmp(head,"CLX1",4))return 2;if(memchr(head,0,n))return 0;if(n>=2&&head[0]=='#'&&head[1]=='!'){char *end=strpbrk(head,"\r\n");if(!end)return 0;*end=0;return !strcmp(head+2,"/bin/sh")||!strcmp(head+2,"/usr/bin/sh");}size_t len=strlen(path);return len>=3&&!strcmp(path+len-3,".sh");}
+static int program_kind_native(const char *path,const char *native){short ref;unsigned char pn[256];char head[96];long n=sizeof head-1;pstr(pn,native);int e=HOpen(0,0,pn,fsRdPerm,&ref);if(e)return 0;e=FSRead(ref,&n,head);FSClose(ref);if(e&&e!=eofErr)return 0;head[n]=0;if(n>=4&&!memcmp(head,"CLX1",4))return 2;if(memchr(head,0,n))return 0;if(n>=2&&head[0]=='#'&&head[1]=='!'){char *end=strpbrk(head,"\r\n");if(!end)return 0;*end=0;return !strcmp(head+2,"/bin/sh")||!strcmp(head+2,"/usr/bin/sh");}size_t len=strlen(path);return len>=3&&!strcmp(path+len-3,".sh");}
+/* Reuse the resolved path while choosing an executable; no resident cache. */
+static int program_kind(const char *path){char native[PATH_CAP];if(resolve(path,native))return 0;return program_kind_native(path,native);}
 static int path_entry(const char **cursor,char *out){const char *p=*cursor;if(!p)return 0;const char *end=strchr(p,':');size_t n=end?(size_t)(end-p):strlen(p);if(n>=PATH_CAP)return 0;memcpy(out,p,n);out[n]=0;if(!n)strcpy(out,".");*cursor=end?end+1:0;return 1;}
-static int command_path(const char *name,char *out){char native[PATH_CAP];CInfoPBRec pb;int rejected=0;
- if(strchr(name,'/')||!strncmp(name,"native:",7)){if(strlen(name)>=PATH_CAP)return -1;strcpy(out,name);if(resolve(out,native)||info(native,&pb))return 0;if(!(pb.hFileInfo.ioFlAttrib&16)&&program_kind(out))return 1;errsay("command is not an executable command\n");return -1;}
- const char *p=env_get("PATH");while(path_entry(&p,out)){size_t n=strlen(out);if(n+strlen(name)+2>=PATH_CAP)continue;strcat(out,"/");strcat(out,name);if(resolve(out,native)||info(native,&pb))continue;if(!(pb.hFileInfo.ioFlAttrib&16)&&program_kind(out))return 1;rejected=1;}
+static int command_path(const char *name,char *out,int *kind){char native[PATH_CAP];CInfoPBRec pb;int rejected=0;
+ if(strchr(name,'/')||!strncmp(name,"native:",7)){if(strlen(name)>=PATH_CAP)return -1;strcpy(out,name);if(resolve(out,native)||info(native,&pb))return 0;if(!(pb.hFileInfo.ioFlAttrib&16)){int k=dispatch_legacy?program_kind(out):program_kind_native(out,native);if(k){if(kind)*kind=k;return 1;}}errsay("command is not an executable command\n");return -1;}
+ const char *p=env_get("PATH");while(path_entry(&p,out)){size_t n=strlen(out);if(n+strlen(name)+2>=PATH_CAP)continue;strcat(out,"/");strcat(out,name);if(resolve(out,native)||info(native,&pb))continue;if(!(pb.hFileInfo.ioFlAttrib&16)){int k=dispatch_legacy?program_kind(out):program_kind_native(out,native);if(k){if(kind)*kind=k;return 1;}}rejected=1;}
  if(rejected)errsay("PATH command found, but it is not an executable command\n");return rejected?-1:0;
 }
 static int redirect(const char *s,int append){char p[PATH_CAP];unsigned char n[256];int e=resolve(s,p);if(e)return e;pstr(n,p);e=HOpen(0,0,n,fsWrPerm,&output_ref);if(e==fnfErr){e=HCreate(0,0,n,'S6UX','TEXT');if(!e)e=HOpen(0,0,n,fsWrPerm,&output_ref);}if(e){output_ref=-1;return e;}e=append?SetFPos(output_ref,fsFromLEOF,0):SetEOF(output_ref,0);if(e){FSClose(output_ref);output_ref=-1;}return e;}
@@ -100,6 +109,7 @@ static int selftest(void){unsigned long t=TickCount(),n;int fail=0;char b[2048],
  for(n=0;n<10000;n++){if(!asm_contains("0123456789abcdefghijk","efgh"))fail++;if((n&255)==0)app_yield();}
  {char text[128];snprintf(text,sizeof text,"selftest: %s; 10000 scans, %lu ticks\n",fail?"FAIL":"PASS",(unsigned long)(TickCount()-t));say(text);}return fail?1:0;}
 #include "port-files.inc"
+#include "safe-save.inc"
 #include "module.inc"
 #include "help.inc"
 static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
@@ -113,9 +123,17 @@ static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  else if(!strcmp(av[0],"export")){if(argc==1){for(i=0;i<16;i++)if(env_names[i][0]){say(env_names[i]);say("=");say(env_values[i]);say("\n");}}for(i=1;i<argc;i++)if(env_set(av[i])){term_puts("export: invalid name/value or environment full\n");status=2;}}
  else if(!strcmp(av[0],"history")){if(argc>1&&!strcmp(av[1],"off"))history_enabled=0;else if(argc>1&&!strcmp(av[1],"on"))history_enabled=1;else if(argc>1&&!strcmp(av[1],"clear")){if(history_ref>=0&&!SetEOF(history_ref,0))history_count=0;else status=1;}else{char line[LINE_CAP];for(i=HISTORY_SLOTS;i>=1;i--)if(history_get(i,line)){say(line);say("\n");if(app_yield()){status=130;break;}}}}
  else if(!strcmp(av[0],"clear"))app_clear();
- else if(!strcmp(av[0],"status")&&argc==2&&!strcmp(av[1],"runtime")){char b[240];snprintf(b,sizeof b,"Runtime: heap=%ld largest=%ld image=%lu ticks=%lu load=%lu owned-peak=%lu remaining=%lu\n",FreeMem(),MaxBlock(),module_bytes,module_ticks,module_load_ticks,port_peak,port_remaining);say(b);snprintf(b,sizeof b,"Loader ticks: read=%lu validate=%lu imports=%lu relocations=%lu prepare=%lu (successful execution only)\n",module_read_ticks,module_validate_ticks,module_import_ticks,module_reloc_ticks,module_prepare_ticks);say(b);}
+ else if(!strcmp(av[0],"status")&&argc==2&&!strcmp(av[1],"runtime")){char b[240];snprintf(b,sizeof b,"Runtime: heap=%ld largest=%ld image=%lu ticks=%lu load=%lu owned-peak=%lu remaining=%lu\n",FreeMem(),MaxBlock(),module_bytes,module_ticks,module_load_ticks,port_peak,port_remaining);say(b);snprintf(b,sizeof b,"Loader ticks: read=%lu validate=%lu imports=%lu relocations=%lu prepare=%lu events=%lu (events included above)\n",module_read_ticks,module_validate_ticks,module_import_ticks,module_reloc_ticks,module_prepare_ticks,module_poll_ticks);
+#ifdef CLARICE_NANO_PERF
+ {char perf[400];app_nano_stats(perf,sizeof perf);say(perf);snprintf(perf,sizeof perf,"Native ticks: allocs=%lu FreeMem=%lu NewPtr=%lu reads=%lu read=%lu stdio=%lu image-alloc=%lu meta-alloc=%lu\n",perf_allocs,perf_free_ticks,perf_new_ticks,perf_reads,perf_read_ticks,perf_stdio_ticks,perf_image_ticks,perf_meta_ticks);say(perf);}
+#endif
+say(b);snprintf(b,sizeof b,"Verification ticks: mode=%s header=%lu record=%lu payload=%lu metadata=%lu structure=%lu (structure included in relocations)\n",module_fast?"fast":"full",module_header_ticks,module_record_ticks,module_payload_ticks,module_metadata_ticks,module_structure_ticks);say(b);}
  else if(!strcmp(av[0],"status")){if(argc>2||(argc==2&&strcmp(av[1],"-h"))){say("usage: status [-h]\n");status=2;}else app_metrics(argc==2);}
- else if(!strcmp(av[0],"scrollbench"))status=app_scroll_bench(argc>1&&!strcmp(av[1],"cached")?3:argc>1&&!strcmp(av[1],"native")?2:argc>1&&!strcmp(av[1],"quick"));
+ else if(!strcmp(av[0],"scrollbench"))status=app_scroll_bench(
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+ argc>1&&!strcmp(av[1],"glyphpixels")?10:argc>1&&!strcmp(av[1],"jumps")?9:argc>1&&!strcmp(av[1],"frames")?8:argc>1&&!strcmp(av[1],"listing")?7:argc>1&&!strcmp(av[1],"catalog")?6:argc>1&&!strcmp(av[1],"dispatch")?5:argc>1&&!strcmp(av[1],"profile")?4:
+#endif
+ argc>1&&!strcmp(av[1],"cached")?3:argc>1&&!strcmp(av[1],"native")?2:argc>1&&!strcmp(av[1],"quick"));
  else if(!strcmp(av[0],"prefs"))status=app_preferences(argc,av);
  else if(!strcmp(av[0],"checks"))app_run_checks();
  else if(!strcmp(av[0],"selftest"))status=selftest();
@@ -134,7 +152,7 @@ static void complete_directory(const char *dir,const char *prefix,char *common,i
  if(directory(dir,&vol,&id))return;
  for(;;){CInfoPBRec pb;unsigned char name[256];memset(&pb,0,sizeof pb);pb.hFileInfo.ioNamePtr=name;pb.hFileInfo.ioVRefNum=vol;pb.hFileInfo.ioDirID=id;pb.hFileInfo.ioFDirIndex=index++;e=PBGetCatInfoSync(&pb);if(e)break;name[name[0]+1]=0;if(encode_name((char*)name+1,candidate,sizeof candidate))continue;if(strncmp(candidate,prefix,strlen(prefix)))continue;
  if(strlen(dir)+strlen(candidate)+2>=sizeof full)continue;strcpy(full,dir);strcat(full,"/");strcat(full,candidate);
- if(command){char selected[PATH_CAP];if(builtin_name(candidate)||(pb.hFileInfo.ioFlAttrib&16)||!program_kind(full))continue;if(command_path(candidate,selected)!=1||strcmp(selected,full))continue;}
+ if(command){char selected[PATH_CAP];if(builtin_name(candidate)||(pb.hFileInfo.ioFlAttrib&16)||!program_kind(full))continue;if(command_path(candidate,selected,0)!=1||strcmp(selected,full))continue;}
  else {int folder=pb.hFileInfo.ioFlAttrib&16;if(!folder&&is_link(&pb)){short v;long d;folder=!directory(full,&v,&d);}if(folder)strcat(candidate,"/");}
  completion_item(candidate,prefix,common,count,show,shown);if((index&15)==0&&app_yield())break;
  }
@@ -149,6 +167,9 @@ int shell_complete(char *line,int *cursor){static char previous[LINE_CAP];static
  if(start+j+(int)strlen(line+*cursor)>=LINE_CAP)return 0;memmove(line+start+j,line+*cursor,strlen(line+*cursor)+1);memcpy(line+start,encoded,j);*cursor=start+j;strcpy(previous,line);previous_cursor=*cursor;return count;
 }
 
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+void shell_dispatch_stats(unsigned long *out){out[0]=dispatch_path_ticks;out[1]=dispatch_kind_ticks;out[2]=module_load_ticks;out[3]=module_ticks;}
+#endif
 #include "sh.inc"
 
 static void complete_functions(const char *p,char *c,int *n,int show,int *shown){for(int i=0;i<16;i++)if(sh_functions[i].name[0]&&!builtin_name(sh_functions[i].name))completion_item(sh_functions[i].name,p,c,n,show,shown);}

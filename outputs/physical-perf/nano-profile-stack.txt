@@ -1,0 +1,4 @@
+Using multiversal interfaces
+00000000 <main>:
+   0:	4e56 f56c      	linkw %fp,#-2708
+   4:	48e7 1f38      	moveml %d3-%d7/%a2-%a4,%sp@-

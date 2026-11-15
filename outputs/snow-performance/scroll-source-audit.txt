@@ -1,0 +1,9 @@
+Pre-change audit (before the fixes recorded in measurements.json). Compared against HEAD 2c3dfff (0.4.0, 11 November 2026). This does not establish identical installed binaries or preferences.
+draw_native: identical
+draw_cached: identical
+present_rows: identical
+present_native_row: identical
+prefer_pixel_scroll: identical
+build_font_cache: identical
+drag_history: identical
+selection_clear: identical

@@ -1,0 +1,1 @@
+PASS: 200000 mixed byte/control sequences; unchanged terminal state and every visible change dirties its row; SGR-only does not repaint

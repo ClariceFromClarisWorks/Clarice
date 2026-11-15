@@ -24,7 +24,7 @@ static void activity_tick(unsigned long now){
  GrafPtr old;Rect source;GetPort(&old);SetPort(win);SetRect(&source,0,0,cell_w,line_h);
  if(!activity_visible){activity_back.baseAddr=(Ptr)activity_pixels;activity_back.rowBytes=4;SetRect(&activity_back.bounds,0,0,32,64);activity_rect=r;CopyBits(&win->portBits,&activity_back,&r,&source,srcCopy,0);}
  SetPort(&prompt_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);
- EraseRect(&source);MoveTo(0,font_ascent);DrawChar("|/-\\"[phase]);
+ EraseRect(&source);MoveTo(0,font_ascent);DrawChar("|/-\\"[phase]);InvertRect(&source);
  SetPort(win);CopyBits(&prompt_port.portBits,&win->portBits,&source,&r,srcCopy,0);SetPort(old);
  activity_visible=1;activity_phase=phase;activity_presented(&activity_clock);
 }

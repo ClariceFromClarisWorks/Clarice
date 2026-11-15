@@ -1,0 +1,5 @@
+PASS: IEEE CRC-32 empty, known vector, incremental 64 KB guest benchmark
+PASS: bounded strict manifest, every truncation, trailing/unknown fields, filename traversal/control, integer overflow
+PASS: plan roundtrip, every byte corruption, unrelated/cross-volume/target backup rejected
+PASS 482 transaction scenarios: creation/replacement, every operation failure, rollback failure, busy candidate/target, invalid candidate, retained backup refusal; neither version deleted
+PASS: binary preservation of both forks, empty data fork, every seek/open/read/write/poll/close failure; no open writer retained

@@ -1,5 +1,10 @@
 # Clarice
 
+Current development checkpoint: **2026111517**, tested in Snow and on a stock
+68000 Macintosh SE. See [current implementation and limits](outputs/CURRENT-STATE.md)
+and [checkpoint build reproduction](outputs/jump-perf/REPRODUCE.md). The published
+release descriptions below are historical; this checkpoint creates no new release.
+
 A native System 6 command prompt for a Macintosh Plus with 4 MB, built using the existing SkiFree Retro68 toolchain. This is a working Phase 1 prototype, not a Unix kernel, bash implementation or collection of completed GNU ports.
 
 ## Current engineering direction
@@ -42,7 +47,7 @@ docker pull --platform linux/amd64 ghcr.io/autc04/retro68@sha256:dd923969100f408
 ./scripts/build.sh
 ```
 
-The project reuses SkiFree’s pinned toolchain; it does not require a SkiFree checkout. Builds are offline, target the original 68000 and produce `outputs/namespace/Clarice.bin` (MacBinary) and `Clarice.dsk` (800 KB floppy image). The current development build requests a 768 KiB partition under MultiFinder (including the awk port). The terminal uses installed Monaco 9 by default. File > Preferences opens a native dialog with installed-font, scrollback, paging and rendering-cache dropdowns, plus font size, monochrome colours, columns and fill-screen/restore. The separate Font menu is removed; `prefs` provides equivalent command-line controls. Settings use the bounded, editable text file `/etc/clarice/clarice.conf`; command history uses `/etc/clarice/clarice.history`. Legacy root-level files migrate automatically, without overwriting an existing destination. A failed migration retains the original. See `THIRD_PARTY.md` for the mrsh parser attribution.
+The project reuses SkiFree’s pinned toolchain; it does not require a SkiFree checkout. Builds are offline, target the original 68000 and produce `outputs/namespace/Clarice.bin` (MacBinary) and `Clarice.dsk` (800 KB floppy image). The current development build requests a 768 KiB partition under MultiFinder (including the awk port). The terminal uses installed Monaco 9 by default. File > Preferences opens a native dialog with installed-font, scrollback and paging dropdowns, plus font size, monochrome colours, columns and fill-screen/restore. The separate Font menu is removed; `prefs` provides equivalent command-line controls. Settings use the bounded, editable text file `/etc/clarice/clarice.conf`; command history uses `/etc/clarice/clarice.history`. Legacy root-level files migrate automatically, without overwriting an existing destination. A failed migration retains the original. See `THIRD_PARTY.md` for the mrsh parser attribution.
 
 ## Use
 
@@ -56,7 +61,7 @@ The scripting adapter implements a tested subset of POSIX sh: lists, `&&`/`||`, 
 
 Listings pause after a screen by default, stopping further enumeration until Space (next screen), Return (one more line), or Q (cancel). Clicking the temporary More prompt advances a page. `ls -P` disables paging. Redirected/scripted listings never page; View or `prefs paging off|screen|100` changes the interactive default. Creation date/time is implemented; full Unix `ls` option compatibility remains work.
 
-`prefs window` opens the same Preferences dialog. `prefs scrollback 32|64|128` sets retention, and `prefs cache on|off` controls only the terminal rendering cache. No OS disk cache or RAM Doubler settings are changed.
+`prefs window` opens the same Preferences dialog. `prefs scrollback 32|64|128` sets retention. Rendering is selected automatically; renderer/cache choices are no longer user preferences. Older `renderer=` settings are ignored and omitted when preferences are saved. No OS disk cache or RAM Doubler settings are changed.
 
 Preferences examples: `prefs font Monaco`, `prefs size 9`, `prefs colours dark`, `prefs colours light`, `prefs columns 80`, `prefs fill` (toggle fill-screen/restore). `prefs fonts` lists installed fonts. Proportional fonts use fixed cells based on their maximum character width, reducing available columns and drawing speed. Monaco is the recommended baseline. Fill-screen retains the menu bar and is reversible without restarting the shell.
 
@@ -68,7 +73,7 @@ Completion currently matches the case of candidate names, although HFS opens are
 
 The built-in PATH is `/bin:/usr/bin`. `/etc/profile` is sourced once at startup and can replace or extend it, for example `export PATH="$PATH:/mnt/Tools/scripts"` and `export HOSTNAME=macplus`. Current lookup supports `.sh` files or files beginning with `#!/bin/sh` or `#!/usr/bin/sh`. Native CLX1 command images are also supported, as described below. Other interpreters and general Unix executable formats remain unsupported. Built-ins work independently of PATH. A slash in a command uses that path directly; otherwise PATH is searched in order. Empty PATH entries explicitly select the current directory. Tab completion includes PATH scripts. Environment values currently have a 127-byte limit.
 
-History uses at most 128 fixed 1,028-byte records plus an 8-byte header (131,592 bytes on disk). A leading space excludes a command. History retrieval uses a 1 KiB buffer, not a growing RAM list. It flushes on clean exit; power loss can lose recent unflushed commands. Scrollback is a separate fixed 128×132 byte ring (16,896 bytes); retention can be limited to 32, 64 or 128 lines. Reducing retention discards older lines. The Plus default uses native QuickDraw pixel scrolling with the bitmap cache off, following measured comparisons. The optional system-font/bitmap cache requests another 29,696 bytes (29,704-byte measured heap delta including allocator overhead) and releases them when disabled. Long command lines stop at 1,023 bytes.
+History uses at most 128 fixed 1,028-byte records plus an 8-byte header (131,592 bytes on disk). A leading space excludes a command. History retrieval uses a 1 KiB buffer, not a growing RAM list. It flushes on clean exit; power loss can lose recent unflushed commands. Scrollback is a separate fixed 128×132 byte ring (16,896 bytes); retention can be limited to 32, 64 or 128 lines. Reducing retention discards older lines. The Plus default uses native QuickDraw pixel scrolling with the bitmap cache off, following measured comparisons. Cached renderers remain available for diagnostic comparisons; they use another 29,696 bytes (29,704-byte measured heap delta including allocator overhead) during those tests. Long command lines stop at 1,023 bytes.
 
 ## Developer tests
 
@@ -110,7 +115,7 @@ Emulator input patch and guest evidence: `outputs/emulator-input/TEST-REPORT.md`
 
 System 6.0.8 / Plus / 4 MB verification: [test report](outputs/system608/TEST-REPORT.md). Full scrolling and memory checks, native/cached pixel comparisons, Up/Down history and command interrupts pass. Shift+Up/Down mapping is corrected and buffered native scrolling avoids erase-before-draw flashing; see the [scrolling correction report](outputs/scroll-fix/TEST-REPORT.md). Scrollbar track clicks pass, and the user confirms manual thumb dragging works. Automated drags do not enter guest tracking. Finder and installation media confirm 6.0.8 despite SysEnvirons reporting 0607. Launch the separate local test workspace with `python3 scripts/emulator.py start608`.
 
-Preferences are verified on the Plus / 4 MB / System 6.0.8: installed font and size, both monochrome themes, rendering cache on/off, and 32/64/128 retained lines survive quitting and reopening Clarice. Open File > Preferences (Command-comma), or run `prefs window`; `prefs` displays current values. Chicago persistence and numeric validation are corrected. [Evidence](outputs/preferences/TEST-REPORT.md).
+Preferences are verified on the Plus / 4 MB / System 6.0.8: installed font and size, both monochrome themes and 32/64/128 retained lines survive quitting and reopening Clarice. Open File > Preferences (Command-comma), or run `prefs window`; `prefs` displays current values. Chicago persistence and numeric validation are corrected. [Evidence](outputs/preferences/TEST-REPORT.md).
 
 ### Disk space and file listing
 
@@ -185,9 +190,8 @@ Monaco. Settings changed through the dialog or `prefs` rewrite known keys;
 custom comments and unknown keys are not retained on save.
 
 Keys: `font`, `size` (6–24), `colours` (light/dark), `paging`
-(off/screen/100), `scrollback` (32/64/128), `renderer` (native/c/asm),
-`width`, `height`, `x`, `y` and `fill` (0/1). Native means cache off;
-C and ASM select the two cache implementations. Width/height/position describe
+(off/screen/100), `scrollback` (32/64/128),
+`width`, `height`, `x`, `y` and `fill` (0/1). Old `renderer` keys are ignored and removed on the next save. Width/height/position describe
 the normal window; fill-screen preserves that restore geometry. Columns are
 derived from width and font. The dialog changes window width when its column
 value is edited, and otherwise keeps pixel geometry when changing fonts.

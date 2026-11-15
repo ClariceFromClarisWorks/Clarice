@@ -1,0 +1,19 @@
+{
+  "partition": 96,
+  "allocation_bytes": 512,
+  "catalog_bytes": 523264,
+  "catalog_lba_extents": [
+    [
+      626,
+      1137
+    ],
+    [
+      4977,
+      5488
+    ],
+    [
+      115,
+      115
+    ]
+  ]
+}

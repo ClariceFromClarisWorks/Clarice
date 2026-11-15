@@ -1,0 +1,1 @@
+PASS: 26 option comparisons plus 40 buffered-I/O comparisons; line/allocation bounds, cancellation and output failure

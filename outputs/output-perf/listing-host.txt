@@ -1,0 +1,1 @@
+PASS: real listing loop: explicit volumes, overwritten IDs, mixed files/directories, hidden entries, escaped names, 31-byte names, malformed names, EOF, errors, cancellation, missing volumes, virtual mounts

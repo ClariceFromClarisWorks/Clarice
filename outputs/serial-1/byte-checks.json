@@ -1,0 +1,12 @@
+{
+  "echo-final": {
+    "bytes": 315,
+    "exact_match": true,
+    "sha256": "2acd2e18c707ba72204d5c4f94b3655c9fc8fc715ead165e1c1b6a0209064ca9"
+  },
+  "echo-reconnect": {
+    "bytes": 23,
+    "exact_match": true,
+    "sha256": "ebdaaa4c3332daea738070009680559348190a7cebc87017d47da289ab6eabb4"
+  }
+}

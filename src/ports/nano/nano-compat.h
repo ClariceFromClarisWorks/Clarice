@@ -23,3 +23,13 @@ time_t port_nano_time(time_t *);
 #define putenv port_nano_putenv
 #define time port_nano_time
 #endif
+/* Optional explicit safe-save service: required imports fail on older hosts. */
+#include "../safe-save.h"
+int port_nano_finish_save(FILE *,void **);
+
+#ifdef PORT_NANO_PERF
+void app_nano_mark(int);
+#define NANO_PERF(n) app_nano_mark(n)
+#else
+#define NANO_PERF(n) ((void)0)
+#endif

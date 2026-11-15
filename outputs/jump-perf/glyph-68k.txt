@@ -1,0 +1,1 @@
+PASS: 356 M68000 compositor cases, both entry points, widths 1..8, heights 1/11/32, ASCII/high-byte indexing, empty/full rows, guards and ABI

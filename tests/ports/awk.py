@@ -33,7 +33,7 @@ with tempfile.TemporaryDirectory() as tmp:
   results.append({'args':args,'status':a.returncode,'passed':True})
  for label,prog,data,env,status in [
  ('cancel loop','BEGIN {while(1) {x++}}',b'',{'CLARICE_CANCEL_AFTER':'4'},130),
- ('owned allocation cap','BEGIN {for(i=0;i<100000;i++) a[i]=i}',b'',{},2),
+ ('owned allocation cap','BEGIN {for(i=0;i<100000;i++) a[i]=i}',b'',{'CLARICE_TEST_ALLOC_BUDGET':'98304'},2),
  ('text cap','{print length($0)}',b'a'*17000,{},2),
  ('recursive calls','function f(n){return f(n+1)} BEGIN {f(0)}',b'',{},2),
  ('unsupported system','BEGIN {system("echo bad")}',b'',{},2),

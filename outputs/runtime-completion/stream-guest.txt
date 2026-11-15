@@ -1,0 +1,4 @@
+PASS binary update streams, seek, descriptor ownership and reopen
+0
+Runtime: heap=400394 largest=400218 image=8812 ticks=90 load=56 owned-peak=2128 remaining=0
+Loader ticks: read=10 validate=24 imports=11 relocations=1 prepare=10 events=7 (events included above)

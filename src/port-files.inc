@@ -2,7 +2,26 @@ static unsigned long cli_ticks(void){return TickCount();}
 static int cli_isatty(int fd){short ref=fd==0?input_ref:fd==1?output_ref:fd==2?error_ref:-2;return ref<0&&ref!=-2;}
 static unsigned long port_peak,port_remaining,module_ticks,module_bytes,module_load_ticks;
 static void cli_port_stats(unsigned long peak,unsigned long remaining){port_peak=peak;port_remaining=remaining;}
-static void *cli_alloc(unsigned long n){return NewPtr(n);}
+/* Keep error reporting, cancellation and file cleanup viable under pressure.
+   No reserved block or permanent arena; the stack has its own launch reserve. */
+#ifdef CLARICE_NANO_PERF
+static unsigned long perf_allocs,perf_free_ticks,perf_new_ticks,perf_read_ticks,perf_reads,perf_stdio_ticks,perf_image_ticks,perf_meta_ticks;
+#endif
+static void *cli_alloc(unsigned long n){
+#ifdef CLARICE_NANO_PERF
+ unsigned long t=TickCount();perf_allocs++;
+#endif
+ long available=FreeMem();
+#ifdef CLARICE_NANO_PERF
+ perf_free_ticks+=TickCount()-t;t=TickCount();
+#endif
+ if(n>0x7fffffffUL||available<32768L||n>(unsigned long)(available-32768L)){errno=ENOMEM;return NULL;}
+ void *p=NewPtr(n);
+#ifdef CLARICE_NANO_PERF
+ perf_new_ticks+=TickCount()-t;
+#endif
+ if(!p)errno=ENOMEM;return p;
+}
 static void cli_free(void *p){if(p)DisposePtr((Ptr)p);}
 /* Data-fork I/O for portable command stdio. Standard descriptors stay separate. */
 static int port_errno(int e){
@@ -10,7 +29,10 @@ static int port_errno(int e){
 }
 static int cli_file_open(const char *path,const char *mode){
  short ref;char p[PATH_CAP];unsigned char name[256];int e;
- if(!mode||!mode[0]||!strchr("rwax",mode[0])||(mode[1]&&strcmp(mode+1,"b")&&strcmp(mode+1,"+"))){errno=EINVAL;return -1;}
+ if(!mode||!mode[0]||!strchr("rwax",mode[0])){errno=EINVAL;return -1;}
+ int binary=0,update=0;for(const char *m=mode+1;*m;m++){
+  if(*m=='b'&&!binary)binary=1;else if(*m=='+'&&!update)update=1;else{errno=EINVAL;return -1;}
+ }
  e=resolve(path,p);if(e)return port_errno(e);pstr(name,p);
  short permission=strchr(mode,'+')?fsRdWrPerm:mode[0]=='r'?fsRdPerm:fsWrPerm;
  if(mode[0]=='x'){e=HCreate(0,0,name,'CLRC','TEXT');if(e==dupFNErr){errno=EEXIST;return -1;}if(e)return port_errno(e);e=HOpen(0,0,name,permission,&ref);}
@@ -19,7 +41,15 @@ static int cli_file_open(const char *path,const char *mode){
  if(mode[0]=='w')e=SetEOF(ref,0);else if(mode[0]=='a')e=SetFPos(ref,fsFromLEOF,0);
  if(e){FSClose(ref);return port_errno(e);}return ref;
 }
-static long cli_file_read(int ref,void *buf,unsigned long count){long n=count;int e=FSRead(ref,&n,buf);if(e&&e!=eofErr)return port_errno(e);return n;}
+static long cli_file_read(int ref,void *buf,unsigned long count){long n=count;
+#ifdef CLARICE_NANO_PERF
+ unsigned long t=TickCount();perf_reads++;
+#endif
+ int e=FSRead(ref,&n,buf);
+#ifdef CLARICE_NANO_PERF
+ perf_read_ticks+=TickCount()-t;
+#endif
+if(e&&e!=eofErr)return port_errno(e);return n;}
 static long cli_file_write(int ref,const void *buf,unsigned long count){long n=count;int e=FSWrite(ref,&n,buf);if(e)return port_errno(e);return n;}
 static int cli_file_close(int ref){int e=FSClose(ref);return e?port_errno(e):0;}
 /* newlib retains FILE records for reuse. Allocate that bounded pool before any
@@ -28,8 +58,15 @@ static int cli_empty_read(void *cookie,char *buf,int n){(void)cookie;(void)buf;(
 static int cli_prepare_stdio(void){
  static int ready;FILE *slots[12];int count=0;
  if(ready)return 0;
+#ifdef CLARICE_NANO_PERF
+ unsigned long t=TickCount();
+#endif
  while(count<12){slots[count]=funopen(0,cli_empty_read,0,0,0);if(!slots[count])break;count++;}
- int ok=count==12;while(count)fclose(slots[--count]);ready=ok;return ok?0:-1;
+ int ok=count==12;while(count)fclose(slots[--count]);ready=ok;
+#ifdef CLARICE_NANO_PERF
+ perf_stdio_ticks+=TickCount()-t;
+#endif
+ return ok?0:-1;
 }
 
 static int cli_environment(int index,char *out,unsigned long capacity){

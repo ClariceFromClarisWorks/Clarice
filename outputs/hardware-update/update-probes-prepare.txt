@@ -1,0 +1,23 @@
+Using multiversal interfaces
+[ 19%] Built target LaunchProbe
+[ 19%] Built target GuardAfter
+Consolidate compiler generated dependencies of target ResourceProbe
+[ 28%] Built target NativeTxn
+[ 33%] Building C object CMakeFiles/ResourceProbe.dir/resource-probe.c.obj
+[ 38%] Building C object CMakeFiles/HashBench.dir/hash-bench.c.obj
+[ 42%] Linking C executable ResourceProbe.code.bin
+[ 47%] Linking C executable HashBench.code.bin
+[ 47%] Built target ResourceProbe
+[ 57%] Built target GuardAfter_APPL
+[ 61%] Built target HashBench
+[ 71%] Built target LaunchProbe_APPL
+[ 80%] Built target NativeTxn_APPL
+[ 85%] Generating ResourceProbe.bin, ResourceProbe.APPL, ResourceProbe.dsk, ResourceProbe.ad, %ResourceProbe.ad
+[ 90%] Generating HashBench.bin, HashBench.APPL, HashBench.dsk, HashBench.ad, %HashBench.ad
+[100%] Built target ResourceProbe_APPL
+[100%] Built target HashBench_APPL
+/src/work/hardware-update/system.hda: contains 1 HFS partition
+Volume name is "Sys6Unix"
+Volume was created on Sun Nov  8 05:23:44 2026
+Volume was last modified on Sat Nov 14 12:51:52 2026
+Volume has 23041024 bytes free

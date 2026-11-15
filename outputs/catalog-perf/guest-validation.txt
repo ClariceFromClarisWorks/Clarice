@@ -1,0 +1,1 @@
+PASS: actual Snow two-volume listing transcript, hidden/escaped names, relative/absolute paths, safe file operations, fail-closed errors; native pixel and scrollbar reference checks

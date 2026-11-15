@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "existing_edit_exact": true,
+    "new_file_exact": true,
+    "resource_exact": true,
+    "type_creator": true,
+    "finder_flags": true,
+    "creation_date": true,
+    "no_transaction_siblings": true,
+    "existing_nano_status_zero": true,
+    "new_nano_status_zero": true,
+    "cancel_status_130": true,
+    "locked_refused": true,
+    "probe-one": true,
+    "probe-two": true
+  },
+  "passed": true,
+  "resource_sha256": "f7c15f91b8d907942953059537cba1998947e2cab29e44b24d37a58966073af7",
+  "existing_data_hex": "656469746564206f726967696e616c20646174610d0a",
+  "metadata_limit": "hfsutils exports Finder position/folder fields as zero; nonzero guest positions remain unverified; host model checks standard/extended metadata copying"
+}

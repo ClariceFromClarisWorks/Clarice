@@ -1,0 +1,174 @@
+{
+  "machine": "Physical Macintosh SE, user confirmed stock 68000 mode; 4 MB, System 6.0.8, MultiFinder",
+  "configuration": "Monaco 9; 80 columns x 24 rows; light; quiet SEControl during measured loop",
+  "build": 2026111516,
+  "method": "Same alternating legacy/candidate diagnostic as Snow, three repetitions; 24 jumps/case. Values transcribed from captured guest report, not inferred from Snow.",
+  "evidence": [
+    "se-paired-summary.png",
+    "se-paired-tail.png"
+  ],
+  "runs": [
+    {
+      "run": 0,
+      "new": 0,
+      "kind": "listing",
+      "ticks": 370,
+      "worst": 17,
+      "frames": 24
+    },
+    {
+      "run": 0,
+      "new": 0,
+      "kind": "varied",
+      "ticks": 1159,
+      "worst": 49,
+      "frames": 24
+    },
+    {
+      "run": 0,
+      "new": 1,
+      "kind": "listing",
+      "ticks": 288,
+      "worst": 18,
+      "frames": 24
+    },
+    {
+      "run": 0,
+      "new": 1,
+      "kind": "varied",
+      "ticks": 728,
+      "worst": 31,
+      "frames": 24
+    },
+    {
+      "run": 1,
+      "new": 0,
+      "kind": "listing",
+      "ticks": 370,
+      "worst": 17,
+      "frames": 24
+    },
+    {
+      "run": 1,
+      "new": 0,
+      "kind": "varied",
+      "ticks": 1161,
+      "worst": 50,
+      "frames": 24
+    },
+    {
+      "run": 1,
+      "new": 1,
+      "kind": "listing",
+      "ticks": 285,
+      "worst": 17,
+      "frames": 24
+    },
+    {
+      "run": 1,
+      "new": 1,
+      "kind": "varied",
+      "ticks": 732,
+      "worst": 31,
+      "frames": 24
+    },
+    {
+      "run": 2,
+      "new": 0,
+      "kind": "listing",
+      "ticks": 369,
+      "worst": 17,
+      "frames": 24
+    },
+    {
+      "run": 2,
+      "new": 0,
+      "kind": "varied",
+      "ticks": 1159,
+      "worst": 50,
+      "frames": 24
+    },
+    {
+      "run": 2,
+      "new": 1,
+      "kind": "listing",
+      "ticks": 286,
+      "worst": 17,
+      "frames": 24
+    },
+    {
+      "run": 2,
+      "new": 1,
+      "kind": "varied",
+      "ticks": 731,
+      "worst": 31,
+      "frames": 24
+    }
+  ],
+  "summary": {
+    "listing": {
+      "before_ticks": 370,
+      "after_ticks": 286,
+      "reduction_percent": 22.7,
+      "before_mean_frame_ms": 256.9,
+      "after_mean_frame_ms": 198.6
+    },
+    "varied": {
+      "before_ticks": 1159,
+      "after_ticks": 731,
+      "reduction_percent": 36.9,
+      "before_mean_frame_ms": 804.9,
+      "after_mean_frame_ms": 507.6
+    }
+  },
+  "heap_delta": 0,
+  "glyph_cold_build_ticks": [
+    4,
+    5
+  ],
+  "normal_build_acceptance": {
+    "build": 2026111517,
+    "installed_version_verified": true,
+    "automatic_relaunch": true,
+    "ctrl_c_output": 130,
+    "ctrl_c_pager": 130,
+    "history_thumb_drag": "view moved; track, thumb and arrows intact; mouse released",
+    "selection": "multi-line highlight correct; mouse released",
+    "heap": 424878,
+    "largest": 424332,
+    "owned_remaining": 0,
+    "heap_difference_from_1515_sample": -868,
+    "previous_normal_backup": {
+      "path": "Macintosh HD:.cu-000005db-78c4021c.old",
+      "resource_bytes": 938856
+    },
+    "previous_diagnostic_backup": {
+      "path": "Macintosh HD:.cu-0000063c-78c4021d.old",
+      "resource_bytes": 949013
+    },
+    "update": {
+      "download_seconds": 53,
+      "stage_ticks": 4055,
+      "staged_verification_ticks": 2066,
+      "error_28_observed": false
+    },
+    "evidence": [
+      "se-installed-version.png",
+      "se-normal-cancel-output.png",
+      "se-normal-pager.png",
+      "se-normal-cancel-pager.png",
+      "se-normal-thumb-drag.png",
+      "se-normal-selection.png",
+      "se-normal-memory.png",
+      "se-recovery-files.png"
+    ]
+  },
+  "diagnostic_pixel_check": {
+    "bursts": 22,
+    "views": 20,
+    "text_mismatches": 0,
+    "scrollbar_checks": 147,
+    "scrollbar_mismatches": 0,
+    "evidence": "se-glyph-complete.png"
+  }
+}
