@@ -1,65 +1,72 @@
 # Clarice current state
 
-15 November 2026, Adelaide. Normal build **2026111517** is now installed on the
-physical SE through private Wi-Fi update, with automatic relaunch and version
-check. Previous application and replaced `/bin/ls`/`benchls` remain recoverable.
-Error 28 did not recur; its historical cause remains unknown.
-ROADMAP.md is provisional history, not current authorisation.
+15 November 2026, Adelaide. Normal build **2026111521** is installed on the
+physical stock SE through private Wi-Fi update, with automatic relaunch and
+installed-version confirmation. Previous applications, including normal 1519,
+remain recoverable. No new error 28 was observed; its historical cause remains
+unknown. ROADMAP.md is provisional history, not current authorisation.
 
-Development checkpoint: `codex/se-performance-2026111517`; no release or tag.
-Source, focused tests and benchmark evidence are retained; generated applications,
-media, private connection settings and interim captures remain local.
-[Reproduction instructions](jump-perf/REPRODUCE.md). No renderer changes or new
-hardware tests in this checkpoint task.
-Clean build passes; both application CODE resources match the accepted build.
-The fresh package regenerates older bundled utilities, so it is not byte-identical
-or newly hardware-qualified; [comparison](jump-perf/checkpoint-validation.json).
+Development checkpoint branch: `codex/se-alignment-2026111521`. It includes the
+accepted row-clearing and alignment changes below, preserving prior checkpoint
+**7185b68b0144d8c869990f61a6c4a278ca69e367** and published release history.
+Generated applications/media and private session configuration stay local;
+selected primary test captures are tracked. [Build procedure](jump-perf/REPRODUCE.md).
+The normal package reuses accepted command resources: rebuilding every utility
+can produce a different package and does not inherit this hardware acceptance.
 
 ## Large history jumps — 15 November 2026
 
-- Normal build **2026111517** reuses unused space in the existing row bitmap for
-  installed Monaco 9 ASCII cells. A bounded 68000 loop composes four cells into
-  three bytes. Other fonts/extended characters, selection, prompts/cursors and
-  forced redraws retain QuickDraw; editor ownership invalidates the stored cells.
-  No new bitmap allocation, partition increase, renderer preference or idle work.
-- Three alternating old/new runs in one diagnostic executable, **24 large jumps**
-  each: Snow directory-style **331 → 249 ticks (24.8% less time)**, dense text
-  **1,071 → 645 (39.8%)**. Stock physical SE: **370 → 286 (22.7%)** and
-  **1,159 → 731 (36.9%)**. Same Monaco 9/80×24 setup; quiet SEControl.
-  Physical mean frames **257 → 199 ms** and **805 → 508 ms**, respectively.
-  First-use cell preparation costs 4–5 ticks; included in the measured draws.
-- Snow actual step-and-pause dragging: worst draw **14 → 11 ticks**; gestures
-  covered different view ranges, and host final-change medians are within capture
-  granularity. **Fluid continuous dragging is not yet established.** Dense history
-  remains slow; composition and per-row native presentation remain the focus.
-  The existing two-tick post-paint drag cadence is unchanged.
-- Host: 356 actual M68000 compositor cases, 510 glyph-builder cases, 532 row
-  comparisons, selection delta and 1,560 cursor/view guards pass. Snow light/dark
-  dense-text checks each have zero mismatches across 22 bursts + 20 views and
-  147 scrollbar checks. Physical diagnostic dense-text/scrollbar checks also pass.
-- Normal Snow: Ctrl+C output/pager statuses 130, selection works, nano opens the
-  8 KB fixture and exits, then native pixel/scrollbar checks pass; owned remainder
-  zero. Physical normal build: actual thumb dragging and selection work, complete
-  scrollbar retained, Ctrl+C output/pager statuses 130, mouse button released.
-  No high-speed physical video/flicker latency measurement; no cursor changes.
-- Normal resource fork **+858 bytes** over 1515. Physical sampled free heap
-  **414.92 KB (424,878 bytes)**, 868 bytes below the previous after-listing sample;
-  owned remainder zero. Paired jump test heap delta zero on both machines.
-- Wi-Fi update automatically relaunched and verified **2026111517**. Prior normal
-  app: `Macintosh HD:.cu-000005db-78c4021c.old` (resource 938,856 bytes); diagnostic
-  1516 also retained. Earlier backups preserved; no new error 28 observed.
-- Prior 1515 native BlockMove/even-aligned row-comparison optimisation remains;
-  its separate physical 30-frame result was 248 → 174 ticks.
-  [Prior report](frame-perf/REPORT.md). No new nano-startup or HFS throughput claim.
-- Outstanding: previously recorded dark-to-light preference invalidation and
-  updater viewport-visible `Y/n`/explicit `-y`; no work on those in this task.
-  [Report/build](jump-perf/REPORT.md), [Snow evidence](jump-perf/measurements.json),
-  [physical evidence](jump-perf/physical-measurements.json).
-- Next recommendation, not implemented: measure and remove redundant row clearing
-  before the four-cell compositor's full-byte writes. Physical dense-frame text
-  work is about 235–239 ms, presentation 155–166 ms, layout/history 11–15 ms.
-  The text counter combines clearing, glyph work and setup; the clearing share
-  is not separately measured. [Analysis and verification plan](jump-perf/REPORT.md#next-focused-opportunity-checkpoint-review).
+- Retained bounded source-bit alignment inside the existing 4096-byte drawing
+  buffer. Monochrome 64-byte-stride spans at least 128 pixels wide can match
+  QuickDraw source/destination offsets modulo 16; unsuitable geometry and short
+  spans keep the existing path. Clipping and obscured-window handling remain.
+  No new persistent bitmap/cache, renderer setting or cursor change.
+- Three alternating pairs, 24 jumps per workload, Monaco 9/80×24/light/128 retained
+  lines. Physical stock SE (CPU code 1), quiet SEControl. Median directory-style
+  **266 → 267 ticks**, effectively unchanged (**184.7 → 185.4 ms/frame**).
+  Dense **724 → 682 ticks**, **502.8 → 473.6 ms/frame (5.8%)**; every pair improves.
+  Snow directory **234 → 234**, dense **617 → 588 ticks (4.7%)**. Both paired
+  benchmarks report zero heap delta. Dense scrolling remains visibly expensive.
+- Rejected a slower C shift and an assembly variant that regressed short spans.
+  Accepted assembly uses backwards word accesses within validated row bounds.
+  Host coverage: 8,806 actual M68000 alignment cases, dirty prior bytes, all bit
+  offsets, partial groups, overlapping moves and invalid geometry; existing
+  glyph, selection and scroll-guard checks pass.
+- Snow and physical diagnostic: **322 dirty-buffer/clipping comparisons** pass,
+  including another window actually covering the row and covered/uncovered full
+  redraws. Both themes pass 22 bursts + 20 views, zero text mismatches, and
+  147 clean scrollbar checks. The random pixel strip was deliberate test data
+  and is removed on diagnostic exit.
+- Normal 1521: Snow pixel/bar checks pass. Snow and physical output/pager Ctrl+C
+  return **130**. Physical thumb dragging and multiline selection work; mouse
+  button released. User watched rapid physical dragging: **no blanking or missing
+  scrollbar**. Snow sampled drag: 80 captures/4.15 s, no transient blank bands;
+  this cannot exclude flashes shorter than the sampling interval.
+- Genuine nano opened the 8 KB fixture and exited in Snow; subsequent native
+  text/scrollbar checks pass, invocation-owned remainder zero. No new nano
+  startup, safe-save or HFS performance claim.
+- Normal resource fork **940,037 bytes, +259 over 1519**, partition/stack unchanged.
+  Physical free heap sample **414.61 KB (424,556 bytes)**, owned remainder zero;
+  254 bytes below the prior after-listing sample, not a controlled peak comparison.
+  The clipping diagnostic's -44/-20-byte Snow/SE final heap differences include
+  Window Manager/event state and remain unattributed; its explicit allocations
+  are disposed. The production alignment path allocates nothing.
+- Remaining physical dense cost: text/glyph work about **208 ms/frame**;
+  presentation about **156 ms**, including **98 ms** aligning staged rows.
+  Remaining presentation helper/QuickDraw work is approximately **58 ms**.
+  Coarse nested counters overlap. Text composition is now the largest bucket;
+  alignment preparation consumes much of the isolated copy saving.
+- **Next recommendation, not implemented:** measure producing aligned pixels
+  during existing glyph composition to avoid that second pass. Preserve the
+  same dirty-buffer/clip/bounds proof; no broader renderer rewrite is authorised.
+- Earlier accepted row-clearing change removes clearing only for fully overwritten
+  four-character groups; tail bytes still clear. Physical directory/dense gains
+  were 7.6%/4.2% in its own matched experiment. [Evidence](clear-perf/REPORT.md).
+  This builds on 1517 glyph reuse (257 → 199 ms directory; 805 → 508 ms dense).
+  Do not mix diagnostic binaries as interchangeable timing baselines.
+- Outstanding: recorded dark-to-light preference invalidation and updater
+  viewport-visible `Y/n`/explicit `-y`; neither changed here.
+  [Alignment report](align-perf/REPORT.md), [measurements](align-perf/measurements.json).
 
 ## Listing throughput — 15 November 2026
 

@@ -225,8 +225,28 @@ static void erase_margins(void){Rect content=win->portRect;if(history_bar)conten
  }
 /* The same reference-tested 68000 row copier used by the optional cache.
    Keep the clipped QuickDraw fallback for covered/misaligned windows. */
-static void present_native_row(const Rect *source,const Rect *dest){
+#include "native-align.inc"
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+static int align_legacy;
+static unsigned long align_ticks;
+#define ALIGN_LEGACY align_legacy
+#else
+#define ALIGN_LEGACY 0
+#endif
+static void present_native_row(const Rect *original,const Rect *dest){
+ Rect adjusted=*original;const Rect *source=&adjusted;
  int stride=win->portBits.rowBytes&0x3fff,px=dest->left-win->portBits.bounds.left,py=dest->top-win->portBits.bounds.top,width=dest->right-dest->left,height=dest->bottom-dest->top;
+ /* Short changed spans already copy cheaply; shifting them regressed the
+    matched directory workload. Reserve alignment for substantial row spans. */
+ if(!ALIGN_LEGACY&&width>=128&&!(win->portBits.rowBytes&0xc000)&&stride==64&&width==source->right-source->left&&height==source->bottom-source->top){
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+  unsigned long start=TickCount();
+#endif
+  align_native_row(&adjusted,px&15);
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+  align_ticks+=TickCount()-start;
+#endif
+ }
  if(FrontWindow()==win&&!(win->portBits.rowBytes&0xc000)&&stride==64&&!(px&15)&&!(source->left&15)&&!(width&7)&&px>=0&&py>=0&&px+width<=512&&py+height<=342&&region_contains(win->visRgn,dest)&&region_contains(win->clipRgn,dest)){
   unsigned char *to=(unsigned char*)win->portBits.baseAddr+py*stride+px/8;HideCursor();asm_copy_rows(to,prompt_pixels+source->top*STRIDE+source->left/8,width/8,height,stride,STRIDE);ShowCursor();
  }else CopyBits(&prompt_port.portBits,&win->portBits,source,dest,srcCopy,0);
@@ -469,6 +489,8 @@ static int native_scroll_check(int cached){
 #include "../tests/terminal/draw-guest.inc"
 #include "../tests/terminal/frame-guest.inc"
 #include "../tests/terminal/jump-guest.inc"
+#include "../tests/terminal/presentation-guest.inc"
+#include "../tests/terminal/align-guest.inc"
 #include "../tests/terminal/dispatch-guest.inc"
 #include "../tests/terminal/catalog-guest.inc"
 #include "../tests/terminal/listing-render-guest.inc"
@@ -476,8 +498,12 @@ static int native_scroll_check(int cached){
 /* Executed inside the 68000 guest, not host timing or inferred performance. */
 int app_scroll_bench(int quick){
 #ifdef CLARICE_DRAW_DIAGNOSTICS
+ if(quick==14)return alignment_pixels();
+ if(quick==13)return jump_probe(2);
+ if(quick==12)return presentation_probe();
+ if(quick==11)return jump_probe(1);
  if(quick==10){native_varied_test=1;int result=native_scroll_check(0);native_varied_test=0;return result;}
- if(quick==9)return jump_probe();
+ if(quick==9)return jump_probe(0);
  if(quick==8)return frame_probe();
  if(quick==7)return listing_render_probe();
  if(quick==6)return catalog_probe();

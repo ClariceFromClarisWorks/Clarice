@@ -1,0 +1,16 @@
+[
+  {
+    "renderer": "automatic",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "snow-cancel-automatic-off-status.png",
+    "note": "Screenshots require inspection; elapsed host script time is not guest interrupt latency."
+  },
+  {
+    "renderer": "automatic",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "snow-cancel-automatic-screen-status.png",
+    "note": "Screenshots require inspection; elapsed host script time is not guest interrupt latency."
+  }
+]

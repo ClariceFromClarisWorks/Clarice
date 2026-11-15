@@ -199,6 +199,43 @@ asm_cells:
  movem.l (%sp)+,%d2-%d7/%a2-%a6
  rts
 
+/* In-place right shift, end points at the last even word of the first row.
+   C validates 1..32 words, 1..64 rows, 1..15 bits and all 64-byte row bounds.
+   A single 32-bit shift combines adjacent words; backwards writes preserve
+   unread input. The first word never reads before the validated span. */
+.globl asm_align_row_bits
+asm_align_row_bits:
+ movem.l %d2-%d5/%a2,-(%sp)
+ move.l 24(%sp),%a2
+ move.l 28(%sp),%d2
+ move.l 32(%sp),%d3
+ move.l 36(%sp),%d4
+ subq.w #1,%d2
+ subq.w #1,%d3
+.Lalign_row:
+ move.l %a2,%a0
+ lea 2(%a2),%a1
+ move.w (%a0),%d0
+ swap %d0
+ move.w %d2,%d5
+ beq .Lalign_first
+ subq.w #1,%d5
+.Lalign_word:
+ move.w -(%a0),%d0
+ swap %d0
+ move.l %d0,%d1
+ lsr.l %d4,%d1
+ move.w %d1,-(%a1)
+ dbra %d5,.Lalign_word
+.Lalign_first:
+ swap %d0
+ lsr.w %d4,%d0
+ move.w %d0,-(%a1)
+ lea 64(%a2),%a2
+ dbra %d3,.Lalign_row
+ movem.l (%sp)+,%d2-%d5/%a2
+ rts
+
 /* Even-aligned row transfer. Width can be any positive number of bytes. */
 .globl asm_copy_rows
 asm_copy_rows:

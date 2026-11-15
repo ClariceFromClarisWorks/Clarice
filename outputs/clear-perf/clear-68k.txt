@@ -1,0 +1,2 @@
+Using multiversal interfaces
+PASS: 85 actual M68000 C-clear/compositor cases with arbitrary previous bytes; all short/full/tail lengths and untouched guards

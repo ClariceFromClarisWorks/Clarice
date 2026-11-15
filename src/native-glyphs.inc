@@ -2,15 +2,26 @@
    staging bitmap. No allocation: first 704 bytes remain the 11-pixel output
    row; 95 * 32 glyph bytes occupy bytes 704..3743. Editor drawing may use the
    whole bitmap, so draw() invalidates these cells before handing it over. */
-/* Compositor writes a zeroed row; four six-pixel cells share three bytes. */
+/* Four six-pixel cells overwrite three bytes. Only the OR-composed tail needs
+   clearing; presentation clips to count*6 pixels, never to the unused padding. */
 extern void asm_ascii_cells(unsigned char *,const unsigned char *,const unsigned char *,long,long,long);
 #ifdef CLARICE_DRAW_DIAGNOSTICS
 static int jump_legacy;
+static int clear_legacy;
 static unsigned long glyph_build_ticks;
 #define JUMP_LEGACY jump_legacy
 #else
 #define JUMP_LEGACY 0
 #endif
+static void native_glyph_clear(int count){
+#ifdef CLARICE_DRAW_DIAGNOSTICS
+ if(clear_legacy){memset(prompt_pixels,0,STRIDE*11);return;}
+#endif
+ int tail=count&3;
+ if(tail){unsigned char *p=prompt_pixels+(count>>2)*3;
+  for(int y=0;y<11;y++,p+=STRIDE){p[0]=0;if(tail>1)p[1]=0;if(tail>2)p[2]=0;}
+ }
+}
 static int native_glyph_row(const char *s,int count){
  if(JUMP_LEGACY||!mono||font_id!=4||font_size!=9||cell_w!=6||line_h!=11||font_ascent!=9||count<1||count>85)return 0;
  for(int i=0;i<count;i++)if((unsigned char)s[i]<32||(unsigned char)s[i]>126)return 0;
@@ -38,7 +49,7 @@ static int native_glyph_row(const char *s,int count){
   glyph_build_ticks+=TickCount()-build_start;
 #endif
  }
- memset(prompt_pixels,0,STRIDE*11);
+ native_glyph_clear(count);
  asm_ascii_cells(prompt_pixels,(const unsigned char*)s,glyphs,count,11,6);
  if(inverse){Rect r;SetRect(&r,0,0,count*6,11);InvertRect(&r);}
  return 1;

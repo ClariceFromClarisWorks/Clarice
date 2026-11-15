@@ -22,7 +22,7 @@ static void InvertRect(Rect*r){for(int y=r->top;y<r->bottom;y++)for(int x=r->lef
 static void MoveTo(int x,int y){pen_x=x;pen_y=y;}
 static void DrawText(const char*s,int off,int n){draws++;for(int c=0;c<n;c++)for(int y=0;y<11;y++)for(int x=0;x<6;x++)bit(pen_x+c*6+x,pen_y-9+y,(font[s[off+c]-32][y]>>(7-x)&1)?fore:back);}
 void asm_ascii_cells(unsigned char*d,const unsigned char*s,const unsigned char*g,long n,long h,long width){
- for(int c=0;c<n;c++)for(int y=0;y<h;y++)for(int x=0;x<width;x++)if(g[(s[c]-32)*32+y]&(128>>x)){int b=c*width+x;d[y*64+b/8]|=128>>(b&7);}
+ for(int c=0;c<n;c++)for(int y=0;y<h;y++)for(int x=0;x<width;x++){int b=c*width+x;unsigned char mask=128>>(b&7);if(c<(n/4)*4)d[y*64+b/8]&=~mask;if(g[(s[c]-32)*32+y]&(128>>x))d[y*64+b/8]|=mask;}
 }
 '''
 tail=r'''
@@ -30,9 +30,10 @@ int main(void){unsigned seed=68000;for(int c=0;c<95;c++)for(int y=0;y<11;y++){se
  for(int rebuild=0;rebuild<3;rebuild++){
   memset(prompt_pixels,0xa5,sizeof prompt_pixels);native_glyph_valid=0;draws=0;
   for(inverse=0;inverse<2;inverse++)for(int n=1;n<=85;n++){
+   memset(prompt_pixels,0xa5,704);
    char s[85];for(int i=0;i<n;i++)s[i]=32+(n*11+i*13)%95;
    assert(native_glyph_row(s,n)==1);assert(draws==2);
-   for(int y=0;y<11;y++)for(int x=0;x<512;x++){int want=x<n*6?((font[s[x/6]-32][y]>>(7-x%6))&1)^inverse:0;assert(getbit(x,y)==want);}
+   for(int y=0;y<11;y++)for(int x=0;x<n*6;x++){int want=((font[s[x/6]-32][y]>>(7-x%6))&1)^inverse;assert(getbit(x,y)==want);}
    for(int c=0;c<95;c++)assert(!memcmp(prompt_pixels+704+c*32,font[c],11));
    for(int i=3744;i<4096;i++)assert(prompt_pixels[i]==0xa5);
   }

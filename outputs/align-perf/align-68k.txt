@@ -1,0 +1,2 @@
+Using multiversal interfaces
+PASS: 8806 actual M68000 alignment cases; offsets 0..15, all cell tails, dirty buffers, overlap, bounds and fallback; full-buffer read/write guards and ABI registers
