@@ -69,5 +69,6 @@ long app_screen_write(const void *,unsigned long);
 
 #ifdef CLARICE_NANO_PERF
 void app_nano_mark(int);
+void app_nano_refresh(unsigned long);
 void app_nano_stats(char *,unsigned long);
 #endif

@@ -1,9 +1,11 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted development build **2026111533** implements
-the six terminal UX changes. Accepted loader build **2026111534** is now running on the
-stock SE after the authorised loader experiment and automatic relaunch. Focused host/Snow and physical UX/editor
-checks pass. Previous working applications and command recovery copies remain available.
+16 November 2026, Adelaide. Loader checkpoint **2e84229 / build 2026111534** is
+preserved and pushed on its development branch. Focused editor drawing candidate
+**2026111536** passed matched stock-SE timing/pixel/cleanup checks; normal build
+**2026111537** (profiling OFF) passed Snow editor/exit checks and is prepared locally.
+The SE remains on instrumented 1536; normal nano's format fix is installed there
+with its previous command retained. No new release, tag or main change.
 ROADMAP.md is provisional history, not current authorisation.
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
@@ -12,9 +14,165 @@ Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 No tag or release. Physical loader profiling has resumed; build 1534 changes only
 the approved installed-fast metadata validation path, not nano.
 
+## Utility elasticity and small-command audit — 16 November
+
+Experimental normal build **2026111538** and independently built awk/sort are
+host/Snow validated; no physical deployment or new cache. Full inventory and
+reproduction evidence: [utility audit](utility-audit/AUDIT.md).
+
+- Actual installed ls: 18 Snow invocations (help, empty and ten-entry directory).
+  Warm loader median **40 ticks / 0.67 s**, of which reading is 13–14 ticks,
+  receipt work 16, preparation 8, imports/relocations about 1–2 each. First load
+  53 ticks. Reading does not dominate; retain on-demand CLX, no caching/builtin
+  conversion. These module timings exclude shell parsing and final prompt paint.
+- Removed Clarice's artificial 16 KiB awk/sort record ceilings using upstream
+  growth and existing spill merging. Small sort batches remain bounded; large
+  records transfer buffer ownership instead of allocating a duplicate.
+- Shell read now consumes an oversized record, reports failure and preserves its
+  variable instead of silently succeeding with a truncated value. Exact 127-byte
+  records and subsequent reads work; no new permanent allocation.
+- Host: 37 elastic-text cases, 30 awk comparisons, 45 tail/sort comparisons,
+  spill/error/cancellation tests, 31 shell comparisons and focused read boundaries.
+  Snow: exact 64 KiB records, multi-run sort/unique, genuine heap exhaustion,
+  recovery, Ctrl+C status 130 and zero command-owned survivors. Small sort peak
+  4,492 bytes; 64 KiB sort 208,408; awk length 152,101. Large fields still exhaust
+  the available application heap explicitly. No claim that every command is elastic.
+- Rebuilt grep/sed: accelerated Snow now verifies exact 64 KiB grep and single
+  substitution output, 32 KiB global substitution, and subsequent small-command
+  recovery. Sed no longer scans beyond the requested positive occurrence or
+  repeatedly scans the growing substitution destination. Host: 35 comparisons
+  against pristine upstream, allocation failure and cancellation cleanup pass.
+  Global 64 KiB substitution still exhausts this guest's available command heap:
+  explicit status 1, no output and zero portable-owned survivors; not silent success.
+- find/du now use demand-allocated iterative traversal instead of depth 8.
+  Host depth-24, allocation-failure-at-each-frame and cancellation tests pass;
+  Snow verifies 26 entries, explicit maxdepth 12, and expected allocated-space
+  total. Native path/catalog limits remain. cp/rm now also use iterative traversal;
+  depth-24 guest copy/removal, allocation failure, cancellation and recovery pass.
+- Test at fixed uncapped FFWD, dynamic acceleration disabled. Startup sometimes
+  stays around 1.5× until FFWD is toggled off/on; verified runs show 15.1–15.4×.
+  Use prepared guest startup scripts: current automated key/clipboard delivery
+  is unreliable at this speed. This is not a demonstrated Clarice paste defect.
+- Disposable-volume exports are reliable after explicit native flush/unmount.
+  Earlier host-emulator termination without guest unmount lost catalog changes
+  despite a name-based FlushVol success. Cause is not established; preserved
+  evidence must not be treated as successful byte verification. No production
+  filesystem changes made to compensate for the test shutdown problem.
+- Guest reports **System 6.0.7**, Plus/4 MB; physical SE/6.0.8 acceptance pending.
+  Focused results: [utility correctness evidence](utility-correctness/RESULTS.md).
+  Native-error descriptions and inverse pinwheel are now guest-validated below.
+  Stream/descriptor elasticity and cp/rm traversal are validated. The broader
+  utility/POSIX audit remains incremental, not a full compliance claim.
+
+## cp/rm and portable streams — 16 November
+
+- Removed depth-8 cp/rm restriction with explicit demand-allocated DFS frames.
+  Both-fork replacement remains unchanged. Partial directory trees after failure
+  are reported, not rolled back as a whole; source files remain intact.
+- Removed 12-entry portable stream/descriptor ceilings. Stable stream cookies grow
+  individually; descriptors grow on demand and reuse closed numbers. Standard
+  streams remain small/static. Command-owned records/buffers are all reclaimed.
+- Host ASan/UBSan: depth 24, 25 copy allocation boundaries, removal allocation
+  failure, cancellation and cleanup; 40 simultaneous streams plus 40 descriptors,
+  fdopen ownership, repeated invocations, low-memory and cancellation checks with
+  native handle counts restored. Existing 30 awk / 19 sed comparisons pass.
+- Snow fixed uncapped FFWD (~14–15.5×): deep cp/rm and fault injection pass;
+  failed/cancelled overwrite preserves both forks and Finder metadata; no leftover
+  copy temporary siblings. 16 streams and 16 descriptors separately pass three
+  times, as do injected runtime OOM/cancellation and subsequent recovery.
+  Real upstream awk writes 16 simultaneously open files, repeated; all bytes exact.
+- Native combined capacity test reaches EMFILE after 16 streams plus 11 descriptors
+  in this guest: genuine system-wide open-file capacity remains. All portable
+  survivors zero. Stream test peak 13,816 B; repeated free heap 397,948 B unchanged.
+  Shared newlib FILE records retain roughly 2.10 KiB after first larger use; largest
+  free block can shrink from allocation placement (first stress: 388,476→364,500 B).
+  This is libc high-water storage, not a new Clarice resident cache; no repeated loss.
+- Normal external packages prepared locally: cp/rm 12,840 B each (+708), awk
+  188,312 B (+532). Other installed/bundled commands are not silently updated;
+  they acquire the new runtime when rebuilt. No application/SE update, push or release.
+  [Evidence and commands](utility-correctness/RESULTS.md); guest remains System
+  6.0.7/Plus/4 MB. Physical SE and 6.0.8 acceptance remain pending.
+
+## Native errors, activity display and POSIX checks — 16 November
+
+Normal local application **2026111539** passes Snow Plus/4 MB/System 6.0.7
+at fixed uncapped FFWD (~15.6×). SE remains untouched; no push or publication.
+
+- Native error reporting retains numeric codes and adds shared descriptions;
+  missing-file, disk-full, memory and unknown-code fixtures pass, as does actual
+  cat failure. Unknown errors are not guessed; upstream Unix errno remains separate.
+- Pinwheel CopyBits now uses neutral port colours for exact pixel transfer.
+  Native QuickDraw tests pass all four frames, both themes and both destination
+  polarities, with exact restoration after cancellation. Free heap stays 422,922 B;
+  no additional bitmap or permanent allocation. Clock/catch-up tests pass.
+- Shell fixes: IFS non-whitespace empty fields, quoted `$*` joining, substitution
+  status for assignment-only commands, sh -c positional arguments, read -r/escape
+  handling and IFS trimming. Temporary assignments preserve unrelated builtin
+  effects. Two small mrsh parser fixes preserve empty assignment boundaries and
+  prevent `$#` following another expansion being swallowed as a comment.
+- Host ASan/UBSan: existing 31 shell comparisons + 3 cancellations, read overflow
+  boundaries, and 39 new dash comparisons pass. The same 39 cases pass byte-for-byte
+  in eight Snow batches. Existing pipeline, spilling-sort, cancellation and
+  output-failure checks pass against the current runtime.
+- Shell remains bounded (127-byte variables, 32 arguments, 8 KiB source, 256-token
+  guard); read supports one variable. Embedded quoted `$@`, broader parameter
+  grammar and other documented shell gaps remain. No general POSIX compliance claim.
+  These changes add two scalar substitution counters (8 B in the 68k build),
+  temporary read quote markers and no resident cache. Full shell memory/latency
+  profiling and physical/System 6.0.8 acceptance are not claimed.
+
+[Tests, references and evidence](utility-correctness/RESULTS.md).
+Normal MacBinary: `outputs/utility-correctness/build/Clarice.bin`, with SHA256SUMS;
+activity diagnostics and nano profiling are OFF. Independent utility candidates
+remain separately packaged; the normal application does not silently replace them.
+Next: continue capability/failure coverage and remaining artificial shell limits,
+then consolidated physical acceptance when authorised.
+
+## Physical SE screensaver — 16 November
+
+The user completed After Dark/Flying Toasters installation and shut down the SE.
+User reports Flying Toasters activates after **10 minutes of inactivity**. Before
+future SEControl screenshots or keyboard input, send a mouse movement to wake the
+display, allow it to restore, then capture/check the foreground application before
+typing. Screensaver activation was not independently verified remotely.
+Clarice wget successfully transferred the control panel and module beforehand;
+no Clarice production changes were needed. Leave hardware off until available.
+
+## Nano post-loader experiment — 16 November
+
+Keep the existing strip renderer; omit trailing-space drawing after full-row
+clearing and render directly at the destination bit phase where the same buffer
+fits. QuickDraw clipping, inverse spans and cursor behaviour remain. No additional
+bitmap or permanent allocation. The shared newlib format adapter now covers nano's
+vsnprintf/sprintf paths: `Read 128 lines`, not `Read zu lines`.
+
+Matched physical warm startup, measured internally to painted input readiness
+(excludes screenshot overhead): empty **5.68 → 5.10 s**, 8 KiB/128 lines
+**9.19 → 8.57 s**, 8 KiB/two long lines **7.34 → 6.88 s**. Two runs per case;
+portable remaining=0 throughout, peaks unchanged. Drawing totals respectively
+62–65 → 34–35, 103–105 → 69–71, 69–71 → 39–42 ticks. Physical editor-body,
+shortcut-bar and scrollbar pixels match exactly (corrected status line excluded).
+Normal nano image grows 196 bytes; no new idle heap reservation. Instrumented app
+free heap is stable at 418,906 bytes versus prior 419,010, not accumulating per run.
+
+Host dirty-buffer/clip/theme/cursor checks and safe-save fault injection pass.
+Snow normal nano repeated saves preserve exact data, resource fork, type/creator,
+flags and creation date; cancellation returns 130 without saving, remaining=0.
+Normal 1537 opens/exits nano successfully. Physical normal nano installed with prior command retained; new-file editing,
+save, readback and exit passed with remaining=0. Clarice was then closed for the
+night; no additional hardware work is running.
+No high-speed physical flicker capture or fresh matched cold run this evening.
+
+Remaining priorities: short-file open/construction ~2.8 s (native reads only
+6–10 ticks), final ncurses refresh ~1.65 s including output/rendering, warm CLX
+~1.42 s. Counters overlap; do not sum. Cold preparation/receipt policy unchanged.
+Three-second target remains unmet. Hardware work is stopped for tonight; no further renderer campaign. [Evidence and methods](nano-profile2/README.md).
+
 ## Executable loading — accepted focused experiment, 16 November
 
-AGENTS `43eb445` and checkpoint `7eb7064` are preserved. Build **2026111534**
+Accepted checkpoint `2e84229` was pushed to `codex/clx-fast-2026111534` on
+16 November, preserving AGENTS `43eb445` and checkpoint `7eb7064`. Main and
+releases were not changed. Build **2026111534**
 retains receipt-gated installed-fast loading but omits its repeated metadata hash.
 One cancellation poll and all structural/import/relocation bounds remain. Full
 installation/repair/check/strict and unknown/changed-file verification remain.
@@ -33,10 +191,10 @@ No retained invocation allocations in repeated physical nano and native-probe ru
 
 Whole-nano physical observations include first rendering, not just loading:
 complete-screen capture upper bounds **12.26 s cold empty, 9.35 s warm empty,
-19.88 s warm 8 KiB/two long lines**. Input was confirmed after complete rendering
+19.88 s warm 8 KiB/126 lines**. Input was confirmed after complete rendering
 and test edits discarded. Wi-Fi/capture overhead is included; these are not exact
-internal startup marks. Cold 8 KiB and an ordinary short-line document remain
-unmeasured here. The three-second editor target remains unmet. Earlier partial
+internal startup marks. Cold 8 KiB remains unmeasured here. `wc` subsequently confirmed the historical
+fixture has 126 lines; its previous two-long-lines label was erroneous. The three-second editor target remains unmet. Earlier partial
 frames must not be counted as complete startup. Both SE and Snow greetings report
 System 6.0.7; do not claim independent 6.0.8 acceptance from these captures.
 

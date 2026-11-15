@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+extern void *cli_alloc(unsigned long);
+extern void cli_free(void *);
 extern int resolve_ex(const char *,char *,char *,int),resolve(const char *,char *);
 extern int info(const char *,CInfoPBRec *),is_link(const CInfoPBRec *);
 extern int link_target(const char *,char *),protected_path(const char *);

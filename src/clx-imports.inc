@@ -27,6 +27,7 @@
  CLX_IMPORT("app_columns", app_columns)
 #ifdef CLARICE_NANO_PERF
  CLX_IMPORT("app_nano_mark", app_nano_mark)
+ CLX_IMPORT("app_nano_refresh", app_nano_refresh)
 #endif
  CLX_IMPORT("app_output_batch", app_output_batch)
  CLX_IMPORT("app_page", app_page)

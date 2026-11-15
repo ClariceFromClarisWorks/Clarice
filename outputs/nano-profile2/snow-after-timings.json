@@ -1,0 +1,42 @@
+[
+  {
+    "fixture": "empty",
+    "run": 1,
+    "submit": 7898,
+    "ready": 8175,
+    "total_ticks": 277,
+    "draw_ticks": 29
+  },
+  {
+    "fixture": "short",
+    "run": 2,
+    "submit": 11049,
+    "ready": 11489,
+    "total_ticks": 440,
+    "draw_ticks": 63
+  },
+  {
+    "fixture": "short",
+    "run": 3,
+    "submit": 14163,
+    "ready": 14590,
+    "total_ticks": 427,
+    "draw_ticks": 63
+  },
+  {
+    "fixture": "long",
+    "run": 4,
+    "submit": 17265,
+    "ready": 17618,
+    "total_ticks": 353,
+    "draw_ticks": 31
+  },
+  {
+    "fixture": "long",
+    "run": 5,
+    "submit": 20432,
+    "ready": 20784,
+    "total_ticks": 352,
+    "draw_ticks": 35
+  }
+]

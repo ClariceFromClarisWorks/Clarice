@@ -1,0 +1,29 @@
+Runtime: heap=388484 largest=388476 image=0 ticks=0 load=0 owned-peak=0 remaining=0
+Loader ticks: read=0 validate=0 imports=0 relocations=0 prepare=0 events=0 (events included above)
+Verification ticks: mode=full header=0 record=0 payload=0 metadata=0 structure=0 (structure included in relocations)
+COPY:0
+REMOVE:0
+ABSENT:1
+fixture: status=1 live=0
+COPY_OOM:1
+CLEAN:0
+fixture: status=130 live=0
+COPY_CANCEL:130
+fixture: status=1 live=0
+REMOVE_OOM:1
+fixture: status=130 live=0
+REMOVE_CANCEL:130
+RECOVER:0
+FORKS:0
+STREAMS1:2
+Runtime: heap=386330 largest=364500 image=9844 ticks=301 load=43 owned-peak=14356 remaining=0
+Loader ticks: read=11 validate=21 imports=2 relocations=1 prepare=2 events=5 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=21 metadata=0 structure=1 (structure included in relocations)
+STREAMS2:2
+Runtime: heap=386330 largest=364500 image=9844 ticks=314 load=41 owned-peak=14356 remaining=0
+Loader ticks: read=12 validate=19 imports=2 relocations=1 prepare=1 events=2 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=19 metadata=0 structure=0 (structure included in relocations)
+STREAMS3:2
+Runtime: heap=386330 largest=364500 image=9844 ticks=282 load=43 owned-peak=14356 remaining=0
+Loader ticks: read=11 validate=21 imports=2 relocations=1 prepare=2 events=1 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=21 metadata=0 structure=0 (structure included in relocations)

@@ -1,0 +1,75 @@
+PASS deep cp/rm, 25 allocation boundaries, cancellation, copy failure and cleanup
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+fopen 1 errno 12
+PORT_STATS peak=2352 remaining=0
+fopen 4 errno 12
+PORT_STATS peak=5912 remaining=0
+fopen 9 errno 12
+PORT_STATS peak=8672 remaining=0
+PORT_STATS peak=1656 remaining=0
+PORT_STATS peak=7568 remaining=0
+PORT_STATS peak=11432 remaining=0
+PORT_STATS peak=17344 remaining=0
+PORT_STATS peak=21208 remaining=0
+PORT_STATS peak=27120 remaining=0
+PORT_STATS peak=29880 remaining=0
+PORT_STATS peak=29880 remaining=0
+PORT_STATS peak=29880 remaining=0
+PORT_STATS peak=29880 remaining=0
+PORT_STATS peak=29880 remaining=0
+PORT_STATS peak=29880 remaining=0
+PORT_STATS peak=29880 remaining=0
+PORT_STATS peak=29880 remaining=0
+PORT_STATS peak=31928 remaining=0
+PORT_STATS peak=31928 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PORT_STATS peak=32224 remaining=0
+PASS elastic streams/descriptors: reuse, fdopen ownership, repeated invocation, low memory and cancellation without handles/allocations retained
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+fopen 1 errno 12
+PORT_STATS peak=2352 remaining=0
+fopen 4 errno 12
+PORT_STATS peak=5912 remaining=0
+fopen 9 errno 12
+PORT_STATS peak=8672 remaining=0
+PORT_STATS peak=1656 remaining=0
+PORT_STATS peak=7568 remaining=0
+PORT_STATS peak=11432 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PORT_STATS peak=14584 remaining=0
+PASS elastic streams/descriptors: reuse, fdopen ownership, repeated invocation, low memory and cancellation without handles/allocations retained

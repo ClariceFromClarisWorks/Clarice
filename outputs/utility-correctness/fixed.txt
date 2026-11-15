@@ -1,0 +1,17 @@
+BEGIN_single
+END_single:0
+Runtime: heap=399714 largest=399484 image=45580 ticks=476 load=148 owned-peak=212789 remaining=0
+Loader ticks: read=20 validate=79 imports=3 relocations=5 prepare=35 events=7 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=79 metadata=0 structure=3 (structure included in relocations)
+BEGIN_global
+END_global:1
+Runtime: heap=399714 largest=399484 image=45580 ticks=10108 load=144 owned-peak=246124 remaining=0
+Loader ticks: read=20 validate=111 imports=2 relocations=5 prepare=0 events=38 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=111 metadata=0 structure=3 (structure included in relocations)
+GREP_BEGIN
+GREP_STATUS:0
+Runtime: heap=399714 largest=399484 image=32088 ticks=312 load=82 owned-peak=208692 remaining=0
+Loader ticks: read=16 validate=54 imports=2 relocations=3 prepare=1 events=3 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=54 metadata=0 structure=2 (structure included in relocations)
+FLUSH:0
+FIXED_DONE

@@ -12,7 +12,7 @@ code=r'''
 #include "src/ports/terminal/screen.h"
 typedef struct {int left,top,right,bottom;} Rect;
 static unsigned char pixels[132*9*32];
-static int calls,cell_w,line_h,background;
+static int calls,cell_w,line_h,background,origin;
 static void SetRect(Rect *r,int l,int t,int rr,int b){*r=(Rect){l,t,rr,b};}
 static void InvertRect(Rect *r){assert(r->left>=0&&r->right<=132*cell_w&&r->top==0&&r->bottom==line_h);calls++;for(int y=0;y<line_h;y++)for(int x=r->left;x<r->right;x++)pixels[y*132*cell_w+x]^=1;}
 static void paint(CliScreen *s,int row){int top=0;

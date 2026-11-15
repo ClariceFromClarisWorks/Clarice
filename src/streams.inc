@@ -14,7 +14,8 @@ static long stream_write(short ref,const void *data,unsigned long count){
 static long cli_write(int fd,const void *data,unsigned long count){if(fd!=1&&fd!=2)return -1;return stream_write(fd==1?output_ref:error_ref,data,count);}
 static void emit(const char *s,long n){if(n>0)cli_write(1,s,n);}
 static void errsay(const char *s){cli_write(2,s,strlen(s));}
-static void error(const char *s,int e){char b[128];snprintf(b,sizeof b,"%s (Mac OS error %d)\n",s,e);errsay(b);}
+#include "mac-error.h"
+static void error(const char *s,int e){char b[64];const char *description=mac_error_description(e);errsay(s);snprintf(b,sizeof b,": Mac OS error %d",e);errsay(b);if(description){errsay(": ");errsay(description);}errsay("\n");}
 
 static long cli_read(int fd,void *data,unsigned long count){
  if(fd!=0||input_ref==-2)return -1;if(!count)return 0;

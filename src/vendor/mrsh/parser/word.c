@@ -425,6 +425,10 @@ struct mrsh_word *expect_dollar(struct mrsh_parser *parser) {
 			return &wc->word;
 		}
 	default:; // Parameter expansion in the form `$parameter`
+		/* Clarice: inside a parameter, # is a name, not a new comment.
+		 * A preceding expansion may have consumed the cached TOKEN. */
+		parser->has_sym = true;
+		parser->sym = TOKEN;
 		size_t name_len = peek_name(parser, false);
 		if (name_len == 0) {
 			bool ok = false;

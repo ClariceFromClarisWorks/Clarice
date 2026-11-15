@@ -1,0 +1,24 @@
+stream fixture: status=2 live=0
+STREAM_OOM:2
+Runtime: heap=399898 largest=399778 image=10484 ticks=72 load=58 owned-peak=3668 remaining=0
+Loader ticks: read=12 validate=21 imports=2 relocations=1 prepare=15 events=2 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=21 metadata=0 structure=0 (structure included in relocations)
+stream fixture: status=130 live=0
+STREAM_CANCEL:130
+Runtime: heap=399902 largest=399670 image=10484 ticks=131 load=47 owned-peak=8528 remaining=0
+Loader ticks: read=13 validate=22 imports=2 relocations=1 prepare=2 events=3 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=22 metadata=0 structure=0 (structure included in relocations)
+STREAM_RECOVERY:0
+Runtime: heap=399030 largest=377106 image=10080 ticks=411 load=45 owned-peak=13816 remaining=0
+Loader ticks: read=12 validate=22 imports=1 relocations=2 prepare=1 events=3 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=22 metadata=0 structure=1 (structure included in relocations)
+AWK16_OK
+AWK:0
+Runtime: heap=398808 largest=377118 image=136736 ticks=820 load=303 owned-peak=33625 remaining=0
+Loader ticks: read=47 validate=230 imports=3 relocations=14 prepare=2 events=15 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=230 metadata=0 structure=9 (structure included in relocations)
+AWK16_OK
+AWK_REPEAT:0
+Runtime: heap=398810 largest=377106 image=136736 ticks=788 load=318 owned-peak=33625 remaining=0
+Loader ticks: read=46 validate=230 imports=3 relocations=14 prepare=18 events=15 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=230 metadata=0 structure=9 (structure included in relocations)

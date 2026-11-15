@@ -254,6 +254,10 @@ static struct mrsh_assignment *assignment_word(struct mrsh_parser *parser) {
 	struct mrsh_position equal_pos = parser->pos;
 	parser_read(parser, NULL, 1);
 
+	/* Clarice: an empty assignment ends here; do not skip blanks into
+	 * the following command while obtaining a fresh token. */
+	parser->has_sym = true;
+	parser->sym = TOKEN;
 	struct mrsh_word *value = word(parser, 0);
 	if (value == NULL) {
 		value = &mrsh_word_string_create(strdup(""), false)->word;

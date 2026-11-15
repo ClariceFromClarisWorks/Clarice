@@ -41,7 +41,7 @@ substitutes for exact internal startup-stage instrumentation.
 |---|---:|---|
 | First empty buffer after application launch | 12.26 s | Modified buffer with inserted z at 19.66 s |
 | Repeat empty buffer | 9.35 s | Modified buffer with inserted z at 16.36 s |
-| Warm 8 KiB, two long lines, extended observation | 19.88 s | Modified buffer with inserted z at 30.53 s |
+| Warm 8 KiB, 126 lines, extended observation | 19.88 s | Modified buffer with inserted z at 30.53 s |
 
 Input was intentionally sent later than the first frame; those times do not imply
 that keyboard readiness itself was delayed that long. Initial six-frame 8 KiB
@@ -49,9 +49,10 @@ observations ended during progressive first rendering; do not count their partia
 drawn frames as complete startup. The extended observation captures the complete
 screen and successful input. All test edits were discarded, never saved.
 
-The reused 8 KiB fixture has two long lines, not an ordinary short-line document.
-A cold 8 KiB and a separately characterised short-line fixture remain unmeasured
-in this follow-up. The three-second whole-editor target remains unmet. The loader
+Correction verified on 16 November: `wc /tmp/ux-nano.txt` reports 126 lines
+and 8192 bytes. The earlier two-long-lines description was an incorrect reading
+of nano's status message. Timings are unchanged; the workload label is corrected.
+A cold 8 KiB launch remains unmeasured in this follow-up. The three-second whole-editor target remains unmet. The loader
 improvement is accepted independently of that unmet editor target; no nano rewrite
 or additional optimisation is claimed.
 

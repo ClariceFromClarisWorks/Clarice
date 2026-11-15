@@ -46,10 +46,35 @@ static int mkdir_one(const char *path){char native[PATH_CAP],canonical[PATH_CAP]
  for(size_t i=1;i<=len;i++)if(part[i]=='/'||!part[i]){char c=part[i];part[i]=0;CInfoPBRec pb;e=resolve(part,native);if(!e)e=info(native,&pb);
   if(e==fnfErr||e==dirNFErr){e=checked(part,native,canonical,1);if(!e)e=cli_native_mkdir(native);}else if(!e&&!isdir(&pb))e=dirNFErr;
   part[i]=c;if(e)return e;if(app_yield())return 130;}return 0;}
+/* Explicit DFS frames keep stack use constant; only active directories allocate. */
+typedef struct RemoveFrame {struct RemoveFrame *parent;char native[PATH_CAP],path[PATH_CAP];} RemoveFrame;
 static int remove_one(const char *path,int depth,int onlydir){
- char native[PATH_CAP],canonical[PATH_CAP],leaf[32],encoded[100],child[PATH_CAP];CInfoPBRec pb;int e=checked(path,native,canonical,0);if(!e)e=info(native,&pb);if((e==fnfErr||e==dirNFErr)&&force)return 0;if(e)return e;
- if(isdir(&pb)){if(!onlydir&&!recursive)return paramErr;if(recursive&&!onlydir){if(depth>=8)return paramErr;for(;;){e=cli_native_nth(native,1,leaf,&pb);if(e==fnfErr)break;if(e)return e;e=encode_name(leaf,encoded,sizeof encoded);if(!e)e=join_path(canonical,encoded,child);if(!e)e=remove_one(child,depth+1,0);if(e)return e;if(app_yield())return 130;}}}else if(onlydir)return dirNFErr;
- return cli_native_delete(native);
+ (void)depth;RemoveFrame *top=NULL;char pending[PATH_CAP],native[PATH_CAP],canonical[PATH_CAP],leaf[32],encoded[100];CInfoPBRec pb;int e=0;
+ if(strlen(path)>=sizeof pending)return bdNamErr;strcpy(pending,path);
+ for(;;){
+  if(app_yield()){e=130;break;}
+  e=checked(pending,native,canonical,0);if(!e)e=info(native,&pb);
+  if((e==fnfErr||e==dirNFErr)&&force)e=0;
+  else if(!e){
+   if(isdir(&pb)&&recursive&&!onlydir){
+    RemoveFrame *f=cli_alloc(sizeof *f);if(!f){e=memFullErr;break;}
+    f->parent=top;strcpy(f->native,native);strcpy(f->path,canonical);top=f;
+   }else if(isdir(&pb)&&!onlydir)e=paramErr;
+   else if(!isdir(&pb)&&onlydir)e=dirNFErr;
+   else e=cli_native_delete(native);
+  }
+  if(e)break;
+  while(top){
+   e=cli_native_nth(top->native,1,leaf,&pb);
+   if(!e){e=encode_name(leaf,encoded,sizeof encoded);if(!e)e=join_path(top->path,encoded,pending);break;}
+   if(e!=fnfErr)break;
+   e=cli_native_delete(top->native);if(e)break;
+   RemoveFrame *f=top;top=f->parent;cli_free(f);
+   if(app_yield()){e=130;break;}
+  }
+  if(e||!top)break;
+ }
+ while(top){RemoveFrame *f=top;top=f->parent;cli_free(f);}return e;
 }
 static int temporary_sibling(const char *destination,char *out){strcpy(out,destination);char *leaf=strrchr(out,':');if(!leaf)return bdNamErr;size_t prefix=leaf+1-out;if(prefix+30>255)return bdNamErr;for(int i=0;i<32;i++){snprintf(out+prefix,PATH_CAP-prefix,"Clv tmp %08lx %04lx",cli_ticks(),++sequence&65535);int e=cli_native_create(out,0,0);if(!e)return 0;if(e!=dupFNErr)return e;}return dupFNErr;}
 static int copy_fork(const char *src,const char *dst,int resource){short in=-1,out=-1;char buf[4096];int e=cli_native_open(src,resource,0,&in);if(!e)e=cli_native_open(dst,resource,1,&out);while(!e){long n=sizeof buf;e=cli_native_read(in,buf,&n);if(e&&e!=eofErr)break;int eof=e==eofErr;e=0;if(n){long wrote=n;e=cli_native_write(out,buf,&wrote);if(!e&&wrote!=n)e=ioErr;}if(!e&&app_yield())e=130;if(e||eof||!n)break;}if(in>=0){int c=cli_native_close(in);if(!e)e=c;}if(out>=0){int c=cli_native_close(out);if(!e)e=c;}return e;}
@@ -63,14 +88,34 @@ static int copy_file(const char *src,const char *dst,CInfoPBRec *source){
  if(exists)e=cli_native_delete(backup);
  if(!e&&preserve&&(source->hFileInfo.ioFlAttrib&1))e=cli_native_lock(dst,1);return e;
 }
+typedef struct CopyFrame {struct CopyFrame *parent;char native[PATH_CAP],source[PATH_CAP],destination[PATH_CAP];int index;} CopyFrame;
 static int copy_one(const char *source,const char *destination,int depth){
- char src[PATH_CAP],dst[PATH_CAP],sc[PATH_CAP],dc[PATH_CAP],leaf[32],enc[100],childsrc[PATH_CAP],childdst[PATH_CAP];CInfoPBRec pb,target;int e=resolve_ex(source,src,sc,0);if(!e)e=info(src,&pb);if(!e)e=checked(destination,dst,dc,0);if(e)return e;
- if(same_name(sc,dc))return paramErr;
- if(!isdir(&pb))return copy_file(src,dst,&pb);
- if(!recursive||depth>=8)return paramErr;size_t n=strlen(src);if(!strncasecmp(src,dst,n)&&(dst[n]==':'||!dst[n]))return paramErr;
- e=info(dst,&target);if(e==fnfErr){e=cli_native_mkdir(dst);}else if(!e&&!isdir(&target))e=paramErr;if(e)return e;
- for(int i=1;;i++){e=cli_native_nth(src,i,leaf,&target);if(e==fnfErr)break;if(e)return e;e=encode_name(leaf,enc,sizeof enc);if(!e)e=join_path(sc,enc,childsrc);if(!e)e=join_path(dc,enc,childdst);if(!e)e=copy_one(childsrc,childdst,depth+1);if(e)return e;if(app_yield())return 130;}
- return 0;
+ (void)depth;CopyFrame *top=NULL;char pending_src[PATH_CAP],pending_dst[PATH_CAP],src[PATH_CAP],dst[PATH_CAP],sc[PATH_CAP],dc[PATH_CAP],leaf[32],enc[100];CInfoPBRec pb,target;int e=0;
+ if(strlen(source)>=PATH_CAP||strlen(destination)>=PATH_CAP)return bdNamErr;
+ strcpy(pending_src,source);strcpy(pending_dst,destination);
+ for(;;){
+  if(app_yield()){e=130;break;}
+  e=resolve_ex(pending_src,src,sc,0);if(!e)e=info(src,&pb);if(!e)e=checked(pending_dst,dst,dc,0);if(e)break;
+  if(same_name(sc,dc)){e=paramErr;break;}
+  if(!isdir(&pb))e=copy_file(src,dst,&pb);
+  else{
+   size_t n=strlen(src);if(!recursive||(!strncasecmp(src,dst,n)&&(dst[n]==':'||!dst[n]))){e=paramErr;break;}
+   CopyFrame *f=cli_alloc(sizeof *f);if(!f){e=memFullErr;break;}
+   f->parent=top;f->index=1;strcpy(f->native,src);strcpy(f->source,sc);strcpy(f->destination,dc);top=f;
+   e=info(dst,&target);if(e==fnfErr)e=cli_native_mkdir(dst);else if(!e&&!isdir(&target))e=paramErr;
+  }
+  if(e)break;
+  while(top){
+   if(top->index>32767){e=paramErr;break;}
+   e=cli_native_nth(top->native,top->index++,leaf,&target);
+   if(!e){e=encode_name(leaf,enc,sizeof enc);if(!e)e=join_path(top->source,enc,pending_src);if(!e)e=join_path(top->destination,enc,pending_dst);break;}
+   if(e!=fnfErr)break;
+   CopyFrame *f=top;top=f->parent;cli_free(f);e=0;
+   if(app_yield()){e=130;break;}
+  }
+  if(e||!top)break;
+ }
+ while(top){CopyFrame *f=top;top=f->parent;cli_free(f);}return e;
 }
 static int transfer(int argc,char **av,int start,int moving){
  if(argc-start<2)return 2;int status=0;char target[PATH_CAP],native[PATH_CAP],dc[PATH_CAP];CInfoPBRec pb;int targetdir=!resolve(av[argc-1],native)&&!info(native,&pb)&&isdir(&pb);if(argc-start>2&&!targetdir)return 2;
@@ -87,11 +132,11 @@ static int transfer(int argc,char **av,int start,int moving){
 static int symlink_command(int argc,char **av){char native[PATH_CAP],canonical[PATH_CAP];if(argc!=4||strcmp(av[1],"-s")||!*av[2]||strlen(av[2])>=PATH_CAP)return 2;int e=checked(av[3],native,canonical,0);if(e)return fail("ln",e);e=cli_native_create(native,'S6LK','S6UX');if(e)return fail("ln",e);short ref;e=cli_native_open(native,0,1,&ref);if(!e){long n=5;e=cli_native_write(ref,"S6L1\n",&n);if(!e&&n!=5)e=ioErr;if(!e){n=strlen(av[2]);e=cli_native_write(ref,av[2],&n);if(!e&&n!=(long)strlen(av[2]))e=ioErr;}int c=cli_native_close(ref);if(!e)e=c;}if(e)cli_native_delete(native);return e?fail("ln",e):0;}
 static void usage(const char *name){
  if(!strcmp(name,"hfsattr"))say("hfsattr [--type CODE] [--creator CODE] [--locked on|off] [--invisible on|off] [--] file ...\nNo options displays metadata. Codes are exactly four bytes; .... displays unset bytes.\nDirectories support visibility only. No Unix permissions are invented.\n");
- else if(!strcmp(name,"cp"))say("cp [-Rp] [--] source ... destination\nCopy data and resource forks and Finder type/creator. -R copies folders (8 levels).\n-p also preserves file creation/modification dates and locked state.\nSymlinks are copied as links. Directory metadata preservation is not implemented.\nExisting files are replaced only after both forks have copied successfully.\n");
+ else if(!strcmp(name,"cp"))say("cp [-Rp] [--] source ... destination\nCopy data and resource forks and Finder type/creator. -R copies folders using available traversal memory.\n-p also preserves file creation/modification dates and locked state.\nSymlinks are copied as links. Directory metadata preservation is not implemented.\nExisting files are replaced only after both forks have copied successfully.\n");
  else if(!strcmp(name,"mv"))say("mv [--] source ... destination\nRename/move on HFS; regular files can cross volumes using fork-preserving copy.\nDirectory moves require the same parent or an unchanged leaf name.\n");
  else if(!strcmp(name,"touch"))say("touch [-c] [--] file ...\nUpdate modification time, or create an empty file with unset type/creator.\n-c does not create missing files. HFS has no access-time field; -a/-t are unsupported.\n");
  else if(!strcmp(name,"mkdir"))say("mkdir [-p] [--] directory ...\n-p creates missing parents and accepts existing directories.\n");
- else if(!strcmp(name,"rm"))say("rm [-frR] [--] file ...\n-r/-R removes folders recursively (8 levels); -f ignores absent files.\nLinks themselves are removed. Finder locks are respected even with -f.\n");
+ else if(!strcmp(name,"rm"))say("rm [-frR] [--] file ...\n-r/-R removes folders recursively using available traversal memory; -f ignores absent files.\nLinks themselves are removed. Finder locks are respected even with -f.\n");
  else if(!strcmp(name,"rmdir"))say("rmdir [--] directory ...\nRemove empty directories only.\n");
  else if(!strcmp(name,"ln"))say("ln -s target link\nCreate a bounded Clarice symbolic link. Hard links and -f are unsupported.\n");
  else say("readlink [--] link ...\nPrint stored symbolic-link targets without resolving them.\n");

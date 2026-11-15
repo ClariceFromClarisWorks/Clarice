@@ -1,0 +1,50 @@
+[
+  {
+    "batch": 0,
+    "passed": true,
+    "bytes": 108,
+    "sha256": "8c3f52e933ca1b7cd2702a74f7154c08b9331be665c91146b38a4deaec61d5ce"
+  },
+  {
+    "batch": 1,
+    "passed": true,
+    "bytes": 116,
+    "sha256": "b4f0f895938840fb7fe49932648d9aa0180edf2f317b74a26fc499bf4c497587"
+  },
+  {
+    "batch": 2,
+    "passed": true,
+    "bytes": 101,
+    "sha256": "d15ab5637b72431e700efb7dc81fa7a13caf9d07d0ab1184a34b6b39ae49abdb"
+  },
+  {
+    "batch": 3,
+    "passed": true,
+    "bytes": 104,
+    "sha256": "b33ecdc64b5632cf95d55856e6223a4b5f58473377923a21ebd08571eda0d8f5"
+  },
+  {
+    "batch": 4,
+    "passed": true,
+    "bytes": 137,
+    "sha256": "234bf38e51b722ee70e581a895631c3f5ce6526758bc628d6f61a54f9d65673f"
+  },
+  {
+    "batch": 5,
+    "passed": true,
+    "bytes": 142,
+    "sha256": "e3aeba479098943a0e1ddeade80772d6291ad62d18c955ebd006b2f8e9267fa8"
+  },
+  {
+    "batch": 6,
+    "passed": true,
+    "bytes": 132,
+    "sha256": "9b05dadd6156a292211acfbe46834a7e086def7c877e1f652836ba11cebc4b99"
+  },
+  {
+    "batch": 7,
+    "passed": true,
+    "bytes": 110,
+    "sha256": "f951b95582bed7947a1037f9e6ff71a265320bac7f958639aea7a345cdd10dc2"
+  }
+]

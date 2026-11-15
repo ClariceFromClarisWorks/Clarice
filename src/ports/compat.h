@@ -23,6 +23,9 @@ int port_fclose(FILE *);
 ssize_t port_getline(char **,size_t *,FILE *);
 void port_exit(int) __attribute__((noreturn));
 int port_snprintf(char *,size_t,const char *,...);
+int port_vsnprintf(char *,size_t,const char *,va_list);
+int port_sprintf(char *,const char *,...);
+int port_vsprintf(char *,const char *,va_list);
 int port_printf(const char *,...);
 int port_fprintf(FILE *,const char *,...);
 int port_vfprintf(FILE *,const char *,va_list);
@@ -49,7 +52,14 @@ void port_temp_remove(const char *);
 #define fstat port_fstat
 #define lseek port_lseek
 #define sleep port_sleep
+#undef snprintf
+#undef vsnprintf
+#undef sprintf
+#undef vsprintf
 #define snprintf port_snprintf
+#define vsnprintf port_vsnprintf
+#define sprintf port_sprintf
+#define vsprintf port_vsprintf
 #define fprintf port_fprintf
 #define vfprintf port_vfprintf
 #define printf port_printf

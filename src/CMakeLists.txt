@@ -38,3 +38,7 @@ endif()
 if(CLARICE_DRAW_DIAGNOSTICS)
  target_compile_definitions(Clarice PRIVATE CLARICE_DRAW_DIAGNOSTICS=1)
 endif()
+
+if(CLARICE_ACTIVITY_DIAGNOSTICS)
+ target_compile_definitions(Clarice PRIVATE CLARICE_ACTIVITY_DIAGNOSTICS=1)
+endif()

@@ -10,7 +10,7 @@ static int builtin_help(const char *topic){
  {"unset","unset name ...\nRemove variables. Function removal is not implemented.\n"},
  {"set","set [-- argument ...]\nList variables, or replace positional arguments. Shell option flags unsupported.\n"},
  {"shift","shift [count]\nDrop positional arguments; default one.\n"},
- {"read","read name\nRead one line into one variable (127-byte bound); no option or IFS splitting support.\n"},
+ {"read","read name\nRead one line into one variable (127-byte bound); overlong lines are consumed\nwith an error and leave the variable unchanged. No option or IFS splitting support.\n"},
  {"sh","sh file [argument ...] | sh -c command\nRun the bounded POSIX-inspired scripting subset; not full POSIX conformance.\n8 KiB source, 256 tokens, 16 nesting levels; pipelines use sequential /tmp spools.\n"},
  {".",". file [argument ...]\nSource a script in the current shell environment.\n"},
  {"test","test expression | [ expression ]\nSupported: -e -f -d -s -n -z, strings = !=, integers -eq -ne -lt -le -gt -ge, !.\nNo compound -a/-o expression parser.\n"},

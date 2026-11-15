@@ -1,0 +1,31 @@
+é File Edit Tests View
+Macintosh HD
+Clarice
+1008 0 B / 0B
+Downloaded 0B to /tmp/np-empty
+A wget =0 /tmp/oe=sbort bttp:/2192.158.1.112:8080/2 35/np=short
+Downloaded 8.00 KB to
+====] 100$ 8.00 KiB / 8.00 KiB
+/› wget-0/tmp/np-long http://192.168.1.112:8080/np35/np-long
+=======================] 100$ 8.00 KiB / 8.00 KiB
+Downloaded 8.00 KB to /tmp/np-long
+/› appinstall replace /tmp/np.clx nano-profile
+appinstall: complete
+› nano-profile /tmp/np-empty
+/ › status runtime
+Runtime: heap=419010 largest=418900 image=198560 ticks=1601 load=87 owned-peak=7
+5112 remaining=0
+Nano
+ticks: 2114675 2114788 2114789 2114790 2114819 2114877 2114981 2115015 2115
+021 2114969 2114969 0 0;
+input batches=1 sum=12 max=12:
+initial-heap=423806
+Editor startup: draws=11 rows=56 text=21 copy=18 total=62 ticks
+Curses startup: refreshes=1 refresh-ticks=4 writes=15 bytes=459 feed-ticks=5
+Native ticks:
+al locs=125 FreeMem=2 NewPtr=32 reads=1 read=0 stdio=0 image-al loc=
+O meta-al loc=0
+Loader ticks: read=37 validate=3 imports=4 relocations=23 prepare=4 events=3 (ev
+ents included above)
+Verification ticks: mode=fast header=0 record=16 payload=0 metadata=3 structure=
+14 (structure included in relocations)

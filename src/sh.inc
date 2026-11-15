@@ -7,6 +7,8 @@
 #define SH_DEPTH 16
 static int sh_source_depth,sh_depth,sh_flow,sh_flow_status,sh_loop,sh_functions_active;
 static int sh_argc=1;
+static unsigned long sh_substitutions;
+static int sh_substatus;
 static char *sh_owned_args;
 static char *sh_argv[MAX_ARGS+1]={"sh"};
 static struct {char name[32];struct mrsh_command *body;} sh_functions[16];
@@ -68,7 +70,7 @@ case MRSH_WORD_STRING:{struct mrsh_word_string *s=(void*)node;return sh_append(w
 case MRSH_WORD_LIST:{struct mrsh_word_list *l=(void*)node;if(l->double_quoted)w->quoted=1;for(i=0;i<l->children.len;i++)if(sh_word(l->children.data[i],w,quoted||l->double_quoted))return 2;return 0;}
 case MRSH_WORD_PARAMETER:{struct mrsh_word_parameter *p=(void*)node;const char *value=sh_get(p->name,num);int unset=!sh_isset(p->name)||(p->colon&&!*value);struct sh_word *arg;
  if(quoted&&!strcmp(p->name,"@"))return sh_fail("embedded quoted $@ is not implemented; use a separate \"$@\" argument");
- if(!strcmp(p->name,"@")||!strcmp(p->name,"*")){for(i=1;i<(size_t)sh_argc;i++){if(i>1&&sh_append(w," ",quoted?1:2))return 2;if(sh_append(w,sh_argv[i],quoted?1:2))return 2;}return 0;}
+ if(!strcmp(p->name,"@")||!strcmp(p->name,"*")){for(i=1;i<(size_t)sh_argc;i++){char sep[2]={' ',0};if(quoted&&!strcmp(p->name,"*"))sep[0]=sh_isset("IFS")?env_get("IFS")[0]:' ';if(i>1&&sh_append(w,sep,quoted?1:2))return 2;if(sh_append(w,sh_argv[i],quoted?1:2))return 2;}return 0;}
  if(p->op==MRSH_PARAM_LEADING_HASH){snprintf(num,sizeof num,"%lu",(unsigned long)strlen(value));value=num;}
  if(p->op==MRSH_PARAM_NONE||p->op==MRSH_PARAM_LEADING_HASH)return sh_append(w,value,quoted?1:2);
  if(p->op==MRSH_PARAM_MINUS&&!unset)return sh_append(w,value,quoted?1:2);
@@ -81,7 +83,7 @@ case MRSH_WORD_PARAMETER:{struct mrsh_word_parameter *p=(void*)node;const char *
  else if(p->op==MRSH_PARAM_MINUS||p->op==MRSH_PARAM_PLUS)rc=sh_append(w,arg->text,quoted?1:2);
  else {char copy[2048];size_t n=strlen(value),j;int match=-1;if(n>=sizeof copy)rc=2;else{strcpy(copy,value);for(j=0;j<=n;j++){char save=copy[j];int yes;if(p->op==MRSH_PARAM_HASH||p->op==MRSH_PARAM_DHASH){copy[j]=0;yes=sh_pattern(arg->text,copy);copy[j]=save;}else yes=sh_pattern(arg->text,copy+j);if(yes){match=j;if(p->op==MRSH_PARAM_HASH||p->op==MRSH_PARAM_DPERCENT)break;}}if(match>=0){if(p->op==MRSH_PARAM_HASH||p->op==MRSH_PARAM_DHASH)memmove(copy,copy+match,n-match+1);else copy[match]=0;}rc=sh_append(w,copy,quoted?1:2);}}}free(arg);return rc;}
 case MRSH_WORD_ARITHMETIC:{struct sh_word *arg=calloc(1,sizeof *arg);long value;int rc;if(!arg)return sh_fail("out of memory");rc=sh_word(((struct mrsh_word_arithmetic*)node)->body,arg,1);if(!rc){struct mrsh_parser *p=mrsh_parser_with_data(arg->text,arg->used);struct mrsh_arithm_expr *e=mrsh_parse_arithm_expr(p);if(!e||mrsh_parser_error(p,0)||!sh_arith(e,&value))rc=sh_fail(mrsh_parser_error(p,0)?mrsh_parser_error(p,0):"unsupported or invalid arithmetic");else{snprintf(num,sizeof num,"%ld",value);rc=sh_append(w,num,quoted?1:2);}mrsh_arithm_expr_destroy(e);mrsh_parser_destroy(p);}free(arg);return rc;}
-case MRSH_WORD_COMMAND:{struct mrsh_word_command *c=(void*)node;short ref,old=output_ref;unsigned char name[256];struct sh_saved *saved=sh_save();char value[2048];long n=sizeof value-1;int rc,flow=sh_flow;if(!saved)return sh_fail("out of memory");if(sh_temp(&ref,name)){sh_restore(saved);return sh_fail("cannot create substitution spool");}output_ref=ref;script_depth++;rc=c->program?sh_array(&c->program->body):0;script_depth--;output_ref=old;sh_restore(saved);sh_flow=flow;SetFPos(ref,fsFromStart,0);int e=FSRead(ref,&n,value);long size=0;GetEOF(ref,&size);sh_temp_close(ref,name);if((e&&e!=eofErr)||size>2047)return sh_fail("command substitution exceeds 2047 bytes");while(n&&(value[n-1]=='\n'||value[n-1]=='\r'))n--;value[n]=0;shell_status=rc;return sh_append(w,value,quoted?1:2);}}
+case MRSH_WORD_COMMAND:{struct mrsh_word_command *c=(void*)node;short ref,old=output_ref;unsigned char name[256];struct sh_saved *saved=sh_save();char value[2048];long n=sizeof value-1;int rc,flow=sh_flow;if(!saved)return sh_fail("out of memory");if(sh_temp(&ref,name)){sh_restore(saved);return sh_fail("cannot create substitution spool");}output_ref=ref;script_depth++;rc=c->program?sh_array(&c->program->body):0;script_depth--;output_ref=old;sh_restore(saved);sh_flow=flow;SetFPos(ref,fsFromStart,0);int e=FSRead(ref,&n,value);long size=0;GetEOF(ref,&size);sh_temp_close(ref,name);if((e&&e!=eofErr)||size>2047)return sh_fail("command substitution exceeds 2047 bytes");while(n&&(value[n-1]=='\n'||value[n-1]=='\r'))n--;value[n]=0;shell_status=rc;sh_substatus=rc;sh_substitutions++;return sh_append(w,value,quoted?1:2);}}
 return sh_fail("unknown word");}
 struct sh_args {char data[4096];char *v[MAX_ARGS+1];int used,n;};
 static int sh_arg(struct sh_args *a,const char *s){int n=strlen(s)+1;if(a->n>=MAX_ARGS||a->used+n>(int)sizeof a->data)return sh_fail("argument limit exceeded");a->v[a->n++]=a->data+a->used;memcpy(a->data+a->used,s,n);a->used+=n;a->v[a->n]=0;return 0;}
@@ -107,7 +109,15 @@ static int sh_expand(struct mrsh_word *node,struct sh_args *a){struct sh_word *w
  snprintf(expanded,sizeof expanded,"/%s",tail);
 #endif
 if(strlen(expanded)>=sizeof w->text)rc=2;else{strcpy(w->text,expanded);w->used=strlen(expanded);memset(w->mode,1,w->used);}}
- if(!rc){if(!w->used&&w->quoted)rc=sh_arg(a,"");for(i=0;i<w->used&&!rc;){while(i<w->used&&w->mode[i]==2&&strchr(ifs,w->text[i]))i++;start=i;while(i<w->used&&!(w->mode[i]==2&&strchr(ifs,w->text[i])))i++;if(i>start){char save=w->text[i];w->text[i]=0;rc=sh_glob(a,w->text+start,w->mode+start);w->text[i]=save;}}}free(w);return rc;}
+ if(!rc){if(!w->used&&w->quoted)rc=sh_arg(a,"");i=0;
+  while(i<w->used&&w->mode[i]==2&&strchr(ifs,w->text[i])&&strchr(" \t\n",w->text[i]))i++;
+  while(i<w->used&&!rc){start=i;while(i<w->used&&!(w->mode[i]==2&&strchr(ifs,w->text[i])))i++;
+   int end=i,nonwhite=i<w->used&&!strchr(" \t\n",w->text[i]);
+   if(end>start||nonwhite){char save=w->text[end];w->text[end]=0;rc=sh_glob(a,w->text+start,w->mode+start);w->text[end]=save;}
+   if(i<w->used){if(nonwhite)i++;else{while(i<w->used&&w->mode[i]==2&&strchr(ifs,w->text[i])&&strchr(" \t\n",w->text[i]))i++;if(i<w->used&&w->mode[i]==2&&strchr(ifs,w->text[i]))i++;}
+    while(i<w->used&&w->mode[i]==2&&strchr(ifs,w->text[i])&&strchr(" \t\n",w->text[i]))i++;}
+  }
+ }free(w);return rc;}
 static int sh_test(int n,char **v){
 #ifndef SH_HOST_TEST
  if(n==2&&(!strcmp(v[0],"-L")||!strcmp(v[0],"-h"))){char p[PATH_CAP];CInfoPBRec pb;return resolve_ex(v[1],p,0,0)||info(p,&pb)||!is_link(&pb);}
@@ -124,8 +134,26 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
  if(!strcmp(v[0],"shift")){int count=n>1?atoi(v[1]):1;if(count<0||count>=sh_argc)return 1;memmove(sh_argv+1,sh_argv+1+count,(sh_argc-count-1)*sizeof(char*));sh_argc-=count;return 0;}
  if(!strcmp(v[0],"set")){if(n==1){for(i=0;i<16;i++)if(env_names[i][0]){say(env_names[i]);say("=");say(env_values[i]);say("\n");}return 0;}if(n>1&&strcmp(v[1],"--"))return sh_fail("only set -- is implemented");char *storage=malloc(4096);int used=0;if(!storage)return sh_fail("out of memory");for(i=2;i<n;i++){int len=strlen(v[i])+1;if(used+len>4096){free(storage);return 2;}memcpy(storage+used,v[i],len);sh_argv[i-1]=storage+used;used+=len;}free(sh_owned_args);sh_owned_args=storage;sh_argc=n>1?n-1:1;return 0;}
  if(!strcmp(v[0],"printf")){if(n<2)return 0;const char *f=v[1];int arg=2;do{int before=arg;const char *p=f;while(*p){char c=*p++;if(c=='\\'){c=*p++;if(!c)break;c=c=='n'?'\n':c=='t'?'\t':c=='r'?'\r':c;emit(&c,1);}else if(c=='%'){c=*p++;if(c=='%')say("%");else if(c=='s')say(arg<n?v[arg++]:"");else if(c=='d'){char b[32];snprintf(b,sizeof b,"%ld",arg<n?strtol(v[arg++],0,0):0L);say(b);}else return sh_fail("printf supports %s, %d and %%");}else emit(&c,1);}if(arg==before)break;}while(arg<n);return output_error?1:0;}
- if(!strcmp(v[0],"read")){char line[128];int used=0;long count;char c;int e;if(n!=2)return sh_fail("read requires one variable");while(used<127){count=cli_read(0,&c,1);e=count<0;if(count<=0)break;if(c=='\n'||c=='\r')break;line[used++]=c;if(e)break;}line[used]=0;sh_set(v[1],line);return count>0?0:1;}
- if(!strcmp(v[0],"sh")){if(n<2)return sh_fail("usage: sh file [args] or sh -c command");if(!strcmp(v[1],"-c")){if(n<3)return 2;struct sh_saved *saved=sh_save();int oldflow=sh_flow;if(!saved)return 2;script_depth++;sh_flow=0;int rc=sh_source(v[2]);script_depth--;sh_restore(saved);sh_flow=oldflow;return rc;}return sh_file(v[1],n-1,v+1,0);}
+ if(!strcmp(v[0],"read")){
+  char line[128],c;unsigned char protected[128];int used=0,overflow=0,escaped=0,raw=n>1&&!strcmp(v[1],"-r"),var=raw?2:1;unsigned polled=0;long count;
+  if(n!=var+1)return sh_fail("read [-r] requires one variable");
+  while((count=cli_read(0,&c,1))>0){
+   if(!(++polled&127)&&app_yield())return 130;
+   int quote=escaped;escaped=0;
+   if(!raw&&!quote&&c=='\\'){escaped=1;continue;}
+   if(c=='\n'||c=='\r'){if(quote)continue;break;}
+   if(used<(int)sizeof line-1){protected[used]=quote;line[used++]=c;}else overflow=1;
+  }
+  if(count<0)return sh_fail("read failed");
+  if(overflow)return sh_fail("read value exceeds 127 bytes");
+  const char *ifs=sh_isset("IFS")?env_get("IFS"):" \t\n";int start=0;
+  while(start<used&&!protected[start]&&strchr(" \t\n",line[start])&&strchr(ifs,line[start]))start++;
+  while(used>start&&!protected[used-1]&&strchr(" \t\n",line[used-1])&&strchr(ifs,line[used-1]))used--;
+  line[used]=0;int rc=sh_set(v[var],line+start);return rc?rc:count>0?0:1;
+ }
+ if(!strcmp(v[0],"sh")){if(n<2)return sh_fail("usage: sh file [args] or sh -c command");if(!strcmp(v[1],"-c")){if(n<3)return 2;struct sh_saved *saved=sh_save();int oldflow=sh_flow,oldargc=sh_argc;char *oldargv[MAX_ARGS+1],*owned=sh_owned_args;if(!saved)return 2;
+ memcpy(oldargv,sh_argv,sizeof oldargv);sh_owned_args=0;sh_argc=n>3?n-3:1;if(n>3)memcpy(sh_argv,v+3,sh_argc*sizeof *v);else sh_argv[0]=v[0];
+ script_depth++;sh_flow=0;int rc=sh_source(v[2]);script_depth--;free(sh_owned_args);sh_owned_args=owned;sh_argc=oldargc;memcpy(sh_argv,oldargv,sizeof oldargv);sh_restore(saved);sh_flow=oldflow;return rc;}return sh_file(v[1],n-1,v+1,0);}
  if(!strcmp(v[0],".")){if(n<2)return 2;return sh_file(v[1],n-1,v+1,1);}
  for(i=0;i<16;i++)if(!strcmp(sh_functions[i].name,v[0])){char *saved[MAX_ARGS+1];int count=sh_argc,rc;char *owned=sh_owned_args;sh_owned_args=0;memcpy(saved,sh_argv,sizeof saved);sh_argc=n;memcpy(sh_argv,v,n*sizeof(char*));struct mrsh_command *body=mrsh_command_copy(sh_functions[i].body);sh_functions_active++;rc=body?sh_command(body):2;sh_functions_active--;mrsh_command_destroy(body);free(sh_owned_args);sh_owned_args=owned;sh_argc=count;memcpy(sh_argv,saved,sizeof saved);if(sh_flow==3)sh_flow=0;return rc;}
 
@@ -151,10 +179,11 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
  errsay("command not found: ");errsay(v[0]);errsay("\n");return 127;}
 #endif
 
+static int sh_special(const char *name){const char *names[]={":",".","break","continue","exit","export","return","set","shift","unset",0};for(int i=0;names[i];i++)if(!strcmp(name,names[i]))return 1;return 0;}
 static int sh_simple(struct mrsh_simple_command *c){struct sh_args *a=calloc(1,sizeof *a);size_t i;short oldin=input_ref,oldout=output_ref,olderr=error_ref;short opened[16];unsigned char temp_names[8][256];short temp_refs[8];int temp_count=0,opened_count=0,rc=0;struct sh_saved *saved=0;if(!a)return sh_fail("out of memory");
- output_error=0;
+ unsigned long substitutions_before=sh_substitutions;output_error=0;
  if(c->name)rc=sh_expand(c->name,a);for(i=0;!rc&&i<c->arguments.len;i++)rc=sh_expand(c->arguments.data[i],a);
- if(a->n&&c->assignments.len){saved=sh_save();if(!saved)rc=sh_fail("out of memory");}
+ if(a->n&&c->assignments.len&&!sh_special(a->v[0])){saved=sh_save();if(!saved)rc=sh_fail("out of memory");}
  for(i=0;!rc&&i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];struct sh_word *w=calloc(1,sizeof *w);if(!w){rc=2;break;}rc=sh_word(x->value,w,1);if(!rc)rc=sh_set(x->name,w->text);free(w);}
  for(i=0;!rc&&i<c->io_redirects.len;i++){struct mrsh_io_redirect *r=c->io_redirects.data[i];struct sh_word *w=calloc(1,sizeof *w);if(!w){rc=2;break;}rc=sh_word(r->name,w,1);if(!rc){if(opened_count>=16)rc=sh_fail("too many redirections");else if(r->op==MRSH_IO_LESS&&(r->io_number<0||r->io_number==0)){short ref;if(open_path(w->text,fsRdPerm,&ref))rc=sh_fail("input redirection failed");else{input_ref=ref;opened[opened_count++]=ref;}}
  else if((r->op==MRSH_IO_GREAT||r->op==MRSH_IO_DGREAT||r->op==MRSH_IO_CLOBBER)&&(r->io_number<0||r->io_number==1||r->io_number==2)){short prior=output_ref;int e=redirect(w->text,r->op==MRSH_IO_DGREAT);short ref=output_ref;output_ref=prior;if(e)rc=sh_fail("output redirection failed");else{opened[opened_count++]=ref;if(r->io_number==2)error_ref=ref;else output_ref=ref;}}
@@ -165,11 +194,13 @@ static int sh_simple(struct mrsh_simple_command *c){struct sh_args *a=calloc(1,s
  else if(strcmp(w->text,"-")){if(w->text[1]||w->text[0]<'0'||w->text[0]>'2')rc=sh_fail("invalid descriptor duplication");else{int from=w->text[0]-'0';ref=from==0?input_ref:from==1?output_ref:error_ref;if(ref==-2){sh_fail("source descriptor is closed");rc=1;}}}
  if(!rc){if(to==0)input_ref=ref;else if(to==1)output_ref=ref;else error_ref=ref;}} 
  else rc=sh_fail("this redirection is not supported yet");}free(w);}
- if(!rc)rc=sh_dispatch(a);if(output_error&&!rc)rc=1;while(opened_count)if(FSClose(opened[--opened_count])&&!rc)rc=1;while(temp_count){temp_count--;sh_temp_close(temp_refs[temp_count],temp_names[temp_count]);}input_ref=oldin;output_ref=oldout;error_ref=olderr;if(saved){memcpy(saved->cwd,shell_cwd,PATH_CAP);
-#ifndef SH_HOST_TEST
-strcpy(saved->unixdir,unix_cwd);
-#endif
-sh_restore(saved);}free(a);return rc;}
+ if(!rc)rc=a->n?sh_dispatch(a):sh_substitutions!=substitutions_before?sh_substatus:0;if(output_error&&!rc)rc=1;while(opened_count)if(FSClose(opened[--opened_count])&&!rc)rc=1;while(temp_count){temp_count--;sh_temp_close(temp_refs[temp_count],temp_names[temp_count]);}input_ref=oldin;output_ref=oldout;error_ref=olderr;if(saved){
+ /* Temporary prefix assignments must not undo unrelated builtin effects
+    (notably IFS= read -r value). Restore only the assigned names. */
+ for(i=0;i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];for(int j=0;j<16;j++)if(!strcmp(env_names[j],x->name))env_names[j][0]=env_values[j][0]=0;}
+ for(i=0;i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];for(int j=0;j<16;j++)if(!strcmp(saved->names[j],x->name)){int e=sh_set(x->name,saved->values[j]);if(e&&!rc)rc=e;break;}}
+ for(int j=0;j<16;j++)mrsh_command_destroy(saved->functions[j]);free(saved);
+ }free(a);return rc;}
 static int sh_command(struct mrsh_command *cmd){int rc=0;size_t i;if(++sh_depth>SH_DEPTH){sh_depth--;return sh_fail("execution nesting limit");}if(app_yield()){sh_depth--;sh_flow=4;sh_flow_status=130;return 130;}switch(cmd->type){
 case MRSH_SIMPLE_COMMAND:rc=sh_simple((void*)cmd);break;
 case MRSH_BRACE_GROUP:rc=sh_array(&((struct mrsh_brace_group*)cmd)->body);break;

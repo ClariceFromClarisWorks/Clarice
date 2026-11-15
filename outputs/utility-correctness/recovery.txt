@@ -1,0 +1,20 @@
+fixture: status=1 live=0
+WRITE_FAIL:1
+fixture: status=130 live=0
+WRITE_CANCEL:130
+CAPACITY:2
+Runtime: heap=397948 largest=375992 image=10080 ticks=321 load=44 owned-peak=14356 remaining=0
+Loader ticks: read=13 validate=20 imports=1 relocations=2 prepare=2 events=3 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=20 metadata=0 structure=1 (structure included in relocations)
+SEQUENTIAL1:0
+Runtime: heap=397948 largest=375992 image=10080 ticks=406 load=45 owned-peak=13816 remaining=0
+Loader ticks: read=12 validate=21 imports=2 relocations=1 prepare=2 events=3 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=21 metadata=0 structure=1 (structure included in relocations)
+SEQUENTIAL2:0
+Runtime: heap=397948 largest=375992 image=10080 ticks=404 load=42 owned-peak=13816 remaining=0
+Loader ticks: read=11 validate=20 imports=2 relocations=1 prepare=1 events=1 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=20 metadata=0 structure=1 (structure included in relocations)
+SEQUENTIAL3:0
+Runtime: heap=397948 largest=375992 image=10080 ticks=404 load=42 owned-peak=13816 remaining=0
+Loader ticks: read=11 validate=20 imports=2 relocations=1 prepare=1 events=2 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=20 metadata=0 structure=1 (structure included in relocations)

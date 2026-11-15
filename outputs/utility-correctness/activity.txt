@@ -1,0 +1,5 @@
+PASS theme=0 port-polarity=0 frames/inverse/restoration
+PASS theme=0 port-polarity=1 frames/inverse/restoration
+PASS theme=1 port-polarity=0 frames/inverse/restoration
+PASS theme=1 port-polarity=1 frames/inverse/restoration
+failures=0 heap_before=422922 heap_after=422922

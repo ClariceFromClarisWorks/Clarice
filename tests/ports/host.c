@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <stdio.h>
 extern int clarice_main(int,char **);
 typedef union HostAllocation {long double align;unsigned long size;} HostAllocation;
 static unsigned long host_owned;
@@ -12,7 +13,7 @@ void *cli_alloc(unsigned long n){
  HostAllocation *p=malloc(sizeof(*p)+n);if(!p)return NULL;p->size=n;host_owned+=n;return p+1;
 }
 void cli_free(void *p){if(p){HostAllocation *h=(HostAllocation*)p-1;host_owned-=h->size;free(h);}}
-void cli_port_stats(unsigned long peak,unsigned long remaining){if(remaining||host_owned)abort();}
+void cli_port_stats(unsigned long peak,unsigned long remaining){if(remaining||host_owned)abort();if(getenv("CLARICE_TEST_STATS"))fprintf(stderr,"PORT_STATS peak=%lu remaining=%lu\n",peak,remaining);}
 static unsigned long polls;
 int app_yield(void){const char *s=getenv("CLARICE_CANCEL_AFTER");return s&&++polls>=strtoul(s,0,10);}
 int cli_isatty(int fd){return isatty(fd);}

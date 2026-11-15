@@ -230,8 +230,8 @@
     "passed": true
   },
   {
-    "test": "text cap",
-    "status": 2,
+    "test": "elastic record",
+    "status": 0,
     "passed": true
   },
   {

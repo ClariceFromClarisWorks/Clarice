@@ -1,0 +1,4 @@
+missing fixture: Mac OS error -43: File or path not found
+full fixture: Mac OS error -34: Volume has no free allocation blocks
+memory fixture: Mac OS error -108: Insufficient memory
+unknown fixture: Mac OS error -32000

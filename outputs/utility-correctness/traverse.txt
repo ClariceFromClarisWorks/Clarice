@@ -1,0 +1,17 @@
+FIND:0
+Runtime: heap=400710 largest=400478 image=6064 ticks=1666 load=35 owned-peak=0 remaining=0
+Loader ticks: read=8 validate=11 imports=1 relocations=1 prepare=11 events=0 (events included above)
+Verification ticks: mode=full header=0 record=3 payload=11 metadata=0 structure=0 (structure included in relocations)
+LIMITED:0
+DU:0
+Runtime: heap=400710 largest=400478 image=6064 ticks=1755 load=32 owned-peak=0 remaining=0
+Loader ticks: read=11 validate=12 imports=1 relocations=1 prepare=1 events=3 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=12 metadata=0 structure=1 (structure included in relocations)
+GLOBAL32:0
+Runtime: heap=400710 largest=400478 image=45580 ticks=5200 load=130 owned-peak=180588 remaining=0
+Loader ticks: read=22 validate=79 imports=3 relocations=4 prepare=15 events=4 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=79 metadata=0 structure=2 (structure included in relocations)
+RECOVERY:0
+Runtime: heap=400710 largest=400478 image=45580 ticks=155 load=135 owned-peak=12000 remaining=0
+Loader ticks: read=22 validate=98 imports=3 relocations=4 prepare=1 events=25 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=98 metadata=0 structure=2 (structure included in relocations)

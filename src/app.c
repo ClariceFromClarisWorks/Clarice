@@ -850,6 +850,9 @@ if(base)c=base;}
 #ifdef CLARICE_SELECTION_DIAGNOSTICS
 #include "../tests/terminal/selection-guest.inc"
 #endif
+#ifdef CLARICE_ACTIVITY_DIAGNOSTICS
+#include "../tests/terminal/activity-guest.inc"
+#endif
 #ifdef CLARICE_USABILITY_DIAGNOSTICS
 #include "../tests/terminal/usability-guest.inc"
 #endif
@@ -883,6 +886,9 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  shell_init();shell_state_path(prefs_path,"clarice.conf","Clarice Preferences");load_preferences();font_layout();
  welcome();busy=1;shell_profile();busy=0;dirty=1;initial_free=FreeMem();start_tick=TickCount()-launch;last_yield=TickCount();
  while(!done){
+#ifdef CLARICE_ACTIVITY_DIAGNOSTICS
+ static int activity_tested;if(!activity_tested&&FrontWindow()==win){activity_tested=1;activity_probe();}
+#endif
 #ifdef CLARICE_USABILITY_DIAGNOSTICS
  static int usability_tested;if(!usability_tested&&FrontWindow()==win){usability_tested=1;usability_probe();}
 #endif

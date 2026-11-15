@@ -22,6 +22,20 @@ text=(root/'src/vendor/sbase/sed.c').read_text()
 old='for (pc = prog; !gflags.halt; pc++)\n\t\tpc->fninfo->fn(pc);'
 assert old in text
 text=text.replace(old,'for (pc = prog; !gflags.halt; pc++) { port_poll(); pc->fninfo->fn(pc); }')
+# Keep upstream pristine. Substitution has one append-only output buffer.
+start=text.index('static void\ncmd_s(Cmd *c)')
+end=text.index('\nstatic void',start+1)
+body=text[start:end]
+body=body.replace('*genbuf.str = \'\\0\';', '*genbuf.str = \'\\0\';\n\tsize_t generated = 0;')
+body=body.replace('while (!qflag && !regexec(re, s, plen, pmatch, cflags)) {',
+                  'while (!qflag && !regexec(re, s, plen, pmatch, cflags)) { port_poll();')
+body=body.replace('strnacat(&genbuf, ', 'substitution_append(&genbuf, &generated, ')
+body=body.replace('stracat(&genbuf, s);', 'substitution_append(&genbuf, &generated, s, strlen(s));')
+body=body.replace('s += pmatch[0].rm_eo;\n\t}',
+                  's += pmatch[0].rm_eo;\n\t\tif (c->u.s.occurrence && matches >= c->u.s.occurrence) break;\n\t}')
+assert 'size_t generated = 0' in body and 'substitution_append' in body
+text=text[:start]+(root/'src/ports/sed-append.inc').read_text()+'\n'+body+text[end:]
+text='#include <stdint.h>\n'+text
 (root/'work/build/ports/sed.c').write_text(text)
 
 # Diagnostic output itself may alter errno in pinned newlib. Preserve the cause.
@@ -39,5 +53,5 @@ helps={
  'sed':'sed [-nE] [-e script] [-f scriptfile] [script] [file ...]\n-n quiet; -E/-r extended regular expressions.\nSupports upstream sbase addresses, substitutions, hold/pattern space and branching.\nNo GNU -i in-place editing. See the supplied sed manual for the script language.\nStatus: 0 success, nonzero error, 130 interrupted.\n'}
 for name,help in helps.items():
  p=root/'work/build/ports'/f'{name}.c';s=p.read_text();marker='main(int argc, char *argv[])\n{';assert marker in s
- s=s.replace(marker,marker+'\n if(argc==2&&!strcmp(argv[1],"--help")){puts('+json.dumps(help+'sbase port: 96 KiB allocation cap; 16 KiB input-line cap.\n')+');return 0;}')
+ s=s.replace(marker,marker+'\n if(argc==2&&!strcmp(argv[1],"--help")){puts('+json.dumps(help+'sbase port: text records grow with available application memory.\n')+');return 0;}')
  p.write_text(s)

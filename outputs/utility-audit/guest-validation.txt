@@ -1,0 +1,48 @@
+{
+  "--help": {
+    "ticks": 41,
+    "load": 40,
+    "read": 13,
+    "prepare": 8,
+    "image-alloc": 1,
+    "meta-alloc": 1,
+    "record": 16,
+    "imports": 1,
+    "relocations": 1,
+    "validate": 1,
+    "payload": 0,
+    "metadata": 1,
+    "stdio": 0
+  },
+  "/mnt/Audit/empty": {
+    "ticks": 47,
+    "load": 40,
+    "read": 13,
+    "prepare": 8,
+    "image-alloc": 1,
+    "meta-alloc": 1,
+    "record": 16,
+    "imports": 2,
+    "relocations": 1,
+    "validate": 1,
+    "payload": 0,
+    "metadata": 1,
+    "stdio": 0
+  },
+  "/mnt/Audit/ten": {
+    "ticks": 54,
+    "load": 40,
+    "read": 14,
+    "prepare": 8,
+    "image-alloc": 1,
+    "meta-alloc": 1,
+    "record": 16,
+    "imports": 2,
+    "relocations": 1,
+    "validate": 1,
+    "payload": 0,
+    "metadata": 1,
+    "stdio": 0
+  }
+}
+PASS guest exact byte comparison, explicit low-memory errors, recovery, zero owned allocations; 18 ls invocations
