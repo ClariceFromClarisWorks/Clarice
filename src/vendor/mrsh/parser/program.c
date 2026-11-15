@@ -979,11 +979,20 @@ static struct mrsh_command *command(struct mrsh_parser *parser) {
 	apply_aliases(parser);
 
 	struct mrsh_command *cmd = compound_command(parser);
-	if (cmd != NULL || mrsh_parser_error(parser, NULL)) {
+	if (cmd != NULL) {
+		/* Clarice: scope each redirect to this complete compound command. */
+		struct mrsh_io_redirect *redir;
+		while ((redir = io_redirect(parser)) != NULL) {
+			if (!cmd->redirects) cmd->redirects = calloc(1, sizeof *cmd->redirects);
+			if (!cmd->redirects || mrsh_array_add(cmd->redirects, redir) < 0) {
+				mrsh_io_redirect_destroy(redir);
+				parser_set_error(parser, "out of memory for compound redirection");
+				break;
+			}
+		}
+		if (mrsh_parser_error(parser, NULL)) {mrsh_command_destroy(cmd);return NULL;}
 		return cmd;
-	}
-
-	// TODO: compound_command redirect_list
+	} else if (mrsh_parser_error(parser, NULL)) return NULL;
 
 	struct mrsh_simple_command *sc = simple_command(parser);
 	if (sc != NULL) {

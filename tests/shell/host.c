@@ -6,6 +6,8 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <sys/wait.h>
+#include <errno.h>
 #define PATH_CAP 512
 #define MAX_ARGS 32
 #define fsRdPerm 1
@@ -43,6 +45,26 @@ static int redirect(const char*s,int append){for(int i=0;i<128;i++)if(!refs[i]){
 typedef struct {struct {int ioFlAttrib;long ioFlLgLen;}hFileInfo;}CInfoPBRec;
 static int resolve(const char*s,char*p){strcpy(p,s);return 0;}
 static int info(const char*p,CInfoPBRec *b){struct stat s;if(stat(p,&s))return 1;b->hFileInfo.ioFlAttrib=S_ISDIR(s.st_mode)?16:0;b->hFileInfo.ioFlLgLen=s.st_size;return 0;}
-static int run_args(int argc,char**av){if(!strcmp(av[0],"echo")){for(int i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");return 0;}if(!strcmp(av[0],"cat")){FILE*f=argc==1?(input_ref>=0?refs[input_ref]:stdin):fopen(av[1],"rb");if(!f)return 1;char b[512];size_t n;while((n=fread(b,1,sizeof b,f)))emit(b,n);if(argc>1)fclose(f);return 0;}if(!strcmp(av[0],"export")){for(int i=1;i<argc;i++)if(env_set(av[i]))return 2;return 0;}return 127;}
+/* Test-only native host subprocess bridge. Production still uses CLX/spools. */
+static int host_external(char **av){
+ if(!getenv("CLARICE_SHELL_EXTERNAL"))return 127;
+ fflush(NULL);pid_t pid=fork();if(pid<0)return 126;
+ if(!pid){
+  short refs_in[3]={input_ref,output_ref,error_ref};
+  for(int i=0;i<3;i++){if(refs_in[i]>=0)dup2(fileno(refs[refs_in[i]]),i);else if(refs_in[i]==-2)close(i);}
+  for(int i=0;i<128;i++)if(refs[i]&&fileno(refs[i])>2)close(fileno(refs[i]));
+  execvp(av[0],av);_exit(errno==ENOENT?127:126);
+ }
+ int status;while(waitpid(pid,&status,0)<0)if(errno!=EINTR)return 126;
+ return WIFEXITED(status)?WEXITSTATUS(status):128+WTERMSIG(status);
+}
+static int run_args(int argc,char**av){if(!strcmp(av[0],"echo")){for(int i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");return 0;}if(!strcmp(av[0],"cat")){int status=0;for(int i=argc==1?0:1;i<argc;i++){FILE*f=i==0?(input_ref>=0?refs[input_ref]:stdin):fopen(av[i],"rb");if(!f){status=1;continue;}char b[512];size_t n;while((n=fread(b,1,sizeof b,f)))emit(b,n);if(ferror(f))status=1;if(i)fclose(f);}return status;}if(!strcmp(av[0],"export")){for(int i=1;i<argc;i++)if(env_set(av[i]))return 2;return 0;}return host_external(av);}
 #include "../../src/sh.inc"
-int main(int argc,char **argv){if(argc<2)return 2;if(argc>2)cancel_after=atoi(argv[2]);return shell_run(argv[1]);}
+int main(int argc,char **argv){
+ if(argc<2)return 2;if(argc>2)cancel_after=atoi(argv[2]);
+ int rc=shell_run(argv[1]);
+ for(int i=0;i<128;i++)if(refs[i]){fprintf(stderr,"leaked native reference %d\n",i);return 125;}
+ if(getenv("CLARICE_SHELL_RECOVERY")){cancel_after=polls=0;shell_run("printf 'STREAMS-RESTORED\\n'");}
+ for(int i=0;i<16;i++)mrsh_command_destroy(sh_functions[i].body);
+ free(sh_owned_args);return rc;
+}

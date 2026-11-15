@@ -127,6 +127,13 @@ void mrsh_command_destroy(struct mrsh_command *cmd) {
 		return;
 	}
 
+	if (cmd->redirects) {
+		for (size_t i = 0; i < cmd->redirects->len; i++)
+			mrsh_io_redirect_destroy(cmd->redirects->data[i]);
+		mrsh_array_finish(cmd->redirects);
+		free(cmd->redirects);
+	}
+
 	switch (cmd->type) {
 	case MRSH_SIMPLE_COMMAND:;
 		struct mrsh_simple_command *sc = mrsh_command_get_simple_command(cmd);
@@ -1131,7 +1138,7 @@ static struct mrsh_case_item *case_item_copy(const struct mrsh_case_item *ci) {
 	return ci_copy;
 }
 
-struct mrsh_command *mrsh_command_copy(const struct mrsh_command *cmd) {
+static struct mrsh_command *command_copy_body(const struct mrsh_command *cmd) {
 	struct mrsh_array io_redirects = {0};
 	switch (cmd->type) {
 	case MRSH_SIMPLE_COMMAND:;
@@ -1289,4 +1296,29 @@ struct mrsh_program *mrsh_program_copy(const struct mrsh_program *prog) {
 	struct mrsh_program *prog_copy = mrsh_program_create();
 	command_list_array_copy(&prog_copy->body, &prog->body);
 	return prog_copy;
+}
+
+/* Keep compound redirects with copied function/subshell ASTs. Existing upstream
+   copy helpers don't propagate child failure. A generation counter lets every
+   enclosing command discard its partial copy instead of accepting NULL children.
+   Copying is synchronous in this single-threaded adapter. */
+static unsigned long command_copy_failures;
+struct mrsh_command *mrsh_command_copy(const struct mrsh_command *cmd) {
+ if (!cmd) return NULL;
+ unsigned long before=command_copy_failures;
+ struct mrsh_command *copy = command_copy_body(cmd);
+ if (!copy || command_copy_failures!=before) goto fail;
+ if (!cmd->redirects) return copy;
+ copy->redirects = calloc(1, sizeof *copy->redirects);
+ if (!copy->redirects) goto fail;
+ for (size_t i=0;i<cmd->redirects->len;i++) {
+  struct mrsh_io_redirect *r=mrsh_io_redirect_copy(cmd->redirects->data[i]);
+  if (!r || mrsh_array_add(copy->redirects,r)<0) {
+   mrsh_io_redirect_destroy(r);goto fail;
+  }
+ }
+ if (command_copy_failures!=before) goto fail;
+ return copy;
+fail:
+ command_copy_failures++;mrsh_command_destroy(copy);return NULL;
 }

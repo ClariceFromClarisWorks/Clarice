@@ -1,0 +1,79 @@
+[
+  {
+    "source": "{ printf bad; } > missing/file",
+    "cancel_at": 0,
+    "status": 2,
+    "expected": 2,
+    "passed": true
+  },
+  {
+    "source": "{ printf bad; } > first > missing/file",
+    "cancel_at": 0,
+    "status": 2,
+    "expected": 2,
+    "passed": true
+  },
+  {
+    "source": "{ printf bad; } 1>&- ",
+    "cancel_at": 0,
+    "status": 1,
+    "expected": 1,
+    "passed": true
+  },
+  {
+    "source": "{ while true; do printf x; done; } > output",
+    "cancel_at": 6,
+    "status": 130,
+    "expected": 130,
+    "passed": true
+  },
+  {
+    "source": "{ while true; do printf x; done; } > output",
+    "cancel_at": 10,
+    "status": 130,
+    "expected": 130,
+    "passed": true
+  },
+  {
+    "source": "{ while true; do printf x; done; } > output",
+    "cancel_at": 20,
+    "status": 130,
+    "expected": 130,
+    "passed": true
+  },
+  {
+    "source": "while true; do { printf x; continue; } >> output; done",
+    "cancel_at": 6,
+    "status": 130,
+    "expected": 130,
+    "passed": true
+  },
+  {
+    "source": "while true; do { printf x; continue; } >> output; done",
+    "cancel_at": 10,
+    "status": 130,
+    "expected": 130,
+    "passed": true
+  },
+  {
+    "source": "while true; do { printf x; continue; } >> output; done",
+    "cancel_at": 20,
+    "status": 130,
+    "expected": 130,
+    "passed": true
+  },
+  {
+    "source": "{ for x in a b c; do { echo \"$x\"; } > inner; done; } > outer",
+    "cancel_at": 0,
+    "status": 0,
+    "expected": 0,
+    "passed": true
+  },
+  {
+    "source": "f() { { echo saved; return 7; } > output; }; f",
+    "cancel_at": 0,
+    "status": 7,
+    "expected": 7,
+    "passed": true
+  }
+]

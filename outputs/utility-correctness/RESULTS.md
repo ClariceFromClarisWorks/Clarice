@@ -175,3 +175,67 @@ embedded quoted $@ and broader grammar gaps; comprehensive utility compatibility
 coverage. No claim of complete POSIX conformance, hardware acceptance or measured
 shell speedup. No SE contact, executable cache, push, release or silent bundled
 command replacement.
+
+## Checkpoint and complete-script follow-up (1540)
+
+Accepted 1539 checkpoint **ff68dc471856b4093ca747f3406e0963ddd53e91** pushed to
+`codex/utility-correctness-2026111539`; 133 curated files, existing history preserved.
+No main/tag/release changes. Generated executable media, raw SEControl sessions,
+private saved preferences, disposable large outputs and unrelated legacy build-log
+noise remain excluded. No credentials found by staged-content pattern review.
+New 1540 changes below remain local, not part of that pushed checkpoint.
+
+Root cause: upstream mrsh's compound-command redirect-list TODO let trailing
+redirections be parsed as separate empty commands. A group could write to the
+terminal before a later standalone redirection created/truncated a file. Optional
+owned redirect lists now attach to compound AST nodes. The existing simple-command
+redirection scope executes the compound body and always closes/restores its streams;
+no duplicate filesystem/I/O layer. Copy failure propagates through parent command
+copies, discards partial trees and avoids installing damaged function definitions.
+
+Validation, actual evidence:
+
+- Twelve realistic portable scripts combine variables, quotes, loops/functions,
+  pipelines, substitution, status handling, files and redirects. All match dash
+  on host and Snow. `od` presentation spacing differs from macOS; the portable
+  fixture normalises whitespace before comparing exact hex-byte values.
+- Existing 31 shell comparisons/3 cancellations and 39 focused cases pass;
+  read-overflow tests still pass. Eleven new scope/failure/cancellation ownership
+  cases pass. Eighteen allocation-position trials include ten reached injected
+  failures and eight no-injection controls. These test new ownership sites, not
+  every allocation in the upstream parser. See compound-oom.json.
+- Native repeated scopes/here-documents/read loops: three matched post-batch
+  samples all heap=399996/largest=375926, portable remaining=0. Real guest Ctrl+C
+  yields 130, the subsequent BAD marker is absent, stdout/stderr return to the
+  terminal, file overwrite/read works, Audit flush/unmount succeeds. Exported
+  evidence and exact checker: tests/utility-correctness/validate-workflows.py.
+- All 34 production external --help calls return zero. Actual native utility
+  create/copy/move/link/find/inspect/dump/pager/delete, HFS metadata/lock refusal,
+  list/dot entries/df and grep/sed/awk/pipeline combinations pass. Prior deep-tree,
+  large-record, native-capacity and injected file-failure acceptance is retained.
+  Hashes identify the tested standalone binaries; helper-only communication and
+  update checks are not fresh transport or updater acceptance.
+- No change to shared libc: 32 cookie streams show 2180 B retained capacity,
+  all addresses reused, stable repeat heap. See LIBC-POOL.md, not a zero-retention
+  claim. Native allocation placement can still affect largest free blocks.
+
+Normal app 1540 is 946816 bytes (+640 against 1539 package). Memory additions are
+4 B per parsed command, optional redirect lists and a 4 B copy-failure counter;
+no permanent heap cache. Scoped execution reuses the existing temporary argument/
+redirection frame (~4.14 KiB argument allocation per redirected compound scope).
+No startup/performance speedup is claimed.
+
+Snow fixed uncapped mode reached ~15.6–16×. Synthetic command setup used normal
+speed briefly to avoid host key-repeat artifacts, then returned to maximum before
+execution/cancellation. Reused full Audit eventually produced a Finder memory
+alert before launching Clarice; preserved that image, used a clean disposable Audit
+and passed the repeat. No production filesystem change inferred. All exported
+results use explicit native flush/unmount. Physical SE untouched.
+
+Reproduction: scripts/test-shell.sh; tests/shell/scenarios.py;
+tests/shell/compound-failures.py; tests/shell/compound-oom.py;
+tests/shell/posix-focused.py; tests/shell/read-overflow.py. Stage the same scenario
+sources and listed tools on disposable Audit, run compound-repeat.sh, interrupt
+compound-cancel.sh, then run compound-end.sh. Export workflows/ after unmount and
+run validate-workflows.py. References/limitations and complete acceptance inventory
+are in COMPATIBILITY.md; this is incremental POSIX compatibility, not certification.

@@ -1,0 +1,3 @@
+pool run=0 count=32 sizeofFILE=104 before=408964 open=405888 after=406784 reused=0 retained=2180
+pool run=1 count=32 sizeofFILE=104 before=406784 open=405888 after=406784 reused=32 retained=2180
+pool run=2 count=32 sizeofFILE=104 before=406784 open=405888 after=406784 reused=32 retained=2180

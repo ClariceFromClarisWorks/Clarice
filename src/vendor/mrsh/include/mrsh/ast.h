@@ -188,6 +188,8 @@ enum mrsh_command_type {
 struct mrsh_command {
 	struct mrsh_node node;
 	enum mrsh_command_type type;
+	/* Clarice: allocated only for redirected compound commands. */
+	struct mrsh_array *redirects;
 };
 
 /**

@@ -1,11 +1,11 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Loader checkpoint **2e84229 / build 2026111534** is
-preserved and pushed on its development branch. Focused editor drawing candidate
-**2026111536** passed matched stock-SE timing/pixel/cleanup checks; normal build
-**2026111537** (profiling OFF) passed Snow editor/exit checks and is prepared locally.
-The SE remains on instrumented 1536; normal nano's format fix is installed there
-with its previous command retained. No new release, tag or main change.
+16 November 2026, Adelaide. Accepted Snow development checkpoint **ff68dc4**
+(build **2026111539**) is pushed on `codex/utility-correctness-2026111539`.
+Normal candidate **2026111540** adds targeted compound-command redirection;
+focused host and accelerated Snow acceptance passes. The new work is local and
+uncommitted. No physical deployment, release, tag or main change. The SE stays
+on its previously tested installation; no hardware testing in this task.
 ROADMAP.md is provisional history, not current authorisation.
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
@@ -13,6 +13,46 @@ Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-ux-2026111533`, inheriting Research Before Reinvention from 12ccb4a.
 No tag or release. Physical loader profiling has resumed; build 1534 changes only
 the approved installed-fast metadata validation path, not nano.
+
+## Portable scripts and compound redirection — 16 November
+
+- Fixed the imported parser's missing compound redirect-list support: redirection
+  now covers the entire group/loop/subshell/if/case, through the existing shell I/O
+  owner. Restores previous streams after completion/error/control flow/cancellation.
+  Redirect lists are owned/copied/freed with their AST. Failed copies reject and
+  free partial trees and retain existing function definitions.
+- Host: 12 complete scripts match dash, plus existing 31 comparisons/3 cancellation
+  checks and 39 focused cases. Eleven scope/failure/cancellation checks pass with
+  no open native references; 18 allocation-position trials exercise the added
+  parser/copy sites (10 reached injections, 8 beyond-allocation controls).
+- Snow Plus/4 MB, reported System 6.0.7: all 12 script outputs match, using actual
+  CLX utilities; od values compared after portable whitespace normalisation.
+  Fresh native metadata/locked-file/listing/df checks and all 34 external --help
+  exits pass. Repeated scope/here-document/read batches: heap **399,996 B** and
+  largest block **375,926 B**, identical across three runs; portable remaining=0.
+- Real guest Ctrl+C interrupts a redirected infinite loop with **130**, skips its
+  following command, restores stdout/stderr and permits subsequent file writing.
+  Functional runs at fixed uncapped FFWD (~15.6–16×); briefly normal speed for
+  synthetic keyboard setup only. No physical results inferred.
+- Memory cost: one 4-byte optional pointer per parsed command, redirect storage
+  only when used, one 4-byte copy-failure generation counter; no new permanent heap
+  allocation. Scoped execution reuses the existing simple-command frame, including
+  its temporary ~4.14 KiB argument structure; not a new stream implementation.
+- Shared newlib 4.6.0 retains **2,180 B** after the 32-stream probe and reuses all
+  32 FILE addresses on two repeats. This is useful stdio capacity, not automatically
+  reclaimable general heap. No libc change justified or made.
+- Complete declared-utility acceptance inventory and supported/partial/unsupported/
+  platform-limited shell matrix: [compatibility](utility-correctness/COMPATIBILITY.md).
+  Capacity limits, function-definition redirects, full export/subshell semantics,
+  complete printf/read and parser-wide OOM hardening remain gaps; no POSIX claim.
+
+[Evidence](utility-correctness/RESULTS.md), [libc finding](utility-correctness/LIBC-POOL.md).
+Local normal app: `outputs/utility-correctness/build-1540/Clarice.bin` (diagnostics
+and nano profiling OFF). Bundled resources remain separate from independently
+rebuilt/tested utility candidates; startup does not replace existing installations.
+The pushed checkpoint excludes generated packages, raw control sessions, private
+preferences, legacy build-log noise and disposable large-output fixtures. All
+existing branches/tags/releases preserved; subsequent task changes remain local.
 
 ## Utility elasticity and small-command audit — 16 November
 

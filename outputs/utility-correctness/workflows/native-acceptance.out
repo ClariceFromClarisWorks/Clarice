@@ -1,0 +1,12 @@
+MKDIR:0
+ATTR:0
+native-check/file: HFS file, type 'TEXT', creator 'TEST', data 8 bytes, resource 0 bytes
+.
+..
+file
+---         8B         0B 2026-11-16 09:26 native-check/file
+LS_INVALID:2
+DF:0
+1	native-check
+LOCKED:1
+REMOVE:0
