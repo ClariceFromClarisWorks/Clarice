@@ -1,11 +1,10 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted Snow development checkpoint **ff68dc4**
-(build **2026111539**) is pushed on `codex/utility-correctness-2026111539`.
-Normal candidate **2026111540** adds targeted compound-command redirection;
-focused host and accelerated Snow acceptance passes. The new work is local and
-uncommitted. No physical deployment, release, tag or main change. The SE stays
-on its previously tested installation; no hardware testing in this task.
+16 November 2026, Adelaide. Accepted build **2026111540** is preserved in local
+checkpoint **2115cd8**, following pushed **ff68dc4**, on
+`codex/utility-correctness-2026111539`. Elastic-shell candidate **2026111541**
+passes the focused host and accelerated Snow checks below. No physical deployment,
+System 6.0.8 claim, push, release, tag or main change in this task. The SE stays off.
 ROADMAP.md is provisional history, not current authorisation.
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
@@ -13,6 +12,40 @@ Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-ux-2026111533`, inheriting Research Before Reinvention from 12ccb4a.
 No tag or release. Physical loader profiling has resumed; build 1534 changes only
 the approved installed-fast metadata validation path, not nano.
+
+## Elastic shell — first batch, 16 November
+
+- Removed fixed variable count/name/value, expanded-word/substitution and argument
+  count/storage limits. Storage grows on demand, with checked size arithmetic and
+  staged updates. Small words use 64 inline bytes; no resident cache. The interactive
+  1023-byte line limit and AST/parser representation are unchanged.
+- Multi-variable `read` follows tested dash IFS/escape/EOF behaviour; allocation
+  failure leaves destination variables intact. Fixed function `$0` and restored
+  positional parameters across subshell/command-substitution scopes. Snapshot
+  unwinding transfers owned storage without allocating. NUL records/scripts and
+  short script/substitution reads fail explicitly.
+- Host: existing 31 comparisons/3 cancellation, 39 focused and 12 complete scripts
+  pass, plus 41 elastic comparisons. 329 adapter allocation-failure injections
+  leave zero tracked allocations; compound ownership/failure tests remain passing.
+- Snow Plus/4 MB, reported **6.0.7**, fixed uncapped FFWD approximately 15–16×:
+  all 41 new cases, all 39 focused cases and all 12 scripts pass. Includes 64 KiB
+  read/expansion, 8 KiB substitution, 80 variables and 100 arguments. A 512 KiB
+  record produces an explicit memory error and preserves `x=old`. Actual Ctrl+C
+  cancels a substitution loop with 130, skips the following command, restores
+  output/error streams; portable remaining=0. No physical tests.
+- Five repeat samples: free heap **409058, 409068, 409068, 409068, 409068 B**;
+  largest block **233372 B** throughout. Host adapter peak for `echo hello`
+  falls **8472 → 259 B** (64-bit host, excludes AST/libc, not a hardware timing).
+  Native static variable/positional arrays shrink by approximately 2.6 KiB;
+  actual live values now consume heap. Normal MacBinary is **948736 B** (+1920).
+- Remaining: 8 KiB source/256-token/16-function guards and recursion safeguards;
+  embedded quoted `$@`, full export/scope, additional printf/test semantics.
+  A focused host probe confirms the upstream parser dereferences NULL on its first
+  allocation failure. Parser/AST constructors and ignored growth failures need
+  systematic error propagation before lifting parser guards. No new arena/cache
+  or parser replacement was introduced; general parser OOM safety is not claimed.
+- [Evidence and next-step assessment](shell-elastic/RESULTS.md),
+  [compatibility matrix](utility-correctness/COMPATIBILITY.md).
 
 ## Portable scripts and compound redirection — 16 November
 

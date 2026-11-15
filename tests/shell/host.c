@@ -17,7 +17,7 @@
 #define dupFNErr -48
 static short input_ref=-1,output_ref=-1,error_ref=-3;
 static int output_error,shell_status,script_depth;
-static char env_names[16][32],env_values[16][128],shell_cwd[PATH_CAP]="./",home_path[PATH_CAP]="./";
+static char shell_cwd[PATH_CAP]="./",home_path[PATH_CAP]="./";
 static FILE *refs[128];
 
 static int cancel_after,polls;
@@ -29,8 +29,9 @@ static int FSWrite(short r,long*n,const void*b){size_t k=fwrite(b,1,*n,refs[r]);
 static int FSRead(short,long*,char*);
 #include "../../src/streams.inc"
 static void say(const char*s){emit(s,strlen(s));}
-static const char *env_get(const char *name){for(int i=0;i<16;i++)if(!strcmp(env_names[i],name))return env_values[i];return "";}
-static int env_set(const char *s){const char *e=strchr(s,'=');if(!e)return 1;for(int i=0;i<16;i++)if(!env_names[i][0]||(strlen(env_names[i])==(size_t)(e-s)&&!strncmp(s,env_names[i],e-s))){memcpy(env_names[i],s,e-s);env_names[i][e-s]=0;strcpy(env_values[i],e+1);return 0;}return 1;}
+#include "alloc.h"
+#include "../../src/shell-env.inc"
+static const char *env_get(const char *name){struct sh_env *e=env_find(sh_env,name);return e?e->value:"";}
 static void pstr(unsigned char*p,const char*s){*p=strlen(s);memcpy(p+1,s,*p);}
 static void pathstr(char *s,const unsigned char*p){memcpy(s,p+1,*p);s[*p]=0;}
 static int HCreate(int a,int b,const unsigned char*p,int c,int d){char s[256];(void)a;(void)b;(void)c;(void)d;pathstr(s,p);FILE*f=fopen(s,"wx");if(!f)return dupFNErr;fclose(f);return 0;}
@@ -66,5 +67,5 @@ int main(int argc,char **argv){
  for(int i=0;i<128;i++)if(refs[i]){fprintf(stderr,"leaked native reference %d\n",i);return 125;}
  if(getenv("CLARICE_SHELL_RECOVERY")){cancel_after=polls=0;shell_run("printf 'STREAMS-RESTORED\\n'");}
  for(int i=0;i<16;i++)mrsh_command_destroy(sh_functions[i].body);
- free(sh_owned_args);return rc;
+ free(sh_owned_args);env_free(sh_env);if(getenv("CLARICE_SHELL_ALLOC_STATS"))fprintf(stderr,"ALLOC calls=%lu peak=%lu remaining=%lu fault=%d\n",(unsigned long)host_calls,(unsigned long)host_peak,(unsigned long)host_live,host_fault);if(host_live)return 124;return rc;
 }

@@ -1,6 +1,6 @@
 # Portable shell and utility acceptance — 16 November 2026
 
-Build 2026111540 development candidate. **Snow only**, Plus/4 MB; guest reports
+Build 2026111541, elastic shell batch one (1540 checkpoint preserved). **Snow only**, Plus/4 MB; guest reports
 System 6.0.7. No new physical/System 6.0.8 acceptance. No POSIX certification.
 
 **Fully supported** below means the explicitly named form, within stated capacity
@@ -15,20 +15,20 @@ The reference is dash plus portable utility behaviour, not Bash extensions.
 |---|---|---|
 | Simple commands, sequences, `&&`, `||`, `!`, `$?` | Fully supported (named forms) | Left-associative and/or; short-circuiting and final pipeline status tested. Cancellation is 130. |
 | Single/double quotes, escapes, concatenation | Partial | Tested strings with spaces, empty arguments, literals and adjacent expansions. Embedded quoted `$@` is explicitly unsupported; separate `"$@"` works. |
-| Variables, IFS, positional parameters | Partial | Assignment, unset, `$0`/`$1`/`$#`, `set --`, shift, quoted `$*`, IFS whitespace/non-whitespace splitting tested. 16 variables, names 31 B, values 127 B; export/locality is not a complete POSIX environment model. |
+| Variables, IFS, positional parameters | Partial | Assignment, unset, `$0`/`$1`/`$#`, `set --`, shift, quoted `$*`, IFS whitespace/non-whitespace splitting tested. Variable names/count/values and positional storage now grow on demand; 80 variables, 100 arguments and 64 KiB records tested. Export/locality is not yet a complete POSIX environment model; older awk/editor environment consumers still have their own 18-entry/buffer limits. |
 | Parameter expansion | Partial | Defaults/alternates/assignment/error/length and prefix/suffix removal exist. Special/braced parameter grammar is not comprehensive. No Bash arrays or indirect expansion. |
 | `for`, `while`, `until`, `if`, `case` | Partial | Ordinary forms, nested loops and unnumbered break/continue tested. Numeric break/continue levels rejected. Existing syntax/execution nesting limits remain. |
 | Functions, `.`, `sh -c`, script operands | Partial | Function arguments, return, saved positional parameters, source effects and copied redirected bodies tested. Redirection attached to a function *definition* is rejected; redirecting its call or body works. |
 | Compound-command redirects | Fully supported (fds 0–2/forms below) | Groups, subshells, loops, if/case; scope lasts through completion/break/continue/return. Uses the same ownership/cleanup as simple commands. Nested and pipeline cases tested. |
 | `<`, `>`, `>>`, `2>`, `n>&m`, `n<&m`, closure, here-documents | Partial | Descriptor 0–2 mapping and left-to-right ordering; quoted/unquoted here-documents tested. `<>`, general numbered descriptors and complete here-doc edge cases are not supported. Output open/truncate follows shell semantics, not editor safe-save semantics. |
-| Finite pipelines and command substitution | Partial / platform-limited | Native HFS spools; finite combinations tested with genuine grep/sed/awk/pipeline ports. Sequential, not concurrent pipes: no infinite producers, SIGPIPE or live IPC. Substitution limited to 2047 B. |
-| Subshell grouping | Partial | Environment/functions/cwd snapshot, no separate OS process. Positional parameters/options are not a complete process-isolation model. |
+| Finite pipelines and command substitution | Partial / platform-limited | Native HFS spools; finite combinations tested with genuine grep/sed/awk/pipeline ports. Sequential, not concurrent pipes: no infinite producers, SIGPIPE or live IPC. Substitution and expansion storage now grow on demand; 8 KiB substitution tested, with explicit memory/I/O failures and no silent short reads. |
+| Subshell grouping | Partial | Environment/functions/cwd and positional-parameter snapshots; `set --`/shift in a subshell or command substitution no longer escape. No separate OS process or complete shell-option isolation. |
 | Arithmetic and `test`/`[` | Partial | Integer arithmetic and common string/numeric/file tests; not all operators/test expressions. Overflow and advanced arithmetic syntax not comprehensively audited. |
-| `read`, `printf`, echo | Partial | One-variable `read [-r]`, IFS trimming, escaped newline and EOF; >127 B fails after consuming record, preserving old variable. printf supports `%s`, `%d`, `%%` and a limited escape set, not the full POSIX formatter. |
+| `read`, `printf`, echo | Partial | Multi-variable `read [-r]`, IFS splitting, escaped newline and EOF; record storage grows on demand. All destination values are staged before assignment, so allocation failure preserves old values. Failure may leave unread input; callers must check status. NUL-containing records are explicitly rejected; native CR is also a line terminator. printf supports `%s`, `%d`, `%%` and a limited escape set, not the full POSIX formatter. |
 | Pathname expansion | Partial / HFS | Final-component globs sorted; parent-directory wildcards rejected. HFS case/31-byte names and encoded `/`/`%` differ. Host glob shim is not evidence of native glob behaviour. |
 | Shell options, traps, exec, readonly, getopts | Unsupported/incomplete | No full `set -e/-u/-f`/trap/exec facility; `set --` is supported. Do not silently assume scripts using these features are portable here. |
 | Jobs, Unix process IDs, fork, signals, users/permissions | Platform-limited | Not simulated. Cooperative Ctrl+C, no process groups/job control/sudo/Unix permission ownership. chmod is not implemented; native metadata uses hfsattr. |
-| Resource bounds | Partial | 8 KiB script, 256-token guard, 32 arguments/4096 B argument storage, 16 functions; command line/paste 1023 B. Bounds are explicit restrictions, not POSIX limits. Parser-wide OOM hardening remains incomplete; targeted new allocation failures are tested. |
+| Resource bounds | Partial | 8 KiB script, 256-token guard, 16 functions, source depth 8 and execution depth 16 remain pending parser failure hardening; argument count/storage, variable storage and command-substitution caps are removed; command line/paste 1023 B. Bounds are explicit restrictions, not POSIX limits. Parser-wide OOM hardening remains incomplete; targeted new allocation failures are tested. |
 
 ## Utility acceptance inventory
 
@@ -67,3 +67,5 @@ claim exhaustive option/failure testing or revalidate communications/updating.
 Next correctness priorities: shell capacity/parameter grammar, complete printf/read
 semantics, export/subshell isolation and additional error cases. They are an
 inventory of gaps, not authorisation for a shell replacement or OS facilities.
+
+Elastic batch evidence: [host/guest results and memory accounting](../shell-elastic/RESULTS.md). The interactive 1023-byte input limit is unchanged. Parser-wide allocation failure is **not** safe yet: the host probe reproduces a null dereference at parser construction.

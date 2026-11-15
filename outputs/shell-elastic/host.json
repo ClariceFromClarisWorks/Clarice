@@ -1,0 +1,330 @@
+[
+  {
+    "name": "80 variables",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 13,
+    "stderr": ""
+  },
+  {
+    "name": "long variable name",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 4,
+    "stderr": ""
+  },
+  {
+    "name": "read 0",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 11,
+    "stderr": ""
+  },
+  {
+    "name": "read 1",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 12,
+    "stderr": ""
+  },
+  {
+    "name": "read 127",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 138,
+    "stderr": ""
+  },
+  {
+    "name": "read 128",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 139,
+    "stderr": ""
+  },
+  {
+    "name": "read 2047",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 2058,
+    "stderr": ""
+  },
+  {
+    "name": "read 2048",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 2059,
+    "stderr": ""
+  },
+  {
+    "name": "read 4096",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 4107,
+    "stderr": ""
+  },
+  {
+    "name": "read 8192",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 8203,
+    "stderr": ""
+  },
+  {
+    "name": "read 65536",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 65547,
+    "stderr": ""
+  },
+  {
+    "name": "large substitution",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 8198,
+    "stderr": ""
+  },
+  {
+    "name": "100 arguments",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 499,
+    "stderr": ""
+  },
+  {
+    "name": "subshell arguments",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 18,
+    "stderr": ""
+  },
+  {
+    "name": "substitution arguments",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 18,
+    "stderr": ""
+  },
+  {
+    "name": "function zero and restore",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 19,
+    "stderr": ""
+  },
+  {
+    "name": "nested expansion lifetime",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 7,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ':' b':a:\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 9,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ':' b'a:b:c:\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 13,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ':' b'::\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 8,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ':' b'  a : : b  \\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 18,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ':' b'\\\\ a b\\\\ c d\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 16,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ':' b'last'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 12,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ': ' b':a:\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 9,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ': ' b'a:b:c:\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 13,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ': ' b'::\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 8,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ': ' b'  a : : b  \\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 12,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ': ' b'\\\\ a b\\\\ c d\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 15,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ': ' b'last'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 12,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ' ' b':a:\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 11,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ' ' b'a:b:c:\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 14,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ' ' b'::\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 10,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ' ' b'  a : : b  \\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 14,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ' ' b'\\\\ a b\\\\ c d\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 15,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs ' ' b'last'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 12,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs '' b':a:\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 11,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs '' b'a:b:c:\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 14,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs '' b'::\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 10,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs '' b'  a : : b  \\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 19,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs '' b'\\\\ a b\\\\ c d\\n'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 16,
+    "stderr": ""
+  },
+  {
+    "name": "read ifs '' b'last'",
+    "passed": true,
+    "status": 0,
+    "expected_status": 0,
+    "output_bytes": 12,
+    "stderr": ""
+  }
+]

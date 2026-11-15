@@ -72,7 +72,7 @@ static int cli_prepare_stdio(void){
 static int cli_environment(int index,char *out,unsigned long capacity){
  const char *name,*value;
  if(index==0){name="HOME";value="/";}else if(index==1){name="PWD";value=unix_cwd;}
- else if(index>=2&&index<18){name=env_names[index-2];value=env_values[index-2];if(!*name)return 0;}else return 0;
+ else if(index>=2){struct sh_env *e=sh_env;for(int i=2;e&&i<index;i++)e=e->next;if(!e)return 0;name=e->name;value=e->value;}else return 0;
  if(strlen(name)+strlen(value)+2>capacity)return -1;snprintf(out,capacity,"%s=%s",name,value);return 1;
 }
 static int cli_path_kind(const char *path){char native[PATH_CAP];CInfoPBRec pb;int e=resolve(path,native);if(!e)e=info(native,&pb);if(e)return port_errno(e);return !!(pb.hFileInfo.ioFlAttrib&16);}
