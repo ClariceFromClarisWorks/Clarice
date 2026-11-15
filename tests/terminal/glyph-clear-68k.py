@@ -2,7 +2,7 @@
 from pathlib import Path
 import subprocess
 root=Path.cwd();out=root/'work/clear-perf';out.mkdir(parents=True,exist_ok=True)
-s=(root/'src/native-glyphs.inc').read_text();clear='static void native_glyph_clear'+s.split('static void native_glyph_clear',1)[1].split('static int native_glyph_row',1)[0]
+s=(root/'src/native-glyphs.inc').read_text();clear='static void native_glyph_clear'+s.split('static void native_glyph_clear',1)[1].split('extern void asm_ascii_groups_at',1)[0]
 (out/'wrapper.c').write_text('#define STRIDE 64\nstatic unsigned char *prompt_pixels;\n'+clear+'\nextern void asm_ascii_cells(unsigned char *,const unsigned char *,const unsigned char *,long,long,long);\nvoid test_native_row(unsigned char *p,const unsigned char *s,const unsigned char *g,long n,long h,long w){prompt_pixels=p;native_glyph_clear(n);asm_ascii_cells(p,s,g,n,h,w); }\n')
 subprocess.run(['docker','run','--rm','--pull','never','--platform','linux/amd64','--network','none','-v',str(root)+':/src','ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae819583eecb0ddd1837da6943c','sh','-ec',"m68k-apple-macos-gcc -m68000 -Os -c /src/work/clear-perf/wrapper.c -o /src/work/clear-perf/wrapper.o; m68k-apple-macos-gcc -m68000 -c /src/src/kernels.S -o /src/work/clear-perf/kernels.o; m68k-apple-macos-ld -Ttext=0x10000 -e test_native_row /src/work/clear-perf/wrapper.o /src/work/clear-perf/kernels.o -o /src/work/clear-perf/kernels.elf; m68k-apple-macos-objcopy -O binary /src/work/clear-perf/kernels.elf /src/work/clear-perf/kernels.raw; m68k-apple-macos-nm /src/work/clear-perf/kernels.elf > /src/work/clear-perf/symbols.txt"],check=True)
 """Real 68000 shared cell compositor: original and ASCII-based entry points."""

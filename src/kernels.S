@@ -89,6 +89,13 @@ asm_ascii_cells:
 asm_cells:
  moveq #0,%d0
 .Lcells_enter:
+ moveq #0,%d1
+ bra .Lcells_offset
+.globl asm_ascii_cells_at
+asm_ascii_cells_at:
+ move.l #1024,%d0
+ move.l 28(%sp),%d1
+.Lcells_offset:
  movem.l %d2-%d7/%a2-%a5,-(%sp)
  move.l 44(%sp),%a0
  move.l 48(%sp),%a1
@@ -97,7 +104,7 @@ asm_cells:
  move.l 56(%sp),%d7
  move.l 60(%sp),%d6
  move.l 64(%sp),%d5
- moveq #0,%d4
+ move.l %d1,%d4
  tst.l %d7
  beq 4f
 1: moveq #0,%d0
@@ -118,8 +125,10 @@ asm_cells:
  move.l %d0,%a5
  lsr.b %d2,%d0
  or.b %d0,(%a4)
- tst.w %d2
- beq 3f
+ /* A fitting glyph must not touch the next byte, even with a zero OR:
+    the last scanline may end exactly at the staging-buffer boundary. */
+ cmp.w %d5,%d3
+ bge 3f
  move.l %a5,%d0
  lsl.b %d3,%d0
  or.b %d0,1(%a4)
@@ -196,6 +205,87 @@ asm_cells:
  jsr asm_ascii_cells
  lea 24(%sp),%sp
 .Lascii_done:
+ movem.l (%sp)+,%d2-%d7/%a2-%a6
+ rts
+
+/* Four-glyph groups emitted at a 1..7 bit offset. C bounds the count and
+   clears the first/carry-tail bytes. Overlapping stores preserve prior groups;
+   every word/long access is even, including odd-byte destination groups. */
+.globl asm_ascii_groups_at
+asm_ascii_groups_at:
+ movem.l %d2-%d7/%a2-%a6,-(%sp)
+ move.l 48(%sp),%a0
+ move.l 52(%sp),%a1
+ move.l 56(%sp),%a2
+ suba.l #1024,%a2
+ move.l 60(%sp),%d6
+ lsr.l #2,%d6
+ moveq #6,%d4
+ sub.l 64(%sp),%d4
+.Ldirect_group:
+ moveq #0,%d0
+ move.b (%a1)+,%d0
+ lsl.w #5,%d0
+ lea (%a2,%d0.w),%a3
+ move.b (%a1)+,%d0
+ andi.w #255,%d0
+ lsl.w #5,%d0
+ lea (%a2,%d0.w),%a4
+ move.b (%a1)+,%d0
+ andi.w #255,%d0
+ lsl.w #5,%d0
+ lea (%a2,%d0.w),%a5
+ move.b (%a1)+,%d0
+ andi.w #255,%d0
+ lsl.w #5,%d0
+ lea (%a2,%d0.w),%a6
+ moveq #10,%d5
+ move.l %a0,%d0
+ btst #0,%d0
+ bne .Ldirect_odd
+.macro direct_scan odd
+.Ldirect_scan\@:
+ moveq #0,%d0
+ move.b (%a3)+,%d0
+ lsl.l #6,%d0
+ or.b (%a4)+,%d0
+ lsl.l #6,%d0
+ or.b (%a5)+,%d0
+ lsl.l #6,%d0
+ or.b (%a6)+,%d0
+ tst.w %d4
+ bmi .Ldirect_right\@
+ lsl.l %d4,%d0
+ bra .Ldirect_store\@
+.Ldirect_right\@:
+ lsr.l #1,%d0
+.Ldirect_store\@:
+ moveq #0,%d1
+.if \odd
+ move.w -1(%a0),%d1
+ swap %d1
+ move.l %d0,%d2
+ lsr.l #8,%d2
+ or.l %d1,%d2
+ move.l %d2,-1(%a0)
+ move.b %d0,3(%a0)
+.else
+ move.b (%a0),%d1
+ ror.l #8,%d1
+ or.l %d1,%d0
+ move.l %d0,(%a0)
+.endif
+ lea 64(%a0),%a0
+ dbra %d5,.Ldirect_scan\@
+.endm
+ direct_scan 0
+ bra .Ldirect_next
+.Ldirect_odd:
+ direct_scan 1
+.Ldirect_next:
+ lea -701(%a0),%a0
+ subq.w #1,%d6
+ bne .Ldirect_group
  movem.l (%sp)+,%d2-%d7/%a2-%a6
  rts
 

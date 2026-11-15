@@ -18,3 +18,5 @@ int cli_native_create(const char *,unsigned long,unsigned long),cli_native_open(
 
 int cli_isatty(int);
 void app_progress(const char *,int);
+
+int app_columns(void);

@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "../update/identity.h"
 #include "../update/manifest.h"
+#include "../update/confirmation.h"
 #include "../update/extract.h"
 static void verification_failure(const char *phase,uint32_t want,uint32_t have){char text[128];snprintf(text,sizeof text,"%s mismatch: expected %08lx, read %08lx.\n",phase,(unsigned long)want,(unsigned long)have);errsay(text);}
 #define UPDATE_VERIFY_REPORT(phase,want,have) verification_failure(phase,want,have)
@@ -46,12 +47,12 @@ static int install_helper(const char *path){
  if(e){int x=cli_native_delete(path);if(x)error("retained incomplete updater helper",x);}return e;
 }
 int clarice_main(int argc,char **argv){
- int check=0,e=0,staged=0,planned=0,handed=0;short in=-1;
+ int check=0,assume_yes=0,e=0,staged=0,planned=0,handed=0;short in=-1;
  char source[768]="",manifest_file[PATH_CAP]="",package_file[PATH_CAP]="",text[1024],own[256],helper[PATH_CAP],plan_path[PATH_CAP],canonical[PATH_CAP];
  UpdateManifest m;UpdatePlan plan;memset(&plan,0,sizeof plan);
- if(argc==2&&!strcmp(argv[1],"--help")){say("usage: clarice update [--check] [--source http://IPv4:port/update.txt]\nUses /etc/clarice/update.conf (one source URL). Private HTTP only.\nChecks for a newer 68000-compatible application, verifies both forks,\nasks before replacing, retains the previous version and restarts automatically.\n--check downloads only the source index and makes no application changes.\n");return 0;}
- if(argc<2||strcmp(argv[1],"update")){errsay("usage: clarice update [--check] [--source URL]\n");return 2;}
- for(int i=2;i<argc;i++){if(!strcmp(argv[i],"--check")&&!check)check=1;else if(!strcmp(argv[i],"--source")&&i+1<argc&&!source[0]){if(strlen(argv[++i])>=sizeof source)return 2;strcpy(source,argv[i]);}else return 2;}
+ if(argc==2&&!strcmp(argv[1],"--help")){say("usage: clarice update [-y] [--check] [--source http://IPv4:port/update.txt]\nUses /etc/clarice/update.conf (one source URL). Private HTTP only.\nChecks for a newer 68000-compatible application, verifies both forks,\nasks before replacing, retains the previous version and relaunches Clarice automatically.\n-y accepts without prompting; verification and recovery are unchanged.\n--check downloads only the source index and makes no application changes.\n");return 0;}
+ if(argc<2||strcmp(argv[1],"update")){errsay("usage: clarice update [-y] [--check] [--source URL]\n");return 2;}
+ for(int i=2;i<argc;i++){if(!strcmp(argv[i],"-y"))assume_yes=1;else if(!strcmp(argv[i],"--check")&&!check)check=1;else if(!strcmp(argv[i],"--source")&&i+1<argc&&!source[0]){if(strlen(argv[++i])>=sizeof source)return 2;strcpy(source,argv[i]);}else return 2;}
  if(!source[0]){e=read_text("/etc/clarice/update.conf",source,sizeof source);if(e){errsay("Configure /etc/clarice/update.conf with the private update URL, or use --source URL.\n");goto done;}size_t n=strlen(source);while(n&&(source[n-1]=='\n'||source[n-1]=='\r'))source[--n]=0;}
  if(strncmp(source,"http://",7)||strchr(source,'\n')||strchr(source,'\r')||!strrchr(source,'/')){e=paramErr;goto done;}
  char host[32];const char *slash=strchr(source+7,'/');size_t hostlen=slash?(size_t)(slash-source-7):0;
@@ -62,7 +63,7 @@ int clarice_main(int argc,char **argv){
  SysEnvRec env;e=SysEnvirons(1,&env);if(e)goto done;if(m.system>(unsigned short)env.systemVersion){errsay("Update requires a newer Macintosh system.\n");e=paramErr;goto done;}
  snprintf(text,sizeof text,"Installed build %lu; source %s (build %lu).\n",(unsigned long)current,m.version,(unsigned long)m.build);say(text);
  if(m.build<=current){say("No newer compatible update; no downgrade performed.\n");goto done;}if(check)goto done;
- if(!cli_isatty(0)||!cli_isatty(1)){errsay("Updates require an interactive terminal for confirmation.\n");e=paramErr;goto done;}
+ if(!assume_yes&&(!cli_isatty(0)||!cli_isatty(1))){errsay("Updates require an interactive terminal for confirmation, or -y.\n");e=paramErr;goto done;}
  snprintf(text,sizeof text,"/etc/clarice/%s",update_helper_leaf);e=checked(text,helper,canonical,0);if(e)goto done;e=checked("/etc/clarice/" UPDATE_PLAN_NAME,plan_path,canonical,0);if(e)goto done;e=absent(plan_path);if(e){errsay("An unfinished update plan exists; recovery is required before another update.\n");goto done;}
  strcpy(plan.target,own);CInfoPBRec original;e=info(own,&original);if(e)goto done;if(original.hFileInfo.ioFlAttrib&17){e=permErr;goto done;}
  plan.original_id=original.hFileInfo.ioDirID;plan.original_modified=original.hFileInfo.ioFlMdDat;plan.build=m.build;
@@ -82,10 +83,19 @@ int clarice_main(int argc,char **argv){
  plan.data_crc=ex.hashes[0];plan.resource_crc=ex.hashes[1];snprintf(text,sizeof text,"Staging: %lu ticks.\n",TickCount()-stage_start);say(text);say("Checking staged application...\n");unsigned long verify_start=TickCount();e=update_verify_candidate(plan.stage,&plan);snprintf(text,sizeof text,"Staged verification: %lu ticks.\n",TickCount()-verify_start);say(text);if(e)goto done;
  say("Preparing independent updater...\n");e=install_helper(helper);if(e)goto done;if((e=update_flush(plan.stage)))goto done;
  snprintf(text,sizeof text,"Verified %s.\n",m.version);say(text);
- say("Installation and automatic restart may take a minute.\nDO NOT reset or switch off the Macintosh.\nThe previous application will be retained for recovery.\n");
- errsay("Replace and restart? Type yes to continue: ");char answer[32];long got=cli_read(0,answer,sizeof answer-1);if(got<0){e=userCanceledErr;goto done;}answer[got]=0;size_t len=strlen(answer);while(len&&(answer[len-1]=='\r'||answer[len-1]=='\n'))answer[--len]=0;if(strcmp(answer,"yes")){say("Update cancelled; installed application unchanged.\n");goto done;}
+ say("Only Clarice will close, install and relaunch.\nThis may take a minute; do not reset or switch off the Mac.\nThe previous application is retained for recovery.\n");
+ if(!assume_yes){
+  int accept=-1;
+  while(accept<0){errsay("Install update and relaunch Clarice? [Y/n]\n");term_present();
+   char answer[32];long got=cli_read(0,answer,sizeof answer);
+   if(got<0){e=userCanceledErr;goto done;}accept=update_confirmation(answer,got);
+   if(accept<0)errsay("Please enter y or n (Enter accepts).\n");
+  }
+  if(!accept){say("Update cancelled; installed application unchanged.\n");goto done;}
+ }
+
  unsigned char encoded[UPDATE_PLAN_SIZE];e=update_plan_encode(&plan,encoded);if(e)goto done;e=cli_native_create(plan_path,'DATA','CLUP');if(e)goto done;planned=1;short out;e=cli_native_open(plan_path,0,1,&out);if(!e){e=io_write(out,encoded,sizeof encoded);int x=FSClose(out);if(!e)e=x;}if(!e)e=update_flush(plan_path);if(e)goto done;
- say("Restarting through the independent updater...\n");e=app_update_handoff(helper);if(!e)handed=1;
+ say("Closing Clarice now. Please wait for automatic relaunch.\n");term_present();e=app_update_handoff(helper);if(!e)handed=1;
 done:
  if(in>=0)FSClose(in);
  if(!handed){if(planned){int x=cli_native_delete(plan_path);if(x)error("retained update plan",x);}if(staged){

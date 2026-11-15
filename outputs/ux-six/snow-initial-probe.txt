@@ -1,0 +1,33 @@
+PASS launch window in front
+PASS Command-C selected text
+PASS Command-V at insertion point
+PASS foreground ordered typeahead editing
+PASS foreground paste queued atomically
+PASS queued paste newline never submits
+PASS busy paste overflow fails closed
+PASS loading typeahead transferred to editor
+PASS pinwheel inverse background
+PASS hardware snapshot stock mono 4 MB and no retained allocation
+hardware 20 calls=26 ticks model=Macintosh Plus cpu=1 fpu=0 system=607
+PASS physical Ctrl-X editor
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS physical Ctrl-X editor
+FAIL Option-W uses keyboard map not accented character
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS physical Ctrl-X editor
+PASS Command-X maps to Ctrl-X
+FAIL Command-Option-C editor control not local abort
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS scrollback fills last row, no pinned prompt/cursor
+PASS copy includes last history row
+PASS shifted typing returns live and retains key
+PASS paste returns live and retains contents
+PASS theme immediately fills margins, preserves input and history
+PASS theme immediately fills margins, preserves input and history
+failures=2 heap=408758

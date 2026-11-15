@@ -131,7 +131,7 @@ say(b);snprintf(b,sizeof b,"Verification ticks: mode=%s header=%lu record=%lu pa
  else if(!strcmp(av[0],"status")){if(argc>2||(argc==2&&strcmp(av[1],"-h"))){say("usage: status [-h]\n");status=2;}else app_metrics(argc==2);}
  else if(!strcmp(av[0],"scrollbench"))status=app_scroll_bench(
 #ifdef CLARICE_DRAW_DIAGNOSTICS
- argc>1&&!strcmp(av[1],"alignpixels")?14:argc>1&&!strcmp(av[1],"alignment")?13:argc>1&&!strcmp(av[1],"present")?12:argc>1&&!strcmp(av[1],"clearing")?11:argc>1&&!strcmp(av[1],"glyphpixels")?10:argc>1&&!strcmp(av[1],"jumps")?9:argc>1&&!strcmp(av[1],"frames")?8:argc>1&&!strcmp(av[1],"listing")?7:argc>1&&!strcmp(av[1],"catalog")?6:argc>1&&!strcmp(av[1],"dispatch")?5:argc>1&&!strcmp(av[1],"profile")?4:
+ argc>1&&!strcmp(av[1],"directpixels")?16:argc>1&&!strcmp(av[1],"direct")?15:argc>1&&!strcmp(av[1],"alignpixels")?14:argc>1&&!strcmp(av[1],"alignment")?13:argc>1&&!strcmp(av[1],"present")?12:argc>1&&!strcmp(av[1],"clearing")?11:argc>1&&!strcmp(av[1],"glyphpixels")?10:argc>1&&!strcmp(av[1],"jumps")?9:argc>1&&!strcmp(av[1],"frames")?8:argc>1&&!strcmp(av[1],"listing")?7:argc>1&&!strcmp(av[1],"catalog")?6:argc>1&&!strcmp(av[1],"dispatch")?5:argc>1&&!strcmp(av[1],"profile")?4:
 #endif
  argc>1&&!strcmp(av[1],"cached")?3:argc>1&&!strcmp(av[1],"native")?2:argc>1&&!strcmp(av[1],"quick"));
  else if(!strcmp(av[0],"prefs"))status=app_preferences(argc,av);

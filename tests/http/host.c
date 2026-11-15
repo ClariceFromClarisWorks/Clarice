@@ -5,6 +5,7 @@ static unsigned char response[16384],saved[16384];
 static unsigned length,pos,bytes,ticks,calls;
 static int exists,temporary,committed,network,stop,stall,write_error,close_error,rename_error,create_error,cleanup_error;
 static char diagnostics[4096];
+int app_columns(void){return 80;}
 int cli_isatty(int fd){(void)fd;return 0;}
 void app_progress(const char *s,int done){(void)s;(void)done;assert(0);}
 int app_yield(void){return stop&&++calls>5;}

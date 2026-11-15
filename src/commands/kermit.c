@@ -21,12 +21,15 @@ static void message(int fd,const char *format,...){
 }
 #define progress_clock ticks
 #ifdef KERMIT_HOST
+#include <sys/ioctl.h>
 #define progress_tty() isatty(2)
-static void progress_row(const char *s,int done){message(2,"\r%-70s%s",s,done?"\n":"");}
+static int progress_columns(void){struct winsize w;return !ioctl(2,TIOCGWINSZ,&w)&&w.ws_col?w.ws_col:80;}
+static void progress_row(const char *s,int done){message(2,"\r\033[K%s%s",s,done?"\n":"");}
 #else
-extern int cli_isatty(int);
+extern int cli_isatty(int),app_columns(void);
 #define progress_tty() cli_isatty(2)
 #define progress_row app_progress
+#define progress_columns app_columns
 #endif
 #include "progress.h"
 static unsigned long transfer_size,transfer_bytes;
@@ -109,7 +112,7 @@ int clarice_main(int argc,char **argv){
  if(status==X_DONE&&completed&&!io_failed&&!cancelled)result=0;
  if(cancelled)result=130;
 end:
- if(progress_enabled){progress_update(transfer_bytes,transfer_size,transfer_size_known,1);progress_enabled=0;}
+ if(progress_enabled){progress_update(transfer_bytes,transfer_size,transfer_size_known,result?-1:1);progress_enabled=0;}
  e=file_close();if(e)result=1;
  if(owned&&file_finish(0)) {message(2,"kermit: temporary cleanup failed: %s\n",temporary);result=1;}
  e=transport_close();if(e){message(2,"kermit: serial cleanup failed (%d)\n",e);result=1;}

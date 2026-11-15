@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include "reflow.h"
 #include "display-size.h"
+#include "hardware.h"
+#include "update/version.h"
 #ifdef CLARICE_UPDATE_DIAGNOSTICS
 static void handoff_trace(const char *s){unsigned char p[]="\053Sys6Unix:HIL Results:handoff-trace.txt";p[0]=strlen((char*)p+1);short ref;Create(p,0,'CLRC','TEXT');if(!FSOpen(p,0,&ref)){SetFPos(ref,fsFromLEOF,0);long n=strlen(s);FSWrite(ref,&n,s);n=1;FSWrite(ref,&n,"\n");FSClose(ref);FlushVol(0,0);}}
 #define UPDATE_LAUNCH_TRACE(s) handoff_trace(s)
@@ -90,6 +92,8 @@ static long initial_free;
 static SysEnvRec system_info;
 static short font_id=4,font_size=9,cell_w=6,line_h=12,font_ascent=9;
 static int mono=1,inverse,page_mode=1,paging,page_action;
+static int control_mode=1; /* Option substitution preserves existing Plus behaviour. */
+#include "control-keys.h"
 static int native_glyph_valid;
 static long page_start;
 static char prefs_path[PATH_CAP];
@@ -133,6 +137,7 @@ static void input_position(int lead,int end,int *row,int *col){
  int r=lead/columns,c=lead%columns;for(int i=0;i<end;i++){if(input[i]=='\n'){r++;c=0;}else if(++c==columns){r++;c=0;}}*row=r;*col=c;
 }
 static void compose_input(char screen[40][COLS],long *first,int *prompt){
+ if(scrollback){*first=current_line-visible-scrollback;if(*first<oldest_line)*first=oldest_line;*prompt=visible+1;memset(screen,0,40*COLS);for(int r=0;r<=visible;r++){long line=*first+r;if(line>=oldest_line&&line<=current_line)memcpy(screen[r],text[line%ROWS],columns);}return;}
  char prefix[132];int lead=prompt_prefix(prefix),rows=1,i,start=0,cr=0,cc=0;
  int editing=(!busy||tty_reading)&&!searching;
  if(editing){int r,c;input_position(lead,strlen(input),&r,&c);rows=r+1;input_position(lead,cursor,&cr,&cc);
@@ -192,8 +197,8 @@ void app_metrics(int human){char b[256],free_size[32],launch_size[32];
 static void layout(void){activity_hide();Rect r=win->portRect;int previous_columns=columns,previous_visible=visible;columns=(r.right-TEXT_LEFT-16)/cell_w;if(columns>COLS-2)columns=COLS-2;if(columns<1)columns=1;
  /* Use every complete row, from the content top through the bottom prompt. */
  visible=(r.bottom-TEXT_TOP)/line_h-1;if(visible<1)visible=1;if(visible>37)visible=37;
- if(previous_columns!=columns){TerminalReflow *next=(TerminalReflow*)NewPtr(sizeof *next);if(next){long anchor=current_line-previous_visible+1-scrollback;if(anchor<oldest_line)anchor=oldest_line;
- terminal_reflow(next,text,wrapped,oldest_line,current_line,anchor,columns,retained);memcpy(text,next->lines,sizeof text);memcpy(wrapped,next->wraps,sizeof wrapped);current_line=next->end;oldest_line=next->oldest;out_col=next->column;if(scrollback){scrollback=current_line-visible+1-next->anchor;if(scrollback<0)scrollback=0;}DisposePtr((Ptr)next);page_start=current_line;select_start=select_end=-1;}}
+ if(previous_columns!=columns){TerminalReflow *next=(TerminalReflow*)NewPtr(sizeof *next);if(next){long anchor=current_line-previous_visible-scrollback;if(anchor<oldest_line)anchor=oldest_line;
+ terminal_reflow(next,text,wrapped,oldest_line,current_line,anchor,columns,retained);memcpy(text,next->lines,sizeof text);memcpy(wrapped,next->wraps,sizeof wrapped);current_line=next->end;oldest_line=next->oldest;out_col=next->column;if(scrollback){scrollback=current_line-visible-next->anchor;if(scrollback<0)scrollback=0;}DisposePtr((Ptr)next);page_start=current_line;select_start=select_end=-1;}}
  force_draw=dirty=1;if(scrollback>scroll_limit())scrollback=scroll_limit();if(history_bar){MoveControl(history_bar,r.right-15,0);SizeControl(history_bar,16,r.bottom-14);}}
 
 static void font_layout(void){native_glyph_valid=0;FontInfo f;int c;SetPort(win);TextFont(font_id);TextSize(font_size);TextFace(0);GetFontInfo(&f);font_ascent=f.ascent;line_h=f.ascent+f.descent+f.leading;if(line_h<1)line_h=12;cell_w=CharWidth('M');mono=1;for(c=32;c<127;c++){int w=CharWidth(c);if(w!=cell_w)mono=0;}if(!mono)cell_w=f.widMax;if(cell_w<1)cell_w=6;layout();build_font_cache();}
@@ -286,7 +291,7 @@ static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((ali
  /* Copy overlapping pixels without ScrollRect's exposed-area erase. Rows are
     composed offscreen below, so a scroll never blanks text before replacing it.
     Obscured/partially clipped views redraw from the bounded text model. */
- if(!force_draw&&select_start<0&&!scroll_area_has_caret()&&prompt_row==visible&&drawn_prompt==visible&&first!=drawn_first&&labs(first-drawn_first)<visible&&prefer_pixel_scroll(screen,(int)(first-drawn_first))){
+ if(!force_draw&&select_start<0&&!scroll_area_has_caret()&&prompt_row>=visible&&drawn_prompt>=visible&&first!=drawn_first&&labs(first-drawn_first)<visible&&prefer_pixel_scroll(screen,(int)(first-drawn_first))){
   int shift=(int)(first-drawn_first);
   if(scroll_window_rows(shift)){
    ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);
@@ -306,7 +311,7 @@ static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((ali
  if(force_draw)erase_margins();
  /* Configure the reusable row port once per paint, not once per row. */
  if(line_h<=64){SetPort(&prompt_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);SetPort(win);}
- for(row=0;row<visible+1;row++){DRAW_STAMP(plan_start);int selected=selection_a>=0&&selection_b>selection_a&&row<visible;if(force_draw||(FRAME_LEGACY?memcmp(last_screen[row],screen[row],COLS):asm_terminal_row_changed(last_screen[row],screen[row]))||selected){Rect area,destination;char rendered[COLS];int left=0,right=columns,buffered=line_h<=64;
+ for(row=0;row<visible+1;row++){DRAW_STAMP(plan_start);int selected=selection_a>=0&&selection_b>selection_a&&row<visible+(scrollback!=0);if(force_draw||(FRAME_LEGACY?memcmp(last_screen[row],screen[row],COLS):asm_terminal_row_changed(last_screen[row],screen[row]))||selected){Rect area,destination;char rendered[COLS];int left=0,right=columns,buffered=line_h<=64;
  if(!force_draw&&!selected){while(left<right&&last_screen[row][left]==screen[row][left])left++;while(right>left&&last_screen[row][right-1]==screen[row][right-1])right--;
   /* Include both composed cursor cells without repainting the whole prompt. */
   int old=(unsigned char)last_screen[row][COLS-1]-1,now=(unsigned char)screen[row][COLS-1]-1;
@@ -324,7 +329,8 @@ static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((ali
  jump_detail[1]+=TickCount()-prepare_start;
 #endif
  DRAW_STAMP(text_start);
- if(!force_draw&&buffered&&row<prompt_row&&!selected&&!screen[row][COLS-1]&&(!last_screen[row][COLS-1]||(unsigned char)last_screen[row][COLS-1]==255)&&native_glyph_row(rendered+left,right-left)){OffsetRect(&area,-area.left,0);}
+ int glyph_phase=0;if(!DIRECT_LEGACY&&!ALIGN_LEGACY&&buffered&&(right-left)*cell_w>=128&&!(win->portBits.rowBytes&0xc000)&&(win->portBits.rowBytes&0x3fff)==64){glyph_phase=(destination.left-win->portBits.bounds.left)&15;if(glyph_phase+(right-left)*cell_w>512)glyph_phase=0;}
+ if(!force_draw&&buffered&&row<prompt_row&&!selected&&!screen[row][COLS-1]&&(!last_screen[row][COLS-1]||(unsigned char)last_screen[row][COLS-1]==255)&&native_glyph_row(rendered+left,right-left,glyph_phase)){OffsetRect(&area,glyph_phase-area.left,0);}
  else {EraseRect(&area);if(mono){int len=right;while(len>left&&rendered[len-1]==' ')len--;MoveTo(area.left,area.top+font_ascent);if(len>left)DrawText(rendered,left,len-left);}else for(x=left;x<right;x++){MoveTo((buffered?0:TEXT_LEFT)+x*cell_w,area.top+font_ascent);DrawChar(rendered[x]);}}
 
 #ifdef CLARICE_DRAW_DIAGNOSTICS
@@ -342,7 +348,7 @@ extern void asm_copy_rows(unsigned char *,const unsigned char *,long,long,long,l
 static void cells_c(unsigned char *dst,const unsigned char *s,const unsigned char *glyph,long n,long h,long w){
  long c,y;for(c=0;c<n;c++){unsigned int bit=c*w,shift=bit&7;unsigned char *d=dst+(bit>>3);const unsigned char *g=glyph+((unsigned long)s[c]<<5);for(y=0;y<h;y++){d[y*STRIDE]|=g[y]>>shift;if(shift)d[y*STRIDE+1]|=g[y]<<(8-shift);}}
 }
-static int scroll_limit(void){long newest=current_line-visible+1,oldest=oldest_line;if(newest<0)newest=0;if(oldest<0)oldest=0;return newest>oldest?(int)(newest-oldest):0;}
+static int scroll_limit(void){long newest=current_line-visible,oldest=oldest_line;if(newest<0)newest=0;if(oldest<0)oldest=0;return newest>oldest?(int)(newest-oldest):0;}
 /* Test-only readback: verify that composing text/control updates never
    changes the live bar before the single completed-control copy. */
 static int bar_snapshot(unsigned short *saved,int compare){
@@ -431,7 +437,7 @@ static void draw_cached(void){
  unsigned long stamp=TickCount();char screen[40][COLS];int row,x,lo=40,hi=0,xmin=columns,xmax=0,prompt=visible;long first=current_line-visible+1-scrollback;if(first<0){first=0;prompt=(int)current_line;}
  compose_input(screen,&first,&prompt);
  profile[0]+=TickCount()-stamp;stamp=TickCount();
- if(!force_draw&&select_start<0&&!scroll_area_has_caret()&&!((render_mode==1||DRAW_LEGACY)&&last_screen[visible][COLS-1])&&prompt==visible&&drawn_prompt==visible&&first!=drawn_first&&prefer_pixel_scroll(screen,(int)(first-drawn_first))){long d=first-drawn_first;int moved=!DRAW_LEGACY&&d&&labs(d)<visible?scroll_window_rows((int)d):0;if(d>0&&d<visible){if(render_mode==2){asm_copy_rows(frame_pixels,frame_pixels+d*line_h*STRIDE,STRIDE,(visible-d)*line_h,STRIDE,STRIDE);asm_copy_rows((unsigned char*)last_screen,(unsigned char*)(last_screen+d),COLS,visible-d,COLS,COLS);}else{memmove(frame_pixels,frame_pixels+d*line_h*STRIDE,(visible-d)*line_h*STRIDE);memmove(last_screen,last_screen+d,(visible-d)*COLS);}memset(last_screen+visible-d,255,d*COLS);if(!moved){lo=0;hi=visible;xmin=0;xmax=columns;}}else if(d<0&&-d<visible){d=-d;if(render_mode==2){asm_copy_rows(frame_pixels+(visible*line_h-1)*STRIDE,frame_pixels+((visible-d)*line_h-1)*STRIDE,STRIDE,(visible-d)*line_h,-STRIDE,-STRIDE);asm_copy_rows((unsigned char*)last_screen[visible-1],(unsigned char*)last_screen[visible-d-1],COLS,visible-d,-COLS,-COLS);}else{memmove(frame_pixels+d*line_h*STRIDE,frame_pixels,(visible-d)*line_h*STRIDE);memmove(last_screen+d,last_screen,(visible-d)*COLS);}memset(last_screen,255,d*COLS);if(!moved){lo=0;hi=visible;xmin=0;xmax=columns;}}}
+ if(!force_draw&&select_start<0&&!scroll_area_has_caret()&&!((render_mode==1||DRAW_LEGACY)&&last_screen[visible][COLS-1])&&prompt>=visible&&drawn_prompt>=visible&&first!=drawn_first&&prefer_pixel_scroll(screen,(int)(first-drawn_first))){long d=first-drawn_first;int moved=!DRAW_LEGACY&&d&&labs(d)<visible?scroll_window_rows((int)d):0;if(d>0&&d<visible){if(render_mode==2){asm_copy_rows(frame_pixels,frame_pixels+d*line_h*STRIDE,STRIDE,(visible-d)*line_h,STRIDE,STRIDE);asm_copy_rows((unsigned char*)last_screen,(unsigned char*)(last_screen+d),COLS,visible-d,COLS,COLS);}else{memmove(frame_pixels,frame_pixels+d*line_h*STRIDE,(visible-d)*line_h*STRIDE);memmove(last_screen,last_screen+d,(visible-d)*COLS);}memset(last_screen+visible-d,255,d*COLS);if(!moved){lo=0;hi=visible;xmin=0;xmax=columns;}}else if(d<0&&-d<visible){d=-d;if(render_mode==2){asm_copy_rows(frame_pixels+(visible*line_h-1)*STRIDE,frame_pixels+((visible-d)*line_h-1)*STRIDE,STRIDE,(visible-d)*line_h,-STRIDE,-STRIDE);asm_copy_rows((unsigned char*)last_screen[visible-1],(unsigned char*)last_screen[visible-d-1],COLS,visible-d,-COLS,-COLS);}else{memmove(frame_pixels+d*line_h*STRIDE,frame_pixels,(visible-d)*line_h*STRIDE);memmove(last_screen+d,last_screen,(visible-d)*COLS);}memset(last_screen,255,d*COLS);if(!moved){lo=0;hi=visible;xmin=0;xmax=columns;}}}
  profile[1]+=TickCount()-stamp;stamp=TickCount();
  SetPort(&frame_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(blackColor);BackColor(whiteColor);
  for(row=0;row<visible+1;row++)if(force_draw||memcmp(screen[row],last_screen[row],COLS)||select_start>=0){
@@ -441,7 +447,7 @@ static void draw_cached(void){
   if(glyph_ready){int y,n=right-left;unsigned char *dst=pixels+left*cell_w/8;for(y=0;y<line_h;y++)memset(dst+y*STRIDE,0,((right-left)*cell_w+7)/8);while(n&&(!screen[row][left+n-1]||screen[row][left+n-1]==' '))n--;if(render_mode==2)asm_cells(dst,(unsigned char*)screen[row]+left,glyph_cache,n,line_h,cell_w);else cells_c(dst,(unsigned char*)screen[row]+left,glyph_cache,n,line_h,cell_w);}
   else{memset(pixels,0,line_h*STRIDE);char rendered[COLS];for(x=0;x<columns;x++)rendered[x]=screen[row][x]?screen[row][x]:' ';if(mono){MoveTo(0,r.top+font_ascent);DrawText(rendered,0,columns);}else for(x=0;x<columns;x++){MoveTo(x*cell_w,r.top+font_ascent);DrawChar(rendered[x]);}}
   if(inverse)InvertRect(&r);
-  int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end;if(a>=0&&row<visible)for(x=0;x<columns;x++)if(row*columns+x>=a&&row*columns+x<z){Rect q;SetRect(&q,x*cell_w,r.top,(x+1)*cell_w,r.bottom);InvertRect(&q);}
+  int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end;if(a>=0&&row<visible+(scrollback!=0))for(x=0;x<columns;x++)if(row*columns+x>=a&&row*columns+x<z){Rect q;SetRect(&q,x*cell_w,r.top,(x+1)*cell_w,r.bottom);InvertRect(&q);}
   if(screen[row][COLS-1]){int cx=(unsigned char)screen[row][COLS-1]-1;Rect caret;SetRect(&caret,cx*cell_w,r.top,(cx+1)*cell_w,r.bottom);InvertRect(&caret);}
   if(left<xmin)xmin=left;if(right>xmax)xmax=right;if(row<lo)lo=row;if(row+1>hi)hi=row+1;memcpy(last_screen[row],screen[row],COLS);
  }
@@ -498,7 +504,9 @@ static int native_scroll_check(int cached){
 /* Executed inside the 68000 guest, not host timing or inferred performance. */
 int app_scroll_bench(int quick){
 #ifdef CLARICE_DRAW_DIAGNOSTICS
- if(quick==14)return alignment_pixels();
+ if(quick==16)return alignment_pixels(1);
+ if(quick==15)return jump_probe(3);
+ if(quick==14)return alignment_pixels(0);
  if(quick==13)return jump_probe(2);
  if(quick==12)return presentation_probe();
  if(quick==11)return jump_probe(1);
@@ -520,7 +528,7 @@ int app_scroll_bench(int quick){
  for(w=1;w<=64;w++){for(i=0;i<4096;i++)a[i]=(unsigned char)(i*13+7);memset(b,0,4096);asm_copy_rows(b+16,a+16,w,5,64,64);for(i=0;i<4096;i++){int row=(i-16)/64,col=(i-16)%64;unsigned char want=i>=16&&row<5&&col<w?a[i]:0;if(b[i]!=want){failed++;break;}}}
  DisposePtr((Ptr)a);DisposePtr((Ptr)b);
  /* Retention/wrap and anchored-view checks use the production ring operations. */
- for(w=32;w<=128;w*=2){retained=w;app_clear();for(i=0;i<300;i++)term_puts("ring test\n");if(oldest_line!=current_line-w+1||scroll_limit()!=w-visible)failed++;scrollback=5;long first=current_line-visible+1-scrollback;newline();if(current_line-visible+1-scrollback!=first)failed++;scrollback=scroll_limit();long oldest=oldest_line;newline();if(oldest_line!=oldest+1||scrollback!=scroll_limit())failed++;retained=128;if(oldest_line!=oldest+1)failed++;}
+ for(w=32;w<=128;w*=2){retained=w;app_clear();for(i=0;i<300;i++)term_puts("ring test\n");if(oldest_line!=current_line-w+1||scroll_limit()!=w-visible-1)failed++;scrollback=5;long first=current_line-visible+1-scrollback;newline();if(current_line-visible+1-scrollback!=first)failed++;scrollback=scroll_limit();long oldest=oldest_line;newline();if(oldest_line!=oldest+1||scrollback!=scroll_limit())failed++;retained=128;if(oldest_line!=oldest+1)failed++;}
  render_mode=0;build_font_cache();long heap_off=FreeMem(),heap_on=0;for(i=0;i<4;i++){render_mode=2;build_font_cache();if(!frame_pixels)failed++;heap_on=FreeMem();render_mode=0;build_font_cache();if(FreeMem()!=heap_off)failed++;}render_mode=2;build_font_cache();
  retained=128;scrollback=0;select_start=select_end=-1;busy=1;cancelled=0;
  for(mode=0;mode<3&&!cancelled;mode++){render_mode=mode;force_draw=dirty=1;draw();if(mode==2)memset(profile,0,sizeof profile);for(run=0;run<runs&&!cancelled;run++){unsigned long start=TickCount();worst[mode][run]=0;for(i=0;i<frames&&!cancelled;i++){int x;for(x=0;x<columns;x++)line[x]=(char)('!'+(i*7+x*11)%90);line[columns]='\n';line[columns+1]=0;unsigned long t=TickCount();term_puts(line);term_present();unsigned long delta=TickCount()-t;if(delta>worst[mode][run])worst[mode][run]=delta;app_yield();}ticks[mode][run]=TickCount()-start;}}
@@ -550,7 +558,7 @@ static void fill_window(void);
 static void save_preferences(void);
 static void prefs_snapshot(struct ClaricePrefs *p){
  unsigned char font[256];Point origin={0,0};GetFontName(font_id,font);memcpy(p->font,font+1,font[0]);p->font[font[0]]=0;
- SetPort(win);LocalToGlobal(&origin);p->size=font_size;p->inverse=inverse;p->paging=page_mode;p->retained=retained;p->fill=filled;
+ SetPort(win);LocalToGlobal(&origin);p->size=font_size;p->inverse=inverse;p->paging=page_mode;p->retained=retained;p->fill=filled;p->control=control_mode;
  p->width=filled?normal_bounds.right-normal_bounds.left:win->portRect.right;p->height=filled?normal_bounds.bottom-normal_bounds.top:win->portRect.bottom;
  p->x=filled?normal_bounds.left:origin.h;p->y=filled?normal_bounds.top:origin.v;if(p->x<0)p->x=0;if(p->y<0)p->y=0;
 }
@@ -568,7 +576,7 @@ static void load_preferences(void){
   memcpy(p.font,d+9,d[8]);p.font[d[8]]=0;p.size=d[4];p.inverse=d[5];p.paging=d[6];if(n>=48){p.retained=d[7];}
   p.width=d[40]*256+d[41];p.height=d[42]*256+d[43];if(n==52){p.x=(short)((d[48]<<8)|d[49]);p.y=(short)((d[50]<<8)|d[51]);}legacy=1;
  }else if(!prefs_parse(&p,data,n))return;
- short id;pstr(name,p.font);if(installed_font(name,&id))font_id=id;font_size=p.size;inverse=p.inverse;page_mode=p.paging;retained=p.retained;
+ short id;pstr(name,p.font);if(installed_font(name,&id))font_id=id;font_size=p.size;inverse=p.inverse;page_mode=p.paging;retained=p.retained;control_mode=p.control;
  int maxw=qd.screenBits.bounds.right-8,maxh=qd.screenBits.bounds.bottom-44;
  if(p.width<180)p.width=180;if(p.width>maxw)p.width=maxw;if(p.height<100)p.height=100;if(p.height>maxh)p.height=maxh;
  SizeWindow(win,p.width,p.height,1);MoveWindow(win,p.x,p.y,1);
@@ -602,9 +610,9 @@ static void fill_window(void){if(!filled){Point origin={0,0};SetPort(win);LocalT
 static void dialog_text(DialogPtr d,short item,const char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);pstr(p,s);SetDialogItemText(h,p);}
 static void dialog_read(DialogPtr d,short item,char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);GetDialogItemText(h,p);memcpy(s,p+1,p[0]);s[p[0]]=0;}
 static ControlHandle dialog_control(DialogPtr d,short item){short type;Handle h;Rect r;GetDialogItem(d,item,&type,&h,&r);return (ControlHandle)h;}
-static MenuHandle pref_popup_menus[3];
-static int pref_popup_choices[3];
-static int popup_slot(int item){return item==5?0:item==12?1:2;}
+static MenuHandle pref_popup_menus[4];
+static int pref_popup_choices[4];
+static int popup_slot(int item){return item==5?0:item==12?1:item==14?2:3;}
 static pascal void draw_pref_popup(DialogPtr d,short item){
  short type;Handle h;Rect r;GrafPtr old;unsigned char title[256];int k=popup_slot(item);if(!pref_popup_menus[k])return;
  GetPort(&old);SetPort(d);GetDialogItem(d,item,&type,&h,&r);EraseRect(&r);FrameRect(&r);GetMenuItemText(pref_popup_menus[k],pref_popup_choices[k],title);
@@ -614,17 +622,18 @@ static int dialog_popup(DialogPtr d,int item,MenuHandle m,int selected){short ty
 static void popup_title(DialogPtr d,int item,MenuHandle m,int selected){short type;Handle h;Rect r;int k=popup_slot(item);pref_popup_menus[k]=m;pref_popup_choices[k]=selected;GetDialogItem(d,item,&type,&h,&r);SetDialogItem(d,item,userItem,(Handle)draw_pref_popup,&r);draw_pref_popup(d,item);}
 static void preferences_window(void){
  hide_caret();DialogPtr d=GetNewDialog(140,0,(WindowPtr)-1);if(!d){SysBeep(1);return;}
- MenuHandle fonts=GetMenuHandle(132),lines=GetMenuHandle(134),pages=GetMenuHandle(135);
- unsigned char name[256],other[256];char b[256];short item=0;int chosen=1,cap=retained==32?1:retained==64?2:3,page=page_mode+1;
+ MenuHandle fonts=GetMenuHandle(132),lines=GetMenuHandle(134),pages=GetMenuHandle(135),controls=GetMenuHandle(136);
+ unsigned char name[256],other[256];char b[256];short item=0;int chosen=1,cap=retained==32?1:retained==64?2:3,page=page_mode+1,ctrl=control_mode+1;
  GetFontName(font_id,name);for(int i=1;i<=CountMItems(fonts);i++){GetMenuItemText(fonts,i,other);if(other[0]==name[0]&&!memcmp(other+1,name+1,name[0]))chosen=i;}
  popup_title(d,5,fonts,chosen);snprintf(b,sizeof b,"%d",font_size);dialog_text(d,7,b);snprintf(b,sizeof b,"%d",columns);dialog_text(d,9,b);
- SetControlValue(dialog_control(d,10),inverse);SetControlValue(dialog_control(d,15),filled);popup_title(d,12,lines,cap);popup_title(d,14,pages,page);
+ SetControlValue(dialog_control(d,10),inverse);SetControlValue(dialog_control(d,15),filled);popup_title(d,12,lines,cap);popup_title(d,14,pages,page);popup_title(d,17,controls,ctrl);
  SelectDialogItemText(d,7,0,32767);
  while(item!=2){ModalDialog(0,&item);
   if(item==10||item==15){ControlHandle c=dialog_control(d,item);SetControlValue(c,!GetControlValue(c));}
   if(item==5){chosen=dialog_popup(d,5,fonts,chosen);popup_title(d,5,fonts,chosen);}
   if(item==12){cap=dialog_popup(d,12,lines,cap);popup_title(d,12,lines,cap);}
   if(item==14){page=dialog_popup(d,14,pages,page);popup_title(d,14,pages,page);}
+  if(item==17){ctrl=dialog_popup(d,17,controls,ctrl);popup_title(d,17,controls,ctrl);}
   if(item==1){char size[256],cols[256];short id;dialog_read(d,7,size);dialog_read(d,9,cols);GetMenuItemText(fonts,chosen,name);
    int n=preference_number(size),count=preference_number(cols);if(!installed_font(name,&id)||n<6||n>24||count<20||count>130){StopAlert(141,0);continue;}
    int want_fill=GetControlValue(dialog_control(d,15)),dark=GetControlValue(dialog_control(d,10));
@@ -636,7 +645,7 @@ static void preferences_window(void){
    if(change_columns&&(pixels<180||pixels>qd.screenBits.bounds.right-8)){SetPort(d);StopAlert(141,0);continue;}
    DisposeDialog(d);SetPort(win);if(filled&&(!want_fill||change_columns))fill_window();
    if(change_columns)SizeWindow(win,pixels,win->portRect.bottom,1);
-   font_id=id;font_size=n;retained=cap==1?32:cap==2?64:128;inverse=dark;page_mode=page-1;
+   font_id=id;font_size=n;retained=cap==1?32:cap==2?64:128;inverse=dark;page_mode=page-1;control_mode=ctrl-1;
    if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;scrollback=0;
    if(want_fill&&!filled)fill_window();font_layout();
    /* Closing a dialog invalidates only its former rectangle. Font/theme changes
@@ -647,7 +656,7 @@ static void preferences_window(void){
  DisposeDialog(d);SetPort(win);dirty=force_draw=1;
 }
 
-int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char name[256];GetFontName(font_id,name);if(name[0]>31)name[0]=31;name[name[0]+1]=0;snprintf(b,sizeof b,"Font %.31s, %d point; %d columns x %d rows\nColours %s; paging %s\n",name+1,font_size,columns,visible,inverse?"white on black":"black on white",page_mode==0?"off":page_mode==1?"screen":"100 lines");term_puts(b);snprintf(b,sizeof b,"Scrollback %d lines; rendering automatic\n",retained);term_puts(b);return 0;}
+int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char name[256];GetFontName(font_id,name);if(name[0]>31)name[0]=31;name[name[0]+1]=0;snprintf(b,sizeof b,"Font %.31s, %d point; %d columns x %d rows\nColours %s; paging %s\n",name+1,font_size,columns,visible,inverse?"white on black":"black on white",page_mode==0?"off":page_mode==1?"screen":"100 lines");term_puts(b);snprintf(b,sizeof b,"Scrollback %d lines; rendering automatic\nControl key: %s (physical Control always works)\n",retained,control_name(control_mode));term_puts(b);return 0;}
 
  if(!strcmp(argv[1],"window")){preferences_window();return 0;}
  if(!strcmp(argv[1],"fonts")){MenuHandle m=GetMenuHandle(132);short i;for(i=1;i<=CountMItems(m);i++){unsigned char name[256];GetMenuItemText(m,i,name);term_write((char*)name+1,name[0]);term_puts("\n");}return 0;}
@@ -655,6 +664,7 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
  else if(argc==3&&!strcmp(argv[1],"font")){unsigned char name[256];short id;pstr(name,argv[2]);if(!installed_font(name,&id)){term_puts("Font is not installed. Use prefs fonts.\n");return 2;}font_id=id;}
  else if(argc==3&&!strcmp(argv[1],"size")){int size=preference_number(argv[2]);if(size<6||size>24)return 2;font_size=size;}
  else if(argc==3&&!strcmp(argv[1],"colours")){if(!strcmp(argv[2],"dark"))inverse=1;else if(!strcmp(argv[2],"light"))inverse=0;else return 2;}
+ else if(argc==3&&!strcmp(argv[1],"control")){int k=control_parse(argv[2]);if(k<0)return 2;control_mode=k;}
  else if(argc==3&&!strcmp(argv[1],"paging")){if(!strcmp(argv[2],"off"))page_mode=0;else if(!strcmp(argv[2],"screen"))page_mode=1;else if(!strcmp(argv[2],"100"))page_mode=2;else return 2;}
  else if(argc==3&&!strcmp(argv[1],"scrollback")){int n=preference_number(argv[2]);if(n!=32&&n!=64&&n!=128)return 2;retained=n;if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;scrollback=0;}
 
@@ -665,8 +675,8 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
  else if(!strcmp(argv[1],"cache")||!strcmp(argv[1],"renderer")){term_puts("Rendering is selected automatically.\n");return 2;}
 #endif
  else if(argc==3&&!strcmp(argv[1],"columns")){int n=preference_number(argv[2]),width=n*cell_w+TEXT_LEFT+16;if(n<20||n>130||width>qd.screenBits.bounds.right-8){term_puts("Requested columns do not fit this screen/font.\n");return 2;}if(filled)fill_window();SizeWindow(win,width,win->portRect.bottom,1);}
- else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | scrollback 32/64/128 | paging off/screen/100 | columns N | fill]\n");return 2;}
- font_layout();save_preferences();return 0;}
+ else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | paging off/screen/100 | columns N | fill]\n");return 2;}
+ font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();term_present();return 0;}
 int app_yield(void){EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return cancelled||done;unsigned long t=TickCount();for(int i=0;i<16&&!cancelled&&!done;i++){if(!WaitNextEvent(everyEvent,&ev,0,0))break;handle(&ev);}event_ticks+=TickCount()-t;if(dirty&&TickCount()-last_paint>=output_paint_ticks){
 #ifdef CLARICE_DRAW_DIAGNOSTICS
 if(output_paint_ticks==listing_paint_interval&&out_col)listing_partial_frames++;
@@ -675,7 +685,7 @@ if(output_paint_ticks==listing_paint_interval&&out_col)listing_partial_frames++;
 /* Canonical terminal stdin: fixed 1 KiB queue, EOF on Ctrl-D, cancellable. */
 long app_terminal_read(void *data,unsigned long count){
  if(!count)return 0;
- if(tty_offset>=tty_count){EventRecord ev;tty_count=tty_offset=tty_ready=0;input[0]=0;cursor=0;tty_reading=1;activity_hide();dirty=1;
+ if(tty_offset>=tty_count){EventRecord ev;tty_count=tty_offset=tty_ready=0;input[0]=0;cursor=0;tty_reading=1;scrollback=0;activity_hide();dirty=1;
   while(!tty_ready&&!cancelled&&!done){if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);}
   tty_reading=0;dirty=1;if(cancelled||done){input[0]=0;cursor=0;return -1;}
  }
@@ -688,7 +698,7 @@ static unsigned char ahead_keys[LINE_CAP];
 static unsigned short ahead_mods[LINE_CAP];
 static unsigned int ahead_head,ahead_count;
 #define PASTED_KEY 0x8000
-static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<visible*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1)b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
+static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+(scrollback!=0))*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1)b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
 static void insert_char(unsigned char c){size_t n=strlen(input);if(input_blocked)return;if(n>=LINE_CAP-1){input_fail("command exceeds 1023 bytes");return;}memmove(input+cursor+1,input+cursor,n-cursor+1);input[cursor++]=(char)c;dirty=1;}
 /* Validate the complete paste before changing the line. Newlines are retained
    (CR/CRLF normalized), never submitted as Return events. */
@@ -701,7 +711,7 @@ static void paste(void){
  if(bad||used>(long)(busy?LINE_CAP-ahead_count:LINE_CAP-1-old)){HUnlock(h);DisposeHandle(h);input_fail(bad?"clipboard contains unsupported control bytes":"paste exceeds 1023-byte command limit");return;}
  used=0;for(long i=0;i<n;i++){unsigned char c=(unsigned char)(*h)[i];if(c=='\r'){if(i+1<n&&(*h)[i+1]=='\n')i++;c='\n';}(*h)[used++]=c;}
  if(busy){for(long i=0;i<used;i++){unsigned at=(ahead_head+ahead_count++)%LINE_CAP;ahead_keys[at]=(unsigned char)(*h)[i];ahead_mods[at]=PASTED_KEY;}HUnlock(h);DisposeHandle(h);return;}
- memmove(input+cursor+used,input+cursor,old-cursor+1);memcpy(input+cursor,*h,used);cursor+=used;dirty=1;HUnlock(h);DisposeHandle(h);
+ selection_clear();scrollback=0;memmove(input+cursor+used,input+cursor,old-cursor+1);memcpy(input+cursor,*h,used);cursor+=used;dirty=1;HUnlock(h);DisposeHandle(h);
 }
 static void history_move(int direction){char b[LINE_CAP];if(!history_back)strcpy(saved_input,input);if(direction<0){if(history_get(history_back+1,b)){history_back++;strcpy(input,b);}}else if(history_back>0){history_back--;if(!history_back)strcpy(input,saved_input);else if(history_get(history_back,b))strcpy(input,b);}cursor=strlen(input);dirty=1;}
 static void do_search(void){char b[LINE_CAP];int k;busy=1;cancelled=0;k=history_search(search,search_back?search_back+1:1,b);busy=0;if(k){search_back=k;strcpy(input,b);cursor=strlen(input);}dirty=1;}
@@ -723,20 +733,22 @@ int app_serial_input(int enabled){
 /* Separate import lets old runtimes reject remote-tty clients safely. */
 int app_serial_tty(int enabled){return app_serial_input(enabled?2:0);}
 int app_serial_key(void){if(serial_overflow)return -2;if(!serial_count)return -1;int c=ahead_keys[serial_head];serial_head=(serial_head+1)%LINE_CAP;serial_count--;return c;}
-static void key(unsigned char c,unsigned short mods){if(mods==PASTED_KEY&&!busy){insert_char(c);return;}int n=strlen(input);if(paging){if((mods&shiftKey)&&(c==30||c==31)){scrollback+=c==30?visible:-visible;if(scrollback<0)scrollback=0;if(scrollback>scroll_limit())scrollback=scroll_limit();dirty=1;return;}if(c==' '){page_action=1;return;}if(c==13){page_action=2;return;}if(c=='q'||c=='Q'){cancelled=1;return;}}if((mods&(ControlKey|optionKey))&&c>=32&&c<127)c&=31;if((mods&cmdKey)&&c=='.')c=3;if(input_blocked){if(c!=3)return;input_blocked=0;ahead_head=ahead_count=0;}if(tty_reading&&c!=3){
+static void key(unsigned char c,unsigned short mods){if(mods==PASTED_KEY&&!busy){selection_clear();scrollback=0;insert_char(c);return;}int n=strlen(input);if(scrollback&&!((mods&shiftKey)&&(c==30||c==31))){selection_clear();scrollback=0;dirty=1;}if(paging){if((mods&shiftKey)&&(c==30||c==31)){scrollback+=c==30?visible:-visible;if(scrollback<0)scrollback=0;if(scrollback>scroll_limit())scrollback=scroll_limit();dirty=1;return;}if(c==' '){page_action=1;return;}if(c==13){page_action=2;return;}if(c=='q'||c=='Q'){cancelled=1;return;}}if((mods&ControlKey)&&c>=32&&c<127)c=control_ascii(c);if((mods&cmdKey)&&c=='.')c=3;if(input_blocked){if(c!=3)return;input_blocked=0;ahead_head=ahead_count=0;}if(tty_reading&&c!=3){
  if(c==13||c==4){if(c==4&&!n){tty_ready=1;return;}memcpy(tty_buffer,input,n);tty_count=n;if(c==13)tty_buffer[tty_count++]='\n';tty_offset=0;term_write(input,n);if(c==13)term_puts("\n");input[0]=0;cursor=0;tty_ready=1;dirty=1;return;}
  if(c==8||c==127){if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}}
  else if(c==21){input[0]=0;cursor=0;}
  else if(c>=32&&!(mods&cmdKey))insert_char(c);
  dirty=1;return;
- }if(editor_screen){if((mods&cmdKey)&&c==3){interrupted=cancelled=1;}else screen_key(c);return;}if(busy){if(c==3&&(serial_input!=2||(mods&cmdKey))){interrupted=1;cancelled=1;}else if(serial_input){if(!serial_overflow&&serial_count<LINE_CAP){ahead_keys[(serial_head+serial_count)%LINE_CAP]=c;serial_count++;}else serial_overflow=1;}else if(c==27||(c=='.'&&(mods&cmdKey)))cancelled=1;
- else if(!paging&&!activity_interactive){if(ahead_count<LINE_CAP){unsigned int at=(ahead_head+ahead_count)%LINE_CAP;ahead_keys[at]=c;ahead_mods[at]=mods&shiftKey;ahead_count++;}else input_fail("pending input queue overflow");}return;}
+ }if(editor_screen){if((mods&cmdKey)&&c==3){interrupted=cancelled=1;}else screen_key(c,mods&ControlKey);return;}if(busy){if(c==3&&(serial_input!=2||(mods&cmdKey))){interrupted=1;cancelled=1;}else if(serial_input){if(!serial_overflow&&serial_count<LINE_CAP){ahead_keys[(serial_head+serial_count)%LINE_CAP]=c;serial_count++;}else serial_overflow=1;}else if(c==27||(c=='.'&&(mods&cmdKey)))cancelled=1;
+ else if(!paging&&!activity_interactive){if(ahead_count<LINE_CAP){unsigned int at=(ahead_head+ahead_count)%LINE_CAP;ahead_keys[at]=c;ahead_mods[at]=mods&(shiftKey|ControlKey);ahead_count++;}else input_fail("pending input queue overflow");}return;}
  if(c==3){char prefix[132];shell_prompt(prefix,sizeof prefix);term_puts(prefix);term_puts(input);term_puts("^C\n");input[0]=saved_input[0]=continued[0]=0;continuing=0;cursor=history_back=searching=search_back=scrollback=0;shell_status=130;dirty=1;return;}
  if(mods&cmdKey){if(c=='q'||c=='Q'){app_quit();return;}if(c=='c'||c=='C'){copy_selection();return;}if(c=='v'||c=='V'){paste();return;}if(c=='.'){input[0]=0;cursor=0;searching=0;dirty=1;return;}}
  if(searching){if(c==13||c==27){searching=0;dirty=1;return;}if(c==18){do_search();return;}if(c==8||c==127){size_t l=strlen(search);if(l)search[l-1]=0;}else if(c>=32&&strlen(search)<sizeof(search)-1){size_t l=strlen(search);search[l]=c;search[l+1]=0;}search_back=0;do_search();return;}
+ /* Raw controls 28..31 have no shell action; only arrow events move history. */
+ if((mods&ControlKey)&&c>=28&&c<=31)return;
  /* Clear only the existing highlight; a click alone changes no pixels. */
  selection_clear();
- if(!(mods&shiftKey))scrollback=0;
+ if(!((mods&shiftKey)&&(c==30||c==31)))scrollback=0;
  switch(c){case 13:execute();break;case 9:{int k;busy=1;cancelled=0;k=shell_complete(input,&cursor);busy=0;if(!k)SysBeep(1);break;}case 8:case 127:if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}break;
  case 1:cursor=0;break;case 5:cursor=n;break;case 2:case 28:if(cursor)cursor--;break;case 6:case 29:if(cursor<n)cursor++;break;
  case 16:case 30:if(mods&shiftKey){scrollback+=visible;if(scrollback>scroll_limit())scrollback=scroll_limit();}else history_move(-1);break;
@@ -753,9 +765,9 @@ static void key(unsigned char c,unsigned short mods){if(mods==PASTED_KEY&&!busy)
  }dirty=1;}
 static int claim_pending_screen(void){
  unsigned required=0;
- for(unsigned i=0;i<ahead_count;i++){unsigned at=(ahead_head+i)%LINE_CAP;unsigned char c=ahead_keys[at];required+=(c>=28&&c<=31)?3:1;}
+ for(unsigned i=0;i<ahead_count;i++){unsigned at=(ahead_head+i)%LINE_CAP;unsigned char c=ahead_keys[at];required+=(c>=28&&c<=31&&!(ahead_mods[at]&ControlKey))?3:1;}
  if(required>128){input_fail("application input queue overflow");return -1;}
- while(ahead_count){unsigned at=ahead_head;ahead_head=(ahead_head+1)%LINE_CAP;ahead_count--;screen_key(ahead_keys[at]);}
+ while(ahead_count){unsigned at=ahead_head;ahead_head=(ahead_head+1)%LINE_CAP;ahead_count--;screen_key(ahead_keys[at],ahead_mods[at]&ControlKey);}
  return 0;
 }
 /* An unquoted (or double-quoted) final backslash escapes the submitted newline. */
@@ -770,12 +782,13 @@ void app_run_checks(void){unsigned char pn[256];char path[PATH_CAP];int i,failed
  for(i=0;cases[i]&&!cancelled;i++){term_puts("$ ");term_puts(cases[i]);term_puts("\n");{char result[96];unsigned long t=TickCount();int rc=shell_run(cases[i]);if(rc)failed++;snprintf(result,sizeof result,"[status %d; %lu ticks]\n",rc,TickCount()-t);term_puts(result);}app_yield();}
  {char recalled[LINE_CAP],result[128];long before=FreeMem(),after;for(i=0;i<140&&!cancelled;i++){if(shell_run("echo"))failed++;app_yield();}after=FreeMem();if(!history_get(128,recalled)||strcmp(recalled,"echo")||history_get(129,recalled))failed++;snprintf(result,sizeof result,"History wrap: 140 commands; heap before %ld after %ld\n",before,after);term_puts(result);}
  term_puts(failed?"PHASE1_CHECKS FAIL\n":"PHASE1_CHECKS PASS\n");if(test_ref>=0){FSClose(test_ref);test_ref=-1;FlushVol(0,0);}busy=0;dirty=1;}
-static void menu(long choice){short id=(short)(choice>>16),item=(short)choice;if(id==128){if(item==1){term_puts("Clarice Phase 1 - native System 6 command prompt\nInstalled system font; settings in File > Preferences.\n");}else{MenuHandle m=GetMenuHandle(128);unsigned char name[256];GetMenuItemText(m,item,name);OpenDeskAcc(name);SetPort(win);}}
+static void welcome(void);
+static void menu(long choice){short id=(short)(choice>>16),item=(short)choice;if(id==128){if(item==1){welcome();}else{MenuHandle m=GetMenuHandle(128);unsigned char name[256];GetMenuItemText(m,item,name);OpenDeskAcc(name);SetPort(win);}}
  if(id==129){if(item==1&&!editor_screen)app_clear();if(item==2)key(3,(editor_screen||serial_input==2)?cmdKey:0);if(item==4&&!busy)preferences_window();if(item==6)app_quit();}
  if(id==130){if(item==1)copy_selection();if(item==2)paste();if(item==4&&!busy)history_move(-1);if(item==5&&!busy)history_move(1);}
  if(id==131&&!busy){if(item==1)app_run_checks();if(item==2)app_metrics(0);}
- if(id==132){unsigned char name[256];GetMenuItemText(GetMenuHandle(132),item,name);GetFNum(name,&font_id);font_layout();save_preferences();}
- if(id==133&&!editor_screen){if(item==1)inverse=!inverse;if(item==2)fill_window();if(item==4)font_size=9;if(item==5)font_size=12;if(item==6)font_size=14;if(item>=8&&item<=10)page_mode=item-8;font_layout();save_preferences();}
+ if(id==132){unsigned char name[256];GetMenuItemText(GetMenuHandle(132),item,name);GetFNum(name,&font_id);font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}
+ if(id==133&&!editor_screen){if(item==1)inverse=!inverse;if(item==2)fill_window();if(item==4)font_size=9;if(item==5)font_size=12;if(item==6)font_size=14;if(item>=8&&item<=10)page_mode=item-8;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}
  HiliteMenu(0);dirty=1;}
 /* Moving a fixed selection anchor changes only the interval between the old
    and new endpoints. Invert those pixels once per row; keep an enabled cache
@@ -801,8 +814,8 @@ static void selection_begin(int anchor){
  selection_clear();
  select_start=select_end=anchor;
 }
-static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible)y=visible-1;return y*columns+x;}
-static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;SetRect(&bounds,180,100,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-40);size=GrowWindow(win,ev->where,&bounds);if(size){filled=0;SizeWindow(win,(short)size,(short)(size>>16),1);layout();save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+visible*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
+static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible+(scrollback!=0))y=visible+(scrollback!=0)-1;return y*columns+x;}
+static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;SetRect(&bounds,180,100,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-40);size=GrowWindow(win,ev->where,&bounds);if(size){filled=0;SizeWindow(win,(short)size,(short)(size>>16),1);layout();save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+(scrollback!=0))*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
  case keyDown:case autoKey:{
 #ifdef CLARICE_INPUT_DIAGNOSTICS
  unsigned long age=TickCount()-ev->when;probe_events++;probe_age+=age;if(age>probe_age_max)probe_age_max=age;
@@ -810,7 +823,23 @@ static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEv
  unsigned char c=(unsigned char)(ev->message&charCodeMask);/* On the Plus, shifted M0110A arrow packets translate to keypad / and =.
      Normalize their physical codes before character editing; main keyboard
      slash/equal use different codes. ADB machines retain their OS translation. */
- if(system_info.machineType==envMacPlus&&(ev->modifiers&shiftKey)){unsigned char code=(ev->message>>8)&255;if(code==0x4d)c=30;else if(code==0x48)c=31;}/* Option-C is the Plus substitute: Option changes the character to cedilla. */if(ev->modifiers&optionKey){unsigned char code=(ev->message>>8)&255;if(code==8)c=3;else if(code==2)c=4;else if(code==32)c=21;else if(serial_input&&code==30)c=29;else if(editor_screen&&code==31)c=15;else if(editor_screen&&code==7)c=24;else if(editor_screen&&code==13)c=23;}if((ev->modifiers&cmdKey)&&c!='.')menu(MenuKey(c));else key(c,ev->modifiers);break;}
+ if(system_info.machineType==envMacPlus&&(ev->modifiers&shiftKey)){unsigned char code=(ev->message>>8)&255;if(code==0x4d)c=30;else if(code==0x48)c=31;}if((ev->modifiers&cmdKey)&&c=='.'){key(3,cmdKey);break;}
+ unsigned short mods=ev->modifiers;int explicit_control=control_mode==2&&(mods&cmdKey)&&(mods&optionKey);
+ if((mods&cmdKey)&&!explicit_control){long action=MenuKey(c);if(action){menu(action);break;}if(control_mode!=2)break;}
+
+ if(control_requested(control_mode,mods)){
+  /* Translate with the active keyboard layout, without Option's accented
+     characters or dead-key state. No cached resource or permanent buffer. */
+  short script=GetScriptManagerVariable(smKeyScript);/* Keep the 16-bit Pascal result in a frame slot: this Retro68 compiler
+     otherwise reuses SP+2 after pushing the resource type. */
+  volatile short id=GetScriptVariable(script,smScriptKeys);
+  Handle map=GetResource('KCHR',id);
+if(map){uint32_t state=0;unsigned code=(ev->message>>8)&127;unsigned char base=KeyTranslate(*map,code|(mods&shiftKey),&state);
+if(base)c=base;}
+  c=control_ascii(c);mods=(mods&~(cmdKey|optionKey))|ControlKey;
+ }
+
+ key(c,mods);break;}
  case updateEvt:if((WindowPtr)ev->message==win){hide_caret();SetPort(win);BeginUpdate(win);force_draw=dirty=1;draw();EndUpdate(win);}break;
  case activateEvt:if((WindowPtr)ev->message==win){background=!(ev->modifiers&activeFlag);if(editor_screen)editor_screen->dirty[editor_screen->row]=1;dirty=1;}break;
  case osEvt:if((ev->message>>24)==1){background=!(ev->message&1);dirty=force_draw=1;}break;
@@ -824,6 +853,18 @@ static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEv
 #ifdef CLARICE_USABILITY_DIAGNOSTICS
 #include "../tests/terminal/usability-guest.inc"
 #endif
+static void welcome(void){
+ ClariceHardware h;char line[192],cpu[32],fpu[40],ram[32];cli_hardware(&h,sizeof h);
+ static const char *cpus[]={"unknown","68000","68010","68020","68030","68040"};
+ if(h.cpu<6)strcpy(cpu,cpus[h.cpu]);else snprintf(cpu,sizeof cpu,"unknown (code %u)",h.cpu);
+ if(h.fpu==0)strcpy(fpu,"none");else if(h.fpu==1)strcpy(fpu,"68881");else if(h.fpu==2)strcpy(fpu,"68882");else if(h.fpu==3)strcpy(fpu,"68040");else if(h.fpu==-2)strcpy(fpu,"present, type unknown");else strcpy(fpu,"unknown");
+ if(h.ram)display_size(ram,h.ram);else strcpy(ram,"unknown");
+ snprintf(line,sizeof line,"Clarice - build %lu\n",(unsigned long)CLARICE_UPDATE_BUILD);term_puts(line);
+ if(!h.model_name[0])snprintf(h.model_name,sizeof h.model_name,"Macintosh (model %ld)",(long)h.model);
+ snprintf(line,sizeof line,"%s | CPU %s | FPU %s\n",h.model_name,cpu,fpu);term_puts(line);
+ snprintf(line,sizeof line,"RAM %s | Display %u x %u, %u-bit\n",ram,h.width,h.height,h.depth);term_puts(line);
+ if(h.system)snprintf(line,sizeof line,"System %x.%x.%x (reported)\n",h.system>>8,(h.system>>4)&15,h.system&15);else strcpy(line,"System version unknown\n");term_puts(line);term_puts("Type help for commands; Tab completes.\n\n");
+}
 int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount();InitGraf(&qd.thePort);InitFonts();InitWindows();InitMenus();TEInit();InitDialogs(0);InitCursor();/* Reserve 64 KiB beyond the monochrome Mac default stack before growing the heap. */SetApplLimit(LMGetApplLimit()-65536);MaxApplZone();MoreMasters();SysEnvirons(1,&system_info);
  m=NewMenu(128,(const unsigned char*)"\p\024");AppendMenu(m,(const unsigned char*)"\pAbout Clarice;(-");AppendResMenu(m,'DRVR');InsertMenu(m,0);
  m=NewMenu(129,(const unsigned char*)"\pFile");AppendMenu(m,(const unsigned char*)"\pClear terminal;Cancel command/.;(-;Preferences.../,;(-;Quit/Q");InsertMenu(m,0);
@@ -832,6 +873,7 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  m=NewMenu(132,(const unsigned char*)"\pFont");AppendResMenu(m,'FONT');InsertMenu(m,-1);
  m=NewMenu(134,(const unsigned char*)"\pScrollback");AppendMenu(m,(const unsigned char*)"\p32 lines;64 lines;128 lines");InsertMenu(m,-1);
  m=NewMenu(135,(const unsigned char*)"\pPaging");AppendMenu(m,(const unsigned char*)"\pOff;By screen;100 lines");InsertMenu(m,-1);
+ m=NewMenu(136,(const unsigned char*)"\pControl key");AppendMenu(m,(const unsigned char*)"\pControl only;Option;Command");InsertMenu(m,-1);
  m=NewMenu(133,(const unsigned char*)"\pView");AppendMenu(m,(const unsigned char*)"\pReverse colours;Fill screen / restore;(-;9 point;12 point;14 point;(-;Paging off;Page by screen;Page by 100 lines");InsertMenu(m,0);DrawMenuBar();
  SetRect(&r,8,48,512,326);win=NewWindow(&win_record,&r,(const unsigned char*)"\pClarice",1,documentProc,(WindowPtr)-1,1,0);if(!win)return 1;SetPort(win);
  {Rect frame=(*((WindowPeek)win)->strucRgn)->rgnBBox;MoveWindow(win,r.left+qd.screenBits.bounds.left+2-frame.left,r.top+qd.screenBits.bounds.top+menu_bar_height()+2-frame.top,1);}
@@ -839,7 +881,7 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  OpenPort(&frame_port);frame_port.portBits.baseAddr=(Ptr)frame_pixels;frame_port.portBits.rowBytes=STRIDE;SetRect(&frame_port.portBits.bounds,0,0,512,HEIGHT);frame_port.portRect=frame_port.portBits.bounds;ClipRect(&frame_port.portRect);frame_ready=1;OpenPort(&prompt_port);prompt_port.portBits.baseAddr=(Ptr)prompt_pixels;prompt_port.portBits.rowBytes=STRIDE;SetRect(&prompt_port.portBits.bounds,0,0,512,64);prompt_port.portRect=prompt_port.portBits.bounds;ClipRect(&prompt_port.portRect);SetPort(win);
  SetRect(&r,win->portRect.right-15,0,win->portRect.right+1,win->portRect.bottom-14);history_bar=NewControl(win,&r,(const unsigned char*)"\p",1,0,0,0,scrollBarProc,0);
  shell_init();shell_state_path(prefs_path,"clarice.conf","Clarice Preferences");load_preferences();font_layout();
- term_puts("Clarice  |  Native System 6 command prompt\nMacintosh Plus / 68000  |  HFS files\nType help. Tab completes; Option-C or Cmd-period interrupts.\n\n");busy=1;shell_profile();busy=0;dirty=1;initial_free=FreeMem();start_tick=TickCount()-launch;last_yield=TickCount();
+ welcome();busy=1;shell_profile();busy=0;dirty=1;initial_free=FreeMem();start_tick=TickCount()-launch;last_yield=TickCount();
  while(!done){
 #ifdef CLARICE_USABILITY_DIAGNOSTICS
  static int usability_tested;if(!usability_tested&&FrontWindow()==win){usability_tested=1;usability_probe();}

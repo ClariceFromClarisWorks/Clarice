@@ -1,0 +1,1 @@
+PASS: queued control modifiers and exact editor capacity; all raw control bytes distinct from arrows, bounded editor queue

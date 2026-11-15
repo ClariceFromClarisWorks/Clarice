@@ -1,6 +1,7 @@
 #ifndef SYS6_H
 #define SYS6_H
 #include <stddef.h>
+#include "hardware.h"
 #define LINE_CAP 1024
 #define MAX_ARGS 32
 #define PATH_CAP 512

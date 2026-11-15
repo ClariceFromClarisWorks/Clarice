@@ -8,11 +8,11 @@ resource 'SIZE' (-1) {
 };
 
 resource 'DLOG' (140) {
- {40, 75, 284, 435}, dBoxProc, visible, noGoAway, 0x0, 140, "Preferences", 0
+ {36, 75, 306, 435}, dBoxProc, visible, noGoAway, 0x0, 140, "Preferences", 0
 };
 resource 'DITL' (140) {{
- {212, 260, 234, 340}, Button { enabled, "OK" };
- {212, 168, 234, 248}, Button { enabled, "Cancel" };
+ {238, 260, 260, 340}, Button { enabled, "OK" };
+ {238, 168, 260, 248}, Button { enabled, "Cancel" };
  {10, 16, 28, 340}, StaticText { disabled, "Clarice preferences" };
  {38, 16, 56, 125}, StaticText { disabled, "Installed font:" };
  {36, 132, 58, 338}, UserItem { enabled };
@@ -25,7 +25,9 @@ resource 'DITL' (140) {{
  {126, 132, 148, 338}, UserItem { enabled };
  {158, 16, 176, 125}, StaticText { disabled, "Paging:" };
  {156, 132, 178, 338}, UserItem { enabled };
- {186, 16, 204, 338}, CheckBox { enabled, "Fill screen (keep menu bar)" }
+ {212, 16, 230, 338}, CheckBox { enabled, "Fill screen (keep menu bar)" };
+ {186, 16, 204, 125}, StaticText { disabled, "Control key:" };
+ {184, 132, 206, 338}, UserItem { enabled }
 }};
 resource 'ALRT' (141) {{100, 65, 220, 445}, 141, {OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1}, 0};
 resource 'DITL' (141) {{

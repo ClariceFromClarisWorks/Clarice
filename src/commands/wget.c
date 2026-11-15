@@ -12,7 +12,9 @@ extern int cli_isatty(int);
 #define progress_clock cli_ticks
 #define progress_tty() cli_isatty(2)
 #define progress_row app_progress
+#define progress_columns app_columns
 #include "progress.h"
+#include "../display-size.h"
 static NetConn net;
 static unsigned char buffer[2048];
 static unsigned used,available;
@@ -103,7 +105,7 @@ int clarice_main(int argc,char **argv){
  progress_update(written,size,1,1);progress_enabled=0;
  char amount[32];display_size(amount,written);snprintf(header,sizeof header,"Downloaded %s to %s\n",amount,output);say(header);result=0;
 done:
- if(progress_enabled){progress_update(written,size,have_length,1);progress_enabled=0;}
+ if(progress_enabled){progress_update(written,size,have_length,-1);progress_enabled=0;}
  if(input_failure&&!cancelled)why=input_failure;
  if(file>=0){int close_error=cli_native_close(file);if(close_error&&!e)e=close_error;}
  int net_error=NetClose(&net);

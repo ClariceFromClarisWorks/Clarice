@@ -58,6 +58,7 @@
  CLX_IMPORT("cli_file_size", cli_file_size)
  CLX_IMPORT("cli_file_write", cli_file_write)
  CLX_IMPORT("cli_free", cli_free)
+ CLX_IMPORT("cli_hardware", cli_hardware)
  CLX_IMPORT("cli_isatty", cli_isatty)
  CLX_IMPORT("cli_mac_time", cli_mac_time)
  CLX_IMPORT("cli_native_close", cli_native_close)

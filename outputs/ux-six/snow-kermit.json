@@ -1,0 +1,62 @@
+{
+  "tests": [
+    {
+      "test": "ux-receive",
+      "peer_exit": 0,
+      "elapsed_including_typing": 9.732
+    },
+    {
+      "test": "ux-send",
+      "peer_exit": 0,
+      "elapsed_including_typing": 7.893
+    },
+    {
+      "test": "ux-cancel",
+      "peer_exit": 1,
+      "elapsed_including_typing": 10.286
+    },
+    {
+      "test": "ux-recover",
+      "peer_exit": 0,
+      "elapsed_including_typing": 9.763
+    },
+    {
+      "test": "ux-recovered",
+      "peer_exit": 0,
+      "elapsed_including_typing": 8.164
+    }
+  ],
+  "roundtrip_bytes_exact": true,
+  "guest_checks": [
+    {
+      "name": "ux-receive",
+      "status": 0,
+      "heap": 420942,
+      "owned_remaining": 0
+    },
+    {
+      "name": "ux-send",
+      "status": 0,
+      "heap": 420948,
+      "owned_remaining": 0
+    },
+    {
+      "name": "ux-cancel",
+      "status": 130,
+      "heap": 420944,
+      "owned_remaining": 0
+    },
+    {
+      "name": "ux-recover",
+      "status": 0,
+      "heap": 420942,
+      "owned_remaining": 0
+    },
+    {
+      "name": "ux-recovered",
+      "status": 0,
+      "heap": 420938,
+      "owned_remaining": 0
+    }
+  ]
+}

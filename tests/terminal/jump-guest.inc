@@ -5,6 +5,7 @@ static int jump_probe(int clearing){
  long heap_before=FreeMem();
  used+=snprintf(report+used,sizeof report-used,"JUMP_PROFILE cols=%d rows=%d cell=%d line=%d inverse=%d\n",columns,visible,cell_w,line_h,inverse);
  for(int run=0;run<3&&!cancelled;run++)for(int variant=0;variant<2&&!cancelled;variant++)for(int kind=0;kind<2&&!cancelled;kind++){
+  direct_legacy=clearing==3?!variant:1;
   jump_legacy=clearing?0:!variant;clear_legacy=clearing==1?!variant:0;align_legacy=clearing==2?!variant:0;native_glyph_valid=0;glyph_build_ticks=0;
   app_clear();busy=1;
   for(int i=0;i<128;i++){
@@ -21,8 +22,8 @@ static int jump_probe(int clearing){
   }
   used+=snprintf(report+used,sizeof report-used,"run=%d new=%d kind=%s ticks=%lu worst=%lu frames=%lu compose=%lu shift=%lu raster=%lu copy=%lu bar=%lu plan=%lu prepare=%lu text=%lu rows=%lu build=%lu align=%lu\n",run,variant,kind?"varied":"listing",total,worst,draw_frames,profile[0],profile[1],profile[2],profile[3],draw_bar_ticks,jump_detail[0],jump_detail[1],jump_detail[2],jump_detail[3],glyph_build_ticks,align_ticks);
  }
- jump_legacy=clear_legacy=align_legacy=0;render_mode=saved;page_mode=saved_page;busy=saved_busy;scrollback=0;build_font_cache();force_draw=dirty=1;
+ direct_legacy=jump_legacy=clear_legacy=align_legacy=0;render_mode=saved;page_mode=saved_page;busy=saved_busy;scrollback=0;build_font_cache();force_draw=dirty=1;
  used+=snprintf(report+used,sizeof report-used,"heap_delta=%ld; phases overlap; total is sum of completed draw calls\n",FreeMem()-heap_before);
- char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,clearing==2?"align-profile.txt":clearing?"clear-profile.txt":"jump-profile.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=used;SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
+ char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,clearing==3?"direct-profile.txt":clearing==2?"align-profile.txt":clearing?"clear-profile.txt":"jump-profile.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=used;SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
  term_puts(report);return cancelled?130:0;
 }

@@ -16,6 +16,8 @@ head=r'''
 #define LINE_CAP 1024
 #define TEXT 0
 #define PASTED_KEY 0x8000
+static int scrollback;
+static void selection_clear(void){}
 static int editor_screen,serial_input,paging,activity_interactive;
 static void SysBeep(int n){(void)n;}
 static unsigned char ahead_keys[LINE_CAP];

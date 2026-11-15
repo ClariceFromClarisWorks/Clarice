@@ -1,0 +1,9 @@
+Host-only actual E-Kermit adapter and engine, tests/kermit/host.py with the updated progress facility:
+empty: 0 bytes, send/receive 0/0, 0.767 s
+all-bytes: 4096 bytes, exact match, 0/0, 0.355 s
+repeat: 4097 bytes, exact match, 0/0, 0.284 s
+boundary: 513 bytes, exact match, 0/0, 0.291 s
+checksum-retry: 2048 bytes, injected corruption retransmitted, exact match, 0/0, 0.319 s
+cancel: both peers 130, incomplete destination absent, 0.280 s
+recovery: 2048 bytes, exact match, 0/0, 0.345 s
+No leftover temporary files. This does not measure guest or physical serial throughput.

@@ -8,10 +8,10 @@ void app_screen_close(void){if(editor_screen){DisposePtr((Ptr)editor_screen);edi
 int app_screen_rows(void){return editor_screen?editor_screen->rows:visible+1;}
 long app_screen_write(const void *p,unsigned long n){if(!editor_screen)return -1;screen_feed(editor_screen,p,n);dirty=1;return n;}
 int app_screen_pending(void){return editor_screen?editor_screen->count:0;}
-static void screen_key(unsigned char c){nano_input();CliScreen *s=editor_screen;const char *seq=0;if(c==28)seq="\033[D";if(c==29)seq="\033[C";if(c==30)seq="\033[A";if(c==31)seq="\033[B";unsigned n=seq?3:1;if(n>128-s->count){input_fail("application input queue overflow");return;}for(unsigned i=0;i<n;i++)s->keys[(s->head+s->count++)%128]=seq?seq[i]:c;}
+static void screen_key(unsigned char c,int control){nano_input();CliScreen *s=editor_screen;const char *seq=0;if(!control&&c==28)seq="\033[D";if(!control&&c==29)seq="\033[C";if(!control&&c==30)seq="\033[A";if(!control&&c==31)seq="\033[B";unsigned n=seq?3:1;if(n>128-s->count){input_fail("application input queue overflow");return;}for(unsigned i=0;i<n;i++)s->keys[(s->head+s->count++)%128]=seq?seq[i]:c;}
 long app_screen_read(void *p,unsigned long n){if(!editor_screen)return -1;
 #ifdef CLARICE_INPUT_DIAGNOSTICS
- if(probe_curses){probe_curses=0;screen_key(30);screen_key('z');screen_key(3);screen_key('q');}
+ if(probe_curses){probe_curses=0;screen_key(30,0);screen_key('z',0);screen_key(3,1);screen_key('q',0);}
 #endif
 while(!editor_screen->count&&!cancelled&&!done){EventRecord ev;if(dirty)draw();
 #ifdef CLARICE_NANO_PERF

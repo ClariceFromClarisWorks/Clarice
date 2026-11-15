@@ -1,0 +1,121 @@
+{
+  "build": 2026111533,
+  "baseline": 2026111525,
+  "checkpoint": "33f0075fb14385cd82d792f611261313b60e1583",
+  "macbinary_bytes": 943104,
+  "data_fork_bytes": 0,
+  "resource_fork_bytes": 942884,
+  "sha256": "3329e7966a113755043faed9c2717919b97d1e81312ed543329cbeb64fcff272",
+  "partition_bytes": 786432,
+  "stack_reserve_bytes": 65536,
+  "new_bitmap_allocations": 0,
+  "physical_before_heap": 423998,
+  "physical_http_old_ticks": [
+    347
+  ],
+  "physical_http_new_ticks": [
+    352,
+    322
+  ],
+  "snow_caps_20_calls_ticks": 26,
+  "snow_caps_retained_bytes": 0,
+  "snow_normal_start_ticks": 318,
+  "snow_preferences_survive_restart": true,
+  "physical_post_update_status": "1533 normal automatic relaunch confirmed by screen; final keyboard/editor checks pass",
+  "physical_installed_shell": 2026111533,
+  "physical_caps_20_calls_ticks": 31,
+  "physical_caps_retained_bytes": 0,
+  "physical_normal_start_ticks": 358,
+  "physical_after_caps_heap": 421006,
+  "physical_after_caps_owned_remaining": 0,
+  "physical_return_user_estimate_seconds": 240,
+  "progress_commands": {
+    "wget": "459b7f9abb0c8e53350e8e59b69f61fa97ccc92f6171142f693505428528eeb1",
+    "kermit": "d3df9addc44b22a16e5a537581e51db11fd5fa908a961a5840ed85095e1f5d4b",
+    "clarice": "0f317e33f1c6e620db198a394cb6c82ccba162ab54deec760ecf05016d75d548"
+  },
+  "final_bundle": {
+    "build": 2026111533,
+    "bytes": 943104,
+    "resource_bytes": 942884,
+    "sha256": "3329e7966a113755043faed9c2717919b97d1e81312ed543329cbeb64fcff272",
+    "note": "Final queued-control preservation and corrected progress commands."
+  },
+  "nano_fixture": {
+    "bytes": 267744,
+    "sha256": "859b771c9ca3542fe39c01f6623ef0fbcdc94661d0df43a62983c473ef108e77",
+    "source": "Existing Snow /bin/nano, GNU nano 9.2; no port rebuild"
+  },
+  "intermediate_1531_bundle": {
+    "build": 2026111531,
+    "macbinary_bytes": 942976,
+    "data_fork_bytes": 0,
+    "resource_fork_bytes": 942730,
+    "sha256": "36efdd50f5da623ad8c3677a9446a763076bc3b2ba840c63177767e7a7b35888"
+  },
+  "physical_after_nano_heap": 420960,
+  "physical_after_nano_owned_remaining": 0,
+  "physical_loader_final": [
+    {
+      "case": "cold-empty",
+      "load": 356,
+      "read": 35,
+      "validate": 138,
+      "imports": 4,
+      "relocations": 23,
+      "prepare": 139,
+      "record": 16,
+      "events_included": 40,
+      "structure_in_relocations": 14,
+      "payload": 0,
+      "owned_peak": 74572,
+      "remaining": 0,
+      "free_heap": 420960,
+      "evidence": "se-final-nano-empty-runtime.png"
+    },
+    {
+      "case": "first-8KiB",
+      "load": 190,
+      "read": 38,
+      "validate": 108,
+      "imports": 4,
+      "relocations": 22,
+      "prepare": 4,
+      "record": 14,
+      "events_included": 23,
+      "structure_in_relocations": 14,
+      "payload": 0,
+      "owned_peak": 101736,
+      "remaining": 0,
+      "free_heap": 420960,
+      "evidence": "se-final-nano-eight-runtime.png"
+    },
+    {
+      "case": "repeat-8KiB",
+      "load": 190,
+      "read": 35,
+      "validate": 107,
+      "imports": 4,
+      "relocations": 22,
+      "prepare": 5,
+      "record": 16,
+      "events_included": 19,
+      "structure_in_relocations": 14,
+      "payload": 0,
+      "owned_peak": 101736,
+      "remaining": 0,
+      "free_heap": 420960,
+      "evidence": "se-final-nano-repeat-runtime.png"
+    }
+  ],
+  "physical_loader_units": "ticks at 60 Hz; loader-only, not total startup; events and structural counters nested",
+  "final_update_observations": {
+    "command_entry_finished_seconds": 19.25,
+    "checking_staged_at_seconds": 166.1,
+    "running_1533_captured_at_seconds": 357.5,
+    "staging_ticks": 4190,
+    "exact_relaunch_time_measured": false,
+    "helper_restart_required": false,
+    "source": "se-final-update.json"
+  }
+}

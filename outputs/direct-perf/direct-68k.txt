@@ -1,0 +1,2 @@
+Using multiversal interfaces
+PASS: 1339 actual M68000 direct-composition cases; every phase/tail, dirty storage, byte-identical glyph/outer guards, bounded and even multibyte accesses

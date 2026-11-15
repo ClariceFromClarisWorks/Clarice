@@ -1,0 +1,1 @@
+PASS: 8034 production glyph-row/phase cases, all 95 ASCII glyphs, widths 1..85, both themes, two-draw cold preparation, cache reuse/rebuild, tail guards and unchanged unsupported fallbacks
