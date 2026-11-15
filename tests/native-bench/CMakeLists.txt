@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(NativeBench C)
+add_application(NBWorker worker.c Worker.r TYPE APPL CREATOR CLNB)
+target_compile_options(NBWorker PRIVATE -Os -m68000 -Wno-multichar)
+set_target_properties(NBWorker PROPERTIES LINK_FLAGS "-Wl,--mac-single")

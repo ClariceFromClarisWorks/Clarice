@@ -146,8 +146,7 @@ int main(int argc,char **argv){
  reset();i=setup();assert(!command_check_native(dest));assert(!command_bundle("grep",201,1));assert(!module_run(dest,0,0)&&module_fast);
  reset();i=put(dest,updated,updated_len);fail_write=1;assert(!command_check_native(dest));assert(!module_run(dest,0,0)&&!module_fast);assert(!module_run(dest,0,0)&&!module_fast); /* torn record remains untrusted */
  reset();i=setup();assert(!command_check_native(dest));fail_rename=2;assert(command_replace("grep",source,0,0,1));same_old(i,dest);assert(find(receipt_name)<0);assert(!module_run(dest,0,0)&&!module_fast);
- /* Metadata checksum and bounds both remain mandatory, even with a forged
-    matching receipt. Receipts are not an authenticity/security mechanism. */
+ /* Structural bounds remain mandatory even with a matching receipt. */
  for(int fault=0;fault<3;fault++){
   reset();make_image(bad,1,1);clx_put32(bad+16,1);clx_put32(bad+36,0);clx_put32(bad+40,1);clx_put32(bad+44,0);long len=48;clx_put32(bad+24,asm_fnv1a(2166136261UL,bad+32,16));i=put(dest,bad,len);assert(!command_check_native(dest));rec=find(receipt_name);
   clx_put32(files[i].data+36,fault==0?2:8);
@@ -165,5 +164,14 @@ int main(int argc,char **argv){
   if(fault)memset(files[i].data+36,'x',64);else memcpy(files[i].data+36,"missing",8);
   clx_put32(files[rec].data+344,asm_fnv1a(2166136261UL,files[i].data+36,64));clx_put32(files[rec].data+348,asm_fnv1a(2166136261UL,files[rec].data,348));assert(module_run(dest,0,0)==126&&!executions);
  }
+ /* In-range relocation corruption with unchanged identity is the explicitly
+    accepted fast-mode risk; strict/check must reject and revoke its receipt. */
+ for(int check=0;check<2;check++){
+  reset();make_image(bad,1,1);clx_put32(bad+16,1);clx_put32(bad+36,0);clx_put32(bad+40,1);clx_put32(bad+44,0);clx_put32(bad+24,asm_fnv1a(2166136261UL,bad+32,16));i=put(dest,bad,48);assert(!command_check_native(dest));
+  clx_put32(files[i].data+44,2);assert(!module_run(dest,0,0)&&module_fast&&executions==1);
+  if(check)assert(command_check_native(dest));else{verify_policy="strict";assert(module_run(dest,0,0)==126);}
+  assert(find(receipt_name)<0);verify_policy="";assert(module_run(dest,0,0)==126&&executions==1);
+ }
+ reset();i=put(dest,updated,updated_len);assert(!command_check_native(dest));cancel_at=1;assert(module_run(dest,0,0)==130&&!executions);cancel_at=0;assert(!module_run(dest,0,0)&&module_fast);
  reset();printf("PASS: %d loader/installer scenarios; no leaked allocations or descriptors\n",cases-1);return 0;
 }

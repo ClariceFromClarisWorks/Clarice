@@ -115,10 +115,13 @@ if(!meta){reason="insufficient relocation memory";goto close;}
   if(checksum!=clx_u32(header+24)){reason="CLX payload checksum mismatch";goto close;}
  }
  phase=TickCount();
- if(eligible&&(fast||!matched)){
+ /* Installed-fast trusts matching identity/receipt for contents, including
+    relocation metadata. Bounds/import checks below still run every time.
+    Strict/check/install paths always verify the complete image. */
+ if(fast&&module_poll()){status=130;goto close;}
+ if(eligible&&!matched){
   metadata_hash=2166136261UL;
   for(unsigned long i=0;i<extra;){unsigned long n=extra-i;if(n>4096)n=4096;metadata_hash=clx_hash(metadata_hash,meta+i,n);i+=n;if(module_poll()){status=130;goto close;}}
-  if(fast&&metadata_hash!=clx_u32(receipt+344)){reason="installed command metadata checksum mismatch";goto close;}
  }
  metadata_time=TickCount()-phase;validation+=payload_time+metadata_time;phase=TickCount();
  unsigned char *records=meta,*names=records+nr*12;void *imports[128];

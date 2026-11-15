@@ -1,16 +1,75 @@
 # Clarice current state
 
-15 November 2026, Adelaide. Normal development build **2026111533** implements
-the six terminal UX changes and is running on the stock physical SE after the
-Wi-Fi update and automatic relaunch. Focused host/Snow and physical UX/editor
+16 November 2026, Adelaide. Accepted development build **2026111533** implements
+the six terminal UX changes. Accepted loader build **2026111534** is now running on the
+stock SE after the authorised loader experiment and automatic relaunch. Focused host/Snow and physical UX/editor
 checks pass. Previous working applications and command recovery copies remain available.
 ROADMAP.md is provisional history, not current authorisation.
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-alignment-2026111521` is preserved. Renderer and UX work through 1533 is checkpointed on
 `codex/se-ux-2026111533`, inheriting Research Before Reinvention from 12ccb4a.
-No tag or release. Physical loader profiling has resumed;
-no new loader/nano optimisation in this build.
+No tag or release. Physical loader profiling has resumed; build 1534 changes only
+the approved installed-fast metadata validation path, not nano.
+
+## Executable loading — accepted focused experiment, 16 November
+
+AGENTS `43eb445` and checkpoint `7eb7064` are preserved. Build **2026111534**
+retains receipt-gated installed-fast loading but omits its repeated metadata hash.
+One cancellation poll and all structural/import/relocation bounds remain. Full
+installation/repair/check/strict and unknown/changed-file verification remain.
+No executable-format change, receipt removal, permanent allocation or nano change.
+
+Physical stock SE loader: cold **356 → 215 ticks (5.93 → 3.58 s)**; warm **190 →
+85/86 (3.17 → 1.42/1.43 s)**. Fresh follow-up cold 222, warm 87 ticks. The removed
+metadata/event interval accounts for the improvement; preparation remains 132–139
+cold versus 3–4 warm. Receipt work remains about 15–16 ticks (~0.25 s).
+Host 64 scenarios pass, including structural corruption, strict/check rejection,
+revocation, replacement/recovery and cancellation. Snow disposable unchanged-identity
+metadata corruption passes only in fast mode, then fails strict/check and succeeds
+after explicit replacement. This intentional residual corruption risk is documented.
+No retained invocation allocations in repeated physical nano and native-probe runs.
+[Acceptance and evidence](loader-fast2/ACCEPTANCE.md).
+
+Whole-nano physical observations include first rendering, not just loading:
+complete-screen capture upper bounds **12.26 s cold empty, 9.35 s warm empty,
+19.88 s warm 8 KiB/two long lines**. Input was confirmed after complete rendering
+and test edits discarded. Wi-Fi/capture overhead is included; these are not exact
+internal startup marks. Cold 8 KiB and an ordinary short-line document remain
+unmeasured here. The three-second editor target remains unmet. Earlier partial
+frames must not be counted as complete startup. Both SE and Snow greetings report
+System 6.0.7; do not claim independent 6.0.8 acceptance from these captures.
+
+Minimal returning native APPL comparison completed with the same bounded argument,
+stdout/stderr/status body. Snow CLX **25/27/27 ticks**, native through driver
+**126/127/126**. Physical CLX **34/34/33**, native **157/155/155**. Native includes
+file exchange, separate 160 KiB partition, actual launch, execution and return;
+module timing excludes final prompt painting. Both routes return status 7 and
+recover memory. This small-command result does not establish a large-app or nano
+advantage. Keep CLX; no production process replacement is justified by this probe.
+[Methods and limits](native-bench/RESULTS.md).
+
+Receipts are useful only for the current checked-versus-unknown launch policy;
+staging and retained backups provide recovery. Recommend policy review before
+removing receipts, not another trust database. Cold NewPtr/image/metadata/stdio
+preparation is the next loader measurement; do not hide it with permanent caches.
+[Native-first and receipt assessment](loader-review/SIMPLIFICATION.md).
+
+Runtime allocation already adapts to available application heap minus 32 KiB
+headroom; there is no current 96 KiB command ceiling. Small 2 KiB pages and direct
+allocations are invocation-owned. Genuine limits include the 768 KiB partition,
+contiguous space and 64 KiB stack. Separate loader limits (256 KiB image, 8192
+relocations, 128 imports) need compatibility/overflow review before changing.
+Initial utility limits: FILE/FD tables 12, temporaries 20, recursive traversal depth
+8; inventory is preliminary, with no widespread utility rewrites authorised.
+
+Deployment issue: Finder was scrolled past the current app and contained many prior
+`.cu-*` copies. Remote inspection located build 1534 as **Clarice Updatastute** on
+Macintosh HD and confirmed its greeting before measurements. Older copies were
+opened during identification; those are not benchmark evidence. No application
+contents or backups were deleted. Owner requests one clearly named current app,
+identifiable recovery and safe staging cleanup. Updating an existing copy is already
+the intended workflow; broader cleanup remains future updater work. No push/release.
 
 ## Terminal UX and capabilities — 15 November 2026
 

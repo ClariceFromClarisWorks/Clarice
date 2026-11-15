@@ -1,0 +1,75 @@
+{
+  "platform": "Snow Plus 4 MB existing System 6 fixture; greeting reports 6.0.7",
+  "units": "60 Hz ticks",
+  "clx_total": [
+    25,
+    27,
+    27
+  ],
+  "native_total": [
+    126,
+    127,
+    126
+  ],
+  "native_driver_load": [
+    25,
+    26,
+    25
+  ],
+  "native_entry": [
+    56,
+    55,
+    55
+  ],
+  "native_body": [
+    4,
+    5,
+    5
+  ],
+  "native_driver_entry_to_return": [
+    100,
+    100,
+    100
+  ],
+  "free_heap_after_each": 421176,
+  "remaining_owned": 0,
+  "worker_SIZE_bytes": 163840,
+  "worker_FreeMem": 4664,
+  "limitation": "module timer ends after execution/cleanup, before final prompt painting; native includes CLX test driver and bounded HFS request/response, not live stream transport; no physical native measurement yet",
+  "physical": {
+    "machine": "stock Macintosh SE 68000, 4 MB; greeting reports System 6.0.7",
+    "clx_total_ticks": [
+      34,
+      34,
+      33
+    ],
+    "native_total_ticks": [
+      157,
+      155,
+      155
+    ],
+    "native_driver_load_ticks": [
+      32,
+      34,
+      33
+    ],
+    "native_entry_ticks": [
+      69,
+      65,
+      66
+    ],
+    "native_body_ticks": [
+      10,
+      9,
+      9
+    ],
+    "native_driver_entry_to_return_ticks": [
+      124,
+      121,
+      121
+    ],
+    "post_invocation_heap": 420992,
+    "remaining_owned": 0,
+    "worker_FreeMem": 4652
+  }
+}
