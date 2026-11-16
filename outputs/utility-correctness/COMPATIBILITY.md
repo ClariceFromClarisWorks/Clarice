@@ -1,6 +1,6 @@
 # Portable shell and utility acceptance — 16 November 2026
 
-Build 2026111544, practical-script/diagnostic batch (1543 checkpoint 61a1b4c preserved). **Snow only**, Plus/4 MB; guest reports
+Build 2026111545, argv ownership/editor environment batch (1544 checkpoint 5bfa053 preserved). **Snow only**, Plus/4 MB; guest reports
 System 6.0.7. No new physical/System 6.0.8 acceptance. No POSIX certification.
 
 **Fully supported** below means the explicitly named form, within stated capacity
@@ -15,7 +15,7 @@ The reference is dash plus portable utility behaviour, not Bash extensions.
 |---|---|---|
 | Simple commands, sequences, `&&`, `||`, `!`, `$?` | Fully supported (named forms) | Left-associative and/or; short-circuiting and final pipeline status tested. Cancellation is 130. |
 | Single/double quotes, escapes, concatenation | Partial | Tested strings with spaces, empty arguments, literals and adjacent expansions. Quoted `$@` preserves argument boundaries, empty arguments and attached prefixes/suffixes. Empty quote groups follow dash, including `"$@$@"`; separate `"$@"` with no parameters disappears. |
-| Variables, IFS, positional parameters | Partial | Assignment, unset, `$0`/`$1`/`$#`, `set args`, `set - args`, `set --`, shift, quoted `$*`, IFS whitespace/non-whitespace splitting tested. Variable names/count/values and positional storage now grow on demand; 80 variables, 100 arguments and 64 KiB records tested. Export attributes survive reassignment and snapshots; new sh invocations inherit exported values and no functions. `export -p` round-trips quoted values and exported-but-unset names. Native HOME/PWD defaults remain Macintosh-specific. Rebuilt awk imports grow on demand; the unchanged editor still imports only 18 entries into 24 slots and rejects entries beyond 1024 bytes. |
+| Variables, IFS, positional parameters | Partial | Assignment, unset, `$0`/`$1`/`$#`, `set args`, `set - args`, `set --`, shift, quoted `$*`, IFS whitespace/non-whitespace splitting tested. Variable names/count/values and positional storage now grow on demand; 80 variables, 100 arguments and 64 KiB records tested. Export attributes survive reassignment and snapshots; new sh invocations inherit exported values and no functions. `export -p` round-trips quoted values and exported-but-unset names. Native HOME/PWD defaults remain Macintosh-specific. Rebuilt awk imports grow on demand; the editor adapter also imports on demand, preserves only exported values and forces TERM=clarice. Host 80 x 4096-byte and Snow 40 x 2048-byte imports pass with cleanup; genuine exhaustion fails explicitly. |
 | Parameter expansion | Partial | Defaults/alternates/assignment/error/length and prefix/suffix removal exist. Braced special parameters `${@}`, `${*}`, `${#}` and `${?}` work. Default/alternate words preserve nested quoted `$@` fields. Operations on `$@`/`$*` other than ordinary expansion explicitly fail; scalar assignment/error operators do not provide full vector expansion. No Bash arrays or indirect expansion. |
 | `for`, `while`, `until`, `if`, `case` | Partial | Ordinary forms, nested loops and unnumbered break/continue tested. Numeric break/continue levels rejected. Existing syntax/execution nesting limits remain. |
 | Functions, `.`, `sh -c`, script operands | Partial | Function arguments/return, temporary assignment restoration, shared variable/export effects, sourced definitions/variables/positional changes and copied redirected bodies tested. Dot with explicit arguments retains Clarice’s scoped-argument extension; no-argument dot shares the caller’s positional parameters. Redirection attached to a function *definition* is rejected; redirecting its call or body works. |
@@ -86,6 +86,8 @@ than being relabelled OOM during cleanup. Genuine injected allocation exhaustion
 still reports OOM and recovers. Editor environment limits are demonstrated
 functional restrictions, not System 6 requirements; correcting them remains work.
 
-Native total-heap stability is not established: matched old/new awk tests both
-lose about 96 B per invocation despite zero tracked command allocations. This
-pre-existing retention remains unresolved; see the practical memory comparison.
+Build 1545 fixes the native awk heap decline: upstream rewrites argv entries, so
+the loader now lends commands a temporary pointer-vector copy while preserving
+shell ownership. Matching new-awk runs settle at 362452 B free; ten empty runs
+remain at 362352 B. This is a focused leak correction, not a claim that every
+workload has invariant heap usage. See ../heap-audit/RESULTS.md.

@@ -1,0 +1,136 @@
+{
+  "build": 2026111545,
+  "platform": "Snow Plus / 4 MB / reported 6.0.7 / fixed uncapped",
+  "physical_acceptance": false,
+  "awk_fixed": [
+    {
+      "heap": 362454,
+      "largest": 362220
+    },
+    {
+      "heap": 362452,
+      "largest": 362218
+    },
+    {
+      "heap": 362452,
+      "largest": 362218
+    },
+    {
+      "heap": 362452,
+      "largest": 362218
+    },
+    {
+      "heap": 362452,
+      "largest": 362218
+    }
+  ],
+  "awk_empty": [
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362184
+    },
+    {
+      "heap": 362352,
+      "largest": 362220
+    }
+  ],
+  "heap_walk_counts": [
+    [
+      769,
+      83372,
+      36,
+      255330
+    ],
+    [
+      769,
+      83362,
+      36,
+      255330
+    ],
+    [
+      769,
+      83372,
+      36,
+      255330
+    ],
+    [
+      769,
+      83362,
+      36,
+      255330
+    ]
+  ],
+  "editor": [
+    {
+      "heap": 309742,
+      "largest": 306934
+    },
+    {
+      "heap": 309744,
+      "largest": 306934
+    },
+    {
+      "heap": 309742,
+      "largest": 306934
+    },
+    {
+      "heap": 309744,
+      "largest": 306934
+    },
+    {
+      "heap": 309742,
+      "largest": 306934
+    }
+  ],
+  "nano": [
+    {
+      "heap": 399650,
+      "largest": 236688
+    },
+    {
+      "heap": 399658,
+      "largest": 236688
+    },
+    {
+      "heap": 399658,
+      "largest": 236688
+    }
+  ],
+  "cancel_status": 130,
+  "post_cancel_array_entries": 500,
+  "exhausted_array_request": 1000,
+  "exhaustion_status": 2,
+  "upstream_variants": 6
+}

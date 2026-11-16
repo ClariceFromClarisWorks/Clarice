@@ -4,6 +4,7 @@
 #include "termios.h"
 #include "sys/ioctl.h"
 #include <stdarg.h>
+#include <limits.h>
 extern unsigned long cli_ticks(void);
 extern int app_columns(void),app_screen_rows(void),app_screen_pending(void),app_yield(void);
 extern void app_screen_flush_input(void);
@@ -19,21 +20,37 @@ speed_t cfgetispeed(const struct termios *t){return t->c_ispeed;}
 int cfsetospeed(struct termios *t,speed_t s){t->c_ospeed=s;return 0;}
 int cfsetispeed(struct termios *t,speed_t s){t->c_ispeed=s;return 0;}
 int ioctl(int fd,unsigned long request,...){va_list ap;va_start(ap,request);void *p=va_arg(ap,void*);va_end(ap);if(!cli_isatty(fd)||!p){errno=ENOTTY;return -1;}if(request==TIOCGWINSZ){struct winsize *w=p;memset(w,0,sizeof *w);w->ws_row=app_screen_rows();w->ws_col=app_columns();return 0;}if(request==FIONREAD){*(int*)p=app_screen_pending();return 0;}errno=ENOTTY;return -1;}
-/* A private, bounded environment snapshot for this invocation. */
+/* Invocation-owned environment: only exported entries, with no count/value
+   ceiling. The port runtime reclaims entries on exit, failure or cancellation. */
 extern int cli_environment(int,char *,unsigned long);
-static char *environment[24];
+struct editor_env {struct editor_env *next;char text[];};
+static struct editor_env *environment;
 static int env_ready;
-static int env_slot(const char *name){size_t n=strlen(name);for(int i=0;i<24;i++)if(environment[i]&&!strncmp(environment[i],name,n)&&environment[i][n]=='=')return i;return -1;}
+static struct editor_env **env_slot(const char *name){size_t n=strlen(name);struct editor_env **slot=&environment;while(*slot&&(strncmp((*slot)->text,name,n)||(*slot)->text[n]!='='))slot=&(*slot)->next;return slot;}
 static int env_store(const char *name,const char *value,int overwrite){
  if(!name||!*name||strchr(name,'=')||!value){errno=EINVAL;return -1;}
- int i=env_slot(name);if(i>=0&&!overwrite)return 0;if(i<0)for(i=0;i<24&&environment[i];i++);
- size_t a=strlen(name),b=strlen(value);if(i==24||a+b+2>1024){errno=ENOMEM;return -1;}
- char *p=malloc(a+b+2);if(!p)return -1;memcpy(p,name,a);p[a]='=';memcpy(p+a+1,value,b+1);free(environment[i]);environment[i]=p;return 0;
+ struct editor_env **slot=env_slot(name),*old=*slot;if(old&&!overwrite)return 0;
+ size_t a=strlen(name),b=strlen(value);
+ if(a>(size_t)-1-sizeof(struct editor_env)-2||b>(size_t)-1-sizeof(struct editor_env)-2-a){errno=ENOMEM;return -1;}
+ struct editor_env *p=malloc(sizeof *p+a+b+2);if(!p)return -1;
+ p->next=old?old->next:NULL;memcpy(p->text,name,a);p->text[a]='=';memcpy(p->text+a+1,value,b+1);*slot=p;free(old);return 0;
 }
-static void env_init(void){if(env_ready)return;env_ready=1;char line[1024];for(int i=0;i<18;i++)if(cli_environment(i,line,sizeof line)>0){char *eq=strchr(line,'=');if(eq){*eq=0;env_store(line,eq+1,1);}}env_store("TERM","clarice",1);}
-char *port_curses_getenv(const char *name){env_init();int i=env_slot(name);return i<0?0:strchr(environment[i],'=')+1;}
+static void env_failure(void){fputs("editor: insufficient memory importing environment\n",stderr);port_exit(2);}
+static void env_init(void){
+ if(env_ready)return;size_t capacity=128;char *line=malloc(capacity);if(!line)env_failure();
+ for(int i=0;;i++){
+  int result=cli_environment(i,line,capacity);
+  while(result<0){if(capacity>(size_t)-1/2)env_failure();capacity*=2;char *p=realloc(line,capacity);if(!p)env_failure();line=p;result=cli_environment(i,line,capacity);}
+  if(!result)break;
+  char *eq=strchr(line,'=');if(!eq){fputs("editor: invalid exported environment\n",stderr);port_exit(2);}
+  *eq=0;if(env_store(line,eq+1,1))env_failure();
+  if(i==INT_MAX)env_failure();
+ }
+ free(line);if(env_store("TERM","clarice",1))env_failure();env_ready=1;
+}
+char *port_curses_getenv(const char *name){env_init();if(!name)return NULL;struct editor_env *e=*env_slot(name);return e?strchr(e->text,'=')+1:NULL;}
 int setenv(const char *name,const char *value,int overwrite){env_init();return env_store(name,value,overwrite);}
-int unsetenv(const char *name){env_init();if(!name||!*name||strchr(name,'=')){errno=EINVAL;return -1;}int i=env_slot(name);if(i>=0){free(environment[i]);environment[i]=0;}return 0;}
+int unsetenv(const char *name){env_init();if(!name||!*name||strchr(name,'=')){errno=EINVAL;return -1;}struct editor_env **slot=env_slot(name),*old=*slot;if(old){*slot=old->next;free(old);}return 0;}
 /* Synchronous signal delivery inside the active command; no process IDs,
    asynchronous OS delivery, job control or catchable hardware faults. */
 typedef void (*Handler)(int);

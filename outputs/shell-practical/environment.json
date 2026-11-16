@@ -49,19 +49,8 @@
       "accounting": "PORT_STATS peak=28813 remaining=0\n"
     }
   ],
-  "unchanged_editor": [
-    {
-      "large_values": false,
-      "result": "imported=18 long_set=-1 errno=12\n"
-    },
-    {
-      "large_values": true,
-      "result": "imported=0 long_set=-1 errno=12\n"
-    }
-  ],
-  "awk_cancel": {
-    "status": 130,
-    "stderr": "PORT_STATS peak=42520 remaining=0\n",
-    "no_execution": true
+  "editor": {
+    "elastic": true,
+    "result": "PASS editor environment: 80 exports x 4096 bytes; 88 import failure points; cancellation, replacement, 20 repeats; peak=337062 remaining=0\n"
   }
 }

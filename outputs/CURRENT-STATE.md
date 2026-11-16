@@ -1,8 +1,8 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted **2026111543 / 61a1b4c** is preserved on
-`codex/utility-correctness-2026111539`. Build **2026111544** adds practical upstream
-script acceptance, accurate syntax diagnostics and elastic awk environment import.
+16 November 2026, Adelaide. Accepted **2026111544 / 5bfa053** is preserved on
+`codex/utility-correctness-2026111539`. Build **2026111545** fixes command argument ownership and makes editor
+environment import elastic. Practical upstream-script acceptance is preserved.
 Host and Snow Plus/4 MB/**reported System 6.0.7** only; physical SE/6.0.8 remains
 pending and the SE stays off. No release, tag or main change.
 
@@ -11,6 +11,39 @@ Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-ux-2026111533`, inheriting Research Before Reinvention from 12ccb4a.
 No tag or release. Physical loader profiling has resumed; build 1534 changes only
 the approved installed-fast metadata validation path, not nano.
+
+## Native heap and editor environment — build 2026111545
+
+- Root cause: upstream awk overwrites argv entries. Passing the shell-owned vector
+  lost its program-string allocation and caused a duplicate free attempt. CLX now
+  lends a temporary pointer-vector copy, released on normal/error/cancel return.
+  No checksum/ABI or allocator redesign; no permanent memory added. Two-argument
+  commands require 12 transient bytes plus native block overhead.
+- Before: native heap walk gained one pointer block per run, handles stayed flat;
+  compaction did not recover it. Fixed matched new awk settles at 362452 B free;
+  ten empty runs remain 362352 B. Four final walks retain 769 pointer / 36 handle
+  blocks. Native stdio's previously measured reusable pool remains unchanged.
+- Editor exports now grow on demand, including values >1024 B; TERM=clarice and
+  private-variable exclusion preserved. Host 80 x 4096 B, 88 import-failure sites,
+  cancellation and repeats pass. Snow 40 x 2048 B: five successes, free heap
+  309742/309744 B, largest 306934 B, owned peak 97220 B, remaining=0. Three injected
+  import failures return 2 and recover with stable heap and explicit diagnostics.
+- Existing nano/ncurses objects relinked with only the terminal adapter recompiled.
+  Six launches, disposable save/reopen. Matched three-run loop: free heap
+  399650/399658/399658 B; largest 236688 B; owned peak 87684 B, remaining=0.
+  30 exports and a 1500-byte value present. Canonical 255-byte input bound unchanged.
+- Host 54/39/41 shell comparisons, 12 scripts, 31 basic/3 cancel, 9874 parser and
+  3090 scope fault trials pass. Loader mutation/error/cancel/admission tests pass.
+  Six upstream-script guest variants still match dash exactly. Native awk heap
+  exhaustion fails explicitly and recovers; 1000 entries exceed this fixture's
+  available heap, so that workload is not labelled successful. Ordinary Ctrl+C
+  returns 130, skips the next command and restores streams; a following 500-entry
+  awk array returns 0 with remaining=0.
+- Normal MacBinary 957952 B (+256); experimental nano 268212 B (+212), separately
+  installed. Local build artifacts excluded from Git; no physical-SE acceptance.
+
+[Evidence, limits and reproduction](heap-audit/RESULTS.md),
+[compatibility](utility-correctness/COMPATIBILITY.md).
 
 ## Practical scripts and environment audit — build 2026111544
 
@@ -27,16 +60,8 @@ the approved installed-fast metadata validation path, not nano.
   Host: 30 x 4096-byte exports, low-memory failures, cancellation before execution,
   remaining=0. Snow: 30 x 512-byte exports, three successful repeats, owned peak
   67723 B, remaining=0. No idle reservation or runtime ABI change.
-- **Whole-application heap stability remains unresolved.** Initial free heap fell
-  381500 → 381404 → 381302 B. Ten further invocations also declined. Matched old/new
-  awk controls each lost 384 B over four intervals (~96 B/invocation), with owned
-  allocations zero. This predates the change; it is not labelled stable or fixed.
-  Next memory investigation should isolate the shared runtime/loader/native heap.
-- Editor audit reproduces 18 imported entries, 24 slots and 1024-byte entries,
-  including silent omission of large exports. These are artificial restrictions,
-  not HFS constraints; the editor is unchanged and needs a focused correction and
-  its own validation. Canonical input has a separate 255-byte bound; nano uses raw
-  input. No new editor acceptance.
+- The subsequently isolated argv-ownership leak and editor environment limits
+  are corrected in 1545 (above); original 1544 evidence remains historical.
 - Retained host 54 POSIX, 39 focused, 41 elastic and basic/cancellation cases pass;
   9874 parser and 3090 scope failure positions pass. Native Ctrl+C returns 130,
   skips the following command and restores stdout/stderr. Guest runs fixed max

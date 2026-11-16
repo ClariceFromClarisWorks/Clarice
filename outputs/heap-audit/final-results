@@ -1,0 +1,51 @@
+FAILURE:2
+Runtime: heap=289756 largest=286050 image=7676 ticks=85 load=62 owned-peak=7620 remaining=0
+Loader ticks: read=13 validate=16 imports=1 relocations=1 prepare=24 events=2 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=16 metadata=0 structure=1 (structure included in relocations)
+PASS editor 40 exported 2048-byte values, TERM override, private exclusion, set/unset
+RECOVERY:0
+Runtime: heap=289756 largest=286050 image=7404 ticks=226 load=42 owned-peak=97220 remaining=0
+Loader ticks: read=11 validate=14 imports=1 relocations=1 prepare=7 events=0 (events included above)
+Verification ticks: mode=full header=0 record=8 payload=14 metadata=0 structure=1 (structure included in relocations)
+FAILURE:2
+Runtime: heap=289758 largest=286050 image=7676 ticks=62 load=44 owned-peak=7620 remaining=0
+Loader ticks: read=13 validate=15 imports=1 relocations=1 prepare=7 events=1 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=15 metadata=0 structure=1 (structure included in relocations)
+PASS editor 40 exported 2048-byte values, TERM override, private exclusion, set/unset
+RECOVERY:0
+Runtime: heap=289758 largest=286050 image=7404 ticks=220 load=43 owned-peak=97220 remaining=0
+Loader ticks: read=12 validate=16 imports=1 relocations=1 prepare=6 events=3 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=16 metadata=0 structure=1 (structure included in relocations)
+FAILURE:2
+Runtime: heap=289756 largest=286050 image=7676 ticks=64 load=44 owned-peak=7620 remaining=0
+Loader ticks: read=12 validate=15 imports=2 relocations=1 prepare=7 events=0 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=15 metadata=0 structure=0 (structure included in relocations)
+PASS editor 40 exported 2048-byte values, TERM override, private exclusion, set/unset
+RECOVERY:0
+Runtime: heap=289756 largest=286050 image=7404 ticks=219 load=43 owned-peak=97220 remaining=0
+Loader ticks: read=12 validate=16 imports=1 relocations=1 prepare=6 events=3 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=16 metadata=0 structure=1 (structure included in relocations)
+AWK_FAILURE:2
+LARGE:2
+Runtime: heap=374438 largest=234468 image=136800 ticks=1795 load=334 owned-peak=203598 remaining=0
+Loader ticks: read=51 validate=229 imports=3 relocations=14 prepare=27 events=16 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=229 metadata=0 structure=9 (structure included in relocations)
+AWK_FAILURE:2
+LARGE:2
+Runtime: heap=374444 largest=234472 image=136800 ticks=1693 load=311 owned-peak=203598 remaining=0
+Loader ticks: read=50 validate=230 imports=2 relocations=15 prepare=4 events=17 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)
+AWK_FAILURE:2
+LARGE:2
+Runtime: heap=374442 largest=234472 image=136800 ticks=1693 load=311 owned-peak=203598 remaining=0
+Loader ticks: read=50 validate=230 imports=2 relocations=15 prepare=4 events=18 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)
+EXHAUSTION:2
+Runtime: heap=374530 largest=234460 image=136800 ticks=1701 load=311 owned-peak=203688 remaining=0
+Loader ticks: read=50 validate=231 imports=2 relocations=15 prepare=4 events=14 (events included above)
+Verification ticks: mode=full header=1 record=9 payload=230 metadata=0 structure=9 (structure included in relocations)
+AWK_RECOVERED
+AFTER_EXHAUSTION:0
+Runtime: heap=374540 largest=234470 image=136800 ticks=338 load=311 owned-peak=16809 remaining=0
+Loader ticks: read=50 validate=230 imports=2 relocations=15 prepare=3 events=16 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)

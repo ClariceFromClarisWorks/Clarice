@@ -1,0 +1,7 @@
+awk
+heap=402628 largest=402526 compact=402526 after=402628 rel=0 ptr=0 empty=0 handles=0
+heap=402600 largest=402514 compact=402514 after=402600 rel=0 ptr=0 empty=0 handles=0
+heap=402574 largest=402498 compact=402498 after=402574 rel=0 ptr=0 empty=0 handles=0
+heap=402570 largest=402470 compact=402470 after=402570 rel=0 ptr=0 empty=0 handles=0
+heap=402546 largest=402462 compact=402462 after=402546 rel=0 ptr=0 empty=0 handles=0
+heap=402524 largest=402464 compact=402464 after=402524 rel=0 ptr=0 empty=0 handles=0

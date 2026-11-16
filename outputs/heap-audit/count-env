@@ -1,0 +1,7 @@
+env
+heap=402246 largest=262568 compact=262568 after=402246 rel=0 ptr=0 empty=0 handles=0
+heap=402186 largest=262706 compact=262706 after=402186 rel=0 ptr=0 empty=0 handles=0
+heap=402138 largest=262670 compact=262670 after=402138 rel=0 ptr=0 empty=0 handles=0
+heap=402082 largest=262612 compact=262612 after=402082 rel=0 ptr=0 empty=0 handles=0
+heap=402010 largest=263298 compact=263298 after=402010 rel=0 ptr=0 empty=0 handles=0
+heap=401964 largest=263264 compact=263264 after=401964 rel=0 ptr=0 empty=0 handles=0

@@ -27,8 +27,8 @@ static unsigned long port_peak,port_remaining,module_bytes,module_load_ticks,mod
 static unsigned long ticks;
 static const char *verify_policy="";
 static const char *env_get(const char *name){(void)name;return verify_policy;}
-static int executions;
-static int clx_test_execute(const unsigned char *p,unsigned long n){(void)p;(void)n;executions++;return 0;}
+static int executions,execute_status,fail_alloc_at,alloc_calls;
+static int clx_test_execute(const unsigned char *p,unsigned long n,int argc,char **argv){(void)p;(void)n;executions++;if(argc>1){argv[1]=argv[0];argv[0]=NULL;}return execute_status;}
 static int resolve(const char *p,char *out){if(!strncmp(p,"native:",7))p+=7;strcpy(out,p);return 0;}
 static unsigned long TickCount(void){return ticks++;}
 static char diagnostics[8192];
@@ -43,7 +43,7 @@ static void app_activity_interactive(int n){(void)n;}
 static void app_serial_input(int n){(void)n;}
 static int cli_prepare_stdio(void){return 0;}
 static int allocs;
-static Ptr NewPtr(unsigned long n){void *p=malloc(n);if(p)allocs++;return p;}
+static Ptr NewPtr(unsigned long n){if(++alloc_calls==fail_alloc_at)return NULL;void *p=malloc(n);if(p)allocs++;return p;}
 static void DisposePtr(Ptr p){assert(p);allocs--;free(p);}
 static char export_names[8192];
 static void *clx_import(const char *s){char key[70];snprintf(key,sizeof key,"\n%s\n",s);return !strcmp(s,"present")||strstr(export_names,key)?(void*)1:NULL;}
@@ -97,6 +97,11 @@ int main(int argc,char **argv){
   printf("PASS: production loader validated %d actual command images and imports (no execution)\n",argc-2);return 0;
  }
  bundle_len=make_image(bundle,1,1);updated_len=make_image(updated,2,2);
+ reset();setup();char first[]="awk",program[]="BEGIN {}";char *args[]={first,program,NULL};
+ for(int run=0;run<3;run++){execute_status=run==0?0:run==1?2:130;assert(module_run(dest,2,args)==execute_status);assert(args[0]==first&&args[1]==program&&!args[2]);assert(!allocs);}execute_status=0;
+ alloc_calls=0;fail_alloc_at=3;int prior=executions;assert(module_run(dest,2,args)==126);assert(executions==prior&&!allocs);assert(strstr(diagnostics,"argument memory"));fail_alloc_at=0;
+ assert(!module_run(dest,2,args));assert(!allocs);
+
  reset();assert(!install_commands());assert(!yields);assert(find(dest)>=0);int count=writes;assert(!install_commands());assert(writes==count);assert(!command_check_native(dest));
  reset();int i=setup();assert(!install_commands());same_old(i,dest);
  reset();i=put(dest,updated,updated_len);assert(!install_commands());assert(find(dest)==i&&!memcmp(files[i].data,updated,updated_len));

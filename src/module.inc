@@ -62,7 +62,7 @@ static int module_load(const char *path,int argc,char **argv,int execute){
  if(execute)perf_allocs=perf_free_ticks=perf_new_ticks=perf_read_ticks=perf_reads=perf_stdio_ticks=perf_image_ticks=perf_meta_ticks=0;
 #endif
  if(execute){port_peak=port_remaining=module_bytes=module_load_ticks=0;module_read_ticks=module_validate_ticks=module_import_ticks=module_reloc_ticks=module_prepare_ticks=0;}
- short ref=-1;unsigned char header[48] __attribute__((aligned(2)))={0};long length=32,total=0;unsigned char *file=0,*meta=0;int status=126,executed=0;
+ short ref=-1;unsigned char header[48] __attribute__((aligned(2)))={0};long length=32,total=0;unsigned char *file=0,*meta=0;int status=126,executed=0;char **command_argv=0;
  unsigned long reading=0,validation=0,imports_time=0,relocations=0,preparation=0;
  char native[PATH_CAP],receipt_path[PATH_CAP];
  unsigned char identity[32],receipt[CLX_RECORD_BYTES] __attribute__((aligned(2)));
@@ -138,16 +138,24 @@ if(!meta){reason="insufficient relocation memory";goto close;}
  if(eligible&&!matched){memset(receipt,0,sizeof receipt);memcpy(receipt,"CLXV0001",8);memcpy(receipt+8,identity,32);memcpy(receipt+40,header,48);strcpy((char*)receipt+88,native);clx_put32(receipt+344,metadata_hash);clx_put32(receipt+348,clx_hash(2166136261UL,receipt,348));clx_receipt_write(receipt_path,receipt);}
  record_time+=TickCount()-phase;
  if(!execute){status=0;goto close;}
+ /* Programs may reorder/replace argv entries (upstream awk does). Preserve
+    the caller's pointer ownership; strings remain writable as required by C. */
+ phase=TickCount();
+ if(argc<0||(unsigned long)argc>0x7fffffffUL/sizeof(char*)-1){reason="invalid argument count";goto close;}
+ command_argv=(char**)NewPtr(((unsigned long)argc+1)*sizeof(char*));
+ if(!command_argv){reason="insufficient argument memory";goto close;}
+ if(argc)memcpy(command_argv,argv,(unsigned long)argc*sizeof(char*));command_argv[argc]=0;
+ preparation+=TickCount()-phase;
  executed=1;module_load_ticks=TickCount()-started;
  module_read_ticks=reading;module_validate_ticks=validation;module_import_ticks=imports_time;module_reloc_ticks=relocations;module_prepare_ticks=preparation;
 #ifdef CLX_HOST_TEST
- status=clx_test_execute(file,size);
+ status=clx_test_execute(file,size,argc,command_argv);
 #else
- status=((int (*)(int,char**))(file+entry))(argc,argv)&255;
+ status=((int (*)(int,char**))(file+entry))(argc,command_argv)&255;
 #endif
 close:
  module_fast=fast;module_header_ticks=header_time;module_record_ticks=record_time;module_payload_ticks=payload_time;module_metadata_ticks=metadata_time;module_structure_ticks=structure_time;
- if(ref>=0)FSClose(ref);if(meta)DisposePtr((Ptr)meta);if(file)DisposePtr((Ptr)file);
+ if(command_argv)DisposePtr((Ptr)command_argv);if(ref>=0)FSClose(ref);if(meta)DisposePtr((Ptr)meta);if(file)DisposePtr((Ptr)file);
  if(status==126&&!executed&&!resolve(path,native)){
   if(clx_receipt_forget(native)){clx_fast_blocked=1;errsay("command: cannot revoke verification record; fast launch disabled for this session\n");}
  }
