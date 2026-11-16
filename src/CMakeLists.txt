@@ -42,3 +42,13 @@ endif()
 if(CLARICE_ACTIVITY_DIAGNOSTICS)
  target_compile_definitions(Clarice PRIVATE CLARICE_ACTIVITY_DIAGNOSTICS=1)
 endif()
+
+# Deterministic parser exhaustion checks; excluded from production applications.
+if(CLARICE_PARSER_SAFETY_TEST)
+ target_compile_definitions(Clarice PRIVATE CLARICE_PARSER_SAFETY_TEST=1)
+ target_sources(Clarice PRIVATE ../tests/parser/guest.c)
+ set_property(SOURCE vendor/mrsh/ast.c vendor/mrsh/array.c vendor/mrsh/buffer.c
+  vendor/mrsh/arithm.c vendor/mrsh/parser/parser.c vendor/mrsh/parser/program.c
+  vendor/mrsh/parser/word.c vendor/mrsh/parser/arithm.c APPEND PROPERTY
+  COMPILE_OPTIONS -include "${CMAKE_CURRENT_SOURCE_DIR}/../tests/parser/guest.h")
+endif()

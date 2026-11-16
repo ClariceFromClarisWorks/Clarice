@@ -1,0 +1,19 @@
+{
+  "scope": "Host CPU seconds for 10,000 parse/destroy operations; not SE performance",
+  "samples": {
+    "1541": [
+      0.011945,
+      0.012073,
+      0.011083,
+      0.010579,
+      0.010452
+    ],
+    "candidate": [
+      0.016285,
+      0.015715,
+      0.013857,
+      0.013063,
+      0.013037
+    ]
+  }
+}

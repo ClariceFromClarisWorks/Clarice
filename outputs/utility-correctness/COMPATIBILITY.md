@@ -1,6 +1,6 @@
 # Portable shell and utility acceptance — 16 November 2026
 
-Build 2026111541, elastic shell batch one (1540 checkpoint preserved). **Snow only**, Plus/4 MB; guest reports
+Build 2026111542, parser safety and elastic capacity (1541 checkpoint preserved). **Snow only**, Plus/4 MB; guest reports
 System 6.0.7. No new physical/System 6.0.8 acceptance. No POSIX certification.
 
 **Fully supported** below means the explicitly named form, within stated capacity
@@ -28,7 +28,7 @@ The reference is dash plus portable utility behaviour, not Bash extensions.
 | Pathname expansion | Partial / HFS | Final-component globs sorted; parent-directory wildcards rejected. HFS case/31-byte names and encoded `/`/`%` differ. Host glob shim is not evidence of native glob behaviour. |
 | Shell options, traps, exec, readonly, getopts | Unsupported/incomplete | No full `set -e/-u/-f`/trap/exec facility; `set --` is supported. Do not silently assume scripts using these features are portable here. |
 | Jobs, Unix process IDs, fork, signals, users/permissions | Platform-limited | Not simulated. Cooperative Ctrl+C, no process groups/job control/sudo/Unix permission ownership. chmod is not implemented; native metadata uses hfsattr. |
-| Resource bounds | Partial | 8 KiB script, 256-token guard, 16 functions, source depth 8 and execution depth 16 remain pending parser failure hardening; argument count/storage, variable storage and command-substitution caps are removed; command line/paste 1023 B. Bounds are explicit restrictions, not POSIX limits. Parser-wide OOM hardening remains incomplete; targeted new allocation failures are tested. |
+| Resource bounds | Partial | Source, token and function storage grow with available heap. Source/execution recursion 8/16, parser recursion 32 and deep AND-OR/arithmetic chains 64 protect the native stack. Interactive input/paste stays 1023 B; completion has its existing path-sized buffer. Parser/AST and arithmetic failures now have deterministic host/guest recovery coverage. No full POSIX resource guarantee. |
 
 ## Utility acceptance inventory
 
@@ -59,13 +59,13 @@ claim exhaustive option/failure testing or revalidate communications/updating.
 - `scenarios-guest.json` and `workflows/`: equivalent native execution, exact output
   except od comparison normalises only presentation whitespace (same byte values).
 - `compound-failures.json`: scope/control-flow/cancellation and descriptor cleanup.
-  `compound-oom.json`: 18 fault-position trials: 10 injected failures at new parser/copy ownership sites
-  plus 8 beyond-allocation controls.
+  `compound-oom.json`: 18 legacy fault-position trials: six current injected sites plus controls; the
+  parser-safety sweep covers 8,268 AST-copy failure positions.
 - Earlier utility depth/stream/large-record tests remain in RESULTS.md and AUDIT.md.
   These establish particular capabilities, not every possible Unix option.
 
-Next correctness priorities: shell capacity/parameter grammar, complete printf/read
+Next correctness priorities: quoted parameter grammar/export visibility, printf/test
 semantics, export/subshell isolation and additional error cases. They are an
 inventory of gaps, not authorisation for a shell replacement or OS facilities.
 
-Elastic batch evidence: [host/guest results and memory accounting](../shell-elastic/RESULTS.md). The interactive 1023-byte input limit is unchanged. Parser-wide allocation failure is **not** safe yet: the host probe reproduces a null dereference at parser construction.
+Elastic batch evidence: [host/guest results and memory accounting](../shell-elastic/RESULTS.md). The interactive 1023-byte input limit is unchanged. The original parser-construction crash is fixed. [Parser safety evidence](../parser-safety/RESULTS.md) covers construction, partial cleanup, function copying and real guest exhaustion. Large source parsing can still be slow; lexical scanning does not yet poll cancellation.

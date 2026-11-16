@@ -141,7 +141,7 @@ say(b);snprintf(b,sizeof b,"Verification ticks: mode=%s header=%lu record=%lu pa
  if(output_error)status=1;shell_status=status;return status;
 }
 /* Completion scans the directory without retaining its entries. */
-static void match_candidate(const char *s,const char *prefix,char *common,int *count){size_t n=strlen(prefix),i;if(strncmp(s,prefix,n))return;if(!*count)strcpy(common,s);else for(i=0;common[i];i++)if(common[i]!=s[i]){common[i]=0;break;}(*count)++;}
+static void match_candidate(const char *s,const char *prefix,char *common,int *count){size_t n=strlen(prefix),i;if(strlen(s)>=PATH_CAP||strncmp(s,prefix,n))return;if(!*count)strcpy(common,s);else for(i=0;common[i];i++)if(common[i]!=s[i]){common[i]=0;break;}(*count)++;}
 static void completion_item(const char *candidate,const char *prefix,char *common,int *count,int show,int *shown){match_candidate(candidate,prefix,common,count);if(show&&*shown<50&&!strncmp(candidate,prefix,strlen(prefix))){term_puts(candidate);term_puts("  ");(*shown)++;}}
 static void complete_functions(const char *,char *,int *,int,int *);
 static int builtin_name(const char *s){int i;for(i=0;commands[i];i++)if(!strcmp(commands[i],s))return 1;return 0;}
@@ -171,4 +171,4 @@ void shell_dispatch_stats(unsigned long *out){out[0]=dispatch_path_ticks;out[1]=
 #endif
 #include "sh.inc"
 
-static void complete_functions(const char *p,char *c,int *n,int show,int *shown){for(int i=0;i<16;i++)if(sh_functions[i].name[0]&&!builtin_name(sh_functions[i].name))completion_item(sh_functions[i].name,p,c,n,show,shown);}
+static void complete_functions(const char *p,char *c,int *n,int show,int *shown){for(struct sh_function *f=sh_functions;f;f=f->next)if(!builtin_name(f->name))completion_item(f->name,p,c,n,show,shown);}

@@ -9,6 +9,7 @@ bool mrsh_array_reserve(struct mrsh_array *array, size_t new_cap) {
 		return true;
 	}
 
+	if (new_cap > (size_t)-1 / sizeof(void *)) return false;
 	void *new_data = realloc(array->data, new_cap * sizeof(void *));
 	if (new_data == NULL) {
 		return false;
@@ -22,6 +23,7 @@ ssize_t mrsh_array_add(struct mrsh_array *array, void *value) {
 	assert(array->len <= array->cap);
 
 	if (array->len == array->cap) {
+		if (array->cap > (size_t)-1/2) return -1;
 		size_t new_cap = 2 * array->cap;
 		if (new_cap < INITIAL_SIZE) {
 			new_cap = INITIAL_SIZE;
@@ -39,5 +41,6 @@ ssize_t mrsh_array_add(struct mrsh_array *array, void *value) {
 
 void mrsh_array_finish(struct mrsh_array *array) {
 	free(array->data);
+	array->data = NULL;
 	array->cap = array->len = 0;
 }

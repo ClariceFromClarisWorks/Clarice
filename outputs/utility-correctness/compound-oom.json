@@ -37,25 +37,25 @@
   },
   {
     "failure": 7,
-    "injected": true,
+    "injected": false,
     "status": 0,
     "passed": true
   },
   {
     "failure": 8,
-    "injected": true,
+    "injected": false,
     "status": 0,
     "passed": true
   },
   {
     "failure": 9,
-    "injected": true,
+    "injected": false,
     "status": 0,
     "passed": true
   },
   {
     "failure": 10,
-    "injected": true,
+    "injected": false,
     "status": 0,
     "passed": true
   },

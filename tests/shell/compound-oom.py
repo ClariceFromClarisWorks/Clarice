@@ -8,6 +8,7 @@ for name in ['ast.c','parser/program.c']:
  s=(r/'src/vendor/mrsh'/name).read_text()
  s='#include <stddef.h>\nextern void *fault_alloc(size_t,size_t);\nextern long fault_add(void *,void *);\n'+s
  s=s.replace('calloc(1, sizeof *cmd->redirects)','fault_alloc(1, sizeof *cmd->redirects)').replace('calloc(1, sizeof *copy->redirects)','fault_alloc(1, sizeof *copy->redirects)')
+ s=s.replace('calloc(1,sizeof *result->redirects)','fault_alloc(1,sizeof *result->redirects)')
  s=s.replace('mrsh_array_add(cmd->redirects, redir)','fault_add(cmd->redirects, redir)').replace('mrsh_array_add(copy->redirects,r)','fault_add(copy->redirects,r)')
  (w/Path(name).name).write_text(s)
 (w/'fault.c').write_text('''#include <stdlib.h>

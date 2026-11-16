@@ -1,11 +1,11 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted build **2026111540** is preserved in local
-checkpoint **2115cd8**, following pushed **ff68dc4**, on
-`codex/utility-correctness-2026111539`. Elastic-shell candidate **2026111541**
-passes the focused host and accelerated Snow checks below. No physical deployment,
-System 6.0.8 claim, push, release, tag or main change in this task. The SE stays off.
-ROADMAP.md is provisional history, not current authorisation.
+16 November 2026, Adelaide. Accepted **2026111541 / bbe7d97** is preserved on
+`codex/utility-correctness-2026111539`. Build **2026111542** completes the parser
+allocation-failure/capacity batch below. Validation is host and Snow Plus/4 MB,
+**reported System 6.0.7**, not physical SE or System 6.0.8. The SE remains off.
+Current authorisation includes pushing validated development checkpoints; no
+release, tag or main change. ROADMAP.md remains provisional history.
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-alignment-2026111521` is preserved. Renderer and UX work through 1533 is checkpointed on
@@ -13,39 +13,42 @@ Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 No tag or release. Physical loader profiling has resumed; build 1534 changes only
 the approved installed-fast metadata validation path, not nano.
 
-## Elastic shell — first batch, 16 November
+## Parser safety and elastic capacity — 16 November
 
-- Removed fixed variable count/name/value, expanded-word/substitution and argument
-  count/storage limits. Storage grows on demand, with checked size arithmetic and
-  staged updates. Small words use 64 inline bytes; no resident cache. The interactive
-  1023-byte line limit and AST/parser representation are unchanged.
-- Multi-variable `read` follows tested dash IFS/escape/EOF behaviour; allocation
-  failure leaves destination variables intact. Fixed function `$0` and restored
-  positional parameters across subshell/command-substitution scopes. Snapshot
-  unwinding transfers owned storage without allocating. NUL records/scripts and
-  short script/substitution reads fail explicitly.
-- Host: existing 31 comparisons/3 cancellation, 39 focused and 12 complete scripts
-  pass, plus 41 elastic comparisons. 329 adapter allocation-failure injections
-  leave zero tracked allocations; compound ownership/failure tests remain passing.
-- Snow Plus/4 MB, reported **6.0.7**, fixed uncapped FFWD approximately 15–16×:
-  all 41 new cases, all 39 focused cases and all 12 scripts pass. Includes 64 KiB
-  read/expansion, 8 KiB substitution, 80 variables and 100 arguments. A 512 KiB
-  record produces an explicit memory error and preserves `x=old`. Actual Ctrl+C
-  cancels a substitution loop with 130, skips the following command, restores
-  output/error streams; portable remaining=0. No physical tests.
-- Five repeat samples: free heap **409058, 409068, 409068, 409068, 409068 B**;
-  largest block **233372 B** throughout. Host adapter peak for `echo hello`
-  falls **8472 → 259 B** (64-bit host, excludes AST/libc, not a hardware timing).
-  Native static variable/positional arrays shrink by approximately 2.6 KiB;
-  actual live values now consume heap. Normal MacBinary is **948736 B** (+1920).
-- Remaining: 8 KiB source/256-token/16-function guards and recursion safeguards;
-  embedded quoted `$@`, full export/scope, additional printf/test semantics.
-  A focused host probe confirms the upstream parser dereferences NULL on its first
-  allocation failure. Parser/AST constructors and ignored growth failures need
-  systematic error propagation before lifting parser guards. No new arena/cache
-  or parser replacement was introduced; general parser OOM safety is not claimed.
-- [Evidence and next-step assessment](shell-elastic/RESULTS.md),
-  [compatibility matrix](utility-correctness/COMPATIBILITY.md).
+- Fixed the reproduced parser-constructor NULL dereference and unchecked AST,
+  token-buffer, heredoc, arithmetic and partial-copy failures. Explicit ownership
+  cleanup preserves existing functions and restores shell streams/state. Uses
+  mrsh's existing AST/destructors; no parser rewrite or region allocator.
+- Removed source-size, total-token, function-count/name and source-chunk ceilings.
+  Storage follows available heap. Explicit source/execution (8/16), parser (32)
+  and deep expression-chain (64) stack guards remain. Interactive input is still
+  1023 bytes; completion safely declines names outside its existing fixed buffer.
+- Host: 9,874 parser, 8,268 AST-copy, 660 arithmetic and 1,268 whole-shell injected
+  allocation positions; single failure and continued exhaustion, zero retained
+  tracked bytes, subsequent command recovery. Existing 39 focused, 12 whole and
+  41 elastic cases pass, as do 31 comparisons / 3 cancellation cases and 329
+  adapter allocation failures. Long-name completion passes sanitizer checks.
+- Snow diagnostic run: all 39/12/41 cases, eight capacity/stack-guard cases and
+  282 actual injected failures pass; zero retained parser bytes after each trial,
+  pre-existing function remains callable. Diagnostics are excluded normally.
+- Normal Snow build: 32 KiB source, 600 simple commands, 48 long-named functions,
+  200 arguments; three actual heap-exhaustion attempts return 2 with an error,
+  execute no partial program and recover. Free heap 411350 → 411360 → 411360 B.
+  Actual Ctrl+C returns 130, skips the next command and restores both output
+  streams; portable remaining=0. Fixed uncapped FFWD about 15–16×.
+- Ordinary host adapter `echo hello` remains six allocations / 259-byte peak /
+  zero retained bytes. No permanent cache or reservation. Parser checking adds
+  host CPU cost (recorded, not a physical-performance claim). Very large source
+  parsing still shifts its read buffer repeatedly and does not poll inside lexical
+  scanning; large-script throughput remains a limitation.
+- Earlier elastic variables/arguments/read/substitution work and utility/editor
+  changes are preserved. Next authorised compatibility batch: embedded quoted
+  `$@`, export visibility, printf and test. No claim of full POSIX conformance.
+
+Evidence and reproduction: [parser results](parser-safety/RESULTS.md),
+[diagnostic guest](parser-safety/guest-diagnostic.json),
+[normal guest](parser-safety/guest-normal.json),
+[compatibility matrix](utility-correctness/COMPATIBILITY.md).
 
 ## Portable scripts and compound redirection — 16 November
 

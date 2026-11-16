@@ -66,6 +66,6 @@ int main(int argc,char **argv){
  int rc=shell_run(argv[1]);
  for(int i=0;i<128;i++)if(refs[i]){fprintf(stderr,"leaked native reference %d\n",i);return 125;}
  if(getenv("CLARICE_SHELL_RECOVERY")){cancel_after=polls=0;shell_run("printf 'STREAMS-RESTORED\\n'");}
- for(int i=0;i<16;i++)mrsh_command_destroy(sh_functions[i].body);
+ sh_functions_free(sh_functions);
  free(sh_owned_args);env_free(sh_env);if(getenv("CLARICE_SHELL_ALLOC_STATS"))fprintf(stderr,"ALLOC calls=%lu peak=%lu remaining=%lu fault=%d\n",(unsigned long)host_calls,(unsigned long)host_peak,(unsigned long)host_live,host_fault);if(host_live)return 124;return rc;
 }

@@ -23,7 +23,7 @@ static struct mrsh_word *single_quotes(struct mrsh_parser *parser) {
 		char c = parser_peek_char(parser);
 		if (c == '\0') {
 			parser_set_error(parser, "single quotes not terminated");
-			return NULL;
+			mrsh_buffer_finish(&buf);return NULL;
 		}
 		if (c == '\'') {
 			parser_read_char(parser);
@@ -36,12 +36,13 @@ static struct mrsh_word *single_quotes(struct mrsh_parser *parser) {
 			parser_read_char(parser);
 		}
 
-		mrsh_buffer_append_char(&buf, c);
+		if (!mrsh_buffer_append_char(&buf,c)) {parser_oom(parser);mrsh_buffer_finish(&buf);return NULL;}
 	}
 
-	mrsh_buffer_append_char(&buf, '\0');
+	if (!mrsh_buffer_append_char(&buf,'\0')) {parser_oom(parser);mrsh_buffer_finish(&buf);return NULL;}
 	char *data = mrsh_buffer_steal(&buf);
-	struct mrsh_word_string *ws = mrsh_word_string_create(data, true);
+	struct mrsh_word_string *ws = parser_string(parser,data,true);
+	if (!ws) return NULL;
 	ws->range.begin = begin;
 	ws->range.end = parser->pos;
 	return &ws->word;
@@ -58,7 +59,7 @@ size_t peek_name(struct mrsh_parser *parser, bool in_braces) {
 
 	size_t i = 0;
 	while (true) {
-		parser_peek(parser, NULL, i + 1);
+		if (parser_peek(parser, NULL, i + 1) < i+1) return 0;
 
 		char c = parser->buf.data[i];
 		if (c != '_' && !isalnum(c)) {
@@ -80,7 +81,7 @@ size_t peek_word(struct mrsh_parser *parser, char end) {
 
 	size_t i = 0;
 	while (true) {
-		parser_peek(parser, NULL, i + 1);
+		if (parser_peek(parser, NULL, i + 1) < i+1) return 0;
 
 		char c = parser->buf.data[i];
 
@@ -159,8 +160,10 @@ char *read_token(struct mrsh_parser *parser, size_t len,
 
 	struct mrsh_position begin = parser->pos;
 
+	if (len==(size_t)-1) {parser_oom(parser);return NULL;}
 	char *tok = malloc(len + 1);
-	parser_read(parser, tok, len);
+	if (!tok) {parser_oom(parser);return NULL;}
+	if (parser_read(parser, tok, len)!=len) {free(tok);return NULL;}
 	tok[len] = '\0';
 
 	if (range != NULL) {
@@ -175,6 +178,7 @@ char *read_token(struct mrsh_parser *parser, size_t len,
 static struct mrsh_word *word_list(struct mrsh_parser *parser, char end,
 		word_func f) {
 	struct mrsh_array children = {0};
+	struct mrsh_buffer buf = {0};
 
 	while (true) {
 		if (parser_peek_char(parser) == end) {
@@ -185,29 +189,30 @@ static struct mrsh_word *word_list(struct mrsh_parser *parser, char end,
 		if (child == NULL) {
 			break;
 		}
-		mrsh_array_add(&children, child);
+		if (!parser_word_add(parser,&children,child)) goto error;
 
 		struct mrsh_position begin = parser->pos;
-		struct mrsh_buffer buf = {0};
 		while (true) {
 			char c = parser_peek_char(parser);
 			if (!isblank(c)) {
 				break;
 			}
-			mrsh_buffer_append_char(&buf, parser_read_char(parser));
+			if (!mrsh_buffer_append_char(&buf,parser_read_char(parser))) {parser_oom(parser);goto error;}
 		}
 		if (buf.len == 0) {
 			break; // word() ended on a non-blank char, stop here
 		}
-		mrsh_buffer_append_char(&buf, '\0');
+		if (!mrsh_buffer_append_char(&buf,'\0')) {parser_oom(parser);goto error;}
 		struct mrsh_word_string *ws =
-			mrsh_word_string_create(mrsh_buffer_steal(&buf), false);
+			parser_string(parser,mrsh_buffer_steal(&buf),false);
+		if (!ws) goto error;
 		ws->range.begin = begin;
 		ws->range.end = parser->pos;
-		mrsh_array_add(&children, &ws->word);
+		if (!parser_word_add(parser,&children,&ws->word)) goto error;
 		mrsh_buffer_finish(&buf);
 	}
 
+	if (mrsh_parser_error(parser,NULL)) goto error;
 	if (children.len == 0) {
 		return NULL;
 	} else if (children.len == 1) {
@@ -215,9 +220,12 @@ static struct mrsh_word *word_list(struct mrsh_parser *parser, char end,
 		mrsh_array_finish(&children);
 		return child;
 	} else {
-		struct mrsh_word_list *wl = mrsh_word_list_create(&children, false);
+		struct mrsh_word_list *wl = parser_words(parser,&children,false);
+		if (!wl) goto error;
 		return &wl->word;
 	}
+error:
+	mrsh_buffer_finish(&buf);word_array_finish(&children);return NULL;
 }
 
 static enum mrsh_word_parameter_op char_to_parameter_op_val(char c) {
@@ -309,7 +317,7 @@ static struct mrsh_word_parameter *expect_parameter_expression(
 	if (op == MRSH_PARAM_NONE && parser_peek_char(parser) != '}') {
 		op_range.begin = parser->pos;
 		if (!expect_parameter_op(parser, &op, &colon)) {
-			return NULL;
+			free(name);return NULL;
 		}
 		op_range.end = parser->pos;
 		arg = word_list(parser, '}', word);
@@ -318,11 +326,12 @@ static struct mrsh_word_parameter *expect_parameter_expression(
 	struct mrsh_position rbrace_pos = parser->pos;
 	if (parser_read_char(parser) != '}') {
 		parser_set_error(parser, "expected end of parameter");
-		return NULL;
+		free(name);mrsh_word_destroy(arg);return NULL;
 	}
 
 	struct mrsh_word_parameter *wp =
 		mrsh_word_parameter_create(name, op, colon, arg);
+	if (!wp) {parser_oom(parser);free(name);mrsh_word_destroy(arg);return NULL;}
 	wp->name_range = name_range;
 	wp->op_range = op_range;
 	wp->lbrace_pos = lbrace_pos;
@@ -357,7 +366,8 @@ static struct mrsh_word_command *expect_word_command(
 		return NULL;
 	}
 
-	return mrsh_word_command_create(prog, false);
+	struct mrsh_word_command *wc=mrsh_word_command_create(prog,false);
+	if(!wc){mrsh_program_destroy(prog);parser_oom(parser);}return wc;
 }
 
 static struct mrsh_word_arithmetic *expect_word_arithmetic(
@@ -385,11 +395,19 @@ static struct mrsh_word_arithmetic *expect_word_arithmetic(
 		return NULL;
 	}
 
-	return mrsh_word_arithmetic_create(body);
+	struct mrsh_word_arithmetic *wa=mrsh_word_arithmetic_create(body);
+	if(!wa){mrsh_word_destroy(body);parser_oom(parser);}return wa;
 }
 
 // Expect parameter expansion or command substitution
+static struct mrsh_word *expect_dollar_inner(struct mrsh_parser *parser);
 struct mrsh_word *expect_dollar(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_word *result = expect_dollar_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_word *expect_dollar_inner(struct mrsh_parser *parser) {
 	struct mrsh_position dollar_pos = parser->pos;
 	char c = parser_read_char(parser);
 	assert(c == '$');
@@ -462,25 +480,34 @@ struct mrsh_word *expect_dollar(struct mrsh_parser *parser) {
 		}
 
 		wp = mrsh_word_parameter_create(name, MRSH_PARAM_NONE, false, NULL);
+		if (!wp) {free(name);parser_oom(parser);return NULL;}
 		wp->dollar_pos = dollar_pos;
 		wp->name_range = name_range;
 		return &wp->word;
 	}
 }
 
+static struct mrsh_word *back_quotes_inner(struct mrsh_parser *parser);
 struct mrsh_word *back_quotes(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_word *result = back_quotes_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_word *back_quotes_inner(struct mrsh_parser *parser) {
 	struct mrsh_position begin = parser->pos;
 
 	char c = parser_read_char(parser);
 	assert(c == '`');
 
 	struct mrsh_buffer buf = {0};
+	struct mrsh_parser *subparser=NULL;
 
 	while (true) {
 		char c = parser_peek_char(parser);
 		if (c == '\0') {
 			parser_set_error(parser, "back quotes not terminated");
-			return NULL;
+			goto error;
 		}
 		if (c == '`') {
 			parser_read_char(parser);
@@ -506,12 +533,12 @@ struct mrsh_word *back_quotes(struct mrsh_parser *parser) {
 			parser_read_char(parser);
 		}
 
-		mrsh_buffer_append_char(&buf, c);
+		if (!mrsh_buffer_append_char(&buf,c)) {parser_oom(parser);goto error;}
 	}
 
-	struct mrsh_parser *subparser = mrsh_parser_with_data(buf.data, buf.len);
+	subparser = mrsh_parser_with_data(buf.data, buf.len);
 	if (subparser == NULL) {
-		goto error;
+		parser_oom(parser);goto error;
 	}
 	struct mrsh_program *prog = mrsh_parse_program(subparser);
 	const char *err_msg = mrsh_parser_error(subparser, NULL);
@@ -526,6 +553,7 @@ struct mrsh_word *back_quotes(struct mrsh_parser *parser) {
 	mrsh_buffer_finish(&buf);
 
 	struct mrsh_word_command *wc = mrsh_word_command_create(prog, true);
+	if (!wc) {mrsh_program_destroy(prog);parser_oom(parser);return NULL;}
 	wc->range.begin = begin;
 	wc->range.end = parser->pos;
 	return &wc->word;
@@ -540,23 +568,25 @@ error:
  * Append a new string word to `children` with the contents of `buf`, and reset
  * `buf`.
  */
-static void push_buffer_word_string(struct mrsh_parser *parser,
+static bool push_buffer_word_string(struct mrsh_parser *parser,
 		struct mrsh_array *children, struct mrsh_buffer *buf,
 		struct mrsh_position *child_begin) {
 	if (buf->len == 0) {
 		*child_begin = (struct mrsh_position){0};
-		return;
+		return true;
 	}
 
-	mrsh_buffer_append_char(buf, '\0');
+	if (!mrsh_buffer_append_char(buf,'\0')) {parser_oom(parser);return false;}
 
 	char *data = mrsh_buffer_steal(buf);
-	struct mrsh_word_string *ws = mrsh_word_string_create(data, false);
+	struct mrsh_word_string *ws = parser_string(parser,data,false);
+	if (!ws) return false;
 	ws->range.begin = *child_begin;
 	ws->range.end = parser->pos;
-	mrsh_array_add(children, &ws->word);
+	if (!parser_word_add(parser,children,&ws->word)) return false;
 
 	*child_begin = (struct mrsh_position){0};
+return true;
 }
 
 static struct mrsh_word *double_quotes(struct mrsh_parser *parser) {
@@ -577,32 +607,32 @@ static struct mrsh_word *double_quotes(struct mrsh_parser *parser) {
 		char c = parser_peek_char(parser);
 		if (c == '\0') {
 			parser_set_error(parser, "double quotes not terminated");
-			return NULL;
+			goto error;
 		}
 		if (c == '"') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			rquote_pos = parser->pos;
 			parser_read_char(parser);
 			break;
 		}
 
 		if (c == '$') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = expect_dollar(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
 		if (c == '`') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = back_quotes(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
@@ -628,15 +658,19 @@ static struct mrsh_word *double_quotes(struct mrsh_parser *parser) {
 		}
 
 		parser_read_char(parser);
-		mrsh_buffer_append_char(&buf, c);
+		if (!mrsh_buffer_append_char(&buf,c)) {parser_oom(parser);goto error;}
 	}
 
 	mrsh_buffer_finish(&buf);
+	if (mrsh_parser_error(parser,NULL)) goto error;
 
-	struct mrsh_word_list *wl = mrsh_word_list_create(&children, true);
+	struct mrsh_word_list *wl = parser_words(parser,&children,true);
+	if (!wl) goto error;
 	wl->lquote_pos = lquote_pos;
 	wl->rquote_pos = rquote_pos;
 	return &wl->word;
+error:
+	mrsh_buffer_finish(&buf);word_array_finish(&children);return NULL;
 }
 
 struct mrsh_word *word(struct mrsh_parser *parser, char end) {
@@ -665,42 +699,42 @@ struct mrsh_word *word(struct mrsh_parser *parser, char end) {
 		}
 
 		if (c == '$') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = expect_dollar(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
 		if (c == '`') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = back_quotes(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
 		// Quoting
 		if (c == '\'') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = single_quotes(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 		if (c == '"') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = double_quotes(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
@@ -718,11 +752,12 @@ struct mrsh_word *word(struct mrsh_parser *parser, char end) {
 		}
 
 		parser_read_char(parser);
-		mrsh_buffer_append_char(&buf, c);
+		if (!mrsh_buffer_append_char(&buf,c)) {parser_oom(parser);goto error;}
 	}
 
-	push_buffer_word_string(parser, &children, &buf, &child_begin);
+	if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 	mrsh_buffer_finish(&buf);
+	if (mrsh_parser_error(parser,NULL)) goto error;
 
 	consume_symbol(parser);
 
@@ -731,9 +766,12 @@ struct mrsh_word *word(struct mrsh_parser *parser, char end) {
 		mrsh_array_finish(&children); // TODO: don't allocate this array
 		return word;
 	} else {
-		struct mrsh_word_list *wl = mrsh_word_list_create(&children, false);
+		struct mrsh_word_list *wl = parser_words(parser,&children,false);
+		if (!wl) goto error;
 		return &wl->word;
 	}
+error:
+	mrsh_buffer_finish(&buf);word_array_finish(&children);return NULL;
 }
 
 /* TODO remove end parameter when no *_word function takes it */
@@ -769,42 +807,42 @@ struct mrsh_word *arithmetic_word(struct mrsh_parser *parser, char end) {
 		}
 
 		if (c == '$') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = expect_dollar(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
 		if (c == '`') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = back_quotes(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
 		// Quoting
 		if (c == '\'') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = single_quotes(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 		if (c == '"') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = double_quotes(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
@@ -820,7 +858,7 @@ struct mrsh_word *arithmetic_word(struct mrsh_parser *parser, char end) {
 		}
 		if (!strcmp(next, "<<") || !strcmp(next, ">>")) {
 			parser_read_char(parser);
-			mrsh_buffer_append_char(&buf, c);
+			if (!mrsh_buffer_append_char(&buf,c)) {parser_oom(parser);goto error;}
 		}
 
 		if (c == '(') {
@@ -829,17 +867,18 @@ struct mrsh_word *arithmetic_word(struct mrsh_parser *parser, char end) {
 			if (parser->arith_nested_parens == 0) {
 				parser_set_error(parser, "unmatched closing parenthesis "
 					"in arithmetic expression");
-				return NULL;
+				goto error;
 			}
 			parser->arith_nested_parens--;
 		}
 
 		parser_read_char(parser);
-		mrsh_buffer_append_char(&buf, c);
+		if (!mrsh_buffer_append_char(&buf,c)) {parser_oom(parser);goto error;}
 	}
 
-	push_buffer_word_string(parser, &children, &buf, &child_begin);
+	if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 	mrsh_buffer_finish(&buf);
+	if (mrsh_parser_error(parser,NULL)) goto error;
 
 	consume_symbol(parser);
 
@@ -848,9 +887,12 @@ struct mrsh_word *arithmetic_word(struct mrsh_parser *parser, char end) {
 		mrsh_array_finish(&children); // TODO: don't allocate this array
 		return word;
 	} else {
-		struct mrsh_word_list *wl = mrsh_word_list_create(&children, false);
+		struct mrsh_word_list *wl = parser_words(parser,&children,false);
+		if (!wl) goto error;
 		return &wl->word;
 	}
+error:
+	mrsh_buffer_finish(&buf);word_array_finish(&children);return NULL;
 }
 
 /**
@@ -872,22 +914,22 @@ struct mrsh_word *parameter_expansion_word(struct mrsh_parser *parser) {
 		}
 
 		if (c == '$') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = expect_dollar(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
 		if (c == '`') {
-			push_buffer_word_string(parser, &children, &buf, &child_begin);
+			if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 			struct mrsh_word *t = back_quotes(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if (!parser_word_add(parser,&children,t)) goto error;
 			continue;
 		}
 
@@ -903,11 +945,12 @@ struct mrsh_word *parameter_expansion_word(struct mrsh_parser *parser) {
 		}
 
 		parser_read_char(parser);
-		mrsh_buffer_append_char(&buf, c);
+		if (!mrsh_buffer_append_char(&buf,c)) {parser_oom(parser);goto error;}
 	}
 
-	push_buffer_word_string(parser, &children, &buf, &child_begin);
+	if (!push_buffer_word_string(parser, &children, &buf, &child_begin)) goto error;
 	mrsh_buffer_finish(&buf);
+	if (mrsh_parser_error(parser,NULL)) goto error;
 
 	consume_symbol(parser);
 
@@ -916,7 +959,10 @@ struct mrsh_word *parameter_expansion_word(struct mrsh_parser *parser) {
 		mrsh_array_finish(&children); // TODO: don't allocate this array
 		return word;
 	} else {
-		struct mrsh_word_list *wl = mrsh_word_list_create(&children, false);
+		struct mrsh_word_list *wl = parser_words(parser,&children,false);
+		if (!wl) goto error;
 		return &wl->word;
 	}
+error:
+	mrsh_buffer_finish(&buf);word_array_finish(&children);return NULL;
 }

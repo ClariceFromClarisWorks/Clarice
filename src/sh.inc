@@ -4,7 +4,6 @@
 #include <mrsh/parser.h>
 #include <mrsh/arithm.h>
 #include <limits.h>
-#define SH_TEXT 8192
 #define SH_DEPTH 16
 static int sh_source_depth,sh_depth,sh_flow,sh_flow_status,sh_loop,sh_functions_active;
 static int sh_argc=1;
@@ -13,7 +12,11 @@ static int sh_substatus;
 static char *sh_owned_args;
 static char *sh_initial_argv[]={"sh",0};
 static char **sh_argv=sh_initial_argv;
-static struct {char name[32];struct mrsh_command *body;} sh_functions[16];
+struct sh_function {struct sh_function *next;struct mrsh_command *body;char name[1];};
+static struct sh_function *sh_functions;
+static void sh_functions_free(struct sh_function *f){while(f){struct sh_function *next=f->next;mrsh_command_destroy(f->body);free(f);f=next;}}
+static struct sh_function *sh_function_new(const char *name,const struct mrsh_command *body){size_t len=strlen(name);if(len>(size_t)-1-sizeof(struct sh_function))return 0;struct sh_function *f=malloc(sizeof *f+len);if(!f)return 0;f->body=mrsh_command_copy(body);if(!f->body){free(f);return 0;}f->next=0;strcpy(f->name,name);return f;}
+static int sh_functions_clone(struct sh_function *src,struct sh_function **out){struct sh_function **tail=out;*out=0;for(;src;src=src->next){struct sh_function *f=sh_function_new(src->name,src->body);if(!f){sh_functions_free(*out);*out=0;return -1;}*tail=f;tail=&f->next;}return 0;}
 static int sh_array(struct mrsh_array *a);
 static int sh_command(struct mrsh_command *cmd);
 static int sh_command_body(struct mrsh_command *cmd);
@@ -31,7 +34,7 @@ struct sh_saved {struct sh_env *env;char *args;char **argv;int argc;char cwd[PAT
 #ifndef SH_HOST_TEST
 char unixdir[PATH_CAP];
 #endif
-char function_names[16][32];struct mrsh_command *functions[16];};
+struct sh_function *functions;};
 static struct sh_saved *sh_save(void){
 #ifndef SH_HOST_TEST
  if(FreeMem()<65536)return 0;
@@ -41,12 +44,12 @@ static struct sh_saved *sh_save(void){
 strcpy(s->unixdir,unix_cwd);
 if(FreeMem()<65536){env_free(s->env);free(s->args);free(s);return 0;}
 #endif
-for(int i=0;i<16;i++){strcpy(s->function_names[i],sh_functions[i].name);s->functions[i]=sh_functions[i].body?mrsh_command_copy(sh_functions[i].body):0;if(sh_functions[i].body&&!s->functions[i]){for(int j=0;j<i;j++)mrsh_command_destroy(s->functions[j]);env_free(s->env);free(s->args);free(s);return 0;}}return s;}
+if(sh_functions_clone(sh_functions,&s->functions)){env_free(s->env);free(s->args);free(s);return 0;}return s;}
 static void sh_restore(struct sh_saved *s){env_free(sh_env);sh_env=s->env;free(sh_owned_args);sh_owned_args=s->args;sh_argv=s->argv;sh_argc=s->argc;strcpy(shell_cwd,s->cwd);
 #ifndef SH_HOST_TEST
 strcpy(unix_cwd,s->unixdir);
 #endif
-for(int i=0;i<16;i++){mrsh_command_destroy(sh_functions[i].body);strcpy(sh_functions[i].name,s->function_names[i]);sh_functions[i].body=s->functions[i];}free(s);}
+sh_functions_free(sh_functions);sh_functions=s->functions;free(s);}
 static unsigned long sh_temp_serial;
 static int sh_temp(short *ref,unsigned char *name){char path[PATH_CAP];int e,i;for(i=0;i<100;i++){snprintf(path,sizeof path,"%.220stmp:clarice-pipe-%lu",home_path,++sh_temp_serial);pstr(name,path);e=HCreate(0,0,name,'S6UX','TEXT');if(!e){e=HOpen(0,0,name,fsRdWrPerm,ref);if(e)HDelete(0,0,name);return e;}if(e!=dupFNErr)return e;}return dupFNErr;}
 static void sh_temp_close(short ref,unsigned char *name){if(ref>=0)FSClose(ref);HDelete(0,0,name);}
@@ -142,10 +145,24 @@ static int sh_test(int n,char **v){
 #endif
 if(n==0)return 1;if(n==1)return !*v[0];if(n==2){if(!strcmp(v[0],"!"))return !sh_test(1,v+1);if(!strcmp(v[0],"-n"))return !*v[1];if(!strcmp(v[0],"-z"))return !!*v[1];if(!strcmp(v[0],"-e")||!strcmp(v[0],"-f")||!strcmp(v[0],"-d")||!strcmp(v[0],"-s")){char p[PATH_CAP];CInfoPBRec pb;if(resolve(v[1],p)||info(p,&pb))return 1;int dir=!!(pb.hFileInfo.ioFlAttrib&16);return v[0][1]=='e'?0:v[0][1]=='d'?!dir:v[0][1]=='f'?dir:!pb.hFileInfo.ioFlLgLen;}}
  if(n==3){if(!strcmp(v[1],"="))return !!strcmp(v[0],v[2]);if(!strcmp(v[1],"!="))return !strcmp(v[0],v[2]);char *end1,*end2;long a=strtol(v[0],&end1,10),b=strtol(v[2],&end2,10);if(*end1||*end2)return 2;if(!strcmp(v[1],"-eq"))return a!=b;if(!strcmp(v[1],"-ne"))return a==b;if(!strcmp(v[1],"-lt"))return a>=b;if(!strcmp(v[1],"-le"))return a>b;if(!strcmp(v[1],"-gt"))return a<=b;if(!strcmp(v[1],"-ge"))return a<b;}return sh_fail("unsupported test expression");}
-static int sh_file(const char *path,int argc,char **argv,int dot){short ref;long n,size;char *text;int rc,i,oldargc=sh_argc,oldflow=sh_flow;char *owned=sh_owned_args;char **oldargv=sh_argv;struct sh_saved *saved=dot?0:sh_save();if(!dot&&!saved)return sh_fail("out of memory");if(open_path(path,fsRdPerm,&ref)){if(saved)sh_restore(saved);return sh_fail("cannot open script");}rc=GetEOF(ref,&size);if(rc||size>SH_TEXT||size<0){FSClose(ref);if(saved)sh_restore(saved);return sh_fail("script exceeds 8 KiB limit");}text=malloc(size+1);if(!text){FSClose(ref);if(saved)sh_restore(saved);return sh_fail("out of memory");}n=size;rc=FSRead(ref,&n,text);FSClose(ref);if((rc&&rc!=eofErr)||n!=size||memchr(text,0,(size_t)n)){free(text);if(saved)sh_restore(saved);return sh_fail("script read failed or contains NUL");}text[n]=0;for(i=0;i<n;i++)if(text[i]=='\r')text[i]='\n';if(dot)sh_owned_args=0;if(!dot||argc>1)rc=sh_positions(argc,argv);else{sh_argv=oldargv;rc=0;}if(!rc){script_depth++;sh_flow=0;rc=sh_source(text);script_depth--;}sh_flow=oldflow;free(text);if(saved)sh_restore(saved);else{free(sh_owned_args);sh_owned_args=owned;sh_argc=oldargc;sh_argv=oldargv;}return rc;}
+static int sh_file(const char *path,int argc,char **argv,int dot){short ref;long n,size;char *text;int rc,i,oldargc=sh_argc,oldflow=sh_flow;char *owned=sh_owned_args;char **oldargv=sh_argv;struct sh_saved *saved=dot?0:sh_save();if(!dot&&!saved)return sh_fail("out of memory");if(open_path(path,fsRdPerm,&ref)){if(saved)sh_restore(saved);return sh_fail("cannot open script");}rc=GetEOF(ref,&size);if(rc||size<0||(unsigned long)size>=(size_t)-1){FSClose(ref);if(saved)sh_restore(saved);return sh_fail("cannot read script size");}text=malloc(size+1);if(!text){FSClose(ref);if(saved)sh_restore(saved);return sh_fail("out of memory");}n=size;rc=FSRead(ref,&n,text);FSClose(ref);if((rc&&rc!=eofErr)||n!=size||memchr(text,0,(size_t)n)){free(text);if(saved)sh_restore(saved);return sh_fail("script read failed or contains NUL");}text[n]=0;for(i=0;i<n;i++)if(text[i]=='\r')text[i]='\n';if(dot)sh_owned_args=0;if(!dot||argc>1)rc=sh_positions(argc,argv);else{sh_argv=oldargv;rc=0;}if(!rc){script_depth++;sh_flow=0;rc=sh_source(text);script_depth--;}sh_flow=oldflow;free(text);if(saved)sh_restore(saved);else{free(sh_owned_args);sh_owned_args=owned;sh_argc=oldargc;sh_argv=oldargv;}return rc;}
 
 #include "shell-read.inc"
 static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)return 0;
+
+#ifdef CLARICE_PARSER_SAFETY_TEST
+ if(!strcmp(v[0],"parsercheck")){
+  extern void parser_test_begin(unsigned long,int);
+  extern void parser_test_end(unsigned long*,unsigned long*,int*);
+  unsigned long count,before,after;int hit,rc;char text[128];
+  if(n!=4)return 2;
+  parser_test_end(&count,&before,&hit);
+  parser_test_begin(strtoul(v[1],0,10),atoi(v[2]));
+  rc=sh_source(v[3]);parser_test_end(&count,&after,&hit);
+  snprintf(text,sizeof text,"PARSER calls=%lu hit=%d status=%d delta=%ld\n",count,hit,rc,(long)after-(long)before);say(text);
+  return rc;
+ }
+#endif
  if(!strcmp(v[0],":")||!strcmp(v[0],"true"))return 0;if(!strcmp(v[0],"false"))return 1;
  if(!strcmp(v[0],"test")||!strcmp(v[0],"[")){if(v[0][0]=='['){if(n<2||strcmp(v[n-1],"]"))return sh_fail("missing ]");n--;}return sh_test(n-1,v+1);}
  if(!strcmp(v[0],"break")||!strcmp(v[0],"continue")){if(!sh_loop||n>1)return sh_fail("break/continue requires a loop; numeric levels unsupported");sh_flow=v[0][0]=='b'?1:2;return 0;}
@@ -159,7 +176,7 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
  if(!strcmp(v[0],"sh")){if(n<2)return sh_fail("usage: sh file [args] or sh -c command");if(!strcmp(v[1],"-c")){if(n<3)return 2;struct sh_saved *saved=sh_save();int oldflow=sh_flow;if(!saved)return 2;
  int rc=sh_positions(n>3?n-3:1,n>3?v+3:v);if(!rc){script_depth++;sh_flow=0;rc=sh_source(v[2]);script_depth--;}sh_restore(saved);sh_flow=oldflow;return rc;}return sh_file(v[1],n-1,v+1,0);}
  if(!strcmp(v[0],".")){if(n<2)return 2;return sh_file(v[1],n-1,v+1,1);}
- for(i=0;i<16;i++)if(!strcmp(sh_functions[i].name,v[0])){char **saved=sh_argv;int count=sh_argc,rc;char *owned=sh_owned_args;sh_owned_args=0;char *name=v[0];v[0]=saved[0];rc=sh_positions(n,v);v[0]=name;struct mrsh_command *body=rc?0:mrsh_command_copy(sh_functions[i].body);sh_functions_active++;rc=rc?rc:body?sh_command(body):2;sh_functions_active--;mrsh_command_destroy(body);free(sh_owned_args);sh_owned_args=owned;sh_argc=count;sh_argv=saved;if(sh_flow==3)sh_flow=0;return rc;}
+ for(struct sh_function *f=sh_functions;f;f=f->next)if(!strcmp(f->name,v[0])){char **saved=sh_argv;int count=sh_argc,rc;char *owned=sh_owned_args;sh_owned_args=0;char *name=v[0];v[0]=saved[0];rc=sh_positions(n,v);v[0]=name;struct mrsh_command *body=rc?0:mrsh_command_copy(f->body);sh_functions_active++;rc=rc?rc:body?sh_command(body):2;sh_functions_active--;mrsh_command_destroy(body);free(sh_owned_args);sh_owned_args=owned;sh_argc=count;sh_argv=saved;if(sh_flow==3)sh_flow=0;return rc;}
 
 
 #ifdef SH_HOST_TEST
@@ -204,7 +221,7 @@ static int sh_simple(struct mrsh_simple_command *c,struct mrsh_command *compound
     (notably IFS= read -r value). Restore only the assigned names. */
  for(i=0;i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];free(env_take(&sh_env,x->name));}
  for(i=0;i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];struct sh_env *e=env_take(&saved->env,x->name);if(e)env_put(&sh_env,e);}
- env_free(saved->env);free(saved->args);for(int j=0;j<16;j++)mrsh_command_destroy(saved->functions[j]);free(saved);
+ env_free(saved->env);free(saved->args);sh_functions_free(saved->functions);free(saved);
  }sh_args_free(a);return rc;}
 /* The existing simple-command redirect owner also scopes compound execution.
    This borrows the AST list; only its normal file/temp cleanup runs here. */
@@ -220,21 +237,21 @@ case MRSH_IF_CLAUSE:{struct mrsh_if_clause *c=(void*)cmd;rc=sh_array(&c->conditi
 case MRSH_FOR_CLAUSE:{struct mrsh_for_clause *c=(void*)cmd;struct sh_args *a=calloc(1,sizeof *a);if(!a){rc=2;break;}if(c->in){for(i=0;!rc&&i<c->word_list.len;i++)rc=sh_expand(c->word_list.data[i],a);}else for(i=1;!rc&&i<(size_t)sh_argc;i++)rc=sh_arg(a,sh_argv[i]);if(!rc){sh_loop++;for(i=0;i<(size_t)a->n;i++){if(sh_set(c->name,a->v[i])){rc=2;break;}rc=sh_array(&c->body);if(sh_flow==2)sh_flow=0;else if(sh_flow)break;}sh_loop--;if(sh_flow==1)sh_flow=0;}sh_args_free(a);break;}
 case MRSH_LOOP_CLAUSE:{struct mrsh_loop_clause *c=(void*)cmd;sh_loop++;while(!sh_flow){int cond=sh_array(&c->condition);if(sh_flow||((cond==0)!=(c->type==MRSH_LOOP_WHILE)))break;rc=sh_array(&c->body);if(sh_flow==2)sh_flow=0;if(app_yield()){rc=130;sh_flow=4;sh_flow_status=130;break;}}sh_loop--;if(sh_flow==1)sh_flow=0;break;}
 case MRSH_CASE_CLAUSE:{struct mrsh_case_clause *c=(void*)cmd;struct sh_word *word=sh_word_new(),*pat=sh_word_new();int matched=0;if(!word||!pat){sh_word_free(word);sh_word_free(pat);rc=2;break;}rc=sh_word(c->word,word,1);for(i=0;!rc&&!matched&&i<c->items.len;i++){struct mrsh_case_item *item=c->items.data[i];size_t j;for(j=0;!matched&&j<item->patterns.len;j++){sh_word_reset(pat);rc=sh_word(item->patterns.data[j],pat,1);if(rc)break;matched=sh_pattern(pat->text,word->text);}if(matched)rc=sh_array(&item->body);}sh_word_free(word);sh_word_free(pat);break;}
-case MRSH_FUNCTION_DEFINITION:{struct mrsh_function_definition *c=(void*)cmd;if(c->io_redirects.len||strlen(c->name)>31){rc=sh_fail("function redirections/name unsupported");break;}for(i=0;i<16;i++)if(!sh_functions[i].name[0]||!strcmp(sh_functions[i].name,c->name))break;if(i==16){rc=sh_fail("function table full");break;}struct mrsh_command *copy=mrsh_command_copy(c->body);if(!copy){rc=sh_fail("out of memory copying function");break;}mrsh_command_destroy(sh_functions[i].body);strcpy(sh_functions[i].name,c->name);sh_functions[i].body=copy;break;}}
+case MRSH_FUNCTION_DEFINITION:{struct mrsh_function_definition *c=(void*)cmd;if(c->io_redirects.len){rc=sh_fail("function redirections unsupported");break;}struct sh_function *replacement=sh_function_new(c->name,c->body);if(!replacement){rc=sh_fail("out of memory copying function");break;}struct sh_function **slot=&sh_functions;while(*slot&&strcmp((*slot)->name,c->name))slot=&(*slot)->next;struct sh_function *old=*slot;replacement->next=old?old->next:0;*slot=replacement;if(old){old->next=0;sh_functions_free(old);}break;}}
+
 sh_depth--;shell_status=rc;return rc;}
 static int sh_andor(struct mrsh_and_or_list *node){if(node->type==MRSH_AND_OR_LIST_BINOP){struct mrsh_binop *b=(void*)node;int rc=sh_andor(b->left);if(!sh_flow&&((b->type==MRSH_BINOP_AND&&!rc)||(b->type==MRSH_BINOP_OR&&rc)))rc=sh_andor(b->right);return rc;}
  struct mrsh_pipeline *p=(void*)node;size_t i;int rc=0;short oldin=input_ref,oldout=output_ref,previous=-1;unsigned char previous_name[256];for(i=0;i<p->commands.len&&!sh_flow;i++){short next=-1;unsigned char name[256];struct sh_saved *saved=p->commands.len>1?sh_save():0;if(p->commands.len>1&&!saved){rc=2;break;}if(i+1<p->commands.len&&sh_temp(&next,name)){if(saved)sh_restore(saved);rc=sh_fail("cannot create pipeline spool");break;}input_ref=previous>=0?previous:oldin;output_ref=next>=0?next:oldout;rc=sh_command(p->commands.data[i]);if(saved)sh_restore(saved);if(previous>=0)sh_temp_close(previous,previous_name);previous=next;if(next>=0){memcpy(previous_name,name,sizeof name);SetFPos(next,fsFromStart,0);}if(rc==130)break;}if(previous>=0)sh_temp_close(previous,previous_name);input_ref=oldin;output_ref=oldout;return rc==130?130:p->bang?!rc:rc;}
 static int sh_array(struct mrsh_array *a){size_t i;int rc=0;for(i=0;i<a->len&&!sh_flow;i++){struct mrsh_command_list *c=a->data[i];if(c->ampersand)return sh_fail("background jobs are not implemented");rc=sh_andor(c->and_or_list);shell_status=rc;if(rc==130){sh_flow=4;sh_flow_status=130;}}return rc;}
-static int sh_source(const char *source){struct mrsh_parser *parser;struct mrsh_program *program;int rc;size_t n=strlen(source);if(n>SH_TEXT)return sh_fail("source exceeds 8 KiB limit");
- {size_t k;int nest=0,tokens=0,space=1,q=0;for(k=0;k<n;k++){unsigned char c=source[k];if(c=='\\'&&q!=1){if(source[k+1])k++;continue;}if(c=='\''&&q!=2){q=q==1?0:1;continue;}if(c=='"'&&q!=1){q=q==2?0:2;continue;}if(!q){if(c=='('||c=='{'){if(++nest>16)return sh_fail("syntax nesting exceeds 16");}if((c==')'||c=='}')&&nest)nest--;if(isspace(c)||strchr(";|&<>(){}",c)){space=1;if(!isspace(c))tokens++;}else if(space){tokens++;space=0;}if(tokens>256)return sh_fail("source exceeds 256-token baseline limit");}}}
+static int sh_source(const char *source){struct mrsh_parser *parser;struct mrsh_program *program;int rc;size_t n=strlen(source);
 if(sh_depth>=SH_DEPTH||sh_source_depth>=8)return sh_fail("source nesting limit");
 #ifndef SH_HOST_TEST
- if((unsigned long)FreeMem()<n*32+16384)return sh_fail("insufficient parser working memory");
+ if(FreeMem()<16384)return sh_fail("insufficient parser working memory");
 #endif
  sh_source_depth++;parser=mrsh_parser_with_data(source,n);rc=0;
  /* mrsh may finish a program at a consumed here-document terminator. Keep
     parsing the remaining source, rather than silently dropping later commands. */
- for(int chunks=0;chunks<256&&!sh_flow;chunks++){program=mrsh_parse_program(parser);if(mrsh_parser_error(parser,0)){rc=sh_fail(mrsh_parser_error(parser,0));mrsh_program_destroy(program);break;}if(!program){rc=sh_fail("parser allocation failed");break;}int empty=!program->body.len;rc=sh_array(&program->body);mrsh_program_destroy(program);if(mrsh_parser_eof(parser))break;if(empty){rc=sh_fail("unconsumed source");break;}}
+ while(!sh_flow){program=mrsh_parse_program(parser);if(mrsh_parser_error(parser,0)){rc=sh_fail(mrsh_parser_error(parser,0));mrsh_program_destroy(program);break;}if(!program){rc=sh_fail("parser allocation failed");break;}int empty=!program->body.len;rc=sh_array(&program->body);mrsh_program_destroy(program);if(mrsh_parser_eof(parser))break;if(empty){rc=sh_fail("unconsumed source");break;}}
  mrsh_parser_destroy(parser);sh_source_depth--;return rc;}
 int shell_run(const char *source){int rc;history_add(source);sh_flow=0;output_error=0;rc=sh_source(source);if(sh_flow==3||sh_flow==4)rc=sh_flow_status;sh_flow=0;shell_status=rc;return rc;}
 

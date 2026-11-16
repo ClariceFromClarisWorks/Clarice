@@ -1,0 +1,6 @@
+{
+  "handled_safely": true,
+  "status": 2,
+  "evidence": "sh: out of memory",
+  "scope": "host parser construction failure"
+}
