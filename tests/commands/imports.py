@@ -13,12 +13,12 @@ assert dict(entries)['KILLIO']=='module_kill_io'
 assert dict(entries)['FSREAD']=='FSRead'
 assert dict(entries)['output_ref']=='&output_ref'
 for profile in (False,True):
- active=[(n,v) for n,v in entries if profile or n!='app_nano_mark']
+ active=[(n,v) for n,v in entries if profile or n not in ('app_nano_mark','app_nano_refresh')]
  symbols={v.lstrip('&'):v.startswith('&') for _,v in entries}
- declarations='\n'.join('#define '+n+' stub_'+n for n in symbols if n!='strcmp')+'\n'+'\n'.join(('static int '+n+';' if data else 'static void '+n+'(void){}') for n,data in symbols.items() if n!='strcmp' and (profile or n!='app_nano_mark'))
+ declarations='\n'.join('#define '+n+' stub_'+n for n in symbols if n!='strcmp')+'\n'+'\n'.join(('static int '+n+';' if data else 'static void '+n+'(void){}') for n,data in symbols.items() if n!='strcmp' and (profile or n not in ('app_nano_mark','app_nano_refresh')))
  checks='\n'.join('comparisons=0;assert(clx_import("%s")== (void*)(%s));assert(comparisons<=8);'%(n,v) for n,v in active)
  absent=['','not_an_export','FSRead','fsread','cli_native_open_extra','app_nano_mar','~']
- if not profile:absent+=['app_nano_mark']
+ if not profile:absent+=['app_nano_mark','app_nano_refresh']
  checks+='\n'+'\n'.join('assert(!clx_import("%s"));'%n for n in absent)
  code='''#include <assert.h>
 #include <string.h>

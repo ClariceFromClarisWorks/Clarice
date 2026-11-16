@@ -1,10 +1,34 @@
 # Clarice current state
 
 16 November 2026, Adelaide. Accepted **2026111546 / 74d2823** was pushed to
-`codex/utility-correctness-2026111539`. Development build **2026111547** adds
-source-ported cmp/cksum and the first command-help corrections. Validated on host
+`codex/utility-correctness-2026111539`. Development build **2026111548** completes the first utility batch: cmp/cksum,
+null/zero streams, command -v, free and initial help corrections. Validated on host
 and accelerated Snow Plus/4 MB/**reported System 6.0.7** only. Physical SE off;
 no release, tag or main change. Utility expansion remains in progress.
+
+## Virtual streams and memory query — build 2026111548
+
+- `/dev/null` and `/dev/zero` use stateless tokens through existing standard and
+  portable file I/O; no HFS backing files or permanent allocations. Normalised
+  paths and relative `/dev` paths resolve through the existing namespace.
+  Read/write modes are enforced; seeks fail. Native catalog tools do not list
+  these as physical files; old direct-HFS tools use them through redirection.
+- `command -v [--] name` queries existing CLX/script PATH resolution, builtins,
+  functions and implemented reserved words. One name; execution/-p/-V not added.
+- Independent `free` (2.6 KiB class) reports installed RAM, application heap
+  extent, free/largest blocks and purgeable capacity, not fictional Linux or
+  machine-wide free-memory figures. Runtime 1.4 adds only `cli_memory`; older
+  command compatibility remains. No purge or permanent allocation.
+- Fixed pinned Multiversal PurgeSpace A062 glue: A162 must return A0. The original
+  guest result incorrectly showed an address as contiguous capacity. Corrected
+  Snow sample: free 398310 B, largest 398248 B, after-purge largest 398256 B.
+- Host stream boundaries/access modes, shell restoration, six dash command-v
+  comparisons, free formatting, 39 shell cases, 11 stream and 65 installer cases
+  pass. Guest 23 cases, corrected memory query, six repeat pairs and actual
+  infinite-zero cancellation/recovery pass (130). Repeat free heap settles at
+  399858/399860 B; largest block stays 399630 B; tracked remaining always zero.
+- Physical SE remains off. This is fixed accelerated Snow, reported 6.0.7.
+  Comprehensive help option execution is still partial; second batch remains.
 
 ## Utility expansion — first checkpoint, build 2026111547
 
@@ -23,8 +47,8 @@ no release, tag or main change. Utility expansion remains in progress.
   tracked allocations. Free heap 376836 -> 376804 B; largest block 295896 ->
   295914 B. The 32-byte difference is recorded, not asserted to be a leak or
   proof of perfectly stable native heap. No permanent allocation introduced.
-- Remaining: comprehensive help option/interactions review; virtual null/zero,
-  command -v and free; then the explicitly authorised second utility batch.
+- The following 1548 batch adds virtual null/zero, command -v and free.
+  Comprehensive help review and the second utility batch remain.
   New-command cancellation/failure tests are host-based; hardware acceptance is
   deferred. Editor, loader, safe-save and existing utility work preserved.
 

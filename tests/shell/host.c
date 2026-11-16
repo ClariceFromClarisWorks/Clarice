@@ -36,13 +36,14 @@ static void pstr(unsigned char*p,const char*s){*p=strlen(s);memcpy(p+1,s,*p);}
 static void pathstr(char *s,const unsigned char*p){memcpy(s,p+1,*p);s[*p]=0;}
 static int HCreate(int a,int b,const unsigned char*p,int c,int d){char s[256];(void)a;(void)b;(void)c;(void)d;pathstr(s,p);FILE*f=fopen(s,"wx");if(!f)return dupFNErr;fclose(f);return 0;}
 static int open_path(const char*s,short mode,short*ref){for(int i=0;i<128;i++)if(!refs[i]){refs[i]=fopen(s,mode==fsRdPerm?"rb":"r+b");if(!refs[i])return -1;*ref=i;return 0;}return -1;}
+static int stream_input_open(const char *path,short *ref){int kind=vstream_kind(path);if(kind){*ref=-(kind*4+1);return 0;}return open_path(path,fsRdPerm,ref);}
 static int HOpen(int a,int b,const unsigned char*p,short mode,short*ref){char s[256];(void)a;(void)b;pathstr(s,p);return open_path(s,mode,ref);}
 static int HDelete(int a,int b,const unsigned char*p){char s[256];(void)a;(void)b;pathstr(s,p);return unlink(s);}
 static int FSClose(short r){int rc=fclose(refs[r]);refs[r]=0;return rc;}
 static int SetFPos(short r,int mode,long pos){(void)mode;return fseek(refs[r],pos,SEEK_SET);}
 static int FSRead(short r,long*n,char*b){long count=fread(b,1,*n,refs[r]);int rc=count==*n?0:eofErr;*n=count;return rc;}
 static int GetEOF(short r,long*n){long p=ftell(refs[r]);fseek(refs[r],0,SEEK_END);*n=ftell(refs[r]);fseek(refs[r],p,SEEK_SET);return 0;}
-static int redirect(const char*s,int append){for(int i=0;i<128;i++)if(!refs[i]){refs[i]=fopen(s,append?"ab":"wb");if(!refs[i])return 1;output_ref=i;return 0;}return 1;}
+static int redirect(const char*s,int append){int kind=vstream_kind(s);if(kind){output_ref=-(kind*4+2);return 0;}for(int i=0;i<128;i++)if(!refs[i]){refs[i]=fopen(s,append?"ab":"wb");if(!refs[i])return 1;output_ref=i;return 0;}return 1;}
 typedef struct {struct {int ioFlAttrib;long ioFlLgLen;}hFileInfo;}CInfoPBRec;
 static int resolve(const char*s,char*p){strcpy(p,s);return 0;}
 static int info(const char*p,CInfoPBRec *b){struct stat s;if(stat(p,&s))return 1;b->hFileInfo.ioFlAttrib=S_ISDIR(s.st_mode)?16:0;b->hFileInfo.ioFlLgLen=s.st_size;return 0;}
@@ -61,6 +62,11 @@ static int host_external(char **av){
  return WIFEXITED(status)?WEXITSTATUS(status):128+WTERMSIG(status);
 }
 static int run_args(int argc,char**av){if(!strcmp(av[0],"echo")){for(int i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");return 0;}if(!strcmp(av[0],"cat")){int status=0;for(int i=argc==1?0:1;i<argc;i++){FILE*f=i==0?(input_ref>=0?refs[input_ref]:stdin):fopen(av[i],"rb");if(!f){status=1;continue;}char b[512];size_t n;while((n=fread(b,1,sizeof b,f)))emit(b,n);if(ferror(f))status=1;if(i)fclose(f);}return status;}if(!strcmp(av[0],"export")){for(int i=1;i<argc;i++)if(env_set(av[i]))return 2;return 0;}return host_external(av);}
+static const char *commands[]={"help","appinstall","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
+/* PATH fixture only; production resolver handles HFS and CLX/script identity. */
+static int command_path(const char *name,char *out,int *kind){(void)kind;
+ if(strchr(name,'/')){if(strlen(name)>=PATH_CAP||access(name,X_OK))return 0;strcpy(out,name);return 1;}
+ const char *p=env_get("PATH");while(*p){const char *end=strchr(p,':');size_t n=end?(size_t)(end-p):strlen(p);if(n+strlen(name)+2<PATH_CAP){memcpy(out,p,n);out[n]=0;strcat(out,"/");strcat(out,name);if(!access(out,X_OK))return 1;}if(!end)break;p=end+1;}return 0;}
 #include "../../src/sh.inc"
 int main(int argc,char **argv){
  if(argc<2)return 2;if(argc>2)cancel_after=atoi(argv[2]);

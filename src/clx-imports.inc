@@ -62,6 +62,7 @@
  CLX_IMPORT("cli_hardware", cli_hardware)
  CLX_IMPORT("cli_isatty", cli_isatty)
  CLX_IMPORT("cli_mac_time", cli_mac_time)
+ CLX_IMPORT("cli_memory", cli_memory)
  CLX_IMPORT("cli_native_close", cli_native_close)
  CLX_IMPORT("cli_native_create", cli_native_create)
  CLX_IMPORT("cli_native_delete", cli_native_delete)

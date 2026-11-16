@@ -1,0 +1,148 @@
+{
+  "cases": [
+    {
+      "command": "echo discarded > /dev/null",
+      "status": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "echo visible",
+      "status": 0,
+      "stdout": "visible\n",
+      "stderr": ""
+    },
+    {
+      "command": "cksum /dev/null",
+      "status": 0,
+      "stdout": "4294967295 0 /dev/null\n",
+      "stderr": ""
+    },
+    {
+      "command": "cksum < /dev/null",
+      "status": 0,
+      "stdout": "4294967295 0\n",
+      "stderr": ""
+    },
+    {
+      "command": "cmp /dev/null /dev/null",
+      "status": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "od -A n -t x1 -N 32 < /dev/zero",
+      "status": 0,
+      "stdout": " 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n",
+      "stderr": ""
+    },
+    {
+      "command": "grep x < /dev/null",
+      "status": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "{ echo discarded; printf ignored; } > /dev/null; echo restored",
+      "status": 0,
+      "stdout": "restored\n",
+      "stderr": ""
+    },
+    {
+      "command": "cksum /dev/missing",
+      "status": 1,
+      "stdout": "",
+      "stderr": "cksum: open /dev/missing: No such file or directory\n"
+    },
+    {
+      "command": "cksum /dev/nullx",
+      "status": 1,
+      "stdout": "",
+      "stderr": "cksum: open /dev/nullx: No such file or directory\n"
+    },
+    {
+      "command": "cd /dev; cksum ./null; cd /mnt/Audit/help",
+      "status": 0,
+      "stdout": "4294967295 0 ./null\n",
+      "stderr": ""
+    },
+    {
+      "command": "command -v ls",
+      "status": 0,
+      "stdout": "/mnt/Audit/tools/ls\n",
+      "stderr": ""
+    },
+    {
+      "command": "command -v read",
+      "status": 0,
+      "stdout": "read\n",
+      "stderr": ""
+    },
+    {
+      "command": "f() { :; }; command -v f",
+      "status": 0,
+      "stdout": "f\n",
+      "stderr": ""
+    },
+    {
+      "command": "command -v missing_command",
+      "status": 127,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "command -v -- pwd",
+      "status": 0,
+      "stdout": "pwd\n",
+      "stderr": ""
+    },
+    {
+      "command": "help command",
+      "status": 0,
+      "stdout": "command -v [--] name\nReport a builtin, function, reserved word or executable PATH result.\nUses normal Clarice CLX/script resolution; does not execute the command.\nOne name per call. No -p/-V or command-execution form yet.\nStatus: 0 found (or no name), 127 missing, 2 usage.\nExample: command -v ls\n",
+      "stderr": ""
+    },
+    {
+      "command": "free --help",
+      "status": 0,
+      "stdout": "free [-b|-k|-m|-h] [--]\nReport installed RAM and Clarice's current application heap.\nDefault -k: KiB; -b: bytes; -m: MiB; -h: human readable. Last wins.\nFree and largest blocks are not machine-wide free physical RAM.\nAfter-purge values include reclaimable purgeable handles; no purge is\nrequested. Heap extent excludes the application stack/code outside it;\nSystem 6 partition-wide capacity is not claimed. Values include this\ncommand's temporary image. No Linux swap/buffers/process statistics.\nExample: free -b\nStatus: 0 success, 1 query/output error, 2 invalid option. See status.\n",
+      "stderr": ""
+    },
+    {
+      "command": "free -b",
+      "status": 0,
+      "stdout": "Installed RAM             4194304 bytes\nApplication heap extent   712660 bytes\nFree heap                 353468 bytes\nLargest free block        353320 bytes\nFree after purging        353468 bytes\nLargest after purging     3163188 bytes\n",
+      "stderr": ""
+    },
+    {
+      "command": "free -h",
+      "status": 0,
+      "stdout": "Installed RAM             4.00 MiB\nApplication heap extent   695.95 KiB\nFree heap                 345.18 KiB\nLargest free block        345.03 KiB\nFree after purging        345.18 KiB\nLargest after purging     3.01 MiB\n",
+      "stderr": ""
+    },
+    {
+      "command": "free --bad",
+      "status": 2,
+      "stdout": "",
+      "stderr": "usage: free [-b|-k|-m|-h] [--]; use free --help\n"
+    },
+    {
+      "command": "echo ignored 1>&2 2> /dev/null",
+      "status": 0,
+      "stdout": "",
+      "stderr": "ignored\n"
+    },
+    {
+      "command": "cksum /dev/null > /dev/zero",
+      "status": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "note": "Cases 18/19 are original pre-fix query evidence; corrected free output is below. Others passed on the same implementation.",
+  "free_fixed": "Installed RAM             4194304 bytes\nApplication heap extent   712660 bytes\nFree heap                 398310 bytes\nLargest free block        398248 bytes\nFree after purging        398310 bytes\nLargest after purging     398256 bytes\n",
+  "free_human_fixed": "Installed RAM             4.00 MiB\nApplication heap extent   695.95 KiB\nFree heap                 388.97 KiB\nLargest free block        388.91 KiB\nFree after purging        388.97 KiB\nLargest after purging     388.92 KiB\n",
+  "repeat": "Runtime: heap=399866 largest=399630 image=12112 ticks=72 load=58 owned-peak=3668 remaining=0\nLoader ticks: read=17 validate=25 imports=2 relocations=1 prepare=2 events=3 (events included above)\nVerification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=0 (structure included in relocations)\nRuntime: heap=399858 largest=399630 image=12112 ticks=71 load=58 owned-peak=3668 remaining=0\nLoader ticks: read=17 validate=27 imports=1 relocations=1 prepare=2 events=6 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=27 metadata=0 structure=1 (structure included in relocations)\nRuntime: heap=399860 largest=399630 image=12112 ticks=70 load=56 owned-peak=3668 remaining=0\nLoader ticks: read=17 validate=25 imports=1 relocations=2 prepare=0 events=3 (events included above)\nVerification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=1 (structure included in relocations)\nRuntime: heap=399858 largest=399630 image=12112 ticks=70 load=56 owned-peak=3668 remaining=0\nLoader ticks: read=17 validate=25 imports=2 relocations=1 prepare=0 events=2 (events included above)\nVerification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=0 (structure included in relocations)\nRuntime: heap=399860 largest=399630 image=12112 ticks=69 load=56 owned-peak=3668 remaining=0\nLoader ticks: read=15 validate=26 imports=1 relocations=1 prepare=2 events=3 (events included above)\nVerification ticks: mode=full header=0 record=11 payload=26 metadata=0 structure=1 (structure included in relocations)\nRuntime: heap=399858 largest=399630 image=12112 ticks=70 load=56 owned-peak=3668 remaining=0\nLoader ticks: read=17 validate=25 imports=2 relocations=1 prepare=0 events=2 (events included above)\nVerification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=0 (structure included in relocations)\n",
+  "cancel_status": 130,
+  "recovered": "recovered\n"
+}

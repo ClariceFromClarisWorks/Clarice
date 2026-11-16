@@ -112,4 +112,8 @@ in [utility-closeout/RESULTS.md](../utility-closeout/RESULTS.md).
   No cryptographic authentication or resource-fork coverage.
 - 68 actual guest help invocations passed basic availability/format; exhaustive
   option coverage remains pending. Unknown awk options now fail (status 2).
-- Null/zero, command -v, free and the second utility batch are not yet added.
+- 1548 adds null/zero standard streams and portable stdio operands; no HFS
+  catalog entries, seek or regular-file size. Direct-HFS tools require redirection.
+- `command -v [--] name`: one builtin/function/reserved word/PATH name; no
+  execution form or -p/-V. `free [-b|-k|-m|-h]` reports current Mac heap metrics.
+- Second utility batch and exhaustive help-option execution remain pending.

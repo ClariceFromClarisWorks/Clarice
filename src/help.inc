@@ -1,6 +1,7 @@
 /* Builtin help is explicit; do not change echo/printf/test argument semantics. */
 static int builtin_help(const char *topic){
  static const struct {const char *name,*text;} entries[]={
+ {"command","command -v [--] name\nReport a builtin, function, reserved word or executable PATH result.\nUses normal Clarice CLX/script resolution; does not execute the command.\nOne name per call. No -p/-V or command-execution form yet.\nStatus: 0 found (or no name), 127 missing, 2 usage.\nExample: command -v ls\n"},
  {"appinstall","appinstall check FILE | replace FILE NAME | repair NAME | recover NAME\nManage independently installed /bin commands; never silently overwrite.\nNAME: 1..20 letters/digits/_/-. check fully verifies without execution.\nreplace verifies FILE and preserves a recovery copy before installation.\nrepair explicitly installs the bundled version; recover restores .old.\nPrevious files retain both forks; existing Finder metadata is preserved.\nNew commands contain a data fork; old resource forks stay in the backup.\nExisting .clx-NAME.old/.new files block replacement: inspect them first.\nCLX_VERIFY=strict verifies each launch; installed enables receipt\nchecks.\nStatus: 0 success, nonzero verification/file error, 130 interrupted.\n"},
  {"cd","cd [directory]\nChange shell directory; default is the Clarice root. Paths may use /mnt.\n"},
  {"pwd","pwd\nPrint the full current shell path.\n"},

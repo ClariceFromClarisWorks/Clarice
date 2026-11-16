@@ -5,7 +5,7 @@ IMAGE=ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae81958
 mkdir -p "$ROOT/outputs/namespace"
 mkdir -p "$ROOT/work/build"
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
-for name in files inspect misc; do
+for name in files inspect misc free; do
  m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -Wall -Wextra -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/$name.c -o /src/work/build/$name-main.o
  libgcc=$(m68k-apple-macos-gcc -print-libgcc-file-name)
  m68k-apple-macos-ld -r --gc-sections -u clarice_main /src/work/build/$name-main.o "$libgcc" -o /src/work/build/$name.o
@@ -19,6 +19,7 @@ m68k-apple-macos-ld -r /src/work/build/core-main.o /src/work/build/created.o /sr
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/core.o" "$ROOT/work/build/core.clx"
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/serial.o" "$ROOT/work/build/serial.clx" --runtime 1.0
 for name in files inspect misc; do python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"; done
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/free.o" "$ROOT/work/build/free.clx" --runtime 1.4
 "$ROOT/scripts/build-ports.sh"
 "$ROOT/scripts/build-awk.sh"
 "$ROOT/scripts/build-pipelines.sh"

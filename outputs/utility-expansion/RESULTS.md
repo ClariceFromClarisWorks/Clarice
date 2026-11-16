@@ -121,3 +121,33 @@ option execution remains partial outside the focused cases above.
 Finish help depth/option regressions; null/zero streams, command -v and free;
 validate that first batch before dd, time, cooperative sleep, env/printenv and
 safe mktemp. No caching or process-architecture changes made.
+
+## First batch completion — 1548
+
+23 actual guest device/resolution/memory cases, plus corrected native memory
+query, six repeat pairs and cancellation/recovery are recorded in
+`devices-guest.json`. The original free result is retained and labelled pre-fix.
+No physical acceptance. CLX runtime 1.4 adds the small native memory snapshot;
+existing commands retain their earlier requirements. The virtual stream tokens
+need no native file, handle, descriptor table or permanent allocation.
+
+Limitations: virtual nodes are not HFS catalog entries; native catalog/stat tools
+and direct-HFS file operands do not gain virtual-node support. Portable stdio
+operands and shell redirection work. Seeking and file-size queries fail rather
+than pretending an infinite stream is an ordinary file. command -v accepts one
+name; no command-execution/-p/-V forms. free reports current heap extent, not
+whole application partition capacity or total machine free RAM.
+
+Native memory research: Apple [Inside Macintosh: Memory, PurgeSpace](https://www.vintageapple.org/inside_r/pdf/Memory_1992.pdf)
+defines total in D0 and contiguous capacity in A0. The pinned Multiversal binding
+emits A062; disassembly showed A0 was preserved by trap dispatch, giving a
+3,163,188-byte address as the result. Correct A162 result-return glue, with no OS
+patch or actual purge, yields coherent figures. [Macintosh Revealed](https://vintageapple.org/macprogramming/pdf/Macintosh_Revealed_2nd_Edition_Volume_One_1987.pdf)
+also lists A162. This is a correctness fix, not an assembly optimisation.
+
+Reproduce focused host checks with tests/commands/virtual-streams.py, free.py,
+imports.py, tests/commands/updates.py and host-streams.py. Device guest scripts
+are retained beside this report. Use a *single* FFWD toggle to return temporarily
+to video speed while injecting keys, then restore maximum speed for execution;
+the older double-click helper toggles twice and can cause guest autorepeat.
+The first malformed cancellation command was excluded, then correctly repeated.

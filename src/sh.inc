@@ -196,6 +196,18 @@ static int sh_file(const char *path,int argc,char **argv,int dot){short ref;long
 
 #include "shell-read.inc"
 #include "shell-printf.inc"
+/* Query the same native PATH resolver used for execution; no shell cache. */
+static int sh_command_v(int n,char **v){
+ if(n<2||strcmp(v[1],"-v"))return sh_fail("usage: command -v [--] name");
+ int at=2;if(at<n&&!strcmp(v[at],"--"))at++;
+ if(at==n)return 0;if(n!=at+1)return sh_fail("command -v: one name required");
+ const char *name=v[at];
+ const char *special[]={":","[","break","continue","return","set","shift","unset","read",".","command", "if","then","else","elif","fi","do","done","while","until","for","case","esac","in","!","{","}",0};
+ for(int i=0;special[i];i++)if(!strcmp(name,special[i])){say(name);say("\n");return output_error?1:0;}
+ for(struct sh_function *f=sh_functions;f;f=f->next)if(!strcmp(name,f->name)){say(name);say("\n");return output_error?1:0;}
+ for(int i=0;commands[i];i++)if(!strcmp(name,commands[i])){say(name);say("\n");return output_error?1:0;}
+ char path[PATH_CAP];int kind;if(command_path(name,path,&kind)>0){say(path);say("\n");return output_error?1:0;}return 127;
+}
 static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)return 0;
 
 #ifdef CLARICE_PARSER_SAFETY_TEST
@@ -211,6 +223,7 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
   return rc;
  }
 #endif
+ if(!strcmp(v[0],"command"))return sh_command_v(n,v);
  if(!strcmp(v[0],":")||!strcmp(v[0],"true"))return 0;if(!strcmp(v[0],"false"))return 1;
  if(!strcmp(v[0],"test")||!strcmp(v[0],"[")){if(v[0][0]=='['){if(n<2||strcmp(v[n-1],"]"))return sh_fail("missing ]");n--;}return sh_test(n-1,v+1);}
  if(!strcmp(v[0],"break")||!strcmp(v[0],"continue")){if(!sh_loop||n>1)return sh_fail("break/continue requires a loop; numeric levels unsupported");sh_flow=v[0][0]=='b'?1:2;return 0;}
@@ -257,7 +270,7 @@ static int sh_simple(struct mrsh_simple_command *c,struct mrsh_command *compound
  if(c->name)rc=sh_expand(c->name,a);for(i=0;!rc&&i<c->arguments.len;i++){struct mrsh_word *arg=c->arguments.data[i];if(a->n&&!strcmp(a->v[0],"export")&&sh_assignment_argument(arg)){struct sh_word *w=sh_word_new();if(!w)rc=sh_fail("out of memory");else{rc=sh_word(arg,w,1);if(!rc)rc=sh_arg(a,w->text);sh_word_free(w);}}else rc=sh_expand(arg,a);}
  if(a->n&&c->assignments.len&&!sh_special(a->v[0])){saved=sh_save();if(!saved)rc=sh_fail("out of memory");}
  for(i=0;!rc&&i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];struct sh_word *w=sh_word_new();if(!w){rc=2;break;}rc=sh_word(x->value,w,1);if(!rc)rc=sh_set(x->name,w->text);if(!rc&&saved)env_find(sh_env,x->name)->flags|=SH_ENV_EXPORT;sh_word_free(w);}
- for(i=0;!rc&&i<c->io_redirects.len;i++){struct mrsh_io_redirect *r=c->io_redirects.data[i];struct sh_word *w=sh_word_new();if(!w){rc=2;break;}rc=sh_word(r->name,w,1);if(!rc){if(opened_count>=16)rc=sh_fail("too many redirections");else if(r->op==MRSH_IO_LESS&&(r->io_number<0||r->io_number==0)){short ref;if(open_path(w->text,fsRdPerm,&ref))rc=sh_fail("input redirection failed");else{input_ref=ref;opened[opened_count++]=ref;}}
+ for(i=0;!rc&&i<c->io_redirects.len;i++){struct mrsh_io_redirect *r=c->io_redirects.data[i];struct sh_word *w=sh_word_new();if(!w){rc=2;break;}rc=sh_word(r->name,w,1);if(!rc){if(opened_count>=16)rc=sh_fail("too many redirections");else if(r->op==MRSH_IO_LESS&&(r->io_number<0||r->io_number==0)){short ref;if(stream_input_open(w->text,&ref))rc=sh_fail("input redirection failed");else{input_ref=ref;opened[opened_count++]=ref;}}
  else if((r->op==MRSH_IO_GREAT||r->op==MRSH_IO_DGREAT||r->op==MRSH_IO_CLOBBER)&&(r->io_number<0||r->io_number==1||r->io_number==2)){short prior=output_ref;int e=redirect(w->text,r->op==MRSH_IO_DGREAT);short ref=output_ref;output_ref=prior;if(e)rc=sh_fail("output redirection failed");else{opened[opened_count++]=ref;if(r->io_number==2)error_ref=ref;else output_ref=ref;}}
  else if((r->op==MRSH_IO_DLESS||r->op==MRSH_IO_DLESSDASH)&&(r->io_number<0||r->io_number==0)){
  if(temp_count==8)rc=sh_fail("too many here-documents");else{short ref;if(sh_temp(&ref,temp_names[temp_count]))rc=sh_fail("cannot create here-document");else{size_t j;temp_refs[temp_count++]=ref;short prior=output_ref;output_ref=ref;for(j=0;j<r->here_document.len&&!rc;j++){sh_word_reset(w);rc=sh_word(r->here_document.data[j],w,1);if(!rc){emit(w->text,w->used);say("\n");if(output_error)rc=1;}}output_ref=prior;SetFPos(ref,fsFromStart,0);input_ref=ref;}}}
@@ -266,7 +279,7 @@ static int sh_simple(struct mrsh_simple_command *c,struct mrsh_command *compound
  else if(strcmp(w->text,"-")){if(w->text[1]||w->text[0]<'0'||w->text[0]>'2')rc=sh_fail("invalid descriptor duplication");else{int from=w->text[0]-'0';ref=from==0?input_ref:from==1?output_ref:error_ref;if(ref==-2){sh_fail("source descriptor is closed");rc=1;}}}
  if(!rc){if(to==0)input_ref=ref;else if(to==1)output_ref=ref;else error_ref=ref;}} 
  else rc=sh_fail("this redirection is not supported yet");}sh_word_free(w);}
- if(!rc)rc=compound?sh_command_body(compound):a->n?sh_dispatch(a):sh_substitutions!=substitutions_before?sh_substatus:0;if(output_error&&!rc)rc=1;while(opened_count)if(FSClose(opened[--opened_count])&&!rc)rc=1;while(temp_count){temp_count--;sh_temp_close(temp_refs[temp_count],temp_names[temp_count]);}input_ref=oldin;output_ref=oldout;error_ref=olderr;if(saved){
+ if(!rc)rc=compound?sh_command_body(compound):a->n?sh_dispatch(a):sh_substitutions!=substitutions_before?sh_substatus:0;if(output_error&&!rc)rc=1;while(opened_count){short ref=opened[--opened_count];if(!vstream_code(ref)&&FSClose(ref)&&!rc)rc=1;}while(temp_count){temp_count--;sh_temp_close(temp_refs[temp_count],temp_names[temp_count]);}input_ref=oldin;output_ref=oldout;error_ref=olderr;if(saved){
  /* Temporary prefix assignments must not undo unrelated builtin effects
     (notably IFS= read -r value). Restore only the assigned names. */
  for(i=0;i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];free(env_take(&sh_env,x->name));}

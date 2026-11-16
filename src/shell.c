@@ -61,7 +61,8 @@ static int command_path(const char *name,char *out,int *kind){char native[PATH_C
  const char *p=env_get("PATH");while(path_entry(&p,out)){size_t n=strlen(out);if(n+strlen(name)+2>=PATH_CAP)continue;strcat(out,"/");strcat(out,name);if(resolve(out,native)||info(native,&pb))continue;if(!(pb.hFileInfo.ioFlAttrib&16)){int k=dispatch_legacy?program_kind(out):program_kind_native(out,native);if(k){if(kind)*kind=k;return 1;}}rejected=1;}
  if(rejected)errsay("PATH command found, but it is not an executable command\n");return rejected?-1:0;
 }
-static int redirect(const char *s,int append){char p[PATH_CAP];unsigned char n[256];int e=resolve(s,p);if(e)return e;pstr(n,p);e=HOpen(0,0,n,fsWrPerm,&output_ref);if(e==fnfErr){e=HCreate(0,0,n,'S6UX','TEXT');if(!e)e=HOpen(0,0,n,fsWrPerm,&output_ref);}if(e){output_ref=-1;return e;}e=append?SetFPos(output_ref,fsFromLEOF,0):SetEOF(output_ref,0);if(e){FSClose(output_ref);output_ref=-1;}return e;}
+static int stream_input_open(const char *path,short *ref){char native[PATH_CAP],canonical[PATH_CAP];unsigned char name[256];int e=resolve_ex(path,native,canonical,1);if(e)return e;int kind=vstream_kind(canonical);if(kind){*ref=-(kind*4+1);return 0;}pstr(name,native);return HOpen(0,0,name,fsRdPerm,ref);}
+static int redirect(const char *s,int append){char p[PATH_CAP],canonical[PATH_CAP];unsigned char n[256];int e=resolve_ex(s,p,canonical,1);if(e)return e;int kind=vstream_kind(canonical);if(kind){output_ref=-(kind*4+2);return 0;}pstr(n,p);e=HOpen(0,0,n,fsWrPerm,&output_ref);if(e==fnfErr){e=HCreate(0,0,n,'S6UX','TEXT');if(!e)e=HOpen(0,0,n,fsWrPerm,&output_ref);}if(e){output_ref=-1;return e;}e=append?SetFPos(output_ref,fsFromLEOF,0):SetEOF(output_ref,0);if(e){FSClose(output_ref);output_ref=-1;}return e;}
 /* Fixed-slot disk ring: 128 x 1028 byte records + header. A record is committed by writing its sequence last. */
 #define HISTORY_SLOTS 128
 #define HISTORY_SLOT (LINE_CAP+4)

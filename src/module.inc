@@ -44,7 +44,7 @@ static void *clx_import(const char *name){
 /* Runtime 1.0: native 68000 CLX calling convention and explicit import table.
    This capability does not claim POSIX semantics or a public libc ABI. */
 #define CLX_RUNTIME_MAJOR 1
-#define CLX_RUNTIME_MINOR 3
+#define CLX_RUNTIME_MINOR 4
 #define CLX_CAPABILITIES 1UL
 /* Startup precedes history/preferences initialisation. Service system tasks,
    but do not dispatch shell/UI commands into a partially initialised shell. */
@@ -80,7 +80,7 @@ static int module_load(const char *path,int argc,char **argv,int execute){
  if(clx_u32(header+28)||size<4||size>262144||entry>=size||(entry&1)||nr>8192||ni>128||total!=(long)(header_size+size+nr*12+ni*64))goto close;
  if(version==2){
   if(clx_hash(2166136261UL,header,44)!=clx_u32(header+44))goto close;
-  if(clx_u32(header+32)!=CLX_RUNTIME_MAJOR||clx_u32(header+36)>CLX_RUNTIME_MINOR){reason="incompatible runtime requirement (host is 1.3)";goto close;}
+  if(clx_u32(header+32)!=CLX_RUNTIME_MAJOR||clx_u32(header+36)>CLX_RUNTIME_MINOR){reason="incompatible runtime requirement (host is 1.4)";goto close;}
   if(clx_u32(header+40)&~CLX_CAPABILITIES){reason="required runtime capabilities unavailable";goto close;}
  }
  header_time=TickCount()-phase;validation+=header_time;phase=TickCount();
