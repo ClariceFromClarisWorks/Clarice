@@ -39,7 +39,15 @@ long cli_stream_size(int fd){return cli_file_size(fd);}
 long cli_file_seek(int fd,long offset,int whence){return lseek(fd,offset,whence);}
 int cli_pause_ticks(unsigned long n){for(unsigned long i=0;i<n;i++){if(app_yield())return 1;usleep(16667);}return 0;}
 int cli_temp_create(char *path,unsigned long cap){const char *dir=getenv("CLARICE_TEST_TMP");if(!dir)dir="/tmp";if(strlen(dir)+32>=cap){errno=ENAMETOOLONG;return -1;}strcpy(path,dir);strcat(path,"/clarice-sort-XXXXXX");int fd=mkstemp(path);if(fd<0)return -1;return close(fd);}
-int cli_remove(const char *path){return unlink(path);}
+int cli_remove(const char *path){return remove(path);}
 unsigned long cli_ticks(void){const char *fixed=getenv("CLARICE_TEST_TICKS");if(fixed)return strtoul(fixed,0,10);struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);return (unsigned long)t.tv_sec*60+(unsigned long)t.tv_nsec*60/1000000000;}
 
 int cli_file_resize(int fd,long size){return ftruncate(fd,size);}
+
+int resolve_ex(const char *path,char *native,char *canonical,int follow){(void)follow;if(strlen(path)>=512)return -37;strcpy(native,path);strcpy(canonical,path);return 0;}
+int protected_path(const char *p){return !strcmp(p,"/");}
+int cli_native_mkdir(const char *p){
+ const char *failure=getenv("CLARICE_MKDIR_ERROR");if(failure)return atoi(failure);
+ if(!mkdir(p,0700))return 0;
+ switch(errno){case EEXIST:return -48;case ENOENT:return -120;case EACCES:return -54;case ENOSPC:return -34;default:return -36;}
+}

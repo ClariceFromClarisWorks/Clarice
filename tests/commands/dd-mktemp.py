@@ -25,8 +25,24 @@ with tempfile.TemporaryDirectory() as d:
  q=run('mktemp',['same.XXXXXX'],p,env);assert q.returncode and not q.stdout
  assert len(list(p.glob('same.*')))==32 and all(f.read_bytes()==b'owned' for f in p.glob('same.*'))
  before=set(p.iterdir());q=run('mktemp',['-p',d],p,{**env,'CLARICE_FAIL_WRITE':'1'});assert q.returncode and set(p.iterdir())==before,q
- for args in [['bad'],['-u'],['-d'],['--bad']]:assert run('mktemp',args,p,env).returncode
+ for args in [['bad'],['-u'],['--bad']]:assert run('mktemp',args,p,env).returncode
  q=run('mktemp',['-q','/missing/place/name.XXXXXX'],p,env);assert q.returncode and not q.stdout
+ for i in range(32):
+  q=run('mktemp',['-d','dir.XXXXXX'],p,env);assert q.returncode==0,q
+  path=p/q.stdout.decode().strip();assert path.is_dir();(path/'owned').write_text('keep')
+ q=run('mktemp',['-d','dir.XXXXXX'],p,env);assert q.returncode and not q.stdout
+ assert len(list(p.glob('dir.*')))==32 and all((f/'owned').read_text()=='keep' for f in p.glob('dir.*'))
+ before=set(p.iterdir())
+ for extra in [{'CLARICE_FAIL_WRITE':'1'},{'CLARICE_CANCEL_AFTER':'1'},{'CLARICE_CANCEL_AFTER':'2'},{'CLARICE_TEST_ALLOC_BUDGET':'1'},{'CLARICE_MKDIR_ERROR':'-34'},{'CLARICE_MKDIR_ERROR':'-44'}]:
+  q=run('mktemp',['-d','new.XXXXXX'],p,{**env,**extra});assert q.returncode and set(p.iterdir())==before,(extra,q)
+ q=run('mktemp',['-dq','/missing/place/name.XXXXXX'],p,env);assert q.returncode and not q.stdout
+ q=run('mktemp',['-d','-p',d],p,env);assert q.returncode==0 and Path(q.stdout.decode().strip()).is_dir()
+ for args in [['-d','compare.XXXXXX'],['-d','-p',d,'compare.XXXXXX'],['-dq','/missing/compare.XXXXXX'],['-dt','invalid/name.XXXXXX']]:
+  q=run('mktemp',args,p,env)
+  ref=subprocess.run([str(base/'reference-mktemp'),*args],cwd=p,env={**os.environ,**env},capture_output=True)
+  assert bool(q.returncode)==bool(ref.returncode),(args,q,ref)
+  if not q.returncode:
+   for output in [q.stdout,ref.stdout]:assert (p/output.decode().strip()).is_dir()
  for n in ['dd','mktemp']:
   q=run(n,['--help'],p);assert q.returncode==0 and max(map(len,q.stdout.splitlines()))<=72
 print('PASS: eight dd reference copies; overflow/OOM preserve destination; cancel/write failures; binary stdio; mktemp collision/ownership/output-failure cleanup/options')

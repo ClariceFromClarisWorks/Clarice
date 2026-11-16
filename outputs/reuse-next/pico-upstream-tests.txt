@@ -1,0 +1,438 @@
+ok 1 - test.c 532
+    # Subtest: request
+    # simple
+    ok 1 - test.c 64
+    ok 2 - test.c 65
+    ok 3 - test.c 66
+    ok 4 - test.c 67
+    ok 5 - test.c 68
+    # partial
+    ok 6 - test.c 70
+    # parse headers
+    ok 7 - test.c 72
+    ok 8 - test.c 73
+    ok 9 - test.c 74
+    ok 10 - test.c 75
+    ok 11 - test.c 76
+    ok 12 - test.c 77
+    ok 13 - test.c 78
+    ok 14 - test.c 79
+    ok 15 - test.c 80
+    # multibyte included
+    ok 16 - test.c 82
+    ok 17 - test.c 83
+    ok 18 - test.c 84
+    ok 19 - test.c 85
+    ok 20 - test.c 86
+    ok 21 - test.c 87
+    ok 22 - test.c 88
+    ok 23 - test.c 89
+    ok 24 - test.c 90
+    # parse multiline
+    ok 25 - test.c 92
+    ok 26 - test.c 93
+    ok 27 - test.c 94
+    ok 28 - test.c 95
+    ok 29 - test.c 96
+    ok 30 - test.c 97
+    ok 31 - test.c 98
+    ok 32 - test.c 99
+    ok 33 - test.c 100
+    ok 34 - test.c 101
+    ok 35 - test.c 102
+    # parse header name with trailing space
+    ok 36 - test.c 104
+    # incomplete 1
+    ok 37 - test.c 106
+    ok 38 - test.c 107
+    # incomplete 2
+    ok 39 - test.c 108
+    ok 40 - test.c 109
+    # incomplete 3
+    ok 41 - test.c 110
+    ok 42 - test.c 111
+    # incomplete 4
+    ok 43 - test.c 112
+    ok 44 - test.c 113
+    # incomplete 5
+    ok 45 - test.c 114
+    # incomplete 6
+    ok 46 - test.c 115
+    # incomplete 7
+    ok 47 - test.c 116
+    ok 48 - test.c 117
+    # incomplete 8
+    ok 49 - test.c 118
+    ok 50 - test.c 119
+    # slowloris (incomplete)
+    ok 51 - test.c 121
+    # slowloris (complete)
+    ok 52 - test.c 122
+    # empty method
+    ok 53 - test.c 124
+    # empty request-target
+    ok 54 - test.c 125
+    # empty header name
+    ok 55 - test.c 127
+    # header name (space only)
+    ok 56 - test.c 128
+    # NUL in method
+    ok 57 - test.c 130
+    # tab in method
+    ok 58 - test.c 131
+    # invalid method
+    ok 59 - test.c 132
+    # DEL in uri-path
+    ok 60 - test.c 133
+    # NUL in header name
+    ok 61 - test.c 134
+    # NUL in header value
+    ok 62 - test.c 135
+    # CTL in header name
+    ok 63 - test.c 136
+    # CTL in header value
+    ok 64 - test.c 137
+    # invalid char in header value
+    ok 65 - test.c 138
+    # accept MSB chars
+    ok 66 - test.c 139
+    ok 67 - test.c 140
+    ok 68 - test.c 141
+    ok 69 - test.c 142
+    ok 70 - test.c 143
+    ok 71 - test.c 144
+    ok 72 - test.c 145
+    # accept |~ (though forbidden by SSE)
+    ok 73 - test.c 147
+    ok 74 - test.c 148
+    ok 75 - test.c 149
+    ok 76 - test.c 150
+    # disallow {
+    ok 77 - test.c 152
+    # exclude leading and trailing spaces in header value
+    ok 78 - test.c 154
+    ok 79 - test.c 155
+    # accept multiple spaces between tokens
+    ok 80 - test.c 157
+    1..80
+ok 2 - request
+    # Subtest: response
+    # simple
+    ok 1 - test.c 181
+    ok 2 - test.c 182
+    ok 3 - test.c 183
+    ok 4 - test.c 184
+    ok 5 - test.c 185
+    # partial
+    ok 6 - test.c 187
+    # parse headers
+    ok 7 - test.c 189
+    ok 8 - test.c 190
+    ok 9 - test.c 191
+    ok 10 - test.c 192
+    ok 11 - test.c 193
+    ok 12 - test.c 194
+    ok 13 - test.c 195
+    ok 14 - test.c 196
+    ok 15 - test.c 197
+    # parse multiline
+    ok 16 - test.c 199
+    ok 17 - test.c 200
+    ok 18 - test.c 201
+    ok 19 - test.c 202
+    ok 20 - test.c 203
+    ok 21 - test.c 204
+    ok 22 - test.c 205
+    ok 23 - test.c 206
+    ok 24 - test.c 207
+    ok 25 - test.c 208
+    ok 26 - test.c 209
+    # internal server error
+    ok 27 - test.c 211
+    ok 28 - test.c 212
+    ok 29 - test.c 213
+    ok 30 - test.c 214
+    ok 31 - test.c 215
+    ok 32 - test.c 216
+    # incomplete 1
+    ok 33 - test.c 218
+    # incomplete 2
+    ok 34 - test.c 219
+    # incomplete 3
+    ok 35 - test.c 220
+    ok 36 - test.c 221
+    # incomplete 4
+    ok 37 - test.c 222
+    ok 38 - test.c 223
+    # incomplete 5
+    ok 39 - test.c 224
+    # incomplete 6
+    ok 40 - test.c 225
+    ok 41 - test.c 226
+    # incomplete 7
+    ok 42 - test.c 227
+    ok 43 - test.c 228
+    # incomplete 8
+    ok 44 - test.c 229
+    # incomplete 9
+    ok 45 - test.c 230
+    ok 46 - test.c 231
+    # incomplete 10
+    ok 47 - test.c 232
+    ok 48 - test.c 233
+    # incomplete 11
+    ok 49 - test.c 234
+    ok 50 - test.c 235
+    # incomplete 11
+    ok 51 - test.c 237
+    ok 52 - test.c 238
+    # incomplete 12
+    ok 53 - test.c 239
+    ok 54 - test.c 240
+    ok 55 - test.c 241
+    ok 56 - test.c 242
+    # slowloris (incomplete)
+    ok 57 - test.c 244
+    # slowloris (complete)
+    ok 58 - test.c 245
+    # invalid http version
+    ok 59 - test.c 247
+    # invalid http version 2
+    ok 60 - test.c 248
+    # no status code
+    ok 61 - test.c 249
+    # status code below 100
+    ok 62 - test.c 250
+    # status code above 599
+    ok 63 - test.c 251
+    # status code 100
+    ok 64 - test.c 252
+    ok 65 - test.c 253
+    # status code 599
+    ok 66 - test.c 254
+    ok 67 - test.c 255
+    # accept missing trailing whitespace in status-line
+    ok 68 - test.c 257
+    ok 69 - test.c 258
+    # garbage after status 1
+    ok 70 - test.c 259
+    # garbage after status 2
+    ok 71 - test.c 260
+    # garbage after status 3
+    ok 72 - test.c 261
+    # exclude leading and trailing spaces in header value
+    ok 73 - test.c 263
+    ok 74 - test.c 264
+    # accept multiple spaces between tokens
+    ok 75 - test.c 266
+    1..75
+ok 3 - response
+    # Subtest: headers
+    # simple
+    ok 1 - test.c 285
+    ok 2 - test.c 286
+    ok 3 - test.c 287
+    ok 4 - test.c 288
+    ok 5 - test.c 289
+    ok 6 - test.c 290
+    # slowloris
+    ok 7 - test.c 292
+    ok 8 - test.c 293
+    ok 9 - test.c 294
+    ok 10 - test.c 295
+    ok 11 - test.c 296
+    ok 12 - test.c 297
+    # partial
+    ok 13 - test.c 299
+    # error
+    ok 14 - test.c 301
+    1..14
+ok 4 - headers
+    # Subtest: chunked
+    # testing at-once, source at line 416
+    ok 1 - test.c 322
+    ok 2 - test.c 323
+    ok 3 - test.c 324
+    ok 4 - test.c 327
+    # testing at-once, source at line 417
+    ok 5 - test.c 322
+    ok 6 - test.c 323
+    ok 7 - test.c 324
+    ok 8 - test.c 327
+    # testing at-once, source at line 418
+    ok 9 - test.c 322
+    ok 10 - test.c 323
+    ok 11 - test.c 324
+    ok 12 - test.c 327
+    # testing at-once, source at line 419
+    ok 13 - test.c 322
+    ok 14 - test.c 323
+    ok 15 - test.c 324
+    ok 16 - test.c 327
+    # testing at-once, source at line 420
+    ok 17 - test.c 322
+    ok 18 - test.c 323
+    ok 19 - test.c 324
+    ok 20 - test.c 327
+    # testing at-once, source at line 422
+    ok 21 - test.c 322
+    ok 22 - test.c 323
+    ok 23 - test.c 324
+    ok 24 - test.c 327
+    # testing per-byte, source at line 416
+    ok 25 - test.c 359
+    ok 26 - test.c 361
+    ok 27 - test.c 362
+    ok 28 - test.c 365
+    # testing per-byte, source at line 417
+    ok 29 - test.c 359
+    ok 30 - test.c 361
+    ok 31 - test.c 362
+    ok 32 - test.c 365
+    # testing per-byte, source at line 418
+    ok 33 - test.c 359
+    ok 34 - test.c 361
+    ok 35 - test.c 362
+    ok 36 - test.c 365
+    # testing per-byte, source at line 419
+    ok 37 - test.c 359
+    ok 38 - test.c 361
+    ok 39 - test.c 362
+    ok 40 - test.c 365
+    # testing per-byte, source at line 420
+    ok 41 - test.c 359
+    ok 42 - test.c 361
+    ok 43 - test.c 362
+    ok 44 - test.c 365
+    # testing per-byte, source at line 422
+    ok 45 - test.c 359
+    ok 46 - test.c 361
+    ok 47 - test.c 362
+    ok 48 - test.c 365
+    # failures
+    # testing failure at-once, source at line 426
+    ok 49 - test.c 384
+    # testing failure per-byte, source at line 426
+    ok 50 - test.c 393
+    # testing failure at-once, source at line 428
+    ok 51 - test.c 384
+    # testing failure per-byte, source at line 428
+    ok 52 - test.c 402
+    # testing failure at-once, source at line 429
+    ok 53 - test.c 384
+    # testing failure per-byte, source at line 429
+    ok 54 - test.c 393
+    # testing failure at-once, source at line 431
+    ok 55 - test.c 384
+    # testing failure per-byte, source at line 431
+    ok 56 - test.c 393
+    # testing failure at-once, source at line 434
+    ok 57 - test.c 384
+    # testing failure per-byte, source at line 434
+    ok 58 - test.c 393
+    # testing failure at-once, source at line 435
+    ok 59 - test.c 384
+    # testing failure per-byte, source at line 435
+    ok 60 - test.c 393
+    # testing failure at-once, source at line 436
+    ok 61 - test.c 384
+    # testing failure per-byte, source at line 436
+    ok 62 - test.c 393
+    # testing failure at-once, source at line 437
+    ok 63 - test.c 384
+    # testing failure per-byte, source at line 437
+    ok 64 - test.c 393
+    # testing failure at-once, source at line 438
+    ok 65 - test.c 384
+    # testing failure per-byte, source at line 438
+    ok 66 - test.c 393
+    # testing failure at-once, source at line 439
+    ok 67 - test.c 384
+    # testing failure per-byte, source at line 439
+    ok 68 - test.c 393
+    1..68
+ok 5 - chunked
+    # Subtest: chunked-consume-trailer
+    # testing at-once, source at line 447
+    ok 1 - test.c 322
+    ok 2 - test.c 323
+    ok 3 - test.c 324
+    # testing at-once, source at line 448
+    ok 4 - test.c 322
+    ok 5 - test.c 323
+    ok 6 - test.c 324
+    # testing at-once, source at line 449
+    ok 7 - test.c 322
+    ok 8 - test.c 323
+    ok 9 - test.c 324
+    # testing at-once, source at line 450
+    ok 10 - test.c 322
+    ok 11 - test.c 323
+    ok 12 - test.c 324
+    ok 13 - test.c 327
+    # testing at-once, source at line 451
+    ok 14 - test.c 322
+    ok 15 - test.c 323
+    ok 16 - test.c 324
+    ok 17 - test.c 327
+    # testing at-once, source at line 453
+    ok 18 - test.c 322
+    ok 19 - test.c 323
+    ok 20 - test.c 324
+    ok 21 - test.c 327
+    # testing at-once, source at line 454
+    ok 22 - test.c 322
+    ok 23 - test.c 323
+    ok 24 - test.c 324
+    ok 25 - test.c 327
+    # testing per-byte, source at line 447
+    ok 26 - test.c 359
+    ok 27 - test.c 361
+    ok 28 - test.c 362
+    # testing per-byte, source at line 448
+    ok 29 - test.c 359
+    ok 30 - test.c 361
+    ok 31 - test.c 362
+    # testing per-byte, source at line 449
+    ok 32 - test.c 359
+    ok 33 - test.c 361
+    ok 34 - test.c 362
+    # testing per-byte, source at line 450
+    ok 35 - test.c 359
+    ok 36 - test.c 361
+    ok 37 - test.c 362
+    ok 38 - test.c 365
+    # testing per-byte, source at line 451
+    ok 39 - test.c 359
+    ok 40 - test.c 361
+    ok 41 - test.c 362
+    ok 42 - test.c 365
+    # testing per-byte, source at line 453
+    ok 43 - test.c 359
+    ok 44 - test.c 361
+    ok 45 - test.c 362
+    ok 46 - test.c 365
+    # testing per-byte, source at line 454
+    ok 47 - test.c 359
+    ok 48 - test.c 361
+    ok 49 - test.c 362
+    ok 50 - test.c 365
+    1..50
+ok 6 - chunked-consume-trailer
+    # Subtest: chunked-leftdata
+    ok 1 - test.c 468
+    ok 2 - test.c 469
+    ok 3 - test.c 470
+    ok 4 - test.c 471
+    ok 5 - test.c 472
+    1..5
+ok 7 - chunked-leftdata
+    # Subtest: chunked-overhead
+    ok 1 - test.c 516
+    ok 2 - test.c 517
+    ok 3 - test.c 518
+    ok 4 - test.c 520
+    ok 5 - test.c 521
+    1..5
+ok 8 - chunked-overhead
+1..8

@@ -2,18 +2,21 @@
 
 ## Userland upstream reuse — separate Network development
 
-17 November: [inventory and first remediation](reuse-audit/REPORT.md) covers all
-43 standard commands, Network additions, optional editor and shared layers.
-Most text tools already are upstream ports; native HFS/transport services remain
-appropriate. Replaced find's incomplete pattern matcher with pristine musl plus
-a separate MacRoman-byte/C-locale adapter. Host sanitizers/reference comparisons,
-HFS failure/cancellation regression and accelerated Snow output/status tests pass.
-CLX 10,152→12,892 B; 1,000-file median1331→1370 guest ticks (~3% cost for richer
-matching), stable repeated heap/largest block. No permanent matcher allocation.
-Physical acceptance pending; RC checkout unchanged. Next contained candidate:
-restore mktemp directory mode; HTTP parser completion needs shared updater tests.
-Wholesale libvterm screen substitution requires review (72,000 B cells alone at
-80×25 versus current ~11 KiB model). No claim of completed whole-userland remediation.
+17 November: [inventory](reuse-audit/REPORT.md) and [next batch](reuse-next/REPORT.md).
+Find uses genuine musl matching (checkpoint d299d46). Mktemp now restores sbase
+`-d` through exclusive HFS creation; a demonstrated cancellation leak while
+publishing the created name is fixed with a mktemp-only ownership cleanup hook.
+HTTP response/chunk parsing now uses pristine picohttpparser, preserving native
+transport, staged writes and updater decoded-byte limits. Dynamic bounded header
+storage is freed before body I/O; existing transfer buffer reused, no idle Core RAM.
+Host sanitizers/upstream comparisons and accelerated Snow binary/error/cancel/
+reconnect/repeated-run tests pass; final native failure-injection evidence is in
+that report. CLX mktemp16396→18092 B; wget19328→23244 B. No physical speed claim.
+Repeated HTTP heap settles to379486/largest379442; mktemp shows no progressive
+loss. Normal wget/updater builds pass; no application update cycle performed.
+Physical acceptance pending; SE and RC untouched. Remaining reuse candidates:
+upstream od, HTTP redirects/other framing policy, FTP adapter prototype. Libvterm
+screen replacement still requires review for its substantial memory increase.
 
 16 November 2026, Adelaide. Development **2026111550** separates Core from the
 standard utility collection. Host and fixed-maximum-speed Snow Plus/4 MB/

@@ -10,3 +10,5 @@ OSErr NetSend(NetConn *n,const void *p,unsigned short len){(void)n;(void)len;fau
 long NetAvailable(NetConn *n){(void)n;if(offset>=hlen+limit||(fault==1&&offset>=hlen+512))return -1;return cli_ticks()<next?0:128;}
 long NetRecv(NetConn *n,void *p,unsigned short count,unsigned char timeout){(void)n;(void)timeout;unsigned char *b=p;unsigned i=0;for(;i<count&&offset<hlen+limit;i++,offset++)b[i]=offset<hlen?(unsigned char)header[offset]:(unsigned char)(offset-hlen);next=cli_ticks()+2;return i;}
 OSErr NetClose(NetConn *n){(void)n;return 0;}
+
+OSErr NetResolve(const char *s,unsigned long *out,int (*poll)(void),unsigned long timeout){(void)poll;(void)timeout;*out=NetParseIP(s);return *out?0:-50;}

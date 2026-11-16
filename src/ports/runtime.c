@@ -147,6 +147,10 @@ int clarice_main(int argc,char **argv){
   }
  }
  cleaning=1;
+#ifdef CLARICE_MKTEMP_RUNTIME
+ extern int port_mktemp_cleanup(void);
+ if(port_mktemp_cleanup())write_failed=1;
+#endif
  /* Output flush errors must survive both normal return and upstream exit(0). */
  while(extra_streams){Stream *s=extra_streams;if(s->fp){if(port_fclose(s->fp))write_failed=1;}else release_stream(s);}
  for(int i=2;i>=0;i--)if(streams[i].fp&&port_fclose(streams[i].fp))write_failed=1;

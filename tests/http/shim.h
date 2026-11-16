@@ -20,3 +20,9 @@ int cli_isatty(int);
 void app_progress(const char *,int);
 
 int app_columns(void);
+
+#define userCanceledErr (-128)
+int NetResolve(const char *,unsigned long *,int (*)(void),unsigned long);
+
+void *cli_alloc(unsigned long);
+void cli_free(void *);

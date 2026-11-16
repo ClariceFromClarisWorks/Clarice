@@ -33,7 +33,7 @@ unsigned long NetParseIP(const char *dotted)
 		if (*p >= '0' && *p <= '9') {
 			part = part * 10 + (*p - '0');
 			ndigits++;
-			if (part > 255) return 0;
+			if (part > 255 || ndigits > 3) return 0;
 		} else if (*p == '.' || *p == '\0') {
 			if (ndigits == 0) return 0;
 			ip = (ip << 8) | (unsigned long)part;

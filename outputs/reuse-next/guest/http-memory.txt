@@ -1,0 +1,27 @@
+Runtime: heap=379430 largest=379242 image=17464 ticks=350 load=70 owned-peak=0 remaining=0
+Loader ticks: read=21 validate=30 imports=2 relocations=1 prepare=6 events=5 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=30 metadata=0 structure=0 (structure included in relocations)
+Runtime: heap=379422 largest=379242 image=17464 ticks=180 load=67 owned-peak=0 remaining=0
+Loader ticks: read=22 validate=30 imports=1 relocations=1 prepare=3 events=3 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=30 metadata=0 structure=1 (structure included in relocations)
+Runtime: heap=379432 largest=379250 image=17464 ticks=129 load=51 owned-peak=0 remaining=0
+Loader ticks: read=13 validate=29 imports=1 relocations=1 prepare=3 events=2 (events included above)
+Verification ticks: mode=full header=0 record=4 payload=29 metadata=0 structure=1 (structure included in relocations)
+Runtime: heap=379430 largest=379242 image=17464 ticks=139 load=64 owned-peak=0 remaining=0
+Loader ticks: read=17 validate=36 imports=2 relocations=1 prepare=2 events=9 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=36 metadata=0 structure=0 (structure included in relocations)
+Runtime: heap=379424 largest=379242 image=17464 ticks=91 load=56 owned-peak=0 remaining=0
+Loader ticks: read=16 validate=28 imports=2 relocations=1 prepare=3 events=2 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=28 metadata=0 structure=1 (structure included in relocations)
+Runtime: heap=379430 largest=379242 image=17464 ticks=99 load=58 owned-peak=0 remaining=0
+Loader ticks: read=17 validate=30 imports=2 relocations=1 prepare=2 events=3 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=30 metadata=0 structure=1 (structure included in relocations)
+Runtime: heap=379486 largest=379442 image=17464 ticks=149 load=57 owned-peak=0 remaining=0
+Loader ticks: read=17 validate=30 imports=1 relocations=2 prepare=1 events=1 (events included above)
+Verification ticks: mode=full header=0 record=6 payload=30 metadata=0 structure=1 (structure included in relocations)
+Runtime: heap=379486 largest=379442 image=17464 ticks=162 load=61 owned-peak=0 remaining=0
+Loader ticks: read=18 validate=30 imports=2 relocations=1 prepare=3 events=3 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=30 metadata=0 structure=0 (structure included in relocations)
+Runtime: heap=379486 largest=379442 image=17464 ticks=154 load=66 owned-peak=0 remaining=0
+Loader ticks: read=20 validate=32 imports=1 relocations=1 prepare=3 events=3 (events included above)
+Verification ticks: mode=full header=1 record=9 payload=31 metadata=0 structure=1 (structure included in relocations)

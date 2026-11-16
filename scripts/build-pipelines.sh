@@ -1,10 +1,12 @@
 #!/bin/sh
 set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+COMMANDS=${CLARICE_BUILD_COMMANDS:-"wc head cut tr uniq tee tail sort basename dirname cmp cksum sleep printenv mktemp dd"}
+export COMMANDS
 IMAGE=ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae819583eecb0ddd1837da6943c
 python3 "$ROOT/scripts/prepare-pipelines.py"
 python3 "$ROOT/scripts/prepare-utf.py"
-docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
+docker run --rm -e COMMANDS --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
 cd /src
 flags="-m68000 -Os -fno-common -ffunction-sections -fdata-sections -Isrc/ports/include -Isrc/vendor/sbase -Isrc/ports -include src/ports/compat.h"
 objects=""
@@ -16,12 +18,17 @@ for file in src/vendor/sbase/libutf/*.c src/vendor/sbase/libutil/ealloc.c work/b
  m68k-apple-macos-gcc $flags -c "$file" -o work/build/pipelines/$name.o
  objects="$objects work/build/pipelines/$name.o"
 done
-for name in wc head cut tr uniq tee tail sort basename dirname cmp cksum sleep printenv mktemp dd; do
+for name in $COMMANDS; do
+ runtime=work/build/pipelines/runtime.o
+ if [ "$name" = mktemp ]; then
+  m68k-apple-macos-gcc -m68000 -Os -fno-common -ffunction-sections -fdata-sections -DCLARICE_DD_RUNTIME -DCLARICE_MKTEMP_RUNTIME -c src/ports/runtime.c -o work/build/pipelines/mktemp-runtime.o
+  runtime=work/build/pipelines/mktemp-runtime.o
+ fi
  m68k-apple-macos-gcc $flags -Dmain=upstream_main -c work/build/pipelines/$name.c -o work/build/pipelines/$name.o
- m68k-apple-macos-ld -r --gc-sections -u clarice_main work/build/pipelines/$name.o $objects work/build/pipelines/runtime.o "$libgcc" -o work/build/$name.o
+ m68k-apple-macos-ld -r --gc-sections -u clarice_main work/build/pipelines/$name.o $objects "$runtime" "$libgcc" -o work/build/$name.o
 done
 '
-for name in wc head cut tr uniq tee tail sort basename dirname cmp cksum sleep printenv mktemp dd; do
+for name in $COMMANDS; do
  runtime=1.0; if [ "$name" = dd ]; then runtime=1.5; fi
  python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx" --runtime "$runtime"
 done

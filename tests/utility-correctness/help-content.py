@@ -29,7 +29,7 @@ checks={
 'basename':['suffix'], 'dirname':['parent'], 'cmp':['-l','-s','Status','resource'],
 'cksum':['CRC','byte count','cryptographic'], 'free':['-b','-k','-m','-h','heap','largest'],
 'dd':['if=','of=','bs=','ibs=','obs=','count=','skip=','seek=','notrunc','sync','swab','lcase','ucase','noerror','fork'],
-'mktemp':['-qt','-p','-q','-t','TMPDIR','-d','-u','exclusively'],
+'mktemp':['-dqt','-p','-q','-t','TMPDIR','-d','-u','exclusively'],
 'sleep':['seconds','cooperatively','Ctrl+C'], 'printenv':['exported','status 1','Private'],
 'env':['-i','-u','name=value','restored'], 'time':['stderr','60 Hz','user/sys','pipeline'],
 'command':['-v','PATH','One name'],

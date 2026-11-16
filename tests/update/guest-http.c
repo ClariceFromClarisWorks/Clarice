@@ -11,3 +11,5 @@ OSErr NetSend(NetConn *c,const void *p,unsigned short n){(void)c;(void)n;char le
 long NetAvailable(NetConn *c){(void)c;return used<hlen||left?2048:-1;}
 long NetRecv(NetConn *c,void *p,unsigned short n,unsigned char timeout){(void)c;(void)timeout;unsigned done=0;unsigned char *b=p;while(done<n&&used<hlen)b[done++]=header[used++];if(done<n&&left){long count=n-done;if(count>left)count=left;int e=FSRead(ref,&count,b+done);if(e&&e!=eofErr)return -1;left-=count;done+=count;}return done;}
 OSErr NetClose(NetConn *c){(void)c;int e=ref>=0?FSClose(ref):0;ref=-1;return e;}
+
+OSErr NetResolve(const char *s,unsigned long *out,int (*poll)(void),unsigned long timeout){(void)poll;(void)timeout;*out=NetParseIP(s);return *out?0:-50;}

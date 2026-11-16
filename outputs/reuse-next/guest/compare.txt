@@ -1,0 +1,51 @@
+start
+/tmp/wget-before:0
+Runtime: heap=385600 largest=379442 image=14200 ticks=140 load=44 owned-peak=0 remaining=0
+Loader ticks: read=12 validate=24 imports=2 relocations=1 prepare=1 events=1 (events included above)
+Verification ticks: mode=full header=0 record=4 payload=24 metadata=0 structure=0 (structure included in relocations)
+/tmp/http-wget:0
+Runtime: heap=385602 largest=379442 image=17464 ticks=168 load=65 owned-peak=0 remaining=0
+Loader ticks: read=20 validate=31 imports=2 relocations=1 prepare=1 events=2 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=31 metadata=0 structure=0 (structure included in relocations)
+/tmp/mktemp-before:0
+Runtime: heap=385592 largest=379442 image=10380 ticks=111 load=64 owned-peak=5716 remaining=0
+Loader ticks: read=21 validate=29 imports=1 relocations=2 prepare=1 events=9 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=29 metadata=0 structure=1 (structure included in relocations)
+/tmp/mktemp-test:0
+Runtime: heap=385548 largest=379442 image=10860 ticks=108 load=61 owned-peak=5716 remaining=0
+Loader ticks: read=20 validate=25 imports=2 relocations=1 prepare=2 events=4 (events included above)
+Verification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=0 (structure included in relocations)
+/tmp/wget-before:0
+Runtime: heap=385548 largest=379442 image=14200 ticks=181 load=61 owned-peak=0 remaining=0
+Loader ticks: read=21 validate=26 imports=2 relocations=1 prepare=1 events=1 (events included above)
+Verification ticks: mode=full header=1 record=10 payload=25 metadata=0 structure=0 (structure included in relocations)
+/tmp/http-wget:0
+Runtime: heap=385548 largest=379442 image=17464 ticks=178 load=68 owned-peak=0 remaining=0
+Loader ticks: read=22 validate=31 imports=1 relocations=1 prepare=2 events=3 (events included above)
+Verification ticks: mode=full header=0 record=11 payload=31 metadata=0 structure=1 (structure included in relocations)
+/tmp/mktemp-before:0
+Runtime: heap=385546 largest=379442 image=10380 ticks=107 load=60 owned-peak=5716 remaining=0
+Loader ticks: read=21 validate=25 imports=1 relocations=2 prepare=1 events=5 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=25 metadata=0 structure=1 (structure included in relocations)
+/tmp/mktemp-test:0
+Runtime: heap=385548 largest=379442 image=10860 ticks=108 load=60 owned-peak=5716 remaining=0
+Loader ticks: read=22 validate=23 imports=2 relocations=1 prepare=2 events=3 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=23 metadata=0 structure=1 (structure included in relocations)
+/tmp/wget-before:0
+Runtime: heap=385548 largest=379442 image=14200 ticks=173 load=70 owned-peak=0 remaining=0
+Loader ticks: read=21 validate=34 imports=1 relocations=2 prepare=2 events=9 (events included above)
+Verification ticks: mode=full header=1 record=10 payload=33 metadata=0 structure=1 (structure included in relocations)
+/tmp/http-wget:0
+Runtime: heap=385548 largest=379442 image=17464 ticks=176 load=66 owned-peak=0 remaining=0
+Loader ticks: read=22 validate=30 imports=1 relocations=1 prepare=2 events=2 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=30 metadata=0 structure=1 (structure included in relocations)
+/tmp/mktemp-before:0
+Runtime: heap=385546 largest=379442 image=10380 ticks=107 load=61 owned-peak=5716 remaining=0
+Loader ticks: read=20 validate=25 imports=2 relocations=1 prepare=2 events=5 (events included above)
+Verification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=1 (structure included in relocations)
+/tmp/mktemp-test:0
+Runtime: heap=385546 largest=379442 image=10860 ticks=108 load=59 owned-peak=5716 remaining=0
+Loader ticks: read=20 validate=24 imports=1 relocations=2 prepare=2 events=4 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=24 metadata=0 structure=1 (structure included in relocations)
+recovery:0
+integrity:0

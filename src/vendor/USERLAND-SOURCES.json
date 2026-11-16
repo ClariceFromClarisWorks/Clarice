@@ -10,5 +10,11 @@
   "awk": {
     "commit": "72e9b56caddb4a6f8d1405315a5183c26b8650a4",
     "url": "https://github.com/onetrueawk/awk"
+  },
+  "picohttpparser": {
+    "commit": "dd573d8fa9264c646a400e96ce9f07dea6f156e4",
+    "url": "https://github.com/h2o/picohttpparser",
+    "license": "MIT (selected dual-license option)",
+    "location": "src/commands/vendor/picohttpparser"
   }
 }

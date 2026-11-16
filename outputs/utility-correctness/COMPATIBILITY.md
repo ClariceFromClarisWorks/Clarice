@@ -137,3 +137,20 @@ behavior). MacRoman high bytes remain literal, not UTF-8 or locale classes.
 Native traversal and conjunction-only expression scope are unchanged. Host and
 accelerated Snow validated; physical acceptance pending. See
 [reuse audit](../reuse-audit/REPORT.md) for size, timing and remaining gaps.
+
+## Network development: mktemp directories and upstream HTTP (17 November)
+
+`mktemp -d` now uses the genuine sbase frontend with exclusive HFS directory
+creation. `-p`, `-t`, TMPDIR, `-q` and template behavior remain; unsafe `-u`
+is refused. A created item remains owned until its name is successfully flushed;
+failed output/cancellation removes unreported items or diagnoses cleanup failure.
+No Unix permission protection or unpredictable-name claim.
+
+The separate Network wget now uses picohttpparser headers/chunks, accepting HTTP
+200 with unambiguous Content-Length or HTTP/1.1 chunked encoding. Header wire
+limit8KiB, dynamic storage, no fixed header-count ceiling. Identity content coding
+only; no redirects/TLS/EOF-delimited bodies/interim responses/resume. HTTP/1.0
+requests and Connection: close remain. Updater maximum applies to decoded bytes.
+Host and accelerated Snow evidence: [report](../reuse-next/REPORT.md).
+Physical acceptance and an updater handoff with this downloader remain pending.
+The 0.5 release candidate is unchanged.

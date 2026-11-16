@@ -1,0 +1,1 @@
+PASS: eight dd reference copies; overflow/OOM preserve destination; cancel/write failures; binary stdio; mktemp collision/ownership/output-failure cleanup/options

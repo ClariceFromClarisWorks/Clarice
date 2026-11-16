@@ -54,6 +54,8 @@ printf/test/expansion gaps need practical dash comparisons, not Bash extensions.
 All 43 standard external names are represented above, plus four Network additions
 (ipconfig, ping, ftp, telnet). Nano and development ncurses probes are optional.
 
+The next mktemp/HTTP batch is now implemented; see [follow-up evidence](../reuse-next/REPORT.md). The inventory above records the audit-time decision.
+
 ## Ranked next work / escalation
 
 1. **Completed:** replace find's incomplete wildcard component with musl.
