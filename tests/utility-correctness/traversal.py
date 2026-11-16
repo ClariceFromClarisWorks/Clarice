@@ -21,6 +21,7 @@ static void *tracked_alloc(unsigned long n){if(fail_at&&++allocs==fail_at)return
 static void tracked_free(void *p){if(p){live--;free(p);}}
 static void error(const char *s,int e){(void)s;(void)e;errors++;}
 static void say(const char *s){assert(strlen(output)+strlen(s)<sizeof output);strcat(output,s);if(!strcmp(s,"\n"))printed++;}
+static long cli_write(int fd,const void *s,unsigned long n){if(fd==1){assert(strlen(output)+n<sizeof output);strncat(output,s,n);}else errors++;return n;}
 static int app_yield(void){return cancel_at&&++polls>=cancel_at;}
 static int resolve_ex(const char *s,char *n,char *c,int f){(void)f;if(!strcmp(s,"missing"))return fnfErr;strcpy(n,s);strcpy(c,s);return 0;}
 static int info(const char *s,CInfoPBRec *p){memset(p,0,sizeof *p);if(strstr(s,"file space")){p->hFileInfo.ioFlPyLen=512;p->hFileInfo.ioFlRPyLen=512;}else p->hFileInfo.ioFlAttrib=16;return 0;}

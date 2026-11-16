@@ -13,11 +13,11 @@ for file in src/vendor/sbase/libutf/*.c src/vendor/sbase/libutil/ealloc.c work/b
  m68k-apple-macos-gcc $flags -c "$file" -o work/build/pipelines/$name.o
  objects="$objects work/build/pipelines/$name.o"
 done
-for name in wc head cut tr uniq tee tail sort basename dirname; do
+for name in wc head cut tr uniq tee tail sort basename dirname cmp cksum; do
  m68k-apple-macos-gcc $flags -Dmain=upstream_main -c work/build/pipelines/$name.c -o work/build/pipelines/$name.o
  m68k-apple-macos-ld -r --gc-sections -u clarice_main work/build/pipelines/$name.o $objects work/build/ports/runtime.o "$libgcc" -o work/build/$name.o
 done
 '
-for name in wc head cut tr uniq tee tail sort basename dirname; do
+for name in wc head cut tr uniq tee tail sort basename dirname cmp cksum; do
  python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"
 done

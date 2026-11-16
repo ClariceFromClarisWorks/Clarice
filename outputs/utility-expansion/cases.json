@@ -1,0 +1,18 @@
+[
+  "cmp binary binary",
+  "cmp -s binary changed",
+  "cmp -l binary changed",
+  "cmp empty empty",
+  "cmp binary absent",
+  "cmp -l -s binary binary",
+  "cksum binary changed empty",
+  "cksum < binary",
+  "cat binary | cksum",
+  "cmp - binary < binary",
+  "cmp --bad-option",
+  "cksum --bad-option",
+  "awk --bad-option",
+  "ls --bad-option",
+  "find --bad-option",
+  "serial --bad-option"
+]

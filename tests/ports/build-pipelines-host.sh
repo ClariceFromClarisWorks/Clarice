@@ -11,7 +11,7 @@ for file in src/vendor/sbase/libutf/*.c $helpers; do
 done
 cc -g -O1 -fsanitize=address,undefined -c src/ports/runtime.c -o work/pipelines-host/helpers/runtime.o
 reference_helpers=$(printf '%s' "$helpers" | sed 's@work/build/ports/eprintf.c@src/vendor/sbase/libutil/eprintf.c@g')
-for name in wc head cut tr uniq tee tail sort basename dirname; do
+for name in ${CLARICE_TEST_COMMANDS:-wc head cut tr uniq tee tail sort basename dirname cmp cksum}; do
  cc $flags -Dmain=upstream_main -c work/build/pipelines/$name.c -o work/pipelines-host/$name.o
  cc -g -O1 -fsanitize=address,undefined tests/ports/host.c work/pipelines-host/$name.o work/pipelines-host/helpers/*.o -o work/pipelines-host/$name
  cc -O2 -Isrc/vendor/sbase -Isrc/ports src/vendor/sbase/$name.c src/vendor/sbase/libutf/*.c $reference_helpers -o work/pipelines-host/reference-$name

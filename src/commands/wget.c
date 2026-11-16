@@ -55,7 +55,7 @@ int clarice_main(int argc,char **argv){
  unsigned short port=80;unsigned long size=0,written=0;short file=-1;
  int owned=0,e=0,result=1,have_length=0;const char *why="invalid arguments";CInfoPBRec pb;
  if(argc==2&&!strcmp(argv[1],"--help")){
-  say("usage: wget -O NEW_FILE http://IPv4[:port]/path\nStreams HTTP GET to a same-volume temporary file, closes, then renames.\nExisting destinations are refused. Incomplete files are removed; cleanup\nfailures report the temporary path. Ctrl+C cancels. 30-second input timeout.\nHTTP 200 with Content-Length required; no redirects, chunked encoding,\nDNS, credentials, TLS or resume. Data fork only; use MacBinary for Mac apps.\nThis is Clarice's small downloader, not GNU wget.\n");return 0;
+  say("usage: wget -O NEW_FILE http://IPv4[:port]/path\nStreams HTTP GET to a same-volume temporary file, closes, then renames.\nExisting destinations are refused. Incomplete files are removed; cleanup\nfailures report the temporary path. Ctrl+C cancels. 30-second input\ntimeout.\nHTTP 200 with Content-Length required; no redirects, chunked encoding,\nDNS, credentials, TLS or resume. Data fork only; use MacBinary for Mac\napps.\nThis is Clarice's small downloader, not GNU wget.\n");return 0;
  }
  for(int i=1;i<argc;i++){
   if(!strcmp(argv[i],"-O")&&i+1<argc&&!output)output=argv[++i];

@@ -130,24 +130,25 @@ static int transfer(int argc,char **av,int start,int moving){
  }return status;
 }
 static int symlink_command(int argc,char **av){char native[PATH_CAP],canonical[PATH_CAP];if(argc!=4||strcmp(av[1],"-s")||!*av[2]||strlen(av[2])>=PATH_CAP)return 2;int e=checked(av[3],native,canonical,0);if(e)return fail("ln",e);e=cli_native_create(native,'S6LK','S6UX');if(e)return fail("ln",e);short ref;e=cli_native_open(native,0,1,&ref);if(!e){long n=5;e=cli_native_write(ref,"S6L1\n",&n);if(!e&&n!=5)e=ioErr;if(!e){n=strlen(av[2]);e=cli_native_write(ref,av[2],&n);if(!e&&n!=(long)strlen(av[2]))e=ioErr;}int c=cli_native_close(ref);if(!e)e=c;}if(e)cli_native_delete(native);return e?fail("ln",e):0;}
-static void usage(const char *name){
- if(!strcmp(name,"hfsattr"))say("hfsattr [--type CODE] [--creator CODE] [--locked on|off] [--invisible on|off] [--] file ...\nNo options displays metadata. Codes are exactly four bytes; .... displays unset bytes.\nDirectories support visibility only. No Unix permissions are invented.\n");
- else if(!strcmp(name,"cp"))say("cp [-Rp] [--] source ... destination\nCopy data and resource forks and Finder type/creator. -R copies folders using available traversal memory.\n-p also preserves file creation/modification dates and locked state.\nSymlinks are copied as links. Directory metadata preservation is not implemented.\nExisting files are replaced only after both forks have copied successfully.\n");
- else if(!strcmp(name,"mv"))say("mv [--] source ... destination\nRename/move on HFS; regular files can cross volumes using fork-preserving copy.\nDirectory moves require the same parent or an unchanged leaf name.\n");
- else if(!strcmp(name,"touch"))say("touch [-c] [--] file ...\nUpdate modification time, or create an empty file with unset type/creator.\n-c does not create missing files. HFS has no access-time field; -a/-t are unsupported.\n");
- else if(!strcmp(name,"mkdir"))say("mkdir [-p] [--] directory ...\n-p creates missing parents and accepts existing directories.\n");
- else if(!strcmp(name,"rm"))say("rm [-frR] [--] file ...\n-r/-R removes folders recursively using available traversal memory; -f ignores absent files.\nLinks themselves are removed. Finder locks are respected even with -f.\n");
- else if(!strcmp(name,"rmdir"))say("rmdir [--] directory ...\nRemove empty directories only.\n");
- else if(!strcmp(name,"ln"))say("ln -s target link\nCreate a bounded Clarice symbolic link. Hard links and -f are unsupported.\n");
- else say("readlink [--] link ...\nPrint stored symbolic-link targets without resolving them.\n");
- say("Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
+static void usage_text(int fd,const char *s){cli_write(fd,s,strlen(s));}
+static void usage(const char *name,int fd){
+ if(!strcmp(name,"hfsattr"))usage_text(fd,"hfsattr [--type CODE] [--creator CODE] [--locked on|off] [--invisible\non|off] [--] file ...\nNo options displays metadata. Codes are exactly four bytes; ....\ndisplays unset bytes.\nDirectories support visibility only. No Unix permissions are invented.\n");
+ else if(!strcmp(name,"cp"))usage_text(fd,"cp [-Rp] [--] source ... destination\nCopy data and resource forks and Finder type/creator. -R copies folders\nusing available traversal memory.\n-p also preserves file creation/modification dates and locked state.\nSymlinks are copied as links. Directory metadata preservation is not\nimplemented.\nExisting files are replaced only after both forks have copied\nsuccessfully.\n");
+ else if(!strcmp(name,"mv"))usage_text(fd,"mv [--] source ... destination\nRename/move on HFS; regular files can cross volumes using\nfork-preserving copy.\nDirectory moves require the same parent or an unchanged leaf name.\n");
+ else if(!strcmp(name,"touch"))usage_text(fd,"touch [-c] [--] file ...\nUpdate modification time, or create an empty file with unset\ntype/creator.\n-c does not create missing files. HFS has no access-time field; -a/-t\nare unsupported.\n");
+ else if(!strcmp(name,"mkdir"))usage_text(fd,"mkdir [-p] [--] directory ...\n-p creates missing parents and accepts existing directories.\n");
+ else if(!strcmp(name,"rm"))usage_text(fd,"rm [-frR] [--] file ...\n-r/-R removes folders recursively using available traversal memory; -f\nignores absent files.\nLinks themselves are removed. Finder locks are respected even with -f.\n");
+ else if(!strcmp(name,"rmdir"))usage_text(fd,"rmdir [--] directory ...\nRemove empty directories only.\n");
+ else if(!strcmp(name,"ln"))usage_text(fd,"ln -s target link\nCreate a bounded Clarice symbolic link. Hard links and -f are\nunsupported.\n");
+ else usage_text(fd,"readlink [--] link ...\nPrint stored symbolic-link targets without resolving them.\n");
+ usage_text(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
 }
-int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help")){usage(name);return 0;}
- if(!strcmp(name,"hfsattr")){int rc=attr(argc,av);if(rc==2)usage(name);return rc;}
- if(!strcmp(name,"ln")){int rc=symlink_command(argc,av);if(rc==2)usage(name);return rc;}
- int i=1;for(;i<argc&&av[i][0]=='-'&&av[i][1];i++){if(!strcmp(av[i],"--")){i++;break;}for(int j=1;av[i][j];j++){char c=av[i][j];if((!strcmp(name,"cp")||!strcmp(name,"rm"))&&(c=='R'||c=='r'))recursive=1;else if(!strcmp(name,"cp")&&c=='p')preserve=1;else if(!strcmp(name,"rm")&&c=='f')force=1;else if(!strcmp(name,"mkdir")&&c=='p')parents=1;else if(!strcmp(name,"touch")&&c=='c')nocreate=1;else{usage(name);return 2;}}}
- if(!strcmp(name,"cp")||!strcmp(name,"mv")){int rc=transfer(argc,av,i,!strcmp(name,"mv"));if(rc==2)usage(name);return rc;}
- if(i==argc){if(!strcmp(name,"rm")&&force)return 0;usage(name);return 2;}int status=0;
+int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help")){usage(name,1);return 0;}
+ if(!strcmp(name,"hfsattr")){int rc=attr(argc,av);if(rc==2)usage(name,2);return rc;}
+ if(!strcmp(name,"ln")){int rc=symlink_command(argc,av);if(rc==2)usage(name,2);return rc;}
+ int i=1;for(;i<argc&&av[i][0]=='-'&&av[i][1];i++){if(!strcmp(av[i],"--")){i++;break;}for(int j=1;av[i][j];j++){char c=av[i][j];if((!strcmp(name,"cp")||!strcmp(name,"rm"))&&(c=='R'||c=='r'))recursive=1;else if(!strcmp(name,"cp")&&c=='p')preserve=1;else if(!strcmp(name,"rm")&&c=='f')force=1;else if(!strcmp(name,"mkdir")&&c=='p')parents=1;else if(!strcmp(name,"touch")&&c=='c')nocreate=1;else{usage(name,2);return 2;}}}
+ if(!strcmp(name,"cp")||!strcmp(name,"mv")){int rc=transfer(argc,av,i,!strcmp(name,"mv"));if(rc==2)usage(name,2);return rc;}
+ if(i==argc){if(!strcmp(name,"rm")&&force)return 0;usage(name,2);return 2;}int status=0;
  for(;i<argc;i++){char native[PATH_CAP],canonical[PATH_CAP],target[PATH_CAP];CInfoPBRec pb;int e=0;
   if(!strcmp(name,"mkdir"))e=mkdir_one(av[i]);
   else if(!strcmp(name,"rm")||!strcmp(name,"rmdir"))e=remove_one(av[i],0,!strcmp(name,"rmdir"));

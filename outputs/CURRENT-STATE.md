@@ -1,11 +1,34 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted **2026111545 / ee2faf8** is preserved on
-`codex/utility-correctness-2026111539`. Build **2026111546** closes focused startup
-status, find predicate and ls/df operand-safety defects. Host and accelerated Snow
-Plus/4 MB/**reported System 6.0.7** acceptance only; the physical SE stays off.
-No release, tag or main change. Existing argv ownership/editor environment fixes
-and practical upstream-script acceptance remain intact.
+16 November 2026, Adelaide. Accepted **2026111546 / 74d2823** was pushed to
+`codex/utility-correctness-2026111539`. Development build **2026111547** adds
+source-ported cmp/cksum and the first command-help corrections. Validated on host
+and accelerated Snow Plus/4 MB/**reported System 6.0.7** only. Physical SE off;
+no release, tag or main change. Utility expansion remains in progress.
+
+## Utility expansion — first checkpoint, build 2026111547
+
+- All 38 bundled command names, 29 builtin help topics and experimental nano
+  actually executed their help in Snow: success, stdout, no stderr. Clarice help
+  fits 72 columns; upstream nano retains its 80-column help. This verifies basic
+  coverage/format, not exhaustive option conformance for every command.
+- Corrected stale read/export/unset/printf/sh/test/preferences descriptions;
+  expanded appinstall and modified upstream help. Native usage errors now use
+  stderr; awk rejects unknown options instead of warning and continuing.
+- Genuine pinned sbase cmp/cksum, independently bundled. Binary data forks only;
+  POSIX checksum is corruption detection, not authentication. Host 1 MiB reference
+  comparisons, ASan/UBSan and 16 runtime failure/cancel/cleanup trials pass.
+- Snow: 16 cases include binary differences, stdin, pipeline CRC, empty/missing
+  files and invalid options. Twelve repeated cmp/cksum pairs finish with zero
+  tracked allocations. Free heap 376836 -> 376804 B; largest block 295896 ->
+  295914 B. The 32-byte difference is recorded, not asserted to be a leak or
+  proof of perfectly stable native heap. No permanent allocation introduced.
+- Remaining: comprehensive help option/interactions review; virtual null/zero,
+  command -v and free; then the explicitly authorised second utility batch.
+  New-command cancellation/failure tests are host-based; hardware acceptance is
+  deferred. Editor, loader, safe-save and existing utility work preserved.
+
+[Evidence, inventory and reproduction](utility-expansion/RESULTS.md).
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-alignment-2026111521` is preserved. Renderer and UX work through 1533 is checkpointed on

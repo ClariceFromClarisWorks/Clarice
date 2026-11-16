@@ -1,26 +1,38 @@
 """Pristine sbase sources plus Clarice help and cooperative cancellation hooks."""
 from pathlib import Path
-import json
+import json, textwrap
 root=Path(__file__).resolve().parents[1]
 out=root/'work/build/pipelines';out.mkdir(parents=True,exist_ok=True)
 help_text={
+ 'cmp':'cmp [-l|-s] file1 file2\nCompare data forks byte for byte; - means stdin.\nDefault: report the first difference with byte and line positions.\n-l reports every differing byte (decimal offset, octal byte values).\n-s suppresses difference and file-error diagnostics; cannot combine -l.\nStatus: 0 equal, 1 different, 2 error, 130 interrupted.\nExample: cmp -s original copied\nNo text conversion, resource-fork comparison or GNU skip operands.\n',
+ 'cksum':'cksum [file ...]\nPrint the portable POSIX CRC checksum and byte count for each data fork.\nNo operands reads stdin; - reads stdin and labels it <stdin>.\nNot a cryptographic hash or authenticity check. Resource forks excluded.\nExample: cksum downloaded.clx\n',
  'basename':'basename path [suffix]\nPrint the final path component, optionally removing a suffix.\n',
  'dirname':'dirname path\nPrint the parent directory portion.\n',
  'tee':'tee [-a] [file ...]\nCopy stdin to stdout and files; -a appends. -i (Unix signal masking) unsupported.\n',
  'tail':'tail [-f] [-n count|-c count] [file ...]\nLast 10 lines by default; +count starts at that line/byte.\n-f follows one file descriptor and yields until Ctrl+C; truncation restarts it.\n-m UTF-8 counting is deferred because the pinned upstream implementation has bugs.\nRetained tails use available application memory; this is not a disk-backed tail.\n',
  'sort':'sort [-Cbcdfimnru] [-o output] [-t delimiter] [-k key] [file ...]\nSort lines; -n numeric, -r reverse, -u unique, -f ignore case.\n-c/-C check order (C quiet); -k start[,end] selects fields; -b ignores blanks.\n-d dictionary, -i printable only; -m uses the general merge-sort path.\n16 KiB/128-line batches spill to private /tmp files; longer records use singleton runs.\n16 merge levels; records grow with available memory.\n',
  'wc':'wc [-l] [-w] [-c|-m] [file ...]\nCount lines, words, bytes (-c) or UTF-8 characters (-m). Default: lines words bytes.\n',
- 'head':'head [-n count] [file ...]\nPrint the first count lines (default 10). Multiple files get headers.\n',
+ 'head':'head [-count|-n count] [file ...]\nPrint the first count lines (default 10). Multiple files get headers.\n',
  'cut':'cut -b list [-n] [file ...]\ncut -c list [file ...]\ncut -f list [-d delimiter] [-s] [file ...]\nSelect byte, UTF-8 character or field ranges (1,3-5,8-). Default delimiter: tab.\n-n avoids splitting UTF-8 bytes; -s omits lines without the field delimiter.\n',
  'tr':'tr [-cCds] set1 [set2]\nTranslate UTF-8 characters, -d delete, -s squeeze repeats, -c/-C complement.\nSets accept ranges, escapes and character classes such as [:upper:].\n',
- 'uniq':'uniq [-c|-d|-u] [-f fields] [-s chars] [input [output]]\nFilter adjacent repeated lines; -c count, -d duplicates only, -u unique only.\n-f/-s skip fields/characters when comparing. Sort first for nonadjacent repeats.\n'
+ 'uniq':'uniq [-c] [-d|-u] [-f fields] [-s chars] [input [output]]\nFilter adjacent repeated lines; -c count, -d duplicates only, -u unique only.\n-f/-s skip fields/characters when comparing. Sort first for nonadjacent repeats.\n-c may combine with -d or -u; both -d and -u select no lines.\n'
 }
 for name,help in help_text.items():
  s=(root/f'src/vendor/sbase/{name}.c').read_text()
  marker='main(int argc, char *argv[])\n{'
  assert marker in s
- help+='sbase port for Clarice. Status: 0 success; nonzero error; 130 interrupted.\nAllocations and text records grow with available application memory.\nUTF-8 processing does not convert the terminal font from MacRoman.\nGNU-only long options are not implemented; --help is a Clarice addition.\n'
+ if name not in ('basename','dirname','tr','tee','cmp'):
+  help+='Input defaults to stdin (or use -); output defaults to stdout.\nData forks only; resource forks and Finder metadata are not stream data.\n'
+ if name=='sort':help+='-o selects output (may equal an input); -t sets one field separator.\nDefault keys compare the whole line; -C suppresses check diagnostics.\n'
+ if name=='tee':help+='Reads stdin; each file operand receives a copy as well as stdout.\n'
+ if name=='tr':help+='Reads stdin and writes stdout; no file operands.\n'
+ help+='-- ends option parsing where options are supported.\n'
+ help+=('sbase port for Clarice.\n' if name=='cmp' else 'sbase port for Clarice. Status: 0 success; nonzero error; 130 interrupted.\n')
+ help+='Allocations and text records grow with available application memory.\nUTF-8 processing does not convert the terminal font from MacRoman.\nGNU-only long options are not implemented; --help is a Clarice addition.\n'
+ help='\n'.join('\n'.join(textwrap.wrap(line,72,break_long_words=False,break_on_hyphens=False)) for line in help.splitlines())+'\n'
  s=s.replace(marker,marker+'\n\tif (argc == 2 && !strcmp(argv[1], "--help")) { puts('+json.dumps(help)+'); return 0; }')
+ if name=='cmp':s=s.replace('for (n = 1; ; n++) {','for (n = 1; ; n++) {\n if (!(n & 255)) port_poll();')
+ if name=='cksum':s=s.replace('while ((n = read(fd, buf, sizeof(buf))) > 0) {','while ((n = read(fd, buf, sizeof(buf))) > 0) {\n port_poll();')
  if name=='tr':s=s.replace('read:\n','read:\n\tport_poll();\n')
  if name=='tee':
   old='if (iflag && signal(SIGINT, SIG_IGN) == SIG_ERR)\n\t\teprintf("signal:");'

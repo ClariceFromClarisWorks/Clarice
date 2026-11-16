@@ -17,7 +17,7 @@ extern long cli_write(int,const void *,unsigned long);
 static char input_buffer[4096];
 static int output(const char *s){return cli_write(1,s,strlen(s))<0;}
 static int failure(const char *what,int error){char b[128];snprintf(b,sizeof b,"serial: %s (Mac error %d)\n",what,error);cli_write(2,b,strlen(b));return 1;}
-static const char usage[]="usage: serial [-b 4800|9600|19200|38400|57600] /dev/tty.modem|/dev/tty.printer [--test]\n";
+static const char usage[]="usage: serial [-b 4800|9600|19200|38400|57600]\n/dev/tty.modem|/dev/tty.printer [--test]\n";
 int clarice_main(int argc,char **argv){
  int probe=0,baud=baud57600,port=-1,e=0,result=1,buffer_set=0,escape=0,leaving=0,pending=0;
  short in=0,out=0;unsigned long start=0,sent_at=0;unsigned matched=0;
@@ -25,7 +25,7 @@ int clarice_main(int argc,char **argv){
  static const char reply[]="CLARICE-PONG";
  memset(&write_pb,0,sizeof write_pb);
  if(argc==2&&!strcmp(argv[1],"--help")){
-  output(usage);output("Default 57600 baud, 8N1, no hardware/software flow control; remote echo.\nCtrl+] then q exits locally; Ctrl+] twice sends Ctrl+]. Ctrl+C interrupts remote; Cmd-period cancels locally.\n--test sends CLARICE-PING and waits 15 seconds for CLARICE-PONG.\nmodem/printer aliases and legacy positional baud are accepted.\nText only: no VT100, Telnet, SSH or file transfer. No carrier detection: an\nunplugged three-wire cable may remain silent; exit locally and reconnect.\nPrinter port must be free of AppleTalk/other applications.\n");return 0;
+  output(usage);output("Default 57600 baud, 8N1, no hardware/software flow control; remote echo.\nCtrl+] then q exits locally; Ctrl+] twice sends Ctrl+]. Ctrl+C\ninterrupts remote; Cmd-period cancels locally.\n--test sends CLARICE-PING and waits 15 seconds for CLARICE-PONG.\nmodem/printer aliases and legacy positional baud are accepted.\nText only: no VT100, Telnet, SSH or file transfer. No carrier detection:\nan unplugged three-wire cable may remain silent; exit locally and\nreconnect.\nPrinter port must be free of AppleTalk/other applications.\n");return 0;
  }
  for(int i=1;i<argc;i++){
   const char *arg=argv[i];
@@ -94,5 +94,5 @@ end:
  if(out){int cleanup=CloseDriver(out);if(!e&&cleanup){e=cleanup;reason="close output";}}
  if(e==userCanceledErr)return 130;if(e)return failure(reason,e);return result;
 usage_error:
- output(usage);return 2;
+ cli_write(2,usage,strlen(usage));return 2;
 }

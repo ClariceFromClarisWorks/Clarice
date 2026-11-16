@@ -103,3 +103,13 @@ explicitly unsupported; use `find` with quoted `-path` patterns for tree filteri
 still a filtering/printing subset, not a general ordered action-expression engine.
 Startup status/cancellation and full utility pipelines have new focused evidence
 in [utility-closeout/RESULTS.md](../utility-closeout/RESULTS.md).
+
+## Utility expansion (1547, Snow 6.0.7 only)
+
+- `cmp [-l|-s] file1 file2`: byte comparison; `-` is stdin. Status 0/1/2
+  equal/different/error; no GNU skip operands. Data forks only.
+- `cksum [file ...]`: POSIX CRC/length, stdin default, multiple operands.
+  No cryptographic authentication or resource-fork coverage.
+- 68 actual guest help invocations passed basic availability/format; exhaustive
+  option coverage remains pending. Unknown awk options now fail (status 2).
+- Null/zero, command -v, free and the second utility batch are not yet added.

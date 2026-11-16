@@ -13,6 +13,7 @@ extern int link_target(const char *,char *),protected_path(const char *);
 extern int encode_name(const char *,char *,size_t),same_name(const char *,const char *);
 extern void say(const char *),errsay(const char *),error(const char *,int),emit(const char *,long);
 extern int output_error;
+extern long cli_write(int,const void *,unsigned long);
 extern unsigned long cli_ticks(void),cli_mac_time(void);
 extern int cli_native_create(const char *,unsigned long,unsigned long);
 extern int cli_native_delete(const char *),cli_native_mkdir(const char *);

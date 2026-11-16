@@ -10,8 +10,10 @@ for p in (root/'src/vendor/awk').iterdir():
  if p.name=='b.c':
   s=s.replace('state + 10;', 'state + 3;').replace('calloc(NCHARS, sizeof(gtte))', 'calloc(8, sizeof(gtte))').replace('allocated = NCHARS;', 'allocated = 8;')
  if p.name=='main.c':
-  help='awk [-F separator] [-v name=value] [-f programfile] [program] [file ...]\nOne True Awk port: fields, patterns/actions, arrays and functions.\nText buffers grow with available application memory; expression/call depth 64.\nNo system(), command pipes or child processes.\nStatus follows exit expression; errors nonzero; Ctrl+C returns 130.\n'
+  help="awk [-F separator] [-v name=value] [-f programfile] [program] [file ...]\nOne True Awk: process records using patterns, actions, arrays/functions.\n-F sets FS; -v assigns before BEGIN; repeat -f to combine program files.\nWithout -f, first operand is the program. Files default to stdin; - is\nstdin. name=value file operands assign variables at that input position.\n-- ends options; --csv reads CSV records (do not also set FS).\n-safe disables file output and unsafe features; -d[N] enables debugging.\n-version/--version prints the upstream version. No GNU option parity.\nExported variables appear in ENVIRON; private shell variables do not.\nRecords, fields and arrays grow with application memory; call depth 64.\nNo system(), command pipes or child processes. File I/O uses data forks.\nExample: awk -F: '{print $1}' file\nStatus: exit expression (default 0), nonzero error, 130 interrupted.\n"
   import json
+  s=s.replace('WARNING("unknown option %s ignored", argv[1]);', 'FATAL("unknown option %s; use --help", argv[1]);')
+  s=s.replace('if (strcmp(argv[1], "-safe") == 0)\n\t\t\t\tsafe = true;', 'if (strcmp(argv[1], "-safe") == 0)\n\t\t\t\tsafe = true;\n\t\t\telse FATAL("unknown option %s; use --help", argv[1]);')
   s=s.replace('int main(int argc, char *argv[])\n{','int main(int argc, char *argv[])\n{\n if(argc==2&&!strcmp(argv[1],"--help")){puts('+json.dumps(help)+');return 0;}')
   s=s.replace('setlocale(LC_CTYPE, "");','/* The port uses the C locale. */').replace('setlocale(LC_NUMERIC, "C");','').replace('awk_mb_cur_max = MB_CUR_MAX;','awk_mb_cur_max = 1;')
   s=s.replace('(void)signal(SIGFPE, fpecatch);','/* Software floating point: math errors use errno. */')

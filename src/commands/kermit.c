@@ -66,14 +66,14 @@ static int read_packet(struct k_data *k,UCHAR *p,int cap){unsigned long start=ti
 static const char help[]=
  "usage: kermit [-b 57600] [-d /dev/tty.modem|/dev/tty.printer] send FILE\n"
  "       kermit [-b 57600] [-d DEVICE] receive NEWFILE\n"
- "Binary data-fork transfer using E-Kermit 1.8; CRC-16, short packets, one file.\n"
- "Default modem, 57600 baud, 8N1, no flow control. Existing destinations refused.\n"
- "Exit serial first (Ctrl+] then q); start the peer's complementary transfer.\n"
+ "Binary data-fork transfer using E-Kermit 1.8; CRC-16, short packets, one\nfile.\n"
+ "Default modem, 57600 baud, 8N1, no flow control. Existing destinations\nrefused.\n"
+ "Exit serial first (Ctrl+] then q); start the peer's complementary\ntransfer.\n"
  "Ctrl+C or Command-period cancels. Reconnect serial afterward for text.\n"
- "Complete Macintosh files require a MacBinary container; no automatic fork conversion.\n"
+ "Complete Macintosh files require a MacBinary container; no automatic\nfork conversion.\n"
  "Frank da Cruz / Columbia University; revised 3-clause BSD licence.\n"
 #ifdef KERMIT_HOST
- "Host only: --pace-ms 0..20 delays each transmitted byte (including ACKs).\nUse --pace-ms 2 for the tested physical SE/USB cable without flow control.\n"
+ "Host only: --pace-ms 0..20 delays each transmitted byte (including\nACKs).\nUse --pace-ms 2 for the tested physical SE/USB cable without flow\ncontrol.\n"
 #endif
  ;
 #ifdef KERMIT_HOST

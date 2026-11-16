@@ -57,23 +57,24 @@ static void code4(unsigned long x,char *p){for(int i=0;i<4;i++){unsigned char c=
 static int describe(const char *path){char native[PATH_CAP],canonical[PATH_CAP],target[PATH_CAP],type[5],creator[5],buf[160];CInfoPBRec pb;int e=resolve_ex(path,native,canonical,0);if(!e)e=info(native,&pb);if(e){error(path,e);return 1;}if(!brief){say(path);say(": ");}
  if(isdir(&pb))say("HFS directory\n");else if(is_link(&pb)){e=link_target(native,target);if(e)return 1;say("Clarice symbolic link to ");say(target);say("\n");}else{code4(pb.hFileInfo.ioFlFndrInfo.fdType,type);code4(pb.hFileInfo.ioFlFndrInfo.fdCreator,creator);snprintf(buf,sizeof buf,"HFS file, type '%s', creator '%s', data %lu bytes, resource %lu bytes\n",type,creator,(unsigned long)pb.hFileInfo.ioFlLgLen,(unsigned long)pb.hFileInfo.ioFlRLgLen);say(buf);}return output_error?1:0;
 }
-static void usage(const char *name){if(!strcmp(name,"find"))say("find [path ...] [-name pattern] [-path pattern] [-type f|d|l] [-maxdepth N] [-print]\nWalk HFS directories without following symbolic links. Default path: .\n-name matches encoded basenames; -path matches the printed pathname.\nPatterns support * and ?; quote them. All predicates must match.\nPredicates combine with AND. [], -o, -exec and other expressions are unsupported.\nTraversal grows with available memory; -maxdepth explicitly limits it.\n");else if(!strcmp(name,"du"))say("du [-ashk] [--] [path ...]\nAllocated data+resource fork space; default units 512 bytes, -k 1024, -h readable.\n-a includes files, -s gives argument totals. Links are not followed.\nHFS catalog/directory overhead is not assigned to individual folders.\nTraversal grows with available memory and native path capacity.\n");else say("file [-b] [--] file ...\nDescribe HFS kind, symbolic target, type/creator and both fork sizes.\n-b omits the name. This is native metadata inspection, not libmagic content detection.\n");say("Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");}
-int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help")){usage(name);return 0;}int i=1,status=0;
+static void usage_text(int fd,const char *s){cli_write(fd,s,strlen(s));}
+static void usage(const char *name,int fd){if(!strcmp(name,"find"))usage_text(fd,"find [path ...] [-name pattern] [-path pattern] [-type f|d|l] [-maxdepth\nN] [-print]\nWalk HFS directories without following symbolic links. Default path: .\n-name matches encoded basenames; -path matches the printed pathname.\nPatterns support * and ?; quote them. All predicates must match.\nPredicates combine with AND. [], -o, -exec and other expressions are\nunsupported.\nTraversal grows with available memory; -maxdepth explicitly limits it.\n");else if(!strcmp(name,"du"))usage_text(fd,"du [-ashk] [--] [path ...]\nAllocated data+resource fork space; default units 512 bytes, -k 1024, -h\nreadable.\n-a includes files, -s gives argument totals. Links are not followed.\nHFS catalog/directory overhead is not assigned to individual folders.\nTraversal grows with available memory and native path capacity.\n");else usage_text(fd,"file [-b] [--] file ...\nDescribe HFS kind, symbolic target, type/creator and both fork sizes.\n-b omits the name. This is native metadata inspection, not libmagic\ncontent detection.\n");usage_text(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");}
+int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help")){usage(name,1);return 0;}int i=1,status=0;
  if(!strcmp(name,"find")){
   int first=1;while(i<argc&&av[i][0]!='-')i++;
   int roots=i-first;predicates=av+i;predicate_count=argc-i;
   /* Validate the complete expression before producing output. */
   for(;i<argc;i++){
    if(!strcmp(av[i],"-print"))continue;
-   if(i+1>=argc){usage(name);return 2;}
+   if(i+1>=argc){usage(name,2);return 2;}
    if(!strcmp(av[i],"-name")||!strcmp(av[i],"-path")){
-    const char *value=av[++i];if(strchr(value,'[')||strchr(value,']')){usage(name);return 2;}
+    const char *value=av[++i];if(strchr(value,'[')||strchr(value,']')){usage(name,2);return 2;}
    }else if(!strcmp(av[i],"-type")){
-    const char *value=av[++i];if(strlen(value)!=1||!strchr("fdl",*value)){usage(name);return 2;}
+    const char *value=av[++i];if(strlen(value)!=1||!strchr("fdl",*value)){usage(name,2);return 2;}
    }else if(!strcmp(av[i],"-maxdepth")){
     char *end;errno=0;long n=strtol(av[++i],&end,10);
-    if(errno||*end||!*av[i]||n<0||n>2147483647L){usage(name);return 2;}maxdepth=n;
-   }else{usage(name);return 2;}
+    if(errno||*end||!*av[i]||n<0||n>2147483647L){usage(name,2);return 2;}maxdepth=n;
+   }else{usage(name,2);return 2;}
   }
   for(i=0;i<(roots?roots:1);i++){
    unsigned long long n;int rc=walk(roots?av[first+i]:".",0,0,&n);
@@ -82,7 +83,7 @@ int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=na
   return status;
  }
 
- int du=!strcmp(name,"du");for(;i<argc&&av[i][0]=='-'&&av[i][1];i++){if(!strcmp(av[i],"--")){i++;break;}for(int j=1;av[i][j];j++){char c=av[i][j];if(du&&c=='a')all=1;else if(du&&c=='s')summarize=1;else if(du&&c=='h')human=1;else if(du&&c=='k')unit=1024;else if(!du&&c=='b')brief=1;else{usage(name);return 2;}}}
- if(du&&all&&summarize){usage(name);return 2;}if(i==argc){if(du){unsigned long long n;return walk(".",0,1,&n);}usage(name);return 2;}
+ int du=!strcmp(name,"du");for(;i<argc&&av[i][0]=='-'&&av[i][1];i++){if(!strcmp(av[i],"--")){i++;break;}for(int j=1;av[i][j];j++){char c=av[i][j];if(du&&c=='a')all=1;else if(du&&c=='s')summarize=1;else if(du&&c=='h')human=1;else if(du&&c=='k')unit=1024;else if(!du&&c=='b')brief=1;else{usage(name,2);return 2;}}}
+ if(du&&all&&summarize){usage(name,2);return 2;}if(i==argc){if(du){unsigned long long n;return walk(".",0,1,&n);}usage(name,2);return 2;}
  for(;i<argc;i++){unsigned long long n;int rc=du?walk(av[i],0,1,&n):describe(av[i]);if(rc==130)return rc;if(rc)status=rc;if(app_yield())return 130;}return status;
 }

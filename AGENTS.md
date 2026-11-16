@@ -73,3 +73,7 @@ these interface and compatibility principles:
 - Report capabilities, unsupported operations and failures truthfully, with meaningful errors and exit status; apply the no-fake-success rule to every interface. Do not patch the OS or emulate a fictitious Unix permission model.
 - Extend the reusable services above into consistent file, device, terminal and process interfaces across application ports, respecting the actual execution capabilities of each Macintosh environment.
 - Validate real-world Unix-style tasks, including file operations, stream/redirection workflows and serial connections to other servers as support becomes available. Document and justify differences from Unix behavior; do not imply that planned capabilities already work.
+
+- New production commands require accurate `--help` (or `help command` for
+  argument-sensitive builtins), option/status/stream regression coverage and
+  explicit Macintosh limitations before they are considered complete.
