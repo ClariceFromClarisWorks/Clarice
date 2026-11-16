@@ -198,6 +198,7 @@ int port_open(const char *path,int flags,...){
  const char *mode;
  if(flags==O_RDONLY)mode="r";
  else if(flags==(O_WRONLY|O_CREAT|O_TRUNC))mode="w";
+ else if(flags==(O_WRONLY|O_CREAT))mode="c";
  else if(flags==(O_WRONLY|O_CREAT|O_APPEND))mode="a";
  else if(flags==(O_WRONLY|O_CREAT|O_EXCL))mode="x";
  else if(flags==(O_RDWR|O_CREAT|O_EXCL))mode="x+";
@@ -238,3 +239,12 @@ const char *port_temp_new(void){
 void port_temp_remove(const char *name){for(int i=0;i<TEMP_LIMIT;i++)if(temporary[i]==name){if(cli_remove(name)){fputs("sort: cannot remove temporary file\n",port_standard(2));port_exit(2);}temporary[i][0]=0;return;}port_abort();}
 
 int port_track_temp(const char *name){if(strlen(name)>=sizeof temporary[0]){errno=ENAMETOOLONG;return -1;}for(int i=0;i<TEMP_LIMIT;i++)if(!temporary[i][0]){strcpy(temporary[i],name);return 0;}errno=EMFILE;return -1;}
+
+#ifdef CLARICE_DD_RUNTIME
+int port_ftruncate(int fd,off_t size){
+ extern int cli_file_resize(int,long);
+ if(fd<3||fd>=descriptor_capacity||!descriptors[fd]){errno=EBADF;return -1;}
+ if(size<0||size>2147483647L){errno=EINVAL;return -1;}
+ int rc=cli_file_resize(descriptors[fd]-1,(long)size);if(rc&&errno==EINTR)port_exit(130);return rc;
+}
+#endif

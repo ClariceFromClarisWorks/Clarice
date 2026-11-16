@@ -55,6 +55,7 @@
  CLX_IMPORT("cli_file_close", cli_file_close)
  CLX_IMPORT("cli_file_open", cli_file_open)
  CLX_IMPORT("cli_file_read", cli_file_read)
+ CLX_IMPORT("cli_file_resize", cli_file_resize)
  CLX_IMPORT("cli_file_seek", cli_file_seek)
  CLX_IMPORT("cli_file_size", cli_file_size)
  CLX_IMPORT("cli_file_write", cli_file_write)

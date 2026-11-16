@@ -28,7 +28,8 @@ static char home_path[PATH_CAP];
 static char root_path[PATH_CAP],unix_cwd[PATH_CAP]="/";
 #include "shell-env.inc"
 static unsigned long history_count;
-static const char *commands[]={"help","appinstall","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
+static int builtin_help(const char *);
+static const char *commands[]={"env","time","command","help","appinstall","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
 static void pstr(unsigned char *p,const char *s) {size_t n=strlen(s); if(n>255)n=255;p[0]=(unsigned char)n;memcpy(p+1,s,n);}
 #include "streams.inc"
 static void say(const char *s){emit(s,(long)asm_length(s));}

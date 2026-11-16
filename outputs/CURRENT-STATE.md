@@ -1,10 +1,44 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted **2026111546 / 74d2823** was pushed to
-`codex/utility-correctness-2026111539`. Development build **2026111548** completes the first utility batch: cmp/cksum,
-null/zero streams, command -v, free and initial help corrections. Validated on host
-and accelerated Snow Plus/4 MB/**reported System 6.0.7** only. Physical SE off;
-no release, tag or main change. Utility expansion remains in progress.
+16 November 2026, Adelaide. Development **2026111549** completes the two requested
+utility batches and command-help review. Earlier checkpoints `74d2823`,
+`5e53af1` and `ef35443` were pushed to `codex/utility-correctness-2026111539`.
+Host and accelerated Snow Plus/4 MB/**reported System 6.0.7** validation only.
+Physical SE remains off; no release, tag or main change.
+
+## Second utility batch — build 2026111549
+
+- Genuine pinned sbase `dd`, `sleep`, `printenv`, `mktemp` are independent CLX
+  commands. `env` and `time` are small shell wrappers: existing scoped execution
+  avoids a nested-CLX process API. No new process architecture or resident cache.
+- Runtime 1.5 adds native data-fork resize for dd only. Checked sizes, allocation
+  before destructive opens, output-block seek units, explicit zero-filled HFS
+  extensions and correct 32-bit record-count formatting. Ordinary writes remain
+  partial on error; this does not replace the fork-preserving editor save path.
+- Export snapshots are elastic. Explicit exported HOME/PWD now override their
+  synthetic defaults; env -i/-u can suppress those defaults within a saved scope.
+  Parent environment/functions/arguments/directory restore on return or failure.
+- Native exclusive-create mktemp refuses unsafe name-only mode; -d is not added.
+  Sleep cooperatively waits in Macintosh ticks. Time reports elapsed wall time
+  on stderr; user/sys accounting and -p are explicitly unsupported.
+- Snow: 37 utility cases, eight exported files compared byte-for-byte, native
+  allocation/locked-file failure preservation, 2,049-byte exported value,
+  pipelines, repeated runs and Ctrl+C status130. Repeat free heap settles at
+  290,482 bytes; largest block alternates 289,034/289,164; tracked remaining=0.
+  Workload includes the executing script, so these are not idle-heap figures.
+- Host: eight dd reference cases, output/size/allocation failure, temp collisions
+  and cleanup; 64 large environment entries; nine dash scope comparisons plus
+  149 recovery trials (41 injected failures); 39 focused and 54 POSIX cases,
+  1,268 parser recovery trials, 65 installation/loader scenarios and editor
+  environment failure/cancellation/repeat coverage all pass.
+- Help: all 43 bundled command names +32 builtin topics +nano exercised in the
+  guest. Status/stdout/stderr and 72-column checks pass (upstream nano:80).
+  Source/content review and regression contracts describe actual options and
+  Mac limitations. Exhaustive option combinations are not claimed.
+- Evidence, exact scripts, content inventory, binary checksums and build manifest:
+  [utility-expansion/RESULTS.md](utility-expansion/RESULTS.md),
+  [help-inventory-final.json](utility-expansion/help-inventory-final.json).
+  Consolidated System 6.0.8 physical acceptance remains pending.
 
 ## Virtual streams and memory query — build 2026111548
 
@@ -28,7 +62,8 @@ no release, tag or main change. Utility expansion remains in progress.
   infinite-zero cancellation/recovery pass (130). Repeat free heap settles at
   399858/399860 B; largest block stays 399630 B; tracked remaining always zero.
 - Physical SE remains off. This is fixed accelerated Snow, reported 6.0.7.
-  Comprehensive help option execution is still partial; second batch remains.
+  The second batch is completed in 1549 above; exhaustive option combinations
+  and consolidated physical acceptance are not claimed.
 
 ## Utility expansion — first checkpoint, build 2026111547
 

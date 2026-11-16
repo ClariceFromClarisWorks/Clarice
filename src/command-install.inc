@@ -7,7 +7,7 @@ static const struct {const char *name;short resource;} bundled_commands[]={
  {"tail",211},{"sort",212},{"cp",213},{"mv",213},{"touch",213},
  {"rmdir",213},{"mkdir",213},{"rm",213},{"ln",213},{"readlink",213},
  {"hfsattr",213},{"find",214},{"du",214},{"file",214},{"od",215},
- {"more",215},{"basename",216},{"dirname",217},{"kermit",218},{"wget",219},{"clarice",220},{"cmp",221},{"cksum",222},{"free",223},{0,0}};
+ {"more",215},{"basename",216},{"dirname",217},{"kermit",218},{"wget",219},{"clarice",220},{"cmp",221},{"cksum",222},{"free",223},{"sleep",224},{"printenv",225},{"mktemp",226},{"dd",227},{0,0}};
 static int command_paths(const char *name,char *dest,char *stage,char *backup){
  size_t n=strlen(name);if(!n||n>20)return bdNamErr;
  for(size_t i=0;i<n;i++)if(!((name[i]>='a'&&name[i]<='z')||(name[i]>='A'&&name[i]<='Z')||(name[i]>='0'&&name[i]<='9')||name[i]=='_'||name[i]=='-'))return bdNamErr;

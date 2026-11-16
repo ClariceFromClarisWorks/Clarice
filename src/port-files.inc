@@ -29,7 +29,7 @@ static int port_errno(int e){
 }
 static int cli_file_open(const char *path,const char *mode){
  short ref;char p[PATH_CAP],canonical[PATH_CAP];unsigned char name[256];int e;
- if(!mode||!mode[0]||!strchr("rwax",mode[0])){errno=EINVAL;return -1;}
+ if(!mode||!mode[0]||!strchr("rwaxc",mode[0])){errno=EINVAL;return -1;}
  int binary=0,update=0;for(const char *m=mode+1;*m;m++){
   if(*m=='b'&&!binary)binary=1;else if(*m=='+'&&!update)update=1;else{errno=EINVAL;return -1;}
  }
@@ -72,11 +72,19 @@ static int cli_prepare_stdio(void){
 }
 
 static int cli_environment(int index,char *out,unsigned long capacity){
- const char *name,*value;
- if(index==0){name="HOME";value="/";}else if(index==1){name="PWD";value=unix_cwd;}
- else if(index>=2){struct sh_env *e=sh_env;int i=2;for(;e;e=e->next)if((e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT)){if(i++==index)break;}if(!e)return 0;name=e->name;value=e->value;}else return 0;
- if(strlen(name)+strlen(value)+2>capacity)return -1;snprintf(out,capacity,"%s=%s",name,value);return 1;
+ const char *name=0,*value=0;int at=0;if(index<0)return 0;
+ for(int i=0;i<2;i++)if(sh_env_defaults&(1<<i)){
+  const char *key=i?"PWD":"HOME";struct sh_env *e=env_find(sh_env,key);
+  if(at++==index){name=key;value=e&&(e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT)?e->value:i?unix_cwd:"/";break;}
+ }
+ if(!name)for(struct sh_env *e=sh_env;e;e=e->next)if((e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT)){
+  if((!strcmp(e->name,"HOME")&&(sh_env_defaults&1))||(!strcmp(e->name,"PWD")&&(sh_env_defaults&2)))continue;
+  if(at++==index){name=e->name;value=e->value;break;}
+ }
+ if(!name)return 0;if(strlen(name)+strlen(value)+2>capacity)return -1;
+ snprintf(out,capacity,"%s=%s",name,value);return 1;
 }
+
 static int cli_path_kind(const char *path){char native[PATH_CAP];CInfoPBRec pb;int e=resolve(path,native);if(!e)e=info(native,&pb);if(e)return port_errno(e);return !!(pb.hFileInfo.ioFlAttrib&16);}
 static unsigned long cli_unix_time(void){unsigned long now;GetDateTime(&now);return now-2082844800UL;}
 
@@ -126,4 +134,18 @@ int cli_memory(ClariceMemory *out,unsigned long capacity){
 #endif
  out->after_purge=total;out->largest_after_purge=largest;
  return 0;
+}
+
+/* dd requires data-fork resize. HFS extension is explicitly zero-filled rather
+   than exposing newly allocated disk contents. The caller owns partial output
+   on failure/cancellation; this is not the editor safe-replacement interface. */
+static int cli_file_resize(int ref,long size){
+ if(vstream_code(ref)||size<0){errno=EINVAL;return -1;}
+ long old,pos;int e=GetEOF(ref,&old);if(!e)e=GetFPos(ref,&pos);if(e)return port_errno(e);
+ if(size<=old){e=SetEOF(ref,size);return e?port_errno(e):0;}
+ e=SetFPos(ref,fsFromLEOF,0);if(e)return port_errno(e);
+ unsigned char zero[512]={0};int cancelled=0;
+ while(old<size){long n=size-old;if(n>(long)sizeof zero)n=sizeof zero;long want=n;e=FSWrite(ref,&n,zero);old+=n;if(!e&&n!=want)e=ioErr;if(e)break;if(app_yield()){cancelled=1;break;}}
+ {int restore=SetFPos(ref,fsFromStart,pos);if(!e)e=restore;}
+ if(cancelled){errno=EINTR;return -1;}return e?port_errno(e):0;
 }

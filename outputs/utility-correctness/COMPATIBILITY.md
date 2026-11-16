@@ -116,4 +116,14 @@ in [utility-closeout/RESULTS.md](../utility-closeout/RESULTS.md).
   catalog entries, seek or regular-file size. Direct-HFS tools require redirection.
 - `command -v [--] name`: one builtin/function/reserved word/PATH name; no
   execution form or -p/-V. `free [-b|-k|-m|-h]` reports current Mac heap metrics.
-- Second utility batch and exhaustive help-option execution remain pending.
+- 1549 completes the second batch with upstream `dd`, `sleep`, `printenv`,
+  `mktemp`, and scoped shell `env`/`time`. See utility-expansion/RESULTS.md.
+  `env -i` requires an explicit PATH or an absolute external-command path.
+  `time` reports elapsed native ticks only, not fabricated user/system CPU time.
+  `dd` is data-fork copying, not a safe editor save; partial output remains on
+  failure/cancel. Signed 32-bit offsets; seek needs of=; no conv=noerror.
+  `mktemp` uses exclusive native creation and rejects unsafe -u; -d is deferred.
+- Final help inventory: 43 bundled names, 32 builtin topics, experimental nano.
+  All 76 pass actual guest output/status/format checks; 46 command capability
+  contracts plus builtin-help assertions cover advertised content. Exhaustive
+  combinations and new physical serial/network/editor execution are not claimed.

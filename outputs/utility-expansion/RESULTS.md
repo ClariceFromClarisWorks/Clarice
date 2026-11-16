@@ -1,4 +1,80 @@
-# Utility expansion — build 2026111547
+# Utility expansion and help — completed through build 2026111549
+
+## Second batch: actual results
+
+Pinned, unmodified sbase sources/manuals add independent `/bin/dd`, `sleep`,
+`printenv`, `mktemp`. Adaptations remain in the preparation script/runtime.
+`env` and `time` are deliberately shell wrappers using existing scope and
+execution services; an external implementation would require a new nested command
+execution API. No resident code cache, new process model or filesystem layer.
+
+- dd: checked decimal/b/k/x sizes before allocation/destructive open; output-block
+  seek correction; native HFS zero-filled extension, including notrunc; correct
+  32-bit record counts (initial guest exposed the intmax formatting mismatch).
+  Runtime 1.5's resize import is linked only where needed. grep/sed and other
+  older commands retain their prior runtime requirements.
+- mktemp: native exclusive create, collision retries, caller-owned file; removes
+  an unreported file after output failure. -u rejected, -d deferred. Predictable
+  names do not confer Unix permissions or security guarantees on System 6.
+- env/printenv: elastic export snapshot; explicit HOME/PWD overrides honoured;
+  env -i/-u suppress synthetic defaults within saved scope. Use an absolute
+  external path or supply PATH with env -i. The initial fixture incorrectly
+  expected stripped PATH to locate Audit commands; corrected fixtures pass.
+- sleep yields while waiting in native 60 Hz ticks. time prints elapsed wall
+  time to stderr and returns the command status; no fake user/system CPU figures.
+
+Host ASan/UBSan: eight dd copies match /bin/dd; size overflow and allocation
+failure preserve an existing destination; cancellation/write failure return
+nonzero and release ownership. mktemp: 32 deterministic collisions, existing
+contents untouched, output-failure cleanup, invalid/quiet options. printenv:
+64 entries of 2,048 bytes, allocation failures; sleep zero/one-second/cancel.
+Nine dash environment/scope comparisons, time/exit isolation, 149 recovery trials
+(41 injected failures). Preserved 39 focused shell +54 POSIX cases, 1,268 parser
+recovery trials, 65 loader/installer cases, and editor environment tests (80 x
+4,096 bytes, 88 failure points, cancellation and 20 repeats).
+
+Snow Plus/4 MB, **reported System 6.0.7**, fixed maximum speed ~15–16x:
+37 final utility cases passed. Eight exported HFS files compared byte-for-byte,
+including 128 KiB all-byte-values copying, zero gaps, empty files and originals
+preserved after native OOM/locked-file failure. CRCs match the host utility.
+2,049-byte export reaches printenv, env isolation reaches awk, pipelines/statuses
+work. Actual Ctrl+C interrupted sleep and unbounded zero-to-null dd with status
+130 and returned to a usable prompt. That cancellation run precedes the final
+record-format-only dd correction; it was not needlessly repeated.
+
+Six repeated dd/printenv/mktemp/remove cycles: free heap 290,492 then 290,482 bytes;
+largest block alternates 289,034/289,164, without progressive decline. Each
+record reports remaining=0. Measured owned peaks: dd 5,744 bytes, printenv/mktemp
+5,716 bytes for these fixtures; scopes/script memory are separate. Final CLX
+sizes: dd 18,264, sleep 12,688, printenv 13,168, mktemp 16,412 bytes. No new
+permanent buffer/cache; shell default-environment mask adds one integer.
+
+## Help coverage
+
+Final `help-inventory-final.json`: **43 bundled names +32 builtin topics +nano**.
+All 76 actual guest help calls succeed on stdout with no stderr; Clarice help
+fits 72 columns, upstream nano 80. All external option sets were compared with
+current parsing/source, and `help-content.py` checks 46 capability contracts;
+`builtin-help.py` checks the builtin entries. Initial errors corrected include
+awk option handling, native usage stderr, builtin semantics, upstream adaptations
+and misleading generic allocation/encoding wording. No production command lacks
+help. Exhaustive option combinations and new serial/network/editor operation
+acceptance are not claimed by a help sweep.
+
+Exact guest script/cases: `second.sh`, `second-cases.json`. Consolidated actual
+outputs, memory and verified binary hashes: `second-guest.json`. Normal build
+fingerprints: `build1549.json`. Validators replay assertions on saved evidence,
+not the emulator itself. Build with existing `scripts/build.sh`; nano was not
+rebuilt. Guest fixture/test outputs are disposable; no OS images or packages are
+committed. Physical SE/System 6.0.8 acceptance remains pending.
+
+Remaining deliberate limits: dd uses signed 32-bit HFS offsets, seek requires
+of=, no conv=noerror/raw disks/fork-copy/safe-editor-save; partial output remains
+on failure. mktemp directory mode is not supplied. time covers one command,
+not an enclosing pipeline, and does not support -p. These are documented in help.
+
+## First-batch evidence (builds 1547–1548)
+
 
 Host and fixed maximum-speed Snow (~15–16x), Macintosh Plus, 4 MB, guest reports
 System 6.0.7. No physical-SE or System 6.0.8 acceptance claimed.

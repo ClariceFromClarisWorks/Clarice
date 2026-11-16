@@ -7,17 +7,19 @@ docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/sr
 cd /src
 flags="-m68000 -Os -fno-common -ffunction-sections -fdata-sections -Isrc/ports/include -Isrc/vendor/sbase -Isrc/ports -include src/ports/compat.h"
 objects=""
+m68k-apple-macos-gcc -m68000 -Os -fno-common -ffunction-sections -fdata-sections -DCLARICE_DD_RUNTIME -c src/ports/runtime.c -o work/build/pipelines/runtime.o
 libgcc=$(m68k-apple-macos-gcc -print-libgcc-file-name)
-for file in src/vendor/sbase/libutf/*.c src/vendor/sbase/libutil/ealloc.c work/build/ports/eprintf.c src/vendor/sbase/libutil/fshut.c src/vendor/sbase/libutil/reallocarray.c src/vendor/sbase/libutil/strtonum.c src/vendor/sbase/libutil/unescape.c src/vendor/sbase/libutil/memmem.c src/vendor/sbase/libutil/linecmp.c src/vendor/sbase/libutil/getlines.c src/vendor/sbase/libutil/concat.c src/vendor/sbase/libutil/writeall.c src/ports/path-names.c; do
+for file in src/vendor/sbase/libutf/*.c src/vendor/sbase/libutil/ealloc.c work/build/ports/eprintf.c src/vendor/sbase/libutil/fshut.c src/vendor/sbase/libutil/reallocarray.c src/vendor/sbase/libutil/strtonum.c src/vendor/sbase/libutil/unescape.c src/vendor/sbase/libutil/memmem.c src/vendor/sbase/libutil/linecmp.c src/vendor/sbase/libutil/getlines.c src/vendor/sbase/libutil/concat.c src/vendor/sbase/libutil/writeall.c src/ports/path-names.c src/ports/awk-runtime.c src/ports/temp-name.c src/vendor/sbase/libutil/strlcpy.c src/vendor/sbase/libutil/strlcat.c; do
  name=$(basename "$file" .c)
  m68k-apple-macos-gcc $flags -c "$file" -o work/build/pipelines/$name.o
  objects="$objects work/build/pipelines/$name.o"
 done
-for name in wc head cut tr uniq tee tail sort basename dirname cmp cksum; do
+for name in wc head cut tr uniq tee tail sort basename dirname cmp cksum sleep printenv mktemp dd; do
  m68k-apple-macos-gcc $flags -Dmain=upstream_main -c work/build/pipelines/$name.c -o work/build/pipelines/$name.o
- m68k-apple-macos-ld -r --gc-sections -u clarice_main work/build/pipelines/$name.o $objects work/build/ports/runtime.o "$libgcc" -o work/build/$name.o
+ m68k-apple-macos-ld -r --gc-sections -u clarice_main work/build/pipelines/$name.o $objects work/build/pipelines/runtime.o "$libgcc" -o work/build/$name.o
 done
 '
-for name in wc head cut tr uniq tee tail sort basename dirname cmp cksum; do
- python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"
+for name in wc head cut tr uniq tee tail sort basename dirname cmp cksum sleep printenv mktemp dd; do
+ runtime=1.0; if [ "$name" = dd ]; then runtime=1.5; fi
+ python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx" --runtime "$runtime"
 done

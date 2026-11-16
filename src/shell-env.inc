@@ -4,6 +4,8 @@
 enum { SH_ENV_SET=1, SH_ENV_EXPORT=2 };
 struct sh_env {struct sh_env *next;char *value;unsigned char flags;char name[];};
 static struct sh_env *sh_env;
+/* env -i suppresses synthetic HOME/PWD only within its saved scope. */
+static int sh_env_defaults=3;
 static struct sh_env *env_find(struct sh_env *list,const char *name){for(;list;list=list->next)if(!strcmp(list->name,name))return list;return 0;}
 static int env_name(const char *s,size_t n){if(!n)return 0;for(size_t i=0;i<n;i++)if(!(isalnum((unsigned char)s[i])||s[i]=='_')||(!i&&isdigit((unsigned char)s[i])))return 0;return 1;}
 static struct sh_env *env_new(const char *name,size_t n,const char *value){size_t v=strlen(value);struct sh_env *e;if(!env_name(name,n)||n>(size_t)-1-sizeof *e-2||v>(size_t)-1-sizeof *e-n-2)return 0;e=malloc(sizeof *e+n+v+2);if(!e)return 0;e->next=0;e->flags=SH_ENV_SET;memcpy(e->name,name,n);e->name[n]=0;e->value=e->name+n+1;memcpy(e->value,value,v+1);return e;}

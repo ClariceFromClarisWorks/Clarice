@@ -40,6 +40,7 @@ ssize_t port_read(int,void *,size_t);
 ssize_t port_write(int,const void *,size_t);
 int port_fstat(int,struct stat *);
 off_t port_lseek(int,off_t,int);
+int port_ftruncate(int,off_t);
 unsigned port_sleep(unsigned);
 const char *port_temp_new(void);
 void port_temp_remove(const char *);
@@ -51,6 +52,7 @@ void port_temp_remove(const char *);
 #define write port_write
 #define fstat port_fstat
 #define lseek port_lseek
+#define ftruncate port_ftruncate
 #define sleep port_sleep
 #undef snprintf
 #undef vsnprintf

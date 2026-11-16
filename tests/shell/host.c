@@ -55,6 +55,7 @@ static int host_external(char **av){
   short refs_in[3]={input_ref,output_ref,error_ref};
   for(int i=0;i<3;i++){if(refs_in[i]>=0)dup2(fileno(refs[refs_in[i]]),i);else if(refs_in[i]==-2)close(i);}
   for(int i=0;i<128;i++)if(refs[i]&&fileno(refs[i])>2)close(fileno(refs[i]));
+  if(!sh_env_defaults){extern char **environ;environ=NULL;}else{if(!(sh_env_defaults&1))unsetenv("HOME");if(!(sh_env_defaults&2))unsetenv("PWD");}
   for(struct sh_env *e=sh_env;e;e=e->next){if((e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT))setenv(e->name,e->value,1);else unsetenv(e->name);}
   execvp(av[0],av);_exit(errno==ENOENT?127:126);
  }
@@ -62,17 +63,20 @@ static int host_external(char **av){
  return WIFEXITED(status)?WEXITSTATUS(status):128+WTERMSIG(status);
 }
 static int run_args(int argc,char**av){if(!strcmp(av[0],"echo")){for(int i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");return 0;}if(!strcmp(av[0],"cat")){int status=0;for(int i=argc==1?0:1;i<argc;i++){FILE*f=i==0?(input_ref>=0?refs[input_ref]:stdin):fopen(av[i],"rb");if(!f){status=1;continue;}char b[512];size_t n;while((n=fread(b,1,sizeof b,f)))emit(b,n);if(ferror(f))status=1;if(i)fclose(f);}return status;}if(!strcmp(av[0],"export")){for(int i=1;i<argc;i++)if(env_set(av[i]))return 2;return 0;}return host_external(av);}
-static const char *commands[]={"help","appinstall","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
+static const char *commands[]={"env","time","command","help","appinstall","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
 /* PATH fixture only; production resolver handles HFS and CLX/script identity. */
 static int command_path(const char *name,char *out,int *kind){(void)kind;
  if(strchr(name,'/')){if(strlen(name)>=PATH_CAP||access(name,X_OK))return 0;strcpy(out,name);return 1;}
  const char *p=env_get("PATH");while(*p){const char *end=strchr(p,':');size_t n=end?(size_t)(end-p):strlen(p);if(n+strlen(name)+2<PATH_CAP){memcpy(out,p,n);out[n]=0;strcat(out,"/");strcat(out,name);if(!access(out,X_OK))return 1;}if(!end)break;p=end+1;}return 0;}
+#include "../../src/help.inc"
+#include <time.h>
+static unsigned long TickCount(void){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);return (unsigned long)t.tv_sec*60+(unsigned long)t.tv_nsec*60/1000000000;}
 #include "../../src/sh.inc"
 int main(int argc,char **argv){
  if(argc<2)return 2;if(argc>2)cancel_after=atoi(argv[2]);
  int rc=shell_run(argv[1]);
  for(int i=0;i<128;i++)if(refs[i]){fprintf(stderr,"leaked native reference %d\n",i);return 125;}
- if(getenv("CLARICE_SHELL_RECOVERY")){cancel_after=polls=0;shell_run("printf 'STREAMS-RESTORED\\n'");}
+ if(getenv("CLARICE_SHELL_RECOVERY")){unsetenv("CLARICE_SHELL_FAIL_ALLOC");cancel_after=polls=0;shell_run("printf 'STREAMS-RESTORED\\n'");}
  sh_functions_free(sh_functions);
  free(sh_owned_args);env_free(sh_env);if(getenv("CLARICE_SHELL_ALLOC_STATS"))fprintf(stderr,"ALLOC calls=%lu peak=%lu remaining=%lu fault=%d\n",(unsigned long)host_calls,(unsigned long)host_peak,(unsigned long)host_live,host_fault);if(host_live)return 124;return rc;
 }

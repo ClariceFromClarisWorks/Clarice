@@ -30,7 +30,7 @@ static int sh_isset(const char *name){if(!strcmp(name,"HOME")||!strcmp(name,"PWD
 static char *sh_positions_copy(int n,char **v,char ***out){size_t bytes;if(n<1||(size_t)n>((size_t)-1/sizeof(char*))-1)return 0;bytes=((size_t)n+1)*sizeof(char*);for(int i=0;i<n;i++){size_t len=strlen(v[i])+1;if(len>(size_t)-1-bytes)return 0;bytes+=len;}char *storage=malloc(bytes);if(!storage)return 0;char **args=(char**)storage;char *p=storage+((size_t)n+1)*sizeof(char*);for(int i=0;i<n;i++){size_t len=strlen(v[i])+1;args[i]=p;memcpy(p,v[i],len);p+=len;}args[n]=0;*out=args;return storage;}
 static int sh_positions(int n,char **v){char **args;char *storage=sh_positions_copy(n,v,&args);if(!storage)return sh_fail("out of memory storing positional parameters");free(sh_owned_args);sh_owned_args=storage;sh_argv=args;sh_argc=n;return 0;}
 static int sh_pattern(const char *p,const char *s){while(*p){if(*p=='*'){while(*p=='*')p++;if(!*p)return 1;do{if(sh_pattern(p,s))return 1;}while(*s++);return 0;}if(*p=='?'){if(!*s)return 0;p++;s++;continue;}if(*p=='['){int yes=0,neg=0;unsigned char c=*s++;if(!c)return 0;p++;if(*p=='!'||*p=='^'){neg=1;p++;}while(*p&&*p!=']'){unsigned char lo=*p++,hi=lo;if(*p=='-'&&p[1]&&p[1]!=']'){p++;hi=*p++;}if(c>=lo&&c<=hi)yes=1;}if(*p!=']'||yes==neg)return 0;p++;continue;}if(*p=='\\'&&p[1])p++;if(*p++!=*s++)return 0;}return !*s;}
-struct sh_saved {struct sh_env *env;char *args;char **argv;int argc;char cwd[PATH_CAP];
+struct sh_saved {struct sh_env *env;char *args;char **argv;int argc,env_defaults;char cwd[PATH_CAP];
 #ifndef SH_HOST_TEST
 char unixdir[PATH_CAP];
 #endif
@@ -39,13 +39,13 @@ static struct sh_saved *sh_save(void){
 #ifndef SH_HOST_TEST
  if(FreeMem()<65536)return 0;
 #endif
- struct sh_saved *s=malloc(sizeof *s);if(!s)return 0;if(env_clone(sh_env,&s->env)){free(s);return 0;}s->argc=sh_argc;s->args=sh_positions_copy(sh_argc,sh_argv,&s->argv);if(!s->args){env_free(s->env);free(s);return 0;}strcpy(s->cwd,shell_cwd);
+ struct sh_saved *s=malloc(sizeof *s);if(!s)return 0;if(env_clone(sh_env,&s->env)){free(s);return 0;}s->env_defaults=sh_env_defaults;s->argc=sh_argc;s->args=sh_positions_copy(sh_argc,sh_argv,&s->argv);if(!s->args){env_free(s->env);free(s);return 0;}strcpy(s->cwd,shell_cwd);
 #ifndef SH_HOST_TEST
 strcpy(s->unixdir,unix_cwd);
 if(FreeMem()<65536){env_free(s->env);free(s->args);free(s);return 0;}
 #endif
 if(sh_functions_clone(sh_functions,&s->functions)){env_free(s->env);free(s->args);free(s);return 0;}return s;}
-static void sh_restore(struct sh_saved *s){env_free(sh_env);sh_env=s->env;free(sh_owned_args);sh_owned_args=s->args;sh_argv=s->argv;sh_argc=s->argc;strcpy(shell_cwd,s->cwd);
+static void sh_restore(struct sh_saved *s){sh_env_defaults=s->env_defaults;env_free(sh_env);sh_env=s->env;free(sh_owned_args);sh_owned_args=s->args;sh_argv=s->argv;sh_argc=s->argc;strcpy(shell_cwd,s->cwd);
 #ifndef SH_HOST_TEST
 strcpy(unix_cwd,s->unixdir);
 #endif
@@ -208,6 +208,34 @@ static int sh_command_v(int n,char **v){
  for(int i=0;commands[i];i++)if(!strcmp(name,commands[i])){say(name);say("\n");return output_error?1:0;}
  char path[PATH_CAP];int kind;if(command_path(name,path,&kind)>0){say(path);say("\n");return output_error?1:0;}return 127;
 }
+static int sh_dispatch(struct sh_args *a);
+/* Utility wrappers live here to reuse scoped execution, not nest CLX runtimes. */
+static int sh_scoped_utility(struct sh_args *a,int timed){
+ int n=a->n,at=1,rc=0,oldflow=sh_flow,oldstatus=sh_flow_status;char **v=a->v;
+ if(n==2&&!strcmp(v[1],"--help"))return builtin_help(timed?"time":"env");
+ if(sh_depth>=SH_DEPTH)return sh_fail("execution nesting limit");
+ struct sh_saved *saved=sh_save();if(!saved)return sh_fail("out of memory");
+ if(!timed){sh_child_scope();
+  while(at<n&&v[at][0]=='-'){
+   if(!strcmp(v[at],"--")){at++;break;}
+   if(!strcmp(v[at],"-i")||!strcmp(v[at],"-")){env_free(sh_env);sh_env=0;sh_env_defaults=0;at++;continue;}
+   if(!strcmp(v[at],"-u")){if(++at>=n||!env_name(v[at],strlen(v[at]))){rc=sh_fail("env: -u needs a variable name");goto done;}if(!strcmp(v[at],"HOME"))sh_env_defaults&=~1;if(!strcmp(v[at],"PWD"))sh_env_defaults&=~2;free(env_take(&sh_env,v[at++]));continue;}
+   rc=sh_fail("env: unsupported option; use help env");goto done;
+  }
+  while(at<n&&strchr(v[at],'=')){if(env_set(v[at++])){rc=sh_fail("env: invalid name or out of memory");goto done;}}
+ }else if(at<n&&!strcmp(v[at],"--"))at++;
+ else if(at<n&&v[at][0]=='-'){rc=sh_fail("time: only elapsed time is available; use help time");goto done;}
+ if(at==n){if(timed){rc=sh_fail("time: command required");goto done;}
+  if(sh_env_defaults){struct sh_env *e=env_find(sh_env,"HOME");if(!e&&(sh_env_defaults&1)){say("HOME=/\n");}e=env_find(sh_env,"PWD");if(!e&&(sh_env_defaults&2)){say("PWD=");say(env_get("PWD"));say("\n");}}
+  for(struct sh_env *e=sh_env;e;e=e->next)if((e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT)){say(e->name);say("=");say(e->value);say("\n");if(app_yield()){rc=130;goto done;}}
+  rc=output_error?1:0;goto done;
+ }
+ {struct sh_args child=*a;child.n=n-at;child.v=v+at;unsigned long started=TickCount();
+  sh_depth++;script_depth++;sh_flow=0;rc=sh_dispatch(&child);script_depth--;sh_depth--;
+  if(timed){unsigned long ticks=TickCount()-started;char b[64];snprintf(b,sizeof b,"real %lu.%02lu s\n",ticks/60,(ticks%60)*100/60);errsay(b);}
+ }
+done:sh_restore(saved);sh_flow=oldflow;sh_flow_status=oldstatus;return rc;
+}
 static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)return 0;
 
 #ifdef CLARICE_PARSER_SAFETY_TEST
@@ -223,6 +251,8 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
   return rc;
  }
 #endif
+ if(!strcmp(v[0],"env"))return sh_scoped_utility(a,0);
+ if(!strcmp(v[0],"time"))return sh_scoped_utility(a,1);
  if(!strcmp(v[0],"command"))return sh_command_v(n,v);
  if(!strcmp(v[0],":")||!strcmp(v[0],"true"))return 0;if(!strcmp(v[0],"false"))return 1;
  if(!strcmp(v[0],"test")||!strcmp(v[0],"[")){if(v[0][0]=='['){if(n<2||strcmp(v[n-1],"]"))return sh_fail("missing ]");n--;}return sh_test(n-1,v+1);}
