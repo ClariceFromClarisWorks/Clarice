@@ -1,0 +1,44 @@
+[
+  {
+    "source": "echo \"",
+    "status": 2,
+    "error": "sh: double quotes not terminated\nALLOC calls=6 peak=282 remaining=0 fault=0\n",
+    "recovered": true
+  },
+  {
+    "source": "echo '",
+    "status": 2,
+    "error": "sh: single quotes not terminated\nALLOC calls=6 peak=282 remaining=0 fault=0\n",
+    "recovered": true
+  },
+  {
+    "source": "echo ${x:-\"bad}",
+    "status": 2,
+    "error": "sh: double quotes not terminated\nALLOC calls=6 peak=282 remaining=0 fault=0\n",
+    "recovered": true
+  },
+  {
+    "source": "if true; then",
+    "status": 2,
+    "error": "sh: expected a compound list\nALLOC calls=6 peak=282 remaining=0 fault=0\n",
+    "recovered": true
+  },
+  {
+    "source": "for x in a; do",
+    "status": 2,
+    "error": "sh: expected a compound list\nALLOC calls=6 peak=282 remaining=0 fault=0\n",
+    "recovered": true
+  },
+  {
+    "source": "echo $(echo hi",
+    "status": 2,
+    "error": "sh: expected ')'\nALLOC calls=6 peak=282 remaining=0 fault=0\n",
+    "recovered": true
+  },
+  {
+    "source": "echo ${}",
+    "status": 2,
+    "error": "sh: expected a parameter\nALLOC calls=6 peak=282 remaining=0 fault=0\n",
+    "recovered": true
+  }
+]

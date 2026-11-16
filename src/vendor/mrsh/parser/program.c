@@ -356,7 +356,7 @@ static struct mrsh_simple_command *simple_command(struct mrsh_parser *parser) {
 
 	struct mrsh_simple_command *out=NULL;
  if(!mrsh_parser_error(parser,NULL))out=mrsh_simple_command_create(cmd.name,&cmd.arguments,&cmd.io_redirects,&cmd.assignments);
- if(!out){parser_oom(parser);mrsh_word_destroy(cmd.name);word_array_finish(&cmd.arguments);redirect_array_finish(&cmd.io_redirects);assignment_array_finish(&cmd.assignments);}return out;
+ if(!out){if(!mrsh_parser_error(parser,NULL))parser_oom(parser);mrsh_word_destroy(cmd.name);word_array_finish(&cmd.arguments);redirect_array_finish(&cmd.io_redirects);assignment_array_finish(&cmd.assignments);}return out;
 }
 
 static int separator(struct mrsh_parser *parser) {

@@ -1,0 +1,410 @@
+[
+  {
+    "case": 0,
+    "allocations": 29,
+    "trials": 58,
+    "passed": true
+  },
+  {
+    "case": 1,
+    "allocations": 68,
+    "trials": 136,
+    "passed": true
+  },
+  {
+    "case": 2,
+    "allocations": 46,
+    "trials": 92,
+    "passed": true
+  },
+  {
+    "case": 3,
+    "allocations": 36,
+    "trials": 72,
+    "passed": true
+  },
+  {
+    "case": 4,
+    "allocations": 31,
+    "trials": 62,
+    "passed": true
+  },
+  {
+    "case": 5,
+    "allocations": 30,
+    "trials": 60,
+    "passed": true
+  },
+  {
+    "case": 6,
+    "allocations": 24,
+    "trials": 48,
+    "passed": true
+  },
+  {
+    "case": 7,
+    "allocations": 40,
+    "trials": 80,
+    "passed": true
+  },
+  {
+    "case": 8,
+    "allocations": 56,
+    "trials": 112,
+    "passed": true
+  },
+  {
+    "case": 9,
+    "allocations": 45,
+    "trials": 90,
+    "passed": true
+  },
+  {
+    "case": 10,
+    "allocations": 17,
+    "trials": 34,
+    "passed": true
+  },
+  {
+    "case": 11,
+    "allocations": 35,
+    "trials": 70,
+    "passed": true
+  },
+  {
+    "case": 12,
+    "allocations": 37,
+    "trials": 74,
+    "passed": true
+  },
+  {
+    "case": 13,
+    "allocations": 28,
+    "trials": 56,
+    "passed": true
+  },
+  {
+    "case": 14,
+    "allocations": 45,
+    "trials": 90,
+    "passed": true
+  },
+  {
+    "case": 15,
+    "allocations": 42,
+    "trials": 84,
+    "passed": true
+  },
+  {
+    "case": 16,
+    "allocations": 47,
+    "trials": 94,
+    "passed": true
+  },
+  {
+    "case": 17,
+    "allocations": 43,
+    "trials": 86,
+    "passed": true
+  },
+  {
+    "case": 18,
+    "allocations": 43,
+    "trials": 86,
+    "passed": true
+  },
+  {
+    "case": 19,
+    "allocations": 38,
+    "trials": 76,
+    "passed": true
+  },
+  {
+    "case": 20,
+    "allocations": 49,
+    "trials": 98,
+    "passed": true
+  },
+  {
+    "case": 21,
+    "allocations": 49,
+    "trials": 98,
+    "passed": true
+  },
+  {
+    "case": 22,
+    "allocations": 55,
+    "trials": 110,
+    "passed": true
+  },
+  {
+    "case": 23,
+    "allocations": 39,
+    "trials": 78,
+    "passed": true
+  },
+  {
+    "case": 24,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 25,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 26,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 27,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 28,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 29,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 30,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 31,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 32,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 33,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 34,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 35,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 36,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 37,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 38,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 39,
+    "allocations": 182,
+    "trials": 364,
+    "passed": true
+  },
+  {
+    "case": 40,
+    "allocations": 67,
+    "trials": 134,
+    "passed": true
+  },
+  {
+    "case": 41,
+    "allocations": 325,
+    "trials": 650,
+    "passed": true
+  },
+  {
+    "case": 42,
+    "allocations": 172,
+    "trials": 344,
+    "passed": true
+  },
+  {
+    "case": 43,
+    "allocations": 295,
+    "trials": 590,
+    "passed": true
+  },
+  {
+    "case": 44,
+    "allocations": 42,
+    "trials": 84,
+    "passed": true
+  },
+  {
+    "case": 45,
+    "allocations": 166,
+    "trials": 332,
+    "passed": true
+  },
+  {
+    "case": 46,
+    "allocations": 299,
+    "trials": 598,
+    "passed": true
+  },
+  {
+    "case": 47,
+    "allocations": 167,
+    "trials": 334,
+    "passed": true
+  },
+  {
+    "case": 48,
+    "allocations": 304,
+    "trials": 608,
+    "passed": true
+  },
+  {
+    "case": 49,
+    "allocations": 350,
+    "trials": 700,
+    "passed": true
+  },
+  {
+    "case": 50,
+    "allocations": 291,
+    "trials": 582,
+    "passed": true
+  },
+  {
+    "case": 51,
+    "allocations": 28,
+    "trials": 56,
+    "passed": true
+  },
+  {
+    "case": 52,
+    "allocations": 7,
+    "trials": 14,
+    "passed": true
+  },
+  {
+    "case": 53,
+    "allocations": 22,
+    "trials": 44,
+    "passed": true
+  },
+  {
+    "case": 54,
+    "allocations": 40,
+    "trials": 80,
+    "passed": true
+  },
+  {
+    "case": 55,
+    "allocations": 7,
+    "trials": 14,
+    "passed": true
+  },
+  {
+    "case": 56,
+    "allocations": 31,
+    "trials": 62,
+    "passed": true
+  },
+  {
+    "case": 57,
+    "allocations": 46,
+    "trials": 92,
+    "passed": true
+  },
+  {
+    "case": 58,
+    "allocations": 19,
+    "trials": 38,
+    "passed": true
+  },
+  {
+    "case": 59,
+    "allocations": 22,
+    "trials": 44,
+    "passed": true
+  },
+  {
+    "case": 60,
+    "allocations": 20,
+    "trials": 40,
+    "passed": true
+  },
+  {
+    "case": 61,
+    "allocations": 8,
+    "trials": 16,
+    "passed": true
+  },
+  {
+    "case": 62,
+    "allocations": 9,
+    "trials": 18,
+    "passed": true
+  },
+  {
+    "case": 63,
+    "allocations": 11,
+    "trials": 22,
+    "passed": true
+  },
+  {
+    "case": 64,
+    "allocations": 5,
+    "trials": 10,
+    "passed": true
+  },
+  {
+    "case": 65,
+    "allocations": 11,
+    "trials": 22,
+    "passed": true
+  },
+  {
+    "case": 66,
+    "allocations": 7,
+    "trials": 14,
+    "passed": true
+  },
+  {
+    "case": 67,
+    "allocations": 7,
+    "trials": 14,
+    "passed": true
+  }
+]

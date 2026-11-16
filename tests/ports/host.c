@@ -26,7 +26,11 @@ int cli_file_close(int fd){return close(fd);}
 int main(int argc,char **argv){return clarice_main(argc,argv);}
 #include <sys/stat.h>
 #include <time.h>
-int cli_environment(int index,char *out,unsigned long cap){const char *names[]={"HOME","PWD","AWK_TEST"};if(index<0||index>=3)return 0;const char *value=getenv(names[index]);if(!value)return 0;size_t n=strlen(names[index]),m=strlen(value);if(n+m+2>cap)return 0;memcpy(out,names[index],n);out[n]='=';memcpy(out+n+1,value,m+1);return 1;}
+int cli_environment(int index,char *out,unsigned long cap){
+ const char *count=getenv("CLARICE_TEST_ENV_COUNT");
+ if(count){if(index<0||index>=atoi(count))return 0;char name[32];snprintf(name,sizeof name,"ENV%d=",index);const char *value=getenv("CLARICE_TEST_ENV_VALUE");if(!value)value="value";if(strlen(name)+strlen(value)+1>cap)return -1;strcpy(out,name);strcat(out,value);return 1;}
+ const char *names[]={"HOME","PWD","AWK_TEST"};int at=0;for(int i=0;i<3;i++){const char *value=getenv(names[i]);if(!value)continue;if(at++!=index)continue;size_t n=strlen(names[i]),m=strlen(value);if(n+m+2>cap)return -1;memcpy(out,names[i],n);out[n]='=';memcpy(out+n+1,value,m+1);return 1;}return 0;
+}
 int cli_path_kind(const char *p){struct stat st;if(stat(p,&st))return -1;return S_ISDIR(st.st_mode);}
 unsigned long cli_unix_time(void){return (unsigned long)time(NULL);}
 

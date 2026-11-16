@@ -1,0 +1,488 @@
+[
+  {
+    "name": "quoted-at",
+    "source": "set -- ; set -- \"$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "0\n<>\n",
+    "expected": "0\n<>\n",
+    "stderr": "ALLOC calls=28 peak=289 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- ; set -- \"pre$@post\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<prepost>\n",
+    "expected": "1\n<prepost>\n",
+    "stderr": "ALLOC calls=30 peak=313 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- ; set -- pre\"$@\"post; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<prepost>\n",
+    "expected": "1\n<prepost>\n",
+    "stderr": "ALLOC calls=30 peak=313 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- ; set -- \"$@$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<>\n",
+    "expected": "1\n<>\n",
+    "stderr": "ALLOC calls=30 peak=299 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- ; set -- \"\"\"$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<>\n",
+    "expected": "1\n<>\n",
+    "stderr": "ALLOC calls=30 peak=299 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- ; set -- \"$@\"\"\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<>\n",
+    "expected": "1\n<>\n",
+    "stderr": "ALLOC calls=30 peak=299 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- a; set -- \"$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<a>\n",
+    "expected": "1\n<a>\n",
+    "stderr": "ALLOC calls=32 peak=301 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- a; set -- \"pre$@post\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<preapost>\n",
+    "expected": "1\n<preapost>\n",
+    "stderr": "ALLOC calls=32 peak=315 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- a; set -- pre\"$@\"post; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<preapost>\n",
+    "expected": "1\n<preapost>\n",
+    "stderr": "ALLOC calls=32 peak=315 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- a; set -- \"$@$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<aa>\n",
+    "expected": "1\n<aa>\n",
+    "stderr": "ALLOC calls=32 peak=303 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- a; set -- \"\"\"$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<a>\n",
+    "expected": "1\n<a>\n",
+    "stderr": "ALLOC calls=32 peak=301 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- a; set -- \"$@\"\"\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<a>\n",
+    "expected": "1\n<a>\n",
+    "stderr": "ALLOC calls=32 peak=301 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- 'a b' '' c; set -- \"$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "3\n<a b>\n<>\n<c>\n",
+    "expected": "3\n<a b>\n<>\n<c>\n",
+    "stderr": "ALLOC calls=40 peak=327 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- 'a b' '' c; set -- \"pre$@post\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "3\n<prea b>\n<>\n<cpost>\n",
+    "expected": "3\n<prea b>\n<>\n<cpost>\n",
+    "stderr": "ALLOC calls=40 peak=341 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- 'a b' '' c; set -- pre\"$@\"post; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "3\n<prea b>\n<>\n<cpost>\n",
+    "expected": "3\n<prea b>\n<>\n<cpost>\n",
+    "stderr": "ALLOC calls=40 peak=341 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- 'a b' '' c; set -- \"$@$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "5\n<a b>\n<>\n<ca b>\n<>\n<c>\n",
+    "expected": "5\n<a b>\n<>\n<ca b>\n<>\n<c>\n",
+    "stderr": "ALLOC calls=44 peak=355 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- 'a b' '' c; set -- \"\"\"$@\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "3\n<a b>\n<>\n<c>\n",
+    "expected": "3\n<a b>\n<>\n<c>\n",
+    "stderr": "ALLOC calls=40 peak=327 remaining=0 fault=0\n"
+  },
+  {
+    "name": "quoted-at",
+    "source": "set -- 'a b' '' c; set -- \"$@\"\"\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "3\n<a b>\n<>\n<c>\n",
+    "expected": "3\n<a b>\n<>\n<c>\n",
+    "stderr": "ALLOC calls=40 peak=327 remaining=0 fault=0\n"
+  },
+  {
+    "name": "empty-quote",
+    "source": "x=\"a \"; set -- $x\"\"; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "2\n<a>\n<>\n",
+    "expected": "2\n<a>\n<>\n",
+    "stderr": "ALLOC calls=28 peak=340 remaining=0 fault=0\n"
+  },
+  {
+    "name": "empty-quote",
+    "source": "x=\"a \"; set -- \"\"$x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n<a>\n",
+    "expected": "1\n<a>\n",
+    "stderr": "ALLOC calls=26 peak=330 remaining=0 fault=0\n"
+  },
+  {
+    "name": "empty-quote",
+    "source": "x=\"a \"; set -- $x\"\"suffix; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "2\n<a>\n<suffix>\n",
+    "expected": "2\n<a>\n<suffix>\n",
+    "stderr": "ALLOC calls=28 peak=352 remaining=0 fault=0\n"
+  },
+  {
+    "name": "scalar-at",
+    "source": "IFS=:; set -- a b; v=\"$@\"; echo \"$v\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "a:b\n",
+    "expected": "a:b\n",
+    "stderr": "ALLOC calls=23 peak=364 remaining=0 fault=0\n"
+  },
+  {
+    "name": "local-export",
+    "source": "x=private; sh -c 'echo local:${x-unset}'; export x; sh -c 'echo exported:$x'; x=changed; sh -c 'echo reassigned:$x'",
+    "passed": true,
+    "status": 0,
+    "stdout": "local:unset\nexported:private\nreassigned:changed\n",
+    "expected": "local:unset\nexported:private\nreassigned:changed\n",
+    "stderr": "ALLOC calls=66 peak=1051 remaining=0 fault=0\n"
+  },
+  {
+    "name": "export-unset",
+    "source": "export notset; echo ${notset+set}; sh -c 'echo child:${notset+set}'; notset=value; sh -c 'echo child:$notset'",
+    "passed": true,
+    "status": 0,
+    "stdout": "\nchild:\nchild:value\n",
+    "expected": "\nchild:\nchild:value\n",
+    "stderr": "ALLOC calls=51 peak=1050 remaining=0 fault=0\n"
+  },
+  {
+    "name": "prefix-export",
+    "source": "x=old; x=new sh -c 'echo child:$x'; echo parent:$x; sh -c 'echo still:${x-unset}'",
+    "passed": true,
+    "status": 0,
+    "stdout": "child:new\nparent:old\nstill:unset\n",
+    "expected": "child:new\nparent:old\nstill:unset\n",
+    "stderr": "ALLOC calls=50 peak=1630 remaining=0 fault=0\n"
+  },
+  {
+    "name": "export-assignment",
+    "source": "value='two words *'; export x=$value; sh -c 'echo \"$x\"'",
+    "passed": true,
+    "status": 0,
+    "stdout": "two words *\n",
+    "expected": "two words *\n",
+    "stderr": "ALLOC calls=29 peak=1085 remaining=0 fault=0\n"
+  },
+  {
+    "name": "export-subshell",
+    "source": "x=parent; (export x; sh -c 'echo inner:$x'); sh -c 'echo outer:${x-unset}'",
+    "passed": true,
+    "status": 0,
+    "stdout": "inner:parent\nouter:unset\n",
+    "expected": "inner:parent\nouter:unset\n",
+    "stderr": "ALLOC calls=48 peak=1642 remaining=0 fault=0\n"
+  },
+  {
+    "name": "unset-export",
+    "source": "export x=old; unset x; x=new; sh -c 'echo ${x-unset}'",
+    "passed": true,
+    "status": 0,
+    "stdout": "unset\n",
+    "expected": "unset\n",
+    "stderr": "ALLOC calls=34 peak=997 remaining=0 fault=0\n"
+  },
+  {
+    "name": "unset-function",
+    "source": "f() { echo yes; }; f; unset -f f; f; echo status:$?",
+    "passed": true,
+    "status": 0,
+    "stdout": "yes\nstatus:127\n",
+    "expected": "yes\nstatus:127\n",
+    "stderr": "ALLOC calls=30 peak=399 remaining=0 fault=0\n"
+  },
+  {
+    "name": "function-inheritance",
+    "source": "f() { echo parent; }; sh -c 'f'; echo child:$?; f",
+    "passed": true,
+    "status": 0,
+    "stdout": "child:127\nparent\n",
+    "expected": "child:127\nparent\n",
+    "stderr": "ALLOC calls=34 peak=969 remaining=0 fault=0\n"
+  },
+  {
+    "name": "export-roundtrip",
+    "source": "x=\"a'b\"; export x; export -p > exp; unset x; . ./exp; echo \"$x\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "a'b\n",
+    "expected": "a'b\n",
+    "stderr": "ALLOC calls=42 peak=384 remaining=0 fault=0\n"
+  },
+  {
+    "name": "at-separate-groups",
+    "source": "set --; set -- \"$@\"\"$@\"; echo \"$#\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "0\n",
+    "expected": "0\n",
+    "stderr": "ALLOC calls=21 peak=282 remaining=0 fault=0\n"
+  },
+  {
+    "name": "at-braced-group",
+    "source": "set --; set -- \"${@}${@}\"; echo \"$#\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "1\n",
+    "expected": "1\n",
+    "stderr": "ALLOC calls=22 peak=291 remaining=0 fault=0\n"
+  },
+  {
+    "name": "function-exports",
+    "source": "x=local; f() { x=changed; export y=visible; sh -c 'echo ${x-unset}:$y'; }; f; echo $x:$y",
+    "passed": true,
+    "status": 0,
+    "stdout": "unset:visible\nchanged:visible\n",
+    "expected": "unset:visible\nchanged:visible\n",
+    "stderr": "ALLOC calls=45 peak=1195 remaining=0 fault=0\n"
+  },
+  {
+    "name": "function-prefix",
+    "source": "x=old; f() { echo $x; x=inner; other=kept; export y=value; }; x=new f; echo $x:$other:$y; sh -c 'echo ${x-unset}:$y'",
+    "passed": true,
+    "status": 0,
+    "stdout": "new\nold:kept:value\nunset:value\n",
+    "expected": "new\nold:kept:value\nunset:value\n",
+    "stderr": "ALLOC calls=61 peak=1130 remaining=0 fault=0\n"
+  },
+  {
+    "name": "function-args",
+    "source": "set -- parent; f() { printf \"<%s>\\n\" \"$@\"; set -- changed; return 7; }; f \"\" \"two words\"; echo \"$?:$1\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "<>\n<two words>\n7:parent\n",
+    "expected": "<>\n<two words>\n7:parent\n",
+    "stderr": "ALLOC calls=49 peak=487 remaining=0 fault=0\n"
+  },
+  {
+    "name": "source-scope",
+    "source": "printf '%s\n' 'x=sourced; export y=visible; f() { echo function; }; return 6; echo BAD' > scope; x=parent; . ./scope; echo \"$?:$x\"; f; sh -c 'echo \"${x-unset}:$y\"' ",
+    "passed": true,
+    "status": 0,
+    "stdout": "6:sourced\nfunction\nunset:visible\n",
+    "expected": "6:sourced\nfunction\nunset:visible\n",
+    "stderr": "ALLOC calls=74 peak=1107 remaining=0 fault=0\n"
+  },
+  {
+    "name": "source-args",
+    "source": "printf '%s\n' 'printf \"<%s>\n\" \"$@\"; set -- changed; return 4' > scope; set -- parent; . ./scope; echo \"$?:$1\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "<parent>\n4:changed\n",
+    "expected": "<parent>\n4:changed\n",
+    "stderr": "ALLOC calls=54 peak=455 remaining=0 fault=0\n"
+  },
+  {
+    "name": "subshell-scope",
+    "source": "export x=outer; f() { echo original; }; (x=inner; export y=yes; f() { echo changed; }; sh -c 'echo $x:$y'; f); echo $x:${y-unset}; f",
+    "passed": true,
+    "status": 0,
+    "stdout": "inner:yes\nchanged\nouter:unset\noriginal\n",
+    "expected": "inner:yes\nchanged\nouter:unset\noriginal\n",
+    "stderr": "ALLOC calls=71 peak=1743 remaining=0 fault=0\n"
+  },
+  {
+    "name": "printf-strings",
+    "source": "printf '[%8.3s][%-5s][%c]\n' abcdef xy Z; printf '%s:%s\n' one two three",
+    "passed": true,
+    "status": 0,
+    "stdout": "[     abc][xy   ][Z]\none:two\nthree:\n",
+    "expected": "[     abc][xy   ][Z]\none:two\nthree:\n",
+    "stderr": "ALLOC calls=24 peak=294 remaining=0 fault=0\n"
+  },
+  {
+    "name": "printf-integers",
+    "source": "printf '%d %i %u %o %x %X\n' -12 0x20 42 10 31 31; printf '[%+06d][%#08x][%#.0o][%.0d][%.5d]\n' 12 31 0 0 -12",
+    "passed": true,
+    "status": 0,
+    "stdout": "-12 32 42 12 1f 1F\n[+00012][0x00001f][0][][-00012]\n",
+    "expected": "-12 32 42 12 1f 1F\n[+00012][0x00001f][0][][-00012]\n",
+    "stderr": "ALLOC calls=35 peak=367 remaining=0 fault=0\n"
+  },
+  {
+    "name": "printf-escapes",
+    "source": "printf '\\101\\t%s\\n' ok; printf '%b' 'a\\tb\\012c'; printf '%bAFTER' 'end\\cignored'; echo done",
+    "passed": true,
+    "status": 0,
+    "stdout": "A\tok\na\tb\ncenddone\n",
+    "expected": "A\tok\na\tb\ncenddone\n",
+    "stderr": "ALLOC calls=30 peak=284 remaining=0 fault=0\n"
+  },
+  {
+    "name": "printf-binary",
+    "source": "printf 'A\\000B'; printf '%b' 'C\\0000D'; printf '%c' ''; printf '%5.3b' 'a\\tbcd' ",
+    "passed": true,
+    "status": 0,
+    "stdout": "A\u0000BC\u0000D\u0000  a\tb",
+    "expected": "A\u0000BC\u0000D\u0000  a\tb",
+    "stderr": "ALLOC calls=30 peak=276 remaining=0 fault=0\n"
+  },
+  {
+    "name": "printf-missing",
+    "source": "printf '%s:%d:%c\n'; printf -- '-%s-\n' ok",
+    "passed": true,
+    "status": 0,
+    "stdout": ":0:\u0000\n-ok-\n",
+    "expected": ":0:\u0000\n-ok-\n",
+    "stderr": "ALLOC calls=16 peak=275 remaining=0 fault=0\n"
+  },
+  {
+    "name": "printf-character-number",
+    "source": "printf '%d %x\n' \"'A\" '\"B' ",
+    "passed": true,
+    "status": 0,
+    "stdout": "65 42\n",
+    "expected": "65 42\n",
+    "stderr": "ALLOC calls=10 peak=276 remaining=0 fault=0\n"
+  },
+  {
+    "name": "printf-invalid",
+    "source": "printf '%d\n' nope; echo status:$?; printf '%q' bad; echo status:$?",
+    "passed": true,
+    "status": 0,
+    "stdout": "0\nstatus:1\nstatus:2\n",
+    "expected": "0\nstatus:1\nstatus:2\n",
+    "stderr": "printf: invalid or out-of-range number\nsh: printf: unsupported conversion\nALLOC calls=28 peak=272 remaining=0 fault=0\n"
+  },
+  {
+    "name": "test-negation",
+    "source": "test ! 2 -eq 3; echo $?; [ ! abc = def ]; echo $?; test ! ! ''; echo $?",
+    "passed": true,
+    "status": 0,
+    "stdout": "0\n0\n1\n",
+    "expected": "0\n0\n1\n",
+    "stderr": "ALLOC calls=54 peak=272 remaining=0 fault=0\n"
+  },
+  {
+    "name": "test-groups",
+    "source": "test '(' 2 -lt 3 ')'; echo $?; test ! '(' -z foo ')'; echo $?; [ '(' '' ')' ]; echo $?",
+    "passed": true,
+    "status": 0,
+    "stdout": "0\n0\n1\n",
+    "expected": "0\n0\n1\n",
+    "stderr": "ALLOC calls=58 peak=274 remaining=0 fault=0\n"
+  },
+  {
+    "name": "test-operands",
+    "source": "test ! = !; echo $?; [ -n = -n ]; echo $?; test '(' = ')'; echo $?; test !; echo $?",
+    "passed": true,
+    "status": 0,
+    "stdout": "0\n0\n1\n0\n",
+    "expected": "0\n0\n1\n0\n",
+    "stderr": "ALLOC calls=62 peak=268 remaining=0 fault=0\n"
+  },
+  {
+    "name": "test-numbers",
+    "source": "test '' -eq 0; echo $?; test ' 2 ' -eq +2; echo $?; test 12x -lt 99; echo $?; test 999999999999999999999999999999999 -eq 1; echo $?",
+    "passed": true,
+    "status": 0,
+    "stdout": "2\n0\n2\n2\n",
+    "expected": "2\n0\n2\n2\n",
+    "stderr": "sh: test: integer expected\nsh: test: integer expected\nsh: test: integer expected\nALLOC calls=64 peak=301 remaining=0 fault=0\n"
+  },
+  {
+    "name": "test-files",
+    "source": "printf x > item; test -s item; echo $?; test -f item; echo $?; test -d .; echo $?; test -e missing; echo $?; [ -z \"\" ]; echo $?",
+    "passed": true,
+    "status": 0,
+    "stdout": "0\n0\n0\n1\n0\n",
+    "expected": "0\n0\n0\n1\n0\n",
+    "stderr": "ALLOC calls=79 peak=272 remaining=0 fault=0\n"
+  },
+  {
+    "name": "at-count",
+    "source": "set -- a \"\" c; echo \"${#}:${?}\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "3:0\n",
+    "expected": "3:0\n",
+    "stderr": "ALLOC calls=19 peak=313 remaining=0 fault=0\n"
+  },
+  {
+    "name": "at-fallback",
+    "source": "set -- \"a b\" \"\" c; printf \"<%s>\\n\" \"${x:-$@}\"; x=set; printf \"<%s>\\n\" \"${x:+$@}\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "<a b>\n<>\n<c>\n<a b>\n<>\n<c>\n",
+    "expected": "<a b>\n<>\n<c>\n<a b>\n<>\n<c>\n",
+    "stderr": "ALLOC calls=36 peak=357 remaining=0 fault=0\n"
+  },
+  {
+    "name": "at-empty-fallback",
+    "source": "set --; printf \"<%s>\\n\" \"${x:-$@}\"",
+    "passed": true,
+    "status": 0,
+    "stdout": "<>\n",
+    "expected": "<>\n",
+    "stderr": "ALLOC calls=15 peak=290 remaining=0 fault=0\n"
+  }
+]

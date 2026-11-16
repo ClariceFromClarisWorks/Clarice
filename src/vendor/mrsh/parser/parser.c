@@ -402,7 +402,10 @@ void mrsh_parser_reset(struct mrsh_parser *parser) {
 }
 
 bool parser_word_add(struct mrsh_parser *p,struct mrsh_array *a,struct mrsh_word *w) {
- if(w && mrsh_array_add(a,w)>=0)return true;
+ /* A NULL child can be an already-diagnosed syntax error, not a failed
+  * array allocation. Preserve its cause; real allocation failures stay sticky. */
+ if(!w){if(!p->error.msg&&!p->oom)parser_oom(p);return false;}
+ if(mrsh_array_add(a,w)>=0)return true;
  mrsh_word_destroy(w);parser_oom(p);return false;
 }
 struct mrsh_word_string *parser_string(struct mrsh_parser *p,char *s,bool q) {

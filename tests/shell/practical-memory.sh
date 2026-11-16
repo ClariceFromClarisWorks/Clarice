@@ -1,0 +1,37 @@
+export PATH=/mnt/Audit/tools:/bin
+cd /mnt/Audit/practical
+val=$(printf '%0512d' 0)
+export E0="$val"
+export E1="$val"
+export E2="$val"
+export E3="$val"
+export E4="$val"
+export E5="$val"
+export E6="$val"
+export E7="$val"
+export E8="$val"
+export E9="$val"
+export E10="$val"
+export E11="$val"
+export E12="$val"
+export E13="$val"
+export E14="$val"
+export E15="$val"
+export E16="$val"
+export E17="$val"
+export E18="$val"
+export E19="$val"
+export E20="$val"
+export E21="$val"
+export E22="$val"
+export E23="$val"
+export E24="$val"
+export E25="$val"
+export E26="$val"
+export E27="$val"
+export E28="$val"
+export E29="$val"
+awk 'BEGIN { n=0; for(k in ENVIRON) if(k ~ /^E[0-9]/)n++; print n, length(ENVIRON["E29"]) }'
+for i in 1 2 3 4 5; do awk-old 'BEGIN { n=0; for(k in ENVIRON) if(k ~ /^E[0-9]/)n++; print n, length(ENVIRON["E29"]) }' >> /mnt/Audit/practical/old-out; status runtime >> /mnt/Audit/practical/old-memory; done
+for i in 1 2 3 4 5; do awk 'BEGIN { n=0; for(k in ENVIRON) if(k ~ /^E[0-9]/)n++; print n, length(ENVIRON["E29"]) }' >> /mnt/Audit/practical/new-out; status runtime >> /mnt/Audit/practical/new-memory; done
+echo COMPARE_READY

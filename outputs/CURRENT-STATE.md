@@ -1,16 +1,52 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted **2026111542 / c8ab885** is preserved on
-`codex/utility-correctness-2026111539`. Build **2026111543** completes the focused
-POSIX expansion, export/scope and printf/test batch below. Validation is host and
-Snow Plus/4 MB, **reported System 6.0.7**, not physical SE or System 6.0.8.
-The SE remains off. No release, tag or main change. ROADMAP.md is provisional history.
+16 November 2026, Adelaide. Accepted **2026111543 / 61a1b4c** is preserved on
+`codex/utility-correctness-2026111539`. Build **2026111544** adds practical upstream
+script acceptance, accurate syntax diagnostics and elastic awk environment import.
+Host and Snow Plus/4 MB/**reported System 6.0.7** only; physical SE/6.0.8 remains
+pending and the SE stays off. No release, tag or main change.
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-alignment-2026111521` is preserved. Renderer and UX work through 1533 is checkpointed on
 `codex/se-ux-2026111533`, inheriting Research Before Reinvention from 12ccb4a.
 No tag or release. Physical loader profiling has resumed; build 1534 changes only
 the approved installed-fast metadata validation path, not nano.
+
+## Practical scripts and environment audit — build 2026111544
+
+- Syntax cleanup no longer overwrites existing errors with OOM. Seven malformed
+  quote/parameter/compound cases recover with status 2; 128 injected failures on
+  those same inputs still report genuine OOM, free allocations and parse again.
+- Three complete unchanged upstream scripts (musl specs, ncurses 6.5 definition
+  and parameter generators), six default/space-path variants, match dash exactly
+  on host and native guest. Full upstream Caps produces 414 entries. The default
+  ncurses path exposed `set - Caps`; ordinary positional set and set-minus forms
+  now work. No Unix build-system, trap/PID or echo-extension compatibility implied.
+- awk previously dropped exports beyond 18 entries or its 164-byte buffer. Rebuilt
+  standalone awk now imports on demand through existing invocation allocation.
+  Host: 30 x 4096-byte exports, low-memory failures, cancellation before execution,
+  remaining=0. Snow: 30 x 512-byte exports, three successful repeats, owned peak
+  67723 B, remaining=0. No idle reservation or runtime ABI change.
+- **Whole-application heap stability remains unresolved.** Initial free heap fell
+  381500 → 381404 → 381302 B. Ten further invocations also declined. Matched old/new
+  awk controls each lost 384 B over four intervals (~96 B/invocation), with owned
+  allocations zero. This predates the change; it is not labelled stable or fixed.
+  Next memory investigation should isolate the shared runtime/loader/native heap.
+- Editor audit reproduces 18 imported entries, 24 slots and 1024-byte entries,
+  including silent omission of large exports. These are artificial restrictions,
+  not HFS constraints; the editor is unchanged and needs a focused correction and
+  its own validation. Canonical input has a separate 255-byte bound; nano uses raw
+  input. No new editor acceptance.
+- Retained host 54 POSIX, 39 focused, 41 elastic and basic/cancellation cases pass;
+  9874 parser and 3090 scope failure positions pass. Native Ctrl+C returns 130,
+  skips the following command and restores stdout/stderr. Guest runs fixed max
+  FFWD (~15–16×); synthetic entry briefly normal speed. Normal MacBinary 957696 B
+  (+128 B), separate awk.clx 188460 B. Existing utility/editor work is preserved.
+
+[Practical results/provenance](shell-practical/RESULTS.md),
+[guest evidence](shell-practical/guest.json),
+[memory comparison](shell-practical/memory-comparison.json),
+[compatibility matrix](utility-correctness/COMPATIBILITY.md).
 
 ## Parser safety and elastic capacity — 16 November
 

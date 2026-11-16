@@ -1,6 +1,6 @@
 # Portable shell and utility acceptance — 16 November 2026
 
-Build 2026111543, POSIX expansion/scope/formatter batch (1542 checkpoint c8ab885 preserved). **Snow only**, Plus/4 MB; guest reports
+Build 2026111544, practical-script/diagnostic batch (1543 checkpoint 61a1b4c preserved). **Snow only**, Plus/4 MB; guest reports
 System 6.0.7. No new physical/System 6.0.8 acceptance. No POSIX certification.
 
 **Fully supported** below means the explicitly named form, within stated capacity
@@ -15,7 +15,7 @@ The reference is dash plus portable utility behaviour, not Bash extensions.
 |---|---|---|
 | Simple commands, sequences, `&&`, `||`, `!`, `$?` | Fully supported (named forms) | Left-associative and/or; short-circuiting and final pipeline status tested. Cancellation is 130. |
 | Single/double quotes, escapes, concatenation | Partial | Tested strings with spaces, empty arguments, literals and adjacent expansions. Quoted `$@` preserves argument boundaries, empty arguments and attached prefixes/suffixes. Empty quote groups follow dash, including `"$@$@"`; separate `"$@"` with no parameters disappears. |
-| Variables, IFS, positional parameters | Partial | Assignment, unset, `$0`/`$1`/`$#`, `set --`, shift, quoted `$*`, IFS whitespace/non-whitespace splitting tested. Variable names/count/values and positional storage now grow on demand; 80 variables, 100 arguments and 64 KiB records tested. Export attributes survive reassignment and snapshots; new sh invocations inherit exported values and no functions. `export -p` round-trips quoted values and exported-but-unset names. Native HOME/PWD defaults remain Macintosh-specific. Older awk/editor environment consumers still have their own 18-entry/buffer limits. |
+| Variables, IFS, positional parameters | Partial | Assignment, unset, `$0`/`$1`/`$#`, `set args`, `set - args`, `set --`, shift, quoted `$*`, IFS whitespace/non-whitespace splitting tested. Variable names/count/values and positional storage now grow on demand; 80 variables, 100 arguments and 64 KiB records tested. Export attributes survive reassignment and snapshots; new sh invocations inherit exported values and no functions. `export -p` round-trips quoted values and exported-but-unset names. Native HOME/PWD defaults remain Macintosh-specific. Rebuilt awk imports grow on demand; the unchanged editor still imports only 18 entries into 24 slots and rejects entries beyond 1024 bytes. |
 | Parameter expansion | Partial | Defaults/alternates/assignment/error/length and prefix/suffix removal exist. Braced special parameters `${@}`, `${*}`, `${#}` and `${?}` work. Default/alternate words preserve nested quoted `$@` fields. Operations on `$@`/`$*` other than ordinary expansion explicitly fail; scalar assignment/error operators do not provide full vector expansion. No Bash arrays or indirect expansion. |
 | `for`, `while`, `until`, `if`, `case` | Partial | Ordinary forms, nested loops and unnumbered break/continue tested. Numeric break/continue levels rejected. Existing syntax/execution nesting limits remain. |
 | Functions, `.`, `sh -c`, script operands | Partial | Function arguments/return, temporary assignment restoration, shared variable/export effects, sourced definitions/variables/positional changes and copied redirected bodies tested. Dot with explicit arguments retains Clarice’s scoped-argument extension; no-argument dot shares the caller’s positional parameters. Redirection attached to a function *definition* is rejected; redirecting its call or body works. |
@@ -26,7 +26,7 @@ The reference is dash plus portable utility behaviour, not Bash extensions.
 | Arithmetic and `test`/`[` | Partial | Integer arithmetic; arity-sensitive string/numeric/file tests, iterative `!` and grouping. Bad/empty/overflowing integers return 2, without confusing false (1) with error. Use shell `&&`/`||` rather than legacy test `-a`/`-o`; Unix ownership/permission predicates remain unsupported. Overflow and advanced arithmetic syntax not comprehensively audited. |
 | `read`, `printf`, echo | Partial | Multi-variable `read [-r]`, IFS splitting, escaped newline and EOF; record storage grows on demand. All destination values are staged before assignment, so allocation failure preserves old values. Failure may leave unread input; callers must check status. NUL-containing records are explicitly rejected; native CR is also a line terminator. printf supports `%s`, `%b`, `%c`, `%d/%i/%u/%o/%x/%X`, `%%`, literal width/precision, integer flags, octal/control escapes, `%b` stop escape, format reuse and missing operands. Streaming padding is cancellable; embedded NUL output is preserved. Floating formats and dynamic `*` width/precision remain unsupported. Native integers are 32-bit; host long width is not a portability promise. |
 | Pathname expansion | Partial / HFS | Final-component globs sorted; parent-directory wildcards rejected. HFS case/31-byte names and encoded `/`/`%` differ. Host glob shim is not evidence of native glob behaviour. |
-| Shell options, traps, exec, readonly, getopts | Unsupported/incomplete | No full `set -e/-u/-f`/trap/exec facility; `set --` is supported. Do not silently assume scripts using these features are portable here. |
+| Shell options, traps, exec, readonly, getopts | Unsupported/incomplete | No full `set -e/-u/-f`/trap/exec facility; Positional `set` forms are supported; shell-option controls remain incomplete. Do not silently assume scripts using these features are portable here. |
 | Jobs, Unix process IDs, fork, signals, users/permissions | Platform-limited | Not simulated. Cooperative Ctrl+C, no process groups/job control/sudo/Unix permission ownership. chmod is not implemented; native metadata uses hfsattr. |
 | Resource bounds | Partial | Source, token and function storage grow with available heap. Source/execution recursion 8/16, parser recursion 32 and deep AND-OR/arithmetic chains 64 protect the native stack. Interactive input/paste stays 1023 B; completion has its existing path-sized buffer. Parser/AST and arithmetic failures now have deterministic host/guest recovery coverage. No full POSIX resource guarantee. |
 
@@ -70,3 +70,22 @@ The completed expansion/export/scope batch has [host and Snow evidence](../shell
 inventory of gaps, not authorisation for a shell replacement or OS facilities.
 
 Elastic batch evidence: [host/guest results and memory accounting](../shell-elastic/RESULTS.md). The interactive 1023-byte input limit is unchanged. The original parser-construction crash is fixed. [Parser safety evidence](../parser-safety/RESULTS.md) covers construction, partial cleanup, function copying and real guest exhaustion. Large source parsing can still be slow; lexical scanning does not yet poll cancellation.
+
+## Practical upstream scripts (1544)
+
+Complete unchanged musl specs generator and ncurses 6.5 definition/parameter
+generators are exercised with default and space-containing paths, using the full
+upstream ncurses_defs and Caps inputs. This is script/text-generation acceptance,
+not acceptance of whole Unix build systems. See [practical evidence](../shell-practical/RESULTS.md).
+The default parameter generator exposed and motivated `set - Caps` support.
+Trap/PID-dependent ncurses helpers remain unsupported; echo-backslash-dependent
+helpers are not treated as an unambiguous portable oracle.
+
+Malformed quotes and compound syntax now retain their syntax diagnostics rather
+than being relabelled OOM during cleanup. Genuine injected allocation exhaustion
+still reports OOM and recovers. Editor environment limits are demonstrated
+functional restrictions, not System 6 requirements; correcting them remains work.
+
+Native total-heap stability is not established: matched old/new awk tests both
+lose about 96 B per invocation despite zero tracked command allocations. This
+pre-existing retention remains unresolved; see the practical memory comparison.

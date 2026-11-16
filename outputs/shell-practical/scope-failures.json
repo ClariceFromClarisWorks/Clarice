@@ -1,0 +1,42 @@
+[
+  {
+    "source": "set --; set -- \"${@}${@}\"; echo \"$#\"",
+    "trials": 132,
+    "passed": true
+  },
+  {
+    "source": "x=old; f() { echo $x; x=inner; other=kept; export y=value; }; x=new f; echo $x:$other:$y; sh -c 'echo ${x-unset}:$y'",
+    "trials": 736,
+    "passed": true
+  },
+  {
+    "source": "printf '%s\n' 'x=sourced; export y=visible; f() { echo function; }; return 6; echo BAD' > scope; x=parent; . ./scope; echo \"$?:$x\"; f; sh -c 'echo \"${x-unset}:$y\"' ",
+    "trials": 572,
+    "passed": true
+  },
+  {
+    "source": "printf '%s\n' 'printf \"<%s>\n\" \"$@\"; set -- changed; return 4' > scope; set -- parent; . ./scope; echo \"$?:$1\"",
+    "trials": 324,
+    "passed": true
+  },
+  {
+    "source": "export x=outer; f() { echo original; }; (x=inner; export y=yes; f() { echo changed; }; sh -c 'echo $x:$y'; f); echo $x:${y-unset}; f",
+    "trials": 600,
+    "passed": true
+  },
+  {
+    "source": "printf '%d %i %u %o %x %X\n' -12 0x20 42 10 31 31; printf '[%+06d][%#08x][%#.0o][%.0d][%.5d]\n' 12 31 0 0 -12",
+    "trials": 188,
+    "passed": true
+  },
+  {
+    "source": "test '(' 2 -lt 3 ')'; echo $?; test ! '(' -z foo ')'; echo $?; [ '(' '' ')' ]; echo $?",
+    "trials": 312,
+    "passed": true
+  },
+  {
+    "source": "set -- \"a b\" \"\" c; printf \"<%s>\\n\" \"${x:-$@}\"; x=set; printf \"<%s>\\n\" \"${x:+$@}\"",
+    "trials": 226,
+    "passed": true
+  }
+]
