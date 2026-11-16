@@ -48,10 +48,14 @@ int main(void){unsigned long long total;
  reset();assert(walk("/mnt/Missing",0,0,&total)==1);assert(!live&&infos==0);
  reset();zero_volume=1;assert(walk("/mnt/Test 2",0,0,&total)==1);assert(!live);
  reset();oversize=1;assert(walk("/mnt/Test 2",0,0,&total)==1);assert(!live);
+ char *patterns[]={"-name","[[:alpha:]]*","-path","*/[!0-9]*"};predicates=patterns;predicate_count=4;
+ assert(selected("/root/file9","file9",0,0));assert(!selected("/root/9file","9file",0,0));
+ char *escaped[]={"-name","a\\*"};predicates=escaped;predicate_count=2;
+ assert(selected("/root/a*","a*",0,0));assert(!selected("/root/abc","abc",0,0));predicate_count=0;
  puts("PASS traversal: two volumes, raw/encoded names, nested directories, links, fork sizes, allocation failures, cancellation, catalog error, missing root, cleanup/recovery");
 }
 '''
 with tempfile.TemporaryDirectory() as d:
  c=Path(d)/'test.c';exe=Path(d)/'test';c.write_text(pre+source+main)
- subprocess.run(['cc','-std=c99','-fsanitize=address,undefined',str(c),'-o',str(exe)],check=True)
+ subprocess.run(['cc','-std=c99','-fsanitize=address,undefined',str(c),'src/ports/fnmatch-byte.c','-Isrc/vendor/musl-fnmatch','-Isrc/ports/fnmatch-include','-o',str(exe)],check=True)
  subprocess.run([str(exe)],check=True)

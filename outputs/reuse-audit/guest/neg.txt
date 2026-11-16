@@ -1,0 +1,6 @@
+/tmp/reuse-fixture/a*.txt
+/tmp/reuse-fixture/alpha.txt
+/tmp/reuse-fixture/file1.txt
+/tmp/reuse-fixture/file2.c
+/tmp/reuse-fixture/literal[.txt
+/tmp/reuse-fixture/sub/file23.txt

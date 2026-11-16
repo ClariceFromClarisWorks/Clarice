@@ -127,3 +127,13 @@ in [utility-closeout/RESULTS.md](../utility-closeout/RESULTS.md).
   All 76 pass actual guest output/status/format checks; 46 command capability
   contracts plus builtin-help assertions cover advertised content. Exhaustive
   combinations and new physical serial/network/editor execution are not claimed.
+
+## Network development: upstream find matching (17 November 2026)
+
+Separate from the 0.5 RC: find -name/-path now use genuine musl fnmatch with
+byte-oriented C-locale adaptation. Bracket ranges, ! negation, ASCII character
+classes and backslash escapes are supported; unmatched [ is literal (musl
+behavior). MacRoman high bytes remain literal, not UTF-8 or locale classes.
+Native traversal and conjunction-only expression scope are unchanged. Host and
+accelerated Snow validated; physical acceptance pending. See
+[reuse audit](../reuse-audit/REPORT.md) for size, timing and remaining gaps.

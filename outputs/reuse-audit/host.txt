@@ -1,0 +1,2 @@
+PASS 256 C-locale pristine-musl comparisons, MacRoman byte policy, long adversarial pattern; no matcher allocation
+PASS traversal: two volumes, raw/encoded names, nested directories, links, fork sizes, allocation failures, cancellation, catalog error, missing root, cleanup/recovery

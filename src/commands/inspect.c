@@ -2,7 +2,7 @@
 #include "mac-files.h"
 #include <errno.h>
 static char **predicates;static int predicate_count;static int maxdepth=2147483647,all,summarize,human,unit=512,brief;
-static int match(const char *p,const char *s){const char *star=NULL,*retry=NULL;while(*s){if(*p=='?'||*p==*s){p++;s++;}else if(*p=='*'){star=p++;retry=s;}else if(star){p=star+1;s=++retry;}else return 0;}while(*p=='*')p++;return !*p;}
+static int match(const char *p,const char *s){extern int clarice_fnmatch(const char *,const char *,int);return clarice_fnmatch(p,s,0)==0;}
 /* Borrow validated invocation arguments; every predicate is conjunctive.
    No retained matching state or separately allocated expression tree. */
 static int selected(const char *path,const char *base,int directory,int link){
@@ -71,7 +71,7 @@ static int describe(const char *path){char native[PATH_CAP],canonical[PATH_CAP],
  if(isdir(&pb))say("HFS directory\n");else if(is_link(&pb)){e=link_target(native,target);if(e)return 1;say("Clarice symbolic link to ");say(target);say("\n");}else{code4(pb.hFileInfo.ioFlFndrInfo.fdType,type);code4(pb.hFileInfo.ioFlFndrInfo.fdCreator,creator);snprintf(buf,sizeof buf,"HFS file, type '%s', creator '%s', data %lu bytes, resource %lu bytes\n",type,creator,(unsigned long)pb.hFileInfo.ioFlLgLen,(unsigned long)pb.hFileInfo.ioFlRLgLen);say(buf);}return output_error?1:0;
 }
 static void usage_text(int fd,const char *s){cli_write(fd,s,strlen(s));}
-static void usage(const char *name,int fd){if(!strcmp(name,"find"))usage_text(fd,"find [path ...] [-name pattern] [-path pattern] [-type f|d|l] [-maxdepth\nN] [-print]\nWalk HFS directories without following symbolic links. Default path: .\n-name matches encoded basenames; -path matches the printed pathname.\nPatterns support * and ?; quote them. All predicates must match.\nPredicates combine with AND. [], -o, -exec and other expressions are\nunsupported.\nTraversal grows with available memory; -maxdepth explicitly limits it.\n");else if(!strcmp(name,"du"))usage_text(fd,"du [-ashk] [--] [path ...]\nAllocated data+resource fork space; default units 512 bytes, -k 1024, -h\nreadable.\n-a includes files, -s gives argument totals. Links are not followed.\nHFS catalog/directory overhead is not assigned to individual folders.\nTraversal grows with available memory and native path capacity.\n");else usage_text(fd,"file [-b] [--] file ...\nDescribe HFS kind, symbolic target, type/creator and both fork sizes.\n-b omits the name. This is native metadata inspection, not libmagic\ncontent detection.\n");usage_text(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");}
+static void usage(const char *name,int fd){if(!strcmp(name,"find"))usage_text(fd,"find [path ...] [-name pattern] [-path pattern] [-type f|d|l] [-maxdepth\nN] [-print]\nWalk HFS directories without following symbolic links. Default path: .\n-name matches encoded basenames; -path matches the printed pathname.\nPatterns: *, ?, brackets/ranges, ! negation, ASCII character classes\nand backslash escapes; quote patterns. Native names are bytes, not UTF-8.\nPredicates combine with AND; -o, -exec and other expressions unsupported.\nTraversal grows with available memory; -maxdepth explicitly limits it.\n");else if(!strcmp(name,"du"))usage_text(fd,"du [-ashk] [--] [path ...]\nAllocated data+resource fork space; default units 512 bytes, -k 1024, -h\nreadable.\n-a includes files, -s gives argument totals. Links are not followed.\nHFS catalog/directory overhead is not assigned to individual folders.\nTraversal grows with available memory and native path capacity.\n");else usage_text(fd,"file [-b] [--] file ...\nDescribe HFS kind, symbolic target, type/creator and both fork sizes.\n-b omits the name. This is native metadata inspection, not libmagic\ncontent detection.\n");usage_text(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");}
 int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help")){usage(name,1);return 0;}int i=1,status=0;
  if(!strcmp(name,"find")){
   int first=1;while(i<argc&&av[i][0]!='-')i++;
@@ -81,7 +81,7 @@ int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=na
    if(!strcmp(av[i],"-print"))continue;
    if(i+1>=argc){usage(name,2);return 2;}
    if(!strcmp(av[i],"-name")||!strcmp(av[i],"-path")){
-    const char *value=av[++i];if(strchr(value,'[')||strchr(value,']')){usage(name,2);return 2;}
+    ++i;
    }else if(!strcmp(av[i],"-type")){
     const char *value=av[++i];if(strlen(value)!=1||!strchr("fdl",*value)){usage(name,2);return 2;}
    }else if(!strcmp(av[i],"-maxdepth")){

@@ -1,5 +1,20 @@
 # Clarice current state
 
+## Userland upstream reuse — separate Network development
+
+17 November: [inventory and first remediation](reuse-audit/REPORT.md) covers all
+43 standard commands, Network additions, optional editor and shared layers.
+Most text tools already are upstream ports; native HFS/transport services remain
+appropriate. Replaced find's incomplete pattern matcher with pristine musl plus
+a separate MacRoman-byte/C-locale adapter. Host sanitizers/reference comparisons,
+HFS failure/cancellation regression and accelerated Snow output/status tests pass.
+CLX 10,152→12,892 B; 1,000-file median1331→1370 guest ticks (~3% cost for richer
+matching), stable repeated heap/largest block. No permanent matcher allocation.
+Physical acceptance pending; RC checkout unchanged. Next contained candidate:
+restore mktemp directory mode; HTTP parser completion needs shared updater tests.
+Wholesale libvterm screen substitution requires review (72,000 B cells alone at
+80×25 versus current ~11 KiB model). No claim of completed whole-userland remediation.
+
 16 November 2026, Adelaide. Development **2026111550** separates Core from the
 standard utility collection. Host and fixed-maximum-speed Snow Plus/4 MB/
 **reported System 6.0.7** validation only; physical SE remains off. No release,

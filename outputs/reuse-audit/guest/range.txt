@@ -1,0 +1,2 @@
+/tmp/reuse-fixture/file1.txt
+/tmp/reuse-fixture/sub/file23.txt

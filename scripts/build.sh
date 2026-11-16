@@ -7,8 +7,13 @@ mkdir -p "$ROOT/work/build"
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
 for name in files inspect misc free; do
  m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -Wall -Wextra -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/$name.c -o /src/work/build/$name-main.o
+ extra=""
+ if [ "$name" = inspect ]; then
+  m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -I/src/src/vendor/musl-fnmatch -I/src/src/ports/fnmatch-include -c /src/src/ports/fnmatch-byte.c -o /src/work/build/fnmatch-byte.o
+  extra=/src/work/build/fnmatch-byte.o
+ fi
  libgcc=$(m68k-apple-macos-gcc -print-libgcc-file-name)
- m68k-apple-macos-ld -r --gc-sections -u clarice_main /src/work/build/$name-main.o "$libgcc" -o /src/work/build/$name.o
+ m68k-apple-macos-ld -r --gc-sections -u clarice_main /src/work/build/$name-main.o $extra "$libgcc" -o /src/work/build/$name.o
 done
 m68k-apple-macos-gcc -m68000 -Os -Wall -Wextra -Werror -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/serial.c -o /src/work/build/serial.o
 m68k-apple-macos-gcc -m68000 -Os -ffreestanding -fno-common -Wall -Wextra -Werror -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/core.c -o /src/work/build/core-main.o
