@@ -3,6 +3,7 @@ set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 IMAGE=ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae819583eecb0ddd1837da6943c
 python3 "$ROOT/scripts/prepare-pipelines.py"
+python3 "$ROOT/scripts/prepare-utf.py"
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
 cd /src
 flags="-m68000 -Os -fno-common -ffunction-sections -fdata-sections -Isrc/ports/include -Isrc/vendor/sbase -Isrc/ports -include src/ports/compat.h"
@@ -11,6 +12,7 @@ m68k-apple-macos-gcc -m68000 -Os -fno-common -ffunction-sections -fdata-sections
 libgcc=$(m68k-apple-macos-gcc -print-libgcc-file-name)
 for file in src/vendor/sbase/libutf/*.c src/vendor/sbase/libutil/ealloc.c work/build/ports/eprintf.c src/vendor/sbase/libutil/fshut.c src/vendor/sbase/libutil/reallocarray.c src/vendor/sbase/libutil/strtonum.c src/vendor/sbase/libutil/unescape.c src/vendor/sbase/libutil/memmem.c src/vendor/sbase/libutil/linecmp.c src/vendor/sbase/libutil/getlines.c src/vendor/sbase/libutil/concat.c src/vendor/sbase/libutil/writeall.c src/ports/path-names.c src/ports/awk-runtime.c src/ports/temp-name.c src/vendor/sbase/libutil/strlcpy.c src/vendor/sbase/libutil/strlcat.c; do
  name=$(basename "$file" .c)
+ case "$name" in fgetrune|fputrune|isspacerune) file="work/build/utf/$name.c";; esac
  m68k-apple-macos-gcc $flags -c "$file" -o work/build/pipelines/$name.o
  objects="$objects work/build/pipelines/$name.o"
 done

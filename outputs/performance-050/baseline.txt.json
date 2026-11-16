@@ -1,0 +1,3617 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "awk-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391012,
+      "largest": 248768,
+      "image": 137332,
+      "ticks": 1233,
+      "load": 483,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 46,
+        "validate": 294,
+        "imports": 2,
+        "relocations": 15,
+        "prepare": 96,
+        "events": 21
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 30,
+        "payload": 230,
+        "metadata": 64,
+        "structure": 9
+      },
+      "shell_seconds": 20.7
+    },
+    {
+      "case": "awk-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 390998,
+      "largest": 249210,
+      "image": 137332,
+      "ticks": 833,
+      "load": 84,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 45,
+        "validate": 4,
+        "imports": 2,
+        "relocations": 15,
+        "prepare": 7,
+        "events": 4
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 4,
+        "structure": 9
+      },
+      "shell_seconds": 14.03
+    },
+    {
+      "case": "awk-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 390998,
+      "largest": 249210,
+      "image": 137332,
+      "ticks": 830,
+      "load": 80,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 46,
+        "validate": 2,
+        "imports": 3,
+        "relocations": 14,
+        "prepare": 4,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 9
+      },
+      "shell_seconds": 13.98
+    },
+    {
+      "case": "awk-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391014,
+      "largest": 248738,
+      "image": 137332,
+      "ticks": 264,
+      "load": 142,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 45,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 15,
+        "prepare": 67,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 10
+      },
+      "shell_seconds": 4.55
+    },
+    {
+      "case": "awk-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391010,
+      "largest": 249158,
+      "image": 137332,
+      "ticks": 203,
+      "load": 79,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 47,
+        "validate": 0,
+        "imports": 3,
+        "relocations": 14,
+        "prepare": 4,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 9
+      },
+      "shell_seconds": 3.53
+    },
+    {
+      "case": "awk-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391000,
+      "largest": 249130,
+      "image": 137332,
+      "ticks": 205,
+      "load": 84,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 45,
+        "validate": 3,
+        "imports": 3,
+        "relocations": 14,
+        "prepare": 8,
+        "events": 3
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 3,
+        "structure": 9
+      },
+      "shell_seconds": 3.58
+    },
+    {
+      "case": "awk-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391050,
+      "largest": 248756,
+      "image": 137332,
+      "ticks": 183,
+      "load": 145,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 46,
+        "validate": 1,
+        "imports": 3,
+        "relocations": 14,
+        "prepare": 70,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 9
+      },
+      "shell_seconds": 3.2
+    },
+    {
+      "case": "awk-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391042,
+      "largest": 249234,
+      "image": 137332,
+      "ticks": 119,
+      "load": 81,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 47,
+        "validate": 1,
+        "imports": 3,
+        "relocations": 15,
+        "prepare": 4,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 9
+      },
+      "shell_seconds": 2.13
+    },
+    {
+      "case": "awk-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391060,
+      "largest": 249236,
+      "image": 137332,
+      "ticks": 118,
+      "load": 83,
+      "owned-peak": 19849,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 46,
+        "validate": 3,
+        "imports": 3,
+        "relocations": 14,
+        "prepare": 6,
+        "events": 3
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 3,
+        "structure": 9
+      },
+      "shell_seconds": 2.13
+    },
+    {
+      "case": "cat-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391242,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 56,
+      "load": 28,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 3,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 1,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 1.08
+    },
+    {
+      "case": "cat-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391232,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 57,
+      "load": 29,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 0,
+        "prepare": 5,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 1.1
+    },
+    {
+      "case": "cat-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391242,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 57,
+      "load": 27,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 9,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 1.11
+    },
+    {
+      "case": "cat-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391200,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 38,
+      "load": 29,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 0.78
+    },
+    {
+      "case": "cat-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391192,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 37,
+      "load": 28,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 0,
+        "prepare": 5,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 0.76
+    },
+    {
+      "case": "cat-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391200,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 42,
+      "load": 32,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 3,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 3
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 3,
+        "structure": 1
+      },
+      "shell_seconds": 0.85
+    },
+    {
+      "case": "cat-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391242,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 35,
+      "load": 29,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 0,
+        "prepare": 5,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 0.73
+    },
+    {
+      "case": "cat-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391232,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 35,
+      "load": 28,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 0,
+        "prepare": 5,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 0.73
+    },
+    {
+      "case": "cat-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391242,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 36,
+      "load": 29,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 3,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 12,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 0.75
+    },
+    {
+      "case": "cksum-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391216,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 175,
+      "load": 30,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 11,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 3,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 1,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 3.06
+    },
+    {
+      "case": "cksum-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391208,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 173,
+      "load": 28,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 3.05
+    },
+    {
+      "case": "cksum-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391216,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 174,
+      "load": 28,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 3.05
+    },
+    {
+      "case": "cksum-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391170,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 56,
+      "load": 28,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 3,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 12,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 1.08
+    },
+    {
+      "case": "cksum-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391164,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 57,
+      "load": 30,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 11,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 1.1
+    },
+    {
+      "case": "cksum-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391170,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 57,
+      "load": 28,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 1,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.1
+    },
+    {
+      "case": "cksum-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391216,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 41,
+      "load": 28,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 3,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 12,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 0.83
+    },
+    {
+      "case": "cksum-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391208,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 40,
+      "load": 28,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 0.81
+    },
+    {
+      "case": "cksum-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391216,
+      "largest": 249236,
+      "image": 9572,
+      "ticks": 45,
+      "load": 34,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 11,
+        "validate": 3,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 3
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 3,
+        "structure": 1
+      },
+      "shell_seconds": 0.9
+    },
+    {
+      "case": "cmp-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391104,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 541,
+      "load": 30,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 11,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 9.16
+    },
+    {
+      "case": "cmp-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391094,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 541,
+      "load": 28,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 11,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 9.16
+    },
+    {
+      "case": "cmp-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391104,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 539,
+      "load": 28,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 9.13
+    },
+    {
+      "case": "cmp-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391054,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 111,
+      "load": 28,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 3,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 12,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 2.0
+    },
+    {
+      "case": "cmp-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391046,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 111,
+      "load": 28,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 2.01
+    },
+    {
+      "case": "cmp-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391054,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 111,
+      "load": 28,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 11,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 2.0
+    },
+    {
+      "case": "cmp-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391104,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 52,
+      "load": 28,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 1.01
+    },
+    {
+      "case": "cmp-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391094,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 53,
+      "load": 29,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 4,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 1.05
+    },
+    {
+      "case": "cmp-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391104,
+      "largest": 249236,
+      "image": 8508,
+      "ticks": 51,
+      "load": 28,
+      "owned-peak": 4748,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.01
+    },
+    {
+      "case": "cp-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 159,
+      "load": 29,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 10,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 11,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 2.8
+    },
+    {
+      "case": "cp-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 169,
+      "load": 39,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 3.03
+    },
+    {
+      "case": "cp-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 169,
+      "load": 40,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 3.05
+    },
+    {
+      "case": "cp-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391084,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 133,
+      "load": 40,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 2.45
+    },
+    {
+      "case": "cp-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391076,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 138,
+      "load": 45,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 7,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 7
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 7,
+        "structure": 1
+      },
+      "shell_seconds": 2.53
+    },
+    {
+      "case": "cp-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391084,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 132,
+      "load": 39,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 2.43
+    },
+    {
+      "case": "cp-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 128,
+      "load": 39,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 2.35
+    },
+    {
+      "case": "cp-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 129,
+      "load": 39,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 2.36
+    },
+    {
+      "case": "cp-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 7868,
+      "ticks": 133,
+      "load": 45,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 7,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 7
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 7,
+        "structure": 0
+      },
+      "shell_seconds": 2.45
+    },
+    {
+      "case": "cut-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 390868,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 341,
+      "load": 41,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 5,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 5.91
+    },
+    {
+      "case": "cut-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 390858,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 342,
+      "load": 43,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 4,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 4
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 4,
+        "structure": 1
+      },
+      "shell_seconds": 5.93
+    },
+    {
+      "case": "cut-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 390868,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 341,
+      "load": 42,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 5.91
+    },
+    {
+      "case": "cut-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 390826,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 90,
+      "load": 40,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 1.73
+    },
+    {
+      "case": "cut-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 390818,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 91,
+      "load": 41,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 17,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.75
+    },
+    {
+      "case": "cut-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 390826,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 90,
+      "load": 40,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 1.73
+    },
+    {
+      "case": "cut-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 390868,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 57,
+      "load": 42,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 1.16
+    },
+    {
+      "case": "cut-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 390858,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 57,
+      "load": 40,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.18
+    },
+    {
+      "case": "cut-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 390868,
+      "largest": 249236,
+      "image": 12240,
+      "ticks": 55,
+      "load": 40,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 1.15
+    },
+    {
+      "case": "dd",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391004,
+      "largest": 249236,
+      "image": 11628,
+      "ticks": 106,
+      "load": 41,
+      "owned-peak": 11888,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 1.98
+    },
+    {
+      "case": "dd",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391004,
+      "largest": 249236,
+      "image": 11628,
+      "ticks": 105,
+      "load": 40,
+      "owned-peak": 11888,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 1.98
+    },
+    {
+      "case": "dd",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391004,
+      "largest": 249236,
+      "image": 11628,
+      "ticks": 105,
+      "load": 40,
+      "owned-peak": 11888,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.98
+    },
+    {
+      "case": "df",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391396,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 40,
+      "load": 39,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 0.9
+    },
+    {
+      "case": "df",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391396,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 42,
+      "load": 40,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 0.91
+    },
+    {
+      "case": "df",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391396,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 40,
+      "load": 39,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 0.88
+    },
+    {
+      "case": "du-hundred",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391218,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 2061,
+      "load": 38,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 34.56
+    },
+    {
+      "case": "du-hundred",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391208,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 2060,
+      "load": 37,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 34.55
+    },
+    {
+      "case": "du-hundred",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391218,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 2060,
+      "load": 38,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 34.56
+    },
+    {
+      "case": "du-ten",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391258,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 188,
+      "load": 38,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 16,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 3.36
+    },
+    {
+      "case": "du-ten",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391258,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 188,
+      "load": 37,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 17,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 3.36
+    },
+    {
+      "case": "du-ten",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391256,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 187,
+      "load": 38,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 13,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 0,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 17,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 3.33
+    },
+    {
+      "case": "find-hundred",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391194,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 2069,
+      "load": 43,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 34.75
+    },
+    {
+      "case": "find-hundred",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391186,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 2069,
+      "load": 43,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 34.75
+    },
+    {
+      "case": "find-hundred",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391194,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 2069,
+      "load": 44,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 20,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 34.75
+    },
+    {
+      "case": "find-ten",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391246,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 193,
+      "load": 43,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 3.48
+    },
+    {
+      "case": "find-ten",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391246,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 195,
+      "load": 44,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 3.51
+    },
+    {
+      "case": "find-ten",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391246,
+      "largest": 249236,
+      "image": 6508,
+      "ticks": 195,
+      "load": 43,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 20,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 3.51
+    },
+    {
+      "case": "grep-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 1122,
+      "load": 57,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 3,
+        "imports": 2,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 3
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 3,
+        "structure": 2
+      },
+      "shell_seconds": 18.96
+    },
+    {
+      "case": "grep-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391108,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 1128,
+      "load": 56,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 1,
+        "imports": 3,
+        "relocations": 3,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 20,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 2
+      },
+      "shell_seconds": 19.06
+    },
+    {
+      "case": "grep-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 1128,
+      "load": 54,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 20,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 2
+      },
+      "shell_seconds": 19.06
+    },
+    {
+      "case": "grep-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391084,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 207,
+      "load": 55,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 2
+      },
+      "shell_seconds": 3.71
+    },
+    {
+      "case": "grep-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391084,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 207,
+      "load": 54,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 0,
+        "imports": 3,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 2
+      },
+      "shell_seconds": 3.73
+    },
+    {
+      "case": "grep-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391084,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 207,
+      "load": 55,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 0,
+        "imports": 3,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 2
+      },
+      "shell_seconds": 3.71
+    },
+    {
+      "case": "grep-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 85,
+      "load": 57,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 3,
+        "imports": 2,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 3
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 3,
+        "structure": 2
+      },
+      "shell_seconds": 1.68
+    },
+    {
+      "case": "grep-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391108,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 83,
+      "load": 56,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 1,
+        "imports": 3,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 20,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 2
+      },
+      "shell_seconds": 1.66
+    },
+    {
+      "case": "grep-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391118,
+      "largest": 249236,
+      "image": 32708,
+      "ticks": 84,
+      "load": 56,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 20,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 2
+      },
+      "shell_seconds": 1.66
+    },
+    {
+      "case": "ls-hundred",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391126,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 99,
+      "load": 46,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 16,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.91
+    },
+    {
+      "case": "ls-hundred",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391126,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 99,
+      "load": 46,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 20,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.91
+    },
+    {
+      "case": "ls-hundred",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391126,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 98,
+      "load": 46,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 16,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 1.9
+    },
+    {
+      "case": "ls-ten",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391162,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 66,
+      "load": 45,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 17,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.36
+    },
+    {
+      "case": "ls-ten",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391162,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 66,
+      "load": 46,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 16,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 20,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 1.36
+    },
+    {
+      "case": "ls-ten",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391162,
+      "largest": 249236,
+      "image": 8084,
+      "ticks": 66,
+      "load": 44,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 16,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.36
+    },
+    {
+      "case": "pipeline",
+      "repeat": 0,
+      "status": 0,
+      "heap": 390684,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 416,
+      "load": 44,
+      "owned-peak": 1620,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 17,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.11
+    },
+    {
+      "case": "pipeline",
+      "repeat": 1,
+      "status": 0,
+      "heap": 390684,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 417,
+      "load": 45,
+      "owned-peak": 1620,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 17,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.11
+    },
+    {
+      "case": "pipeline",
+      "repeat": 2,
+      "status": 0,
+      "heap": 390684,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 417,
+      "load": 46,
+      "owned-peak": 1620,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 17,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.2
+    },
+    {
+      "case": "sed-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391100,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 2924,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 27,
+        "validate": 1,
+        "imports": 3,
+        "relocations": 5,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 3
+      },
+      "shell_seconds": 49.0
+    },
+    {
+      "case": "sed-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391090,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 2923,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 27,
+        "validate": 1,
+        "imports": 3,
+        "relocations": 5,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 3
+      },
+      "shell_seconds": 48.98
+    },
+    {
+      "case": "sed-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391100,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 2923,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 26,
+        "validate": 2,
+        "imports": 3,
+        "relocations": 4,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 3
+      },
+      "shell_seconds": 48.98
+    },
+    {
+      "case": "sed-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391062,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 455,
+      "load": 60,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 27,
+        "validate": 0,
+        "imports": 3,
+        "relocations": 4,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 3
+      },
+      "shell_seconds": 7.85
+    },
+    {
+      "case": "sed-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391062,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 469,
+      "load": 94,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 26,
+        "validate": 1,
+        "imports": 3,
+        "relocations": 5,
+        "prepare": 39,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 3
+      },
+      "shell_seconds": 8.1
+    },
+    {
+      "case": "sed-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391062,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 438,
+      "load": 60,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 27,
+        "validate": 0,
+        "imports": 3,
+        "relocations": 5,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 3
+      },
+      "shell_seconds": 7.56
+    },
+    {
+      "case": "sed-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391102,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 104,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 27,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 5,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 3
+      },
+      "shell_seconds": 2.0
+    },
+    {
+      "case": "sed-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391092,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 103,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 27,
+        "validate": 1,
+        "imports": 3,
+        "relocations": 5,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 3
+      },
+      "shell_seconds": 1.98
+    },
+    {
+      "case": "sed-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391102,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 103,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 26,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 5,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 3
+      },
+      "shell_seconds": 2.0
+    },
+    {
+      "case": "shell",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391264,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 103,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 26,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 5,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 3
+      },
+      "shell_seconds": 11.98
+    },
+    {
+      "case": "shell",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391264,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 103,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 26,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 5,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 3
+      },
+      "shell_seconds": 11.91
+    },
+    {
+      "case": "shell",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391264,
+      "largest": 249236,
+      "image": 46260,
+      "ticks": 103,
+      "load": 61,
+      "owned-peak": 13464,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 26,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 5,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 3
+      },
+      "shell_seconds": 11.9
+    },
+    {
+      "case": "sort-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391228,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 2834,
+      "load": 52,
+      "owned-peak": 25964,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 47.5
+    },
+    {
+      "case": "sort-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391218,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 2938,
+      "load": 57,
+      "owned-peak": 25964,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 24,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 49.3
+    },
+    {
+      "case": "sort-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391228,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 2870,
+      "load": 57,
+      "owned-peak": 25964,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 24,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 3,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 2
+      },
+      "shell_seconds": 48.16
+    },
+    {
+      "case": "sort-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391194,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 158,
+      "load": 57,
+      "owned-peak": 22924,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 24,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 3,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 2
+      },
+      "shell_seconds": 2.96
+    },
+    {
+      "case": "sort-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391194,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 148,
+      "load": 57,
+      "owned-peak": 22924,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 24,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 3,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 2
+      },
+      "shell_seconds": 2.8
+    },
+    {
+      "case": "sort-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391194,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 147,
+      "load": 58,
+      "owned-peak": 22924,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 24,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 2.78
+    },
+    {
+      "case": "sort-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391228,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 73,
+      "load": 56,
+      "owned-peak": 6540,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.55
+    },
+    {
+      "case": "sort-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391218,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 73,
+      "load": 56,
+      "owned-peak": 6540,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 24,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.55
+    },
+    {
+      "case": "sort-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391228,
+      "largest": 249236,
+      "image": 30360,
+      "ticks": 73,
+      "load": 56,
+      "owned-peak": 6540,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 24,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.55
+    },
+    {
+      "case": "tr-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 390986,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 4432,
+      "load": 54,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 5,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 74.21
+    },
+    {
+      "case": "tr-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 390986,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 4434,
+      "load": 55,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 74.23
+    },
+    {
+      "case": "tr-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 390986,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 4435,
+      "load": 57,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 3,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 3
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 3,
+        "structure": 1
+      },
+      "shell_seconds": 74.25
+    },
+    {
+      "case": "tr-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 390948,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 606,
+      "load": 54,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 10.43
+    },
+    {
+      "case": "tr-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 390942,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 606,
+      "load": 56,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 10.41
+    },
+    {
+      "case": "tr-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 390948,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 605,
+      "load": 55,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 10.41
+    },
+    {
+      "case": "tr-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 390986,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 92,
+      "load": 54,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 21,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 1.86
+    },
+    {
+      "case": "tr-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 390986,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 93,
+      "load": 56,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.86
+    },
+    {
+      "case": "tr-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 390986,
+      "largest": 249236,
+      "image": 25188,
+      "ticks": 95,
+      "load": 57,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 3,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 3
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 3,
+        "structure": 1
+      },
+      "shell_seconds": 1.91
+    },
+    {
+      "case": "wc-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391254,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 2982,
+      "load": 49,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 50.03
+    },
+    {
+      "case": "wc-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391254,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 2983,
+      "load": 50,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 50.05
+    },
+    {
+      "case": "wc-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391254,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 2983,
+      "load": 49,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 50.05
+    },
+    {
+      "case": "wc-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391222,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 429,
+      "load": 51,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 7.46
+    },
+    {
+      "case": "wc-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391222,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 429,
+      "load": 49,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 20,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 5,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 7.48
+    },
+    {
+      "case": "wc-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391222,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 430,
+      "load": 52,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 4,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 4
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 4,
+        "structure": 1
+      },
+      "shell_seconds": 7.51
+    },
+    {
+      "case": "wc-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391254,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 86,
+      "load": 50,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.76
+    },
+    {
+      "case": "wc-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391254,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 87,
+      "load": 51,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.76
+    },
+    {
+      "case": "wc-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391254,
+      "largest": 249236,
+      "image": 9732,
+      "ticks": 86,
+      "load": 50,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 3,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 5,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 1,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.76
+    }
+  ]
+}

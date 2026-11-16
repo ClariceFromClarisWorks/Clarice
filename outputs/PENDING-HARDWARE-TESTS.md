@@ -9,6 +9,27 @@ fluidity remains inadequate (~7.2 fps in the matched native test).
 Target 4 MB, System 6.0.8, verified cable, 57600 8N1, no flow control.
 Use a backup storage image and unused SCSI ID; never modify BlueSCSI firmware.
 
+## 0.5.0 consolidated utility performance acceptance (not executed)
+
+Use stock68000/4MB/System6.0.8, verify accelerator bypass, record system/cache and
+build hashes. Wake After Dark with mouse movement; quiet SEControl while timing.
+On disposable storage, stage tests/performance-050 fixtures and separate old/new
+wc,tr,find,du images. Run pairs.sh and final.sh adapted to old/new absolute paths,
+three warm repetitions plus first launch; record guest ticks and wall duration,
+loader phases, free/largest heap and tracked survivors. Compare 504B,8064B,64512B
+inputs and10/100-file directories. Do not assume Snow percentage gains are physical.
+Run acceptance.sh once then recheck.sh: output must match old tools, missing volume
+must fail, both forks/Finder metadata must remain unchanged. Check a volume with
+spaces and nested encoded names. Interrupt streaming tr and running find with real
+Ctrl+C and Command-period; require status130, immediate usable prompt, subsequent
+successful command and stable heap after10 repeats. Run cat|grep|wc, sed, awk,
+sort-spill, cp/mv/rm, dd,cmp,cksum cases and the small utility workflow. Check actual
+terminal output, selection and scrolling separately from /dev/null timings.
+Capture failures/full output; retain recovery copies. Run one controlled serial/
+Kermit/HTTP transfer with host byte comparison and real elapsed time if connections
+are available; accelerated guest ticks do not establish network throughput. Combine
+with offline install/relaunch tests below. No hardware testing occurred in this audit.
+
 ## Offline installer follow-up (Snow validated only)
 
 When hardware acceptance resumes, use disposable storage with a backup. Open the

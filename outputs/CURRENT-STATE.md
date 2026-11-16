@@ -7,6 +7,24 @@ tag or main change. Development checkpoint branch:
 `codex/core-distribution-2026111550`; accepted `c5075e5` has been pushed.
 Offline-installer UX follow-up is locally validated; ordinary Core remains 1550.
 
+## 0.5.0 bounded utility performance audit — Snow validated
+
+- Core remains 2026111550; external utilities only. Complete-command warm guest
+  ticks: wc64KiB2983→763, tr4434→2687; paired100-file find2098→159,
+  du2095→146. Native traversal reuses catalog metadata and explicit directory IDs;
+  isolated upstream UTF ASCII fast paths avoid unnecessary general conversion.
+- No permanent allocation. wc/tr peaks unchanged4208/3668 B, zero tracked
+  survivors; repeated free/largest heap stable. Traversal saves ~504 B per depth
+  frame. Images grow68 B(wc),124 B(tr),372 B(shared find/du/file); Core untouched.
+- Host sanitizer/reference, fault/cleanup and QOL-1 tests pass. Final Snow output
+  comparisons pass across volumes, relative/encoded names, forks and UTF/binary.
+  Final find cancellation returned via Command-period; automated Ctrl+C arrived
+  as plain c and follow-up counters were not captured. Hardware keyboard/cleanup
+  acceptance remains pending. No physical-SE/System6.0.8 acceptance claimed.
+- [Audit, timing limits and evidence](performance-050/REPORT.md). Stop this bounded
+  optimisation batch and proceed to consolidated hardware acceptance. sed regex,
+  disk-spilling sort and command-substitution costs remain; no speculative rewrite.
+
 ## Offline first-install UX — completed in Snow
 
 - Distribution now has a native **Install Clarice** launcher: open it, click

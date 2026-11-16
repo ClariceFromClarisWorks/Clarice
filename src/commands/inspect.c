@@ -17,31 +17,44 @@ static int selected(const char *path,const char *base,int directory,int link){
 }
 /* Iterative depth-first traversal: one reclaimable frame per active directory.
    No recursion, directory-wide result array, or arbitrary depth ceiling. */
-typedef struct WalkFrame {struct WalkFrame *parent;char path[PATH_CAP],native[PATH_CAP];unsigned long long size;int depth,index,directory;} WalkFrame;
-static WalkFrame *walk_frame(const char *path,int depth,WalkFrame *parent,int du,int *status){
- WalkFrame *f=cli_alloc(sizeof *f);CInfoPBRec pb;char canonical[PATH_CAP];
+typedef struct WalkFrame {struct WalkFrame *parent;char path[PATH_CAP];short volume;long dirid;unsigned long long size;int depth,index,directory;} WalkFrame;
+static WalkFrame *walk_frame(const char *path,int depth,WalkFrame *parent,int du,int *status,const CInfoPBRec *known){
+ WalkFrame *f=cli_alloc(sizeof *f);CInfoPBRec pb;char canonical[PATH_CAP],native[PATH_CAP];
  if(!f){error(path,memFullErr);*status=1;return NULL;}
  memset(f,0,sizeof *f);f->parent=parent;f->depth=depth;f->index=1;
  if(strlen(path)>=PATH_CAP){error(path,bdNamErr);*status=1;cli_free(f);return NULL;}
- strcpy(f->path,path);int e=resolve_ex(path,f->native,canonical,0);if(!e)e=info(f->native,&pb);
+ strcpy(f->path,path);int e=0;
+ /* Indexed HFS enumeration already returns both forks and Finder metadata.
+    Reuse that snapshot rather than resolving/statting every child again.
+    No link following; retain the encoded CLI path for output only. */
+ if(known){pb=*known;strcpy(canonical,path);}
+ else {e=resolve_ex(path,native,canonical,0);if(!e)e=info(native,&pb);}
+ if(!e){f->volume=parent?parent->volume:pb.hFileInfo.ioVRefNum;
+  if(!f->volume)e=nsvErr;} /* Never use the default-volume selector. */
  if(e){error(path,e);*status=1;cli_free(f);return NULL;}
- f->directory=isdir(&pb);int link=is_link(&pb);
+ f->directory=isdir(&pb);f->dirid=f->directory?pb.dirInfo.ioDrDirID:0;int link=is_link(&pb);
  f->size=f->directory?0:(unsigned long)pb.hFileInfo.ioFlPyLen+(unsigned long long)(unsigned long)pb.hFileInfo.ioFlRPyLen;
  const char *base=strrchr(canonical,'/');base=base&&base[1]?base+1:canonical;
  if(!du&&selected(path,base,f->directory,link)){say(path);say("\n");}
  return f;
 }
 static int walk(const char *path,int depth,int du,unsigned long long *total){
- int status=0;*total=0;WalkFrame *f=walk_frame(path,depth,NULL,du,&status);
+ int status=0;*total=0;WalkFrame *f=walk_frame(path,depth,NULL,du,&status,NULL);
  while(f){
   if(app_yield()){status=130;break;}if(output_error){status=1;break;}
   if(f->directory&&f->depth<maxdepth){
    /* The native catalog index is signed 16-bit; fail rather than wrap. */
    if(f->index>32767){error(f->path,paramErr);status=1;break;}
-   CInfoPBRec pb;char leaf[32],enc[100],child[PATH_CAP];int e=cli_native_nth(f->native,f->index,leaf,&pb);
+   CInfoPBRec pb;unsigned char name[256];char leaf[32],enc[100],child[PATH_CAP];
+   /* Same native indexed enumeration as ls. Restore explicit parent/volume
+      every time: HFS overwrites fields in this result block. */
+   memset(&pb,0,sizeof pb);pb.hFileInfo.ioNamePtr=name;
+   pb.hFileInfo.ioVRefNum=f->volume;pb.hFileInfo.ioDirID=f->dirid;pb.hFileInfo.ioFDirIndex=f->index;
+   int e=PBGetCatInfoSync(&pb);
+   if(!e){if(name[0]>31)e=bdNamErr;else{memcpy(leaf,name+1,name[0]);leaf[name[0]]=0;}}
    if(!e){
     f->index++;e=encode_name(leaf,enc,sizeof enc);if(!e)e=join_path(f->path,enc,child);
-    if(e){error(f->path,e);status=1;}else{WalkFrame *next=walk_frame(child,f->depth+1,f,du,&status);if(next){f=next;continue;}}
+    if(e){error(f->path,e);status=1;}else{WalkFrame *next=walk_frame(child,f->depth+1,f,du,&status,&pb);if(next){f=next;continue;}}
    }else if(e!=fnfErr){error(f->path,e);status=1;}
    else goto finish;
    if(!e)continue;

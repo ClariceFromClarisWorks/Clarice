@@ -1,0 +1,1601 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "du-hundred",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392292,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 1681,
+      "load": 48,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 12,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 19,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 14,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 28.23
+    },
+    {
+      "case": "du-hundred",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392292,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 961,
+      "load": 35,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 12,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 15,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 16.23
+    },
+    {
+      "case": "du-hundred",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392292,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 959,
+      "load": 34,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 11,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 15,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 16.21
+    },
+    {
+      "case": "du-ten",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392392,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 66,
+      "load": 35,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 12,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 5,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 15,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 1.33
+    },
+    {
+      "case": "du-ten",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392384,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 66,
+      "load": 34,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 12,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 14,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 1.31
+    },
+    {
+      "case": "du-ten",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392392,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 66,
+      "load": 34,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 12,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 14,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 1.33
+    },
+    {
+      "case": "file",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392400,
+      "largest": 390918,
+      "image": 6508,
+      "ticks": 53,
+      "load": 45,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 4,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 4
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 4,
+        "structure": 1
+      },
+      "shell_seconds": 1.16
+    },
+    {
+      "case": "file",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392390,
+      "largest": 390918,
+      "image": 6508,
+      "ticks": 49,
+      "load": 42,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 1.08
+    },
+    {
+      "case": "file",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392400,
+      "largest": 390918,
+      "image": 6508,
+      "ticks": 50,
+      "load": 42,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.13
+    },
+    {
+      "case": "find-hundred",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392352,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 970,
+      "load": 43,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 1,
+        "imports": 2,
+        "relocations": 0,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 16.45
+    },
+    {
+      "case": "find-hundred",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392352,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 971,
+      "load": 41,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 18,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 16.46
+    },
+    {
+      "case": "find-hundred",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392352,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 970,
+      "load": 41,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 16.45
+    },
+    {
+      "case": "find-ten",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392376,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 77,
+      "load": 45,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 4,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 5,
+        "events": 4
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 4,
+        "structure": 1
+      },
+      "shell_seconds": 1.56
+    },
+    {
+      "case": "find-ten",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392370,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 74,
+      "load": 41,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 1.51
+    },
+    {
+      "case": "find-ten",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392376,
+      "largest": 390918,
+      "image": 6744,
+      "ticks": 74,
+      "load": 41,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 18,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.51
+    },
+    {
+      "case": "head",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392396,
+      "largest": 390918,
+      "image": 9708,
+      "ticks": 62,
+      "load": 47,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 8,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 1.31
+    },
+    {
+      "case": "head",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392386,
+      "largest": 390918,
+      "image": 9708,
+      "ticks": 61,
+      "load": 45,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 16,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 19,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.28
+    },
+    {
+      "case": "head",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392396,
+      "largest": 390918,
+      "image": 9708,
+      "ticks": 57,
+      "load": 43,
+      "owned-peak": 4492,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 15,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 18,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 1.23
+    },
+    {
+      "case": "more",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392390,
+      "largest": 390918,
+      "image": 3204,
+      "ticks": 208,
+      "load": 40,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 18,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 3.75
+    },
+    {
+      "case": "more",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392380,
+      "largest": 390918,
+      "image": 3204,
+      "ticks": 208,
+      "load": 41,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 18,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 0
+      },
+      "shell_seconds": 3.73
+    },
+    {
+      "case": "more",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392390,
+      "largest": 390918,
+      "image": 3204,
+      "ticks": 207,
+      "load": 40,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 14,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 18,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 3.73
+    },
+    {
+      "case": "mv",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391964,
+      "largest": 390918,
+      "image": 7868,
+      "ticks": 101,
+      "load": 56,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 7,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 7
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 7,
+        "structure": 0
+      },
+      "shell_seconds": 2.01
+    },
+    {
+      "case": "mv",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391964,
+      "largest": 390918,
+      "image": 7868,
+      "ticks": 220,
+      "load": 50,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 3.98
+    },
+    {
+      "case": "mv",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391964,
+      "largest": 390918,
+      "image": 7868,
+      "ticks": 219,
+      "load": 49,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 17,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 3.98
+    },
+    {
+      "case": "od",
+      "repeat": 0,
+      "status": 0,
+      "heap": 391836,
+      "largest": 390918,
+      "image": 3204,
+      "ticks": 339,
+      "load": 48,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 16,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 0,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 5.98
+    },
+    {
+      "case": "od",
+      "repeat": 1,
+      "status": 0,
+      "heap": 391836,
+      "largest": 390918,
+      "image": 3204,
+      "ticks": 333,
+      "load": 46,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 16,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 5.88
+    },
+    {
+      "case": "od",
+      "repeat": 2,
+      "status": 0,
+      "heap": 391836,
+      "largest": 390918,
+      "image": 3204,
+      "ticks": 336,
+      "load": 47,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 17,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 5.93
+    },
+    {
+      "case": "rm",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392092,
+      "largest": 390918,
+      "image": 7868,
+      "ticks": 70,
+      "load": 49,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.5
+    },
+    {
+      "case": "rm",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392092,
+      "largest": 390918,
+      "image": 7868,
+      "ticks": 75,
+      "load": 53,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 5,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 5
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 5,
+        "structure": 1
+      },
+      "shell_seconds": 1.56
+    },
+    {
+      "case": "rm",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392092,
+      "largest": 390918,
+      "image": 7868,
+      "ticks": 72,
+      "load": 51,
+      "owned-peak": 0,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 17,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.53
+    },
+    {
+      "case": "tail",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392400,
+      "largest": 390918,
+      "image": 11480,
+      "ticks": 128,
+      "load": 53,
+      "owned-peak": 5744,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 2.46
+    },
+    {
+      "case": "tail",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392390,
+      "largest": 390918,
+      "image": 11480,
+      "ticks": 128,
+      "load": 53,
+      "owned-peak": 5744,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 2.46
+    },
+    {
+      "case": "tail",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392400,
+      "largest": 390918,
+      "image": 11480,
+      "ticks": 132,
+      "load": 56,
+      "owned-peak": 5744,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 7,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 7
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 7,
+        "structure": 1
+      },
+      "shell_seconds": 2.55
+    },
+    {
+      "case": "tee",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392206,
+      "largest": 390844,
+      "image": 8392,
+      "ticks": 141,
+      "load": 50,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 2.66
+    },
+    {
+      "case": "tee",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392202,
+      "largest": 390844,
+      "image": 8392,
+      "ticks": 142,
+      "load": 52,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 8,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 2.7
+    },
+    {
+      "case": "tee",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392206,
+      "largest": 390844,
+      "image": 8392,
+      "ticks": 143,
+      "load": 53,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 5,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 4
+      },
+      "Verification ticks": {
+        "header": 1,
+        "record": 21,
+        "payload": 0,
+        "metadata": 4,
+        "structure": 1
+      },
+      "shell_seconds": 2.71
+    },
+    {
+      "case": "tr-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392108,
+      "largest": 391164,
+      "image": 25300,
+      "ticks": 2705,
+      "load": 63,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 16,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 45.41
+    },
+    {
+      "case": "tr-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392102,
+      "largest": 391164,
+      "image": 25300,
+      "ticks": 2691,
+      "load": 56,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 8,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 45.18
+    },
+    {
+      "case": "tr-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392108,
+      "largest": 391164,
+      "image": 25300,
+      "ticks": 2689,
+      "load": 55,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 45.16
+    },
+    {
+      "case": "tr-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392082,
+      "largest": 391028,
+      "image": 25300,
+      "ticks": 387,
+      "load": 53,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 6.78
+    },
+    {
+      "case": "tr-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392080,
+      "largest": 391028,
+      "image": 25300,
+      "ticks": 388,
+      "load": 57,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 6.78
+    },
+    {
+      "case": "tr-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392082,
+      "largest": 391028,
+      "image": 25300,
+      "ticks": 387,
+      "load": 56,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 6.78
+    },
+    {
+      "case": "tr-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392112,
+      "largest": 391028,
+      "image": 25300,
+      "ticks": 79,
+      "load": 53,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 22,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.65
+    },
+    {
+      "case": "tr-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392106,
+      "largest": 391028,
+      "image": 25300,
+      "ticks": 79,
+      "load": 54,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.65
+    },
+    {
+      "case": "tr-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392112,
+      "largest": 391028,
+      "image": 25300,
+      "ticks": 79,
+      "load": 54,
+      "owned-peak": 3668,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 23,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.65
+    },
+    {
+      "case": "uniq",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392402,
+      "largest": 390936,
+      "image": 10388,
+      "ticks": 337,
+      "load": 52,
+      "owned-peak": 6540,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 20,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 5.95
+    },
+    {
+      "case": "uniq",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392392,
+      "largest": 390936,
+      "image": 10388,
+      "ticks": 335,
+      "load": 52,
+      "owned-peak": 6540,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 5.91
+    },
+    {
+      "case": "uniq",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392402,
+      "largest": 390936,
+      "image": 10388,
+      "ticks": 335,
+      "load": 52,
+      "owned-peak": 6540,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 5.91
+    },
+    {
+      "case": "wc-large",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392378,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 770,
+      "load": 54,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 20,
+        "validate": 4,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 4
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 4,
+        "structure": 0
+      },
+      "shell_seconds": 13.15
+    },
+    {
+      "case": "wc-large",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392378,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 767,
+      "load": 51,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 13.11
+    },
+    {
+      "case": "wc-large",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392378,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 768,
+      "load": 50,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 1,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 1
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 1,
+        "structure": 1
+      },
+      "shell_seconds": 13.11
+    },
+    {
+      "case": "wc-ordinary",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392354,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 151,
+      "load": 50,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 20,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 2.83
+    },
+    {
+      "case": "wc-ordinary",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392352,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 151,
+      "load": 52,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 0
+      },
+      "shell_seconds": 2.85
+    },
+    {
+      "case": "wc-ordinary",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392354,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 150,
+      "load": 49,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 1,
+        "prepare": 6,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 2.83
+    },
+    {
+      "case": "wc-small",
+      "repeat": 0,
+      "status": 0,
+      "heap": 392380,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 67,
+      "load": 49,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 0,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 5,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 1
+      },
+      "shell_seconds": 1.45
+    },
+    {
+      "case": "wc-small",
+      "repeat": 1,
+      "status": 0,
+      "heap": 392374,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 69,
+      "load": 51,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 19,
+        "validate": 2,
+        "imports": 1,
+        "relocations": 2,
+        "prepare": 6,
+        "events": 2
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 21,
+        "payload": 0,
+        "metadata": 2,
+        "structure": 1
+      },
+      "shell_seconds": 1.48
+    },
+    {
+      "case": "wc-small",
+      "repeat": 2,
+      "status": 0,
+      "heap": 392380,
+      "largest": 390936,
+      "image": 9800,
+      "ticks": 69,
+      "load": 50,
+      "owned-peak": 4208,
+      "remaining": 0,
+      "Loader ticks": {
+        "read": 18,
+        "validate": 0,
+        "imports": 2,
+        "relocations": 1,
+        "prepare": 7,
+        "events": 0
+      },
+      "Verification ticks": {
+        "header": 0,
+        "record": 22,
+        "payload": 0,
+        "metadata": 0,
+        "structure": 0
+      },
+      "shell_seconds": 1.48
+    }
+  ]
+}

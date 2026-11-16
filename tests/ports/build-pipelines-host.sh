@@ -3,10 +3,12 @@ set -eu
 mkdir -p work/pipelines-host/helpers work/build/ports
 python3 scripts/prepare-ports.py
 python3 scripts/prepare-pipelines.py
+python3 scripts/prepare-utf.py
 flags='-g -O1 -fsanitize=address,undefined -Isrc/vendor/sbase -Isrc/ports -include src/ports/compat.h'
 helpers='src/vendor/sbase/libutil/ealloc.c work/build/ports/eprintf.c src/vendor/sbase/libutil/fshut.c src/vendor/sbase/libutil/reallocarray.c src/vendor/sbase/libutil/strtonum.c src/vendor/sbase/libutil/unescape.c src/vendor/sbase/libutil/memmem.c src/vendor/sbase/libutil/linecmp.c src/vendor/sbase/libutil/getlines.c src/vendor/sbase/libutil/concat.c src/vendor/sbase/libutil/writeall.c src/ports/path-names.c src/ports/awk-runtime.c src/ports/temp-name.c src/vendor/sbase/libutil/strlcpy.c src/vendor/sbase/libutil/strlcat.c'
 for file in src/vendor/sbase/libutf/*.c $helpers; do
  name=$(basename "$file" .c)
+ case "$name" in fgetrune|fputrune|isspacerune) file="work/build/utf/$name.c";; esac
  cc $flags -c "$file" -o work/pipelines-host/helpers/$name.o
 done
 cc -g -O1 -fsanitize=address,undefined -DCLARICE_DD_RUNTIME -c src/ports/runtime.c -o work/pipelines-host/helpers/runtime.o
