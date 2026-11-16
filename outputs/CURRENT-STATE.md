@@ -1,11 +1,10 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted **2026111541 / bbe7d97** is preserved on
-`codex/utility-correctness-2026111539`. Build **2026111542** completes the parser
-allocation-failure/capacity batch below. Validation is host and Snow Plus/4 MB,
-**reported System 6.0.7**, not physical SE or System 6.0.8. The SE remains off.
-Current authorisation includes pushing validated development checkpoints; no
-release, tag or main change. ROADMAP.md remains provisional history.
+16 November 2026, Adelaide. Accepted **2026111542 / c8ab885** is preserved on
+`codex/utility-correctness-2026111539`. Build **2026111543** completes the focused
+POSIX expansion, export/scope and printf/test batch below. Validation is host and
+Snow Plus/4 MB, **reported System 6.0.7**, not physical SE or System 6.0.8.
+The SE remains off. No release, tag or main change. ROADMAP.md is provisional history.
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-alignment-2026111521` is preserved. Renderer and UX work through 1533 is checkpointed on
@@ -42,12 +41,48 @@ the approved installed-fast metadata validation path, not nano.
   parsing still shifts its read buffer repeatedly and does not poll inside lexical
   scanning; large-script throughput remains a limitation.
 - Earlier elastic variables/arguments/read/substitution work and utility/editor
-  changes are preserved. Next authorised compatibility batch: embedded quoted
-  `$@`, export visibility, printf and test. No claim of full POSIX conformance.
+  changes are preserved. The following batch extends quoted `$@`, export visibility,
+  printf and test. No claim of full POSIX conformance.
 
 Evidence and reproduction: [parser results](parser-safety/RESULTS.md),
 [diagnostic guest](parser-safety/guest-diagnostic.json),
 [normal guest](parser-safety/guest-normal.json),
+[compatibility matrix](utility-correctness/COMPATIBILITY.md).
+
+## POSIX expansion, scope and formatting — build 2026111543
+
+- Quoted `$@` preserves vector boundaries, empty arguments and prefixes/suffixes;
+  quote-group handling resolves the empty `"$@$@"` dash discrepancy. Braced special
+  parameters now parse. Default/alternate expansion retains nested quoted fields.
+- Export flags distinguish local, exported and exported-but-unset variables;
+  preserve flags on reassignment, clone and restoration. Child sh drops locals and
+  functions; functions/sourced scripts share variable changes, subshells isolate
+  them. No-argument dot correctly shares changes made by `set --`. Native external
+  commands receive only exported entries, plus existing HOME/PWD defaults.
+- printf streams integer/string/character/escape conversions with literal width,
+  precision, format reuse and flags. No width-sized allocation; 64-byte temporary
+  output blocks and Ctrl+C polling. `test`/`[` gain grouping/negation and checked
+  integer operands, retaining arity-sensitive operand interpretation.
+- Host: all 54 new dash comparisons, 39 focused, 12 complete, 41 elastic cases,
+  31 existing comparisons/3 cancellation cases pass. 3,090 new whole-shell fault
+  trials restore streams, preserve the seeded function/variable and leave zero
+  tracked bytes; parser/AST sweeps and 329 adapter failure trials still pass.
+- Normal Snow build at fixed uncapped FFWD (~15–16×): all 54 new and 39/12/41
+  retained cases pass, plus native awk export visibility. Actual Ctrl+C interrupts
+  billion-column printf with 130, skips BAD and restores stdout/stderr. Three
+  repeats: heap 314612 / 314612 / 314608 B; largest block 225530 B throughout;
+  portable remaining=0. These are script-context measurements after running awk,
+  not directly comparable to the previous idle parser-only fixture.
+- Small host `echo hello`: six allocations, 267-byte peak (previous 259), zero
+  retained; quote position adds transient word state and export flags add per-variable
+  state. No permanent cache or reservation. Normal MacBinary 957568 B (+4224).
+- Remaining: full POSIX certification is not claimed. Floating printf and dynamic
+  width, legacy test -a/-o, Unix permission predicates, complex vector parameter
+  operations, shell options and legacy external environment-consumer limits remain.
+  Large-source lexical cancellation/throughput limitations are unchanged.
+
+[Results and reproduction](shell-posix2/RESULTS.md),
+[guest evidence](shell-posix2/guest.json),
 [compatibility matrix](utility-correctness/COMPATIBILITY.md).
 
 ## Portable scripts and compound redirection — 16 November
@@ -80,7 +115,7 @@ Evidence and reproduction: [parser results](parser-safety/RESULTS.md),
 - Complete declared-utility acceptance inventory and supported/partial/unsupported/
   platform-limited shell matrix: [compatibility](utility-correctness/COMPATIBILITY.md).
   Capacity limits, function-definition redirects, full export/subshell semantics,
-  complete printf/read and parser-wide OOM hardening remain gaps; no POSIX claim.
+  complete printf/read remain gaps; parser OOM hardening is completed above. No POSIX claim.
 
 [Evidence](utility-correctness/RESULTS.md), [libc finding](utility-correctness/LIBC-POOL.md).
 Local normal app: `outputs/utility-correctness/build-1540/Clarice.bin` (diagnostics

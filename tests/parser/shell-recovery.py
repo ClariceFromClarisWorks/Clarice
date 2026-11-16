@@ -29,8 +29,12 @@ int main(int argc,char **argv){if(argc<3)return 2;if(!strcmp(argv[1],"all")){int
 files=[str(w/'shell.c'),str(w/'fault.o')]+[str(p) for p in (r/'src/vendor/mrsh').glob('*.c')]+[str(p) for p in (r/'src/vendor/mrsh/parser').glob('*.c')]
 subprocess.run(['cc','-std=c99','-D_POSIX_C_SOURCE=200809L','-g','-fsanitize=address,undefined','-Wno-multichar','-I'+str(r/'src/vendor/mrsh/include'),'-include',str(r/'tests/parser/fault.h'),*files,'-o',str(w/'shell')],check=True)
 
-import re
+import re,sys
 cases=["f() { echo new; }; f; x=$(echo hi); { echo a; } > result", "while read x; do echo \"$x\"; done <<EOF > result\none\ntwo\nEOF\ncat result", "( seed=changed; original() { echo changed; }; original ); original", "for x in one two; do echo \"$x\"; done | cat", "echo $((1+2*3)); f() { (echo nested) > result; }; f"]
+posix='--posix' in sys.argv
+if posix:
+ selected={'at-fallback','at-braced-group','source-scope','source-args','function-prefix','subshell-scope','printf-integers','test-groups'}
+ cases=[x['source'] for x in json.loads((r/'outputs/shell-posix2/host.json').read_text()) if x['name'] in selected]
 rows=[]
 for source in cases:
  with tempfile.TemporaryDirectory() as td:
@@ -38,4 +42,4 @@ for source in cases:
   if p.returncode: raise AssertionError((source,p.returncode,p.stderr.decode()[-4500:]))
   n=int(re.search(rb'PASS trials=(\d+)',p.stderr)[1]);rows.append(dict(source=source,trials=n,passed=True))
   print('PASS recovery',n)
-(r/'outputs/parser-safety/shell-recovery.json').write_text(json.dumps(rows,indent=2)+'\n')
+(r/('outputs/shell-posix2/failures.json' if posix else 'outputs/parser-safety/shell-recovery.json')).write_text(json.dumps(rows,indent=2)+'\n')

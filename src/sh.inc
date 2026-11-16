@@ -25,7 +25,7 @@ static int sh_fail(const char *s){errsay("sh: ");errsay(s);errsay("\n");return 2
 static int sh_set(const char *name,const char *value){return env_assign(name,value)?sh_fail("invalid variable name or out of memory"):0;}
 static int sh_position_index(const char *name){unsigned int n=0;if(!*name)return -1;for(;*name;name++){unsigned char c=*name;if(c<'0'||c>'9'||n>((unsigned int)INT_MAX-(c-'0'))/10)return -1;n=n*10+c-'0';}return (int)n;}
 static const char *sh_get(const char *name,char *num){if(!strcmp(name,"?")){snprintf(num,32,"%d",shell_status);return num;}if(!strcmp(name,"#")){snprintf(num,32,"%d",sh_argc-1);return num;}if(isdigit((unsigned char)name[0])){int i=sh_position_index(name);return i>=0&&i<sh_argc?sh_argv[i]:"";}return env_get(name);}
-static int sh_isset(const char *name){if(!strcmp(name,"HOME")||!strcmp(name,"PWD")||!strcmp(name,"?")||!strcmp(name,"#"))return 1;if(isdigit((unsigned char)*name))return sh_position_index(name)>=0&&sh_position_index(name)<sh_argc;return env_find(sh_env,name)!=0;}
+static int sh_isset(const char *name){if(!strcmp(name,"HOME")||!strcmp(name,"PWD")||!strcmp(name,"?")||!strcmp(name,"#"))return 1;if(isdigit((unsigned char)*name))return sh_position_index(name)>=0&&sh_position_index(name)<sh_argc;struct sh_env *e=env_find(sh_env,name);return e&&(e->flags&SH_ENV_SET);}
 /* A single owned block stores positional pointers and strings. */
 static char *sh_positions_copy(int n,char **v,char ***out){size_t bytes;if(n<1||(size_t)n>((size_t)-1/sizeof(char*))-1)return 0;bytes=((size_t)n+1)*sizeof(char*);for(int i=0;i<n;i++){size_t len=strlen(v[i])+1;if(len>(size_t)-1-bytes)return 0;bytes+=len;}char *storage=malloc(bytes);if(!storage)return 0;char **args=(char**)storage;char *p=storage+((size_t)n+1)*sizeof(char*);for(int i=0;i<n;i++){size_t len=strlen(v[i])+1;args[i]=p;memcpy(p,v[i],len);p+=len;}args[n]=0;*out=args;return storage;}
 static int sh_positions(int n,char **v){char **args;char *storage=sh_positions_copy(n,v,&args);if(!storage)return sh_fail("out of memory storing positional parameters");free(sh_owned_args);sh_owned_args=storage;sh_argv=args;sh_argc=n;return 0;}
@@ -74,19 +74,18 @@ case MRSH_ARITHM_BINOP_AND:*v=a&b;break;case MRSH_ARITHM_BINOP_OR:*v=a|b;break;c
 case MRSH_ARITHM_BINOP_DAND:*v=!!b;break;case MRSH_ARITHM_BINOP_DOR:*v=!!b;break;}return 1;}}
 return 0;}
 /* Each byte carries quoting/field-splitting information until arguments form. */
-struct sh_word {char *text;unsigned char *mode;int used,quoted;size_t cap;char small[64];unsigned char flags[64];};
-static struct sh_word *sh_word_new(void){struct sh_word *w=calloc(1,sizeof *w);if(w){w->text=w->small;w->mode=w->flags;w->cap=sizeof w->small;}return w;}
-static void sh_word_reset(struct sh_word *w){w->used=w->quoted=0;w->text[0]=0;}
+struct sh_word {char *text;unsigned char *mode;int used,quoted,quote_end;size_t cap;char small[64];unsigned char flags[64];};
+static struct sh_word *sh_word_new(void){struct sh_word *w=calloc(1,sizeof *w);if(w){w->quote_end=-1;w->text=w->small;w->mode=w->flags;w->cap=sizeof w->small;}return w;}
+static void sh_word_reset(struct sh_word *w){w->used=w->quoted=0;w->quote_end=-1;w->text[0]=0;}
 static void sh_word_free(struct sh_word *w){if(w){if(w->text!=w->small)free(w->text);free(w);}}
 static int sh_append(struct sh_word *w,const char *s,int mode){size_t n=strlen(s),need;if(n>(size_t)INT_MAX-1-(size_t)w->used)return sh_fail("expanded word too large");need=(size_t)w->used+n+1;
  if(need>w->cap){size_t cap=w->cap+w->cap/2;if(cap<w->cap||cap<need)cap=need;if(cap>(size_t)-1/2)return sh_fail("expanded word too large");char *p=malloc(cap*2);if(!p)return sh_fail("out of memory expanding word");memcpy(p,w->text,w->used);memcpy(p+cap,w->mode,w->used);if(w->text!=w->small)free(w->text);w->text=p;w->mode=(unsigned char*)p+cap;w->cap=cap;}
- memcpy(w->text+w->used,s,n);memset(w->mode+w->used,mode,n);w->used+=(int)n;w->text[w->used]=0;if(mode==1)w->quoted=1;return 0;}
+ memcpy(w->text+w->used,s,n);memset(w->mode+w->used,mode,n);w->used+=(int)n;w->text[w->used]=0;if(mode==1){w->quoted=1;w->quote_end=w->used;}return 0;}
 static int sh_word(struct mrsh_word *node,struct sh_word *w,int quoted){size_t i;char num[32];if(!node)return 0;switch(node->type){
 case MRSH_WORD_STRING:{struct mrsh_word_string *s=(void*)node;return sh_append(w,s->str,quoted||s->single_quoted?1:0);}
 case MRSH_WORD_LIST:{struct mrsh_word_list *l=(void*)node;if(l->double_quoted)w->quoted=1;for(i=0;i<l->children.len;i++){int rc=sh_word(l->children.data[i],w,quoted||l->double_quoted);if(rc)return rc;}return 0;}
 case MRSH_WORD_PARAMETER:{struct mrsh_word_parameter *p=(void*)node;const char *value=sh_get(p->name,num);char *stable=0;int unset=!sh_isset(p->name)||(p->colon&&!*value);struct sh_word *arg;
- if(quoted&&!strcmp(p->name,"@"))return sh_fail("embedded quoted $@ is not implemented; use a separate \"$@\" argument");
- if(!strcmp(p->name,"@")||!strcmp(p->name,"*")){for(i=1;i<(size_t)sh_argc;i++){char sep[2]={' ',0};if(quoted&&!strcmp(p->name,"*"))sep[0]=sh_isset("IFS")?env_get("IFS")[0]:' ';if(i>1&&sh_append(w,sep,quoted?1:2))return 2;if(sh_append(w,sh_argv[i],quoted?1:2))return 2;}return 0;}
+ if(!strcmp(p->name,"@")||!strcmp(p->name,"*")){if(p->op!=MRSH_PARAM_NONE)return sh_fail("parameter operation on $@/$* unsupported");for(i=1;i<(size_t)sh_argc;i++){char sep[2]={' ',0};if(quoted)sep[0]=sh_isset("IFS")?env_get("IFS")[0]:' ';if(i>1&&sh_append(w,sep,quoted?1:2))return 2;if(sh_append(w,sh_argv[i],quoted?1:2))return 2;}return 0;}
  if(p->op==MRSH_PARAM_LEADING_HASH){snprintf(num,sizeof num,"%lu",(unsigned long)strlen(value));value=num;}
  if(p->op==MRSH_PARAM_NONE||p->op==MRSH_PARAM_LEADING_HASH)return sh_append(w,value,quoted?1:2);
  if(p->op==MRSH_PARAM_MINUS&&!unset)return sh_append(w,value,quoted?1:2);
@@ -119,10 +118,8 @@ static int sh_glob(struct sh_args *a,char *s,unsigned char *mode){int i,has=0,st
  if(a->n==start)return sh_arg(a,s);for(i=start+1;i<a->n;i++){int j=i;char *value=a->v[i];while(j>start&&strcmp(a->v[j-1],value)>0){a->v[j]=a->v[j-1];j--;}a->v[j]=value;}return 0;
 #endif
 }
-static int sh_expand(struct mrsh_word *node,struct sh_args *a){struct sh_word *w=sh_word_new();int rc,i,start;const char *ifs;if(!w)return sh_fail("out of memory");
- /* Preserve separate positional arguments for the common quoted "$@" form. */
- if(node&&node->type==MRSH_WORD_LIST){struct mrsh_word_list *l=(void*)node;if(l->double_quoted&&l->children.len==1){struct mrsh_word *c=l->children.data[0];if(c->type==MRSH_WORD_PARAMETER&&!strcmp(((struct mrsh_word_parameter*)c)->name,"@")){sh_word_free(w);for(i=1;i<sh_argc;i++)if(sh_arg(a,sh_argv[i]))return 2;return 0;}}}
- rc=sh_word(node,w,0);ifs=sh_isset("IFS")?env_get("IFS"):" \t\n";if(!rc&&w->used&&w->text[0]=='~'&&w->mode[0]!=1&&(w->text[1]=='/'||!w->text[1])){const char *tail=w->text+1;if(*tail=='/')tail++;
+static int sh_fields(struct sh_word *w,struct sh_args *a){int rc=0,i,start,prior=a->n;const char *ifs;
+ ifs=sh_isset("IFS")?env_get("IFS"):" \t\n";if(!rc&&w->used&&w->text[0]=='~'&&w->mode[0]!=1&&(w->text[1]=='/'||!w->text[1])){const char *tail=w->text+1;if(*tail=='/')tail++;
 #ifdef SH_HOST_TEST
  const char *prefix="native:";size_t len=strlen(prefix)+strlen(home_path)+strlen(tail)+1;char *expanded=malloc(len);if(expanded)snprintf(expanded,len,"%s%s%s",prefix,home_path,tail);
 #else
@@ -138,16 +135,67 @@ static int sh_expand(struct mrsh_word *node,struct sh_args *a){struct sh_word *w
    if(i<w->used){if(nonwhite)i++;else{while(i<w->used&&w->mode[i]==2&&strchr(ifs,w->text[i])&&strchr(" \t\n",w->text[i]))i++;if(i<w->used&&w->mode[i]==2&&strchr(ifs,w->text[i]))i++;}
     while(i<w->used&&w->mode[i]==2&&strchr(ifs,w->text[i])&&strchr(" \t\n",w->text[i]))i++;}
   }
- }sh_word_free(w);return rc;}
-static int sh_test(int n,char **v){
+ }if(!rc&&w->quoted&&(a->n==prior||(w->used&&w->quote_end==w->used&&w->mode[w->used-1]==2&&strchr(ifs,w->text[w->used-1]))))rc=sh_arg(a,"");return rc;}
+/* Quoted $@ creates field boundaries, not a joined string. Flush only at
+ * those boundaries so an adjacent prefix/suffix stays on the first/last field. */
+static int sh_argument_word(struct mrsh_word *node,struct sh_word *w,struct sh_args *a,int quoted){
+ if(!node)return 0;
+ if(node->type==MRSH_WORD_LIST){struct mrsh_word_list *l=(void*)node;
+  /* A quoted group retains an empty field, except a sole quoted $@,
+   * which expands to no fields when there are no positional parameters.
+   * Keep the group boundary (as dash does), not just individual expansions. */
+  struct mrsh_word *only=l->children.len==1?l->children.data[0]:0;
+  int sole_at=only&&only->type==MRSH_WORD_PARAMETER&&
+   !strcmp(((struct mrsh_word_parameter*)only)->name,"@")&&
+   ((struct mrsh_word_parameter*)only)->op==MRSH_PARAM_NONE;
+  if(l->double_quoted&&!sole_at){w->quoted=1;w->quote_end=w->used;}
+  for(size_t i=0;i<l->children.len;i++){int rc=sh_argument_word(l->children.data[i],w,a,quoted||l->double_quoted);if(rc)return rc;}return 0;
+ }
+ if(node->type==MRSH_WORD_PARAMETER){struct mrsh_word_parameter *p=(void*)node;
+  if(p->op==MRSH_PARAM_MINUS||p->op==MRSH_PARAM_PLUS){char num[32];const char *value=sh_get(p->name,num);int unset=!sh_isset(p->name)||(p->colon&&!*value);
+   if(p->op==MRSH_PARAM_MINUS?unset:!unset)return sh_argument_word(p->arg,w,a,quoted);
+   if(p->op==MRSH_PARAM_PLUS)return sh_append(w,"",quoted?1:2);
+  }
+ }
+ if(quoted&&node->type==MRSH_WORD_PARAMETER){struct mrsh_word_parameter *p=(void*)node;
+  if(!strcmp(p->name,"@")&&p->op==MRSH_PARAM_NONE){
+   for(int i=1;i<sh_argc;i++){int rc=sh_append(w,sh_argv[i],1);if(rc)return rc;if(i+1<sh_argc){rc=sh_fields(w,a);if(rc)return rc;sh_word_reset(w);}}return 0;
+  }
+ }
+ return sh_word(node,w,quoted);
+}
+static int sh_expand(struct mrsh_word *node,struct sh_args *a){struct sh_word *w=sh_word_new();if(!w)return sh_fail("out of memory");int rc=sh_argument_word(node,w,a,0);if(!rc)rc=sh_fields(w,a);sh_word_free(w);return rc;}
+/* Arity-sensitive POSIX test forms. Peel negation/grouping iteratively;
+ * binary operators take precedence over treating an operand as syntax. */
+static int sh_test(int n,char **v){int negate=0,result;
+ for(;;){
+  if(n==0){result=1;break;}if(n==1){result=!*v[0];break;}
+  if(n==3&&(!strcmp(v[1],"=")||!strcmp(v[1],"!="))){result=!!strcmp(v[0],v[2]);if(v[1][0]=='!')result=!result;break;}
+  if(n==3&&(!strcmp(v[1],"-eq")||!strcmp(v[1],"-ne")||!strcmp(v[1],"-lt")||!strcmp(v[1],"-le")||!strcmp(v[1],"-gt")||!strcmp(v[1],"-ge"))){
+   long values[2];for(int i=0;i<2;i++){const char *s=v[i*2];char *end;errno=0;values[i]=strtol(s,&end,10);if(end==s||errno==ERANGE)return sh_fail("test: integer expected");while(isspace((unsigned char)*end))end++;if(*end)return sh_fail("test: integer expected");}
+   long a=values[0],b=values[1];const char *op=v[1];result=!strcmp(op,"-eq")?a!=b:!strcmp(op,"-ne")?a==b:!strcmp(op,"-lt")?a>=b:!strcmp(op,"-le")?a>b:!strcmp(op,"-gt")?a<=b:a<b;break;
+  }
+  if(!strcmp(v[0],"!")){negate=!negate;v++;n--;continue;}
+  if(n>=3&&!strcmp(v[0],"(")&&!strcmp(v[n-1],")")){v++;n-=2;continue;}
+  if(n!=2)return sh_fail("unsupported test expression; use shell && or ||");
+  if(!strcmp(v[0],"-n")){result=!*v[1];break;}if(!strcmp(v[0],"-z")){result=!!*v[1];break;}
 #ifndef SH_HOST_TEST
- if(n==2&&(!strcmp(v[0],"-L")||!strcmp(v[0],"-h"))){char p[PATH_CAP];CInfoPBRec pb;return resolve_ex(v[1],p,0,0)||info(p,&pb)||!is_link(&pb);}
+  if(!strcmp(v[0],"-L")||!strcmp(v[0],"-h")){char p[PATH_CAP];CInfoPBRec pb;result=resolve_ex(v[1],p,0,0)||info(p,&pb)||!is_link(&pb);break;}
+#else
+  if(!strcmp(v[0],"-L")||!strcmp(v[0],"-h")){struct stat st;result=lstat(v[1],&st)||!S_ISLNK(st.st_mode);break;}
 #endif
-if(n==0)return 1;if(n==1)return !*v[0];if(n==2){if(!strcmp(v[0],"!"))return !sh_test(1,v+1);if(!strcmp(v[0],"-n"))return !*v[1];if(!strcmp(v[0],"-z"))return !!*v[1];if(!strcmp(v[0],"-e")||!strcmp(v[0],"-f")||!strcmp(v[0],"-d")||!strcmp(v[0],"-s")){char p[PATH_CAP];CInfoPBRec pb;if(resolve(v[1],p)||info(p,&pb))return 1;int dir=!!(pb.hFileInfo.ioFlAttrib&16);return v[0][1]=='e'?0:v[0][1]=='d'?!dir:v[0][1]=='f'?dir:!pb.hFileInfo.ioFlLgLen;}}
- if(n==3){if(!strcmp(v[1],"="))return !!strcmp(v[0],v[2]);if(!strcmp(v[1],"!="))return !strcmp(v[0],v[2]);char *end1,*end2;long a=strtol(v[0],&end1,10),b=strtol(v[2],&end2,10);if(*end1||*end2)return 2;if(!strcmp(v[1],"-eq"))return a!=b;if(!strcmp(v[1],"-ne"))return a==b;if(!strcmp(v[1],"-lt"))return a>=b;if(!strcmp(v[1],"-le"))return a>b;if(!strcmp(v[1],"-gt"))return a<=b;if(!strcmp(v[1],"-ge"))return a<b;}return sh_fail("unsupported test expression");}
-static int sh_file(const char *path,int argc,char **argv,int dot){short ref;long n,size;char *text;int rc,i,oldargc=sh_argc,oldflow=sh_flow;char *owned=sh_owned_args;char **oldargv=sh_argv;struct sh_saved *saved=dot?0:sh_save();if(!dot&&!saved)return sh_fail("out of memory");if(open_path(path,fsRdPerm,&ref)){if(saved)sh_restore(saved);return sh_fail("cannot open script");}rc=GetEOF(ref,&size);if(rc||size<0||(unsigned long)size>=(size_t)-1){FSClose(ref);if(saved)sh_restore(saved);return sh_fail("cannot read script size");}text=malloc(size+1);if(!text){FSClose(ref);if(saved)sh_restore(saved);return sh_fail("out of memory");}n=size;rc=FSRead(ref,&n,text);FSClose(ref);if((rc&&rc!=eofErr)||n!=size||memchr(text,0,(size_t)n)){free(text);if(saved)sh_restore(saved);return sh_fail("script read failed or contains NUL");}text[n]=0;for(i=0;i<n;i++)if(text[i]=='\r')text[i]='\n';if(dot)sh_owned_args=0;if(!dot||argc>1)rc=sh_positions(argc,argv);else{sh_argv=oldargv;rc=0;}if(!rc){script_depth++;sh_flow=0;rc=sh_source(text);script_depth--;}sh_flow=oldflow;free(text);if(saved)sh_restore(saved);else{free(sh_owned_args);sh_owned_args=owned;sh_argc=oldargc;sh_argv=oldargv;}return rc;}
+  if(!strcmp(v[0],"-e")||!strcmp(v[0],"-f")||!strcmp(v[0],"-d")||!strcmp(v[0],"-s")){char p[PATH_CAP];CInfoPBRec pb;if(resolve(v[1],p)||info(p,&pb)){result=1;break;}int dir=!!(pb.hFileInfo.ioFlAttrib&16);result=v[0][1]=='e'?0:v[0][1]=='d'?!dir:v[0][1]=='f'?dir:!pb.hFileInfo.ioFlLgLen;break;}
+  return sh_fail("unsupported test operator");
+ }return negate?!result:result;
+}
+/* A new sh invocation inherits exported values, not the parent's local
+ * variables or function table. Subshell groups use the existing full snapshot. */
+static void sh_child_scope(void){struct sh_env **slot=&sh_env;while(*slot){struct sh_env *e=*slot;if((e->flags&(SH_ENV_SET|SH_ENV_EXPORT))!=(SH_ENV_SET|SH_ENV_EXPORT)){*slot=e->next;free(e);}else slot=&e->next;}sh_functions_free(sh_functions);sh_functions=0;}
+static void sh_quote_value(const char *s){say("'");for(;*s;s++){if(*s=='\'')say("'\\''");else emit(s,1);}say("'");}
+static int sh_file(const char *path,int argc,char **argv,int dot){short ref;long n,size;char *text;int rc,i,oldargc=sh_argc,oldflow=sh_flow;char *owned=sh_owned_args;char **oldargv=sh_argv;struct sh_saved *saved=dot?0:sh_save();if(!dot&&!saved)return sh_fail("out of memory");if(open_path(path,fsRdPerm,&ref)){if(saved)sh_restore(saved);return sh_fail("cannot open script");}rc=GetEOF(ref,&size);if(rc||size<0||(unsigned long)size>=(size_t)-1){FSClose(ref);if(saved)sh_restore(saved);return sh_fail("cannot read script size");}text=malloc(size+1);if(!text){FSClose(ref);if(saved)sh_restore(saved);return sh_fail("out of memory");}n=size;rc=FSRead(ref,&n,text);FSClose(ref);if((rc&&rc!=eofErr)||n!=size||memchr(text,0,(size_t)n)){free(text);if(saved)sh_restore(saved);return sh_fail("script read failed or contains NUL");}text[n]=0;for(i=0;i<n;i++)if(text[i]=='\r')text[i]='\n';if(dot){if(argc>1)sh_owned_args=0;}else sh_child_scope();if(!dot||argc>1)rc=sh_positions(argc,argv);else{sh_argv=oldargv;rc=0;}if(!rc){script_depth++;sh_flow=0;rc=sh_source(text);script_depth--;}sh_flow=oldflow;free(text);if(saved)sh_restore(saved);else if(argc>1){free(sh_owned_args);sh_owned_args=owned;sh_argc=oldargc;sh_argv=oldargv;}return rc;}
 
 #include "shell-read.inc"
+#include "shell-printf.inc"
 static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)return 0;
 
 #ifdef CLARICE_PARSER_SAFETY_TEST
@@ -167,14 +215,15 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
  if(!strcmp(v[0],"test")||!strcmp(v[0],"[")){if(v[0][0]=='['){if(n<2||strcmp(v[n-1],"]"))return sh_fail("missing ]");n--;}return sh_test(n-1,v+1);}
  if(!strcmp(v[0],"break")||!strcmp(v[0],"continue")){if(!sh_loop||n>1)return sh_fail("break/continue requires a loop; numeric levels unsupported");sh_flow=v[0][0]=='b'?1:2;return 0;}
  if(!strcmp(v[0],"return")||!strcmp(v[0],"exit")){int rc=n>1?atoi(v[1]):shell_status;if(!script_depth&&!sh_functions_active&&v[0][0]=='r')return sh_fail("return outside script/function");if(!script_depth&&!sh_functions_active&&v[0][0]=='e'){app_quit();return rc;}sh_flow=v[0][0]=='r'?3:4;sh_flow_status=rc;return rc;}
- if(!strcmp(v[0],"unset")){for(i=1;i<n;i++){free(env_take(&sh_env,v[i]));}return 0;}
+ if(!strcmp(v[0],"export")){if(n==1||(n==2&&!strcmp(v[1],"-p"))){for(struct sh_env *e=sh_env;e;e=e->next)if(e->flags&SH_ENV_EXPORT){say("export ");say(e->name);if(e->flags&SH_ENV_SET){say("=");sh_quote_value(e->value);}say("\n");}return output_error?1:0;}for(i=1;i<n;i++)if(env_set(v[i]))return sh_fail("export: invalid name or out of memory");return 0;}
+ if(!strcmp(v[0],"unset")){int funcs=n>1&&!strcmp(v[1],"-f");i=n>1&&(!strcmp(v[1],"-v")||funcs)?2:1;for(;i<n;i++){if(!env_name(v[i],strlen(v[i])))return sh_fail("unset: invalid name");if(funcs){struct sh_function **slot=&sh_functions;while(*slot&&strcmp((*slot)->name,v[i]))slot=&(*slot)->next;if(*slot){struct sh_function *old=*slot;*slot=old->next;old->next=0;sh_functions_free(old);}}else free(env_take(&sh_env,v[i]));}return 0;}
  if(!strcmp(v[0],"shift")){int count=n>1?atoi(v[1]):1;if(count<0||count>=sh_argc)return 1;memmove(sh_argv+1,sh_argv+1+count,(sh_argc-count-1)*sizeof(char*));sh_argc-=count;return 0;}
- if(!strcmp(v[0],"set")){if(n==1){for(struct sh_env *e=sh_env;e;e=e->next){say(e->name);say("=");say(e->value);say("\n");}return 0;}if(n>1&&strcmp(v[1],"--"))return sh_fail("only set -- is implemented");char *option=v[1];v[1]=sh_argv[0];int rc=sh_positions(n-1,v+1);v[1]=option;return rc;}
+ if(!strcmp(v[0],"set")){if(n==1){for(struct sh_env *e=sh_env;e;e=e->next)if(e->flags&SH_ENV_SET){say(e->name);say("=");say(e->value);say("\n");}return 0;}if(n>1&&strcmp(v[1],"--"))return sh_fail("only set -- is implemented");char *option=v[1];v[1]=sh_argv[0];int rc=sh_positions(n-1,v+1);v[1]=option;return rc;}
 
- if(!strcmp(v[0],"printf")){if(n<2)return 0;const char *f=v[1];int arg=2;do{int before=arg;const char *p=f;while(*p){char c=*p++;if(c=='\\'){c=*p++;if(!c)break;c=c=='n'?'\n':c=='t'?'\t':c=='r'?'\r':c;emit(&c,1);}else if(c=='%'){c=*p++;if(c=='%')say("%");else if(c=='s')say(arg<n?v[arg++]:"");else if(c=='d'){char b[32];snprintf(b,sizeof b,"%ld",arg<n?strtol(v[arg++],0,0):0L);say(b);}else return sh_fail("printf supports %s, %d and %%");}else emit(&c,1);}if(arg==before)break;}while(arg<n);return output_error?1:0;}
+ if(!strcmp(v[0],"printf"))return sh_printf(n,v);
  if(!strcmp(v[0],"read"))return sh_read(n,v);
  if(!strcmp(v[0],"sh")){if(n<2)return sh_fail("usage: sh file [args] or sh -c command");if(!strcmp(v[1],"-c")){if(n<3)return 2;struct sh_saved *saved=sh_save();int oldflow=sh_flow;if(!saved)return 2;
- int rc=sh_positions(n>3?n-3:1,n>3?v+3:v);if(!rc){script_depth++;sh_flow=0;rc=sh_source(v[2]);script_depth--;}sh_restore(saved);sh_flow=oldflow;return rc;}return sh_file(v[1],n-1,v+1,0);}
+ sh_child_scope();int rc=sh_positions(n>3?n-3:1,n>3?v+3:v);if(!rc){script_depth++;sh_flow=0;rc=sh_source(v[2]);script_depth--;}sh_restore(saved);sh_flow=oldflow;return rc;}return sh_file(v[1],n-1,v+1,0);}
  if(!strcmp(v[0],".")){if(n<2)return 2;return sh_file(v[1],n-1,v+1,1);}
  for(struct sh_function *f=sh_functions;f;f=f->next)if(!strcmp(f->name,v[0])){char **saved=sh_argv;int count=sh_argc,rc;char *owned=sh_owned_args;sh_owned_args=0;char *name=v[0];v[0]=saved[0];rc=sh_positions(n,v);v[0]=name;struct mrsh_command *body=rc?0:mrsh_command_copy(f->body);sh_functions_active++;rc=rc?rc:body?sh_command(body):2;sh_functions_active--;mrsh_command_destroy(body);free(sh_owned_args);sh_owned_args=owned;sh_argc=count;sh_argv=saved;if(sh_flow==3)sh_flow=0;return rc;}
 
@@ -202,11 +251,12 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
 #endif
 
 static int sh_special(const char *name){const char *names[]={":",".","break","continue","exit","export","return","set","shift","unset",0};for(int i=0;names[i];i++)if(!strcmp(name,names[i]))return 1;return 0;}
+static int sh_assignment_argument(struct mrsh_word *w){if(w->type==MRSH_WORD_LIST){struct mrsh_word_list *l=(void*)w;return l->children.len?sh_assignment_argument(l->children.data[0]):0;}if(w->type!=MRSH_WORD_STRING)return 0;const char *s=((struct mrsh_word_string*)w)->str,*eq=strchr(s,'=');return eq&&env_name(s,(size_t)(eq-s));}
 static int sh_simple(struct mrsh_simple_command *c,struct mrsh_command *compound){struct sh_args *a=calloc(1,sizeof *a);size_t i;short oldin=input_ref,oldout=output_ref,olderr=error_ref;short opened[16];unsigned char temp_names[8][256];short temp_refs[8];int temp_count=0,opened_count=0,rc=0;struct sh_saved *saved=0;if(!a)return sh_fail("out of memory");
  unsigned long substitutions_before=sh_substitutions;output_error=0;
- if(c->name)rc=sh_expand(c->name,a);for(i=0;!rc&&i<c->arguments.len;i++)rc=sh_expand(c->arguments.data[i],a);
+ if(c->name)rc=sh_expand(c->name,a);for(i=0;!rc&&i<c->arguments.len;i++){struct mrsh_word *arg=c->arguments.data[i];if(a->n&&!strcmp(a->v[0],"export")&&sh_assignment_argument(arg)){struct sh_word *w=sh_word_new();if(!w)rc=sh_fail("out of memory");else{rc=sh_word(arg,w,1);if(!rc)rc=sh_arg(a,w->text);sh_word_free(w);}}else rc=sh_expand(arg,a);}
  if(a->n&&c->assignments.len&&!sh_special(a->v[0])){saved=sh_save();if(!saved)rc=sh_fail("out of memory");}
- for(i=0;!rc&&i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];struct sh_word *w=sh_word_new();if(!w){rc=2;break;}rc=sh_word(x->value,w,1);if(!rc)rc=sh_set(x->name,w->text);sh_word_free(w);}
+ for(i=0;!rc&&i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];struct sh_word *w=sh_word_new();if(!w){rc=2;break;}rc=sh_word(x->value,w,1);if(!rc)rc=sh_set(x->name,w->text);if(!rc&&saved)env_find(sh_env,x->name)->flags|=SH_ENV_EXPORT;sh_word_free(w);}
  for(i=0;!rc&&i<c->io_redirects.len;i++){struct mrsh_io_redirect *r=c->io_redirects.data[i];struct sh_word *w=sh_word_new();if(!w){rc=2;break;}rc=sh_word(r->name,w,1);if(!rc){if(opened_count>=16)rc=sh_fail("too many redirections");else if(r->op==MRSH_IO_LESS&&(r->io_number<0||r->io_number==0)){short ref;if(open_path(w->text,fsRdPerm,&ref))rc=sh_fail("input redirection failed");else{input_ref=ref;opened[opened_count++]=ref;}}
  else if((r->op==MRSH_IO_GREAT||r->op==MRSH_IO_DGREAT||r->op==MRSH_IO_CLOBBER)&&(r->io_number<0||r->io_number==1||r->io_number==2)){short prior=output_ref;int e=redirect(w->text,r->op==MRSH_IO_DGREAT);short ref=output_ref;output_ref=prior;if(e)rc=sh_fail("output redirection failed");else{opened[opened_count++]=ref;if(r->io_number==2)error_ref=ref;else output_ref=ref;}}
  else if((r->op==MRSH_IO_DLESS||r->op==MRSH_IO_DLESSDASH)&&(r->io_number<0||r->io_number==0)){

@@ -1,0 +1,353 @@
+[
+  {
+    "source": "set --; printf '<%s>\\n' \"$@\"",
+    "passed": true,
+    "actual": "<>\n",
+    "expected": "<>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=:; x=a::b:; set -- $x; printf '%s\\n' \"$#\"; printf '<%s>\\n' \"$@\"",
+    "passed": true,
+    "actual": "3\n<a>\n<>\n<b>\n",
+    "expected": "3\n<a>\n<>\n<b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=:; set -- a b; printf '<%s>\\n' \"$*\"",
+    "passed": true,
+    "actual": "<a:b>\n",
+    "expected": "<a:b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=old; x=new true; echo $x",
+    "passed": true,
+    "actual": "old\n",
+    "expected": "old\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=$(false); echo $?",
+    "passed": true,
+    "actual": "1\n",
+    "expected": "1\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "false; x=a; echo $?",
+    "passed": true,
+    "actual": "0\n",
+    "expected": "0\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "sh -c 'echo \"$0:$1:$#\"' name argument",
+    "passed": true,
+    "actual": "name:argument:1\n",
+    "expected": "name:argument:1\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "set -- a b; shift 2; echo $#",
+    "passed": true,
+    "actual": "0\n",
+    "expected": "0\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=; echo ${x-default} ${x:-default}; echo ${x+yes} ${x:+yes}",
+    "passed": true,
+    "actual": "default\nyes\n",
+    "expected": "default\nyes\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "case '*' in \\*) echo yes;; *) echo no;; esac",
+    "passed": true,
+    "actual": "yes\n",
+    "expected": "yes\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "printf '%s\\n' a\\ b",
+    "passed": true,
+    "actual": "a b\n",
+    "expected": "a b\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "printf '%s\\n' \"a$(printf 'b\\n\\n')c\"",
+    "passed": true,
+    "actual": "abc\n",
+    "expected": "abc\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "f() { return 4; }; f; echo $?",
+    "passed": true,
+    "actual": "4\n",
+    "expected": "4\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "echo $((0 && 1/0))",
+    "passed": true,
+    "actual": "0\n",
+    "expected": "0\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "printf 'a\\\\b\\n' | { read -r x; printf '%s\\n' \"$x\"; }",
+    "passed": true,
+    "actual": "a\\b\n",
+    "expected": "a\\b\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "printf '  a b  \\n' | { read x; printf '<%s>\\n' \"$x\"; }",
+    "passed": true,
+    "actual": "<a b>\n",
+    "expected": "<a b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=; set -- a b; printf \"<%s>\\n\" \"$*\"",
+    "passed": true,
+    "actual": "<ab>\n",
+    "expected": "<ab>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=$(false) y=$(true); echo $?",
+    "passed": true,
+    "actual": "0\n",
+    "expected": "0\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=$(true) y=$(false); echo $?",
+    "passed": true,
+    "actual": "1\n",
+    "expected": "1\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=old; x=new :; echo \"$x\"",
+    "passed": true,
+    "actual": "new\n",
+    "expected": "new\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "set -- outer; sh -c 'set -- inner; echo \"$1\"' name arg; echo \"$1\"",
+    "passed": true,
+    "actual": "inner\nouter\n",
+    "expected": "inner\nouter\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "printf '  a b  \\n' | { IFS= read -r x; printf '<%s>\\n' \"$x\"; }",
+    "passed": true,
+    "actual": "<  a b  >\n",
+    "expected": "<  a b  >\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "printf 'last' | { read -r x; echo status:$?; echo \"$x\"; }",
+    "passed": true,
+    "actual": "status:1\nlast\n",
+    "expected": "status:1\nlast\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "printf 'a\\\\\\nb\\n' | { read x; echo \"$x\"; }",
+    "passed": true,
+    "actual": "ab\n",
+    "expected": "ab\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=:; x=a::b:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "3\n<a>\n<>\n<b>\n",
+    "expected": "3\n<a>\n<>\n<b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=:; x=:a:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "2\n<>\n<a>\n",
+    "expected": "2\n<>\n<a>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=:; x=:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "1\n<>\n",
+    "expected": "1\n<>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=:; x=' a : : b '; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "3\n< a >\n< >\n< b >\n",
+    "expected": "3\n< a >\n< >\n< b >\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=:; x='  a b  '; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "1\n<  a b  >\n",
+    "expected": "1\n<  a b  >\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=': '; x=a::b:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "3\n<a>\n<>\n<b>\n",
+    "expected": "3\n<a>\n<>\n<b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=': '; x=:a:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "2\n<>\n<a>\n",
+    "expected": "2\n<>\n<a>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=': '; x=:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "1\n<>\n",
+    "expected": "1\n<>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=': '; x=' a : : b '; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "3\n<a>\n<>\n<b>\n",
+    "expected": "3\n<a>\n<>\n<b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=': '; x='  a b  '; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "2\n<a>\n<b>\n",
+    "expected": "2\n<a>\n<b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=' '; x=a::b:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "1\n<a::b:>\n",
+    "expected": "1\n<a::b:>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=' '; x=:a:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "1\n<:a:>\n",
+    "expected": "1\n<:a:>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=' '; x=:; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "1\n<:>\n",
+    "expected": "1\n<:>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=' '; x=' a : : b '; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "4\n<a>\n<:>\n<:>\n<b>\n",
+    "expected": "4\n<a>\n<:>\n<:>\n<b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=' '; x='  a b  '; set -- $x; echo \"$#\"; printf \"<%s>\\n\" \"$@\"",
+    "passed": true,
+    "actual": "2\n<a>\n<b>\n",
+    "expected": "2\n<a>\n<b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  }
+]

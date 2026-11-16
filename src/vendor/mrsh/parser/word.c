@@ -293,14 +293,20 @@ static struct mrsh_word_parameter *expect_parameter_expression(
 
 	enum mrsh_word_parameter_op op = MRSH_PARAM_NONE;
 	struct mrsh_range op_range = {0};
-	if (parser_peek_char(parser) == '#') {
+	char lead[2] = {0};
+	parser_peek(parser, lead, 2);
+	if (lead[0] == '#' && lead[1] != '}') {
 		op_range.begin = parser->pos;
 		parser_read_char(parser);
 		op_range.end = parser->pos;
 		op = MRSH_PARAM_LEADING_HASH;
 	}
 
-	size_t name_len = peek_name(parser, true);
+	/* Braced special parameters are parameter names too. Do not lex # as
+	 * a comment after an earlier expansion consumed the cached token. */
+	parser->has_sym = true;parser->sym = TOKEN;
+	char first = parser_peek_char(parser);
+	size_t name_len = first && strchr("@*#?-$!", first) ? 1 : peek_name(parser, true);
 	if (name_len == 0) {
 		parser_set_error(parser, "expected a parameter");
 		return NULL;

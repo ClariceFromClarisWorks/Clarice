@@ -54,6 +54,7 @@ static int host_external(char **av){
   short refs_in[3]={input_ref,output_ref,error_ref};
   for(int i=0;i<3;i++){if(refs_in[i]>=0)dup2(fileno(refs[refs_in[i]]),i);else if(refs_in[i]==-2)close(i);}
   for(int i=0;i<128;i++)if(refs[i]&&fileno(refs[i])>2)close(fileno(refs[i]));
+  for(struct sh_env *e=sh_env;e;e=e->next){if((e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT))setenv(e->name,e->value,1);else unsetenv(e->name);}
   execvp(av[0],av);_exit(errno==ENOENT?127:126);
  }
  int status;while(waitpid(pid,&status,0)<0)if(errno!=EINTR)return 126;
