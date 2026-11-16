@@ -81,6 +81,15 @@ static int list_impl(const char *s,int detail,int all,int paged,int human,int on
 /* Batch bulk paints, but keep event polling at two ticks and page/first-entry
    presentation immediate. Restore the ordinary cadence on every exit. */
 static int list(const char *s,int detail,int all,int paged,int human,int one){app_output_batch(1);int e=list_impl(s,detail,all,paged,human,one);app_output_batch(0);return e;}
+/* Options are validated first. Revisit borrowed argv for operands instead of
+   copying them into a fixed stack array; no allocation or argv mutation. */
+static const char *listing_operand(int argc,char **av,int *index,int *options){
+ while(*index<argc){const char *path=av[(*index)++];
+  if(*options&&!strcmp(path,"--")){*options=0;continue;}
+  if(*options&&path[0]=='-'&&path[1])continue;
+  return path;
+ }return NULL;
+}
 static int ls_command(int argc,char **av){
  if(argc==2&&!strcmp(av[1],"--help")){say(
  "usage: ls [-lah1P] [--full] [--] [path ...]\n"
@@ -100,9 +109,9 @@ static int ls_command(int argc,char **av){
  "Explicit path operands are shown even when hidden.\n"
  "-1 one entry per line; -P no paging; catalog order.\n"
  "No invented owners, groups or Unix access permissions.\n");return output_error?1:0;}
-int detail=0,all=0,paged=1,human=0,one=0,options=1,n=0,i;const char *paths[MAX_ARGS];
- for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--] [path ...]\n");return 2;}}}else paths[n++]=av[i];}
- if(!n)paths[n++]=".";int result=0;for(i=0;i<n;i++){if(n>1){if(i)say("\n");say(paths[i]);say(":\n");}int e=list(paths[i],detail,all,paged&&output_ref<0&&!script_depth,human,one);if(e==130)return e;if(e)result=e;if(output_error)return 1;}return result;
+int detail=0,all=0,paged=1,human=0,one=0,options=1,n=0,i;int operand=1,operand_options=1;
+ for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--] [path ...]\n");return 2;}}}else n++;}
+ int result=0;for(i=0;i<(n?n:1);i++){const char *path=n?listing_operand(argc,av,&operand,&operand_options):".";if(n>1){if(i)say("\n");say(path);say(":\n");}int e=list(path,detail,all,paged&&output_ref<0&&!script_depth,human,one);if(e==130)return e;if(e)result=e;if(output_error)return 1;}return result;
 }
 static int df_row(HParamBlockRec *pb,int human){
  char size[32],used[32],free_space[32],line[224],raw[32],mount[100];unsigned long blocks=(unsigned short)pb->volumeParam.ioVNmAlBlks,free_blocks=(unsigned short)pb->volumeParam.ioVFrBlk,block_size=(unsigned long)pb->volumeParam.ioVAlBlkSiz;
@@ -113,13 +122,13 @@ static int df_row(HParamBlockRec *pb,int human){
  unsigned long percent=blocks?((blocks-free_blocks)*100+blocks-1)/blocks:0;
  snprintf(line,sizeof line,"%12s %12s %12s %3lu%% /mnt/%s\n",size,used,free_space,percent,mount);say(line);return output_error?1:app_yield()?130:0;
 }
-static int df_command(int argc,char **av){int human=0,options=1,n=0,i,result=0;const char *paths[MAX_ARGS];
- for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *p=av[i]+1;while(*p){if(*p=='h')human=1;else if(*p=='k')human=0;else{errsay("usage: df [-h|-k] [--] [path ...]\n");return 2;}p++;}}else paths[n++]=av[i];}
+static int df_command(int argc,char **av){int human=0,options=1,n=0,i,result=0;int operand=1,operand_options=1;
+ for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *p=av[i]+1;while(*p){if(*p=='h')human=1;else if(*p=='k')human=0;else{errsay("usage: df [-h|-k] [--] [path ...]\n");return 2;}p++;}}else n++;}
  say(human?"        Size         Used        Avail Use% Mounted on\n":"     Size-KB      Used-KB     Avail-KB Use% Mounted on\n");
  for(i=n?0:1;;i++){
   HParamBlockRec pb;unsigned char name[256];memset(&pb,0,sizeof pb);pb.volumeParam.ioNamePtr=name;
   int e;
-  if(n){if(i>=n)break;char native[PATH_CAP];CInfoPBRec item;e=resolve(paths[i],native);if(!e)e=info(native,&item);if(e){error("df",e);result=1;continue;}
+  if(n){if(i>=n)break;char native[PATH_CAP];CInfoPBRec item;e=resolve(listing_operand(argc,av,&operand,&operand_options),native);if(!e)e=info(native,&item);if(e){error("df",e);result=1;continue;}
    char *colon=strchr(native,':');if(!colon){result=1;continue;}*colon=0;
    /* Enumerate by index: full-path catalog calls need not return a resolved
       volume reference in their input ioVRefNum field. */

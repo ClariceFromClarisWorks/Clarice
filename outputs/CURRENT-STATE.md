@@ -1,16 +1,44 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Accepted **2026111544 / 5bfa053** is preserved on
-`codex/utility-correctness-2026111539`. Build **2026111545** fixes command argument ownership and makes editor
-environment import elastic. Practical upstream-script acceptance is preserved.
-Host and Snow Plus/4 MB/**reported System 6.0.7** only; physical SE/6.0.8 remains
-pending and the SE stays off. No release, tag or main change.
+16 November 2026, Adelaide. Accepted **2026111545 / ee2faf8** is preserved on
+`codex/utility-correctness-2026111539`. Build **2026111546** closes focused startup
+status, find predicate and ls/df operand-safety defects. Host and accelerated Snow
+Plus/4 MB/**reported System 6.0.7** acceptance only; the physical SE stays off.
+No release, tag or main change. Existing argv ownership/editor environment fixes
+and practical upstream-script acceptance remain intact.
 
 Validated checkpoint **33f0075fb14385cd82d792f611261313b60e1583** on
 `codex/se-alignment-2026111521` is preserved. Renderer and UX work through 1533 is checkpointed on
 `codex/se-ux-2026111533`, inheriting Research Before Reinvention from 12ccb4a.
 No tag or release. Physical loader profiling has resumed; build 1534 changes only
 the approved installed-fast metadata validation path, not nano.
+
+## Focused utility close-out — build 2026111546
+
+- Startup profiles preserve their result, including Ctrl+C=130. Source execution
+  also propagates exit/return/cancellation from loop conditions before restoring
+  outer state. Host success/error/return/OOM, 80 cancellation points and recovery;
+  Snow startup and ordinary foreground cancellation both return 130.
+- `find` repeated predicates now combine with AND; added small `-path` filter and
+  multiple roots using borrowed arguments. No expression tree, persistent cache
+  or new working allocation. Host depth/failure/cancel tests and real Snow
+  quoted-path/pipeline/cleanup workflow pass against dash/macOS reference output.
+- `ls`/`df` unchecked 32-pointer arrays were a real stack-overwrite risk after
+  shell argument growth. Replaced with allocation-free argv rescanning. ASan
+  reproduced the old overflow; 130 host and 100 Snow operands each pass.
+- Three final find runs: free heap **396578 / 396576 / 396578 B**, largest block
+  **393318 B**, tracked remaining **0**. No persistent allocation added. Catalog
+  order and final-component-only shell globbing remain documented limitations.
+- Host 31 basic/3 cancel, 54/39/41 comparisons, 12 scripts, 3090 parser/adapter
+  recovery trials and six upstream-script variants pass. Editor environment
+  failure/cleanup regression remains passing. No new physical acceptance.
+- Reviewed active bounds: sort's 16 merge levels/20 temporary slots, formatter
+  510-byte format strings, and canonical terminal input 255 bytes remain explicit.
+  Nano uses raw input; these are not new line-record or exported-value limits.
+  No demonstrated ordinary-workflow failure justified changing them this batch.
+
+[Evidence and reproduction](utility-closeout/RESULTS.md),
+[compatibility](utility-correctness/COMPATIBILITY.md).
 
 ## Native heap and editor environment — build 2026111545
 
@@ -139,7 +167,7 @@ Evidence and reproduction: [parser results](parser-safety/RESULTS.md),
   state. No permanent cache or reservation. Normal MacBinary 957568 B (+4224).
 - Remaining: full POSIX certification is not claimed. Floating printf and dynamic
   width, legacy test -a/-o, Unix permission predicates, complex vector parameter
-  operations, shell options and legacy external environment-consumer limits remain.
+  operations, shell options and the documented native path/terminal limits remain.
   Large-source lexical cancellation/throughput limitations are unchanged.
 
 [Results and reproduction](shell-posix2/RESULTS.md),

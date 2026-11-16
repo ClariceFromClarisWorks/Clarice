@@ -1,6 +1,6 @@
 # Portable shell and utility acceptance — 16 November 2026
 
-Build 2026111545, argv ownership/editor environment batch (1544 checkpoint 5bfa053 preserved). **Snow only**, Plus/4 MB; guest reports
+Build 2026111546, focused utility close-out (1545 checkpoint ee2faf8 preserved). **Snow only**, Plus/4 MB; guest reports
 System 6.0.7. No new physical/System 6.0.8 acceptance. No POSIX certification.
 
 **Fully supported** below means the explicitly named form, within stated capacity
@@ -13,7 +13,7 @@ The reference is dash plus portable utility behaviour, not Bash extensions.
 
 | Area | Status | Behaviour and limits |
 |---|---|---|
-| Simple commands, sequences, `&&`, `||`, `!`, `$?` | Fully supported (named forms) | Left-associative and/or; short-circuiting and final pipeline status tested. Cancellation is 130. |
+| Simple commands, sequences, `&&`, `||`, `!`, `$?` | Fully supported (named forms) | Left-associative and/or; short-circuiting and final pipeline status tested. Cancellation is 130, including interrupted startup profiles and loop conditions at script boundaries. |
 | Single/double quotes, escapes, concatenation | Partial | Tested strings with spaces, empty arguments, literals and adjacent expansions. Quoted `$@` preserves argument boundaries, empty arguments and attached prefixes/suffixes. Empty quote groups follow dash, including `"$@$@"`; separate `"$@"` with no parameters disappears. |
 | Variables, IFS, positional parameters | Partial | Assignment, unset, `$0`/`$1`/`$#`, `set args`, `set - args`, `set --`, shift, quoted `$*`, IFS whitespace/non-whitespace splitting tested. Variable names/count/values and positional storage now grow on demand; 80 variables, 100 arguments and 64 KiB records tested. Export attributes survive reassignment and snapshots; new sh invocations inherit exported values and no functions. `export -p` round-trips quoted values and exported-but-unset names. Native HOME/PWD defaults remain Macintosh-specific. Rebuilt awk imports grow on demand; the editor adapter also imports on demand, preserves only exported values and forces TERM=clarice. Host 80 x 4096-byte and Snow 40 x 2048-byte imports pass with cleanup; genuine exhaustion fails explicitly. |
 | Parameter expansion | Partial | Defaults/alternates/assignment/error/length and prefix/suffix removal exist. Braced special parameters `${@}`, `${*}`, `${#}` and `${?}` work. Default/alternate words preserve nested quoted `$@` fields. Operations on `$@`/`$*` other than ordinary expansion explicitly fail; scalar assignment/error operators do not provide full vector expansion. No Bash arrays or indirect expansion. |
@@ -44,7 +44,7 @@ claim exhaustive option/failure testing or revalidate communications/updating.
 | grep, sed, awk | Partial; current real report pipeline, missing inputs, prior large-record/failure/cleanup evidence | sbase grep/sed and One True Awk. C/byte-oriented locale; sed not GNU -i; awk system()/command pipes unsupported, expression/parser depth bounds. Installed hashes recorded; not all packages have identical runtime build dates. |
 | wc, head, tail, cut, tr, sort, uniq, tee | Partial; rebuilt current runtime packages, real multi-stage guest pipeline; host comparisons/spill/cancel/failure checks retained | sort spills, tail -f cancellable; native memory/file limits remain. Unicode processing is not a Unicode terminal. GNU extensions and tail -m unsupported. |
 | cp, mv, touch, mkdir, rmdir, rm, ln, readlink, hfsattr | Partial / HFS; current guest create/copy/move/link/delete/locked refusal and metadata | cp/rm demand-driven DFS; both-fork fault/recovery evidence retained. No hardlinks/Unix chmod. Directory trees are not transactional; partial work on error is reported. Native path limits remain. |
-| find, du, file | Partial / HFS; current tree/find and native allocated-space/type/creator output | DFS elastic, no arbitrary depth 8. find predicate subset, no -exec/-o; file is native metadata, not libmagic; du accounts both forks. |
+| find, du, file | Partial / HFS; current tree/find and native allocated-space/type/creator output | DFS elastic, no arbitrary depth 8. find supports multiple roots and conjunctive -name/-path/-type (* and ? patterns), with explicit -maxdepth; no -exec/-o/bracket patterns; file is native metadata, not libmagic; du accounts both forks. |
 | od, more | Partial; exact dumped byte values and redirected pager tested | od layout/word endianness native 68000; limited formats. more has bounded history, not full backward/search navigation; prior interactive Q/Ctrl+C evidence retained. |
 | basename, dirname | Fully supported (declared single-path forms) | Tested in portable file workflow; shell argument/path bounds remain. |
 | serial, kermit | Partial / transport-specific; help fresh, bidirectional/cancel/recovery evidence retained from Serial milestones | No new serial link session this task. Data-fork Kermit transfers; complete Mac files need a container. No general VT100 or Unix tty subsystem. |
@@ -65,7 +65,7 @@ claim exhaustive option/failure testing or revalidate communications/updating.
   These establish particular capabilities, not every possible Unix option.
 
 Remaining compatibility gaps include the formatter/test subsets above, shell options,
-function-definition redirects and legacy external environment-consumer limits.
+function-definition redirects, parent-component globs and catalog-order ls.
 The completed expansion/export/scope batch has [host and Snow evidence](../shell-posix2/RESULTS.md). They are an
 inventory of gaps, not authorisation for a shell replacement or OS facilities.
 
@@ -83,11 +83,23 @@ helpers are not treated as an unambiguous portable oracle.
 
 Malformed quotes and compound syntax now retain their syntax diagnostics rather
 than being relabelled OOM during cleanup. Genuine injected allocation exhaustion
-still reports OOM and recovers. Editor environment limits are demonstrated
-functional restrictions, not System 6 requirements; correcting them remains work.
+still reports OOM and recovers. The editor environment restrictions were removed
+and failure/cleanup tested in build 1545; see ../heap-audit/RESULTS.md.
 
 Build 1545 fixes the native awk heap decline: upstream rewrites argv entries, so
 the loader now lends commands a temporary pointer-vector copy while preserving
 shell ownership. Matching new-awk runs settle at 362452 B free; ten empty runs
 remain at 362352 B. This is a focused leak correction, not a claim that every
 workload has invariant heap usage. See ../heap-audit/RESULTS.md.
+
+## Focused close-out (1546)
+
+`ls`/`df` operand collection no longer writes beyond a 32-pointer stack array.
+It rescans the borrowed arguments without allocation or mutation: 130 operands
+on the host, 100 each in Snow. Directory output remains streaming catalog order;
+use `ls -1P | sort` where lexical ordering matters. Parent-component globs remain
+explicitly unsupported; use `find` with quoted `-path` patterns for tree filtering.
+`find` predicates now all apply rather than replacing earlier predicates. It is
+still a filtering/printing subset, not a general ordered action-expression engine.
+Startup status/cancellation and full utility pipelines have new focused evidence
+in [utility-closeout/RESULTS.md](../utility-closeout/RESULTS.md).

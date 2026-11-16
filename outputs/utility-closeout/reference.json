@@ -1,0 +1,6 @@
+{
+  "reference": "dash and macOS utilities",
+  "passed": true,
+  "stdout": "PROFILE_STATUS:130\n/tmp/closeout/a/fruit.txt\nTYPES:0\n/tmp/closeout/b/file space.txt\n/tmp/closeout/a\nMISSING:1\nINVALID:1\n1 apple\n2 pear\n</tmp/closeout/a/fruit.txt>\n</tmp/closeout/b/file space.txt>\nCLEANUP:0\nCLOSEOUT_DONE\n",
+  "status": 0
+}

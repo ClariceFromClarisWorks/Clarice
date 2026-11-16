@@ -34,7 +34,7 @@ static void format_size(char *b,unsigned long long n,int h){(void)h;snprintf(b,6
 '''
 src=(r/'src/commands/inspect.c').read_text().replace('#include "mac-files.h"',stub)
 tests=r'''
-static void reset(void){assert(!live);output[0]=0;output_error=allocs=polls=printed=errors=fail_at=cancel_at=0;pattern=NULL;kind=all=summarize=human=brief=0;unit=512;maxdepth=INT_MAX;}
+static void reset(void){assert(!live);output[0]=0;output_error=allocs=polls=printed=errors=fail_at=cancel_at=0;predicates=NULL;predicate_count=0;all=summarize=human=brief=0;unit=512;maxdepth=INT_MAX;}
 int main(void){
  char *find[]={"find","root"};reset();assert(!clarice_main(2,find));assert(printed==26&&!live&&strstr(output,"file space"));
  char *limited[]={"find","root","-maxdepth","12"};reset();assert(!clarice_main(4,limited)&&printed==13&&!live);
@@ -42,6 +42,11 @@ int main(void){
  for(int i=1;i<=26;i++){reset();fail_at=i;assert(clarice_main(2,find)==1&&!live&&errors);}
  reset();cancel_at=15;assert(clarice_main(2,find)==130&&!live);
  reset();char *missing[]={"find","missing"};assert(clarice_main(2,missing)==1&&!live);
+ char *both[]={"find","root","-name","d","-name","file*"};reset();assert(!clarice_main(6,both)&&!printed&&!live);
+ char *types[]={"find","root","-type","d","-type","f"};reset();assert(!clarice_main(6,types)&&!printed&&!live);
+ char *paths[]={"find","root","other","-path","root/*","-type","f"};reset();assert(!clarice_main(7,paths)&&printed==1&&!live);
+ char *roots[]={"find","missing","root","-maxdepth","0"};reset();assert(clarice_main(5,roots)==1&&printed==1&&!live);
+ char *bad[]={"find","root","-path"};reset();assert(clarice_main(3,bad)==2&&!live);
  puts("PASS: depth 24, maxdepth 12, both-fork du total, 26 allocation failures, cancellation and missing path; no live frames");
 }
 '''

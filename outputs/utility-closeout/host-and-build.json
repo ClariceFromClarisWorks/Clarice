@@ -1,0 +1,106 @@
+{
+  "profile-host": {
+    "last_lines": [
+      "Profile returned an error; built-ins remain available.",
+      "PASS: startup success/error/return/OOM status, 80 cancellation points, prompt recovery, stream and allocation cleanup"
+    ]
+  },
+  "operands-host": {
+    "last_lines": [
+      "PASS: ls/df 130 operands, no argv mutation, errors, cancellation, defaults, -- and invalid options"
+    ]
+  },
+  "traversal": {
+    "last_lines": [
+      "PASS: depth 24, maxdepth 12, both-fork du total, 26 allocation failures, cancellation and missing path; no live frames"
+    ]
+  },
+  "listing-format": {
+    "last_lines": [
+      "PASS: 4000 cached/cold long listings match independent printf oracle; mixed dates, directories, virtual entries, flags, full 32-bit sizes, human/full modes, dot names and newline boundaries; exact-key invalidation and zero timestamp"
+    ]
+  },
+  "shell": {
+    "last_lines": [
+      "31 / 31 passed",
+      "3 / 3 cancellation cases passed"
+    ]
+  },
+  "posix": {
+    "last_lines": [
+      "PASS 54 POSIX expansion cases"
+    ]
+  },
+  "focused": {
+    "last_lines": [
+      "PASS 39 focused dash comparisons; prepared 8 guest batches"
+    ]
+  },
+  "elastic": {
+    "last_lines": [
+      "PASS 41 elastic shell/dash comparisons"
+    ]
+  },
+  "scenarios": {
+    "last_lines": [
+      "PASS arguments",
+      "PASS compound-doc",
+      "PASS compound-pipe",
+      "PASS config",
+      "PASS control",
+      "PASS documents",
+      "PASS records",
+      "PASS recovery",
+      "PASS redirect",
+      "PASS report",
+      "PASS scopes",
+      "PASS utility-files"
+    ]
+  },
+  "recovery": {
+    "last_lines": [
+      "PASS recovery 132",
+      "PASS recovery 736",
+      "PASS recovery 572",
+      "PASS recovery 324",
+      "PASS recovery 600",
+      "PASS recovery 188",
+      "PASS recovery 312",
+      "PASS recovery 226"
+    ]
+  },
+  "practical": {
+    "last_lines": [
+      "PASS musl-empty",
+      "PASS musl-paths",
+      "PASS definitions-default",
+      "PASS definitions-spaces",
+      "PASS parameters-default",
+      "PASS parameters-spaces"
+    ]
+  },
+  "artifacts": {
+    "work/build/Clarice.bin": {
+      "bytes": 967680,
+      "sha256": "71b1d28194692e9eda8c376a61d4ff9d7559be15ff78f3fa304ae2ed6840bf80"
+    },
+    "work/build/core.clx": {
+      "bytes": 12584,
+      "sha256": "47a4d1b1246547075f611a1cbd549d3ce72868d053e40e8925b0c9af110f55fc"
+    },
+    "work/build/inspect.clx": {
+      "bytes": 9624,
+      "sha256": "fdb82596f63aa5c41fd2c7da623f30b9741fe0f837f3277548f4f5cd52aa1a19"
+    }
+  },
+  "listing-host": {
+    "last_lines": [
+      "PASS: real listing loop: explicit volumes, overwritten IDs, mixed files/directories, hidden entries, escaped names, 31-byte names, malformed names, EOF, errors, cancellation, missing volumes, virtual mounts"
+    ]
+  },
+  "environment": {
+    "last_lines": [
+      "PASS editor environment: 80 exports x 4096 bytes; 88 import failure points; cancellation, replacement, 20 repeats; peak=337062 remaining=0"
+    ]
+  }
+}

@@ -302,9 +302,9 @@ if(sh_depth>=SH_DEPTH||sh_source_depth>=8)return sh_fail("source nesting limit")
  /* mrsh may finish a program at a consumed here-document terminator. Keep
     parsing the remaining source, rather than silently dropping later commands. */
  while(!sh_flow){program=mrsh_parse_program(parser);if(mrsh_parser_error(parser,0)){rc=sh_fail(mrsh_parser_error(parser,0));mrsh_program_destroy(program);break;}if(!program){rc=sh_fail("parser allocation failed");break;}int empty=!program->body.len;rc=sh_array(&program->body);mrsh_program_destroy(program);if(mrsh_parser_eof(parser))break;if(empty){rc=sh_fail("unconsumed source");break;}}
- mrsh_parser_destroy(parser);sh_source_depth--;return rc;}
+ mrsh_parser_destroy(parser);sh_source_depth--;if(sh_flow==3||sh_flow==4)rc=sh_flow_status;return rc;}
 int shell_run(const char *source){int rc;history_add(source);sh_flow=0;output_error=0;rc=sh_source(source);if(sh_flow==3||sh_flow==4)rc=sh_flow_status;sh_flow=0;shell_status=rc;return rc;}
 
 #ifndef SH_HOST_TEST
-void shell_profile(void){char native[PATH_CAP];CInfoPBRec pb;if(resolve("/etc/profile",native)||info(native,&pb)){term_puts("Profile unavailable; using built-in defaults.\n");return;}char *args[]={"/etc/profile"};int rc=sh_file(args[0],1,args,1);if(rc)term_puts("Profile returned an error; built-ins remain available.\n");sh_flow=0;shell_status=0;}
+void shell_profile(void){char native[PATH_CAP];CInfoPBRec pb;if(resolve("/etc/profile",native)||info(native,&pb)){term_puts("Profile unavailable; using built-in defaults.\n");return;}char *args[]={"/etc/profile"};int rc=sh_file(args[0],1,args,1);if(rc==130)term_puts("Profile interrupted; built-ins remain available.\n");else if(rc)term_puts("Profile returned an error; built-ins remain available.\n");sh_flow=0;shell_status=rc;}
 #endif
