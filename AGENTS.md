@@ -55,12 +55,23 @@ implementation scope and does not reopen completed or paused tasks.
 
 Before substantial features, ports or performance work, research proven historical
 Macintosh/Unix implementations, modern systems algorithms, and demoscene and 68k
-techniques for relevant starting points. Study available source for ideas, then
-implement Clarice-specific solutions independently rather than copying verbatim;
-this does not replace the requirement to retain genuine upstream code in ports.
-Respect licences and attribute useful references. Keep research proportional to
-the task, evaluate approaches against the stock 8 MHz 68000 / System 6 / 4 MB
-baseline, and measure on physical hardware under the performance policy above.
+techniques for relevant starting points. Clarice's mission is to bring established
+Unix userland to System 6/7: prefer genuine upstream ports of mature Unix programs,
+protocol implementations and established algorithms whenever licensing and
+practical platform suitability allow. Preserve upstream source, attribution,
+licences, functionality and maintainability; keep adaptations separable and limit
+them to necessary Macintosh boundaries (HFS, MacTCP/MoofTCP, CLX/runtime and terminal
+services), plus measured 68000 hotspot optimisations without gratuitously replacing
+upstream algorithms.
+
+Implement independently only when no suitable code exists, reuse is legally
+impractical, or evidence demonstrates a meaningful advantage. Learning from source
+to inform an independent implementation is distinct from legitimately incorporating
+licensed upstream source in a genuine port; do not treat the former as a rule to
+rewrite the latter. Respect licences and attribute useful references in either
+case. Keep research proportional to the task, evaluate approaches against the
+stock 8 MHz 68000 / System 6 / 4 MB baseline, and measure on physical hardware under
+the performance policy above, preserving the Native Macintosh First principles.
 
 ## Unix familiarity and compatibility
 
