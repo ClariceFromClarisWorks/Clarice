@@ -1,0 +1,3 @@
+command not found: ls
+Install missing standard tools with appinstall setup DIRECTORY.
+See help appinstall.

@@ -26,7 +26,6 @@ python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/free.o" "$ROOT/work/bu
 "$ROOT/scripts/build-kermit.sh"
 sh "$ROOT/scripts/build-wget.sh"
 sh "$ROOT/scripts/build-update.sh"
-python3 "$ROOT/scripts/command-resource.py"
 
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
 cmake -S /src/src -B /src/work/build -DCMAKE_TOOLCHAIN_FILE=/Retro68-build/toolchain/m68k-apple-macos/cmake/retro68.toolchain.cmake
@@ -40,3 +39,5 @@ humount
 ' >> "$ROOT/outputs/namespace/build.log" 2>&1
 cp "$ROOT/work/build/Clarice.bin" "$ROOT/work/build/Clarice.dsk" "$ROOT/outputs/namespace/"
 cat "$ROOT/outputs/namespace/build.log"
+
+python3 "$ROOT/scripts/package-utilities.py"

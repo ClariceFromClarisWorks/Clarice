@@ -72,13 +72,12 @@ static void history_add(const char *s){char record[LINE_CAP];long n;unsigned lon
 int history_get(int back,char *out){if(history_ref<0||back<1||back>HISTORY_SLOTS||(unsigned long)back>history_count)return 0;return hist_record(history_count-(unsigned long)back+1,out,0)==0;}
 int history_search(const char *needle,int start,char *out){int i;for(i=start;i<=HISTORY_SLOTS&&(unsigned long)i<=history_count;i++){if(history_get(i,out)&&asm_contains(out,needle))return i;if(app_yield())break;}return 0;}
 void history_shutdown(void){if(history_ref>=0){FSClose(history_ref);history_ref=-1;FlushVol(0,0);}}
-static int install_commands(void);
 void shell_init(void){unsigned char vol[256];short vr;WDPBRec pb;unsigned long head[2];long n=8;char path[PATH_CAP];unsigned char pn[256];
  GetVol(vol,&vr);memcpy(shell_cwd,vol+1,vol[0]);shell_cwd[vol[0]]=':';shell_cwd[vol[0]+1]=0;
  /* GetVol may return a working-directory reference; resolve its actual volume name. */
  memset(&pb,0,sizeof pb);pb.ioVRefNum=vr;pb.ioWDIndex=0;if(!PBGetWDInfoSync(&pb))vr=pb.ioWDVRefNum;
  {HParamBlockRec vp;memset(&vp,0,sizeof vp);vp.volumeParam.ioNamePtr=vol;vp.volumeParam.ioVRefNum=vr;if(!PBHGetVInfoSync(&vp)){memcpy(shell_cwd,vol+1,vol[0]);shell_cwd[vol[0]]=':';shell_cwd[vol[0]+1]=0;}}
- {int e=namespace_install();if(e)error("System Folder installation failed",e);}strcpy(shell_cwd,root_path);strcpy(home_path,root_path);migrate_reports();{int e=install_commands();if(e)error("Command installation",e);}env_set("PATH=/bin:/usr/bin");shell_state_path(path,"clarice.history","Clarice History");pstr(pn,path);
+ {int e=namespace_install();if(e)error("System Folder installation failed",e);}strcpy(shell_cwd,root_path);strcpy(home_path,root_path);migrate_reports();env_set("PATH=/bin:/usr/bin");shell_state_path(path,"clarice.history","Clarice History");pstr(pn,path);
  {int e=HOpen(0,0,pn,fsRdWrPerm,&history_ref);if(e==fnfErr){e=HCreate(0,0,pn,'S6UX','DATA');if(!e)e=HOpen(0,0,pn,fsRdWrPerm,&history_ref);}if(e)history_ref=-1;}
  if(history_ref>=0){if(FSRead(history_ref,&n,head)||n!=8||head[0]!=0x53364831){SetEOF(history_ref,0);history_count=0;}else history_count=head[1];}
  else term_puts("History disk unavailable; session remains usable.\n");
@@ -139,7 +138,7 @@ say(b);snprintf(b,sizeof b,"Verification ticks: mode=%s header=%lu record=%lu pa
  else if(!strcmp(av[0],"checks"))app_run_checks();
  else if(!strcmp(av[0],"selftest"))status=selftest();
  else if(!strcmp(av[0],"exit"))app_quit();
- else {say("command not found: ");say(av[0]);say("\n");status=127;}
+ else {say("command not found: ");say(av[0]);say("\n");command_install_hint(av[0]);status=127;}
  if(output_error)status=1;shell_status=status;return status;
 }
 /* Completion scans the directory without retaining its entries. */

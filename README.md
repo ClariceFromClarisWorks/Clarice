@@ -1,9 +1,11 @@
 # Clarice
 
-Current development checkpoint: **2026111517**, tested in Snow and on a stock
-68000 Macintosh SE. See [current implementation and limits](outputs/CURRENT-STATE.md)
-and [checkpoint build reproduction](outputs/jump-perf/REPRODUCE.md). The published
-release descriptions below are historical; this checkpoint creates no new release.
+Current development build: **2026111550**, core/utility separation tested in
+accelerated Snow (Plus, 4 MB, reported System 6.0.7); physical acceptance pending.
+See [current implementation and limits](outputs/CURRENT-STATE.md) and
+[offline installation instructions](INSTALL.md). The core contains no standard
+utility payloads; the complete development disk supplies them separately.
+Published release descriptions below are historical; no new release is created.
 
 A native System 6 command prompt for a Macintosh Plus with 4 MB, built using the existing SkiFree Retro68 toolchain. This is a working Phase 1 prototype, not a Unix kernel, bash implementation or collection of completed GNU ports.
 
@@ -128,7 +130,7 @@ Interactive `ls` streams names across the current terminal width in catalog orde
 
 ## External commands
 
-`ls`, `df` and `cat` now execute native 68000 CLX1 images from `/bin`, found through `PATH` (default `/bin:/usr/bin`). Their utility implementations are outside the shell executable. The build packages a small multicall image; installation writes it under each command name and also installs `benchls`/`benchscan`. The local Task 2 implementation preserves every existing command at startup and provides explicit `appinstall check`, `replace`, `repair` and `recover` operations. New format-2 commands can declare runtime/capability requirements while legacy commands remain supported. See [update behaviour and evidence](outputs/task2/TEST-REPORT.md).
+`ls`, `df` and `cat` now execute native 68000 CLX1 images from `/bin`, found through `PATH` (default `/bin:/usr/bin`). Their utility implementations are outside the shell executable. The separate utility collection supplies a small multicall image under each command name, including `benchls`/`benchscan`. Explicit `appinstall setup DIRECTORY` installs absent commands. Normal startup does not inspect them. `appinstall check`, `replace`, `repair NAME DIRECTORY` and `recover` retain independent-update and recovery support. New format-2 commands can declare runtime/capability requirements while legacy commands remain supported. See [update behaviour and evidence](outputs/task2/TEST-REPORT.md).
 
 Standard input, output and error support `<`, `>`, `>>`, `2>`, `2>>`, descriptor duplication such as `2>&1`, and closing with `>&-`/`<&-`. Redirections apply left to right and restore after each command. Finite pipelines remain sequential HFS spools, not concurrent Unix pipes. Pipeline status is the last command's status; a user interrupt stops the complete pipeline with 130. Missing commands return 127 and invalid native images return 126. Utilities report their own success/failure statuses. UI/diagnostic builtins such as `prefs`, `status` and `scrollbench` currently write directly to the terminal; redirecting their display does not capture it.
 

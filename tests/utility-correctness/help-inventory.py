@@ -2,8 +2,8 @@
 from pathlib import Path
 import re,json
 r=Path(__file__).resolve().parents[2];out=r/'work/utility-expansion';out.mkdir(parents=True,exist_ok=True)
-s=(r/'src/command-install.inc').read_text().split('};',1)[0]
-external=[n for n,_ in re.findall(r'\{"([^"\\]+)",(\d+)\}',s)]
+s=(r/'src/standard-commands.inc').read_text()
+external=re.findall(r'CLARICE_COMMAND\("([^"]+)"',s)
 s=(r/'src/help.inc').read_text();builtin=re.findall(r'\{"([^"\\]+)","',s)
 rows=[];commands=[]
 for kind,names in [('external',external),('builtin',builtin),('experimental',['nano'])]:
@@ -14,4 +14,4 @@ for kind,names in [('external',external),('builtin',builtin),('experimental',['n
   commands.extend([f'{command} > /mnt/Audit/help/o{index} 2> /mnt/Audit/help/e{index}',f'echo $? > /mnt/Audit/help/s{index}'])
 commands+=['echo HELP_DONE']
 (out/'help.sh').write_text('\n'.join(commands)+'\n');(out/'inventory.json').write_text(json.dumps(rows,indent=2)+'\n')
-print(f'Prepared {len(external)} bundled commands, {len(builtin)} builtin topics and nano; guest execution pending')
+print(f'Prepared {len(external)} standard commands, {len(builtin)} builtin topics and nano; guest execution pending')

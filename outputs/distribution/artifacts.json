@@ -1,0 +1,10 @@
+{
+  "outputs/distribution/build/Clarice.bin": {
+    "bytes": 265344,
+    "sha256": "69bcd1ec5cef8001920d14b02b9fc2da237c3dff2033b43f925633934e5dbfa6"
+  },
+  "outputs/distribution/build/Clarice.hda": {
+    "bytes": 33605120,
+    "sha256": "80ca610d10c483c00e55de08000bffb977bdefcda2266b865b97e8fb108d05ce"
+  }
+}

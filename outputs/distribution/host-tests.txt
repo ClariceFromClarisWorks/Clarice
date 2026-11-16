@@ -1,0 +1,2 @@
+PASS: 77 loader/installer scenarios; no leaked allocations or descriptors
+PASS: production loader validated 31 actual command images and imports (no execution)

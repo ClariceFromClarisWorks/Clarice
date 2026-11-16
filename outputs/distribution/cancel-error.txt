@@ -1,0 +1,2 @@
+appinstall: stopped at grep; fix the error and rerun setup.
+appinstall: Mac OS error -128

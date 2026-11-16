@@ -290,7 +290,7 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
 #endif
  if(found<0)return 126;if(found){shell_commands++;return kind==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
  if(!strcmp(v[0],"chmod")){errsay("chmod: command not found; did you mean hfsattr?\n");return 127;}
- errsay("command not found: ");errsay(v[0]);errsay("\n");return 127;}
+ errsay("command not found: ");errsay(v[0]);errsay("\n");command_install_hint(v[0]);return 127;}
 #endif
 
 static int sh_special(const char *name){const char *names[]={":",".","break","continue","exit","export","return","set","shift","unset",0};for(int i=0;names[i];i++)if(!strcmp(name,names[i]))return 1;return 0;}

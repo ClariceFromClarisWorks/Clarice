@@ -1,0 +1,12 @@
+appinstall setup DIRECTORY | install FILE NAME | check FILE
+           replace FILE NAME | repair NAME DIRECTORY | recover NAME
+setup installs the standard collection; install installs one command.
+Both leave every existing command unchanged, even if damaged.
+NAME: /bin leaf, 1..20 letters, digits, _ or -.
+check fully verifies without execution. replace/repair explicitly replace.
+repair reads DIRECTORY/NAME. recover restores .clx-NAME.old.
+Previous files retain both forks; Finder metadata is preserved.
+The replacement is data-only; old resource forks stay in the backup.
+Existing .old/.new files block replacement: inspect and move them first.
+CLX_VERIFY=strict fully verifies launches; installed uses receipts.
+Status: 0 success; 1 install error; 2 usage; 126 bad CLX; 130 cancel.

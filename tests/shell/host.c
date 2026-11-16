@@ -71,6 +71,7 @@ static int command_path(const char *name,char *out,int *kind){(void)kind;
 #include "../../src/help.inc"
 #include <time.h>
 static unsigned long TickCount(void){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);return (unsigned long)t.tv_sec*60+(unsigned long)t.tv_nsec*60/1000000000;}
+static void command_install_hint(const char *name){(void)name;}
 #include "../../src/sh.inc"
 int main(int argc,char **argv){
  if(argc<2)return 2;if(argc>2)cancel_after=atoi(argv[2]);

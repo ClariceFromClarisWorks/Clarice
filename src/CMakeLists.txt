@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(Clarice C ASM)
-add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c kernels.S checksum.S App.r Icons.r ../work/build/Commands.r TYPE APPL CREATOR CLRC)
+add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c kernels.S checksum.S App.r Icons.r TYPE APPL CREATOR CLRC)
 # Retro68's Rez rule tracks App.r itself, but not its included build stamp.
 add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/App.r.rsrc.bin" APPEND
  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/update/version.h")

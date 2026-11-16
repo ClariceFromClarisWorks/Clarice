@@ -1,0 +1,3 @@
+command: native:Sys6Unix:System Folder:Clarice Data:bin:.clx-awk.new: insufficient application memory
+appinstall: stopped at awk; fix the error and rerun setup.
+appinstall: Mac OS error -50: Invalid parameter

@@ -1,10 +1,39 @@
 # Clarice current state
 
-16 November 2026, Adelaide. Development **2026111549** completes the two requested
-utility batches and command-help review. Earlier checkpoints `74d2823`,
-`5e53af1` and `ef35443` were pushed to `codex/utility-correctness-2026111539`.
-Host and accelerated Snow Plus/4 MB/**reported System 6.0.7** validation only.
-Physical SE remains off; no release, tag or main change.
+16 November 2026, Adelaide. Development **2026111550** separates Core from the
+standard utility collection. Host and fixed-maximum-speed Snow Plus/4 MB/
+**reported System 6.0.7** validation only; physical SE remains off. No release,
+tag or main change. Development checkpoint branch:
+`codex/core-distribution-2026111550`, based on accepted `e67c569`.
+
+## Core and utility distribution — implemented
+
+- Core MacBinary **259.12 KiB** (was 1021.12 KiB), zero embedded CLX resources.
+  All 43 standard command files are on separate offline native HFS media. Nano
+  remains optional. Existing namespace, loader, resolver and updater retained.
+- Ordinary startup no longer checks/installs utilities. Matched diagnostic
+  repeated ready time **302 ->193–194 guest ticks**; removed catalog-check phase
+  measured 107 ticks. Adding payloads back gives 193 repeated ticks: package-size
+  reduction is not the source of startup speed. No new permanent allocation;
+  payload-only resource-map saving ~330 B. Partition request remains 768 KiB.
+- `appinstall setup DIRECTORY` and `install FILE NAME` install absent files only.
+  Existing damaged/newer/custom commands remain untouched. `repair NAME DIRECTORY`
+  uses external media; check/replace/recover keep existing validation/backup rules.
+  Missing commands give an installation hint. [Offline instructions](../INSTALL.md).
+- Final normal-build fresh installation from the native Clarice HDA installs all
+  43 commands, byte-for-byte verified; **first-run awk OOM resolved**. Awk and
+  ordinary pipelines execute. Explicit full setup takes 8565 guest ticks;
+  startup never repeats it. `ls /bin` 1.91 guest seconds, loader 59 ticks.
+- 77 host loader/installer scenarios, 31 shell comparisons, three cancellation
+  cases, 32 builtin-help topics. Snow damaged preservation/repair/recovery,
+  incomplete-stage refusal/retry, Ctrl+C130, real 290000-byte heap pressure and
+  successful recovery. Native recovery preserves both forks, Finder metadata
+  and dates byte-for-byte; profile unchanged. Repeated setup heap stable within
+  2 B, largest block fixed, tracked command remainder zero.
+- [Evidence, timings and limitations](distribution/REPORT.md). Collection setup
+  is resumable, not atomic; leftovers need inspection. No physical/6.0.8 or new
+  HTTP-updater acceptance. Native HDA reuses the existing Apple driver/header;
+  no System/ROM/user data included. Generated packages stay untracked.
 
 ## Second utility batch — build 2026111549
 

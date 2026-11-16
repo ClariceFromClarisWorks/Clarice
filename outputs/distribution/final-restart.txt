@@ -1,0 +1,2 @@
+appinstall: existing commands are kept unchanged, not checked.
+appinstall: complete (existing files kept by install/setup)

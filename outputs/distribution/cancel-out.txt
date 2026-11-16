@@ -1,0 +1,1 @@
+appinstall: existing commands are kept unchanged, not checked.

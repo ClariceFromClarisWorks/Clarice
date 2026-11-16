@@ -1,0 +1,10 @@
+run=0 skip=0 ready=7728 drawn=7729 install=7464 before=404594 after=404614 heap=404626 largest=398664 clx_count=28 loaded=0 census_cost=0
+run=1 skip=0 ready=368 drawn=370 install=112 before=404594 after=404594 heap=404620 largest=401014 clx_count=28 loaded=0 census_cost=0
+run=2 skip=0 ready=368 drawn=369 install=112 before=404594 after=404594 heap=404620 largest=401014 clx_count=28 loaded=0 census_cost=0
+run=3 skip=0 ready=368 drawn=369 install=112 before=404594 after=404594 heap=404620 largest=401014 clx_count=28 loaded=0 census_cost=0
+run=4 skip=1 ready=257 drawn=258 install=0 before=404594 after=404594 heap=404620 largest=401014 clx_count=28 loaded=0 census_cost=0
+run=5 skip=1 ready=257 drawn=259 install=0 before=404594 after=404594 heap=404620 largest=401014 clx_count=28 loaded=0 census_cost=0
+run=6 skip=1 ready=257 drawn=259 install=0 before=404594 after=404594 heap=404620 largest=401014 clx_count=28 loaded=0 census_cost=0
+run=7 skip=1 ready=262 drawn=264 install=0 before=404938 after=404938 heap=404954 largest=401032 clx_count=0 loaded=0 census_cost=0
+run=8 skip=1 ready=258 drawn=260 install=0 before=404938 after=404938 heap=404954 largest=401032 clx_count=0 loaded=0 census_cost=0
+run=9 skip=1 ready=258 drawn=260 install=0 before=404938 after=404938 heap=404954 largest=401032 clx_count=0 loaded=0 census_cost=0

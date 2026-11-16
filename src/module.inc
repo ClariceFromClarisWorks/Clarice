@@ -46,11 +46,9 @@ static void *clx_import(const char *name){
 #define CLX_RUNTIME_MAJOR 1
 #define CLX_RUNTIME_MINOR 5
 #define CLX_CAPABILITIES 1UL
-/* Startup precedes history/preferences initialisation. Service system tasks,
-   but do not dispatch shell/UI commands into a partially initialised shell. */
-static int command_installing;
+/* Loading and explicit installation use the normal cancellable event path. */
 static unsigned long module_poll_ticks;
-static int module_poll(void){unsigned long t=TickCount();int result;if(command_installing){SystemTask();result=0;}else result=app_yield();module_poll_ticks+=TickCount()-t;return result;}
+static int module_poll(void){unsigned long t=TickCount();int result;result=app_yield();module_poll_ticks+=TickCount()-t;return result;}
 static unsigned long module_read_ticks,module_validate_ticks,module_import_ticks,module_reloc_ticks,module_prepare_ticks;
 static unsigned long clx_hash(unsigned long hash,const unsigned char *p,unsigned long n){return asm_fnv1a(hash,p,n);}
 static unsigned long module_header_ticks,module_record_ticks,module_payload_ticks,module_metadata_ticks,module_structure_ticks;
@@ -169,15 +167,3 @@ close:
 }
 static int module_run(const char *path,int argc,char **argv){return module_load(path,argc,argv,1);}
 #include "command-install.inc"
-
-static int install_commands(void){
- int result=0;command_installing=1;
- for(int i=0;bundled_commands[i].name;i++){
-  /* Existing commands are not read, rewritten or relabelled at startup. */
-  char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec pb;
-  int e=command_paths(bundled_commands[i].name,dest,stage,backup);
-  if(!e){e=info(dest,&pb);if(!e)continue;if(e==fnfErr)e=command_bundle(bundled_commands[i].name,bundled_commands[i].resource,0);}
-  if(e){errsay("Command installation: ");errsay(bundled_commands[i].name);errsay("\n");if(!result)result=e;}
- }
- command_installing=0;return result;
-}
