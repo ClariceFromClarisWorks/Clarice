@@ -4,7 +4,35 @@
 standard utility collection. Host and fixed-maximum-speed Snow Plus/4 MB/
 **reported System 6.0.7** validation only; physical SE remains off. No release,
 tag or main change. Development checkpoint branch:
-`codex/core-distribution-2026111550`, based on accepted `e67c569`.
+`codex/core-distribution-2026111550`; accepted `c5075e5` has been pushed.
+Offline-installer UX follow-up is locally validated; ordinary Core remains 1550.
+
+## Offline first-install UX — completed in Snow
+
+- Distribution now has a native **Install Clarice** launcher: open it, click
+  Install, wait for installed Core to open. No appinstall knowledge or manual
+  copying. Fixed destination is active System Folder:Clarice and Clarice Data.
+  Launcher finds sibling media files by its own native path, not the disk label.
+- Reuses absent-only setup, media cp, both-fork verification and existing native
+  update transaction. Existing utilities stay untouched; older managed Core is
+  retained as Clarice Previous. Same/newer Core is kept. Explicit repair remains
+  separate. Installer skips user profile/preferences; launched Core uses them.
+- Finder-to-prompt fresh install, Ctrl+C after six utilities, resume to all 43,
+  bundled-1549 upgrade, automatic launch and repeat installation passed. Disk-full
+  copy failure preserved old Core; freeing disposable fixture space allowed retry.
+  Exported comparisons prove previous Core forks/metadata, independent utility
+  (including resource fork), profile and binary user file preserved.
+- Normal Core resources, including CODE, are **byte-identical** to accepted 1550:
+  no added normal-startup work or resident allocation. Installed Core runtime
+  reports 403202 B free / 401056 B largest block, zero tracked allocations.
+  No new startup speed claim; reuse accepted distribution timings below.
+- 482 existing transaction fault scenarios passed under host sanitizers. Focused
+  guest acceptance is maximum-speed Snow Plus/4 MB/**reported 6.0.7**, not SE or
+  6.0.8. Abrupt-reset leftovers require inspection; no power-loss guarantee.
+  Prior Core copies outside the managed location remain untouched. A retained
+  previous/staging file blocks another Core replacement until inspected/moved.
+- [Installation instructions](../INSTALL.md), [focused evidence](install-ux/REPORT.md).
+  Physical single-Finder/MultiFinder acceptance remains pending; no SE access.
 
 ## Core and utility distribution — implemented
 

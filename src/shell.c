@@ -173,3 +173,7 @@ void shell_dispatch_stats(unsigned long *out){out[0]=dispatch_path_ticks;out[1]=
 #include "sh.inc"
 
 static void complete_functions(const char *p,char *c,int *n,int show,int *shown){for(struct sh_function *f=sh_functions;f;f=f->next)if(!builtin_name(f->name))completion_item(f->name,p,c,n,show,shown);}
+
+#ifdef CLARICE_OFFLINE_INSTALLER
+#include "offline-install.inc"
+#endif

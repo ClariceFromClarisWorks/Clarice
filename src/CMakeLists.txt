@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 project(Clarice C ASM)
-add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c kernels.S checksum.S App.r Icons.r TYPE APPL CREATOR CLRC)
+if(CLARICE_OFFLINE_INSTALLER)
+ set(INSTALLER_RESOURCE Installer.r)
+endif()
+add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c kernels.S checksum.S App.r Icons.r ${INSTALLER_RESOURCE} TYPE APPL CREATOR CLRC)
 # Retro68's Rez rule tracks App.r itself, but not its included build stamp.
 add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/App.r.rsrc.bin" APPEND
  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/update/version.h")
@@ -51,4 +54,10 @@ if(CLARICE_PARSER_SAFETY_TEST)
   vendor/mrsh/arithm.c vendor/mrsh/parser/parser.c vendor/mrsh/parser/program.c
   vendor/mrsh/parser/word.c vendor/mrsh/parser/arithm.c APPEND PROPERTY
   COMPILE_OPTIONS -include "${CMAKE_CURRENT_SOURCE_DIR}/../tests/parser/guest.h")
+endif()
+
+# Offline installation launcher only; the ordinary core gets no installer code.
+if(CLARICE_OFFLINE_INSTALLER)
+ target_compile_definitions(Clarice PRIVATE CLARICE_OFFLINE_INSTALLER=1)
+ target_compile_options(Clarice PRIVATE -Wno-unused-function -Wno-sign-compare)
 endif()

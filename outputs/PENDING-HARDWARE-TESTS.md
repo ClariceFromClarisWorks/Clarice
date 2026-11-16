@@ -9,6 +9,20 @@ fluidity remains inadequate (~7.2 fps in the matched native test).
 Target 4 MB, System 6.0.8, verified cable, 57600 8N1, no flow control.
 Use a backup storage image and unused SCSI ID; never modify BlueSCSI firmware.
 
+## Offline installer follow-up (Snow validated only)
+
+When hardware acceptance resumes, use disposable storage with a backup. Open the
+new distribution's **Install Clarice**, click Install, and verify automatic launch
+from System Folder:Clarice with all 43 utilities. Cancel partway with Ctrl+C and
+rerun; verify existing independent utilities and configuration are unchanged.
+Upgrade an older disposable Core, check Clarice Previous and both forks/Finder
+metadata, then rerun without replacing the equal/newer Core. Check the busy-app
+refusal under MultiFinder and launch under single Finder. Record System 6.0.8,
+free/largest heap, time to completion and native launch errors. No physical
+acceptance is claimed for this launcher or build 1550 distribution.
+
+## Earlier capability checks
+
 1. Startup/install: follow `serial-3/build/READ-ME.txt`. Time launch to prompt and
    first-run installation. Run `serial --help`, `kermit --help`, `status runtime`.
    Confirm existing commands/configuration preserved, and explicit appinstall repair

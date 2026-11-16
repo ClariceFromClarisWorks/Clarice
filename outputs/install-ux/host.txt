@@ -1,0 +1,1 @@
+PASS 482 transaction scenarios: creation/replacement, every operation failure, rollback failure, busy candidate/target, invalid candidate, retained backup refusal; neither version deleted

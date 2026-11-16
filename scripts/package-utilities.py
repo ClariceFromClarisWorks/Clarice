@@ -15,7 +15,7 @@ for name,image in entries:
  (utilities/name).write_bytes(data)
  manifest.append(dict(name=name,image=image,bytes=len(data),sha256=hashlib.sha256(data).hexdigest()))
 shutil.copyfile(root/'work/build/Clarice.bin',out/'Clarice.bin')
-shutil.copyfile(root/'INSTALL.md',out/'Read Me.txt')
+(out/'Read Me.txt').write_bytes((root/'INSTALL.md').read_text().replace('→','>').replace('\n','\r').encode('mac_roman',errors='replace'))
 shutil.copyfile(root/'THIRD_PARTY.md',out/'Third Party.txt')
 shutil.copytree(root/'licenses',out/'Licenses',dirs_exist_ok=True)
 for name,source in {

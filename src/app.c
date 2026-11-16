@@ -591,6 +591,9 @@ static void load_preferences(void){
 /* Write/flush a new file before replacing the old one. Keep the previous
    committed file as .bak, also used to recover an interrupted rename. */
 static void save_preferences(void){
+#ifdef CLARICE_OFFLINE_INSTALLER
+ return; /* Installer geometry/theme must not rewrite user preferences. */
+#endif
  struct ClaricePrefs p;char data[1024],tmp[PATH_CAP],backup[PATH_CAP];unsigned char name[256],tn[256],bn[256],base[256];short ref;int e;long n;
  prefs_snapshot(&p);n=prefs_format(data,sizeof data,&p);if(n<0||n>=(long)sizeof data)return;long want=n;
  prefs_sibling(tmp,"clarice.conf.new");prefs_sibling(backup,"clarice.conf.bak");pstr(name,prefs_path);pstr(tn,tmp);pstr(bn,backup);
@@ -883,8 +886,29 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  scroll_region=NewRgn();saved_clip=NewRgn();transfer_region=NewRgn();visible_region=NewRgn();
  OpenPort(&frame_port);frame_port.portBits.baseAddr=(Ptr)frame_pixels;frame_port.portBits.rowBytes=STRIDE;SetRect(&frame_port.portBits.bounds,0,0,512,HEIGHT);frame_port.portRect=frame_port.portBits.bounds;ClipRect(&frame_port.portRect);frame_ready=1;OpenPort(&prompt_port);prompt_port.portBits.baseAddr=(Ptr)prompt_pixels;prompt_port.portBits.rowBytes=STRIDE;SetRect(&prompt_port.portBits.bounds,0,0,512,64);prompt_port.portRect=prompt_port.portBits.bounds;ClipRect(&prompt_port.portRect);SetPort(win);
  SetRect(&r,win->portRect.right-15,0,win->portRect.right+1,win->portRect.bottom-14);history_bar=NewControl(win,&r,(const unsigned char*)"\p",1,0,0,0,scrollBarProc,0);
- shell_init();shell_state_path(prefs_path,"clarice.conf","Clarice Preferences");load_preferences();font_layout();
- welcome();busy=1;shell_profile();busy=0;dirty=1;initial_free=FreeMem();start_tick=TickCount()-launch;last_yield=TickCount();
+ shell_init();shell_state_path(prefs_path,"clarice.conf","Clarice Preferences");
+#ifndef CLARICE_OFFLINE_INSTALLER
+ load_preferences();
+#endif
+ font_layout();
+ welcome();busy=1;
+#ifndef CLARICE_OFFLINE_INSTALLER
+ shell_profile();
+#endif
+ busy=0;dirty=1;initial_free=FreeMem();start_tick=TickCount()-launch;last_yield=TickCount();
+#ifdef CLARICE_OFFLINE_INSTALLER
+ {extern int shell_install_offline(char *);char target[256];
+  SetWTitle(win,(const unsigned char*)"\pInstall Clarice");app_clear();term_puts("Clarice installation\n\n");draw();
+  if(CautionAlert(152,0)==1){busy=1;cancelled=0;int e=shell_install_offline(target);busy=0;draw();
+   if(!e)e=app_update_handoff(target);
+   if(e){char detail[150];unsigned char message[151];
+    if(e==130||e==userCanceledErr)strcpy(detail,"Installation cancelled. Completed utilities are kept. Run Install Clarice again to resume.");
+    else if(e==fBsyErr)strcpy(detail,"Quit the installed Clarice, then run Install Clarice again. The running application has not been replaced.");
+    else snprintf(detail,sizeof detail,"Installation stopped (%d). Completed files are kept. See Read Me for retry or recovery instructions.",e);
+    pstr(message,detail);ParamText(message,0,0,0);StopAlert(151,0);app_quit();}
+  }else app_quit();
+ }
+#endif
  while(!done){
 #ifdef CLARICE_ACTIVITY_DIAGNOSTICS
  static int activity_tested;if(!activity_tested&&FrontWindow()==win){activity_tested=1;activity_probe();}
