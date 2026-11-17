@@ -1,6 +1,59 @@
 # Clarice current state
 
-## Coherent deployment — current SE/Snow utilities, automatic coordination unfinished
+## Resumable repository updater — Snow accepted, build 2026111802
+
+18 November: the simpler per-package updater now works end to end in disposable
+Plus/4 MiB/System 6.0.8 Snow at fixed maximum acceleration (~15×). SE untouched;
+no push, tag or release. Remote sessions remain deferred.
+
+- `clarice update [-y] [--check] [--source URL]` compares a private HTTP repository,
+  adds newly listed tools, preserves known newer versions, and installs tools
+  through existing appinstall before replacing/relaunching Core with its helper.
+- `/etc/clarice/installed.catalog` records each successful package; an
+  `update.incomplete` marker survives failure and clears only after tools complete
+  and, when required, the new Core relaunches. Retry retains successful tools.
+  Torn final catalog writes are repaired; malformed complete records fail clearly.
+- Source is `/etc/clarice/update.conf`. Publisher `scripts/repository.py` accepts
+  only a complete sealed build, publishes immutable CLX/MacBinary payloads before
+  the index, and rejects changed contents at an already published version.
+- Normal startup checks only the marker, without a utility scan or network access.
+  No persistent networking/cache allocation added. Runtime 1.6 exposes the existing
+  installer and native SetEOF; older installations need one offline bootstrap.
+
+Actual guest acceptance: initial installation, repeat/no-download runs, HTTP 404
+  after a successful tool upgrade, resumption skipping that tool, corrupt download
+  preservation, Command-period cancellation/status 130 and retry, incomplete-marker
+  warning after application relaunch, full 47-tool catalog adoption/update, Core
+  1801→1802 replacement and automatic relaunch. Native HFS readback matches all 47
+  expected tool lengths/CRCs. Previous Core and per-tool recovery files remain.
+  Existing awk, sort/wc pipeline and explicit executable checks pass.
+
+Host acceptance: actual catalog/index code under ASan/UBSan (torn records/header,
+  malformed/duplicate input, allocation failure/cancellation), 81 loader/installer
+  cases including repository retries, 482 native-replacement model scenarios,
+  helper recovery decisions, plan corruption, both-fork extraction failure paths,
+  confirmation and import-table tests. Clean sealed build validates 32 distinct
+  CLX images for 47 standard names. This is not physical hardware acceptance.
+
+Measured guest repeats: full repository/no-change update 556/553 ticks, loader
+  51/49 ticks; native free heap 358046 B and largest block 357008 B unchanged.
+  Catalog after complete adoption: 2154 B including disposable test entries.
+  Core MacBinary 271104 B; updater CLX 113312 B, loaded only for the command.
+  These accelerated guest ticks are comparative, not stock-SE wall-clock claims.
+
+Limitations: private HTTP CRC provides corruption detection, not authentication;
+  catalog is not continuous same-size corruption detection (use appinstall check).
+  HFS replacement is recoverable, not collection-atomic or power-loss-safe.
+  Recovery archives consume disk space. Future incompatible runtime changes may
+  need an offline bootstrap. Core interrupted-rename decisions have host coverage;
+  arbitrary resets/power cuts during HFS metadata writes are not guest acceptance.
+  Prior whole-collection experiment remains preserved locally but is not wired
+  into this updater or startup. Existing older reports below are historical.
+
+[Installation and source hosting](../INSTALL.md) ·
+[Guest and host evidence](repository-update/README.md)
+
+## Earlier supervised deployment — historical physical-SE baseline
 
 18 November: supervised complete utility deployment now passes on physical SE
 and Snow, both retaining the accepted diagnostic Core2026111713. All47 standard

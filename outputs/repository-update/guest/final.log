@@ -1,0 +1,83 @@
+FINAL-BEGIN
+3
+AWK-OK
+keep me
+CLARICE-INSTALLED 1
+tool	repotwo	1	12604	96cdfa42
+tool	repoone	1	12604	96cdfa42
+core	Clarice	2026111801	0	00000000
+core	Clarice	2026111801	0	00000000
+tool	repoone	2	2736	a28f71ec
+tool	repobad	1	2736	a28f71ec
+core	Clarice	2026111801	0	00000000
+core	Clarice	2026111801	0	00000000
+core	Clarice	2026111801	0	00000000
+tool	reposlow	1	12604	96cdfa42
+core	Clarice	2026111801	0	00000000
+tool	telnet	2026111802	25048	4411fd17
+tool	ftp	2026111802	19176	33c4a72b
+tool	ping	2026111802	3944	2114b55c
+tool	ipconfig	2026111802	1756	2ccd7316
+tool	dd	2026111802	18264	30911e06
+tool	mktemp	2026111802	18092	c8f5c164
+tool	printenv	2026111802	13168	88482482
+tool	sleep	2026111802	12688	6a39b8f5
+tool	free	2026111802	2736	a28f71ec
+tool	cksum	2026111802	14808	cd02b705
+tool	cmp	2026111802	13564	663dedfc
+tool	clarice	2026111802	113312	ee4df520
+tool	wget	2026111802	23244	42e1314b
+tool	kermit	2026111802	25400	81296b0a
+tool	dirname	2026111802	11948	ee16b635
+tool	basename	2026111802	12100	bb624aa1
+tool	more	2026111802	6008	f94c8c88
+tool	od	2026111802	6008	f94c8c88
+tool	file	2026111802	12892	285ea017
+tool	du	2026111802	12892	285ea017
+tool	find	2026111802	12892	285ea017
+tool	hfsattr	2026111802	12996	78339b94
+tool	readlink	2026111802	12996	78339b94
+tool	ln	2026111802	12996	78339b94
+tool	rm	2026111802	12996	78339b94
+tool	mkdir	2026111802	12996	78339b94
+tool	rmdir	2026111802	12996	78339b94
+tool	touch	2026111802	12996	78339b94
+tool	mv	2026111802	12996	78339b94
+tool	cp	2026111802	12996	78339b94
+tool	sort	2026111802	40016	b1e7a171
+tool	tail	2026111802	17924	14bc1ce3
+tool	tee	2026111802	13460	09c78836
+tool	uniq	2026111802	16716	7ef83872
+tool	tr	2026111802	32456	9272383c
+tool	cut	2026111802	18868	db9a8735
+tool	head	2026111802	15620	ffff63a7
+tool	wc	2026111802	15496	612d2ee0
+tool	serial	2026111802	9552	c43bf37e
+tool	awk	2026111802	188956	44b0e0d6
+tool	sed	2026111802	65760	6714d29c
+tool	grep	2026111802	46044	ba928b81
+tool	benchscan	2026111802	12604	96cdfa42
+tool	benchls	2026111802	12604	96cdfa42
+tool	cat	2026111802	12604	96cdfa42
+tool	df	2026111802	12604	96cdfa42
+tool	ls	2026111802	12604	96cdfa42
+core	Clarice	2026111802	271104	4011f148
+Checking repository...
+Downloaded 5.21 KB to /tmp/clarice-sort-507083-1
+All standard tools are current. Update complete.
+Runtime: heap=358046 largest=357008 image=100540 ticks=556 load=51 owned-peak=0 remaining=0
+Loader ticks: read=30 validate=1 imports=3 relocations=3 prepare=4 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)
+Checking repository...
+Downloaded 5.21 KB to /tmp/clarice-sort-507660-2
+All standard tools are current. Update complete.
+Runtime: heap=358046 largest=357008 image=100540 ticks=553 load=49 owned-peak=0 remaining=0
+Loader ticks: read=29 validate=1 imports=2 relocations=4 prepare=3 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=9 payload=0 metadata=1 structure=2 (structure included in relocations)
+d--                       2026-11-17 06:28 .
+d--                                        ..
+---          0     270911 2026-11-17 16:08 .cu-00000025-78c4033a.old
+---          0     270911 2026-11-17 16:08 Clarice
+--I          0        754 2026-11-17 16:58 Desktop
+---     268212          0 2026-11-17 09:01 nano
+FINAL-PASS

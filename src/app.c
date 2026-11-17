@@ -936,6 +936,9 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  font_layout();
  welcome();busy=1;
 #ifndef CLARICE_OFFLINE_INSTALLER
+ {char pending[PATH_CAP];unsigned char pn[256];short ref;
+  shell_state_path(pending,"update.incomplete",0);pstr(pn,pending);
+  if(!HOpen(0,0,pn,fsRdPerm,&ref)){FSClose(ref);shell_run("/bin/clarice update --finish");}}
  shell_profile();
 #endif
  busy=0;dirty=1;initial_free=FreeMem();start_tick=TickCount()-launch;last_yield=TickCount();

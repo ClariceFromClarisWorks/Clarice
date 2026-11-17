@@ -1,0 +1,4 @@
+PASS native HFS readback: all 47 standard tools match repository size/CRC
+PASS final catalog matches all 47 standard tools and Core 2026111802
+PASS cancellation status 130; all recorded guest assertion markers present
+PASS completed-update marker absent; 26 recorded temporary downloads absent

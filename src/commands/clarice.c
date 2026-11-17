@@ -46,7 +46,9 @@ static int install_helper(const char *path){
  if(!e){for(int fork=0;fork<2;fork++){uint32_t hash;e=update_hash_fork(path,fork,&hash,fork?p.resource_size:p.data_size);if(e||hash!=s.hashes[fork]){if(!e)e=paramErr;break;}}}
  if(e){int x=cli_native_delete(path);if(x)error("retained incomplete updater helper",x);}return e;
 }
-int clarice_main(int argc,char **argv){
+static UpdateManifest repository_core;
+static const char *repository_package;
+static int core_update(int argc,char **argv){
  int check=0,assume_yes=0,e=0,staged=0,planned=0,handed=0;short in=-1;
  char source[768]="",manifest_file[PATH_CAP]="",package_file[PATH_CAP]="",text[1024],own[256],helper[PATH_CAP],plan_path[PATH_CAP],canonical[PATH_CAP];
  UpdateManifest m;UpdatePlan plan;memset(&plan,0,sizeof plan);
@@ -59,18 +61,26 @@ int clarice_main(int argc,char **argv){
  if(!hostlen||hostlen>=sizeof host){e=paramErr;goto done;}memcpy(host,source+7,hostlen);host[hostlen]=0;char *port=strchr(host,':');if(port)*port=0;
  unsigned long ip=NetParseIP(host);if(!((ip>>24)==10||(ip>>16)==0xc0a8||(ip>>20)==0xac1||(ip>>24)==127)){errsay("Update source must be a numeric private-network HTTP address.\n");e=paramErr;goto done;}
  e=update_application_path(own);if(e)goto done;uint32_t current=0;unsigned system=0;e=update_stamp(own,&current,&system);if(e){errsay("Running application has no supported update identity. Install an update-capable bootstrap build first.\n");goto done;}
- say("Checking update source...\n");e=download(source,manifest_file,sizeof text-1);if(e)goto done;e=read_text(manifest_file,text,sizeof text);if(e)goto done;e=update_manifest(text,&m);if(e)goto done;
+ m=repository_core;
  SysEnvRec env;e=SysEnvirons(1,&env);if(e)goto done;if(m.system>(unsigned short)env.systemVersion){errsay("Update requires a newer Macintosh system.\n");e=paramErr;goto done;}
  snprintf(text,sizeof text,"Installed build %lu; source %s (build %lu).\n",(unsigned long)current,m.version,(unsigned long)m.build);say(text);
  if(m.build<=current){say("No newer compatible update; no downgrade performed.\n");goto done;}if(check)goto done;
  if(!assume_yes&&(!cli_isatty(0)||!cli_isatty(1))){errsay("Updates require an interactive terminal for confirmation, or -y.\n");e=paramErr;goto done;}
- snprintf(text,sizeof text,"/etc/clarice/%s",update_helper_leaf);e=checked(text,helper,canonical,0);if(e)goto done;e=checked("/etc/clarice/" UPDATE_PLAN_NAME,plan_path,canonical,0);if(e)goto done;e=absent(plan_path);if(e){errsay("An unfinished update plan exists; recovery is required before another update.\n");goto done;}
+ snprintf(text,sizeof text,"/etc/clarice/%s",update_helper_leaf);e=checked(text,helper,canonical,0);if(e)goto done;e=checked("/etc/clarice/" UPDATE_PLAN_NAME,plan_path,canonical,0);if(e)goto done;e=absent(plan_path);if(e==dupFNErr){
+  unsigned char saved[UPDATE_PLAN_SIZE];short ref;e=cli_native_open(plan_path,0,0,&ref);
+  if(!e){long length;e=GetEOF(ref,&length);if(!e&&length!=sizeof saved)e=paramErr;if(!e)e=io_read(ref,saved,sizeof saved);int x=FSClose(ref);if(!e)e=x;}
+  if(!e)e=update_plan_decode(saved,&plan);
+  if(!e&&(strcmp(plan.target,own)||plan.build!=m.build))e=paramErr;
+  if(!e)e=install_helper(helper);
+  if(!e){say("Resuming the confirmed Core installation.\n");term_present();e=app_update_handoff(helper);if(!e)handed=1;}
+  goto done;
+ }if(e)goto done;
  strcpy(plan.target,own);CInfoPBRec original;e=info(own,&original);if(e)goto done;if(original.hFileInfo.ioFlAttrib&17){e=permErr;goto done;}
  plan.original_id=original.hFileInfo.ioDirID;plan.original_modified=original.hFileInfo.ioFlMdDat;plan.build=m.build;
  const char *leaf=strrchr(own,':');size_t parent=leaf-own+1;if(parent+29>255){e=bdNamErr;goto done;}
  memcpy(plan.stage,own,parent);snprintf(plan.stage+parent,sizeof plan.stage-parent,".cu-%08lx-%08lx.new",(unsigned long)plan.original_id,(unsigned long)m.build);strcpy(plan.backup,plan.stage);strcpy(plan.backup+strlen(plan.backup)-3,"old");
- if((e=absent(plan.stage))||(e=absent(plan.backup)))goto done;
- char url[768];strcpy(url,source);char *last=strrchr(url,'/');if((size_t)(last-url)+1+strlen(m.package)>=sizeof url){e=bdNamErr;goto done;}strcpy(last+1,m.package);
+ e=absent(plan.stage);if(e==dupFNErr){CInfoPBRec stale;e=info(plan.stage,&stale);if(!e){char retained[256];memcpy(retained,own,parent);snprintf(retained+parent,sizeof retained-parent,".cu-orphan-%08lx",(unsigned long)stale.hFileInfo.ioDirID);e=absent(retained);if(!e)e=cli_native_rename(plan.stage,retained);if(!e)e=update_flush(retained);}}if(e||(e=absent(plan.backup)))goto done;
+ char url[768];strcpy(url,source);char *last=strrchr(url,'/');if((size_t)(last-url)+1+strlen(repository_package)>=sizeof url){e=bdNamErr;goto done;}strcpy(last+1,repository_package);
  say("Downloading application package...\n");e=download(url,package_file,m.bytes);if(e)goto done;e=open_path(package_file,fsRdPerm,&in);if(e)goto done;long size;e=GetEOF(in,&size);if(e||size<0||(uint32_t)size!=m.bytes){if(!e)e=paramErr;goto done;}
  say("Verifying package...\n");unsigned char header[128];e=SetFPos(in,fsFromStart,0);if(!e)e=io_read(in,header,128);UpdatePackage pkg;if(!e)e=update_package(header,m.bytes,&pkg);if(e)goto done;
  say("Staging application forks...\n");unsigned long stage_start=TickCount();e=cli_native_create(plan.stage,'APPL','CLRC');if(e)goto done;staged=1;Extract ex={in,-1,0,m.bytes,0,plan.stage};e=extract(&ex,&pkg);if(e)goto done;char package_crc[9];snprintf(package_crc,sizeof package_crc,"%08lx",(unsigned long)update_crc32_sum(&ex.package_crc));if(strcmp(package_crc,m.crc)){e=paramErr;errsay("Package CRC-32 mismatch.\n");goto done;}e=FSClose(in);in=-1;if(e)goto done;
@@ -106,3 +116,5 @@ done:
  if(manifest_file[0])cli_remove(manifest_file);if(package_file[0])cli_remove(package_file);
  if(e)error("clarice update",e);return e==userCanceledErr?130:e?1:0;
 }
+
+#include "repository-client.inc"

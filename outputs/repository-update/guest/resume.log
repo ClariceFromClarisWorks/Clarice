@@ -1,0 +1,24 @@
+RESUME-BEGIN
+Checking repository...
+Downloaded 187 B to /tmp/clarice-sort-176645-9
+repobad -> build 1
+Installing repobad...
+Downloaded 2.67 KB to /tmp/clarice-sort-176794-10
+All standard tools are current. Update complete.
+Runtime: heap=361592 largest=361424 image=100492 ticks=486 load=50 owned-peak=0 remaining=0
+Loader ticks: read=30 validate=0 imports=3 relocations=3 prepare=4 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=2 (structure included in relocations)
+keep me
+Checking repository...
+Downloaded 187 B to /tmp/clarice-sort-177390-11
+All standard tools are current. Update complete.
+Runtime: heap=361592 largest=361424 image=100492 ticks=232 load=51 owned-peak=0 remaining=0
+Loader ticks: read=30 validate=2 imports=3 relocations=3 prepare=4 events=2 (events included above)
+Verification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=2 (structure included in relocations)
+Checking repository...
+Downloaded 187 B to /tmp/clarice-sort-177642-12
+All standard tools are current. Update complete.
+Runtime: heap=361592 largest=361424 image=100492 ticks=243 load=49 owned-peak=0 remaining=0
+Loader ticks: read=29 validate=2 imports=2 relocations=3 prepare=4 events=1 (events included above)
+Verification ticks: mode=fast header=1 record=9 payload=0 metadata=1 structure=2 (structure included in relocations)
+RESUME-PASS

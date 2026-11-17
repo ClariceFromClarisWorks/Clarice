@@ -23,5 +23,5 @@ m68k-apple-macos-gcc $FLAGS -c /src/src/commands/network/native.c -o /src/work/u
 m68k-apple-macos-gcc $FLAGS -DNDEBUG -c /src/src/commands/vendor/picohttpparser/picohttpparser.c -o /src/work/update-command/picohttpparser.o
 m68k-apple-macos-ld -r --gc-sections -u clarice_main /src/work/update-command/clarice.o /src/work/update-command/wget.o /src/work/update-command/nettcp.o /src/work/update-command/native.o /src/work/update-command/picohttpparser.o $(m68k-apple-macos-gcc -print-libgcc-file-name) -o /src/work/update-command/command.o
 '
-python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/update-command/command.o" "$ROOT/work/update-command/clarice.clx" --runtime 1.2
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/update-command/command.o" "$ROOT/work/update-command/clarice.clx" --runtime 1.6
 cp "$ROOT/work/update-command/clarice.clx" "$ROOT/work/build/clarice.clx"

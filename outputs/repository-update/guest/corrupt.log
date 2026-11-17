@@ -1,0 +1,9 @@
+CORRUPT-BEGIN
+Checking repository...
+Downloaded 112 B to /tmp/clarice-sort-235507-13
+repoone -> build 3
+Installing repoone...
+Downloaded 12.31 KB to /tmp/clarice-sort-235641-14
+clarice update: Mac OS error -50: Invalid parameter
+Completed packages are retained. Repeat clarice update -y to resume.
+CORRUPT-PRESERVED-PASS

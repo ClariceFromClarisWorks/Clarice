@@ -84,7 +84,7 @@ void shell_temp_path(char *out,const char *file){snprintf(out,PATH_CAP,"%.220stm
 static int migrate_private_file(char *out,const char *folder,const char *file,const char *legacy){
  char old[PATH_CAP],temp[PATH_CAP];unsigned char dest[256],src[256],tmp[256],base[256];CInfoPBRec pb;short in=-1,to=-1;long size=0;int e;
  if(strlen(root_path)+strlen(folder)+strlen(file)>255){out[0]=0;return bdNamErr;}strcpy(out,root_path);strcat(out,folder);strcat(out,file);
- e=info(out,&pb);if(!e)return 0;if(e!=fnfErr)return e;
+ e=info(out,&pb);if(!e)return 0;if(e!=fnfErr)return e;if(!legacy)return 0;
  snprintf(old,sizeof old,"%s%s",root_path,legacy);e=info(old,&pb);if(e==fnfErr)return 0;if(e)goto fail;if((pb.hFileInfo.ioFlAttrib&16)||pb.hFileInfo.ioFlRLgLen){e=paramErr;goto fail;}
  pstr(src,old);pstr(dest,out);strcpy(temp,root_path);strcat(temp,folder);strcat(temp,"migrate.tmp");pstr(tmp,temp);pstr(base,file);
  e=HOpen(0,0,src,fsRdPerm,&in);if(e)goto fail;e=GetEOF(in,&size);if(e||size>132000){e=paramErr;goto fail;}

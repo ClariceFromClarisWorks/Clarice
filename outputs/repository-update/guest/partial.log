@@ -1,0 +1,18 @@
+PARTIAL-BEGIN
+Checking repository...
+Downloaded 187 B to /tmp/clarice-sort-125377-6
+repoone -> build 2
+repobad -> build 1
+Installing repoone...
+Downloaded 2.67 KB to /tmp/clarice-sort-125530-7
+appinstall: retained recovery file: native:RCGuest:System Folder:Clarice Data:bin:.clx-repoone.old
+Installing repobad...
+wget: HTTP 404 Not Found
+clarice update: Mac OS error -36: Input/output failure
+Completed packages are retained. Repeat clarice update -y to resume.
+tool	repoone	1	12604	96cdfa42
+tool	repoone	2	2736	a28f71ec
+PARTIAL-FAILURE-PASS
+Runtime: heap=361744 largest=361576 image=8508 ticks=67 load=26 owned-peak=4748 remaining=0
+Loader ticks: read=9 validate=1 imports=1 relocations=1 prepare=4 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)
