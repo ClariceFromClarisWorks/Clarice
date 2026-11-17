@@ -67,3 +67,12 @@ under its MIT option; source, notices and licence are in
 FTP and the bounded VT100 model remain independently implemented adapters; they
 are not claimed to be ftplib or libvterm ports. The release review records the
 upstream comparison and supported scope.
+
+## microtar (coherent-deployment experiment)
+
+Copyright (c) 2017 rxi, MIT. Pristine source and licence in
+`src/update/vendor/microtar`, pinned to27076e1b9290e9c7842bb7890a54fcf172406c84.
+Source: https://github.com/rxi/microtar . A separate restricted release reader
+checks field bounds and approved member names before calling upstream parsing.
+No general archive extraction or compression support is added. Native product
+integration remains unfinished.

@@ -1,5 +1,34 @@
 # Clarice current state
 
+## Coherent deployment — host build/package batch, native integration unfinished
+
+Branch codex/coherent-deployment from main110f937; transaction approach approved.
+No physical connections, deployment, push or release. Root causes: skip-existing
+setup, Core-only HTTP updates, unbound utility manifest and reusable build outputs.
+
+Implemented: fresh full-build directory (previous build retained), invalidated
+seal before rebuild, partial-command override disabled for full builds, source/
+build-bound generated manifest, production-loader validation of actual CLX files,
+Core MacBinary/resource/build checks, kit-content checks, and one plain USTAR
+bundle. 47 commands/32 distinct CLX images passed a clean normal build. Bundle
+1351680B; Core270464B; utilities1031308B. No decompressor on the SE.
+[Evidence](coherent-deployment/build-evidence.json),
+[host tests](coherent-deployment/host-tests.txt).
+
+New collection transaction model passes42 injected failures and42 interruptions;
+1564B native manifest passes every-byte corruption checks. Restricted upstream
+microtar wrapper passes complete real bundle plus24 malformed/truncated archive
+cases under ASan/UBSan. Original MIT source/licence retained. These are host
+checks, not native filesystem durability acceptance. Native file adapter compiles
+against pinned68000 headers but is not yet connected to production installation.
+
+Outstanding: native staging, journal decoding/recovery and startup gate; integrate
+bundle with offline installer, appinstall and HTTP updater; managed-file ownership
+and legacy conflicts; test actual native failure paths, cancellation/low memory,
+repeat upgrades and Snow. Existing updater/installer still have their old behaviour.
+Do not deploy this experimental bundle or claim release consistency is guaranteed.
+No new startup memory, runtime checks or executable-format changes are active yet.
+
 ## Recovery steering — separate development helper
 
 17November: shared Clarice tools/se-control now has a Snow-tested reconnect

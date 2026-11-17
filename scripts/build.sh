@@ -3,7 +3,9 @@ set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 IMAGE=ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae819583eecb0ddd1837da6943c
 mkdir -p "$ROOT/outputs/namespace"
-mkdir -p "$ROOT/work/build"
+python3 "$ROOT/scripts/release.py" begin
+# A full build cannot inherit a caller's partial utility selection.
+unset CLARICE_BUILD_COMMANDS
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
 for name in files inspect misc free; do
  m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -Wall -Wextra -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/$name.c -o /src/work/build/$name-main.o
@@ -49,4 +51,5 @@ humount
 cp "$ROOT/work/build/Clarice.bin" "$ROOT/work/build/Clarice.dsk" "$ROOT/outputs/namespace/"
 cat "$ROOT/outputs/namespace/build.log"
 
+python3 "$ROOT/scripts/release.py" seal
 python3 "$ROOT/scripts/package-utilities.py"

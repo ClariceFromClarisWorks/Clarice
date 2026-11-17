@@ -1,5 +1,11 @@
 # Installing Clarice Core and standard utilities
 
+> Development status: coordinated Core/utility deployment is being implemented
+> on `codex/coherent-deployment`. Its single tar bundle and build manifest pass
+> host checks, but the native installer/updater integration is unfinished. Do not
+> deploy that experimental bundle. The installation behaviour below describes
+> the existing implementation, including its Core-only update limitation.
+
 The core application contains the terminal, shell, builtins and runtime. Standard
 commands are separate CLX files. Nano is optional and is not in this collection.
 Use a complete distribution for first installation; a core-only update does not
