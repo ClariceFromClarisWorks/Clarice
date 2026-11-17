@@ -34,7 +34,18 @@ cases under ASan/UBSan. Original MIT source/licence retained. These are host
 checks, not native filesystem durability acceptance. Native file adapter compiles
 against pinned68000 headers but is not yet connected to production installation.
 
-Outstanding: native staging, journal decoding/recovery and startup gate; integrate
+18 November follow-up (SE off): added a bounded recovery-journal decoder and
+native exact-length/close-checked reader. Experimental journal v2 records ordered
+command names, preventing a changed inventory from reinterpreting saved identities.
+The never-deployed v1 format is rejected. Host ASan/UBSan tests pass every-byte
+corruption, every truncation, wrong paths/inventory and unchanged output on failure;
+the collection model still passes 42 failures and 42 interruptions. The codec
+passes in accelerated Snow Plus/System 6.0.8, status 0, tracked remaining 0.
+Native reader compiled against 68000 headers; actual HFS journal recovery is not
+accepted yet. Record: 3,628 bytes, no heap allocation in codec; no idle overhead.
+[Focused evidence](coherent-deployment/journal/README.md).
+
+Outstanding: native staging, completion-marker/recovery handling and startup gate; integrate
 bundle with offline installer, appinstall and HTTP updater; managed-file ownership
 and legacy conflicts; test actual native failure paths, cancellation/low memory,
 repeat upgrades and Snow. Existing updater/installer still have their old behaviour.
@@ -42,6 +53,12 @@ Do not treat this bundle as a completed automatic updater or claim future
 release consistency is guaranteed. The supervised deployment above uses existing
 per-command recovery, not the unfinished collection transaction.
 No new startup memory, runtime checks or executable-format changes are active yet.
+
+Next authorised milestone is [Remote Sessions](../references/remote-sessions-2026-11-18.md),
+conditional on completing deployment consistency. Investigate/reuse first and
+present the technical proposal before remote-session production changes. SE is
+off; continue Snow only, no push/publish/tag/hardware deployment. Physical remote
+session acceptance remains required later and cannot be inferred from Snow.
 
 ## Recovery steering — separate development helper
 

@@ -10,14 +10,7 @@
 #ifndef RELEASE_POLL
 #define RELEASE_POLL() 0
 #endif
-#define RELEASE_JOURNAL_SIZE (556+40*(RELEASE_COUNT+1))
-typedef struct {uint32_t id,modified,data,resource,created;} ReleaseIdentity;
-typedef struct {
- char root[256],target[256];
- unsigned char identity[32];
- ReleaseIdentity old[RELEASE_COUNT+1],next[RELEASE_COUNT+1];
-} ReleaseTransaction;
-static void release_put32(unsigned char *p,uint32_t n){p[0]=n>>24;p[1]=n>>16;p[2]=n>>8;p[3]=n;}
+#include "release-journal.h"
 static int release_path(const ReleaseTransaction *t,unsigned index,int slot,char out[256]){
  const char *name;char parent[256];size_t n;
  if(index>RELEASE_COUNT||slot<0||slot>2)return paramErr;
@@ -52,8 +45,6 @@ static int release_move(void *ctx,unsigned i,int a,int b){
 }
 static int release_flush(void *ctx){ReleaseTransaction *t=ctx;int e=update_flush(t->root);return e?e:update_flush(t->target);}
 static int release_cancel(void *ctx){(void)ctx;return RELEASE_POLL();}
-static void release_encode_identity(unsigned char *p,const ReleaseIdentity *id){release_put32(p,id->id);release_put32(p+4,id->modified);release_put32(p+8,id->data);release_put32(p+12,id->resource);release_put32(p+16,id->created);}
-static void release_decode_identity(const unsigned char *p,ReleaseIdentity *id){id->id=update_be32(p);id->modified=update_be32(p+4);id->data=update_be32(p+8);id->resource=update_be32(p+12);id->created=update_be32(p+16);}
 /* No in-place journal update. A distinct completion marker is written only
  * after every installed member has been checked and flushed. */
 static int release_write_new(const char *path,const unsigned char *p,long size){
@@ -63,15 +54,26 @@ static int release_write_new(const char *path,const unsigned char *p,long size){
  /* A partial owned journal is deliberately retained: startup must fail closed. */
  return e?e:update_flush(path);
 }
+/* Read only from the caller's installation. No rename, delete or recovery
+ * decision is permitted until decoding succeeds. Failed reads leave t intact. */
+static int release_read_journal(ReleaseTransaction *t){
+ char path[256];unsigned char encoded[RELEASE_JOURNAL_SIZE];short ref=-1;
+ int e=release_state_path(t,"release.pending",path);if(e)return e;
+ e=update_open(path,0,0,&ref);if(e)return e;
+ long size=0;e=GetEOF(ref,&size);
+ if(!e&&size!=(long)sizeof encoded)e=paramErr;
+ if(!e){long count=sizeof encoded;e=FSRead(ref,&count,encoded);if(!e&&count!=(long)sizeof encoded)e=ioErr;}
+ {int close_error=FSClose(ref);if(!e)e=close_error;}
+ return e?e:release_journal_decode(encoded,sizeof encoded,t->root,t->target,t);
+}
 static int release_journal(void *ctx,int state){
  ReleaseTransaction *t=ctx;char path[256];int e;
  if(state==2){unsigned char done[36];memcpy(done,t->identity,32);UpdateCRC32 crc;update_crc32_init(&crc);update_crc32_bytes(&crc,done,32);release_put32(done+32,update_crc32_sum(&crc));
   e=release_state_path(t,"release.done",path);return e?e:release_write_new(path,done,sizeof done);}
  e=release_state_path(t,"release.pending",path);if(e)return e;
  if(!state){unsigned char n[256];short v;e=update_volume(path,&v);if(e)return e;update_pstr(n,path);e=HDelete(v,0,n);return e?e:update_flush(path);}
- unsigned char encoded[RELEASE_JOURNAL_SIZE];memset(encoded,0,sizeof encoded);memcpy(encoded,"CLRTX001",8);memcpy(encoded+8,t->root,strlen(t->root));memcpy(encoded+264,t->target,strlen(t->target));memcpy(encoded+520,t->identity,32);
- for(unsigned i=0;i<=RELEASE_COUNT;i++){release_encode_identity(encoded+552+i*40,&t->old[i]);release_encode_identity(encoded+572+i*40,&t->next[i]);}
- UpdateCRC32 crc;update_crc32_init(&crc);update_crc32_bytes(&crc,encoded,sizeof encoded-4);release_put32(encoded+sizeof encoded-4,update_crc32_sum(&crc));
+ unsigned char encoded[RELEASE_JOURNAL_SIZE];
+ e=release_journal_encode(t,encoded);if(e)return e;
  return release_write_new(path,encoded,sizeof encoded);
 }
 static CollectionOps release_ops(ReleaseTransaction *t){CollectionOps o={t,RELEASE_COUNT+1,release_old,release_identify,release_move,release_flush,release_journal,release_cancel};return o;}
