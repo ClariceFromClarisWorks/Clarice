@@ -1,0 +1,4 @@
+PASS 140039 host inversion rectangles under ASan/UBSan: exhaustive horizontal bounds, odd/even bases, top/bottom/full-height, double inversion, invalid/overflow inputs and outer guards.
+PASS 3518 actual M68000 RAM-inversion cases: independent byte oracle, exact per-row extent, odd/even storage, full-height/last-row boundaries, invalid inputs, guard bytes and even multibyte accesses.
+C ABI D3-D7/A2-A6 preserved. No full application build, Snow or physical execution.
+Helper SHA-256 3727990b32c92ebdc58ddeee8ae478c877f2db5b000afe4cbe0afaa25e5cc08c

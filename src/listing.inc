@@ -107,7 +107,7 @@ static int ls_command(int argc,char **av){
  "Directory type/creator use ---- ---- (not applicable).\n"
  "-a includes Finder-invisible entries, dot names, . and ..\n"
  "Explicit path operands are shown even when hidden.\n"
- "-1 one entry per line; -P no paging; catalog order.\n"
+ "-1 one entry per line; -P accepted for compatibility; catalog order.\n"
  "No invented owners, groups or Unix access permissions.\n");return output_error?1:0;}
 int detail=0,all=0,paged=1,human=0,one=0,options=1,n=0,i;int operand=1,operand_options=1;
  for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--] [path ...]\n");return 2;}}}else n++;}

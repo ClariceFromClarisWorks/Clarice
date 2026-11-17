@@ -1,0 +1,1 @@
+DIRECT_STAGE_PIXELS PASS checks=35 failures=0; full/narrow/hole/occluded, themes, selection, forced/incremental; dirty/purged/OOM staging

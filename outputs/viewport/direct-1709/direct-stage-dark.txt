@@ -1,0 +1,38 @@
+JUMP_PROFILE cols=80 rows=24 cell=6 line=11 inverse=1
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=0 new=0 kind=listing ticks=290 worst=18 frames=25 compose=16 shift=3 raster=245 copy=57 bar=57 plan=39 prepare=13 text=102 rows=625 build=4 align=5
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=0 new=0 kind=varied ticks=537 worst=27 frames=24 compose=17 shift=1 raster=463 copy=77 bar=53 plan=8 prepare=43 text=313 rows=593 build=4 align=5
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=0 new=1 kind=listing ticks=291 worst=18 frames=24 compose=21 shift=1 raster=218 copy=53 bar=51 plan=33 prepare=12 text=94 rows=600 build=4 align=1
+direct_stage frames=23 fallback=0 compose=228 present=161 invert=0 alloc=0 capacity=21888
+run=0 new=1 kind=varied ticks=518 worst=29 frames=24 compose=1 shift=0 raster=19 copy=4 bar=53 plan=0 prepare=1 text=13 rows=25 build=4 align=0
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=0 new=2 kind=listing ticks=293 worst=18 frames=24 compose=19 shift=1 raster=219 copy=60 bar=50 plan=41 prepare=15 text=83 rows=600 build=4 align=1
+direct_stage frames=23 fallback=0 compose=228 present=33 invert=36 alloc=0 capacity=21888
+run=0 new=2 kind=varied ticks=431 worst=26 frames=24 compose=0 shift=0 raster=20 copy=4 bar=55 plan=0 prepare=3 text=12 rows=25 build=4 align=0
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=1 new=0 kind=listing ticks=290 worst=18 frames=24 compose=18 shift=1 raster=217 copy=59 bar=53 plan=38 prepare=16 text=76 rows=600 build=4 align=3
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=1 new=0 kind=varied ticks=536 worst=27 frames=24 compose=16 shift=1 raster=466 copy=82 bar=53 plan=6 prepare=46 text=309 rows=593 build=4 align=3
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=1 new=1 kind=listing ticks=293 worst=18 frames=24 compose=20 shift=1 raster=221 copy=59 bar=50 plan=44 prepare=9 text=85 rows=600 build=4 align=1
+direct_stage frames=23 fallback=0 compose=228 present=159 invert=0 alloc=0 capacity=21888
+run=1 new=1 kind=varied ticks=517 worst=29 frames=24 compose=1 shift=0 raster=19 copy=5 bar=52 plan=0 prepare=1 text=12 rows=25 build=4 align=1
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=1 new=2 kind=listing ticks=291 worst=18 frames=24 compose=19 shift=2 raster=219 copy=63 bar=50 plan=36 prepare=13 text=80 rows=600 build=4 align=0
+direct_stage frames=23 fallback=0 compose=228 present=33 invert=37 alloc=0 capacity=21888
+run=1 new=2 kind=varied ticks=429 worst=26 frames=24 compose=1 shift=0 raster=19 copy=5 bar=52 plan=0 prepare=0 text=12 rows=25 build=4 align=1
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=2 new=0 kind=listing ticks=290 worst=18 frames=24 compose=19 shift=1 raster=217 copy=64 bar=53 plan=31 prepare=16 text=82 rows=600 build=4 align=2
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=2 new=0 kind=varied ticks=538 worst=28 frames=24 compose=18 shift=1 raster=463 copy=81 bar=54 plan=6 prepare=40 text=309 rows=593 build=4 align=4
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=2 new=1 kind=listing ticks=291 worst=18 frames=24 compose=21 shift=1 raster=218 copy=63 bar=50 plan=33 prepare=6 text=87 rows=600 build=4 align=0
+direct_stage frames=23 fallback=0 compose=230 present=160 invert=0 alloc=0 capacity=21888
+run=2 new=1 kind=varied ticks=519 worst=30 frames=24 compose=1 shift=0 raster=19 copy=1 bar=52 plan=0 prepare=1 text=13 rows=25 build=4 align=0
+direct_stage frames=0 fallback=0 compose=0 present=0 invert=0 alloc=0 capacity=0
+run=2 new=2 kind=listing ticks=290 worst=18 frames=24 compose=19 shift=1 raster=220 copy=58 bar=49 plan=33 prepare=9 text=93 rows=600 build=4 align=0
+direct_stage frames=23 fallback=0 compose=229 present=34 invert=37 alloc=0 capacity=21888
+run=2 new=2 kind=varied ticks=429 worst=26 frames=24 compose=1 shift=0 raster=19 copy=3 bar=50 plan=0 prepare=4 text=11 rows=25 build=3 align=1
+heap_delta=0; phases overlap; total is sum of completed draw calls

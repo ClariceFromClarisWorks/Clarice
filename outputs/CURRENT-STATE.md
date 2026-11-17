@@ -1,5 +1,95 @@
 # Clarice current state
 
+## Recovery steering — separate development helper
+
+17November: shared Clarice tools/se-control now has a Snow-tested reconnect
+candidate; [report](../../Clarice/outputs/se-control-recovery/REPORT.md). Partial
+input/drag/capture loss, listener restart, repeated heap checks and offline Quit
+pass. No renderer/RC changes for recovery. Helper now installed through Clarice;
+two physical disconnects reconnected unaided in5.94/6.16s, heap26802 stable.
+Old helper application retained; new socket in shared Clarice checkout at
+work/se-control-recovery/physical.sock. Serial adapter now present; independent serial maintenance and safe
+port arbitration remain a separate architectural step, not an existing shell
+server or a general MacTCP/process restart facility.
+
+
+Disk cleanup now archived25 old builds/packages through Clarice into
+Macintosh HD:Clarice Archive 20261117. Normalized fork-length/type/creator/flag
+manifests compare equal; active app/two recent recovery copies/helpers retained.
+Older installed ls lacks -d and cmp is absent; verified with existing shell
+facilities instead. No permanent deletion or utility upgrade; staging stays in/tmp.
+
+## Isolated terminal experiment — in progress
+
+17 November: `codex/terminal-viewport`, based on RC `2df1684`; RC unchanged.
+[Report and evidence](viewport/REPORT.md). Viewport/prompt composition, resize
+anchoring, long-input reflow and clipped scrollbar staging pass focused host/Snow
+tests. Cross-volume preference rename/flush corrected; native negative/recovery
+and Snow theme checks pass. Automatic paging removed; explicit `more` advance,
+quit and cancellation pass. No commits, push or release.
+
+Physical1703's faster row painting still produced a user-observed top-down wipe.
+Snapshot1704 was rejected for slower total redraws. Direct composition1708 avoids
+snapshot/per-row copies;1709/1710 remove redundant row validation after whole-view
+validation. **Physical1710 paired medians for24 large jumps:549→447ticks light,
+613→494dark (18.6%/19.4% faster)**. Sparse medians299→285/347→333 show no systematic
+regression. [Actual trials, limitations and interaction results](viewport/direct-1710/README.md).
+Glyph composition262–281ticks per23frames dominates; final transfer30–40ticks,
+dark inversion43–48. No claim of VBL-atomic presentation.
+
+Physical35pixel cases,22scrolling bursts/20views and147scrollbar comparisons pass.
+Native pressure/recovery passes: owned0, freeheap unchanged, largestblock−158B.
+Payload46,208B plus Handle bookkeeping, demand-allocated/purgeable; command
+admission requests native purging only when its existing preflight would refuse.
+Physical Ctrl+C and Command-period each return130/recover; ordinary ls, selection,
+scrollbar dragging and typing-to-live pass. No old SE applications deleted or
+renamed. Previous working copies remain recoverable.
+
+Snow nano edit/discard/reopen restores terminal/status0, stable freeheap/largest,
+tracked remaining0. Telnet full-screen less, exit, reconnect and local cancellation
+restore the shell; exact cancellation status was obscured by automation errors.
+Physical **visual** acceptance is still pending: screenshots cannot resolve brief
+flashes. A user-observed boxed-minus mouse pointer moved with the mouse; switching
+to Finder and back restored the arrow, and a subsequent scrollbar drag remained
+normal. Trigger unresolved; [evidence](viewport/direct-1710/physical/pointer/README.md). Root graphics drafts are not integrated; RC remains untouched.
+
+The next isolated experiment extends complete-screen composition to completed,
+noninteractive bulk output, preserving incremental/sparse fallback.1711 passes
+293 Snow pixel comparisons.1712 refines the same renderer’s timings to exclude
+fixture generation: six dense48-line batches133→115ticks light/147→122dark
+(13.5%/17.0%); clipped variants also improve, small/sparse cases remain near
+unchanged. [Raw results and reproducible source overlay](viewport/direct-1712/README.md).
+1712 physical matched dense48-line output now passes293pixel comparisons:
+155→135ticks light,183→150dark (12.9%/18.0%); painting124→104/152→119.
+Ingestion unchanged31ticks. Clipped dense cases also improve. One paired batch
+per case; fallback noise −11..+18ticks, no small-case speed claim. No RC promotion.
+
+Physical1712 **System6 clipboard** checks pass: actual mouse selection followed by
+Command-C/V and Edit Copy/Paste; copying historical text returns to the live
+prompt without execution. [Screenshots and scope](viewport/direct-1712/physical/clipboard/README.md).
+No clipboard implementation changes. The user-reported PowerBook failure with
+both methods remains unreproduced; PowerBook unavailable, System7 investigation
+deferred. Up-arrow transient duplication has a focused prepare-row-before-move
+prototype1713:48 Snow pixel comparisons and12 unchanged-before-move checks pass.
+Whole-scroll time is approximately unchanged; exposed-row gap falls sharply.
+[Evidence](viewport/direct-1713/README.md). Physical1713 paired up-arrow tests pass48pixel/12preparation checks.
+24-step medians194→179ticks light (7.7%),191→186dark (2.6%);
+post-move complete-repair interval~46–51→2–4ms per step. No new bitmap.
+Actual held-arrow video reviewed: completed rows/bar correct; transient mixed
+CRT/copy scan remains ambiguous at30fps, no human flash-free acceptance.
+1713 physical Ctrl+C/Cmd-period separately return130/recover, owned0, stable
+326596free/323310largest at those checks.
+User-authorised webcam capture now supplements screenshots (video only,
+1280×720/30fps, private ignored work/ clips; no physical flash-free claim yet).
+
+Separate trusted-local PowerBook listener fixed its initial peer rejection;
+640×400 capture, mouse/keys and background Finder control pass. User is testing
+networking; RC1702 Core and independently installable utilities are served on its
+separate development HTTP endpoint. **User reports ping fails on the PowerBook and
+Ctrl+C does not restore the prompt.** Not reproduced or diagnosed; Open Transport
+is a hypothesis, not an established cause. Command-period suggested; outcome
+unknown. Deferred at user's request; do not claim PowerBook networking acceptance.
+
 ## 0.5.0 integrated candidate — hardware acceptance pending
 
 17 November: build **2026111702**, branch `codex/release-0.5.0-rc`.

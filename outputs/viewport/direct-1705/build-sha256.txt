@@ -1,0 +1,1 @@
+283a1bdeb23804531b0f8037a66d2aea0ae3aadda6f00cf7a11a4b651a99b39a  work/direct-terminal/build/Clarice.bin

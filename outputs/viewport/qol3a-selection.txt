@@ -1,0 +1,18 @@
+new=2 ticks mismatches=0
+mode=2 scrollback=1 inverse=0 updates=12 ticks=7 worst=1 stationary_ticks=0 pixel_valid=1 mismatches=0 heap_delta=0
+key-after-click mode=2 inverse=0 selected=0 old=30 new=3 ticks mismatches=0
+key-after-click mode=2 inverse=0 selected=1 old=30 new=4 ticks mismatches=0
+mode=2 scrollback=36 inverse=1 updates=12 ticks=8 worst=1 stationary_ticks=0 pixel_valid=1 mismatches=0 heap_delta=0
+key-after-click mode=2 inverse=1 selected=0 old=32 new=4 ticks mismatches=0
+key-after-click mode=2 inverse=1 selected=1 old=33 new=5 ticks mismatches=0
+history-scroll mode=0 legacy=1 steps=12 ticks=91 worst=10 mismatches=0 heap_delta=0
+history-scroll mode=0 legacy=0 steps=12 ticks=86 worst=9 mismatches=0 heap_delta=0
+history-scroll mode=2 legacy=1 steps=12 ticks=150 worst=17 mismatches=0 heap_delta=0
+history-scroll mode=2 legacy=0 steps=12 ticks=153 worst=17 mismatches=0 heap_delta=0
+ed typing returns live and retains key
+PASS paste returns live and retains contents
+PASS foreground typeahead returns to liveerse=1 selected=1 old=32 new=4 ticks mismatches=0
+history-scroll mode=0 legacy=1 steps=12 ticks=82 worst=9 mismatches=0 heap_delta=0
+history-scroll mode=0 legacy=0 steps=12 ticks=80 worst=9 mismatches=0 heap_delta=0
+history-scroll mode=2 legacy=1 steps=12 ticks=144 worst=16 mismatches=0 heap_delta=0
+history-scroll mode=2 legacy=0 steps=12 ticks=144 worst=16 mismatches=0 heap_delta=0

@@ -1,0 +1,26 @@
+JUMP_PROFILE cols=80 rows=24 cell=6 line=11 inverse=0
+hits=0 misses=0
+run=0 new=0 kind=listing ticks=248 worst=15 frames=25 compose=20 shift=2 raster=205 copy=70 bar=53 plan=37 prepare=20 text=48 rows=625 build=3 align=6
+hits=0 misses=0
+run=0 new=0 kind=varied ticks=495 worst=28 frames=24 compose=18 shift=1 raster=422 copy=93 bar=54 plan=5 prepare=39 text=263 rows=593 build=4 align=2
+hits=0 misses=0
+run=0 new=1 kind=listing ticks=246 worst=15 frames=24 compose=19 shift=1 raster=173 copy=63 bar=49 plan=37 prepare=9 text=37 rows=600 build=3 align=0
+hits=306 misses=260
+run=0 new=1 kind=varied ticks=446 worst=30 frames=24 compose=16 shift=2 raster=373 copy=79 bar=52 plan=6 prepare=37 text=223 rows=593 build=3 align=5
+hits=0 misses=0
+run=1 new=0 kind=listing ticks=248 worst=15 frames=24 compose=19 shift=2 raster=175 copy=62 bar=52 plan=40 prepare=8 text=38 rows=600 build=3 align=0
+hits=0 misses=0
+run=1 new=0 kind=varied ticks=493 worst=28 frames=24 compose=18 shift=0 raster=422 copy=75 bar=50 plan=5 prepare=46 text=273 rows=593 build=4 align=2
+hits=0 misses=0
+run=1 new=1 kind=listing ticks=247 worst=16 frames=24 compose=15 shift=1 raster=173 copy=55 bar=57 plan=34 prepare=13 text=45 rows=600 build=4 align=0
+hits=306 misses=260
+run=1 new=1 kind=varied ticks=447 worst=29 frames=24 compose=15 shift=1 raster=373 copy=85 bar=55 plan=1 prepare=40 text=214 rows=593 build=4 align=2
+hits=0 misses=0
+run=2 new=0 kind=listing ticks=243 worst=15 frames=24 compose=14 shift=1 raster=174 copy=63 bar=52 plan=32 prepare=16 text=35 rows=600 build=4 align=0
+hits=0 misses=0
+run=2 new=0 kind=varied ticks=493 worst=28 frames=24 compose=17 shift=1 raster=422 copy=73 bar=50 plan=5 prepare=49 text=275 rows=593 build=3 align=2
+hits=0 misses=0
+run=2 new=1 kind=listing ticks=248 worst=16 frames=24 compose=18 shift=1 raster=177 copy=57 bar=52 plan=32 prepare=9 text=48 rows=600 build=3 align=3
+hits=306 misses=260
+run=2 new=1 kind=varied ticks=444 worst=29 frames=24 compose=18 shift=0 raster=375 copy=80 bar=49 plan=6 prepare=30 text=225 rows=593 build=3 align=0
+heap_delta=-67342; phases overlap; total is sum of completed draw calls

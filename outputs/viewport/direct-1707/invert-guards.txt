@@ -1,0 +1,6 @@
+Build1707 isolated RAM inversion: 68000 NOT.L postincrement + DBRA over bounded groups of four bytes, same odd-leading-byte and word/byte tails; portable C word fallback unchanged.
+PASS140039 hostASan/UBSan rectangles. PASS3518 actualM68000 exact-extent/guards/alignment/oracle cases.
+Exact compiled helper text214→194bytes (-20), no data/BSS growth.
+Executed68000 instructions at480x275:72914→14062 (even startingbyte),73189→14337 (odd startingbyte),~80% fewer. This is instructioncount, not measured guest ticks or physical time. Full output byte-for-byte identical.
+No full application build, Snow or SE interaction.
+HelperSHA256 afccf40f0f89e2320647b6c44a04c2e2a489c59c72e63dedc181c8fb5d57f2cd

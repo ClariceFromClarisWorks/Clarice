@@ -1,0 +1,12 @@
+Transcribed from physical screenshots light-summary.png / dark-summary.png.
+24 completed draw calls per sample; stock SE 68000, 4 MB.
+Light original: 662 642 646
+Light planes: 565 555 557
+Light planes+rows: 514 515 514
+Dark original: 712 700 708
+Dark planes: 627 627 625
+Dark planes+rows: 579 577 582
+Light heap_delta=26; dark heap_delta=0.
+SEControl screenshots occurred between some yield points; medians are preliminary
+whole-draw timings, not precise uncontended CPU measurements.
+User observed visible top-down row replacement: visual smoothness FAIL.

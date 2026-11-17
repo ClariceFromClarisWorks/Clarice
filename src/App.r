@@ -23,8 +23,6 @@ resource 'DITL' (140) {{
  {98, 16, 116, 338}, CheckBox { enabled, "White text on black" };
  {128, 16, 146, 125}, StaticText { disabled, "Scrollback:" };
  {126, 132, 148, 338}, UserItem { enabled };
- {158, 16, 176, 125}, StaticText { disabled, "Paging:" };
- {156, 132, 178, 338}, UserItem { enabled };
  {212, 16, 230, 338}, CheckBox { enabled, "Fill screen (keep menu bar)" };
  {186, 16, 204, 125}, StaticText { disabled, "Control key:" };
  {184, 132, 206, 338}, UserItem { enabled }

@@ -1,0 +1,38 @@
+{
+  "src/CMakeLists.txt": {
+    "base": "bc9d2022688e83c8290f8086f080c53f88b6ca3adca07b8dfb05650cd5781568",
+    "candidate": "814550289c65f8e3c885a02e1c3e386e0ee42ec9222e33008a4692b06054a7f1"
+  },
+  "src/app.c": {
+    "base": "ebd7a249c4d9dd631163ded1511ba198d5f25117212261bac2194ba7beaf8f44",
+    "candidate": "f924ab48c4c7ba2960bf3c340998697a77d30bbefefebabb9db782cc1c26d944"
+  },
+  "src/history-raster-cache.inc": {
+    "base": "d22ff38ff5c41fc3300fa1c47ef01026422ee88acf5c8f90bd986112801de28f",
+    "candidate": "1abe314363ea9d6a87a52741d2da16f2d32f6b60c025890d58c32a2cd408baa7"
+  },
+  "src/listing.inc": {
+    "base": "ec90a05886673b6e718e54f3829488435d53615fd0bb170f80d49fdd067522ae",
+    "candidate": "e417387861e1ccd4bf1912b14387ff6293c1824473238fd4ad09f7c2b5288cde"
+  },
+  "src/native-glyphs.inc": {
+    "base": "23aea8a633b671788b20f989c1012b80da2039e8fcb6690a8716e2d123670da6",
+    "candidate": "b195fa831ca1cbab7fdb5e3a1914da366696da3d49347a79a74c6de7610986b4"
+  },
+  "src/planes-unrolled.S": {
+    "base": null,
+    "candidate": "9bd90ee9fea376ee034ae2f10aef49c35f1a7d84a3dbb51627b419232c3bf50a"
+  },
+  "tests/terminal/align-guest.inc": {
+    "base": "c931c1e9ffce58fd7374ccee2edd46a4a514fd7700c6afb769e4f336601324c1",
+    "candidate": "c29d6555f712c73e363e80ae9f94dd11aab3dacfd55f2a9c8c7622ced67a67cf"
+  },
+  "tests/terminal/jump-guest.inc": {
+    "base": "5881042da65c34f0e04c7baf0f9798704a85b1e4a031088b5aaa8fab6f18bcf7",
+    "candidate": "c085403e170d4a834c405c53ed1d8e3b6cefaf0ed3d3d65a4a377d93d27315c7"
+  },
+  "tests/terminal/viewport-host.py": {
+    "base": "69d66f9b533bb777bf16c871dcf97a47631568ac17cd625697aeab2eff61a40b",
+    "candidate": "8a1acc6fbcab37615cbfcff25e151de22b55aa6bb2839a88204b1237c4d1b45d"
+  }
+}

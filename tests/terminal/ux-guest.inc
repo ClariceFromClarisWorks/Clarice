@@ -23,7 +23,7 @@ static void ux_probe(void){
  usability_record("unsupported shell control is not an arrow",!strcmp(input,"unchanged")&&cursor==3&&history_back==previous_history);usability_reset();
  control_mode=saved_mode;
  app_clear();current_line=100;oldest_line=0;for(int r=0;r<=100;r++)snprintf(text[r],COLS,"History row %03d",r);strcpy(input,"keep");cursor=4;scrollback=3;draw();
- char screen[40][COLS];long first;int prompt;compose_input(screen,&first,&prompt);int clean=prompt==visible+1;
+ char screen[40][COLS];long first;int prompt;compose_input(screen,&first,&prompt);int clean=prompt>visible;
  for(int r=0;r<=visible;r++)if(memcmp(screen[r],text[(first+r)%ROWS],columns)||screen[r][COLS-1])clean=0;
  usability_record("scrollback fills last row, no pinned prompt/cursor",clean);
  select_start=visible*columns;select_end=select_start+7;copy_selection();Handle scrap=NewHandle(0);long off,count=GetScrap(scrap,'TEXT',&off);usability_record("copy includes last history row",count==7&&!memcmp(*scrap,"History",7));DisposeHandle(scrap);select_start=select_end=-1;
@@ -31,6 +31,6 @@ static void ux_probe(void){
  scrollback=3;ZeroScrap();PutScrap(2,'TEXT',"XY");ux_event(9,'v',cmdKey);usability_record("paste returns live and retains contents",!scrollback&&!strcmp(input,"keepSXY"));
  busy=1;scrollback=3;key('z',0);usability_record("foreground typeahead returns to live view",!scrollback&&ahead_count==1);busy=0;ahead_count=ahead_head=0;
  int saved_theme=inverse;long line=current_line;char oldrow[COLS];memcpy(oldrow,text[0],COLS);
- for(int dark=0;dark<2;dark++){char *args[]={"prefs","colours",dark?"dark":"light"};Rect tiny;SetRect(&tiny,4,0,8,4);InvalRect(&tiny);app_preferences(3,args);EventRecord ev;while(GetNextEvent(updateMask,&ev))handle(&ev);draw();usability_record("theme immediately fills margins, preserves input and history",GetPixel(TEXT_LEFT-1,line_h*3)==dark&&!strcmp(input,"keepSXY")&&line==current_line&&!memcmp(oldrow,text[0],COLS));}
+ for(int dark=0;dark<2;dark++){char *args[]={"prefs","colours",dark?"dark":"light"};Rect tiny;SetRect(&tiny,4,0,8,4);InvalRect(&tiny);app_preferences(3,args);EventRecord ev;while(GetNextEvent(updateMask,&ev))handle(&ev);draw();int pixel=GetPixel(TEXT_LEFT-1,line_h*3),same_input=!strcmp(input,"keepSXY"),same_row=!memcmp(oldrow,text[0],COLS);snprintf(report,sizeof report,"theme requested=%d actual=%d pixel=%d input_ok=%d line_before=%ld line_after=%ld history_ok=%d\n",dark,inverse,pixel,same_input,line,current_line,same_row);n=strlen(report);FSWrite(usability_ref,&n,report);usability_record("theme immediately fills margins, preserves input and history",pixel==dark&&same_input&&line==current_line&&same_row);}
  inverse=saved_theme;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();usability_reset();
 }

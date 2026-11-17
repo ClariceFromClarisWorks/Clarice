@@ -3,7 +3,7 @@
 #define CLARICE_PREFERENCES_FORMAT_H
 #include "control-keys.h"
 #define PREFS_TEXT_MAX 2048
-struct ClaricePrefs { char font[256]; int size,inverse,paging,retained,width,height,x,y,fill,control; };
+struct ClaricePrefs { char font[256]; int size,inverse,retained,width,height,x,y,fill,control; };
 static int pref_uint(const char *s){int n=0;if(!*s)return -1;while(*s){if(*s<'0'||*s>'9'||n>10000)return -1;n=n*10+*s++-'0';}return n;}
 static char *pref_trim(char *s){char *end;while(*s==' '||*s=='\t')s++;end=s+strlen(s);while(end>s&&(end[-1]==' '||end[-1]=='\t'))*--end=0;return s;}
 /* Invalid values/unknown keys leave defaults unchanged. CR, LF and CRLF accepted.
@@ -16,7 +16,6 @@ static int prefs_parse(struct ClaricePrefs *p,char *data,size_t len){
  else if(!strcmp(key,"size")&&n>=6&&n<=24)p->size=n;
  else if(!strcmp(key,"colours")){if(!strcmp(v,"dark"))p->inverse=1;else if(!strcmp(v,"light"))p->inverse=0;}
  else if(!strcmp(key,"control")){int k=control_parse(v);if(k>=0)p->control=k;}
- else if(!strcmp(key,"paging")){if(!strcmp(v,"off"))p->paging=0;else if(!strcmp(v,"screen"))p->paging=1;else if(!strcmp(v,"100"))p->paging=2;}
  else if(!strcmp(key,"scrollback")&&(n==32||n==64||n==128))p->retained=n;
  else if(!strcmp(key,"width")&&n>=180&&n<=8192)p->width=n;
  else if(!strcmp(key,"height")&&n>=100&&n<=8192)p->height=n;
@@ -27,7 +26,7 @@ static int prefs_parse(struct ClaricePrefs *p,char *data,size_t len){
 }
 static int prefs_format(char *out,size_t cap,const struct ClaricePrefs *p){return snprintf(out,cap,
  "# Clarice preferences; read at launch. Values are not shell commands.\n"
- "control=%s\nfont=%s\nsize=%d\ncolours=%s\npaging=%s\nscrollback=%d\n"
+ "control=%s\nfont=%s\nsize=%d\ncolours=%s\nscrollback=%d\n"
  "# Windowed content geometry; columns follow font and width.\n"
- "width=%d\nheight=%d\nx=%d\ny=%d\nfill=%d\n",control_name(p->control),p->font,p->size,p->inverse?"dark":"light",p->paging==0?"off":p->paging==1?"screen":"100",p->retained,p->width,p->height,p->x,p->y,p->fill);}
+ "width=%d\nheight=%d\nx=%d\ny=%d\nfill=%d\n",control_name(p->control),p->font,p->size,p->inverse?"dark":"light",p->retained,p->width,p->height,p->x,p->y,p->fill);}
 #endif

@@ -1,0 +1,5 @@
+height anchor before=76 after=81 FAIL
+bar clipped-staging vs full rebuild FAIL
+theme requested=0 actual=0 margin=0 status=0
+theme requested=1 actual=1 margin=1 status=0
+heap delta=0

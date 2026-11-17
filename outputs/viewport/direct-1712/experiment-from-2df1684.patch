@@ -1,0 +1,1705 @@
+--- a/src/App.r
++++ b/src/App.r
+@@ -23,8 +23,6 @@
+  {98, 16, 116, 338}, CheckBox { enabled, "White text on black" };
+  {128, 16, 146, 125}, StaticText { disabled, "Scrollback:" };
+  {126, 132, 148, 338}, UserItem { enabled };
+- {158, 16, 176, 125}, StaticText { disabled, "Paging:" };
+- {156, 132, 178, 338}, UserItem { enabled };
+  {212, 16, 230, 338}, CheckBox { enabled, "Fill screen (keep menu bar)" };
+  {186, 16, 204, 125}, StaticText { disabled, "Control key:" };
+  {184, 132, 206, 338}, UserItem { enabled }
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -3,7 +3,7 @@
+ if(CLARICE_OFFLINE_INSTALLER)
+  set(INSTALLER_RESOURCE Installer.r)
+ endif()
+-add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c kernels.S checksum.S App.r Icons.r ${INSTALLER_RESOURCE} TYPE APPL CREATOR CLRC)
++add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c planes-unrolled.S glyph-planes.S kernels.S checksum.S App.r Icons.r ${INSTALLER_RESOURCE} TYPE APPL CREATOR CLRC)
+ # Retro68's Rez rule tracks App.r itself, but not its included build stamp.
+ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/App.r.rsrc.bin" APPEND
+  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/update/version.h")
+--- a/src/app.c
++++ b/src/app.c
+@@ -57,6 +57,7 @@
+ static ControlHandle history_bar;
+ static void sync_history_bar(int force);
+ static unsigned char bar_pixels[4*342];
++static Ptr tall_bar_pixels;static int tall_bar_rows;
+ static int bar_testing,bar_failures,bar_checks;
+ static int bar_snapshot(unsigned short *,int);
+ static int scroll_limit(void);
+@@ -91,7 +92,7 @@
+ static long initial_free;
+ static SysEnvRec system_info;
+ static short font_id=4,font_size=9,cell_w=6,line_h=12,font_ascent=9;
+-static int mono=1,inverse,page_mode=1,paging,page_action;
++static int mono=1,inverse,page_mode,paging,page_action;
+ static int control_mode=1; /* Option substitution preserves existing Plus behaviour. */
+ #include "control-keys.h"
+ static int native_glyph_valid;
+@@ -126,7 +127,7 @@
+ #ifdef CLARICE_SELECTION_DIAGNOSTICS
+ static int scroll_probe_legacy;
+ #endif
+-/* Only the history rows move. The separate bottom prompt stays in place. */
++/* The pixel-move rectangle excludes the last row; that row is composed below. */
+ static int scroll_area_has_caret(void){int limit=visible;
+ #ifdef CLARICE_SELECTION_DIAGNOSTICS
+  if(scroll_probe_legacy)limit=40;
+@@ -136,23 +137,30 @@
+ static void input_position(int lead,int end,int *row,int *col){
+  int r=lead/columns,c=lead%columns;for(int i=0;i<end;i++){if(input[i]=='\n'){r++;c=0;}else if(++c==columns){r++;c=0;}}*row=r;*col=c;
+ }
++/* The editable line extends the current output row. Its wrapped rows belong
++   to the same view coordinates as history, rather than a fixed bottom slot. */
++static long viewport_live_first(void){
++ int rows=1;
++ if((!busy||tty_reading)&&!searching){char prefix[132];int lead=(int)strlen(text[current_line%ROWS])+prompt_prefix(prefix),r,c;
++  input_position(lead,(int)strlen(input),&r,&c);rows=r+1;
++  if(rows>visible+1){input_position(lead,cursor,&r,&c);rows=r+1;if(rows<visible+1)rows=visible+1;}
++ }
++ long first=current_line+rows-1-visible;return first<oldest_line?oldest_line:first;
++}
+ static void compose_input(char screen[40][COLS],long *first,int *prompt){
+- if(scrollback){*first=current_line-visible-scrollback;if(*first<oldest_line)*first=oldest_line;*prompt=visible+1;memset(screen,0,40*COLS);for(int r=0;r<=visible;r++){long line=*first+r;if(line>=oldest_line&&line<=current_line)memcpy(screen[r],text[line%ROWS],columns);}return;}
+- char prefix[132];int lead=prompt_prefix(prefix),rows=1,i,start=0,cr=0,cc=0;
++ char prefix[132];int base=(int)strlen(text[current_line%ROWS]),lead=prompt_prefix(prefix);
+  int editing=(!busy||tty_reading)&&!searching;
+- if(editing){int r,c;input_position(lead,strlen(input),&r,&c);rows=r+1;input_position(lead,cursor,&cr,&cc);
+-  if(rows>visible+1){start=cr-visible;if(start<0)start=0;rows=visible+1;}}
+- *first=current_line-(visible+1-rows)-scrollback;if(*first<0)*first=0;
+- *prompt=(int)(current_line-*first);if(*prompt>visible+1-rows)*prompt=visible+1-rows;
+- memset(screen,0,40*COLS);
+- for(i=0;i<*prompt;i++){long line=*first+i;if(line>=oldest_line&&line<=current_line)memcpy(screen[i],text[line%ROWS],columns);}
+- if(searching)snprintf(screen[*prompt],COLS,"search: %.100s",search);
+- else if(editing){int total=lead+strlen(input),r=0,c=0;
+-  for(i=0;i<total;i++){unsigned char ch=i<lead?prefix[i]:input[i-lead];int row=*prompt+r-start;
+-   if(ch=='\n'){r++;c=0;continue;}if(row>=*prompt&&row<=visible)screen[row][c]=ch;
+-   if(++c==columns){r++;c=0;}}
+-  if(!background&&FrontWindow()==win){int row=*prompt+cr-start;if(row>=0&&row<=visible)screen[row][COLS-1]=cc+1;}
+- }else for(i=*prompt;i<=visible;i++){long line=*first+i;if(line>=oldest_line&&line<=current_line)memcpy(screen[i],text[line%ROWS],columns);}
++ *first=viewport_live_first()-scrollback;if(*first<oldest_line)*first=oldest_line;
++ *prompt=(int)(current_line-*first);memset(screen,0,40*COLS);
++ for(int row=0;row<=visible;row++){long line=*first+row;if(line>=oldest_line&&line<=current_line)memcpy(screen[row],text[line%ROWS],columns);}
++ if(searching){if(*prompt>=0&&*prompt<=visible)snprintf(screen[*prompt],COLS,"search: %.100s",search);}
++ else if(editing){int total=base+lead+(int)strlen(input),r=0,c=0;
++  for(int i=0;i<total;i++){unsigned char ch=i<base?text[current_line%ROWS][i]:i<base+lead?prefix[i-base]:input[i-base-lead];
++   int row=*prompt+r;if(ch=='\n'){r++;c=0;continue;}
++   if(row>=0&&row<=visible)screen[row][c]=ch;if(++c==columns){r++;c=0;}}
++  if(!scrollback&&!background&&FrontWindow()==win){int cr,cc;input_position(base+lead,cursor,&cr,&cc);int row=*prompt+cr;if(row>=0&&row<=visible)screen[row][COLS-1]=cc+1;}
++ }
++ /* Explicit more owns its status row; ordinary output never enters this mode. */
+  if(paging)snprintf(screen[visible],COLS,"-- More -- Space: next; Return: line; Q: stop");
+ }
+ static void pstr(unsigned char *p,const char *s){size_t n=strlen(s);if(n>255)n=255;p[0]=(unsigned char)n;memcpy(p+1,s,n);}
+@@ -194,11 +202,22 @@
+  (void)human;display_size(free_size,(unsigned long)FreeMem());display_size(launch_size,(unsigned long)initial_free);
+  snprintf(b,sizeof b,"CPU code %d; System API %04x\nFree app heap: %s; launch: %s\nLaunch-to-ready %lu ticks; commands %lu\nHistory: disk ring 128 entries; 1 KB retrieval\nKB = 1024 bytes\n",system_info.processor,(unsigned short)system_info.systemVersion,free_size,launch_size,start_tick,shell_commands);term_puts(b);
+ }
+-static void layout(void){activity_hide();Rect r=win->portRect;int previous_columns=columns,previous_visible=visible;columns=(r.right-TEXT_LEFT-16)/cell_w;if(columns>COLS-2)columns=COLS-2;if(columns<1)columns=1;
++static void layout(void){activity_hide();Rect r=win->portRect;int previous_columns=columns,previous_visible=visible,was_scrolled=scrollback!=0;long anchor=viewport_live_first()-scrollback;if(anchor<oldest_line)anchor=oldest_line;
++ /* Continuation rows of the editable command are virtual: reflow only owns
++    committed history. Anchor these by input byte position, not a history index. */
++ int input_anchor=-1;
++ if(was_scrolled&&anchor>current_line&&(!busy||tty_reading)&&!searching){
++  char prefix[132];int lead=(int)strlen(text[current_line%ROWS])+prompt_prefix(prefix),row=lead/columns,col=lead%columns;input_anchor=0;
++  while(input[input_anchor]&&row<anchor-current_line){if(input[input_anchor++]=='\n'){row++;col=0;}else if(++col==columns){row++;col=0;}}
++ }
++ columns=(r.right-TEXT_LEFT-16)/cell_w;if(columns>COLS-2)columns=COLS-2;if(columns<1)columns=1;
+  /* Use every complete row, from the content top through the bottom prompt. */
+  visible=(r.bottom-TEXT_TOP)/line_h-1;if(visible<1)visible=1;if(visible>37)visible=37;
+- if(previous_columns!=columns){TerminalReflow *next=(TerminalReflow*)NewPtr(sizeof *next);if(next){long anchor=current_line-previous_visible-scrollback;if(anchor<oldest_line)anchor=oldest_line;
+- terminal_reflow(next,text,wrapped,oldest_line,current_line,anchor,columns,retained);memcpy(text,next->lines,sizeof text);memcpy(wrapped,next->wraps,sizeof wrapped);current_line=next->end;oldest_line=next->oldest;out_col=next->column;if(scrollback){scrollback=current_line-visible-next->anchor;if(scrollback<0)scrollback=0;}DisposePtr((Ptr)next);page_start=current_line;select_start=select_end=-1;}}
++ if(previous_columns!=columns){TerminalReflow *next=(TerminalReflow*)NewPtr(sizeof *next);if(next){terminal_reflow(next,text,wrapped,oldest_line,current_line,anchor,columns,retained);memcpy(text,next->lines,sizeof text);memcpy(wrapped,next->wraps,sizeof wrapped);current_line=next->end;oldest_line=next->oldest;out_col=next->column;anchor=next->anchor;DisposePtr((Ptr)next);page_start=current_line;
++   if(input_anchor>=0){char prefix[132];int row,col;input_position((int)strlen(text[current_line%ROWS])+prompt_prefix(prefix),input_anchor,&row,&col);anchor=current_line+row;}
++  }else columns=previous_columns;}
++ if(was_scrolled){scrollback=viewport_live_first()-anchor;if(scrollback<0)scrollback=0;}
++ if(previous_columns!=columns||previous_visible!=visible)select_start=select_end=-1;
+  force_draw=dirty=1;if(scrollback>scroll_limit())scrollback=scroll_limit();if(history_bar){MoveControl(history_bar,r.right-15,0);SizeControl(history_bar,16,r.bottom-14);}}
+ 
+ static void font_layout(void){native_glyph_valid=0;FontInfo f;int c;SetPort(win);TextFont(font_id);TextSize(font_size);TextFace(0);GetFontInfo(&f);font_ascent=f.ascent;line_h=f.ascent+f.descent+f.leading;if(line_h<1)line_h=12;cell_w=CharWidth('M');mono=1;for(c=32;c<127;c++){int w=CharWidth(c);if(w!=cell_w)mono=0;}if(!mono)cell_w=f.widMax;if(cell_w<1)cell_w=6;layout();build_font_cache();}
+@@ -282,6 +301,8 @@
+ #endif
+  return 1;
+ }
++#include "glyph-planes.inc"
++static int planes_enabled=2;
+ #include "native-glyphs.inc"
+ static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((aligned(2)));long first=current_line-visible+1-scrollback;int prompt_row=visible;if(first<0){first=0;prompt_row=(int)current_line;}int selection_a=select_start<select_end?select_start:select_end,selection_b=select_start>select_end?select_start:select_end;
+  if(!win)return;SetPort(win);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);DRAW_STAMP(native_stage);compose_input(screen,&first,&prompt_row);DRAW_ADD(0,native_stage);
+@@ -311,7 +332,7 @@
+  if(force_draw)erase_margins();
+  /* Configure the reusable row port once per paint, not once per row. */
+  if(line_h<=64){SetPort(&prompt_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);SetPort(win);}
+- for(row=0;row<visible+1;row++){DRAW_STAMP(plan_start);int selected=selection_a>=0&&selection_b>selection_a&&row<visible+(scrollback!=0);if(force_draw||(FRAME_LEGACY?memcmp(last_screen[row],screen[row],COLS):asm_terminal_row_changed(last_screen[row],screen[row]))||selected){Rect area,destination;char rendered[COLS];int left=0,right=columns,buffered=line_h<=64;
++ for(row=0;row<visible+1;row++){DRAW_STAMP(plan_start);int selected=selection_a>=0&&selection_b>selection_a&&row<visible+1;if(force_draw||(FRAME_LEGACY?memcmp(last_screen[row],screen[row],COLS):asm_terminal_row_changed(last_screen[row],screen[row]))||selected){Rect area,destination;char rendered[COLS];int left=0,right=columns,buffered=line_h<=64;
+  if(!force_draw&&!selected){while(left<right&&last_screen[row][left]==screen[row][left])left++;while(right>left&&last_screen[row][right-1]==screen[row][right-1])right--;
+   /* Include both composed cursor cells without repainting the whole prompt. */
+   int old=(unsigned char)last_screen[row][COLS-1]-1,now=(unsigned char)screen[row][COLS-1]-1;
+@@ -330,6 +351,7 @@
+ #endif
+  DRAW_STAMP(text_start);
+  int glyph_phase=0;if(!DIRECT_LEGACY&&!ALIGN_LEGACY&&buffered&&(right-left)*cell_w>=128&&!(win->portBits.rowBytes&0xc000)&&(win->portBits.rowBytes&0x3fff)==64){glyph_phase=(destination.left-win->portBits.bounds.left)&15;if(glyph_phase+(right-left)*cell_w>512)glyph_phase=0;}
++ history_raster_line=first+row;
+  if(!force_draw&&buffered&&row<prompt_row&&!selected&&!screen[row][COLS-1]&&(!last_screen[row][COLS-1]||(unsigned char)last_screen[row][COLS-1]==255)&&native_glyph_row(rendered+left,right-left,glyph_phase)){OffsetRect(&area,glyph_phase-area.left,0);}
+  else {EraseRect(&area);if(mono){int len=right;while(len>left&&rendered[len-1]==' ')len--;MoveTo(area.left,area.top+font_ascent);if(len>left)DrawText(rendered,left,len-left);}else for(x=left;x<right;x++){MoveTo((buffered?0:TEXT_LEFT)+x*cell_w,area.top+font_ascent);DrawChar(rendered[x]);}}
+ 
+@@ -340,7 +362,7 @@
+  if(screen[row][COLS-1]){int cx=(unsigned char)screen[row][COLS-1]-1;Rect caret;SetRect(&caret,(buffered?0:TEXT_LEFT)+cx*cell_w,area.top,(buffered?0:TEXT_LEFT)+(cx+1)*cell_w,area.bottom);InvertRect(&caret);}
+  if(buffered){SetPort(win);ForeColor(blackColor);BackColor(whiteColor);DRAW_STAMP(copy_start);present_native_row(&area,&destination);DRAW_ADD(3,copy_start);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);}memcpy(last_screen[row],screen[row],COLS);}}
+  DRAW_ADD(2,native_stage);
+- if(force_draw&&saved_clip){ForeColor(blackColor);BackColor(whiteColor);Rect grow=win->portRect;grow.left=grow.right-15;grow.top=grow.bottom-15;GetClip(saved_clip);ClipRect(&grow);DrawGrowIcon(win);SetClip(saved_clip);}drawn_first=first;drawn_prompt=prompt_row;dirty=force_draw=0;last_paint=TickCount();
++ if(force_draw&&saved_clip){ForeColor(blackColor);BackColor(whiteColor);Rect grow=win->portRect;grow.left=grow.right-15;grow.top=grow.bottom-15;GetClip(saved_clip);ClipRect(&grow);DrawGrowIcon(win);SetClip(saved_clip);}history_cache_end();glyph_planes_end();drawn_first=first;drawn_prompt=prompt_row;dirty=force_draw=0;last_paint=TickCount();
+ }
+ /* Cached system-font cells; all addresses remain inside the bounded bitmap. */
+ extern void asm_cells(unsigned char *,const unsigned char *,const unsigned char *,long,long,long);
+@@ -348,7 +370,7 @@
+ static void cells_c(unsigned char *dst,const unsigned char *s,const unsigned char *glyph,long n,long h,long w){
+  long c,y;for(c=0;c<n;c++){unsigned int bit=c*w,shift=bit&7;unsigned char *d=dst+(bit>>3);const unsigned char *g=glyph+((unsigned long)s[c]<<5);for(y=0;y<h;y++){d[y*STRIDE]|=g[y]>>shift;if(shift)d[y*STRIDE+1]|=g[y]<<(8-shift);}}
+ }
+-static int scroll_limit(void){long newest=current_line-visible,oldest=oldest_line;if(newest<0)newest=0;if(oldest<0)oldest=0;return newest>oldest?(int)(newest-oldest):0;}
++static int scroll_limit(void){long newest=viewport_live_first(),oldest=oldest_line;if(newest<0)newest=0;if(oldest<0)oldest=0;return newest>oldest?(int)(newest-oldest):0;}
+ /* Test-only readback: verify that composing text/control updates never
+    changes the live bar before the single completed-control copy. */
+ static int bar_snapshot(unsigned short *saved,int compare){
+@@ -363,19 +385,30 @@
+ /* Control Manager setters erase before redrawing. Compose the complete
+    16-pixel control offscreen, then copy it once; never hide the live control. */
+ static void sync_history_bar(int force){
+- if(!history_bar)return;int limit=scroll_limit();if(scrollback>limit)scrollback=limit;int value=limit-scrollback;
++ if(!history_bar||!transfer_region)return;int limit=scroll_limit();if(scrollback>limit)scrollback=limit;int value=limit-scrollback;
+  if(!force&&GetControlMaximum(history_bar)==limit&&GetControlValue(history_bar)==value)return;
+  SetPort(win);ForeColor(blackColor);BackColor(whiteColor);Rect r=(*history_bar)->contrlRect;
+- BitMap screen=win->portBits,buffer;buffer.baseAddr=(Ptr)bar_pixels;buffer.rowBytes=4;buffer.bounds=r;buffer.bounds.left&=~15;buffer.bounds.right=buffer.bounds.left+32;
+- if(r.right-r.left!=16||r.bottom-r.top>342)return;
+- unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(force||DRAW_LEGACY)memset(bar_pixels,0,sizeof bar_pixels);SetPortBits(&buffer);
++ int height=r.bottom-r.top;Ptr pixels=(Ptr)bar_pixels;long bytes=sizeof bar_pixels;
++ if(height>342){
++  if(height!=tall_bar_rows){if(tall_bar_pixels)DisposePtr(tall_bar_pixels);tall_bar_pixels=0;tall_bar_rows=0;
++   if(height>0&&height<=qd.screenBits.bounds.bottom-qd.screenBits.bounds.top){tall_bar_pixels=NewPtr((long)height*4);if(tall_bar_pixels){tall_bar_rows=height;force=1;}}}
++  if(!tall_bar_pixels){SetControlMaximum(history_bar,limit);SetControlValue(history_bar,value);Draw1Control(history_bar);return;}
++  pixels=tall_bar_pixels;bytes=(long)height*4;
++ }else if(tall_bar_pixels){DisposePtr(tall_bar_pixels);tall_bar_pixels=0;tall_bar_rows=0;force=1;}
++ BitMap screen=win->portBits,buffer;buffer.baseAddr=pixels;buffer.rowBytes=4;buffer.bounds=r;buffer.bounds.left&=~15;buffer.bounds.right=buffer.bounds.left+32;
++ if(r.right-r.left!=16||height<=0)return;
++ /* The staging image must be complete even during a clipped window update.
++    Restore the window regions before copying to the real display. */
++ RgnHandle clip=win->clipRgn,vis=win->visRgn;RectRgn(transfer_region,&r);
++ unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(force||DRAW_LEGACY)memset(pixels,0,bytes);SetPortBits(&buffer);
++ win->clipRgn=win->visRgn=transfer_region;
+  if(GetControlMaximum(history_bar)!=limit)SetControlMaximum(history_bar,limit);
+  if(GetControlValue(history_bar)!=value)SetControlValue(history_bar,value);
+  /* SetControlValue/Maximum redraw changed parts. Preserve the staged pixels
+     between updates instead of clearing and redrawing the control twice. */
+  if(force||DRAW_LEGACY)Draw1Control(history_bar);
+  if(bar_testing){unsigned short candidate[342];bar_snapshot(candidate,0);Draw1Control(history_bar);if(bar_snapshot(candidate,1))bar_failures++;}
+- SetPortBits(&screen);
++ win->clipRgn=clip;win->visRgn=vis;SetPortBits(&screen);
+  if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}
+  CopyBits(&buffer,&screen,&r,&r,srcCopy,0);
+ }
+@@ -432,7 +465,7 @@
+   HideCursor();if(render_mode==2)asm_copy_rows(to,frame_pixels+src.top*STRIDE+src.left/8,width/8,src.bottom-src.top,stride,STRIDE);else{int y;for(y=0;y<src.bottom-src.top;y++)memcpy(to+y*stride,frame_pixels+(src.top+y)*STRIDE+src.left/8,width/8);}ShowCursor();direct_copies++;
+  }else{CopyBits(&frame_port.portBits,&win->portBits,&src,&dst,srcCopy,0);qd_copies++;}
+ }
+-/* Move displayed history as well as its cached pixels; the prompt stays put. */
++/* Move displayed history and cached pixels using the shared logical viewport. */
+ static void draw_cached(void){
+  unsigned long stamp=TickCount();char screen[40][COLS];int row,x,lo=40,hi=0,xmin=columns,xmax=0,prompt=visible;long first=current_line-visible+1-scrollback;if(first<0){first=0;prompt=(int)current_line;}
+  compose_input(screen,&first,&prompt);
+@@ -447,7 +480,7 @@
+   if(glyph_ready){int y,n=right-left;unsigned char *dst=pixels+left*cell_w/8;for(y=0;y<line_h;y++)memset(dst+y*STRIDE,0,((right-left)*cell_w+7)/8);while(n&&(!screen[row][left+n-1]||screen[row][left+n-1]==' '))n--;if(render_mode==2)asm_cells(dst,(unsigned char*)screen[row]+left,glyph_cache,n,line_h,cell_w);else cells_c(dst,(unsigned char*)screen[row]+left,glyph_cache,n,line_h,cell_w);}
+   else{memset(pixels,0,line_h*STRIDE);char rendered[COLS];for(x=0;x<columns;x++)rendered[x]=screen[row][x]?screen[row][x]:' ';if(mono){MoveTo(0,r.top+font_ascent);DrawText(rendered,0,columns);}else for(x=0;x<columns;x++){MoveTo(x*cell_w,r.top+font_ascent);DrawChar(rendered[x]);}}
+   if(inverse)InvertRect(&r);
+-  int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end;if(a>=0&&row<visible+(scrollback!=0))for(x=0;x<columns;x++)if(row*columns+x>=a&&row*columns+x<z){Rect q;SetRect(&q,x*cell_w,r.top,(x+1)*cell_w,r.bottom);InvertRect(&q);}
++  int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end;if(a>=0&&row<visible+1)for(x=0;x<columns;x++)if(row*columns+x>=a&&row*columns+x<z){Rect q;SetRect(&q,x*cell_w,r.top,(x+1)*cell_w,r.bottom);InvertRect(&q);}
+   if(screen[row][COLS-1]){int cx=(unsigned char)screen[row][COLS-1]-1;Rect caret;SetRect(&caret,cx*cell_w,r.top,(cx+1)*cell_w,r.bottom);InvertRect(&caret);}
+   if(left<xmin)xmin=left;if(right>xmax)xmax=right;if(row<lo)lo=row;if(row+1>hi)hi=row+1;memcpy(last_screen[row],screen[row],COLS);
+  }
+@@ -460,7 +493,8 @@
+ }
+ static unsigned long paint_ticks,event_ticks;
+ void app_profile(unsigned long *paint,unsigned long *events){*paint=paint_ticks;*events=event_ticks;}
+-static void draw(void){if(!win)return;if(editor_screen){native_glyph_valid=0;draw_editor();return;}activity_hide();unsigned long start=TickCount();int full=force_draw;hide_caret();unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(render_mode&&frame_pixels)draw_cached();else draw_native();if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}DRAW_STAMP(bar_start);sync_history_bar(full);
++#include "direct-view.inc"
++static void draw(void){if(!win)return;if(editor_screen){native_glyph_valid=0;draw_editor();return;}activity_hide();unsigned long start=TickCount();int full=force_draw;hide_caret();unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(render_mode&&frame_pixels)draw_cached();else draw_native_direct();if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}DRAW_STAMP(bar_start);sync_history_bar(full);
+ #ifdef CLARICE_DRAW_DIAGNOSTICS
+  draw_bar_ticks+=TickCount()-bar_start;draw_frames++;
+ #endif
+@@ -497,6 +531,9 @@
+ #include "../tests/terminal/jump-guest.inc"
+ #include "../tests/terminal/presentation-guest.inc"
+ #include "../tests/terminal/align-guest.inc"
++#include "../tests/terminal/direct-guest.inc"
++#include "../tests/terminal/live-guest.inc"
++#include "../tests/terminal/admission-guest.inc"
+ #include "../tests/terminal/dispatch-guest.inc"
+ #include "../tests/terminal/catalog-guest.inc"
+ #include "../tests/terminal/listing-render-guest.inc"
+@@ -504,6 +541,9 @@
+ /* Executed inside the 68000 guest, not host timing or inferred performance. */
+ int app_scroll_bench(int quick){
+ #ifdef CLARICE_DRAW_DIAGNOSTICS
++ if(quick==19)return live_output_probe();
++ if(quick==18){admission_probe();return 0;}
++ if(quick==17)return direct_view_pixels();
+  if(quick==16)return alignment_pixels(1);
+  if(quick==15)return jump_probe(3);
+  if(quick==14)return alignment_pixels(0);
+@@ -558,7 +598,7 @@
+ static void save_preferences(void);
+ static void prefs_snapshot(struct ClaricePrefs *p){
+  unsigned char font[256];Point origin={0,0};GetFontName(font_id,font);memcpy(p->font,font+1,font[0]);p->font[font[0]]=0;
+- SetPort(win);LocalToGlobal(&origin);p->size=font_size;p->inverse=inverse;p->paging=page_mode;p->retained=retained;p->fill=filled;p->control=control_mode;
++ SetPort(win);LocalToGlobal(&origin);p->size=font_size;p->inverse=inverse;p->retained=retained;p->fill=filled;p->control=control_mode;
+  p->width=filled?normal_bounds.right-normal_bounds.left:win->portRect.right;p->height=filled?normal_bounds.bottom-normal_bounds.top:win->portRect.bottom;
+  p->x=filled?normal_bounds.left:origin.h;p->y=filled?normal_bounds.top:origin.v;if(p->x<0)p->x=0;if(p->y<0)p->y=0;
+ }
+@@ -571,12 +611,12 @@
+  OSErr e=FSRead(ref,&n,data);FSClose(ref);if((e&&e!=eofErr)||n>PREFS_TEXT_MAX)return;prefs_snapshot(&p);
+  unsigned char *d=(unsigned char*)data;
+  if((n==44&&!memcmp(d,"S6P2",4))||(n==48&&!memcmp(d,"S6P3",4))||(n==52&&!memcmp(d,"S6P4",4))){
+-  if(d[4]<6||d[4]>24||d[5]>1||d[6]>2||d[8]>31)return;
++  if(d[4]<6||d[4]>24||d[5]>1||d[8]>31)return;
+   if(n>=48&&((d[7]!=32&&d[7]!=64&&d[7]!=128)||d[44]>2))return;
+-  memcpy(p.font,d+9,d[8]);p.font[d[8]]=0;p.size=d[4];p.inverse=d[5];p.paging=d[6];if(n>=48){p.retained=d[7];}
++  memcpy(p.font,d+9,d[8]);p.font[d[8]]=0;p.size=d[4];p.inverse=d[5];if(n>=48){p.retained=d[7];}
+   p.width=d[40]*256+d[41];p.height=d[42]*256+d[43];if(n==52){p.x=(short)((d[48]<<8)|d[49]);p.y=(short)((d[50]<<8)|d[51]);}legacy=1;
+  }else if(!prefs_parse(&p,data,n))return;
+- short id;pstr(name,p.font);if(installed_font(name,&id))font_id=id;font_size=p.size;inverse=p.inverse;page_mode=p.paging;retained=p.retained;control_mode=p.control;
++ short id;pstr(name,p.font);if(installed_font(name,&id))font_id=id;font_size=p.size;inverse=p.inverse;retained=p.retained;control_mode=p.control;
+  int maxw=qd.screenBits.bounds.right-8,maxh=qd.screenBits.bounds.bottom-44;
+  if(p.width<180)p.width=180;if(p.width>maxw)p.width=maxw;if(p.height<100)p.height=100;if(p.height>maxh)p.height=maxh;
+  SizeWindow(win,p.width,p.height,1);MoveWindow(win,p.x,p.y,1);
+@@ -598,24 +638,24 @@
+  prefs_snapshot(&p);n=prefs_format(data,sizeof data,&p);if(n<0||n>=(long)sizeof data)return;long want=n;
+  prefs_sibling(tmp,"clarice.conf.new");prefs_sibling(backup,"clarice.conf.bak");pstr(name,prefs_path);pstr(tn,tmp);pstr(bn,backup);
+  HDelete(0,0,tn);e=HCreate(0,0,tn,'S6UX','TEXT');if(!e)e=HOpen(0,0,tn,fsWrPerm,&ref);
+- if(!e){e=FSWrite(ref,&n,data);if(!e&&n!=want)e=ioErr;int close=FSClose(ref);if(!e)e=close;}if(!e)e=FlushVol(0,0);
++ if(!e){e=FSWrite(ref,&n,data);if(!e&&n!=want)e=ioErr;int close=FSClose(ref);if(!e)e=close;}if(!e)e=shell_flush_native(prefs_path);
+  if(!e){/* Only remove backup when the primary still exists. */
+   short old;int exists=HOpen(0,0,name,fsRdPerm,&old);if(!exists){FSClose(old);e=HDelete(0,0,bn);if(e==fnfErr)e=0;pstr(base,"clarice.conf.bak");if(!e)e=shell_rename(name,base);}else if(exists!=fnfErr)e=exists;
+   if(!e){const char *tail=strrchr(prefs_path,':');pstr(base,tail?tail+1:prefs_path);e=shell_rename(tn,base);if(e)shell_rename(bn,base);}
+  }
+- if(e){HDelete(0,0,tn);{char msg[110];snprintf(msg,sizeof msg,"Preferences save failed (%d); previous file retained.\n",e);term_puts(msg);}}FlushVol(0,0);
++ if(e){HDelete(0,0,tn);{char msg[110];snprintf(msg,sizeof msg,"Preferences save failed (%d); previous file retained.\n",e);term_puts(msg);}}shell_flush_native(prefs_path);
+ }
+ int app_pager_begin(void){int old=page_mode;page_mode=1;page_start=current_line;app_activity_interactive(1);return old;}
+ int app_pager_end(int old){int quit=cancelled&&!interrupted&&!done;if(quit)cancelled=0;page_mode=old;app_activity_interactive(0);return quit;}
+ void app_page_begin(void){page_start=current_line;}
+-int app_page(void){EventRecord ev;long limit=page_mode==2?100:visible-1;if(!page_mode||test_ref>=0)return app_yield();if(limit<1)limit=1;if(current_line-page_start<limit)return app_yield();paging=1;page_action=0;dirty=1;draw();while(!page_action&&!cancelled&&!done){if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);if(dirty)draw();}paging=0;if(page_action==2)page_start=current_line-limit+1;else page_start=current_line;dirty=1;return cancelled||done;}
++int app_page(void){EventRecord ev;long limit=visible-1;if(!page_mode||test_ref>=0)return app_yield();if(limit<1)limit=1;if(current_line-page_start<limit)return app_yield();paging=1;page_action=0;dirty=1;draw();while(!page_action&&!cancelled&&!done){if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);if(dirty)draw();}paging=0;if(page_action==2)page_start=current_line-limit+1;else page_start=current_line;dirty=1;return cancelled||done;}
+ static void fill_window(void){if(!filled){Point origin={0,0};SetPort(win);LocalToGlobal(&origin);normal_bounds=win->portRect;OffsetRect(&normal_bounds,origin.h,origin.v);MoveWindow(win,4,40,1);SizeWindow(win,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-44,1);filled=1;}else{MoveWindow(win,normal_bounds.left,normal_bounds.top,1);SizeWindow(win,normal_bounds.right-normal_bounds.left,normal_bounds.bottom-normal_bounds.top,1);filled=0;}layout();}
+ static void dialog_text(DialogPtr d,short item,const char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);pstr(p,s);SetDialogItemText(h,p);}
+ static void dialog_read(DialogPtr d,short item,char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);GetDialogItemText(h,p);memcpy(s,p+1,p[0]);s[p[0]]=0;}
+ static ControlHandle dialog_control(DialogPtr d,short item){short type;Handle h;Rect r;GetDialogItem(d,item,&type,&h,&r);return (ControlHandle)h;}
+-static MenuHandle pref_popup_menus[4];
+-static int pref_popup_choices[4];
+-static int popup_slot(int item){return item==5?0:item==12?1:item==14?2:3;}
++static MenuHandle pref_popup_menus[3];
++static int pref_popup_choices[3];
++static int popup_slot(int item){return item==5?0:item==12?1:2;}
+ static pascal void draw_pref_popup(DialogPtr d,short item){
+  short type;Handle h;Rect r;GrafPtr old;unsigned char title[256];int k=popup_slot(item);if(!pref_popup_menus[k])return;
+  GetPort(&old);SetPort(d);GetDialogItem(d,item,&type,&h,&r);EraseRect(&r);FrameRect(&r);GetMenuItemText(pref_popup_menus[k],pref_popup_choices[k],title);
+@@ -625,21 +665,20 @@
+ static void popup_title(DialogPtr d,int item,MenuHandle m,int selected){short type;Handle h;Rect r;int k=popup_slot(item);pref_popup_menus[k]=m;pref_popup_choices[k]=selected;GetDialogItem(d,item,&type,&h,&r);SetDialogItem(d,item,userItem,(Handle)draw_pref_popup,&r);draw_pref_popup(d,item);}
+ static void preferences_window(void){
+  hide_caret();DialogPtr d=GetNewDialog(140,0,(WindowPtr)-1);if(!d){SysBeep(1);return;}
+- MenuHandle fonts=GetMenuHandle(132),lines=GetMenuHandle(134),pages=GetMenuHandle(135),controls=GetMenuHandle(136);
+- unsigned char name[256],other[256];char b[256];short item=0;int chosen=1,cap=retained==32?1:retained==64?2:3,page=page_mode+1,ctrl=control_mode+1;
++ MenuHandle fonts=GetMenuHandle(132),lines=GetMenuHandle(134),controls=GetMenuHandle(136);
++ unsigned char name[256],other[256];char b[256];short item=0;int chosen=1,cap=retained==32?1:retained==64?2:3,ctrl=control_mode+1;
+  GetFontName(font_id,name);for(int i=1;i<=CountMItems(fonts);i++){GetMenuItemText(fonts,i,other);if(other[0]==name[0]&&!memcmp(other+1,name+1,name[0]))chosen=i;}
+  popup_title(d,5,fonts,chosen);snprintf(b,sizeof b,"%d",font_size);dialog_text(d,7,b);snprintf(b,sizeof b,"%d",columns);dialog_text(d,9,b);
+- SetControlValue(dialog_control(d,10),inverse);SetControlValue(dialog_control(d,15),filled);popup_title(d,12,lines,cap);popup_title(d,14,pages,page);popup_title(d,17,controls,ctrl);
++ SetControlValue(dialog_control(d,10),inverse);SetControlValue(dialog_control(d,13),filled);popup_title(d,12,lines,cap);popup_title(d,15,controls,ctrl);
+  SelectDialogItemText(d,7,0,32767);
+  while(item!=2){ModalDialog(0,&item);
+-  if(item==10||item==15){ControlHandle c=dialog_control(d,item);SetControlValue(c,!GetControlValue(c));}
++  if(item==10||item==13){ControlHandle c=dialog_control(d,item);SetControlValue(c,!GetControlValue(c));}
+   if(item==5){chosen=dialog_popup(d,5,fonts,chosen);popup_title(d,5,fonts,chosen);}
+   if(item==12){cap=dialog_popup(d,12,lines,cap);popup_title(d,12,lines,cap);}
+-  if(item==14){page=dialog_popup(d,14,pages,page);popup_title(d,14,pages,page);}
+-  if(item==17){ctrl=dialog_popup(d,17,controls,ctrl);popup_title(d,17,controls,ctrl);}
++  if(item==15){ctrl=dialog_popup(d,15,controls,ctrl);popup_title(d,15,controls,ctrl);}
+   if(item==1){char size[256],cols[256];short id;dialog_read(d,7,size);dialog_read(d,9,cols);GetMenuItemText(fonts,chosen,name);
+    int n=preference_number(size),count=preference_number(cols);if(!installed_font(name,&id)||n<6||n>24||count<20||count>130){StopAlert(141,0);continue;}
+-   int want_fill=GetControlValue(dialog_control(d,15)),dark=GetControlValue(dialog_control(d,10));
++   int want_fill=GetControlValue(dialog_control(d,13)),dark=GetControlValue(dialog_control(d,10));
+    /* Preserve pixel geometry unless columns were explicitly edited; changing
+       fonts is allowed even when the former column count no longer fits. */
+    int change_columns=count!=columns;SetPort(win);TextFont(id);TextSize(n);FontInfo f;GetFontInfo(&f);int width=CharWidth('M'),fixed=1;
+@@ -648,7 +687,7 @@
+    if(change_columns&&(pixels<180||pixels>qd.screenBits.bounds.right-8)){SetPort(d);StopAlert(141,0);continue;}
+    DisposeDialog(d);SetPort(win);if(filled&&(!want_fill||change_columns))fill_window();
+    if(change_columns)SizeWindow(win,pixels,win->portRect.bottom,1);
+-   font_id=id;font_size=n;retained=cap==1?32:cap==2?64:128;inverse=dark;page_mode=page-1;control_mode=ctrl-1;
++   font_id=id;font_size=n;retained=cap==1?32:cap==2?64:128;inverse=dark;control_mode=ctrl-1;
+    if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;scrollback=0;
+    if(want_fill&&!filled)fill_window();font_layout();
+    /* Closing a dialog invalidates only its former rectangle. Font/theme changes
+@@ -659,7 +698,7 @@
+  DisposeDialog(d);SetPort(win);dirty=force_draw=1;
+ }
+ 
+-int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char name[256];GetFontName(font_id,name);if(name[0]>31)name[0]=31;name[name[0]+1]=0;snprintf(b,sizeof b,"Font %.31s, %d point; %d columns x %d rows\nColours %s; paging %s\n",name+1,font_size,columns,visible,inverse?"white on black":"black on white",page_mode==0?"off":page_mode==1?"screen":"100 lines");term_puts(b);snprintf(b,sizeof b,"Scrollback %d lines; rendering automatic\nControl key: %s (physical Control always works)\n",retained,control_name(control_mode));term_puts(b);return 0;}
++int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char name[256];GetFontName(font_id,name);if(name[0]>31)name[0]=31;name[name[0]+1]=0;snprintf(b,sizeof b,"Font %.31s, %d point; %d columns x %d rows\nColours %s\n",name+1,font_size,columns,visible,inverse?"white on black":"black on white");term_puts(b);snprintf(b,sizeof b,"Scrollback %d lines; rendering automatic\nControl key: %s (physical Control always works)\n",retained,control_name(control_mode));term_puts(b);return 0;}
+ 
+  if(!strcmp(argv[1],"window")){preferences_window();return 0;}
+  if(!strcmp(argv[1],"fonts")){MenuHandle m=GetMenuHandle(132);short i;for(i=1;i<=CountMItems(m);i++){unsigned char name[256];GetMenuItemText(m,i,name);term_write((char*)name+1,name[0]);term_puts("\n");}return 0;}
+@@ -668,7 +707,6 @@
+  else if(argc==3&&!strcmp(argv[1],"size")){int size=preference_number(argv[2]);if(size<6||size>24)return 2;font_size=size;}
+  else if(argc==3&&!strcmp(argv[1],"colours")){if(!strcmp(argv[2],"dark"))inverse=1;else if(!strcmp(argv[2],"light"))inverse=0;else return 2;}
+  else if(argc==3&&!strcmp(argv[1],"control")){int k=control_parse(argv[2]);if(k<0)return 2;control_mode=k;}
+- else if(argc==3&&!strcmp(argv[1],"paging")){if(!strcmp(argv[2],"off"))page_mode=0;else if(!strcmp(argv[2],"screen"))page_mode=1;else if(!strcmp(argv[2],"100"))page_mode=2;else return 2;}
+  else if(argc==3&&!strcmp(argv[1],"scrollback")){int n=preference_number(argv[2]);if(n!=32&&n!=64&&n!=128)return 2;retained=n;if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;scrollback=0;}
+ 
+ #ifdef CLARICE_DRAW_DIAGNOSTICS
+@@ -678,7 +716,7 @@
+  else if(!strcmp(argv[1],"cache")||!strcmp(argv[1],"renderer")){term_puts("Rendering is selected automatically.\n");return 2;}
+ #endif
+  else if(argc==3&&!strcmp(argv[1],"columns")){int n=preference_number(argv[2]),width=n*cell_w+TEXT_LEFT+16;if(n<20||n>130||width>qd.screenBits.bounds.right-8){term_puts("Requested columns do not fit this screen/font.\n");return 2;}if(filled)fill_window();SizeWindow(win,width,win->portRect.bottom,1);}
+- else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | paging off/screen/100 | columns N | fill]\n");return 2;}
++ else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | columns N | fill]\n");return 2;}
+  font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();term_present();return 0;}
+ int app_yield(void){EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return cancelled||done;unsigned long t=TickCount();for(int i=0;i<16&&!cancelled&&!done;i++){if(!WaitNextEvent(everyEvent,&ev,0,0))break;handle(&ev);}event_ticks+=TickCount()-t;if(dirty&&TickCount()-last_paint>=output_paint_ticks){
+ #ifdef CLARICE_DRAW_DIAGNOSTICS
+@@ -701,7 +739,7 @@
+ static unsigned short ahead_mods[LINE_CAP];
+ static unsigned int ahead_head,ahead_count;
+ #define PASTED_KEY 0x8000
+-static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+(scrollback!=0))*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1)b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
++static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+1)*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1)b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
+ static void insert_char(unsigned char c){size_t n=strlen(input);if(input_blocked)return;if(n>=LINE_CAP-1){input_fail("command exceeds 1023 bytes");return;}memmove(input+cursor+1,input+cursor,n-cursor+1);input[cursor++]=(char)c;dirty=1;}
+ /* Validate the complete paste before changing the line. Newlines are retained
+    (CR/CRLF normalized), never submitted as Return events. */
+@@ -791,7 +829,7 @@
+  if(id==130){if(item==1)copy_selection();if(item==2)paste();if(item==4&&!busy)history_move(-1);if(item==5&&!busy)history_move(1);}
+  if(id==131&&!busy){if(item==1)app_run_checks();if(item==2)app_metrics(0);}
+  if(id==132){unsigned char name[256];GetMenuItemText(GetMenuHandle(132),item,name);GetFNum(name,&font_id);font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}
+- if(id==133&&!editor_screen){if(item==1)inverse=!inverse;if(item==2)fill_window();if(item==4)font_size=9;if(item==5)font_size=12;if(item==6)font_size=14;if(item>=8&&item<=10)page_mode=item-8;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}
++ if(id==133&&!editor_screen){if(item==1)inverse=!inverse;if(item==2)fill_window();if(item==4)font_size=9;if(item==5)font_size=12;if(item==6)font_size=14;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}
+  HiliteMenu(0);dirty=1;}
+ /* Moving a fixed selection anchor changes only the interval between the old
+    and new endpoints. Invert those pixels once per row; keep an enabled cache
+@@ -817,8 +855,8 @@
+  selection_clear();
+  select_start=select_end=anchor;
+ }
+-static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible+(scrollback!=0))y=visible+(scrollback!=0)-1;return y*columns+x;}
+-static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;SetRect(&bounds,180,100,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-40);size=GrowWindow(win,ev->where,&bounds);if(size){filled=0;SizeWindow(win,(short)size,(short)(size>>16),1);layout();save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+(scrollback!=0))*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
++static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible+1)y=visible+1-1;return y*columns+x;}
++static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;SetRect(&bounds,180,100,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-40);size=GrowWindow(win,ev->where,&bounds);if(size){filled=0;SizeWindow(win,(short)size,(short)(size>>16),1);layout();save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+1)*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
+  case keyDown:case autoKey:{
+ #ifdef CLARICE_INPUT_DIAGNOSTICS
+  unsigned long age=TickCount()-ev->when;probe_events++;probe_age+=age;if(age>probe_age_max)probe_age_max=age;
+@@ -858,6 +896,7 @@
+ #endif
+ #ifdef CLARICE_USABILITY_DIAGNOSTICS
+ #include "../tests/terminal/usability-guest.inc"
++
+ #endif
+ static void welcome(void){
+  ClariceHardware h;char line[192],cpu[32],fpu[40],ram[32];cli_hardware(&h,sizeof h);
+@@ -878,9 +917,8 @@
+  m=NewMenu(131,(const unsigned char*)"\pTests");AppendMenu(m,(const unsigned char*)"\pRun checks/T;Memory and system");InsertMenu(m,0);
+  m=NewMenu(132,(const unsigned char*)"\pFont");AppendResMenu(m,'FONT');InsertMenu(m,-1);
+  m=NewMenu(134,(const unsigned char*)"\pScrollback");AppendMenu(m,(const unsigned char*)"\p32 lines;64 lines;128 lines");InsertMenu(m,-1);
+- m=NewMenu(135,(const unsigned char*)"\pPaging");AppendMenu(m,(const unsigned char*)"\pOff;By screen;100 lines");InsertMenu(m,-1);
+  m=NewMenu(136,(const unsigned char*)"\pControl key");AppendMenu(m,(const unsigned char*)"\pControl only;Option;Command");InsertMenu(m,-1);
+- m=NewMenu(133,(const unsigned char*)"\pView");AppendMenu(m,(const unsigned char*)"\pReverse colours;Fill screen / restore;(-;9 point;12 point;14 point;(-;Paging off;Page by screen;Page by 100 lines");InsertMenu(m,0);DrawMenuBar();
++ m=NewMenu(133,(const unsigned char*)"\pView");AppendMenu(m,(const unsigned char*)"\pReverse colours;Fill screen / restore;(-;9 point;12 point;14 point");InsertMenu(m,0);DrawMenuBar();
+  SetRect(&r,8,48,512,326);win=NewWindow(&win_record,&r,(const unsigned char*)"\pClarice",1,documentProc,(WindowPtr)-1,1,0);if(!win)return 1;SetPort(win);
+  {Rect frame=(*((WindowPeek)win)->strucRgn)->rgnBBox;MoveWindow(win,r.left+qd.screenBits.bounds.left+2-frame.left,r.top+qd.screenBits.bounds.top+menu_bar_height()+2-frame.top,1);}
+  scroll_region=NewRgn();saved_clip=NewRgn();transfer_region=NewRgn();visible_region=NewRgn();
+@@ -929,7 +967,7 @@
+   serviced=1;
+  }
+  if(dirty)draw();if(serviced||ahead_count)continue;if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);}
+- UPDATE_LAUNCH_TRACE("cleanup begin");history_shutdown();if(history_bar)DisposeControl(history_bar);if(frame_ready){ClosePort(&prompt_port);ClosePort(&frame_port);}if(frame_pixels)DisposePtr((Ptr)frame_pixels);if(transfer_region)DisposeRgn(transfer_region);if(visible_region)DisposeRgn(visible_region);if(scroll_region)DisposeRgn(scroll_region);if(saved_clip)DisposeRgn(saved_clip);CloseWindow(win);UPDATE_LAUNCH_TRACE("cleanup done");
++ UPDATE_LAUNCH_TRACE("cleanup begin");direct_stage_dispose();history_cache_dispose();glyph_planes_dispose();history_shutdown();if(tall_bar_pixels)DisposePtr(tall_bar_pixels);if(history_bar)DisposeControl(history_bar);if(frame_ready){ClosePort(&prompt_port);ClosePort(&frame_port);}if(frame_pixels)DisposePtr((Ptr)frame_pixels);if(transfer_region)DisposeRgn(transfer_region);if(visible_region)DisposeRgn(visible_region);if(scroll_region)DisposeRgn(scroll_region);if(saved_clip)DisposeRgn(saved_clip);CloseWindow(win);UPDATE_LAUNCH_TRACE("cleanup done");
+  if(update_handoff){
+   /* Invocation/stream/history cleanup has completed before transfer launch. */
+   int e=update_native_launch(update_handoff);DisposePtr(update_handoff);update_handoff=0;
+--- /dev/null
++++ b/src/direct-gate.h
+@@ -0,0 +1,21 @@
++#ifndef CLARICE_DIRECT_GATE_H
++#define CLARICE_DIRECT_GATE_H
++#include <stdint.h>
++/* Terminal rows are even-aligned. Compare their first up-to-32 bytes using
++   native longwords. An equal prefix conservatively declines the direct path;
++   otherwise preserve the original changed-span rejection. This avoids scanning
++   long identical directory prefixes without admitting previously rejected
++   sparse rows into the more expensive whole-viewport eligibility scan. */
++typedef uint32_t DirectGateWord __attribute__((aligned(2),may_alias));
++static int direct_stage_sparse_first(const char *a,const char *b,int columns){
++ int prefix=columns<32?columns:32,left=0,right=columns;
++ while(left+4<=prefix){
++  if(*(const DirectGateWord*)(a+left)!=*(const DirectGateWord*)(b+left))break;
++  left+=4;
++ }
++ while(left<prefix&&a[left]==b[left])left++;
++ if(left==prefix)return 1;
++ while(right>left&&a[right-1]==b[right-1])right--;
++ return (right-left)*4<columns*3;
++}
++#endif
+--- /dev/null
++++ b/src/direct-invert.h
+@@ -0,0 +1,28 @@
++#ifndef CLARICE_DIRECT_INVERT_H
++#define CLARICE_DIRECT_INVERT_H
++#include <stdint.h>
++/* All bytes touched belong to fully composed text scanlines. The boundary
++   bytes are initialized by the glyph compositor; final CopyBits clips their
++   unused outside bits. Word accesses are even on the baseline 68000. */
++static int direct_stage_invert(unsigned char *base,int px,int py,int width,int height){
++ if(!base||px<0||py<0||width<1||height<1||px>512-width||py>342-height)return 0;
++ int bytes=((px&7)+width+7)>>3;
++ for(int y=0;y<height;y++){
++  unsigned char *p=base+(py+y)*64+(px>>3);int left=bytes;
++  if((uintptr_t)p&1){*p=(unsigned char)~*p;p++;left--;}
++#if defined(__m68k__)
++  /* Even alignment suffices for longwords on 68000. Keep the bounded RAM
++     transfer here; QuickDraw still owns final screen clipping/presentation. */
++  int groups=left>>2;
++  if(groups){int loops=groups-1;
++   __asm__ volatile("1:\n\tnot.l (%0)+\n\tdbra %1,1b"
++                    : "+a"(p), "+d"(loops) : : "cc", "memory");
++   left&=3;
++  }
++#endif
++  while(left>=2){uint16_t *word=(uint16_t*)p;*word=(uint16_t)~*word;p+=2;left-=2;}
++  if(left)*p=(unsigned char)~*p;
++ }
++ return 1;
++}
++#endif
+--- /dev/null
++++ b/src/direct-view.inc
+@@ -0,0 +1,92 @@
++/* Isolated 1709 proof: compose complete ASCII history rows straight into a
++   discardable bitmap, then present once. No screen snapshot or row CopyBits.
++   Sparse changes and every unsupported view use the unchanged native renderer. */
++#include "direct-invert.h"
++#include "direct-gate.h"
++#define DIRECT_STAGE_BYTES (64L*342L)
++static Handle direct_stage_handle;
++static int direct_live_enabled=1;
++static int direct_stage_enabled=1,direct_stage_fail_alloc,direct_stage_invert_ram=1;
++static unsigned long direct_stage_frames,direct_stage_fallbacks,direct_stage_compose_ticks,
++ direct_stage_present_ticks,direct_stage_allocate_ticks,direct_stage_invert_ticks;
++static void direct_stage_dispose(void){if(direct_stage_handle){DisposeHandle(direct_stage_handle);direct_stage_handle=0;}}
++static int direct_stage_supported(void){
++ BitMap *b=&win->portBits;
++ return !(b->rowBytes&0xc000)&&(b->rowBytes&0x3fff)==64&&
++  b->bounds.right-b->bounds.left==512&&b->bounds.bottom-b->bounds.top==342;
++}
++/* Empty output/input cannot wrap the capped prompt at four or more columns.
++   Avoid formatting it merely to reject sparse history; all other states use
++   the shared viewport calculation, including tiny diagnostic widths. */
++static long direct_stage_live_first(void){
++ if(columns>=4&&!input[0]&&!text[current_line%ROWS][0]){long first=current_line-visible;return first<oldest_line?oldest_line:first;}
++ return viewport_live_first();
++}
++static int direct_stage_draw(void){
++#ifdef CLARICE_DRAW_DIAGNOSTICS
++ if(clear_legacy)return 0; /* legacy diagnostic clears from an unoffset row */
++#endif
++ if(!direct_stage_enabled||!direct_stage_supported()||select_start>=0||
++    !mono||font_id!=4||font_size!=9||cell_w!=6||line_h!=11||font_ascent!=9||
++    columns<1||columns>85)return 0;
++ long first=direct_stage_live_first()-scrollback;if(first<oldest_line)first=oldest_line;
++ if(!force_draw&&(drawn_first<0||labs(first-drawn_first)<4))return 0;
++ /* Cheap conservative rejection before building/scanning a second viewport.
++    A sparse first row may miss an otherwise useful candidate, never correctness. */
++ /* Only completed, noninteractive bulk output may include the current empty
++    output row. Keep useful incremental pixel scrolling for overlapping views. */
++ int live=direct_live_enabled&&busy&&!tty_reading&&!searching&&!paging&&!out_col;
++ if(first+visible>current_line||(first+visible==current_line&&!live))return 0;
++ if(live&&!scrollback&&!force_draw&&first-drawn_first<visible)return 0;
++ if(!force_draw&&direct_stage_sparse_first(text[first%ROWS],last_screen[0],columns))return 0;
++ char screen[40][COLS] __attribute__((aligned(2)));int prompt,changed=0;
++ compose_input(screen,&first,&prompt);
++ /* No editable rows, even when an inactive window suppresses its caret. */
++ if(prompt<=visible&&!live)return 0;
++ for(int row=0;row<=visible;row++){
++  if(screen[row][COLS-1])return 0;
++  int left=0,right=columns;
++  while(left<right&&screen[row][left]==last_screen[row][left])left++;
++  while(right>left&&screen[row][right-1]==last_screen[row][right-1])right--;
++  changed+=right-left;
++  for(int x=0;x<columns;x++){unsigned char c=screen[row][x];if(c&&(c<32||c>126))return 0;}
++ }
++ /* Keep accepted partial-span rendering for mostly identical directory rows. */
++ if(!force_draw&&changed*4<columns*(visible+1)*3)return 0;
++ BitMap stage=win->portBits;int px=TEXT_LEFT-stage.bounds.left,py=TEXT_TOP-stage.bounds.top;
++ if(px<0||py<0||px+columns*6>512||py+(visible+1)*11>342)return 0;
++ int phase=px&15;if(phase+columns*6>512)return 0;
++ unsigned long t;
++ if(direct_stage_handle&&!*direct_stage_handle){DisposeHandle(direct_stage_handle);direct_stage_handle=0;}
++ if(!direct_stage_handle){t=TickCount();direct_stage_handle=direct_stage_fail_alloc||!native_heap_room(DIRECT_STAGE_BYTES,32768L,0)?0:NewHandle(DIRECT_STAGE_BYTES);direct_stage_allocate_ticks+=TickCount()-t;}
++ if(!direct_stage_handle){direct_stage_fallbacks++;return 0;}
++ HNoPurge(direct_stage_handle);HLock(direct_stage_handle);
++ stage.baseAddr=*direct_stage_handle;
++ if(!stage.baseAddr){HUnlock(direct_stage_handle);HPurge(direct_stage_handle);direct_stage_fallbacks++;return 0;}
++ t=TickCount();SetPort(&prompt_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);
++ int complete=1;
++ for(int row=0;row<=visible;row++){
++  char rendered[COLS];for(int x=0;x<columns;x++)rendered[x]=screen[row][x]?screen[row][x]:' ';
++  unsigned char *output=(unsigned char*)stage.baseAddr+(py+row*11)*64+((px&~15)>>3);
++  /* Every row was validated before painting, and no event can change the
++     font or viewport here. The first checked row initialises glyphs/planes;
++     subsequent nonzero-phase rows need only composition. */
++  if(row&&phase)native_glyph_compose_at(output,rendered,columns,phase);
++  else if(!native_glyph_row_to(output,rendered,columns,phase)){complete=0;break;}
++ }
++ direct_stage_compose_ticks+=TickCount()-t;glyph_planes_end();SetPort(win);
++ if(complete){
++  if(inverse&&direct_stage_invert_ram){t=TickCount();direct_stage_invert((unsigned char*)stage.baseAddr,px,py,columns*6,(visible+1)*11);direct_stage_invert_ticks+=TickCount()-t;}
++  Rect area;SetRect(&area,TEXT_LEFT,TEXT_TOP,TEXT_LEFT+columns*6,TEXT_TOP+(visible+1)*11);
++  /* Only the fully overwritten text rectangle is published. Boundary bits,
++     margins, controls and occluded areas remain under native clipping. */
++  if(force_draw){ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);erase_margins();}
++  long fg=win->fgColor,bg=win->bkColor;ForeColor(blackColor);BackColor(whiteColor);
++  t=TickCount();CopyBits(&stage,&win->portBits,&area,&area,inverse&&!direct_stage_invert_ram?notSrcCopy:srcCopy,0);direct_stage_present_ticks+=TickCount()-t;
++  ForeColor(fg);BackColor(bg);
++  if(force_draw&&saved_clip){ForeColor(blackColor);BackColor(whiteColor);Rect grow=win->portRect;grow.left=grow.right-15;grow.top=grow.bottom-15;GetClip(saved_clip);ClipRect(&grow);DrawGrowIcon(win);SetClip(saved_clip);}
++  memcpy(last_screen,screen,(visible+1)*COLS);drawn_first=first;drawn_prompt=prompt;dirty=force_draw=0;last_paint=TickCount();direct_stage_frames++;
++ }
++ HUnlock(direct_stage_handle);HPurge(direct_stage_handle);return complete;
++}
++static void draw_native_direct(void){if(!direct_stage_draw())draw_native();}
+--- /dev/null
++++ b/src/glyph-planes.S
+@@ -0,0 +1,72 @@
++.text
++/* Four pre-shifted Monaco 9 contribution planes; plain 68000, C ABI.
++   Each plane has 95 64-byte glyph slots, each with eleven longwords.
++   Existing caller clears boundary/tail bytes and guarantees even row base,
++   64-byte stride, 4..84 glyphs divisible by four and bounded output. */
++.globl asm_ascii_planes_at
++asm_ascii_planes_at:
++ movem.l %d2-%d7/%a2-%a6,-(%sp)
++ move.l 48(%sp),%a0
++ move.l 52(%sp),%a1
++ move.l 56(%sp),%a2
++ suba.l #2048,%a2
++ move.l 60(%sp),%d6
++ lsr.l #2,%d6
++.Lplanes_group:
++ moveq #0,%d0
++ move.b (%a1)+,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a3
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a4
++ adda.l #6080,%a4
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a5
++ adda.l #12160,%a5
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a6
++ adda.l #18240,%a6
++ moveq #10,%d5
++ move.l %a0,%d0
++ btst #0,%d0
++ bne .Lplanes_odd
++.macro planes_scan odd
++.Lplanes_scan\@:
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++.if \odd
++ move.w -1(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,-1(%a0)
++ move.b %d0,3(%a0)
++.else
++ move.b (%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,(%a0)
++.endif
++ lea 64(%a0),%a0
++ dbra %d5,.Lplanes_scan\@
++.endm
++ planes_scan 0
++ bra .Lplanes_next
++.Lplanes_odd:
++ planes_scan 1
++.Lplanes_next:
++ lea -701(%a0),%a0
++ subq.w #1,%d6
++ bne .Lplanes_group
++ movem.l (%sp)+,%d2-%d7/%a2-%a6
++ rts
+--- /dev/null
++++ b/src/glyph-planes.inc
+@@ -0,0 +1,47 @@
++/* Experimental pre-shifted glyph contributions: 24,320 discardable bytes.
++   The font remains the installed native Monaco 9. This is a derived cache,
++   never the source of terminal or font state. Only one current bit phase is
++   prepared; other phases rebuild or use the existing no-allocation path.
++   begin/end surround a paint; invalidate after rebuilding native glyphs. */
++#include <stdint.h>
++#include "heap-admission.h"
++#define GLYPH_PLANES_BYTES (4*95*64)
++static Handle glyph_planes_handle;
++static unsigned char *glyph_planes_data;
++static int glyph_planes_phase=-1,glyph_planes_requested;
++static unsigned long glyph_planes_retry;
++static int glyph_planes_waiting;
++extern void asm_ascii_planes_at(unsigned char *,const unsigned char *,const unsigned char *,long);
++static void glyph_planes_invalidate(void){glyph_planes_phase=-1;}
++static void glyph_planes_end(void){
++ glyph_planes_data=0;
++ if(glyph_planes_handle){HUnlock(glyph_planes_handle);HPurge(glyph_planes_handle);}
++}
++static void glyph_planes_dispose(void){
++ glyph_planes_data=0;if(glyph_planes_handle){DisposeHandle(glyph_planes_handle);glyph_planes_handle=0;}
++ glyph_planes_phase=-1;glyph_planes_waiting=0;
++}
++static int glyph_planes_begin(int phase){
++ if(glyph_planes_data||phase<1||phase>7)return 0;
++ glyph_planes_requested=phase;
++ if(glyph_planes_handle&&!*glyph_planes_handle){DisposeHandle(glyph_planes_handle);glyph_planes_handle=0;glyph_planes_phase=-1;}
++ if(!glyph_planes_handle){
++  unsigned long now=TickCount();if(glyph_planes_waiting&&(unsigned long)(now-glyph_planes_retry)<60)return 0;
++  glyph_planes_handle=native_heap_room(GLYPH_PLANES_BYTES,32768L,0)?NewHandle(GLYPH_PLANES_BYTES):0;
++  if(!glyph_planes_handle){glyph_planes_waiting=1;glyph_planes_retry=now;return 0;}
++  glyph_planes_waiting=0;glyph_planes_phase=-1;
++ }
++ HNoPurge(glyph_planes_handle);HLock(glyph_planes_handle);glyph_planes_data=(unsigned char*)*glyph_planes_handle;
++ if(!glyph_planes_data){glyph_planes_end();return 0;}return 1;
++}
++static void glyph_planes_fill(unsigned char *planes,const unsigned char *glyphs,int phase){
++ for(int p=0;p<4;p++)for(int c=0;c<95;c++){
++  uint32_t *out=(uint32_t*)(planes+(p*95+c)*64);
++  for(int y=0;y<11;y++)out[y]=(uint32_t)(glyphs[c*32+y]>>2)<<(26-phase-p*6);
++ }
++}
++static int glyph_planes_prepare(const unsigned char *glyphs,int phase){
++ if(!glyph_planes_data||phase!=glyph_planes_requested)return 0;
++ if(glyph_planes_phase!=phase){glyph_planes_fill(glyph_planes_data,glyphs,phase);glyph_planes_phase=phase;}
++ return 1;
++}
+--- /dev/null
++++ b/src/heap-admission.h
+@@ -0,0 +1,18 @@
++#ifndef CLARICE_HEAP_ADMISSION_H
++#define CLARICE_HEAP_ADMISSION_H
++/* FreeMem excludes discardable handles. Admission checks must not reject a
++   necessary allocation before the native Memory Manager can reclaim them.
++   Cache creation passes reclaim=0: derived pixels must not consume the
++   caller's recovery headroom or purge useful application resources. */
++static int native_heap_room(unsigned long request,unsigned long reserve,int reclaim){
++ if(reserve>0x7fffffffUL||request>0x7fffffffUL-reserve)return 0;
++ unsigned long need=request+reserve;long available=FreeMem();
++ if(available>=0&&(unsigned long)available>=need)return 1;
++ if(!reclaim)return 0;
++ PurgeMem((long)need);
++ /* PurgeMem seeks contiguous space without allocating it. Fragmentation can
++    produce memFullErr although the existing total-free reserve now fits.
++    Keep the original admission rule; NewPtr decides actual allocation. */
++ available=FreeMem();return available>=0&&(unsigned long)available>=need;
++}
++#endif
+--- a/src/help.inc
++++ b/src/help.inc
+@@ -22,7 +22,7 @@
+  {"break","break\nLeave the current loop; numeric levels unsupported.\n"},{"continue","continue\nStart the next iteration; numeric levels unsupported.\n"},
+  {"return","return [status]\nReturn from a function or script.\n"},{"exit","exit [status]\nExit the script, or quit Clarice at the interactive prompt.\n"},
+  {"history","history [on|off|clear]\nList or control the bounded disk-backed history in\n/etc/clarice/clarice.history.\nUp/Down traverse entries; history is separate from scrollback.\n"},
+- {"prefs","prefs [setting [value]]\nWith no arguments show current preferences. Settings:\nwindow: open Preferences; fonts: list installed fonts.\nfont name: choose installed font (quote spaces); size N: 6..24 points.\ncolours dark|light: apply theme immediately; fill: toggle full-screen.\ncontrol control|option|command: choose Control substitute.\nscrollback 32|64|128: retained lines; reducing it discards older lines.\npaging off|screen|100: output paging; columns N: 20..130 if screen fits.\nChanges persist in /etc/clarice/clarice.conf. Rendering is automatic.\nPhysical Control always works; Option is the default substitute.\nCommand mode preserves menu shortcuts; add Option for conflicts.\nCommand-period cancels locally, including editors and serial.\nStatus: 0 success, 2 invalid setting. See help history and help status.\n"},
++ {"prefs","prefs [setting [value]]\nWith no arguments show current preferences. Settings:\nwindow: open Preferences; fonts: list installed fonts.\nfont name: choose installed font (quote spaces); size N: 6..24 points.\ncolours dark|light: apply theme immediately; fill: toggle full-screen.\ncontrol control|option|command: choose Control substitute.\nscrollback 32|64|128: retained lines; reducing it discards older lines.\ncolumns N: 20..130 if screen fits.\nChanges persist in /etc/clarice/clarice.conf. Rendering is automatic.\nPhysical Control always works; Option is the default substitute.\nCommand mode preserves menu shortcuts; add Option for conflicts.\nCommand-period cancels locally, including editors and serial.\nStatus: 0 success, 2 invalid setting. See help history and help status.\n"},
+  {"status","status [-h] | status runtime\nShow terminal/application metrics; -h retains human-readable formatting.\nruntime shows the last CLX command's timing, memory and loader phases.\nHeap and largest block belong to Clarice's application partition.\nNot Unix process accounting, total machine free RAM or CPU utilisation.\nStatus: 0 success, 2 invalid arguments. See help prefs.\n"},
+  {"clear","clear\nClear the terminal display.\n"},
+  {"selftest","selftest\nRun built-in ABI/parser/scan checks.\n"},{"checks","checks\nRun the application test set.\n"},{"scrollbench","scrollbench [quick|native|cached]\nRun rendering diagnostics; no argument runs the default benchmark.\nquick is a shorter check; native/cached compare renderer paths.\nAdditional developer modes require a diagnostic build and are not\nproduction interface promises. This is not a Unix utility.\n"},
+--- /dev/null
++++ b/src/history-raster-cache.inc
+@@ -0,0 +1,64 @@
++/* Experimental, discardable Monaco 9 history rows. No terminal state lives
++   here. A purged/failed allocation is an ordinary cache miss. Keep this handle
++   locked only between begin/end; never retain a pointer across that boundary.
++   80 slots leave room within the 100 KiB experimental allowance for a separate
++   24 KiB glyph table. Pixel presentation still uses the caller's clipped path. */
++#define HISTORY_CACHE_SLOTS 80
++#define HISTORY_CACHE_KEY_BYTES 132
++#define HISTORY_CACHE_ROW_BYTES (64*11)
++typedef struct {
++ long line;
++ unsigned short valid; /* Keep key and pixel block even-aligned for BlockMove. */
++ unsigned char key[HISTORY_CACHE_KEY_BYTES];
++ unsigned char pixels[HISTORY_CACHE_ROW_BYTES];
++} HistoryRasterRow;
++static Handle history_cache_handle;
++static HistoryRasterRow *history_cache_rows;
++static int history_cache_columns,history_cache_phase;
++static short history_cache_font,history_cache_size;
++static unsigned long history_cache_retry;
++static int history_cache_waiting;
++
++static void history_cache_dispose(void){
++ history_cache_rows=0;
++ if(history_cache_handle){DisposeHandle(history_cache_handle);history_cache_handle=0;}
++ history_cache_waiting=0;
++}
++static void history_cache_end(void){
++ history_cache_rows=0;
++ if(history_cache_handle){HUnlock(history_cache_handle);HPurge(history_cache_handle);}
++}
++static int history_cache_begin(int columns,int phase,short font,short size,int cell,int height){
++ int fresh=0;
++ if(history_cache_rows)return 0; /* No nested ownership. */
++ if(font!=4||size!=9||cell!=6||height!=11||columns<1||columns>85||phase<0||phase>15||phase+columns*6>512)return 0;
++ if(history_cache_handle&&!*history_cache_handle){DisposeHandle(history_cache_handle);history_cache_handle=0;}
++ if(!history_cache_handle){
++  unsigned long now=TickCount();
++  if(history_cache_waiting&&(unsigned long)(now-history_cache_retry)<60)return 0;
++  history_cache_handle=NewHandle((Size)(sizeof(HistoryRasterRow)*HISTORY_CACHE_SLOTS));
++  if(!history_cache_handle){history_cache_retry=now;history_cache_waiting=1;return 0;}
++  history_cache_waiting=0;fresh=1;
++ }
++ HNoPurge(history_cache_handle);HLock(history_cache_handle);
++ history_cache_rows=(HistoryRasterRow*)*history_cache_handle;
++ if(!history_cache_rows){history_cache_end();return 0;}
++ if(fresh||columns!=history_cache_columns||phase!=history_cache_phase||font!=history_cache_font||size!=history_cache_size){
++  for(int i=0;i<HISTORY_CACHE_SLOTS;i++)history_cache_rows[i].valid=0;
++  history_cache_columns=columns;history_cache_phase=phase;history_cache_font=font;history_cache_size=size;
++ }
++ return 1;
++}
++static HistoryRasterRow *history_cache_slot(long line){
++ if(!history_cache_rows||line<0)return 0;
++ return &history_cache_rows[(unsigned long)line%HISTORY_CACHE_SLOTS];
++}
++static int history_cache_load(long line,const unsigned char *key,unsigned char *pixels){
++ HistoryRasterRow *r=history_cache_slot(line);
++ if(!r||!r->valid||r->line!=line||memcmp(r->key,key,HISTORY_CACHE_KEY_BYTES))return 0;
++ BlockMove(r->pixels,pixels,HISTORY_CACHE_ROW_BYTES);return 1;
++}
++static void history_cache_store(long line,const unsigned char *key,const unsigned char *pixels){
++ HistoryRasterRow *r=history_cache_slot(line);if(!r)return;
++ r->valid=0;BlockMove(key,r->key,HISTORY_CACHE_KEY_BYTES);BlockMove(pixels,r->pixels,HISTORY_CACHE_ROW_BYTES);r->line=line;r->valid=1;
++}
+--- a/src/namespace.inc
++++ b/src/namespace.inc
+@@ -68,13 +68,16 @@
+ /* Rename within a catalog directory: System 6 rejects a full source path
+    for this operation on some HFS drivers. Resolve volume and parent first. */
+ int shell_rename(const unsigned char *source,const unsigned char *newname){
+- char path[256];unsigned char volume[256],leaf[256];CInfoPBRec cat;HParamBlockRec pb;
++ char path[256];unsigned char leaf[256];CInfoPBRec cat;HParamBlockRec pb;
+  memcpy(path,source+1,source[0]);path[source[0]]=0;char *colon=strchr(path,':'),*last=strrchr(path,':');if(!colon||!last||!last[1])return bdNamErr;
+- int e=info(path,&cat);if(e)return e;int len=colon-path;volume[0]=len;memcpy(volume+1,path,len);pstr(leaf,last+1);
+- memset(&pb,0,sizeof pb);pb.volumeParam.ioNamePtr=volume;e=PBHGetVInfoSync(&pb);if(e)return e;
+- short vr=pb.volumeParam.ioVRefNum;long parent=cat.hFileInfo.ioFlParID;
++ int e=info(path,&cat);if(e)return e;pstr(leaf,last+1);
++ /* A named PBHGetVInfo with index zero ignores the name and selects the
++    default volume. Bind the source explicitly before reusing its parent ID. */
++ short vr;e=cli_native_volume(path,&vr);if(e)return e;long parent=cat.hFileInfo.ioFlParID;
+  memset(&pb,0,sizeof pb);pb.fileParam.ioVRefNum=vr;pb.fileParam.ioDirID=parent;pb.fileParam.ioNamePtr=leaf;pb.ioParam.ioMisc=(Ptr)newname;return PBHRenameSync(&pb);
+ }
++/* Flush the file's volume, which need not be the application launch volume. */
++int shell_flush_native(const char *path){short volume;int e=cli_native_volume(path,&volume);return e?e:FlushVol(0,volume);}
+ void shell_temp_path(char *out,const char *file){snprintf(out,PATH_CAP,"%.220stmp:%.31s",root_path,file);}
+ /* Copy migration commits by rename, never overwrites an existing destination.
+    Failure leaves the legacy file usable. Fixed 512-byte transfer buffer. */
+--- a/src/native-glyphs.inc
++++ b/src/native-glyphs.inc
+@@ -1,3 +1,10 @@
++extern void asm_ascii_planes_unrolled(unsigned char*,const unsigned char*,const unsigned char*,long);
++#include "history-raster-cache.inc"
++/* Diagnostic experiment: parent sets line identity immediately before each
++   native_glyph_row call, and releases the locked handle once after painting. */
++static int history_raster_enabled;
++static long history_raster_line=-1;
++static unsigned long history_raster_hits,history_raster_misses;
+ /* Monaco 9 ASCII cells share the unused part of the existing 4096-byte row
+    staging bitmap. No allocation: first 704 bytes remain the 11-pixel output
+    row; 95 * 32 glyph bytes occupy bytes 704..3743. Editor drawing may use the
+@@ -16,33 +23,46 @@
+ #define JUMP_LEGACY 0
+ #define DIRECT_LEGACY 0
+ #endif
+-static void native_glyph_clear(int count){
++static void native_glyph_clear(unsigned char *output,int count){
+ #ifdef CLARICE_DRAW_DIAGNOSTICS
+- if(clear_legacy){memset(prompt_pixels,0,STRIDE*11);return;}
++ if(clear_legacy){memset(output,0,STRIDE*11);return;}
+ #endif
+  int tail=count&3;
+- if(tail){unsigned char *p=prompt_pixels+(count>>2)*3;
++ if(tail){unsigned char *p=output+(count>>2)*3;
+   for(int y=0;y<11;y++,p+=STRIDE){p[0]=0;if(tail>1)p[1]=0;if(tail>2)p[2]=0;}
+  }
+ }
+ extern void asm_ascii_groups_at(unsigned char *,const unsigned char *,const unsigned char *,long,long);
+ extern void asm_ascii_cells_at(unsigned char *,const unsigned char *,const unsigned char *,long,long,long,long);
+-static void native_glyph_compose_at(const char *s,int count,int phase){
+- unsigned char *p=prompt_pixels+(phase>>3),*glyphs=prompt_pixels+STRIDE*11;
++static void native_glyph_compose_at(unsigned char *output,const char *s,int count,int phase){
++ unsigned char *p=output+(phase>>3),*glyphs=prompt_pixels+STRIDE*11;
+  int bits=phase&7,full=count&~3,start=(full>>2)*3,end=(bits+count*6+7)>>3;
+  /* Full groups overwrite their interior; only the first byte and tail can
+     combine with prior contents. Clear those before either compositor runs. */
+  for(int y=0;y<11;y++){unsigned char *row=p+y*STRIDE;if(bits)row[0]=0;for(int i=start;i<end;i++)row[i]=0;}
+  if(bits){
+-  if(full)asm_ascii_groups_at(p,(const unsigned char*)s,glyphs,full,bits);
++  if(full){if(planes_enabled&&!glyph_planes_data&&bits==((TEXT_LEFT-win->portBits.bounds.left)&7))glyph_planes_begin(bits);
++ if(planes_enabled&&glyph_planes_prepare(glyphs,bits))(planes_enabled==2?asm_ascii_planes_unrolled:asm_ascii_planes_at)(p,(const unsigned char*)s,glyph_planes_data,full);else asm_ascii_groups_at(p,(const unsigned char*)s,glyphs,full,bits);}
+   if(count!=full)asm_ascii_cells_at(p+start,(const unsigned char*)s+full,glyphs,count-full,11,6,bits);
+  }else asm_ascii_cells(p,(const unsigned char*)s,glyphs,count,11,6);
+ }
+-static int native_glyph_row(const char *s,int count,int phase){
++static int native_glyph_row_to(unsigned char *output,const char *s,int count,int phase){
+  if(JUMP_LEGACY||!mono||font_id!=4||font_size!=9||cell_w!=6||line_h!=11||font_ascent!=9||count<1||count>85||phase<0||phase>15||phase+count*6>512)return 0;
+  for(int i=0;i<count;i++)if((unsigned char)s[i]<32||(unsigned char)s[i]>126)return 0;
+  unsigned char *glyphs=prompt_pixels+STRIDE*11;
+- if(!native_glyph_valid){
++ unsigned char history_key[HISTORY_CACHE_KEY_BYTES];int cacheable=output==prompt_pixels&&history_raster_enabled&&scrollback>0&&count==columns&&history_raster_line>=0;
++ /* Rebuilt native font cells also invalidate their derived history pixels. */
++ if(!native_glyph_valid)history_cache_dispose();
++ if(cacheable){
++  memset(history_key,0,sizeof history_key);memcpy(history_key,s,count);
++  /* Diagnostic and clipped-row callers can change geometry inside one paint.
++     Never treat a held handle as proof that its pixels match this phase. */
++  if(history_cache_rows&&(history_cache_columns!=columns||history_cache_phase!=phase||history_cache_font!=font_id||history_cache_size!=font_size))history_cache_end();
++  if(!history_cache_rows)history_cache_begin(columns,phase,font_id,font_size,cell_w,line_h);
++  if(history_cache_load(history_raster_line,history_key,prompt_pixels)){history_raster_hits++;goto history_ink_ready;}
++  history_raster_misses++;
++ }
++ if(!native_glyph_valid){glyph_planes_invalidate();
+   DRAW_STAMP(build_start);
+   ForeColor(blackColor);BackColor(whiteColor);
+   for(int first=32;first<127;){
+@@ -65,8 +85,14 @@
+   glyph_build_ticks+=TickCount()-build_start;
+ #endif
+  }
+- if(phase)native_glyph_compose_at(s,count,phase);
+- else{native_glyph_clear(count);asm_ascii_cells(prompt_pixels,(const unsigned char*)s,glyphs,count,11,6);}
++ if(phase)native_glyph_compose_at(output,s,count,phase);
++ else{native_glyph_clear(output,count);asm_ascii_cells(output,(const unsigned char*)s,glyphs,count,11,6);}
++ if(cacheable)history_cache_store(history_raster_line,history_key,prompt_pixels);
++history_ink_ready:
++ return 1;
++}
++static int native_glyph_row(const char *s,int count,int phase){
++ if(!native_glyph_row_to(prompt_pixels,s,count,phase))return 0;
+  if(inverse){Rect r;SetRect(&r,phase,0,phase+count*6,11);InvertRect(&r);}
+  return 1;
+ }
+--- /dev/null
++++ b/src/planes-unrolled.S
+@@ -0,0 +1,276 @@
++.text
++/* Four pre-shifted Monaco 9 contribution planes; plain 68000, C ABI.
++   Each plane has 95 64-byte glyph slots, each with eleven longwords.
++   Existing caller clears boundary/tail bytes and guarantees even row base,
++   64-byte stride, 4..84 glyphs divisible by four and bounded output. */
++.globl asm_ascii_planes_unrolled
++asm_ascii_planes_unrolled:
++ movem.l %d2-%d7/%a2-%a6,-(%sp)
++ move.l 48(%sp),%a0
++ move.l 52(%sp),%a1
++ move.l 56(%sp),%a2
++ suba.l #2048,%a2
++ move.l 60(%sp),%d6
++ lsr.l #2,%d6
++.Lunrolled_group:
++ moveq #0,%d0
++ move.b (%a1)+,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a3
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a4
++ adda.l #6080,%a4
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a5
++ adda.l #12160,%a5
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a6
++ adda.l #18240,%a6
++ move.l %a0,%d0
++ btst #0,%d0
++ bne .Lunrolled_odd
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b (%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 64(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,64(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 128(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,128(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 192(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,192(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 256(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,256(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 320(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,320(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 384(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,384(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 448(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,448(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 512(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,512(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 576(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,576(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 640(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,640(%a0)
++ bra .Lunrolled_next
++.Lunrolled_odd:
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w -1(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,-1(%a0)
++ move.b %d0,3(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 63(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,63(%a0)
++ move.b %d0,67(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 127(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,127(%a0)
++ move.b %d0,131(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 191(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,191(%a0)
++ move.b %d0,195(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 255(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,255(%a0)
++ move.b %d0,259(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 319(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,319(%a0)
++ move.b %d0,323(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 383(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,383(%a0)
++ move.b %d0,387(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 447(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,447(%a0)
++ move.b %d0,451(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 511(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,511(%a0)
++ move.b %d0,515(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 575(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,575(%a0)
++ move.b %d0,579(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 639(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,639(%a0)
++ move.b %d0,643(%a0)
++.Lunrolled_next:
++ lea 3(%a0),%a0
++ subq.w #1,%d6
++ bne .Lunrolled_group
++ movem.l (%sp)+,%d2-%d7/%a2-%a6
++ rts
+--- a/src/port-files.inc
++++ b/src/port-files.inc
+@@ -7,15 +7,16 @@
+ #ifdef CLARICE_NANO_PERF
+ static unsigned long perf_allocs,perf_free_ticks,perf_new_ticks,perf_read_ticks,perf_reads,perf_stdio_ticks,perf_image_ticks,perf_meta_ticks;
+ #endif
++#include "heap-admission.h"
+ static void *cli_alloc(unsigned long n){
+ #ifdef CLARICE_NANO_PERF
+  unsigned long t=TickCount();perf_allocs++;
+ #endif
+- long available=FreeMem();
++ int room=native_heap_room(n,32768L,1);
+ #ifdef CLARICE_NANO_PERF
+  perf_free_ticks+=TickCount()-t;t=TickCount();
+ #endif
+- if(n>0x7fffffffUL||available<32768L||n>(unsigned long)(available-32768L)){errno=ENOMEM;return NULL;}
++ if(!room){errno=ENOMEM;return NULL;}
+  void *p=NewPtr(n);
+ #ifdef CLARICE_NANO_PERF
+  perf_new_ticks+=TickCount()-t;
+--- a/src/preferences-format.h
++++ b/src/preferences-format.h
+@@ -3,7 +3,7 @@
+ #define CLARICE_PREFERENCES_FORMAT_H
+ #include "control-keys.h"
+ #define PREFS_TEXT_MAX 2048
+-struct ClaricePrefs { char font[256]; int size,inverse,paging,retained,width,height,x,y,fill,control; };
++struct ClaricePrefs { char font[256]; int size,inverse,retained,width,height,x,y,fill,control; };
+ static int pref_uint(const char *s){int n=0;if(!*s)return -1;while(*s){if(*s<'0'||*s>'9'||n>10000)return -1;n=n*10+*s++-'0';}return n;}
+ static char *pref_trim(char *s){char *end;while(*s==' '||*s=='\t')s++;end=s+strlen(s);while(end>s&&(end[-1]==' '||end[-1]=='\t'))*--end=0;return s;}
+ /* Invalid values/unknown keys leave defaults unchanged. CR, LF and CRLF accepted.
+@@ -16,7 +16,6 @@
+  else if(!strcmp(key,"size")&&n>=6&&n<=24)p->size=n;
+  else if(!strcmp(key,"colours")){if(!strcmp(v,"dark"))p->inverse=1;else if(!strcmp(v,"light"))p->inverse=0;}
+  else if(!strcmp(key,"control")){int k=control_parse(v);if(k>=0)p->control=k;}
+- else if(!strcmp(key,"paging")){if(!strcmp(v,"off"))p->paging=0;else if(!strcmp(v,"screen"))p->paging=1;else if(!strcmp(v,"100"))p->paging=2;}
+  else if(!strcmp(key,"scrollback")&&(n==32||n==64||n==128))p->retained=n;
+  else if(!strcmp(key,"width")&&n>=180&&n<=8192)p->width=n;
+  else if(!strcmp(key,"height")&&n>=100&&n<=8192)p->height=n;
+@@ -27,7 +26,7 @@
+ }
+ static int prefs_format(char *out,size_t cap,const struct ClaricePrefs *p){return snprintf(out,cap,
+  "# Clarice preferences; read at launch. Values are not shell commands.\n"
+- "control=%s\nfont=%s\nsize=%d\ncolours=%s\npaging=%s\nscrollback=%d\n"
++ "control=%s\nfont=%s\nsize=%d\ncolours=%s\nscrollback=%d\n"
+  "# Windowed content geometry; columns follow font and width.\n"
+- "width=%d\nheight=%d\nx=%d\ny=%d\nfill=%d\n",control_name(p->control),p->font,p->size,p->inverse?"dark":"light",p->paging==0?"off":p->paging==1?"screen":"100",p->retained,p->width,p->height,p->x,p->y,p->fill);}
++ "width=%d\nheight=%d\nx=%d\ny=%d\nfill=%d\n",control_name(p->control),p->font,p->size,p->inverse?"dark":"light",p->retained,p->width,p->height,p->x,p->y,p->fill);}
+ #endif
+--- a/src/sh.inc
++++ b/src/sh.inc
+@@ -37,12 +37,12 @@
+ struct sh_function *functions;};
+ static struct sh_saved *sh_save(void){
+ #ifndef SH_HOST_TEST
+- if(FreeMem()<65536)return 0;
++ if(!native_heap_room(0,65536L,1))return 0;
+ #endif
+  struct sh_saved *s=malloc(sizeof *s);if(!s)return 0;if(env_clone(sh_env,&s->env)){free(s);return 0;}s->env_defaults=sh_env_defaults;s->argc=sh_argc;s->args=sh_positions_copy(sh_argc,sh_argv,&s->argv);if(!s->args){env_free(s->env);free(s);return 0;}strcpy(s->cwd,shell_cwd);
+ #ifndef SH_HOST_TEST
+ strcpy(s->unixdir,unix_cwd);
+-if(FreeMem()<65536){env_free(s->env);free(s->args);free(s);return 0;}
++if(!native_heap_room(0,65536L,1)){env_free(s->env);free(s->args);free(s);return 0;}
+ #endif
+ if(sh_functions_clone(sh_functions,&s->functions)){env_free(s->env);free(s->args);free(s);return 0;}return s;}
+ static void sh_restore(struct sh_saved *s){sh_env_defaults=s->env_defaults;env_free(sh_env);sh_env=s->env;free(sh_owned_args);sh_owned_args=s->args;sh_argv=s->argv;sh_argc=s->argc;strcpy(shell_cwd,s->cwd);
+@@ -339,7 +339,7 @@
+ static int sh_source(const char *source){struct mrsh_parser *parser;struct mrsh_program *program;int rc;size_t n=strlen(source);
+ if(sh_depth>=SH_DEPTH||sh_source_depth>=8)return sh_fail("source nesting limit");
+ #ifndef SH_HOST_TEST
+- if(FreeMem()<16384)return sh_fail("insufficient parser working memory");
++ if(!native_heap_room(0,16384L,1))return sh_fail("insufficient parser working memory");
+ #endif
+  sh_source_depth++;parser=mrsh_parser_with_data(source,n);rc=0;
+  /* mrsh may finish a program at a consumed here-document terminator. Keep
+--- a/src/shell.c
++++ b/src/shell.c
+@@ -131,7 +131,7 @@
+  else if(!strcmp(av[0],"status")){if(argc>2||(argc==2&&strcmp(av[1],"-h"))){say("usage: status [-h]\n");status=2;}else app_metrics(argc==2);}
+  else if(!strcmp(av[0],"scrollbench"))status=app_scroll_bench(
+ #ifdef CLARICE_DRAW_DIAGNOSTICS
+- argc>1&&!strcmp(av[1],"directpixels")?16:argc>1&&!strcmp(av[1],"direct")?15:argc>1&&!strcmp(av[1],"alignpixels")?14:argc>1&&!strcmp(av[1],"alignment")?13:argc>1&&!strcmp(av[1],"present")?12:argc>1&&!strcmp(av[1],"clearing")?11:argc>1&&!strcmp(av[1],"glyphpixels")?10:argc>1&&!strcmp(av[1],"jumps")?9:argc>1&&!strcmp(av[1],"frames")?8:argc>1&&!strcmp(av[1],"listing")?7:argc>1&&!strcmp(av[1],"catalog")?6:argc>1&&!strcmp(av[1],"dispatch")?5:argc>1&&!strcmp(av[1],"profile")?4:
++ argc>1&&!strcmp(av[1],"live")?19:argc>1&&!strcmp(av[1],"memory")?18:argc>1&&!strcmp(av[1],"stagepixels")?17:argc>1&&!strcmp(av[1],"directpixels")?16:argc>1&&!strcmp(av[1],"direct")?15:argc>1&&!strcmp(av[1],"alignpixels")?14:argc>1&&!strcmp(av[1],"alignment")?13:argc>1&&!strcmp(av[1],"present")?12:argc>1&&!strcmp(av[1],"clearing")?11:argc>1&&!strcmp(av[1],"glyphpixels")?10:argc>1&&!strcmp(av[1],"jumps")?9:argc>1&&!strcmp(av[1],"frames")?8:argc>1&&!strcmp(av[1],"listing")?7:argc>1&&!strcmp(av[1],"catalog")?6:argc>1&&!strcmp(av[1],"dispatch")?5:argc>1&&!strcmp(av[1],"profile")?4:
+ #endif
+  argc>1&&!strcmp(av[1],"cached")?3:argc>1&&!strcmp(av[1],"native")?2:argc>1&&!strcmp(av[1],"quick"));
+  else if(!strcmp(av[0],"prefs"))status=app_preferences(argc,av);
+--- a/src/sys6.h
++++ b/src/sys6.h
+@@ -52,6 +52,7 @@
+ int shell_state_path(char *out,const char *file,const char *legacy);
+ 
+ int shell_rename(const unsigned char *source,const unsigned char *newname);
++int shell_flush_native(const char *path);
+ void shell_temp_path(char *out,const char *file);
+ 
+ int cli_pause_ticks(unsigned long ticks);
+--- a/src/update/version.h
++++ b/src/update/version.h
+@@ -1,3 +1,3 @@
+ /* Monotonic private development build identifier, not a published release. */
+-#define CLARICE_UPDATE_BUILD 2026111702
++#define CLARICE_UPDATE_BUILD 2026111712
+ #define CLARICE_UPDATE_FORMAT 1
+--- a/tests/preferences/format.c
++++ b/tests/preferences/format.c
+@@ -3,15 +3,15 @@
+ #include <string.h>
+ #include "../../src/preferences-format.h"
+ int main(void){
+- struct ClaricePrefs p={"Monaco",9,0,1,128,340,280,4,40,0,1},q=p;
+- char text[PREFS_TEXT_MAX+2];int n=prefs_format(text,sizeof text,&p);assert(!strstr(text,"renderer=")&&!strstr(text,"cache="));assert(n>0&&prefs_parse(&q,text,n));assert(!memcmp(&p,&q,sizeof p));
+- strcpy(text," # comment\r\n font = New York \rsize=12\ncolours=dark\npaging=100\nscrollback=32\nrenderer=c\nwidth=300\nheight=180\nx=12\ny=45\nfill=1\n");assert(prefs_parse(&q,text,strlen(text)));assert(!strcmp(q.font,"New York")&&q.size==12&&q.inverse==1&&q.paging==2&&q.retained==32&&q.width==300&&q.height==180&&q.x==12&&q.y==45&&q.fill==1);
++ struct ClaricePrefs p={"Monaco",9,0,128,340,280,4,40,0,1},q=p;
++ char text[PREFS_TEXT_MAX+2];int n=prefs_format(text,sizeof text,&p);assert(!strstr(text,"renderer=")&&!strstr(text,"cache=")&&!strstr(text,"paging="));assert(n>0&&prefs_parse(&q,text,n));assert(!memcmp(&p,&q,sizeof p));
++ strcpy(text," # comment\r\n font = New York \rsize=12\ncolours=dark\npaging=100\nscrollback=32\nrenderer=c\nwidth=300\nheight=180\nx=12\ny=45\nfill=1\n");assert(prefs_parse(&q,text,strlen(text)));assert(!strcmp(q.font,"New York")&&q.size==12&&q.inverse==1&&q.retained==32&&q.width==300&&q.height==180&&q.x==12&&q.y==45&&q.fill==1);
+  p=q;strcpy(text,"size=999999999999999999999\nscrollback=100\nrenderer=fast\ncolours=blue\npaging=-1\nx=-2\nfill=2\nwidth=2\nheight=0\nfont=\nunknown=$(rm stuff)\n");assert(prefs_parse(&q,text,strlen(text)));assert(!memcmp(&p,&q,sizeof p));
+  memset(text,'x',sizeof text);assert(!prefs_parse(&q,text,PREFS_TEXT_MAX+1));assert(!memcmp(&p,&q,sizeof p));
+  strcpy(text,"size=14");text[8]=0;assert(!prefs_parse(&q,text,9));assert(!memcmp(&p,&q,sizeof p));
+  memset(text,'x',PREFS_TEXT_MAX);assert(prefs_parse(&q,text,PREFS_TEXT_MAX));
+- strcpy(text,"size=6\nsize=24\nrenderer=asm\npaging=off\ncolours=light\nfill=0");assert(prefs_parse(&q,text,strlen(text)));assert(q.size==24&&q.paging==0&&q.inverse==0&&!q.fill);
+- p=q;strcpy(text,"renderer=asm\nrenderer=c\nrenderer=native\n");assert(prefs_parse(&q,text,strlen(text)));assert(!memcmp(&p,&q,sizeof p));
++ strcpy(text,"size=6\nsize=24\nrenderer=asm\npaging=off\ncolours=light\nfill=0");assert(prefs_parse(&q,text,strlen(text)));assert(q.size==24&&q.inverse==0&&!q.fill);
++ p=q;strcpy(text,"paging=screen\npaging=100\npaging=off\nrenderer=asm\nrenderer=c\nrenderer=native\n");assert(prefs_parse(&q,text,strlen(text)));assert(!memcmp(&p,&q,sizeof p));
+  for(int mode=0;mode<3;mode++){q.control=mode;int len=prefs_format(text,sizeof text,&q);p=q;p.control=-1;assert(prefs_parse(&p,text,len)&&p.control==mode);}
+  puts("PASS: roundtrip, CR/LF, whitespace, all fields, invalid values, overflow, binary, size cap, duplicate keys");
+ }
+--- a/tests/preferences/guest.sh
++++ b/tests/preferences/guest.sh
+@@ -5,7 +5,7 @@
+ prefs scrollback 32
+ prefs renderer c
+ echo removed-renderer:$?
+-prefs paging 100
++prefs paging 100 # obsolete setting must return usage status
+ prefs columns 40
+ cat /etc/clarice/clarice.conf > /tmp/prefs-cli.conf
+ prefs size 0
+--- /dev/null
++++ b/tests/terminal/admission-guest.inc
+@@ -0,0 +1,37 @@
++/* Disposable native heap-pressure probe. Runs after renderer handles have
++   been released, without event dispatch while holding pressure allocations. */
++static Ptr admission_blocks[128];
++static int admission_count;
++static void admission_release(void){while(admission_count)DisposePtr(admission_blocks[--admission_count]);}
++static int admission_pressure(long target){
++ while(FreeMem()>target+64){
++  if(admission_count==128)return 0;
++  long n=FreeMem()-target-64;if(n>8192)n=8192;
++  Ptr p=NewPtr(n);if(!p)return 0;admission_blocks[admission_count++]=p;
++ }
++ return FreeMem()<target+128;
++}
++static void admission_probe(void){
++ char report[1500];int used=0,failures=0;Handle cache=0;Ptr p=0;
++ direct_stage_dispose();glyph_planes_dispose();history_cache_dispose();
++ /* Test setup only: remove unrelated purgeable resource capacity so the
++    locked/no-capacity cases cannot succeed through another cache. */
++ PurgeMem(0x7fffffffL);long before=FreeMem(),largest_before=MaxBlock();
++ cache=NewHandle(65536);if(cache){HLock(cache);memset(*cache,0x5a,65536);}
++ int setup=cache&&admission_pressure(49152);long low=FreeMem();int reclaimed=0,allocated=0,pointer_ok=0;
++ if(setup){HUnlock(cache);HPurge(cache);reclaimed=native_heap_room(32768,32768,1);if(reclaimed)p=NewPtr(32768);allocated=p!=0;if(p){p[0]=0x19;p[32767]=0x27;pointer_ok=p[0]==0x19&&p[32767]==0x27;DisposePtr(p);p=0;}}
++ int emptied=cache&&!*cache;int pass=setup&&reclaimed&&allocated&&pointer_ok&&emptied;if(!pass)failures++;
++ used+=snprintf(report+used,sizeof report-used,"reclaim %s setup=%d low=%ld admitted=%d allocated=%d data=%d emptied=%d\n",pass?"PASS":"FAIL",setup,low,reclaimed,allocated,pointer_ok,emptied);
++ admission_release();if(cache){DisposeHandle(cache);cache=0;}
++ PurgeMem(0x7fffffffL);cache=NewHandle(65536);Ptr locked_address=0;if(cache){HLock(cache);HPurge(cache);locked_address=*cache;}
++ setup=cache&&admission_pressure(49152);int refused=setup&&!native_heap_room(0,65536,1);int unchanged=cache&&*cache==locked_address;int recovery=0;
++ if(cache){HUnlock(cache);if(setup)recovery=native_heap_room(0,65536,1)&&!*cache;}
++ pass=setup&&refused&&unchanged&&recovery;if(!pass)failures++;
++ used+=snprintf(report+used,sizeof report-used,"locked %s setup=%d refused=%d unchanged=%d unlock-recovery=%d\n",pass?"PASS":"FAIL",setup,refused,unchanged,recovery);
++ admission_release();if(cache){DisposeHandle(cache);cache=0;}
++ PurgeMem(0x7fffffffL);setup=admission_pressure(8192);low=FreeMem();refused=setup&&!native_heap_room(0,16384,1);admission_release();recovery=native_heap_room(0,16384,1);pass=setup&&refused&&recovery;if(!pass)failures++;
++ used+=snprintf(report+used,sizeof report-used,"exhaustion %s low=%ld refused=%d recovery=%d\n",pass?"PASS":"FAIL",low,refused,recovery);
++ long after=FreeMem();used+=snprintf(report+used,sizeof report-used,"failures=%d owned=%d heap=%ld/%ld delta=%ld largest=%ld/%ld\n",failures,admission_count,before,after,after-before,largest_before,MaxBlock());
++ char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,"heap-admission.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=used;SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);shell_flush_native(full);}
++ native_glyph_valid=0;force_draw=dirty=1;term_puts(report);
++}
+--- a/tests/terminal/align-guest.inc
++++ b/tests/terminal/align-guest.inc
+@@ -43,6 +43,6 @@
+  }
+  SetPort(win);SetClip(original);
+  InvalRect(&win->portRect);native_glyph_valid=0;force_draw=dirty=1;DisposeRgn(original);DisposeRgn(clip);DisposeRgn(hole);DisposePtr((Ptr)reference);char report[200];snprintf(report,sizeof report,"%s_PIXELS %s checks=%d failures=%d heap_delta=%ld\n",direct?"DIRECT":"ALIGN",failures?"FAIL":"PASS",checks,failures,FreeMem()-heap);
+- char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,direct?"direct-pixels.txt":"align-pixels.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=strlen(report);SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
++ char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,direct?inverse?"planes-pixels-dark.txt":"planes-pixels-light.txt":"align-pixels.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=strlen(report);SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
+  term_puts(report);return cancelled?130:failures?1:0;
+ }
+--- /dev/null
++++ b/tests/terminal/direct-guest.inc
+@@ -0,0 +1,46 @@
++/* Compare completed viewport bytes with the unchanged per-row presenter.
++   Snapshot is test-only. Deliberately retain the original clip/vis in both paths. */
++static int direct_view_pixels(void){
++ if(!direct_stage_supported())return 2;
++ unsigned char *reference=(unsigned char*)NewPtr(DIRECT_STAGE_BYTES);
++ RgnHandle original=NewRgn(),clip=NewRgn(),hole=NewRgn();
++ if(!reference||!original||!clip||!hole){if(reference)DisposePtr((Ptr)reference);if(original)DisposeRgn(original);if(clip)DisposeRgn(clip);if(hole)DisposeRgn(hole);return 1;}
++ int checks=0,failures=0,saved_theme=inverse,saved_coherent=direct_stage_enabled;WindowPtr cover=0;
++ SetPort(win);GetClip(original);history_raster_enabled=0;planes_enabled=2;direct_stage_invert_ram=1;input[0]=0;cursor=0;Ptr real_bits=win->portBits.baseAddr;
++ for(int mode=0;mode<4;mode++){
++  if(mode==3){Rect r;SetRect(&r,170,75,340,145);cover=NewWindow(0,&r,(ConstStringPtr)"\007Overlap",true,0,(WindowPtr)-1,false,0);if(!cover){failures++;break;}}
++  for(int theme=0;theme<2;theme++)for(int selected=0;selected<2;selected++)for(int forced=0;forced<2;forced++){
++   SetPort(win);SetClip(original);inverse=theme;font_layout();direct_stage_enabled=0;select_start=select_end=-1;
++   app_clear();busy=1;char line[COLS];for(int i=0;i<128;i++){for(int j=0;j<columns;j++)line[j]=(char)('!'+(i*7+j*11)%90);line[columns]='\n';line[columns+1]=0;term_puts(line);}busy=0;
++   force_draw=dirty=1;draw();
++   Rect c=win->portRect;RectRgn(clip,&c);
++   if(mode==1){c.left+=19;c.right-=11;c.top+=3;c.bottom=TEXT_TOP+42;RectRgn(clip,&c);}
++   if(mode==2){SetRect(&c,TEXT_LEFT+101,TEXT_TOP+2,TEXT_LEFT+223,TEXT_TOP+39);RectRgn(hole,&c);DiffRgn(clip,hole,clip);}
++   SetClip(clip);scrollback=37;select_start=selected?columns+3:-1;select_end=selected?3*columns+9:-1;force_draw=dirty=1;draw();
++   HideCursor();BlockMove(win->portBits.baseAddr,reference,DIRECT_STAGE_BYTES);ShowCursor();
++   /* Repaint an older source view, then take the experimental jump. */
++   scrollback=5;force_draw=dirty=1;draw();scrollback=37;direct_stage_enabled=1;force_draw=forced;dirty=1;unsigned long staged_before=direct_stage_frames;draw();
++   if(direct_stage_frames!=staged_before+(selected?0:1))failures++;
++   HideCursor();int mismatch=win->portBits.baseAddr!=real_bits||memcmp(reference,win->portBits.baseAddr,DIRECT_STAGE_BYTES)!=0;ShowCursor();checks++;if(mismatch)failures++;
++  }
++  SetPort(win);SetClip(original);if(cover){DisposeWindow(cover);cover=0;SetPort(win);}
++ }
++ SetPort(win);SetClip(original);select_start=select_end=-1;direct_stage_enabled=0;scrollback=37;force_draw=dirty=1;draw();
++ HideCursor();BlockMove(win->portBits.baseAddr,reference,DIRECT_STAGE_BYTES);ShowCursor();
++ for(int fault=0;fault<3;fault++){
++  direct_stage_enabled=0;scrollback=5;force_draw=dirty=1;draw();
++  if(fault==0){if(!direct_stage_handle)direct_stage_handle=NewHandle(DIRECT_STAGE_BYTES);if(direct_stage_handle&&*direct_stage_handle){HLock(direct_stage_handle);memset(*direct_stage_handle,0xa5,DIRECT_STAGE_BYTES);HUnlock(direct_stage_handle);}}
++  else if(fault==1){if(direct_stage_handle)EmptyHandle(direct_stage_handle);}
++  else {direct_stage_dispose();direct_stage_fail_alloc=1;}
++  direct_stage_enabled=1;scrollback=37;dirty=1;unsigned long staged_before=direct_stage_frames;draw();direct_stage_fail_alloc=0;
++  if(direct_stage_frames!=staged_before+(fault==2?0:1))failures++;
++  HideCursor();int mismatch=win->portBits.baseAddr!=real_bits||memcmp(reference,win->portBits.baseAddr,DIRECT_STAGE_BYTES)!=0;ShowCursor();checks++;if(mismatch)failures++;
++ }
++ direct_stage_dispose();if(direct_stage_handle||win->portBits.baseAddr!=real_bits)failures++;
++ SetClip(original);DisposeRgn(original);DisposeRgn(clip);DisposeRgn(hole);DisposePtr((Ptr)reference);
++ inverse=saved_theme;direct_stage_enabled=saved_coherent;select_start=select_end=-1;scrollback=0;busy=0;force_draw=dirty=1;
++ char report[256],full[PATH_CAP];unsigned char path[256];short ref;
++ snprintf(report,sizeof report,"DIRECT_STAGE_PIXELS %s checks=%d failures=%d; full/narrow/hole/occluded, themes, selection, forced/incremental; dirty/purged/OOM staging\n",failures?"FAIL":"PASS",checks,failures);
++ shell_temp_path(full,"direct-stage-pixels.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=strlen(report);SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);shell_flush_native(full);}
++ term_puts(report);return failures?1:0;
++}
+--- a/tests/terminal/jump-guest.inc
++++ b/tests/terminal/jump-guest.inc
+@@ -1,11 +1,11 @@
+ /* Large retained-history jumps. Report I/O and seeding are outside paint timing. */
+ static int jump_probe(int clearing){
+- char report[4096],line[COLS];int used=0,saved=render_mode,saved_page=page_mode,saved_busy=busy;
++ char report[8192],line[COLS];int used=0,saved=render_mode,saved_page=page_mode,saved_busy=busy;
+  render_mode=0;page_mode=0;build_font_cache();select_start=select_end=-1;
+- long heap_before=FreeMem();
++ direct_stage_dispose();glyph_planes_dispose();history_cache_dispose();long heap_before=FreeMem();
+  used+=snprintf(report+used,sizeof report-used,"JUMP_PROFILE cols=%d rows=%d cell=%d line=%d inverse=%d\n",columns,visible,cell_w,line_h,inverse);
+- for(int run=0;run<3&&!cancelled;run++)for(int variant=0;variant<2&&!cancelled;variant++)for(int kind=0;kind<2&&!cancelled;kind++){
+-  direct_legacy=clearing==3?!variant:1;
++ for(int run=0;run<3&&!cancelled;run++)for(int variant=0;variant<(inverse?3:2)&&!cancelled;variant++)for(int kind=0;kind<2&&!cancelled;kind++){
++  direct_legacy=0;planes_enabled=2;direct_stage_enabled=variant!=0;direct_stage_invert_ram=!inverse||variant==2;history_raster_enabled=0;direct_stage_dispose();direct_stage_frames=direct_stage_fallbacks=direct_stage_compose_ticks=direct_stage_present_ticks=direct_stage_allocate_ticks=direct_stage_invert_ticks=0;glyph_planes_dispose();history_cache_dispose();history_raster_hits=history_raster_misses=0;
+   jump_legacy=clearing?0:!variant;clear_legacy=clearing==1?!variant:0;align_legacy=clearing==2?!variant:0;native_glyph_valid=0;glyph_build_ticks=0;
+   app_clear();busy=1;
+   for(int i=0;i<128;i++){
+@@ -13,17 +13,20 @@
+    else{for(int j=0;j<columns;j++)line[j]=(char)('!'+(i*7+j*11)%90);line[columns]='\n';line[columns+1]=0;}
+    term_puts(line);
+   }
+-  busy=0;draw();memset(profile,0,sizeof profile);memset(jump_detail,0,sizeof jump_detail);draw_bar_ticks=draw_frames=align_ticks=0;
++  busy=0;direct_stage_enabled=0;draw();direct_stage_enabled=variant!=0;direct_stage_invert_ram=!inverse||variant==2;direct_stage_dispose();glyph_planes_dispose();native_glyph_valid=0;memset(profile,0,sizeof profile);memset(jump_detail,0,sizeof jump_detail);draw_bar_ticks=draw_frames=align_ticks=0;
+   unsigned long total=0,worst=0;
+   for(int i=0;i<24&&!cancelled;i++){
+    scrollback=(i*29+17)%(scroll_limit()+1);dirty=1;
+    unsigned long start=TickCount();draw();unsigned long dt=TickCount()-start;total+=dt;if(dt>worst)worst=dt;
+    if(i%6==5)app_yield();
+   }
++  used+=snprintf(report+used,sizeof report-used,"direct_stage frames=%lu fallback=%lu compose=%lu present=%lu invert=%lu alloc=%lu capacity=%ld\n",direct_stage_frames,direct_stage_fallbacks,direct_stage_compose_ticks,direct_stage_present_ticks,direct_stage_invert_ticks,direct_stage_allocate_ticks,direct_stage_handle?DIRECT_STAGE_BYTES:0L);
+   used+=snprintf(report+used,sizeof report-used,"run=%d new=%d kind=%s ticks=%lu worst=%lu frames=%lu compose=%lu shift=%lu raster=%lu copy=%lu bar=%lu plan=%lu prepare=%lu text=%lu rows=%lu build=%lu align=%lu\n",run,variant,kind?"varied":"listing",total,worst,draw_frames,profile[0],profile[1],profile[2],profile[3],draw_bar_ticks,jump_detail[0],jump_detail[1],jump_detail[2],jump_detail[3],glyph_build_ticks,align_ticks);
+  }
+- direct_legacy=jump_legacy=clear_legacy=align_legacy=0;render_mode=saved;page_mode=saved_page;busy=saved_busy;scrollback=0;build_font_cache();force_draw=dirty=1;
++ direct_stage_invert_ram=1;direct_legacy=jump_legacy=clear_legacy=align_legacy=0;render_mode=saved;page_mode=saved_page;busy=saved_busy;scrollback=0;build_font_cache();force_draw=dirty=1;
++ direct_stage_dispose();history_cache_dispose();glyph_planes_dispose();
+  used+=snprintf(report+used,sizeof report-used,"heap_delta=%ld; phases overlap; total is sum of completed draw calls\n",FreeMem()-heap_before);
+- char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,clearing==3?"direct-profile.txt":clearing==2?"align-profile.txt":clearing?"clear-profile.txt":"jump-profile.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=used;SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
++ history_cache_dispose();glyph_planes_dispose();
++ char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,inverse?"direct-stage-dark.txt":"direct-stage-light.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=used;SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
+  term_puts(report);return cancelled?130:0;
+ }
+--- /dev/null
++++ b/tests/terminal/live-guest.inc
+@@ -0,0 +1,59 @@
++/* Paired, actual terminal-output + completed-paint probe. Test-only snapshot.
++   Runs with command input ownership; yields only between complete comparisons. */
++static int live_output_probe(void){
++ if(!direct_stage_supported()||columns!=80||line_h!=11)return 2;
++ unsigned char *reference=(unsigned char*)NewPtr(DIRECT_STAGE_BYTES);
++ char (*batch)[COLS]=(char(*)[COLS])NewPtr(48L*COLS);
++ RgnHandle saved_clip_live=NewRgn(),probe_clip=NewRgn(),hole=NewRgn();
++ if(!batch||!reference||!saved_clip_live||!probe_clip||!hole){if(batch)DisposePtr((Ptr)batch);if(reference)DisposePtr((Ptr)reference);if(saved_clip_live)DisposeRgn(saved_clip_live);if(probe_clip)DisposeRgn(probe_clip);if(hole)DisposeRgn(hole);return 1;}
++ char report[8192],line[COLS];int used=0,failed=0,checks=0;
++ int saved_theme=inverse,saved_busy=busy,saved_live=direct_live_enabled,saved_direct=direct_stage_enabled,saved_page=paging;
++ SetPort(win);GetClip(saved_clip_live);busy=1;paging=0;input[0]=0;cursor=0;select_start=select_end=-1;
++ for(int theme=0;theme<2&&!cancelled;theme++)for(int pass=0;pass<3&&!cancelled;pass++)for(int dense=0;dense<2&&!cancelled;dense++)for(int chunk=4;chunk<=48&&!cancelled;chunk+=44)for(int variant=0;variant<2&&!cancelled;variant++){
++  inverse=theme;SetPort(win);SetClip(saved_clip_live);font_layout();app_clear();busy=1;direct_live_enabled=0;direct_stage_enabled=1;
++  int serial=0;
++  for(int i=0;i<128;i++){native_test_line(line,serial++);term_puts(line);}force_draw=dirty=1;draw();
++  /* Warm glyphs equally; stage allocation remains part of the candidate cost. */
++  direct_stage_dispose();direct_live_enabled=variant;unsigned long ticks=0,worst=0,frames=0,stage=0,output_ticks=0,paint_ticks=0;
++  SetPort(win);RectRgn(probe_clip,&win->portRect);
++  if(pass==1){Rect r=win->portRect;r.left+=17;r.right-=13;r.top+=2;r.bottom-=9;RectRgn(probe_clip,&r);}
++  if(pass==2){Rect r;SetRect(&r,115,39,225,87);RectRgn(hole,&r);DiffRgn(probe_clip,hole,probe_clip);}
++  SetClip(probe_clip);
++  for(int frame=0;frame<6&&!cancelled;frame++){
++   /* Fixture formatting is not terminal work. Prepare identical bytes outside
++      the timed interval; include only terminal ingestion and completed paint. */
++   for(int i=0;i<chunk;i++){
++    if(dense){for(int x=0;x<columns;x++)batch[i][x]=(char)('!'+(serial*7+x*11)%90);batch[i][columns]='\n';batch[i][columns+1]=0;serial++;}
++    else snprintf(batch[i],COLS,"---         35          0 2026-11-08 05:53 file%04d.txt\n",serial++);
++   }
++   unsigned long paint_before=draw_frames,stage_before=direct_stage_frames,t=TickCount();
++   for(int i=0;i<chunk;i++)term_puts(batch[i]);
++   unsigned long middle=TickCount();draw();unsigned long end=TickCount(),dt=end-t;
++   output_ticks+=middle-t;paint_ticks+=end-middle;ticks+=dt;if(dt>worst)worst=dt;
++   frames+=draw_frames-paint_before;stage+=direct_stage_frames-stage_before;
++   HideCursor();BlockMove(win->portBits.baseAddr,reference,DIRECT_STAGE_BYTES);ShowCursor();
++   int live=direct_live_enabled,staged=direct_stage_enabled;direct_live_enabled=direct_stage_enabled=0;force_draw=dirty=1;draw();
++   HideCursor();if(memcmp(reference,win->portBits.baseAddr,DIRECT_STAGE_BYTES))failed++;ShowCursor();checks++;
++   direct_live_enabled=live;direct_stage_enabled=staged;
++   SetClip(saved_clip_live);app_yield();SetPort(win);SetClip(probe_clip);
++  }
++  used+=snprintf(report+used,sizeof report-used,"theme=%d pass=%d dense=%d chunk=%d new=%d ticks=%lu output=%lu paint=%lu worst=%lu paints=%lu direct=%lu failures=%d\n",theme,pass,dense,chunk,variant,ticks,output_ticks,paint_ticks,worst,frames,stage,failed);
++ }
++ /* Current partial rows, canonical reads and selections must use fallback. */
++ SetPort(win);SetClip(saved_clip_live);inverse=saved_theme;font_layout();app_clear();busy=1;
++ for(int i=0;i<80;i++){for(int x=0;x<columns;x++)line[x]=(char)('!'+(i*7+x*11)%90);line[columns]='\n';line[columns+1]=0;term_puts(line);}
++ for(int mode=0;mode<5&&!cancelled;mode++){
++  tty_reading=mode==1;searching=mode==2;paging=mode==3;select_start=mode==4?columns:-1;select_end=mode==4?columns+10:-1;
++  if(mode==0)term_puts("partial");
++  direct_stage_enabled=0;force_draw=dirty=1;draw();HideCursor();BlockMove(win->portBits.baseAddr,reference,DIRECT_STAGE_BYTES);ShowCursor();
++  direct_stage_enabled=direct_live_enabled=1;unsigned long before=direct_stage_frames;force_draw=dirty=1;draw();
++  HideCursor();if(memcmp(reference,win->portBits.baseAddr,DIRECT_STAGE_BYTES)||before!=direct_stage_frames)failed++;ShowCursor();checks++;
++  if(mode==0)term_puts("\n");SetClip(saved_clip_live);app_yield();
++ }
++ tty_reading=searching=0;paging=saved_page;select_start=select_end=-1;inverse=saved_theme;busy=saved_busy;direct_live_enabled=saved_live;direct_stage_enabled=saved_direct;
++ direct_stage_dispose();glyph_planes_dispose();native_glyph_valid=0;SetPort(win);SetClip(saved_clip_live);font_layout();scrollback=0;force_draw=dirty=1;
++ DisposePtr((Ptr)batch);DisposePtr((Ptr)reference);DisposeRgn(saved_clip_live);DisposeRgn(probe_clip);DisposeRgn(hole);
++ used+=snprintf(report+used,sizeof report-used,"LIVE_OUTPUT checks=%d failures=%d cancelled=%d\n",checks,failed,cancelled);
++ char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,"live-output.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=used;SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);shell_flush_native(full);}
++ term_puts(report);term_present();return cancelled?130:failed?1:0;
++}
+--- /dev/null
++++ b/tests/terminal/planes-host.c
+@@ -0,0 +1,37 @@
++/* Exact cache lifecycle plus independent mathematical table oracle. */
++#include <assert.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++typedef char **Handle;static unsigned long ticks;static int fail,owned,locked,purgeable;static size_t bytes;
++static unsigned long TickCount(void){return ticks;}
++static long free_bytes=100000;
++static long FreeMem(void){return free_bytes;}
++static void PurgeMem(long n){(void)n;assert(!"cache must not request purging");}
++static Handle NewHandle(long n){if(fail)return NULL;Handle h=malloc(sizeof *h);assert(h);*h=malloc(n);assert(*h);memset(*h,0xa5,n);bytes=n;owned++;return h;}
++static void DisposeHandle(Handle h){free(*h);free(h);owned--;locked=purgeable=0;bytes=0;}
++static void HLock(Handle h){assert(h&&*h);locked=1;}
++static void HUnlock(Handle h){assert(h);locked=0;}
++static void HPurge(Handle h){assert(h);purgeable=1;}
++static void HNoPurge(Handle h){assert(h);purgeable=0;}
++#include "../../src/glyph-planes.inc"
++int main(void){
++ unsigned char glyphs[95*32];for(int i=0;i<95*32;i++)glyphs[i]=(i*17&63)<<2;
++ fail=1;assert(!glyph_planes_begin(3));assert(!owned);fail=0;assert(!glyph_planes_begin(3));ticks=60;
++ for(int phase=1;phase<8;phase++){
++  assert(glyph_planes_begin(phase));assert(locked&&!purgeable);assert(bytes==24320);assert(!glyph_planes_begin(phase));
++  assert(!glyph_planes_prepare(glyphs,phase==7?1:phase+1));assert(glyph_planes_prepare(glyphs,phase));
++  for(int p=0;p<4;p++)for(int c=0;c<95;c++)for(int y=0;y<11;y++){
++   uint32_t expected=0;for(int bit=0;bit<6;bit++)if(glyphs[c*32+y]&(128>>bit))expected|=UINT32_C(1)<<(31-phase-p*6-bit);
++   assert(((uint32_t*)(glyph_planes_data+(p*95+c)*64))[y]==expected);
++  }
++  glyph_planes_end();assert(!locked&&purgeable);assert(!glyph_planes_prepare(glyphs,phase));
++ }
++ assert(glyph_planes_begin(3));assert(glyph_planes_prepare(glyphs,3));glyphs[0]^=128;glyph_planes_invalidate();assert(glyph_planes_prepare(glyphs,3));assert(*(uint32_t*)glyph_planes_data==(uint32_t)(glyphs[0]>>2)<<23);glyph_planes_end();
++ free(*glyph_planes_handle);*glyph_planes_handle=NULL;assert(glyph_planes_begin(3));assert(glyph_planes_phase==-1);assert(glyph_planes_prepare(glyphs,3));glyph_planes_end();
++ for(int i=0;i<1000;i++){assert(glyph_planes_begin(3));assert(glyph_planes_prepare(glyphs,3));glyph_planes_end();}assert(owned==1);
++ glyph_planes_dispose();assert(!owned&&!bytes);assert(!glyph_planes_begin(0));assert(!glyph_planes_begin(8));
++ free_bytes=32768+GLYPH_PLANES_BYTES-1;ticks+=60;assert(!glyph_planes_begin(3)&&!owned);free_bytes++;ticks+=60;assert(glyph_planes_begin(3));glyph_planes_end();glyph_planes_dispose();assert(!owned);
++ puts("PASS cache reserve admission; 29,260 glyph-plane oracle cases; failed allocation/retry, purge, invalidation, phase fallback, ownership and 1000 paint acquisitions;24320 bytes");
++}
+--- a/tests/terminal/presentation-guest.inc
++++ b/tests/terminal/presentation-guest.inc
+@@ -11,7 +11,7 @@
+  for(int run=0;run<3&&!cancelled;run++){
+   for(int variant=0;variant<2;variant++)for(int n=0;n<2;n++){
+    clear_legacy=!variant;int count=n?51:80;unsigned long start=TickCount();
+-   for(int i=0;i<2000;i++)native_glyph_clear(count);
++   for(int i=0;i<2000;i++)native_glyph_clear(prompt_pixels,count);
+    used+=snprintf(report+used,sizeof report-used,"clear run=%d new=%d count=%d calls=2000 ticks=%lu\n",run,variant,count,TickCount()-start);
+   }
+   clear_legacy=0;
+--- a/tests/terminal/ux-guest.inc
++++ b/tests/terminal/ux-guest.inc
+@@ -23,7 +23,7 @@
+  usability_record("unsupported shell control is not an arrow",!strcmp(input,"unchanged")&&cursor==3&&history_back==previous_history);usability_reset();
+  control_mode=saved_mode;
+  app_clear();current_line=100;oldest_line=0;for(int r=0;r<=100;r++)snprintf(text[r],COLS,"History row %03d",r);strcpy(input,"keep");cursor=4;scrollback=3;draw();
+- char screen[40][COLS];long first;int prompt;compose_input(screen,&first,&prompt);int clean=prompt==visible+1;
++ char screen[40][COLS];long first;int prompt;compose_input(screen,&first,&prompt);int clean=prompt>visible;
+  for(int r=0;r<=visible;r++)if(memcmp(screen[r],text[(first+r)%ROWS],columns)||screen[r][COLS-1])clean=0;
+  usability_record("scrollback fills last row, no pinned prompt/cursor",clean);
+  select_start=visible*columns;select_end=select_start+7;copy_selection();Handle scrap=NewHandle(0);long off,count=GetScrap(scrap,'TEXT',&off);usability_record("copy includes last history row",count==7&&!memcmp(*scrap,"History",7));DisposeHandle(scrap);select_start=select_end=-1;
+@@ -31,6 +31,6 @@
+  scrollback=3;ZeroScrap();PutScrap(2,'TEXT',"XY");ux_event(9,'v',cmdKey);usability_record("paste returns live and retains contents",!scrollback&&!strcmp(input,"keepSXY"));
+  busy=1;scrollback=3;key('z',0);usability_record("foreground typeahead returns to live view",!scrollback&&ahead_count==1);busy=0;ahead_count=ahead_head=0;
+  int saved_theme=inverse;long line=current_line;char oldrow[COLS];memcpy(oldrow,text[0],COLS);
+- for(int dark=0;dark<2;dark++){char *args[]={"prefs","colours",dark?"dark":"light"};Rect tiny;SetRect(&tiny,4,0,8,4);InvalRect(&tiny);app_preferences(3,args);EventRecord ev;while(GetNextEvent(updateMask,&ev))handle(&ev);draw();usability_record("theme immediately fills margins, preserves input and history",GetPixel(TEXT_LEFT-1,line_h*3)==dark&&!strcmp(input,"keepSXY")&&line==current_line&&!memcmp(oldrow,text[0],COLS));}
++ for(int dark=0;dark<2;dark++){char *args[]={"prefs","colours",dark?"dark":"light"};Rect tiny;SetRect(&tiny,4,0,8,4);InvalRect(&tiny);app_preferences(3,args);EventRecord ev;while(GetNextEvent(updateMask,&ev))handle(&ev);draw();int pixel=GetPixel(TEXT_LEFT-1,line_h*3),same_input=!strcmp(input,"keepSXY"),same_row=!memcmp(oldrow,text[0],COLS);snprintf(report,sizeof report,"theme requested=%d actual=%d pixel=%d input_ok=%d line_before=%ld line_after=%ld history_ok=%d\n",dark,inverse,pixel,same_input,line,current_line,same_row);n=strlen(report);FSWrite(usability_ref,&n,report);usability_record("theme immediately fills margins, preserves input and history",pixel==dark&&same_input&&line==current_line&&same_row);}
+  inverse=saved_theme;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();usability_reset();
+ }
+--- /dev/null
++++ b/tests/terminal/viewport-guest.inc
+@@ -0,0 +1,22 @@
++/* Opt-in native viewport regression; all fixtures are disposable. */
++static void viewport_probe(void){
++ char path[PATH_CAP],report[2048];unsigned char pn[256];short ref;int used=0;
++ shell_temp_path(path,"viewport-v2.txt");pstr(pn,path);HCreate(0,0,pn,'CLRC','TEXT');OSErr open_error=HOpen(0,0,pn,fsWrPerm,&ref);if(open_error){char err[80];snprintf(err,sizeof err,"VIEWPORT open failed %d\n",open_error);term_puts(err);return;}SetEOF(ref,0);
++ int oldh=win->portRect.bottom,oldw=win->portRect.right,saved_inverse=inverse;long heap=FreeMem();
++ input[0]=0;cursor=0;busy=0;page_mode=0;app_clear();
++ for(int i=0;i<110;i++){char l[64];snprintf(l,sizeof l,"row %03d abcdefghijklmnopqrstuvwxyz\n",i);term_puts(l);}scrollback=10;force_draw=dirty=1;draw();
++ char model[40][COLS];long before,after;int pr;compose_input(model,&before,&pr);
++ SizeWindow(win,oldw,oldh-55,1);layout();compose_input(model,&after,&pr);
++ used+=snprintf(report+used,sizeof report-used,"height anchor before=%ld after=%ld %s\n",before,after,before==after?"PASS":"FAIL");
++ SizeWindow(win,oldw,oldh,1);layout();force_draw=dirty=1;draw();
++ /* A narrow update outside the bar must not poison its staging bitmap. */
++ RgnHandle original=NewRgn();GetClip(original);Rect tiny;SetRect(&tiny,TEXT_LEFT,TEXT_TOP,TEXT_LEFT+8,TEXT_TOP+8);ClipRect(&tiny);sync_history_bar(1);SetClip(original);
++ scrollback++;sync_history_bar(0);unsigned short snapshot[342];bar_snapshot(snapshot,0);sync_history_bar(1);int mismatch=bar_snapshot(snapshot,1);
++ used+=snprintf(report+used,sizeof report-used,"bar clipped-staging vs full rebuild %s\n",mismatch?"FAIL":"PASS");DisposeRgn(original);
++ for(int theme=0;theme<2;theme++){
++  char *args[]={"prefs","colours",theme?"dark":"light"};int rc=app_preferences(3,args);SetPort(win);int pixel=GetPixel(TEXT_LEFT-1,line_h*3);
++  used+=snprintf(report+used,sizeof report-used,"theme requested=%d actual=%d margin=%d status=%d\n",theme,inverse,pixel,rc);
++ }
++ inverse=saved_inverse;scrollback=0;force_draw=dirty=1;draw();
++ used+=snprintf(report+used,sizeof report-used,"heap delta=%ld\n",FreeMem()-heap);long n=used;FSWrite(ref,&n,report);FSClose(ref);unsigned char vol[]={7,'R','C','G','u','e','s','t'};FlushVol(vol,0);term_puts(report);
++}
+--- /dev/null
++++ b/tests/terminal/viewport-host.py
+@@ -0,0 +1,79 @@
++from pathlib import Path
++import subprocess
++r=Path(__file__).resolve().parents[2];s=(r/'src/app.c').read_text()
++a=s.index('static void input_position');b=s.index('static void pstr',a)
++code=r'''
++#include <stdio.h>
++#include <string.h>
++#include <assert.h>
++#define COLS 132
++#define ROWS 128
++static char text[ROWS][COLS],input[1024],search[128];
++static int columns=20,visible=4,scrollback,busy,tty_reading,searching,cursor,background,paging;
++static long current_line,oldest_line;
++static int win=1;
++static int FrontWindow(void){return 1;}
++static int prompt_prefix(char *p){if(tty_reading){p[0]=0;return 0;}strcpy(p,"/ > ");return 4;}
++'''+s[a:b]+r'''
++int main(void){char screen[40][COLS];long first;int prompt;
++ strcpy(text[0],"partial");current_line=0;strcpy(input,"xy");cursor=2;
++ compose_input(screen,&first,&prompt);
++ printf("partial-output: %s\n",screen[0]);
++ assert(!strncmp(screen[0],"partial/ > xy",12));
++ memset(text,0,sizeof text);for(int i=0;i<100;i++)snprintf(text[i],COLS,"row %d",i);
++ current_line=100;strcpy(input,"012345678901234567890123456789");cursor=30;
++ compose_input(screen,&first,&prompt);long live=first;
++ scrollback=2;compose_input(screen,&first,&prompt);assert(first==live-2);
++ for(int i=0;i<=visible;i++)assert(!screen[i][COLS-1]);
++ scrollback=0;compose_input(screen,&first,&prompt);int carets=0;for(int i=0;i<=visible;i++)carets+=screen[i][COLS-1]!=0;assert(carets==1);
++ 
++ /* A command with no trailing newline remains visible while busy, then the
++    shell prompt follows it instead of replacing those bytes. */
++ memset(text,0,sizeof text);oldest_line=current_line=scrollback=0;
++ strcpy(text[0],"partial");input[0]=0;cursor=0;busy=1;
++ compose_input(screen,&first,&prompt);assert(!strcmp(screen[0],"partial"));
++ for(int i=0;i<=visible;i++)assert(!screen[i][COLS-1]);
++ busy=0;compose_input(screen,&first,&prompt);
++ assert(!strncmp(screen[0],"partial/ > ",11)&&screen[0][COLS-1]==12);
++ /* Canonical read input follows a partial application prompt without the
++    shell prefix. Exact-width text places the caret on the next whole row. */
++ tty_reading=1;busy=1;strcpy(text[0],"Enter: ");strcpy(input,"abcdefghijklm");cursor=13;
++ compose_input(screen,&first,&prompt);
++ assert(!strncmp(screen[0],"Enter: abcdefghijklm",20));
++ assert(screen[0][COLS-1]==0&&screen[1][COLS-1]==1);
++ tty_reading=busy=0;
++ /* A five-row input at the bottom must not detach its prefix; scrolling
++    hides only the cursor, not the actual command content. */
++ memset(text,0,sizeof text);current_line=100;oldest_line=0;
++ for(int i=0;i<100;i++)snprintf(text[i],COLS,"row %d",i);
++ memset(input,'x',80);input[80]=0;cursor=80;
++ compose_input(screen,&first,&prompt);assert(first==100&&prompt==0);
++ assert(!strncmp(screen[0],"/ > xxxxxxxxxxxxxxxx",20));
++ assert(screen[4][COLS-1]==5);
++ scrollback=1;compose_input(screen,&first,&prompt);
++ assert(first==99&&prompt==1&&!strcmp(screen[0],"row 99"));
++ assert(!strncmp(screen[1],"/ > xxxxxxxxxxxxxxxx",20));
++ for(int i=0;i<=visible;i++)assert(!screen[i][COLS-1]);
++ /* The input may exceed a viewport. Moving the caret to its beginning
++    restores its prefix; moving to the end shows the final complete row. */
++ scrollback=0;memset(input,'z',200);input[200]=0;cursor=200;
++ compose_input(screen,&first,&prompt);assert(first==106&&prompt==-6);
++ assert(screen[4][COLS-1]==5);
++ cursor=0;compose_input(screen,&first,&prompt);
++ assert(first==100&&prompt==0&&screen[0][COLS-1]==5);
++ /* Explicit newlines and a nonzero ring origin use the same coordinates. */
++ memset(text,0,sizeof text);oldest_line=198;current_line=200;
++ strcpy(text[198%ROWS],"oldest");strcpy(text[199%ROWS],"previous");
++ strcpy(input,"a\nb\n");cursor=4;
++ compose_input(screen,&first,&prompt);
++ assert(first==198&&prompt==2&&!strcmp(screen[0],"oldest"));
++ assert(!strncmp(screen[2],"/ > a",5)&&!strcmp(screen[3],"b"));
++ assert(screen[4][COLS-1]==1);
++ background=1;compose_input(screen,&first,&prompt);
++ for(int i=0;i<=visible;i++)assert(!screen[i][COLS-1]);
++ puts("PASS partial output, canonical read, exact-width caret, wrapped input, scrollback, long editing, newlines, ring origin and background cursor");
++}
++'''
++p=r/'work/viewport';p.mkdir(parents=True,exist_ok=True);(p/'compose.c').write_text(code)
++subprocess.run(['cc','-std=c99','-fsanitize=address,undefined',str(p/'compose.c'),'-o',str(p/'compose')],check=True)
++subprocess.run([str(p/'compose')],check=True)

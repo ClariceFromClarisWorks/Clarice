@@ -1,0 +1,41 @@
+PASS launch window in front
+PASS Command-C selected text
+PASS Command-V at insertion point
+PASS foreground ordered typeahead editing
+PASS foreground paste queued atomically
+PASS queued paste newline never submits
+PASS busy paste overflow fails closed
+PASS loading typeahead transferred to editor
+PASS pinwheel inverse background
+PASS hardware snapshot stock mono 4 MB and no retained allocation
+hardware 20 calls=26 ticks model=Macintosh Plus cpu=1 fpu=0 system=608
+PASS physical Ctrl-X editor
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS physical Ctrl-X editor
+PASS Option-W uses keyboard map not accented character
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS physical Ctrl-X editor
+PASS Command-X maps to Ctrl-X
+PASS Command-Option-C editor control not local abort
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS queued Ctrl-underscore keeps its control modifier
+PASS unsupported shell control is not an arrow
+PASS scrollback fills last row, no pinned prompt/cursor
+PASS copy includes last history row
+PASS shifted typing returns live and retains key
+PASS paste returns live and retains contents
+PASS foreground typeahead returns to live view
+theme requested=0 actual=0 pixel=0 input_ok=1 line_before=100 line_after=100 history_ok=1
+PASS theme immediately fills margins, preserves input and history
+theme requested=1 actual=1 pixel=1 input_ok=1 line_before=100 line_after=100 history_ok=1
+PASS theme immediately fills margins, preserves input and history
+failures=0 heap=380106

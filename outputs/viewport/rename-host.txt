@@ -1,0 +1,2 @@
+PASS: cross-volume rename/recovery/flush, duplicate IDs/leaves, spaces/case, missing/ambiguous/error fail closed
+PASS: regression detects a successful rename on the wrong volume

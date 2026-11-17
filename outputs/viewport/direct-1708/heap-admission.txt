@@ -1,0 +1,4 @@
+reclaim PASS setup=1 low=49208 admitted=1 allocated=1 data=1 emptied=1
+locked PASS setup=1 refused=1 unchanged=1 unlock-recovery=1
+exhaustion PASS low=8248 refused=1 recovery=1
+failures=0 owned=0 heap=381568/381580 delta=12 largest=377812/375948

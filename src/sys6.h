@@ -52,6 +52,7 @@ void app_activity_interactive(int);
 int shell_state_path(char *out,const char *file,const char *legacy);
 
 int shell_rename(const unsigned char *source,const unsigned char *newname);
+int shell_flush_native(const char *path);
 void shell_temp_path(char *out,const char *file);
 
 int cli_pause_ticks(unsigned long ticks);

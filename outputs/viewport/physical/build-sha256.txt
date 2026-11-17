@@ -1,0 +1,1 @@
+7a408d1bf2fd1dfde0975382e259a6768677a8f51e6100aaf7eb65fb84ad15cc  work/physical-terminal/build/Clarice.bin

@@ -57,3 +57,11 @@ Agreed updater follow-up, 15 November: keep confirmation visible within the
 terminal viewport, use familiar `Y/n` interaction, and support explicit `-y`
 auto-acceptance. Preserve verification, recovery and no silent updates. Recorded
 during the frame-performance task; not implemented as part of that task.
+
+## Agreed remote test service follow-up — 17 November 2026
+
+A future Preferences-selectable, disabled-by-default Telnet server should expose
+an independent Clarice shell session (own prompt, cwd, variables and streams),
+not mirror the graphical terminal. Intended uses include non-graphics acceptance
+tests and launching/restarting SEControl. Reuse native networking and existing
+shell/invocation facilities; no implementation is part of the renderer task.
