@@ -1,0 +1,12 @@
+old=1 files=10 pass=0 status=0 total=123 path=15 kind=6 load=33 module=66 paint=32 heap=422060
+old=1 files=10 pass=1 status=0 total=118 path=15 kind=6 load=33 module=66 paint=32 heap=422060
+old=1 files=10 pass=2 status=0 total=117 path=15 kind=6 load=34 module=67 paint=31 heap=422060
+old=1 files=100 pass=0 status=0 total=174 path=15 kind=6 load=33 module=128 paint=40 heap=422060
+old=1 files=100 pass=1 status=0 total=172 path=16 kind=6 load=34 module=127 paint=39 heap=422060
+old=1 files=100 pass=2 status=0 total=173 path=16 kind=6 load=35 module=127 paint=41 heap=422060
+old=0 files=10 pass=0 status=0 total=107 path=12 kind=0 load=33 module=66 paint=30 heap=422060
+old=0 files=10 pass=1 status=0 total=108 path=11 kind=0 load=35 module=68 paint=32 heap=422060
+old=0 files=10 pass=2 status=0 total=108 path=11 kind=0 load=33 module=67 paint=32 heap=422060
+old=0 files=100 pass=0 status=0 total=163 path=10 kind=0 load=35 module=128 paint=43 heap=422060
+old=0 files=100 pass=1 status=0 total=165 path=12 kind=0 load=33 module=127 paint=43 heap=422060
+old=0 files=100 pass=2 status=0 total=162 path=11 kind=0 load=34 module=127 paint=40 heap=422060

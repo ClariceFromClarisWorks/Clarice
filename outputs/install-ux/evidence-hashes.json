@@ -1,0 +1,34 @@
+{
+  "first/Clarice.bin": {
+    "bytes": 265344,
+    "sha256": "fd05a1174e1660f2bd06c5601fabc97d3dfd45add8e6ab40b026a517504da527"
+  },
+  "before-upgrade/Clarice.bin": {
+    "bytes": 1045632,
+    "sha256": "b3ba06e78edafb79f71ebe7a761995a0b9c4b6c3191eabc09034dcec0e3e6c36"
+  },
+  "diskfull/Clarice.bin": {
+    "bytes": 1045632,
+    "sha256": "b3ba06e78edafb79f71ebe7a761995a0b9c4b6c3191eabc09034dcec0e3e6c36"
+  },
+  "after-upgrade/Clarice.bin": {
+    "bytes": 265344,
+    "sha256": "fea44c348ec5b993f6b238bac3945c50ad3f09350d0838acee1e24bc5bc41cfd"
+  },
+  "after-upgrade/previous.bin": {
+    "bytes": 1045632,
+    "sha256": "07b51b43eebca282aa78eb16ded0cc0d856e2528222d481493fc9469861af518"
+  },
+  "before-upgrade/grep.bin": {
+    "bytes": 12928,
+    "sha256": "bc37aee6e1975358df0c6659eea9e5905bc99d647e499622a3732eb3494b2d5e"
+  },
+  "after-upgrade/grep.bin": {
+    "bytes": 12928,
+    "sha256": "bc37aee6e1975358df0c6659eea9e5905bc99d647e499622a3732eb3494b2d5e"
+  },
+  "build/Clarice.hda": {
+    "bytes": 33605120,
+    "sha256": "4711afefc981e0ff6b1d8455aa3a132217503d0ecb6e3cb20a7b1082925b572b"
+  }
+}

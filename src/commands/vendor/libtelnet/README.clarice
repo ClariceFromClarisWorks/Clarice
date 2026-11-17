@@ -1,0 +1,13 @@
+Upstream: https://github.com/seanmiddleditch/libtelnet
+Revision: 5f5ecee776b9bdaa4e981e5f807079a9c79d633e (develop, version 0.30.0)
+Authors/licence: AUTHORS and COPYING, public-domain dedication.
+libtelnet.c and libtelnet.h are unmodified upstream source. Test inputs and
+expected results plus util/telnet-test.c are retained for reproducibility.
+No zlib; protocol engine is linked only into the external Telnet command.
+../../network/telnet-engine.c supplies cli_alloc/free, overflow-checked calloc
+and realloc, and observes upstream state for timeout/EOF and option policy.
+This avoids duplicating the parser. Diagnostics do not depend on errno libc.
+All allocations belong to the invocation and are freed by telnet_free.
+Subnegotiation limit is upstream's 16 KiB; growth temporarily retains both old
+and new blocks. Warnings/errors end the client session; no partial protocol
+recovery is silently treated as successful by Clarice.

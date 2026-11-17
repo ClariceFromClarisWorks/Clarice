@@ -1,0 +1,1 @@
+[('sort', 2, 'text tool: line exceeds 16384-byte limit\n'), ('awk', 2, 'work/awk-host/awk: Clarice: text buffer exceeds 16384 bytes\n source line number 1\n')]

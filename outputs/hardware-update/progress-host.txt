@@ -1,0 +1,1 @@
+PASS: once-per-second updates, final row, redirected stderr suppressed, unknown total, bounded percentage arithmetic

@@ -1,0 +1,12 @@
+variant=0 mode=0 cadence=96 files=100 pass=0 total=163 paint=31 frames=3 events=3 partial=0 status=0 heap=420248 path=16 load=43 module=110
+variant=1 mode=0 cadence=96 files=100 pass=0 total=153 paint=31 frames=3 events=5 partial=0 status=0 heap=420248 path=17 load=37 module=102
+variant=0 mode=0 cadence=96 files=100 pass=1 total=156 paint=31 frames=3 events=2 partial=0 status=0 heap=420248 path=17 load=38 module=105
+variant=1 mode=0 cadence=96 files=100 pass=1 total=153 paint=31 frames=3 events=3 partial=0 status=0 heap=420248 path=16 load=37 module=102
+variant=0 mode=0 cadence=96 files=100 pass=2 total=155 paint=32 frames=3 events=2 partial=0 status=0 heap=420248 path=17 load=38 module=105
+variant=1 mode=0 cadence=96 files=100 pass=2 total=153 paint=31 frames=3 events=3 partial=0 status=0 heap=420248 path=16 load=37 module=102
+variant=0 mode=0 cadence=96 files=1000 pass=0 total=610 paint=83 frames=7 events=7 partial=0 status=0 heap=420248 path=17 load=38 module=563
+variant=1 mode=0 cadence=96 files=1000 pass=0 total=577 paint=82 frames=7 events=6 partial=0 status=0 heap=420248 path=17 load=37 module=529
+variant=0 mode=0 cadence=96 files=1000 pass=1 total=611 paint=83 frames=7 events=7 partial=0 status=0 heap=420248 path=17 load=36 module=561
+variant=1 mode=0 cadence=96 files=1000 pass=1 total=577 paint=81 frames=7 events=8 partial=0 status=0 heap=420248 path=16 load=37 module=529
+variant=0 mode=0 cadence=96 files=1000 pass=2 total=611 paint=80 frames=7 events=5 partial=0 status=0 heap=420248 path=17 load=37 module=562
+variant=1 mode=0 cadence=96 files=1000 pass=2 total=577 paint=83 frames=7 events=8 partial=0 status=0 heap=420248 path=17 load=37 module=528

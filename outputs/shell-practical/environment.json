@@ -1,0 +1,56 @@
+{
+  "awk": [
+    {
+      "entries": 30,
+      "value_bytes": 4096,
+      "budget": null,
+      "status": 0,
+      "stdout": "30 4096\n",
+      "accounting": "PORT_STATS peak=286323 remaining=0\n"
+    },
+    {
+      "entries": 30,
+      "value_bytes": 4096,
+      "budget": 64,
+      "status": 2,
+      "stdout": "",
+      "accounting": "PORT_STATS peak=0 remaining=0\n"
+    },
+    {
+      "entries": 30,
+      "value_bytes": 4096,
+      "budget": 512,
+      "status": 2,
+      "stdout": "",
+      "accounting": "PORT_STATS peak=0 remaining=0\n"
+    },
+    {
+      "entries": 30,
+      "value_bytes": 4096,
+      "budget": 4096,
+      "status": 2,
+      "stdout": "",
+      "accounting": "PORT_STATS peak=3808 remaining=0\n"
+    },
+    {
+      "entries": 30,
+      "value_bytes": 4096,
+      "budget": 16384,
+      "status": 2,
+      "stdout": "",
+      "accounting": "PORT_STATS peak=16078 remaining=0\n"
+    },
+    {
+      "entries": 3,
+      "value_bytes": 5,
+      "budget": null,
+      "status": 0,
+      "stdout": "3 5\n",
+      "accounting": "PORT_STATS peak=28813 remaining=0\n"
+    }
+  ],
+  "editor": {
+    "elastic": true,
+    "result": "PASS editor environment: 80 exports x 4096 bytes; 88 import failure points; cancellation, replacement, 20 repeats; peak=337062 remaining=0\n"
+  }
+}

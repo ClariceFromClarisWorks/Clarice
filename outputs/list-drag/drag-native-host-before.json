@@ -1,0 +1,38 @@
+[
+  {
+    "first_text_change_seconds" : null,
+    "samples" : 33,
+    "step" : 1,
+    "target_y" : 718
+  },
+  {
+    "first_text_change_seconds" : null,
+    "samples" : 33,
+    "step" : 2,
+    "target_y" : 696
+  },
+  {
+    "first_text_change_seconds" : null,
+    "samples" : 33,
+    "step" : 3,
+    "target_y" : 674
+  },
+  {
+    "first_text_change_seconds" : null,
+    "samples" : 28,
+    "step" : 4,
+    "target_y" : 652
+  },
+  {
+    "first_text_change_seconds" : null,
+    "samples" : 34,
+    "step" : 5,
+    "target_y" : 630
+  },
+  {
+    "first_text_change_seconds" : null,
+    "samples" : 34,
+    "step" : 6,
+    "target_y" : 608
+  }
+]

@@ -1,0 +1,110 @@
+{
+  "environment": "Snow Plus 4 MB 68000 System 6.0.8; no physical SE tests",
+  "end_to_end": [
+    {
+      "files": 100,
+      "cadence": 32,
+      "total_ticks": 165,
+      "paint_ticks": 48,
+      "frames": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "files": 100,
+      "cadence": 96,
+      "total_ticks": 147,
+      "paint_ticks": 31,
+      "frames": [
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "files": 1000,
+      "cadence": 32,
+      "total_ticks": 722,
+      "paint_ticks": 202,
+      "frames": [
+        17,
+        17,
+        17
+      ]
+    },
+    {
+      "files": 1000,
+      "cadence": 96,
+      "total_ticks": 602,
+      "paint_ticks": 82,
+      "frames": [
+        7,
+        7,
+        7
+      ]
+    }
+  ],
+  "phase_before": [
+    [
+      806,
+      49,
+      286,
+      113,
+      88,
+      265
+    ],
+    [
+      763,
+      29,
+      306,
+      103,
+      77,
+      226
+    ],
+    [
+      757,
+      15,
+      303,
+      97,
+      86,
+      212
+    ]
+  ],
+  "phase_after": [
+    [
+      723,
+      20,
+      289,
+      66,
+      79,
+      235
+    ],
+    [
+      707,
+      15,
+      296,
+      65,
+      83,
+      205
+    ],
+    [
+      692,
+      15,
+      286,
+      73,
+      68,
+      195
+    ]
+  ],
+  "phase_columns": [
+    "internal_total",
+    "resolve",
+    "catalog",
+    "format",
+    "emit",
+    "yield_includes_paint"
+  ],
+  "phase_note": "Diagnostic benchls adds timing overhead; not full dispatch-to-prompt. Before/after phases at 32-tick painting."
+}

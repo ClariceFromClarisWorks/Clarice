@@ -1,0 +1,8 @@
+{
+  "scope": "Host runtime sequence used by nano tiny; not guest nano execution",
+  "status": 2,
+  "stderr": "save failed: No space left on device\n",
+  "before": "original must survive\\n",
+  "after_hex": "",
+  "recovery_passed": false
+}

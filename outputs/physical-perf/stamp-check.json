@@ -1,0 +1,27 @@
+{
+  "source3": {
+    "file": "work/physical-perf/source3/Clarice-2026111503.bin",
+    "stamp": "434c553178c4020f0600000100010002",
+    "build": 2026111503
+  },
+  "source4": {
+    "file": "work/physical-perf/source4/Clarice-2026111504.bin",
+    "stamp": "434c553178c4020f0600000100010002",
+    "build": 2026111503
+  },
+  "source5": {
+    "file": "work/physical-perf/source5/Clarice-2026111505.bin",
+    "stamp": "434c553178c4020f0600000100010002",
+    "build": 2026111503
+  },
+  "source6": {
+    "file": "work/physical-perf/source6/Clarice-2026111506.bin",
+    "stamp": "434c553178c4020f0600000100010002",
+    "build": 2026111503
+  },
+  "source6-fixed": {
+    "file": "work/physical-perf/source6-fixed/Clarice-2026111506.bin",
+    "stamp": "434c553178c402120600000100010002",
+    "build": 2026111506
+  }
+}

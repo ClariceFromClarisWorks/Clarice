@@ -1,0 +1,67 @@
+{
+  "build": 2026111534,
+  "sha256": "3e968894c75489912493bd9a537ad48866518ca12b6991f6382724e5f32e99b4",
+  "resource_bytes": 942839,
+  "snow_loader_ticks": [
+    224,
+    102,
+    102
+  ],
+  "snow_free_heap": [
+    421188,
+    421188,
+    421188
+  ],
+  "owned_remaining": [
+    0,
+    0,
+    0
+  ],
+  "physical": "1534 relaunched; three nano runs completed, no retained owned allocations",
+  "policy": "matching receipts skip metadata checksum; structural checks always; strict full checksum",
+  "physical_loader_ticks": [
+    215,
+    85,
+    86
+  ],
+  "physical_free_heap": [
+    420984,
+    420984,
+    420984
+  ],
+  "physical_phases": [
+    {
+      "read": 38,
+      "validate": 2,
+      "imports": 4,
+      "relocations": 23,
+      "prepare": 132,
+      "record": 16,
+      "events_included": 2
+    },
+    {
+      "read": 37,
+      "validate": 2,
+      "imports": 4,
+      "relocations": 23,
+      "prepare": 3,
+      "record": 16,
+      "events_included": 2
+    },
+    {
+      "read": 38,
+      "validate": 2,
+      "imports": 4,
+      "relocations": 23,
+      "prepare": 4,
+      "record": 15,
+      "events_included": 2
+    }
+  ],
+  "baseline_physical_ticks": [
+    356,
+    190,
+    190
+  ],
+  "comparison_limit": "successive builds, same SE/fixtures; cold empty then two warm 8 KiB; loader only, not total editor readiness"
+}

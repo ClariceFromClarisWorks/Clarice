@@ -1,0 +1,12 @@
+{
+  "ordinary_core_resources_byte_identical": true,
+  "cancelled_after_commands": 6,
+  "installed_commands": 43,
+  "fresh_copy_forks_match": true,
+  "disk_full_original_preserved": true,
+  "upgrade_retains_previous_forks_metadata": true,
+  "independent_command_exact_macbinary": true,
+  "profile_and_user_file_unchanged": true,
+  "guest": "Snow Plus / 4 MB / reported System 6.0.7 / maximum fast-forward",
+  "physical_acceptance": false
+}

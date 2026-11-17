@@ -1,0 +1,1 @@
+PASS 20000 scrollbar damage bounds/copies: unchanged, forced, sparse and boundary changes, 1..342 rows

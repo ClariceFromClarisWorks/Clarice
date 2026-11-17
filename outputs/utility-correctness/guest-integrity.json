@@ -1,0 +1,19 @@
+{
+  "fixed-single.out": {
+    "bytes": 65537,
+    "sha256": "e6d8b354c6d76ee884125cf67d3c533be9362a8f6a02e88b9c3750be035a8fee"
+  },
+  "grep-fixed.out": {
+    "bytes": 65537,
+    "sha256": "56479685d124f33af3523dcfe0e533648115bc71b17bdfe13718156c4f995d06"
+  },
+  "fixed-global.out": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "verification": {
+    "single": true,
+    "grep": true,
+    "global": "explicit out-of-memory, status 1, no owned survivors"
+  }
+}

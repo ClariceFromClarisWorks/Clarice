@@ -1,0 +1,19 @@
+string
+Runtime: heap=395720 largest=395654 image=136800 ticks=336 load=309 owned-peak=14761 remaining=0
+Loader ticks: read=51 validate=230 imports=2 relocations=15 prepare=1 events=14 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)
+Runtime: heap=395692 largest=395654 image=136800 ticks=381 load=364 owned-peak=14761 remaining=0
+Loader ticks: read=51 validate=230 imports=3 relocations=14 prepare=56 events=13 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)
+Runtime: heap=395662 largest=395654 image=136800 ticks=328 load=312 owned-peak=14761 remaining=0
+Loader ticks: read=50 validate=233 imports=2 relocations=15 prepare=1 events=19 (events included above)
+Verification ticks: mode=full header=0 record=11 payload=233 metadata=0 structure=9 (structure included in relocations)
+Runtime: heap=395634 largest=395466 image=136800 ticks=326 load=309 owned-peak=14761 remaining=0
+Loader ticks: read=51 validate=230 imports=3 relocations=14 prepare=1 events=11 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)
+Runtime: heap=395606 largest=395438 image=136800 ticks=328 load=312 owned-peak=14761 remaining=0
+Loader ticks: read=50 validate=233 imports=2 relocations=15 prepare=1 events=18 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=233 metadata=0 structure=9 (structure included in relocations)
+Runtime: heap=395578 largest=395410 image=136800 ticks=325 load=309 owned-peak=14761 remaining=0
+Loader ticks: read=50 validate=229 imports=3 relocations=15 prepare=2 events=15 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=229 metadata=0 structure=9 (structure included in relocations)

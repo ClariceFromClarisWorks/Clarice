@@ -1,0 +1,5 @@
+ready=197 drawn=199 heap=404856 largest=401048 clx=0
+ready=194 drawn=195 heap=404856 largest=401048 clx=0
+ready=193 drawn=195 heap=404856 largest=401048 clx=0
+ready=197 drawn=198 heap=404526 largest=401030 clx=28
+ready=193 drawn=195 heap=404526 largest=401030 clx=28

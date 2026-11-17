@@ -1,0 +1,93 @@
+{
+  "machine": {
+    "physical": "Macintosh SE",
+    "cpu": "user confirmed stock 68000 after accelerator test",
+    "memory_mb": 4,
+    "system": "user System 6.0.8; existing API 0607 discrepancy",
+    "display": "Monaco 9, 80 columns x 24 history rows",
+    "secontrol": "quiet mode during measured loops"
+  },
+  "before": {
+    "build": 2026111514,
+    "native_scroll_frames": 30,
+    "native_scroll_ticks": 248,
+    "worst_frame_ticks": 8,
+    "benchls_files": 452,
+    "benchls_ticks": [
+      336,
+      384,
+      322
+    ],
+    "benchls_first_ticks": [
+      25,
+      39,
+      34
+    ],
+    "three_run_paint_ticks": 168,
+    "three_run_events_ticks": 141,
+    "free_heap": 425964,
+    "largest_block": 425562,
+    "owned_remaining": 0,
+    "evidence": [
+      "se-configuration.png",
+      "se-before-quick.png",
+      "se-before-listing.png",
+      "se-before-memory.png"
+    ]
+  },
+  "after": {
+    "build": 2026111515,
+    "native_scroll_frames": 30,
+    "native_scroll_ticks": 174,
+    "worst_frame_ticks": 5,
+    "quick_failures": 0,
+    "evidence": [
+      "se-installed-version.png",
+      "se-after-quick.png",
+      "se-after-listing.png",
+      "se-after-memory.png",
+      "se-history-drag.png",
+      "se-cancel-output.png",
+      "se-pager.png",
+      "se-cancel-pager.png",
+      "se-recovery-files.png"
+    ],
+    "benchls_files": 452,
+    "benchls_ticks": [
+      329,
+      325,
+      330
+    ],
+    "benchls_first_ticks": [
+      23,
+      37,
+      38
+    ],
+    "three_run_paint_ticks": 145,
+    "three_run_events_ticks": 134,
+    "free_heap": 425746,
+    "largest_block": 425004,
+    "owned_remaining": 0,
+    "pixel_test": {
+      "bursts": 22,
+      "views": 20,
+      "mismatches": 0,
+      "scrollbar_checks": 147,
+      "scrollbar_mismatches": 0,
+      "evidence": "se-native-complete.png"
+    },
+    "ctrl_c_output_status": 130,
+    "ctrl_c_pager_status": 130,
+    "history_drag": "view moved; complete scrollbar retained; no physical latency measurement",
+    "backup": "Macintosh HD:.cu-0000039b-78c4021b.old",
+    "backup_resource_bytes": 938632,
+    "update": {
+      "download_seconds_reported": 55,
+      "stage_ticks": 4310,
+      "staged_verification_ticks": 1959,
+      "automatically_relaunched": true,
+      "installed_version_checked": 2026111515
+    }
+  },
+  "note": "Native synthetic scrolling is a single matched run per normal build. benchls is three listing-loop runs, excluding load and final report/prompt. No physical high-speed video latency or accelerator comparison claim."
+}

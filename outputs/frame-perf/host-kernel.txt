@@ -1,0 +1,1 @@
+PASS: 532 actual M68000 row comparisons; equal and every differing byte, both even alignments, no out-of-bounds reads/writes; preserved ABI

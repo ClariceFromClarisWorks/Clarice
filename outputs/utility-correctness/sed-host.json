@@ -1,0 +1,212 @@
+[
+  {
+    "size": 0,
+    "expression": "s/x/y/",
+    "host_seconds": 0.8282069169999999,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 0,
+    "expression": "s/x/y/g",
+    "host_seconds": 0.03886729199999994,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 0,
+    "expression": "s/x/y/2",
+    "host_seconds": 0.03962433300000001,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 0,
+    "expression": "s/z/y/g",
+    "host_seconds": 0.03724516700000002,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 0,
+    "expression": "s/x*/Q/g",
+    "host_seconds": 0.03924462499999992,
+    "stats": "PORT_STATS peak=14936 remaining=0"
+  },
+  {
+    "size": 0,
+    "expression": "s/$/END/",
+    "host_seconds": 0.03767129199999997,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 0,
+    "expression": "s/^/BEGIN/",
+    "host_seconds": 0.03838545800000004,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 1,
+    "expression": "s/x/y/",
+    "host_seconds": 0.03848895800000007,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 1,
+    "expression": "s/x/y/g",
+    "host_seconds": 0.040485582999999936,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 1,
+    "expression": "s/x/y/2",
+    "host_seconds": 0.038484167000000014,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 1,
+    "expression": "s/z/y/g",
+    "host_seconds": 0.03850587500000002,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 1,
+    "expression": "s/x*/Q/g",
+    "host_seconds": 0.03788433300000005,
+    "stats": "PORT_STATS peak=14936 remaining=0"
+  },
+  {
+    "size": 1,
+    "expression": "s/$/END/",
+    "host_seconds": 0.03988295900000005,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 1,
+    "expression": "s/^/BEGIN/",
+    "host_seconds": 0.03838762500000015,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 127,
+    "expression": "s/x/y/",
+    "host_seconds": 0.03878737500000007,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 127,
+    "expression": "s/x/y/g",
+    "host_seconds": 0.038371334000000035,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 127,
+    "expression": "s/x/y/2",
+    "host_seconds": 0.03780904100000004,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 127,
+    "expression": "s/z/y/g",
+    "host_seconds": 0.039746791999999864,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 127,
+    "expression": "s/x*/Q/g",
+    "host_seconds": 0.03785395799999991,
+    "stats": "PORT_STATS peak=14936 remaining=0"
+  },
+  {
+    "size": 127,
+    "expression": "s/$/END/",
+    "host_seconds": 0.03860687499999993,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 127,
+    "expression": "s/^/BEGIN/",
+    "host_seconds": 0.037685291999999926,
+    "stats": "PORT_STATS peak=13592 remaining=0"
+  },
+  {
+    "size": 16384,
+    "expression": "s/x/y/",
+    "host_seconds": 0.03987829200000004,
+    "stats": "PORT_STATS peak=64913 remaining=0"
+  },
+  {
+    "size": 16384,
+    "expression": "s/x/y/g",
+    "host_seconds": 0.04963491699999989,
+    "stats": "PORT_STATS peak=98272 remaining=0"
+  },
+  {
+    "size": 16384,
+    "expression": "s/x/y/2",
+    "host_seconds": 0.03995487500000028,
+    "stats": "PORT_STATS peak=64913 remaining=0"
+  },
+  {
+    "size": 16384,
+    "expression": "s/z/y/g",
+    "host_seconds": 0.050400250000000035,
+    "stats": "PORT_STATS peak=64912 remaining=0"
+  },
+  {
+    "size": 16384,
+    "expression": "s/x*/Q/g",
+    "host_seconds": 0.07469212499999989,
+    "stats": "PORT_STATS peak=62120 remaining=0"
+  },
+  {
+    "size": 16384,
+    "expression": "s/$/END/",
+    "host_seconds": 0.1103130000000001,
+    "stats": "PORT_STATS peak=97723 remaining=0"
+  },
+  {
+    "size": 16384,
+    "expression": "s/^/BEGIN/",
+    "host_seconds": 0.04001429199999995,
+    "stats": "PORT_STATS peak=64918 remaining=0"
+  },
+  {
+    "size": 65536,
+    "expression": "s/x/y/",
+    "host_seconds": 0.04069033299999969,
+    "stats": "PORT_STATS peak=212369 remaining=0"
+  },
+  {
+    "size": 65536,
+    "expression": "s/x/y/g",
+    "host_seconds": 0.05875624999999962,
+    "stats": "PORT_STATS peak=344032 remaining=0"
+  },
+  {
+    "size": 65536,
+    "expression": "s/x/y/2",
+    "host_seconds": 0.04509437499999969,
+    "stats": "PORT_STATS peak=212369 remaining=0"
+  },
+  {
+    "size": 65536,
+    "expression": "s/z/y/g",
+    "host_seconds": 0.043502124999999836,
+    "stats": "PORT_STATS peak=212368 remaining=0"
+  },
+  {
+    "size": 65536,
+    "expression": "s/x*/Q/g",
+    "host_seconds": 0.04187987500000023,
+    "stats": "PORT_STATS peak=209576 remaining=0"
+  },
+  {
+    "size": 65536,
+    "expression": "s/$/END/",
+    "host_seconds": 0.04196441599999989,
+    "stats": "PORT_STATS peak=343483 remaining=0"
+  },
+  {
+    "size": 65536,
+    "expression": "s/^/BEGIN/",
+    "host_seconds": 0.0405246659999996,
+    "stats": "PORT_STATS peak=212374 remaining=0"
+  }
+]

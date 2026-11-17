@@ -1,0 +1,33 @@
+é File Edit Tests Diew
+Macintosh HD
+Clarice
+Nano
+2120172 2120282 2120283 2120284 2120315 2120366 2120559 2120623 2120
+730 2120429 2120546 0 0; input batches=1 sum=7 max=7;
+initial-heap=423804
+tor startup: draws=22 rows=77 text=46 copy=29 total=105 ticks
+Ehses startup: refreshes-i refresh-ticks=opy writes=36 bytes=1920 reed-ticks=14
+Notiup tinke.
+al locs=137 FreeMem=0 NewPtr=45 reads=17 read=7 stdio=0 image-al loc
+=0 meta-al loc=0
+Loader ticks: read=38 validate=1 imports=4 relocations=23 prepare=3 events=1 (ev
+ents included above)
+Verification ticks: mode=fast header=0 record=15 payload=0 metadata=1 structure=
+14 (structure included in relocations)
+•> nano-profile /tmp/np-short
+status runtime
+Runtime: heap=419010 largest=418826 image=198560 ticks=1584 load=85 owned-peak=1
+01736 remaining=0
+Nano ticks: 2122832 2122942 2122943 2122944 2122974 2123025 2123207 2123266 2123
+377 2123089 2123193 0 0;
+input batches=1 sum=9 max=9;
+Editor startup: draws=24 rows=77 text=47 copy=26
+initial-heap=423804
+toto=le icke
+Curses startup: refreshes=1 refresh-ticks=107 writes=36 bytes=1920 feed-ticks=18
+Native ticks: al locs=137 FreeMem=3 NewPtr=28 reads=17 read=9 stdio=o image-alloc
+=0 meta-al loc=0
+Loader ticks: read=38 validate=2 imports=4 relocations=23 prepare=3 events=2 (ev
+ents included above)
+Verification ticks: mode=fast header=0 record=15 payload=0 metadata=2 structure=
+14 (structure included in relocations)

@@ -1,0 +1,36 @@
+Using multiversal interfaces
+/src/work/hardware-update/system.hda: contains 1 HFS partition
+Volume name is "Sys6Unix"
+Volume was created on Sun Nov  8 05:23:44 2026
+Volume was last modified on Sat Nov 14 13:08:16 2026
+Volume has 22808576 bytes free
+d          3 items               Nov  8 05:53 Bench
+f  TEXT/S6UX         0        60 Nov  8 18:58 Cached Scroll Report
+f  APPL/CLRC    930122         0 Nov 14 13:02 Clarice
+fi FNDR/ERIK      2351         0 Nov  8 19:51 Desktop
+d          5 items               Nov  8 17:26 Documents
+f  APPL/CLRC     56520         0 Nov 14 11:53 GuardAfter
+f  APPL/CLRC     61029         0 Nov 14 12:54 HashBench
+d         19 items               Nov 14  2026 HIL Results
+f  ????/UNIX         0      3196 Nov 14 13:03 HIL Script
+f  TEXT/????         0       549 Nov 14  2026 HIL-script-result.txt
+f  APPL/CLRC     59072         0 Nov 14 12:24 LaunchProbe
+f  TEXT/S6UX         0        60 Nov  8 18:36 Native Scroll Report
+f  APPL/CLRC     72406         0 Nov 14 12:44 NativeTxn
+d          5 items               Nov  8 08:55 ns-tests
+f  APPL/SECT     96497         0 Nov 14 10:41 o
+f  TEXT/S6UX         0      1595 Nov  8 17:34 Phase1 Report
+d          2 items               Nov 11 16:11 qol-safe
+f  APPL/CLRC     60501         0 Nov 14 12:54 ResourceProbe
+f  TEXT/S6UX         0       457 Nov  8 18:27 Scroll Report
+d         32 items               Nov  8 06:53 shcases
+f  DATA/S6UX         0    131592 Nov  8 19:00 Sys6 History
+f  PREF/S6UX         0        48 Nov  8 19:00 Sys6 Preferences
+d          7 items               Nov  8 09:59 System Folder
+f  APPL/S6UX    138047         0 Nov  8 09:05 Terminal
+d          4 items               Nov 14  2026 Txn fixture
+f  ????/UNIX         0     96360 Nov 14 13:03 ucheck.clx
+d          2 items               Nov 14 13:03 Update fixture
+f  ????/UNIX         0     10100 Nov 14 11:24 wget.clx
+f  ????/UNIX         0     11700 Nov 14 11:44 wtest.clx
+f  ????/UNIX         0      1124 Nov 14 11:55 zguard.clx

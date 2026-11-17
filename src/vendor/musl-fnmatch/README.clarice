@@ -1,0 +1,10 @@
+Genuine musl fnmatch by Rich Felker (April 2012), MIT; see COPYRIGHT.
+Source: https://git.musl-libc.org/cgit/musl/
+Pinned revision: 7813e9119eb5fe681b6750b8a033a0490bca0941
+Files fnmatch.c and fnmatch.h are unmodified from this revision.
+../../ports/fnmatch-byte.c supplies the necessary MacRoman byte/C-locale
+boundary and renames fnmatch. No matching algorithm rewrite, heap allocation,
+recursive backtracking, permanent cache or Unicode conversion.
+Named classes/ranges use ASCII/C byte ordering; high bytes match literally.
+The empty locale_impl.h shim replaces an unused musl-private include.
+Currently used only by external find: shell expansion remains unchanged.

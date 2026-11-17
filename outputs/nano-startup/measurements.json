@@ -1,0 +1,338 @@
+[
+  {
+    "run": "before0",
+    "total": 911,
+    "runtime": 2,
+    "ncurses": 72,
+    "file": 90,
+    "parse": 27,
+    "first_paint": 8,
+    "save": 0,
+    "loader": {
+      "read": 62,
+      "validate": 330,
+      "imports": 18,
+      "relocations": 21,
+      "prepare": 115,
+      "events": 31
+    },
+    "owned_peak": 68755,
+    "remaining": 0,
+    "heap": 397208
+  },
+  {
+    "run": "before1",
+    "total": 730,
+    "runtime": 1,
+    "ncurses": 28,
+    "file": 92,
+    "parse": 0,
+    "first_paint": 8,
+    "save": 0,
+    "loader": {
+      "read": 62,
+      "validate": 329,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 0,
+      "events": 15
+    },
+    "owned_peak": 68755,
+    "remaining": 0,
+    "heap": 397208
+  },
+  {
+    "run": "before2",
+    "total": 1075,
+    "runtime": 1,
+    "ncurses": 28,
+    "file": 317,
+    "parse": 255,
+    "first_paint": 99,
+    "save": 0,
+    "loader": {
+      "read": 61,
+      "validate": 329,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 1,
+      "events": 16
+    },
+    "owned_peak": 83748,
+    "remaining": 0,
+    "heap": 397208
+  },
+  {
+    "run": "before3",
+    "total": 1061,
+    "runtime": 1,
+    "ncurses": 28,
+    "file": 308,
+    "parse": 245,
+    "first_paint": 95,
+    "save": 0,
+    "loader": {
+      "read": 61,
+      "validate": 329,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 1,
+      "events": 17
+    },
+    "owned_peak": 83748,
+    "remaining": 0,
+    "heap": 397208
+  },
+  {
+    "run": "after0",
+    "total": 820,
+    "runtime": 0,
+    "ncurses": 41,
+    "file": 88,
+    "parse": 0,
+    "first_paint": 7,
+    "save": 0,
+    "loader": {
+      "read": 63,
+      "validate": 330,
+      "imports": 18,
+      "relocations": 21,
+      "prepare": 123,
+      "events": 27
+    },
+    "owned_peak": 78548,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "after1",
+    "total": 664,
+    "runtime": 1,
+    "ncurses": 26,
+    "file": 83,
+    "parse": 0,
+    "first_paint": 7,
+    "save": 0,
+    "loader": {
+      "read": 63,
+      "validate": 329,
+      "imports": 18,
+      "relocations": 21,
+      "prepare": 0,
+      "events": 23
+    },
+    "owned_peak": 78548,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "after2",
+    "total": 845,
+    "runtime": 1,
+    "ncurses": 26,
+    "file": 149,
+    "parse": 64,
+    "first_paint": 94,
+    "save": 0,
+    "loader": {
+      "read": 63,
+      "validate": 330,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 0,
+      "events": 18
+    },
+    "owned_peak": 103124,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "after3",
+    "total": 833,
+    "runtime": 0,
+    "ncurses": 26,
+    "file": 137,
+    "parse": 79,
+    "first_paint": 95,
+    "save": 0,
+    "loader": {
+      "read": 63,
+      "validate": 330,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 0,
+      "events": 27
+    },
+    "owned_peak": 103124,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "final0",
+    "total": 820,
+    "runtime": 0,
+    "ncurses": 41,
+    "file": 85,
+    "parse": 0,
+    "first_paint": 8,
+    "save": 0,
+    "loader": {
+      "read": 63,
+      "validate": 331,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 122,
+      "events": 26
+    },
+    "owned_peak": 78548,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "final1",
+    "total": 669,
+    "runtime": 1,
+    "ncurses": 27,
+    "file": 87,
+    "parse": 0,
+    "first_paint": 8,
+    "save": 0,
+    "loader": {
+      "read": 63,
+      "validate": 329,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 1,
+      "events": 21
+    },
+    "owned_peak": 78548,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "final2",
+    "total": 854,
+    "runtime": 1,
+    "ncurses": 26,
+    "file": 150,
+    "parse": 89,
+    "first_paint": 94,
+    "save": 0,
+    "loader": {
+      "read": 63,
+      "validate": 329,
+      "imports": 18,
+      "relocations": 21,
+      "prepare": 1,
+      "events": 21
+    },
+    "owned_peak": 105172,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "final3",
+    "total": 844,
+    "runtime": 0,
+    "ncurses": 26,
+    "file": 141,
+    "parse": 54,
+    "first_paint": 95,
+    "save": 0,
+    "loader": {
+      "read": 64,
+      "validate": 330,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 0,
+      "events": 25
+    },
+    "owned_peak": 105172,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "cold0",
+    "total": 1006,
+    "runtime": 0,
+    "ncurses": 41,
+    "file": 151,
+    "parse": 91,
+    "first_paint": 94,
+    "save": 0,
+    "loader": {
+      "read": 63,
+      "validate": 331,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 122,
+      "events": 25
+    },
+    "owned_peak": 105172,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "cold1",
+    "total": 841,
+    "runtime": 1,
+    "ncurses": 26,
+    "file": 138,
+    "parse": 79,
+    "first_paint": 95,
+    "save": 0,
+    "loader": {
+      "read": 64,
+      "validate": 329,
+      "imports": 18,
+      "relocations": 21,
+      "prepare": 0,
+      "events": 29
+    },
+    "owned_peak": 105172,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "edit",
+    "total": 844,
+    "runtime": 1,
+    "ncurses": 26,
+    "file": 138,
+    "parse": 79,
+    "first_paint": 96,
+    "save": 123,
+    "loader": {
+      "read": 64,
+      "validate": 330,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 0,
+      "events": 15
+    },
+    "owned_peak": 105172,
+    "remaining": 0,
+    "heap": 397102
+  },
+  {
+    "run": "save",
+    "total": 671,
+    "runtime": 1,
+    "ncurses": 26,
+    "file": 86,
+    "parse": 28,
+    "first_paint": 10,
+    "save": 87,
+    "loader": {
+      "read": 63,
+      "validate": 330,
+      "imports": 17,
+      "relocations": 22,
+      "prepare": 1,
+      "events": 14
+    },
+    "owned_peak": 80596,
+    "remaining": 0,
+    "heap": 397102
+  }
+]

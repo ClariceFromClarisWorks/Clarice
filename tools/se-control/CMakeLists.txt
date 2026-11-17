@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(SEControl C ASM)
+add_application(SEControl control.c mouse.c timer.S Control.r vendor/nettcp.c TYPE APPL CREATOR SECT)
+target_include_directories(SEControl PRIVATE vendor)
+target_compile_options(SEControl PRIVATE -Os -m68000 -Wall -Wextra -Wno-multichar -ffunction-sections -fdata-sections)
+set_target_properties(SEControl PROPERTIES LINK_FLAGS "-Wl,-gc-sections -Wl,--mac-single")

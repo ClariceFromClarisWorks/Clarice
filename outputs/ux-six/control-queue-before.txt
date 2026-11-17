@@ -1,0 +1,7 @@
+Assertion failed: (claim_pending_screen()==0), function main, file control-input.c, line 27.
+Traceback (most recent call last):
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice/tests/terminal/control-input.py", line 33, in <module>
+    subprocess.run([str(w/'control-input')],check=True)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/williamprestwich/Documents/ChatGPT/Clarice/work/ux-six/control-input']' died with <Signals.SIGABRT: 6>.

@@ -33,8 +33,8 @@ with tempfile.TemporaryDirectory() as tmp:
   results.append({'args':args,'status':a.returncode,'passed':True})
  for label,prog,data,env,status in [
  ('cancel loop','BEGIN {while(1) {x++}}',b'',{'CLARICE_CANCEL_AFTER':'4'},130),
- ('owned allocation cap','BEGIN {for(i=0;i<100000;i++) a[i]=i}',b'',{},2),
- ('text cap','{print length($0)}',b'a'*17000,{},2),
+ ('owned allocation cap','BEGIN {for(i=0;i<100000;i++) a[i]=i}',b'',{'CLARICE_TEST_ALLOC_BUDGET':'98304'},2),
+ ('elastic record','{print length($0)}',b'a'*17000,{},0),
  ('recursive calls','function f(n){return f(n+1)} BEGIN {f(0)}',b'',{},2),
  ('unsupported system','BEGIN {system("echo bad")}',b'',{},2),
  ('unsupported command pipe','BEGIN {"echo bad" | getline x}',b'',{},2),
@@ -45,4 +45,4 @@ with tempfile.TemporaryDirectory() as tmp:
   results.append({'test':label,'status':status,'passed':True})
 (root/'outputs/awk').mkdir(exist_ok=True)
 (root/'outputs/awk/host-tests.json').write_text(json.dumps(results,indent=2)+'\n')
-print(f'PASS: {len(cases)} upstream awk comparisons; cancellation, allocation/text/recursion bounds, unsupported processes, write failures')
+print(f'PASS: {len(cases)} upstream awk comparisons; cancellation, allocation/recursion errors, elastic records, unsupported processes, write failures')

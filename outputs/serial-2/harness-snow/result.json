@@ -1,0 +1,87 @@
+{
+  "pass": true,
+  "mode": "Snow keyboard + serial",
+  "steps": [
+    {
+      "step": 0,
+      "local_input_submitted": true
+    },
+    {
+      "step": 1,
+      "pass": true,
+      "seconds_including_typing": 0.14952774999999985,
+      "received": "0d",
+      "output": "0d0a4d4143424f4f4b3e20"
+    },
+    {
+      "step": 2,
+      "pass": true,
+      "seconds_including_typing": 0.35160545899999995,
+      "received": "7077640d",
+      "output": "7077640d0a2f707269766174652f7661722f666f6c646572732f7a732f633367703934313136313336327a32306b6e63737639327230303030676e2f542f636c61726963652d72656d6f74652d783368616c6d72730d0a4d4143424f4f4b3e20"
+    },
+    {
+      "step": 3,
+      "pass": true,
+      "seconds_including_typing": 0.3114634169999997,
+      "received": "6c730d",
+      "output": "6c730d0a62696e090973616d706c652e7478740d0a4d4143424f4f4b3e20"
+    },
+    {
+      "step": 4,
+      "pass": true,
+      "seconds_including_typing": 0.8036077499999994,
+      "received": "6563686f2068656c6c6f0d",
+      "output": "6563686f2068656c6c6f0d0a68656c6c6f0d0a4d4143424f4f4b3e20"
+    },
+    {
+      "step": 5,
+      "pass": true,
+      "seconds_including_typing": 1.1187755829999997,
+      "received": "6563686f206261647f7f7f676f6f640d",
+      "output": "6563686f20626164082008082008082008676f6f640d0a676f6f640d0a4d4143424f4f4b3e20"
+    },
+    {
+      "step": 6,
+      "pass": true,
+      "seconds_including_typing": 0.6797095840000003,
+      "received": "736c6565702032300d",
+      "output": "736c6565702032300d0a"
+    },
+    {
+      "step": 7,
+      "pass": true,
+      "seconds_including_typing": 1.5072660829999993,
+      "received": "036563686f20616674657220696e746572727570740d",
+      "output": "5e4365630d0a4d4143424f4f4b3e20686f20616674657220696e746572727570740d0a616674657220696e746572727570740d0a4d4143424f4f4b3e20"
+    },
+    {
+      "step": 8,
+      "pass": true,
+      "seconds_including_typing": 1.0656457499999998,
+      "received": "6361742073616d706c652e7478740d",
+      "output": "6361742073616d706c652e7478740d0a72656d6f746520666978747572650d0a4d4143424f4f4b3e20"
+    },
+    {
+      "step": 9,
+      "local_input_submitted": true
+    },
+    {
+      "step": 10,
+      "local_input_submitted": true
+    },
+    {
+      "step": 11,
+      "pass": true,
+      "seconds_including_typing": 1.245043667000001,
+      "received": "0d6563686f207265636f6e6e65637465640d",
+      "output": "0d0a4d4143424f4f4b3e206563686f207265636f6e6e65637465640d0a7265636f6e6e65637465640d0a4d4143424f4f4b3e20"
+    },
+    {
+      "step": 12,
+      "local_input_submitted": true
+    }
+  ],
+  "seconds": 18.436986791,
+  "peer_returncode": 130
+}

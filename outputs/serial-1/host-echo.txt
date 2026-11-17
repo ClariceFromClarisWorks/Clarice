@@ -1,0 +1,1 @@
+PASS: two connections, 8192 exact bytes each, disconnect error, reconnect and Ctrl+C shutdown

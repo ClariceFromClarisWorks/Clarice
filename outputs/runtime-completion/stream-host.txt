@@ -1,0 +1,1 @@
+PASS binary update streams, seek, descriptor ownership and reopen

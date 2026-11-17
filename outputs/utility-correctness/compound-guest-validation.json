@@ -1,0 +1,24 @@
+{
+  "scripts": 12,
+  "byte_comparisons": true,
+  "repeated_memory": [
+    [
+      "399996",
+      "375926"
+    ],
+    [
+      "399996",
+      "375926"
+    ],
+    [
+      "399996",
+      "375926"
+    ]
+  ],
+  "ctrl_c_status": 130,
+  "tail_not_executed": true,
+  "streams_restored": true,
+  "help_commands": 34,
+  "native_metadata": true,
+  "fixture_cleanup": true
+}

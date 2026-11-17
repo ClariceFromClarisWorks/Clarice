@@ -1,0 +1,91 @@
+Using multiversal interfaces
+00000000 <read_file>:
+   0:	598f           	subql #4,%sp
+   2:	48e7 1c3a      	moveml %d3-%d5/%a2-%a4/%fp,%sp@-
+   6:	2079 0000 0000 	moveal 0 <read_file>,%a0
+			8: R_68K_32	openfile
+   c:	2068 0010      	moveal %a0@(16),%a0
+  10:	2f68 0004 001c 	movel %a0@(4),%sp@(28)
+  16:	4878 0078      	pea 78 <read_file+0x78>
+  1a:	4eb9 0000 0000 	jsr 0 <read_file>
+			1c: R_68K_32	nmalloc
+  20:	2440           	moveal %d0,%a2
+  22:	42a7           	clrl %sp@-
+  24:	4df9 0000 0000 	lea 0 <read_file>,%fp
+			26: R_68K_32	make_new_node
+  2a:	4e96           	jsr %fp@
+  2c:	2a00           	movel %d0,%d5
+  2e:	42b9 0000 0000 	clrl 0 <read_file>
+			30: R_68K_32	control_C_was_pressed
+  34:	508f           	addql #8,%sp
+  36:	2640           	moveal %d0,%a3
+  38:	387c 0078      	moveaw #120,%a4
+  3c:	7600           	moveq #0,%d3
+  3e:	7800           	moveq #0,%d4
+  40:	2f2f 0024      	movel %sp@(36),%sp@-
+  44:	4eb9 0000 0000 	jsr 0 <read_file>
+			46: R_68K_32	getc
+  4a:	588f           	addql #4,%sp
+  4c:	72ff           	moveq #-1,%d1
+  4e:	b280           	cmpl %d0,%d1
+  50:	670a           	beqs 5c <read_file+0x5c>
+  52:	4ab9 0000 0000 	tstl 0 <read_file>
+			54: R_68K_32	control_C_was_pressed
+  58:	6700 00ce      	beqw 128 <read_file+0x128>
+  5c:	4eb9 0000 0000 	jsr 0 <read_file>
+			5e: R_68K_32	__errno
+  62:	206f 0024      	moveal %sp@(36),%a0
+  66:	0828 0006 000d 	btst #6,%a0@(13)
+  6c:	6600 0104      	bnew 172 <read_file+0x172>
+  70:	4ab9 0000 0000 	tstl 0 <read_file>
+			72: R_68K_32	control_C_was_pressed
+  76:	6712           	beqs 8a <read_file+0x8a>
+  78:	4879 0000 0000 	pea 0 <read_file>
+			7a: R_68K_32	.rodata.read_file.str1.1+0x20
+  7e:	4878 0007      	pea 7 <read_file+0x7>
+  82:	4eb9 0000 0000 	jsr 0 <read_file>
+			84: R_68K_32	statusline
+  88:	508f           	addql #8,%sp
+  8a:	2f2f 0024      	movel %sp@(36),%sp@-
+  8e:	4eb9 0000 0000 	jsr 0 <read_file>
+			90: R_68K_32	port_fclose
+  94:	588f           	addql #4,%sp
+  96:	4aaf 0028      	tstl %sp@(40)
+  9a:	6e00 0104      	bgtw 1a0 <read_file+0x1a0>
+  9e:	387c 0001      	moveaw #1,%a4
+  a2:	4a83           	tstl %d3
+  a4:	6600 012a      	bnew 1d0 <read_file+0x1d0>
+  a8:	4879 0000 0000 	pea 0 <read_file>
+			aa: R_68K_32	.rodata.make_new_buffer.str1.1
+  ae:	4eb9 0000 0000 	jsr 0 <read_file>
+			b0: R_68K_32	copy_of
+  b4:	588f           	addql #4,%sp
+  b6:	2680           	movel %d0,%a3@
+  b8:	2f0a           	movel %a2,%sp@-
+  ba:	4eb9 0000 0000 	jsr 0 <read_file>
+			bc: R_68K_32	port_free
+  c0:	2f05           	movel %d5,%sp@-
+  c2:	4eb9 0000 0000 	jsr 0 <read_file>
+			c4: R_68K_32	ingraft_buffer
+  c8:	2479 0000 0000 	moveal 0 <read_file>,%a2
+			ca: R_68K_32	openfile
+  ce:	4eb9 0000 0000 	jsr 0 <read_file>
+			d0: R_68K_32	xplustabs
+  d4:	2540 0020      	movel %d0,%a2@(32)
+  d8:	508f           	addql #8,%sp
+  da:	b8fc 0000      	cmpaw #0,%a4
+  de:	6600 0102      	bnew 1e2 <read_file+0x1e2>
+  e2:	2f2f 002c      	movel %sp@(44),%sp@-
+  e6:	4879 0000 0000 	pea 0 <read_file>
+			e8: R_68K_32	.rodata.read_file.str1.1+0x2c
+  ec:	4878 0007      	pea 7 <read_file+0x7>
+  f0:	4eb9 0000 0000 	jsr 0 <read_file>
+			f2: R_68K_32	statusline
+  f6:	4fef 000c      	lea %sp@(12),%sp
+  fa:	7001           	moveq #1,%d0
+  fc:	23c0 0000 0000 	movel %d0,0 <read_file>
+			fe: R_68K_32	report_size
+ 102:	4aaf 0030      	tstl %sp@(48)
+ 106:	6700 0100      	beqw 208 <read_file+0x208>
+ 10a:	42a7           	clrl %sp@-
+ 10c:	2f2f 0020      	movel %sp@(32),%sp@-

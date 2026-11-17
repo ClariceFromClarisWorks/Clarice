@@ -1,0 +1,34 @@
+{
+  "ncurses": "ncurses 6.5, existing upstream archive; include/MKncurses_def.sh, include/MKparametrized.sh, include/ncurses_defs, include/Caps; scripts unchanged",
+  "musl": "https://git.musl-libc.org/cgit/musl/tree/tools/musl-gcc.specs.sh (blob 3049257446e113b0fc745f8efeb3e2b101e07798)",
+  "files": [
+    {
+      "file": "Caps",
+      "sha256": "61131cfcfae18b8c01d12f1e3b1a3bf2115dcc01310ba903779dc3a4271cab34"
+    },
+    {
+      "file": "MUSL-COPYRIGHT",
+      "sha256": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b"
+    },
+    {
+      "file": "NCURSES-LICENSE",
+      "sha256": "b2feb54f39529abe226f709a292584fde48a2e5721559fee417d2cdd51cb7cc1"
+    },
+    {
+      "file": "musl-specs.sh",
+      "sha256": "ef7baf50ae403b3bf40c7403754daac024de9acf3c83e9b7b4cb9f80eaead343"
+    },
+    {
+      "file": "ncurses-def.sh",
+      "sha256": "609f9de2dee114b4643c64bbbc781baaab37cc0b09c39d9f3f232b503fd7acbe"
+    },
+    {
+      "file": "ncurses_defs",
+      "sha256": "d81e565fd62e9323803651a088ed1e01a3c9cab716d95a72473055b0ceb43daa"
+    },
+    {
+      "file": "parametrized.sh",
+      "sha256": "34a05f144c87f4cdb2166dc0fece42a7738ab87dff9856eb5b1815dc9a3c8c3c"
+    }
+  ]
+}

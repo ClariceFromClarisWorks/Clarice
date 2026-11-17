@@ -1,0 +1,5 @@
+{
+  "memory": "Runtime: heap=381500 largest=274914 image=136800 ticks=625 load=416 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=110 events=19 (events included above)\nVerification ticks: mode=full header=0 record=9 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=381404 largest=274914 image=136800 ticks=573 load=370 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=63 events=14 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=10 (structure included in relocations)\nRuntime: heap=381302 largest=274914 image=136800 ticks=573 load=369 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=3 relocations=14 prepare=62 events=12 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\n",
+  "environment": "30 512\n30 512\n30 512\n",
+  "cancellation": "CANCEL:130\n"
+}

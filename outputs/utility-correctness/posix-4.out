@@ -1,0 +1,20 @@
+CASE_20
+inner
+outer
+STATUS:0
+CASE_21
+<  a b  >
+STATUS:0
+CASE_22
+status:1
+last
+STATUS:0
+CASE_23
+ab
+STATUS:0
+CASE_24
+3
+<a>
+<>
+<b>
+STATUS:0

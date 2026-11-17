@@ -1,0 +1,9 @@
+find [path ...] [-name pattern] [-path pattern] [-type f|d|l] [-maxdepth
+N] [-print]
+Walk HFS directories without following symbolic links. Default path: .
+-name matches encoded basenames; -path matches the printed pathname.
+Patterns: *, ?, brackets/ranges, ! negation, ASCII character classes
+and backslash escapes; quote patterns. Native names are bytes, not UTF-8.
+Predicates combine with AND; -o, -exec and other expressions unsupported.
+Traversal grows with available memory; -maxdepth explicitly limits it.
+Status: 0 success, 1 file error, 2 usage, 130 interrupted.

@@ -1,0 +1,9 @@
+{
+  "data": true,
+  "resource_fork": true,
+  "type_creator": true,
+  "finder_flags": true,
+  "creation_date": true,
+  "no_transaction_siblings": true,
+  "scope": "Snow disposable existing file, two saves plus unsaved-edit cancellation; no physical power-failure claim"
+}

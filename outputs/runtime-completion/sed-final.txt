@@ -1,0 +1,1 @@
+PASS: 19 upstream sed comparisons; infinite-loop cancellation, long lines and write failure

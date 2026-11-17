@@ -1,0 +1,2 @@
+run=1 skip=0 ready=307 drawn=309 install=107 before=404594 after=404594 heap=404634 largest=401014 clx_count=28 loaded=0 census_cost=0
+run=2 skip=0 ready=302 drawn=304 install=107 before=404594 after=404594 heap=404634 largest=401014 clx_count=28 loaded=0 census_cost=0

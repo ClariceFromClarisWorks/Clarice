@@ -1,0 +1,11 @@
+FRAME_PROFILE cols=80 rows=24 cell=6 line=11 font=4/9 inverse=0
+run=0 kind=output total=181 paint=158 frames=24 compose=16 shift=56 pixels=31 model=23 raster=86 copy=11 bar=0 worst=7
+run=0 kind=history1 total=201 paint=201 frames=24 compose=16 shift=54 pixels=30 model=22 raster=87 copy=12 bar=44 worst=9
+run=0 kind=history4 total=309 paint=309 frames=24 compose=17 shift=48 pixels=29 model=18 raster=202 copy=30 bar=42 worst=14
+run=1 kind=output total=181 paint=158 frames=24 compose=14 shift=54 pixels=33 model=20 raster=89 copy=7 bar=0 worst=7
+run=1 kind=history1 total=201 paint=201 frames=24 compose=17 shift=52 pixels=31 model=21 raster=88 copy=8 bar=44 worst=9
+run=1 kind=history4 total=310 paint=310 frames=24 compose=19 shift=48 pixels=26 model=21 raster=200 copy=32 bar=42 worst=14
+run=2 kind=output total=181 paint=158 frames=24 compose=16 shift=55 pixels=32 model=22 raster=86 copy=10 bar=1 worst=7
+run=2 kind=history1 total=202 paint=201 frames=24 compose=16 shift=54 pixels=31 model=22 raster=87 copy=8 bar=42 worst=9
+run=2 kind=history4 total=310 paint=309 frames=24 compose=16 shift=48 pixels=28 model=18 raster=200 copy=35 bar=45 worst=14
+heap_delta=0; raster includes copy, shift includes pixels/model

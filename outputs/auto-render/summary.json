@@ -1,0 +1,98 @@
+[
+  {
+    "cadence": 32,
+    "files": 100,
+    "mode": 0,
+    "median_ticks": 170,
+    "median_paint": 47,
+    "frames": [
+      5,
+      5,
+      5
+    ]
+  },
+  {
+    "cadence": 32,
+    "files": 100,
+    "mode": 2,
+    "median_ticks": 179,
+    "median_paint": 57,
+    "frames": [
+      5,
+      5,
+      5
+    ]
+  },
+  {
+    "cadence": 32,
+    "files": 1000,
+    "mode": 0,
+    "median_ticks": 792,
+    "median_paint": 227,
+    "frames": [
+      19,
+      19,
+      19
+    ]
+  },
+  {
+    "cadence": 32,
+    "files": 1000,
+    "mode": 2,
+    "median_ticks": 756,
+    "median_paint": 192,
+    "frames": [
+      19,
+      19,
+      19
+    ]
+  },
+  {
+    "cadence": 16,
+    "files": 100,
+    "mode": 0,
+    "median_ticks": 193,
+    "median_paint": 70,
+    "frames": [
+      7,
+      7,
+      6
+    ]
+  },
+  {
+    "cadence": 16,
+    "files": 100,
+    "mode": 2,
+    "median_ticks": 188,
+    "median_paint": 66,
+    "frames": [
+      7,
+      7,
+      7
+    ]
+  },
+  {
+    "cadence": 16,
+    "files": 1000,
+    "mode": 0,
+    "median_ticks": 980,
+    "median_paint": 412,
+    "frames": [
+      34,
+      34,
+      34
+    ]
+  },
+  {
+    "cadence": 16,
+    "files": 1000,
+    "mode": 2,
+    "median_ticks": 902,
+    "median_paint": 340,
+    "frames": [
+      34,
+      34,
+      34
+    ]
+  }
+]

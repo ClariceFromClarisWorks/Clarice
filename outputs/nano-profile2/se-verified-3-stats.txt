@@ -1,0 +1,31 @@
+é File Edit Tests View
+Macintosh HD
+Clarice
+2180667 2180776 2180777 2180778 2180809 2180846 2180934 2180968 2180
+973 2180909 2180923 0 0; input batches=1 sum=11 max=11;
+initial-heap=423700
+tor startup: draws=10 rows=56 text=3 copy=4 total=34 ticks
+Ehrses startupy redreshesei refsesh-ticksop writes=15 bytes=458 feed-ticks=3
+allocs=125 FreeMem=1 NewPtr=25 reads=1 read=0 stdio=0 image-al loc=
+O meta-al loc=0
+Loader ticks: read=39 validate=2 imports=4 relocations=22 prepare=4 events=2 (ev
+ents includedabove)
+Verification ticks:
+mode=fast header=0 record=14 payload=0 metadata=2 structure=
+14 (structure included in relocations)
+/> nano-profile /tmp/np-short
+status runtime
+Runtime: heap=418906 largest=418718 image=198756 ticks=1602 load=85 owned-peak=1
+01736 remaining=0
+Nano ticks: 2183315 2183425 2183425 2183426 2183457 2183495 2183668 2183730 2183
+830 2183556 2183655 0 0; input batches=1 sum=5 max=5;
+initial-heap=423700
+Editor startup: draws=23 rows=77 text=24 copy=7 total=71 ticks
+Curses startup: refreshes=1 refresh-ticks=97 writes=36 bytes=1921 feed-ticks=17
+Native ticks:
+al locs=137 FreeMem=4 NewPtr=45 reads=17 read=6 stdio=0 image-al loc
+=0 meta-alloc=0
+Loader ticks: read=37 validate=2 imports=4 relocations=23 prepare=4 events=2 (ev
+ents included above)
+Verification ticks: mode=fast header=0 record=15 payload=0 metadata=2 structure=
+14 (structure included in relocations)

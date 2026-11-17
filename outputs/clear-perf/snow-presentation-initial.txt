@@ -1,0 +1,38 @@
+PRESENT_PROFILE px=8 stride=64; 300 copies/case; monochrome srcCopy no scaling
+clear run=0 new=0 count=80 calls=2000 ticks=80
+clear run=0 new=0 count=51 calls=2000 ticks=79
+clear run=0 new=1 count=80 calls=2000 ticks=3
+clear run=0 new=1 count=51 calls=2000 ticks=26
+copy run=0 kind=0 width=464 ticks=112
+copy run=0 kind=1 width=464 ticks=110
+copy run=0 kind=2 width=464 ticks=33
+copy run=0 kind=3 width=464 ticks=108
+copy run=0 kind=4 width=464 ticks=32
+copy run=0 kind=5 width=16 ticks=22
+copy run=0 kind=6 width=464 ticks=18
+copy run=0 kind=7 width=16 ticks=26
+clear run=1 new=0 count=80 calls=2000 ticks=80
+clear run=1 new=0 count=51 calls=2000 ticks=80
+clear run=1 new=1 count=80 calls=2000 ticks=3
+clear run=1 new=1 count=51 calls=2000 ticks=26
+copy run=1 kind=0 width=464 ticks=112
+copy run=1 kind=1 width=464 ticks=109
+copy run=1 kind=2 width=464 ticks=33
+copy run=1 kind=3 width=464 ticks=109
+copy run=1 kind=4 width=464 ticks=32
+copy run=1 kind=5 width=16 ticks=22
+copy run=1 kind=6 width=464 ticks=18
+copy run=1 kind=7 width=16 ticks=25
+clear run=2 new=0 count=80 calls=2000 ticks=80
+clear run=2 new=0 count=51 calls=2000 ticks=80
+clear run=2 new=1 count=80 calls=2000 ticks=3
+clear run=2 new=1 count=51 calls=2000 ticks=26
+copy run=2 kind=0 width=464 ticks=112
+copy run=2 kind=1 width=464 ticks=109
+copy run=2 kind=2 width=464 ticks=33
+copy run=2 kind=3 width=464 ticks=108
+copy run=2 kind=4 width=464 ticks=31
+copy run=2 kind=5 width=16 ticks=22
+copy run=2 kind=6 width=464 ticks=18
+copy run=2 kind=7 width=16 ticks=25
+heap_delta=0; kinds=helper,screen,aligned-screen,shifted-memory,aligned-memory,tiny-memory,asm-memory,tiny-screen

@@ -1,0 +1,30 @@
+{
+  "build": 2026111542,
+  "platform": "Patched Snow Macintosh Plus / 4 MB, reported System 6.0.7; fixed uncapped FFWD about 15\u201316x",
+  "normal_build": true,
+  "real_heap_exhaustion_statuses": [
+    2,
+    2,
+    2
+  ],
+  "incomplete_program_executed": false,
+  "recovery_commands_succeeded": true,
+  "heap": [
+    [
+      "411350",
+      "410220"
+    ],
+    [
+      "411360",
+      "411336"
+    ],
+    [
+      "411360",
+      "411272"
+    ]
+  ],
+  "ctrl_c_status": 130,
+  "following_command_skipped": true,
+  "streams_restored": true,
+  "portable_after_cancel": "Runtime: heap=415720 largest=414146 image=0 ticks=0 load=0 owned-peak=0 remaining=0\nLoader ticks: read=0 validate=0 imports=0 relocations=0 prepare=0 events=0 (events included above)\nVerification ticks: mode=full header=0 record=0 payload=0 metadata=0 structure=0 (structure included in relocations)\n"
+}

@@ -1,0 +1,10 @@
+{
+  "exact_recovered_macbinary": true,
+  "sha256": "bc37aee6e1975358df0c6659eea9e5905bc99d647e499622a3732eb3494b2d5e",
+  "original_resource_bytes": 37,
+  "replacement_resource_bytes": 0,
+  "type": "TEST",
+  "creator": "DIST",
+  "finder_flags": 16384,
+  "profile_unchanged": true
+}

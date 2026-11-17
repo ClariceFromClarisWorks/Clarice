@@ -1,0 +1,164 @@
+Using multiversal interfaces
+
+/src/work/se-control/build/CMakeFiles/SEControl.dir/mouse.c.obj:     file format elf32-m68k
+
+
+Disassembly of section .text.hil_post:
+
+00000000 <hil_post>:
+   0:	202f 0006      	movel %sp@(6),%d0
+   4:	306f 0004      	moveaw %sp@(4),%a0
+   8:	a12f           	.short 0xa12f
+   a:	4a40           	tstw %d0
+   c:	6618           	bnes 26 <hil_post+0x26>
+   e:	b0fc 0000      	cmpaw #0,%a0
+  12:	6712           	beqs 26 <hil_post+0x26>
+  14:	316f 000a 0014 	movew %sp@(10),%a0@(20)
+  1a:	316f 000c 0012 	movew %sp@(12),%a0@(18)
+  20:	316f 000e 0010 	movew %sp@(14),%a0@(16)
+  26:	4e75           	rts
+
+Disassembly of section .text.hil_post.macsbug:
+
+00000000 <.text.hil_post.macsbug>:
+   0:	8868 696c      	orw %a0@(26988),%d4
+   4:	Address 0xc is out of bounds.
+
+
+Disassembly of section .text.hil_release:
+
+00000000 <hil_release>:
+   0:	2f0a           	movel %a2,%sp@-
+   2:	246f 0008      	moveal %sp@(8),%a2
+   6:	4a6a 001a      	tstw %a2@(26)
+   a:	673c           	beqs 48 <hil_release+0x48>
+   c:	21f8 016a 016e 	movel 16a <hil_release+0x16a>,16e <hil_release+0x16e>
+  12:	11fc ff80 0172 	moveb #-128,172 <hil_release+0x172>
+  18:	357c 0000 001a 	movew #0,%a2@(26)
+  1e:	3238 082c      	movew 82c <hil_release+0x82c>,%d1
+  22:	3038 082e      	movew 82e <hil_release+0x82e>,%d0
+  26:	3f01           	movew %d1,%sp@-
+  28:	3f00           	movew %d0,%sp@-
+  2a:	3f3c 0080      	movew #128,%sp@-
+  2e:	42a7           	clrl %sp@-
+  30:	3f3c 0002      	movew #2,%sp@-
+  34:	4eb9 0000 0000 	jsr 0 <hil_release>
+  3a:	4fef 000c      	lea %sp@(12),%sp
+  3e:	4a40           	tstw %d0
+  40:	6706           	beqs 48 <hil_release+0x48>
+  42:	357c 0001 0020 	movew #1,%a2@(32)
+  48:	357c 0000 0016 	movew #0,%a2@(22)
+  4e:	2578 016a 0026 	movel 16a <hil_release+0x16a>,%a2@(38)
+  54:	245f           	moveal %sp@+,%a2
+  56:	4e75           	rts
+
+Disassembly of section .text.hil_release.macsbug:
+
+00000000 <.text.hil_release.macsbug>:
+   0:	8b68 696c      	orw %d5,%a0@(26988)
+   4:	5f72 656c 6561 	subqw #7,%a2@(6561)@(0)
+   a:	7365           	.short 0x7365
+	...
+
+Disassembly of section .text.hil_tick:
+
+00000000 <hil_tick>:
+   0:	598f           	subql #4,%sp
+   2:	206f 0008      	moveal %sp@(8),%a0
+   6:	4a68 0016      	tstw %a0@(22)
+   a:	6700 011c      	beqw 128 <hil_tick+0x128>
+   e:	2038 016a      	movel 16a <hil_tick+0x16a>,%d0
+  12:	4a68 0018      	tstw %a0@(24)
+  16:	660c           	bnes 24 <hil_tick+0x24>
+  18:	90a8 0022      	subl %a0@(34),%d0
+  1c:	0c80 0000 00f0 	cmpil #240,%d0
+  22:	630c           	blss 30 <hil_tick+0x30>
+  24:	2f48 0008      	movel %a0,%sp@(8)
+  28:	588f           	addql #4,%sp
+  2a:	4ef9 0000 0000 	jmp 0 <hil_tick>
+  30:	4a68 001a      	tstw %a0@(26)
+  34:	6710           	beqs 46 <hil_tick+0x46>
+  36:	2238 016a      	movel 16a <hil_tick+0x16a>,%d1
+  3a:	5681           	addql #3,%d1
+  3c:	21c1 016e      	movel %d1,16e <hil_tick+0x16e>
+  40:	11fc 0000 0172 	moveb #0,172 <hil_tick+0x172>
+  46:	3228 001e      	movew %a0@(30),%d1
+  4a:	b268 001c      	cmpw %a0@(28),%d1
+  4e:	6f00 00c8      	blew 118 <hil_tick+0x118>
+  52:	3228 001c      	movew %a0@(28),%d1
+  56:	48c1           	extl %d1
+  58:	e789           	lsll #3,%d1
+  5a:	3230 1830      	movew %a0@(30,%d1:l),%d1
+  5e:	0281 0000 ffff 	andil #65535,%d1
+  64:	b081           	cmpl %d1,%d0
+  66:	6500 00b0      	bcsw 118 <hil_tick+0x118>
+  6a:	3028 001c      	movew %a0@(28),%d0
+  6e:	3200           	movew %d0,%d1
+  70:	5241           	addqw #1,%d1
+  72:	3141 001c      	movew %d1,%a0@(28)
+  76:	48c0           	extl %d0
+  78:	e788           	lsll #3,%d0
+  7a:	43f0 0800      	lea %a0@(0,%d0:l),%a1
+  7e:	3429 002c      	movew %a1@(44),%d2
+  82:	3229 002a      	movew %a1@(42),%d1
+  86:	31c2 082c      	movew %d2,82c <hil_tick+0x82c>
+  8a:	31c2 0828      	movew %d2,828 <hil_tick+0x828>
+  8e:	31c1 082e      	movew %d1,82e <hil_tick+0x82e>
+  92:	31c1 082a      	movew %d1,82a <hil_tick+0x82a>
+  96:	11f8 08cf 08ce 	moveb 8cf <hil_tick+0x8cf>,8ce <hil_tick+0x8ce>
+  9c:	3229 002e      	movew %a1@(46),%d1
+  a0:	b268 001a      	cmpw %a0@(26),%d1
+  a4:	6772           	beqs 118 <hil_tick+0x118>
+  a6:	3141 001a      	movew %d1,%a0@(26)
+  aa:	2278 016a      	moveal 16a <hil_tick+0x16a>,%a1
+  ae:	4a68 001a      	tstw %a0@(26)
+  b2:	675c           	beqs 110 <hil_tick+0x110>
+  b4:	7203           	moveq #3,%d1
+  b6:	d289           	addl %a1,%d1
+  b8:	21c1 016e      	movel %d1,16e <hil_tick+0x16e>
+  bc:	4a68 001a      	tstw %a0@(26)
+  c0:	57c1           	seq %d1
+  c2:	ef09           	lslb #7,%d1
+  c4:	11c1 0172      	moveb %d1,172 <hil_tick+0x172>
+  c8:	43f0 0800      	lea %a0@(0,%d0:l),%a1
+  cc:	3429 002c      	movew %a1@(44),%d2
+  d0:	3269 002a      	moveaw %a1@(42),%a1
+  d4:	4a68 001a      	tstw %a0@(26)
+  d8:	57c0           	seq %d0
+  da:	4880           	extw %d0
+  dc:	4440           	negw %d0
+  de:	ef48           	lslw #7,%d0
+  e0:	4a68 001a      	tstw %a0@(26)
+  e4:	672e           	beqs 114 <hil_tick+0x114>
+  e6:	7201           	moveq #1,%d1
+  e8:	3f02           	movew %d2,%sp@-
+  ea:	3f09           	movew %a1,%sp@-
+  ec:	3f00           	movew %d0,%sp@-
+  ee:	42a7           	clrl %sp@-
+  f0:	3f01           	movew %d1,%sp@-
+  f2:	2f48 000c      	movel %a0,%sp@(12)
+  f6:	4eb9 0000 0000 	jsr 0 <hil_tick>
+  fc:	4fef 000c      	lea %sp@(12),%sp
+ 100:	2057           	moveal %sp@,%a0
+ 102:	4a40           	tstw %d0
+ 104:	6712           	beqs 118 <hil_tick+0x118>
+ 106:	317c 0001 0020 	movew #1,%a0@(32)
+ 10c:	6000 ff16      	braw 24 <hil_tick+0x24>
+ 110:	7200           	moveq #0,%d1
+ 112:	60a2           	bras b6 <hil_tick+0xb6>
+ 114:	7202           	moveq #2,%d1
+ 116:	60d0           	bras e8 <hil_tick+0xe8>
+ 118:	3028 001e      	movew %a0@(30),%d0
+ 11c:	b068 001c      	cmpw %a0@(28),%d0
+ 120:	6f00 ff02      	blew 24 <hil_tick+0x24>
+ 124:	7010           	moveq #16,%d0
+ 126:	a05a           	.short 0xa05a
+ 128:	588f           	addql #4,%sp
+ 12a:	4e75           	rts
+
+Disassembly of section .text.hil_tick.macsbug:
+
+00000000 <.text.hil_tick.macsbug>:
+   0:	8868 696c      	orw %a0@(26988),%d4
+   4:	Address 0xa is out of bounds.
+

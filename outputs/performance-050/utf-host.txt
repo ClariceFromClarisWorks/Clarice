@@ -1,0 +1,1 @@
+PASS: exhaustive Unicode whitespace classification; ASCII, binary, malformed/truncated UTF input; identical rune outputs/statuses

@@ -1,0 +1,8 @@
+{
+  "bytes": 33605120,
+  "driver_type": "Apple_Driver43",
+  "driver_sha256": "f5f71d1d17914e2f064b3943b168159100eee369e09bfe502c5217eee124a206",
+  "hfs_start": 96,
+  "hfs_blocks": 65536,
+  "template_hfs_bytes_copied": 0
+}

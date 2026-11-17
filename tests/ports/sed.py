@@ -11,10 +11,10 @@ with tempfile.TemporaryDirectory() as tmp:
   assert b'AddressSanitizer' not in a.stderr and b'runtime error:' not in a.stderr,a.stderr
   assert ok,(args,a.stdout,a.stderr,a.returncode,b.stdout,b.stderr,b.returncode)
   results.append({'args':args,'status':a.returncode,'passed':True})
- for label,args,body,env,status in [('cancel loop',[':x;b x'],b'a\n',{'CLARICE_CANCEL_AFTER':'4'},130),('long line',['p'],b'a'*17000,{},2),('write error',['p'],b'a\n',{'CLARICE_FAIL_WRITE':'1'},2)]:
+ for label,args,body,env,status in [('cancel loop',[':x;b x'],b'a\n',{'CLARICE_CANCEL_AFTER':'4'},130),('long line',['p'],b'a'*17000,{},0),('write error',['p'],b'a\n',{'CLARICE_FAIL_WRITE':'1'},2)]:
   a=subprocess.run([str(port),*args],cwd=tmp,input=body,capture_output=True,env={**os.environ,**env},timeout=10)
   assert a.returncode==status,(label,a.returncode,a.stderr)
   assert b'AddressSanitizer' not in a.stderr and b'runtime error:' not in a.stderr,a.stderr
   results.append({'test':label,'status':status,'passed':True})
 (root/'outputs/grep/sed-host-tests.json').write_text(json.dumps(results,indent=2)+'\n')
-print(f'PASS: {len(cases)} upstream sed comparisons; infinite-loop cancellation, line cap and write failure')
+print(f'PASS: {len(cases)} upstream sed comparisons; infinite-loop cancellation, long lines and write failure')

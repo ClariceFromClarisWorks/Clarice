@@ -1,0 +1,9 @@
+mode=sync run=0 count=1000 ticks=297 hash=c6c2ccc1 waits=0 error=0 begin=1865 end=2162
+mode=sync run=1 count=1000 ticks=302 hash=c6c2ccc1 waits=0 error=0 begin=2162 end=2464
+mode=sync run=2 count=1000 ticks=300 hash=c6c2ccc1 waits=0 error=0 begin=2464 end=2764
+mode=async run=0 count=1000 ticks=300 hash=c6c2ccc1 waits=0 error=0 begin=2764 end=3064
+mode=async run=1 count=1000 ticks=301 hash=c6c2ccc1 waits=0 error=0 begin=3064 end=3365
+mode=async run=2 count=1000 ticks=300 hash=c6c2ccc1 waits=0 error=0 begin=3365 end=3665
+mode=hot run=0 count=1000 ticks=173 hash=3b12eb78 waits=0 error=0 begin=3665 end=3838
+mode=hot run=1 count=1000 ticks=170 hash=3b12eb78 waits=0 error=0 begin=3838 end=4008
+mode=hot run=2 count=1000 ticks=171 hash=3b12eb78 waits=0 error=0 begin=4008 end=4179

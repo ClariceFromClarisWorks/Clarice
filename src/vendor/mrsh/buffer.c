@@ -3,9 +3,10 @@
 #include <string.h>
 
 char *mrsh_buffer_reserve(struct mrsh_buffer *buf, size_t size) {
+	if (size > (size_t)-1 - buf->len) return NULL;
 	size_t new_len = buf->len + size;
 	if (new_len > buf->cap) {
-		size_t new_cap = 2 * buf->cap;
+		size_t new_cap = buf->cap > (size_t)-1/2 ? new_len : 2 * buf->cap;
 		if (new_cap == 0) {
 			new_cap = 32;
 		}
@@ -21,7 +22,7 @@ char *mrsh_buffer_reserve(struct mrsh_buffer *buf, size_t size) {
 		buf->cap = new_cap;
 	}
 
-	return &buf->data[buf->len];
+	return buf->data ? &buf->data[buf->len] : NULL;
 }
 
 char *mrsh_buffer_add(struct mrsh_buffer *buf, size_t size) {
@@ -35,6 +36,7 @@ char *mrsh_buffer_add(struct mrsh_buffer *buf, size_t size) {
 }
 
 bool mrsh_buffer_append(struct mrsh_buffer *buf, const char *data, size_t size) {
+	if (!size) return true;
 	char *dst = mrsh_buffer_add(buf, size);
 	if (dst == NULL) {
 		return false;

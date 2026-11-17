@@ -1,0 +1,2 @@
+Kermit receive; binary mode, Ctrl+C cancels.
+kermit: transfer failed

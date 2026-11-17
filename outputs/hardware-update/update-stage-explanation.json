@@ -1,0 +1,7 @@
+{
+  "all_differences_within_os_reserved_16_127": true,
+  "data_resource_map_and_application_header_exact": true,
+  "canonical_crc32": "fa79d932",
+  "excluded_bytes": 112,
+  "source_package_crc_covers_all_bytes": true
+}

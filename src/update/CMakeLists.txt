@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(ClariceUpdater C)
+add_application(ClariceUpdater helper.c Helper.r TYPE APPL CREATOR CLUP)
+target_compile_options(ClariceUpdater PRIVATE -Os -m68000 -Wall -Wextra -Wno-multichar -Wno-misleading-indentation -Wno-unused-function)
+set_target_properties(ClariceUpdater PROPERTIES LINK_FLAGS "-Wl,--mac-single")

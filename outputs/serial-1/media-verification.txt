@@ -1,0 +1,1 @@
+PASS: clean HDA round-trip APPL/CLRC, exact application data/resource forks, exact serial.clx bytes.

@@ -1,0 +1,45 @@
+{
+  "measurement": "Unicorn executed 68000 instructions, NOT guest ticks or physical timing",
+  "cases": [
+    {
+      "x": 6,
+      "width": 480,
+      "height": 275,
+      "old_instructions": 72914,
+      "new_instructions": 14062,
+      "reduction_percent": 80.71
+    },
+    {
+      "x": 14,
+      "width": 480,
+      "height": 275,
+      "old_instructions": 73189,
+      "new_instructions": 14337,
+      "reduction_percent": 80.41
+    },
+    {
+      "x": 0,
+      "width": 512,
+      "height": 342,
+      "old_instructions": 95799,
+      "new_instructions": 17821,
+      "reduction_percent": 81.4
+    },
+    {
+      "x": 7,
+      "width": 1,
+      "height": 1,
+      "old_instructions": 64,
+      "new_instructions": 56,
+      "reduction_percent": 12.5
+    },
+    {
+      "x": 8,
+      "width": 16,
+      "height": 11,
+      "old_instructions": 336,
+      "new_instructions": 268,
+      "reduction_percent": 20.24
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "record",
+    "injected_failures": 21,
+    "host_adapter_peak": 36998,
+    "remaining": 0
+  },
+  {
+    "name": "multi",
+    "injected_failures": 14,
+    "host_adapter_peak": 447,
+    "remaining": 0
+  },
+  {
+    "name": "substitution",
+    "injected_failures": 20,
+    "host_adapter_peak": 1032,
+    "remaining": 0
+  },
+  {
+    "name": "scope",
+    "injected_failures": 37,
+    "host_adapter_peak": 947,
+    "remaining": 0
+  },
+  {
+    "name": "args",
+    "injected_failures": 211,
+    "host_adapter_peak": 2454,
+    "remaining": 0
+  },
+  {
+    "name": "prefix",
+    "injected_failures": 26,
+    "host_adapter_peak": 1014,
+    "remaining": 0
+  }
+]

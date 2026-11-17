@@ -1,0 +1,1 @@
+7b2528bb197030c4a4b36311e6691aa007a2114b17bbfe7bdd93e2e4d8de0051  work/direct-terminal-v3/build/Clarice.bin

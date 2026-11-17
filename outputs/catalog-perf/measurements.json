@@ -1,0 +1,97 @@
+{
+  "environment": "Snow Plus 4 MB System 6.0.8; no physical results",
+  "ticks_per_second": 60,
+  "diagnostic_scan1000": {
+    "total": [
+      386,
+      409,
+      391
+    ],
+    "native_hfs": [
+      284,
+      285,
+      289
+    ],
+    "setup": [
+      13,
+      13,
+      10
+    ],
+    "names": [
+      30,
+      33,
+      24
+    ],
+    "item": [
+      12,
+      23,
+      18
+    ],
+    "source": "scan-diagnostic.png"
+  },
+  "reuse_same_image": {
+    "old": [
+      393,
+      350,
+      348
+    ],
+    "new": [
+      328,
+      335,
+      335
+    ],
+    "note": "first old pass cold; subsequent pairs are warm",
+    "sources": [
+      "reuse-0.png",
+      "reuse-1.png"
+    ]
+  },
+  "normal_1511_scan1000": {
+    "total": [
+      369,
+      323,
+      323
+    ],
+    "first": [
+      13,
+      14,
+      13
+    ],
+    "paint": 0,
+    "events_all_runs": 16,
+    "source": "normal-scan.png"
+  },
+  "normal_1511_listing100": {
+    "total": [
+      133,
+      95,
+      100
+    ],
+    "first": [
+      25,
+      30,
+      39
+    ],
+    "paint_all_runs": 116,
+    "events_all_runs": 10,
+    "source": "normal-list100.png",
+    "note": "benchls excludes dispatch/load, may defer final paint; not complete-command timing"
+  },
+  "rejected_cadence": {
+    "default": [
+      110,
+      115,
+      108
+    ],
+    "six_ticks": [
+      213,
+      213,
+      210
+    ],
+    "three_ticks": [
+      336,
+      335,
+      348
+    ]
+  }
+}

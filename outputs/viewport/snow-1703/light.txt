@@ -1,0 +1,38 @@
+JUMP_PROFILE cols=80 rows=24 cell=6 line=11 inverse=0
+hits=0 misses=0
+run=0 new=0 kind=listing ticks=245 worst=15 frames=25 compose=20 shift=1 raster=199 copy=60 bar=54 plan=34 prepare=11 text=65 rows=625 build=3 align=4
+hits=0 misses=0
+run=0 new=0 kind=varied ticks=560 worst=24 frames=24 compose=19 shift=2 raster=485 copy=87 bar=54 plan=5 prepare=42 text=327 rows=593 build=3 align=5
+hits=0 misses=0
+run=0 new=1 kind=listing ticks=250 worst=16 frames=24 compose=17 shift=1 raster=177 copy=69 bar=53 plan=44 prepare=10 text=30 rows=600 build=3 align=2
+hits=0 misses=0
+run=0 new=1 kind=varied ticks=478 worst=27 frames=24 compose=16 shift=2 raster=408 copy=105 bar=50 plan=4 prepare=16 text=253 rows=593 build=4 align=2
+hits=0 misses=0
+run=0 new=2 kind=listing ticks=246 worst=15 frames=24 compose=21 shift=2 raster=171 copy=62 bar=52 plan=28 prepare=11 text=43 rows=600 build=3 align=0
+hits=306 misses=260
+run=0 new=2 kind=varied ticks=437 worst=29 frames=24 compose=17 shift=2 raster=365 copy=72 bar=52 plan=5 prepare=44 text=210 rows=593 build=4 align=4
+hits=0 misses=0
+run=1 new=0 kind=listing ticks=248 worst=15 frames=24 compose=20 shift=1 raster=175 copy=60 bar=52 plan=36 prepare=12 text=39 rows=600 build=3 align=0
+hits=0 misses=0
+run=1 new=0 kind=varied ticks=560 worst=24 frames=24 compose=20 shift=1 raster=486 copy=82 bar=53 plan=6 prepare=44 text=331 rows=593 build=3 align=4
+hits=0 misses=0
+run=1 new=1 kind=listing ticks=244 worst=16 frames=24 compose=15 shift=3 raster=170 copy=57 bar=55 plan=31 prepare=7 text=54 rows=600 build=4 align=0
+hits=0 misses=0
+run=1 new=1 kind=varied ticks=480 worst=28 frames=24 compose=18 shift=2 raster=404 copy=109 bar=53 plan=7 prepare=31 text=231 rows=593 build=3 align=3
+hits=0 misses=0
+run=1 new=2 kind=listing ticks=249 worst=16 frames=24 compose=17 shift=2 raster=176 copy=59 bar=51 plan=36 prepare=15 text=39 rows=600 build=3 align=2
+hits=306 misses=260
+run=1 new=2 kind=varied ticks=443 worst=29 frames=24 compose=22 shift=0 raster=367 copy=90 bar=54 plan=4 prepare=33 text=206 rows=593 build=3 align=5
+hits=0 misses=0
+run=2 new=0 kind=listing ticks=250 worst=16 frames=24 compose=19 shift=1 raster=172 copy=59 bar=57 plan=33 prepare=10 text=40 rows=600 build=4 align=0
+hits=0 misses=0
+run=2 new=0 kind=varied ticks=559 worst=24 frames=24 compose=19 shift=2 raster=486 copy=81 bar=50 plan=4 prepare=39 text=335 rows=593 build=3 align=3
+hits=0 misses=0
+run=2 new=1 kind=listing ticks=248 worst=15 frames=24 compose=17 shift=1 raster=176 copy=59 bar=53 plan=32 prepare=4 text=49 rows=600 build=3 align=3
+hits=0 misses=0
+run=2 new=1 kind=varied ticks=476 worst=27 frames=24 compose=14 shift=3 raster=408 copy=94 bar=50 plan=2 prepare=29 text=258 rows=593 build=4 align=2
+hits=0 misses=0
+run=2 new=2 kind=listing ticks=242 worst=15 frames=24 compose=13 shift=1 raster=175 copy=57 bar=50 plan=31 prepare=6 text=48 rows=600 build=3 align=0
+hits=306 misses=260
+run=2 new=2 kind=varied ticks=439 worst=29 frames=24 compose=16 shift=1 raster=366 copy=87 bar=54 plan=6 prepare=41 text=212 rows=593 build=4 align=1
+heap_delta=26; phases overlap; total is sum of completed draw calls

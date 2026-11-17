@@ -1,0 +1,34 @@
+[
+  {
+    "renderer": "native",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "verified-cancel-native-off-status.png",
+    "note": "Host wait intervals are not guest cancellation latency measurements.",
+    "result": "PASS: inspected ^C, status 130 and restored prompt"
+  },
+  {
+    "renderer": "native",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "verified-cancel-native-screen-status.png",
+    "note": "Host wait intervals are not guest cancellation latency measurements.",
+    "result": "PASS: inspected ^C, status 130 and restored prompt"
+  },
+  {
+    "renderer": "asm",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "verified-cancel-asm-off-status.png",
+    "note": "Host wait intervals are not guest cancellation latency measurements.",
+    "result": "PASS: inspected ^C, status 130 and restored prompt"
+  },
+  {
+    "renderer": "asm",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "verified-cancel-asm-screen-status.png",
+    "note": "Host wait intervals are not guest cancellation latency measurements.",
+    "result": "PASS: inspected ^C, status 130 and restored prompt"
+  }
+]

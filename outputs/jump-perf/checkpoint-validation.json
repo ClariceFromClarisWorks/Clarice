@@ -1,0 +1,138 @@
+{
+  "date": "2026-11-15",
+  "branch": "codex/se-performance-2026111517",
+  "scope": "Source checkpoint only; no new guest or hardware acceptance, no deployment",
+  "normal_build": "PASS from an isolated git archive of the staged source, pinned Retro68 toolchain, fresh work directory",
+  "accepted": {
+    "bytes": 939904,
+    "sha256": "bd6de3793030845a612200a86f6871be14e53454748a52f7d6762e7e503b9b7a",
+    "data_bytes": 0,
+    "resource_bytes": 939714,
+    "resource_sha256": "566248ac161f9211137e9f9266f814910d0c79be8f34f5849bcdb23c751eec04"
+  },
+  "fresh": {
+    "bytes": 944512,
+    "sha256": "04dd65a4465137c3e771c1d077b0ba60bb1ec8b755ea71fd92eeb9bc81779797",
+    "data_bytes": 0,
+    "resource_bytes": 944266,
+    "resource_sha256": "7f29c55994ec87857eb9acc04f204f91eb4178358c6cb1fef8ee5b4d25e348d6"
+  },
+  "code_resources": [
+    {
+      "id": 0,
+      "bytes": 24,
+      "sha256": "068d9076ddd62561e4264bc0aa72148963de71522d6379ed9c6220eb0d5882c0",
+      "identical": true
+    },
+    {
+      "id": 1,
+      "bytes": 234315,
+      "sha256": "76bca637f7443fb887bc0b5e3e200118a2734c63e91f2a30803243dd334bb409",
+      "identical": true
+    }
+  ],
+  "changed_resources": [
+    {
+      "type": "CLX1",
+      "id": 201,
+      "accepted_bytes": 44320,
+      "fresh_bytes": 44876
+    },
+    {
+      "type": "CLX1",
+      "id": 202,
+      "accepted_bytes": 63492,
+      "fresh_bytes": 64048
+    },
+    {
+      "type": "CLX1",
+      "id": 203,
+      "accepted_bytes": 189900,
+      "fresh_bytes": 187592
+    },
+    {
+      "type": "CLX1",
+      "id": 205,
+      "accepted_bytes": 17596,
+      "fresh_bytes": 18180
+    },
+    {
+      "type": "CLX1",
+      "id": 206,
+      "accepted_bytes": 16832,
+      "fresh_bytes": 17416
+    },
+    {
+      "type": "CLX1",
+      "id": 207,
+      "accepted_bytes": 20092,
+      "fresh_bytes": 20676
+    },
+    {
+      "type": "CLX1",
+      "id": 208,
+      "accepted_bytes": 35236,
+      "fresh_bytes": 35728
+    },
+    {
+      "type": "CLX1",
+      "id": 209,
+      "accepted_bytes": 17932,
+      "fresh_bytes": 18516
+    },
+    {
+      "type": "CLX1",
+      "id": 210,
+      "accepted_bytes": 15532,
+      "fresh_bytes": 16116
+    },
+    {
+      "type": "CLX1",
+      "id": 211,
+      "accepted_bytes": 19372,
+      "fresh_bytes": 19956
+    },
+    {
+      "type": "CLX1",
+      "id": 212,
+      "accepted_bytes": 40420,
+      "fresh_bytes": 41004
+    },
+    {
+      "type": "CLX1",
+      "id": 216,
+      "accepted_bytes": 15388,
+      "fresh_bytes": 15972
+    },
+    {
+      "type": "CLX1",
+      "id": 217,
+      "accepted_bytes": 15232,
+      "fresh_bytes": 15816
+    },
+    {
+      "type": "CLX1",
+      "id": 220,
+      "accepted_bytes": 97408,
+      "fresh_bytes": 97408
+    }
+  ],
+  "caveat": "All application CODE resources match. Full package differs because a clean build regenerates bundled CLX utilities; accepted package had older command builds. New package is not claimed hardware validated. Generated packages remain local.",
+  "nano_preparation": {
+    "matched_existing_c_and_header_files": 445,
+    "mismatches": 0,
+    "full_editor_rebuild": false
+  },
+  "focused_host": {
+    "m68000_glyph_cases": 356,
+    "m68000_row_cases": 532,
+    "glyph_builder_cases": 510,
+    "selection_delta": "PASS",
+    "scroll_guards": 1560,
+    "loader_installer_scenarios": 61,
+    "fresh_command_images_validated": 24,
+    "command_execution": "Not performed; structural/import validation only"
+  },
+  "guest_tests_this_task": false,
+  "physical_tests_this_task": false
+}

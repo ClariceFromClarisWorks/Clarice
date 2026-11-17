@@ -1,0 +1,1 @@
+All 183 files under src/ match the pre-task SHA-256 manifest.

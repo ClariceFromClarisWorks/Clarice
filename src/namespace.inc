@@ -68,13 +68,16 @@ static int namespace_install(void){SysEnvRec sys;WDPBRec wd;HParamBlockRec vp;CI
 /* Rename within a catalog directory: System 6 rejects a full source path
    for this operation on some HFS drivers. Resolve volume and parent first. */
 int shell_rename(const unsigned char *source,const unsigned char *newname){
- char path[256];unsigned char volume[256],leaf[256];CInfoPBRec cat;HParamBlockRec pb;
+ char path[256];unsigned char leaf[256];CInfoPBRec cat;HParamBlockRec pb;
  memcpy(path,source+1,source[0]);path[source[0]]=0;char *colon=strchr(path,':'),*last=strrchr(path,':');if(!colon||!last||!last[1])return bdNamErr;
- int e=info(path,&cat);if(e)return e;int len=colon-path;volume[0]=len;memcpy(volume+1,path,len);pstr(leaf,last+1);
- memset(&pb,0,sizeof pb);pb.volumeParam.ioNamePtr=volume;e=PBHGetVInfoSync(&pb);if(e)return e;
- short vr=pb.volumeParam.ioVRefNum;long parent=cat.hFileInfo.ioFlParID;
+ int e=info(path,&cat);if(e)return e;pstr(leaf,last+1);
+ /* A named PBHGetVInfo with index zero ignores the name and selects the
+    default volume. Bind the source explicitly before reusing its parent ID. */
+ short vr;e=cli_native_volume(path,&vr);if(e)return e;long parent=cat.hFileInfo.ioFlParID;
  memset(&pb,0,sizeof pb);pb.fileParam.ioVRefNum=vr;pb.fileParam.ioDirID=parent;pb.fileParam.ioNamePtr=leaf;pb.ioParam.ioMisc=(Ptr)newname;return PBHRenameSync(&pb);
 }
+/* Flush the file's volume, which need not be the application launch volume. */
+int shell_flush_native(const char *path){short volume;int e=cli_native_volume(path,&volume);return e?e:FlushVol(0,volume);}
 void shell_temp_path(char *out,const char *file){snprintf(out,PATH_CAP,"%.220stmp:%.31s",root_path,file);}
 /* Copy migration commits by rename, never overwrites an existing destination.
    Failure leaves the legacy file usable. Fixed 512-byte transfer buffer. */

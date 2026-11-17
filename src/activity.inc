@@ -6,10 +6,16 @@ static int activity_command,activity_interactive,activity_visible,activity_phase
 static unsigned char activity_pixels[4*64] __attribute__((aligned(2)));
 static BitMap activity_back;
 static Rect activity_rect;
+/* CopyBits maps monochrome source bits through the destination port colours.
+   Overlay/save buffers already contain final pixels; preserve their polarity. */
+static void activity_copy(BitMap *src,BitMap *dst,const Rect *from,const Rect *to){
+ long fg=win->fgColor,bg=win->bkColor;ForeColor(blackColor);BackColor(whiteColor);
+ CopyBits(src,dst,from,to,srcCopy,0);ForeColor(fg);BackColor(bg);
+}
 static void activity_hide(void){
  if(activity_visible){GrafPtr old;Rect source={0,0,0,0};GetPort(&old);SetPort(win);
   source.right=activity_rect.right-activity_rect.left;source.bottom=activity_rect.bottom-activity_rect.top;
-  CopyBits(&activity_back,&win->portBits,&source,&activity_rect,srcCopy,0);SetPort(old);
+  activity_copy(&activity_back,&win->portBits,&source,&activity_rect);SetPort(old);
  }
  activity_visible=0;activity_phase=-1;
 }
@@ -22,9 +28,9 @@ static void activity_tick(unsigned long now){
  if(!region_contains(win->visRgn,&r)){activity_hide();return;}
  if(activity_visible&&phase==activity_phase)return;
  GrafPtr old;Rect source;GetPort(&old);SetPort(win);SetRect(&source,0,0,cell_w,line_h);
- if(!activity_visible){activity_back.baseAddr=(Ptr)activity_pixels;activity_back.rowBytes=4;SetRect(&activity_back.bounds,0,0,32,64);activity_rect=r;CopyBits(&win->portBits,&activity_back,&r,&source,srcCopy,0);}
+ if(!activity_visible){activity_back.baseAddr=(Ptr)activity_pixels;activity_back.rowBytes=4;SetRect(&activity_back.bounds,0,0,32,64);activity_rect=r;activity_copy(&win->portBits,&activity_back,&r,&source);}
  SetPort(&prompt_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);
- EraseRect(&source);MoveTo(0,font_ascent);DrawChar("|/-\\"[phase]);
- SetPort(win);CopyBits(&prompt_port.portBits,&win->portBits,&source,&r,srcCopy,0);SetPort(old);
+ EraseRect(&source);MoveTo(0,font_ascent);DrawChar("|/-\\"[phase]);InvertRect(&source);
+ SetPort(win);activity_copy(&prompt_port.portBits,&win->portBits,&source,&r);SetPort(old);
  activity_visible=1;activity_phase=phase;activity_presented(&activity_clock);
 }

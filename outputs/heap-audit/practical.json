@@ -1,0 +1,44 @@
+[
+  {
+    "name": "musl-empty",
+    "status": 0,
+    "bytes": 475,
+    "sha256": "024bcfb5aebdb6ee2b51d5f3d53b6e76b18cb3981cd5e64c635aa53e92da72b4",
+    "matches_dash": true
+  },
+  {
+    "name": "musl-paths",
+    "status": 0,
+    "bytes": 554,
+    "sha256": "4931ba9e3eacad68e1048c91122f80d6341c4e8e617d9691287e38f4fc201df4",
+    "matches_dash": true
+  },
+  {
+    "name": "definitions-default",
+    "status": 0,
+    "bytes": 13866,
+    "sha256": "b6b322c7e41ebe0c8d38a6b62c7d274e8c8f152d3f5dce5ef791f060f94113de",
+    "matches_dash": true
+  },
+  {
+    "name": "definitions-spaces",
+    "status": 0,
+    "bytes": 13866,
+    "sha256": "b6b322c7e41ebe0c8d38a6b62c7d274e8c8f152d3f5dce5ef791f060f94113de",
+    "matches_dash": true
+  },
+  {
+    "name": "parameters-default",
+    "status": 0,
+    "bytes": 7074,
+    "sha256": "849e0d72ee005acae7628ffe05e0784ebc9463658ba73f9a39ca199ae8f96b66",
+    "matches_dash": true
+  },
+  {
+    "name": "parameters-spaces",
+    "status": 0,
+    "bytes": 7074,
+    "sha256": "849e0d72ee005acae7628ffe05e0784ebc9463658ba73f9a39ca199ae8f96b66",
+    "matches_dash": true
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "exact": true,
+  "bytes": 16384,
+  "no_error_destinations": true,
+  "no_wget_temporary": true
+}

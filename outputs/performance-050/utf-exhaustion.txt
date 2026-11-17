@@ -1,0 +1,16 @@
+wc budget=0 status=2
+wc budget=512 status=2
+wc budget=1600 status=2
+wc budget=2500 status=0
+wc budget=4000 status=0
+wc budget=5000 status=0
+wc budget=10000 status=0
+PORT_STATS peak=1656 remaining=0
+tr budget=0 status=2
+tr budget=512 status=2
+tr budget=1600 status=2
+tr budget=2500 status=0
+tr budget=4000 status=0
+tr budget=5000 status=0
+tr budget=10000 status=0
+PORT_STATS peak=5752 remaining=0

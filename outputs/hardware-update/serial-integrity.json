@@ -1,0 +1,7 @@
+{
+  "rx": "SE19200-abc123RECONNECT-OK",
+  "tx": "SE19200-abc123RECONNECT-OK",
+  "equal": true,
+  "expected": true,
+  "baud": 19200
+}

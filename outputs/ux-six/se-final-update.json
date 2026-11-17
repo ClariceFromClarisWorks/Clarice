@@ -1,0 +1,51 @@
+[
+  {
+    "seconds": 19.25,
+    "action": [
+      "type",
+      "clarice update -y --source http://192.168.1.112:8080/ux33/update.txt",
+      "--enter"
+    ],
+    "result": "{\"ok\": true, \"queued\": 69, \"delivery\": \"verify screenshot; not an application acknowledgement\"}"
+  },
+  {
+    "seconds": 19.33,
+    "action": [
+      "quiet",
+      "180"
+    ],
+    "result": "{\"ok\": true, \"quiet_seconds\": 180, \"note\": \"Automatic heartbeats paused; explicit requests still send traffic\"}"
+  },
+  {
+    "seconds": 166.1,
+    "action": [
+      "shot",
+      "outputs/ux-six/se-final-update-mid.png"
+    ],
+    "result": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/ux-six/se-final-update-mid.png\", \"seconds\": 1.6782387080020271, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4314, \"frame_sha256\": \"26fdbb33387635eb8d183c824ddbf3983b4d73fcee7888682b0de31e07fb7636\", \"bytes\": 21888}"
+  },
+  {
+    "seconds": 166.16,
+    "action": [
+      "quiet",
+      "180"
+    ],
+    "result": "{\"ok\": true, \"quiet_seconds\": 180, \"note\": \"Automatic heartbeats paused; explicit requests still send traffic\"}"
+  },
+  {
+    "seconds": 276.25,
+    "action": [
+      "quiet",
+      "180"
+    ],
+    "result": "{\"ok\": true, \"quiet_seconds\": 180, \"note\": \"Automatic heartbeats paused; explicit requests still send traffic\"}"
+  },
+  {
+    "seconds": 357.5,
+    "action": [
+      "shot",
+      "outputs/ux-six/se-final-update-result.png"
+    ],
+    "result": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/ux-six/se-final-update-result.png\", \"seconds\": 1.1523579170025187, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4314, \"frame_sha256\": \"aa5006e99c3f5eed6ccede2080a573386b95c3f3185e80f37188124aef1c84f9\", \"bytes\": 21888}"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "resources.txt": true,
+  "recovery.txt": true,
+  "stream-recovery.txt": true,
+  "deep_copy_remove": true,
+  "copy_failure_forks_metadata": true,
+  "cleanup": true,
+  "awk_16_exact_outputs": true
+}

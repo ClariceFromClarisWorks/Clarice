@@ -1,0 +1,10 @@
+{
+  "wget.clx": {
+    "bytes": 10100,
+    "sha256": "a3c18d06356d725cc440416111380da6b4cf9c708743ba9ac0f9c4388b623987"
+  },
+  "binary.dat": {
+    "bytes": 16384,
+    "sha256": "a1f259d4365ed4320c377ce26f5c8c56dcdc9a89e7b641bfd8eabfbbeac86654"
+  }
+}

@@ -1,0 +1,30 @@
+é File Edit Tests View
+Macintosh HD
+Clarice
+› nano-profile /tmp/np-empty
+A wget =0 /tmp/gp3so.clx http:2/192, 168.1. 112:8080/mp35/mano-profile.clx
+Downloaded 262.23 KB to /tmp/np36a.clx
+1008 262.23 KiB / 262.23 KiB 17.48 KiB/s
+/ › m /bin/.clx-nano-profile.old /tmp/np35-recovery.c/x
+/› appinstall replace /tmp/np36a.clx nano-profile
+appinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Dat
+a:bin:.clx-nano-profile.old
+appinstall: complete
+› nano-profile /tmp/np-empty
+/ › status runtime
+Runtime: heap=418906 largest=418718 image=198756 ticks=1597 load=85 owned-peak=7
+5112 remaining=0
+Nano
+ticks: 2175336 2175447 2175448 2175449 2175480 2175531 2175622 2175653 2175
+659 2175608 2175609 00;
+input batches=1 sum=11 max=11;
+initial-heap=423700
+Editor startup: draws=11 rows=56 text=2 copy=5 total=34 ticks
+Curses startup: refreshes=1 refresh-ticks=5 writes=15 bytes=458 feed-ticks=4
+Native ticks:
+al locs=125 FreeMem=1 NewPtr=42 reads=1 read=0 stdio=0 image-al loc=
+O meta-al loc=0
+Loader ticks: read=38 validate=1 imports=5 relocations=22 prepare=4 events=1 (ev
+ents included above)
+Verification ticks: mode=fast header=0 record=15 payload=0 metadata=1 structure=
+14 (structure included in relocations)

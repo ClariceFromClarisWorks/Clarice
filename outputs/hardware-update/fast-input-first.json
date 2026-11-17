@@ -1,0 +1,9 @@
+{
+  "characters": 47,
+  "seconds": 6.249029833000001,
+  "characters_per_second": 7.521167486159446,
+  "text": "echo FAST-0123456789-abcdefghijklmnopqrstuvwxyz",
+  "returncode": 0,
+  "response": "{\"ok\": true, \"queued\": 47, \"delivery\": \"unsubmitted line; verify screenshot before Return\", \"batch\": 4}\n",
+  "submitted": false
+}

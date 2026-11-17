@@ -1,0 +1,13 @@
+theme=0 repeat=0 new=0 ticks=188 worst=18 prepared=0 prepare=0 exposed=66 exposed_worst=13
+theme=0 repeat=0 new=1 ticks=180 worst=17 prepared=24 prepare=24 exposed=3 exposed_worst=1
+theme=0 repeat=1 new=0 ticks=194 worst=18 prepared=0 prepare=0 exposed=72 exposed_worst=14
+theme=0 repeat=1 new=1 ticks=178 worst=17 prepared=24 prepare=22 exposed=6 exposed_worst=1
+theme=0 repeat=2 new=0 ticks=195 worst=18 prepared=0 prepare=0 exposed=70 exposed_worst=13
+theme=0 repeat=2 new=1 ticks=179 worst=17 prepared=24 prepare=21 exposed=3 exposed_worst=1
+theme=1 repeat=0 new=0 ticks=202 worst=18 prepared=0 prepare=0 exposed=74 exposed_worst=14
+theme=1 repeat=0 new=1 ticks=186 worst=17 prepared=24 prepare=25 exposed=3 exposed_worst=1
+theme=1 repeat=1 new=0 ticks=191 worst=19 prepared=0 prepare=0 exposed=70 exposed_worst=14
+theme=1 repeat=1 new=1 ticks=185 worst=17 prepared=24 prepare=27 exposed=4 exposed_worst=1
+theme=1 repeat=2 new=0 ticks=186 worst=18 prepared=0 prepare=0 exposed=74 exposed_worst=13
+theme=1 repeat=2 new=1 ticks=187 worst=17 prepared=24 prepare=24 exposed=3 exposed_worst=1
+ARROWS checks=48 prepared_unchanged=12 failures=0 cancelled=0

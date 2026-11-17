@@ -55,6 +55,7 @@ const size_t keywords_len = sizeof(keywords) / sizeof(keywords[0]);
 
 static struct mrsh_parser *parser_create(void) {
 	struct mrsh_parser *parser = calloc(1, sizeof(struct mrsh_parser));
+	if (!parser) return NULL;
 	parser->fd = -1;
 	parser->pos.line = parser->pos.column = 1;
 	return parser;
@@ -62,19 +63,24 @@ static struct mrsh_parser *parser_create(void) {
 
 struct mrsh_parser *mrsh_parser_with_fd(int fd) {
 	struct mrsh_parser *parser = parser_create();
+	if (!parser) return NULL;
 	parser->fd = fd;
 	return parser;
 }
 
 struct mrsh_parser *mrsh_parser_with_data(const char *buf, size_t len) {
 	struct mrsh_parser *parser = parser_create();
-	mrsh_buffer_append(&parser->buf, buf, len);
-	mrsh_buffer_append_char(&parser->buf, '\0');
+	if (!parser) return NULL;
+	if (!mrsh_buffer_append(&parser->buf, buf, len) ||
+		!mrsh_buffer_append_char(&parser->buf, '\0')) {
+		mrsh_parser_destroy(parser); return NULL;
+	}
 	return parser;
 }
 
 struct mrsh_parser *mrsh_parser_with_buffer(struct mrsh_buffer *buf) {
 	struct mrsh_parser *parser = parser_create();
+	if (!parser) return NULL;
 	parser->in_buf = buf;
 	return parser;
 }
@@ -95,6 +101,7 @@ static ssize_t parser_peek_fd(struct mrsh_parser *parser, size_t size) {
 	size_t n_read = 0;
 	while (n_read < size) {
 		char *dst = mrsh_buffer_reserve(&parser->buf, READ_SIZE);
+		if (!dst) {parser_oom(parser); return -1;}
 
 		errno = 0;
 		ssize_t n = read(parser->fd, dst, READ_SIZE);
@@ -127,7 +134,7 @@ static ssize_t parser_peek_buffer(struct mrsh_parser *parser, size_t size) {
 		memcpy(&parser->buf, parser->in_buf, sizeof(struct mrsh_buffer));
 		memset(parser->in_buf, 0, sizeof(struct mrsh_buffer));
 	} else {
-		mrsh_buffer_append(&parser->buf, parser->in_buf->data, n_read);
+		if (!mrsh_buffer_append(&parser->buf, parser->in_buf->data, n_read)) {parser_oom(parser); return -1;}
 		parser->in_buf->len = 0;
 	}
 
@@ -135,6 +142,8 @@ static ssize_t parser_peek_buffer(struct mrsh_parser *parser, size_t size) {
 }
 
 size_t parser_peek(struct mrsh_parser *parser, char *buf, size_t size) {
+	if (buf) memset(buf, 0, size);
+	if (parser->oom) return 0;
 	if (size > parser->buf.len) {
 		size_t n_more = size - parser->buf.len;
 
@@ -154,7 +163,7 @@ size_t parser_peek(struct mrsh_parser *parser, char *buf, size_t size) {
 
 		if ((size_t)n_read < n_more) {
 			if (!parser->eof) {
-				mrsh_buffer_append_char(&parser->buf, '\0');
+				if (!mrsh_buffer_append_char(&parser->buf, '\0')) {parser_oom(parser); return 0;}
 				parser->eof = true;
 			}
 			size = parser->buf.len;
@@ -176,8 +185,11 @@ char parser_peek_char(struct mrsh_parser *parser) {
 size_t parser_read(struct mrsh_parser *parser, char *buf, size_t size) {
 	size_t n = parser_peek(parser, buf, size);
 	if (n > 0) {
+		if (memchr(parser->buf.data, '\0', n)) {
+			parser_set_error(parser, "unexpected end of input");
+			return 0;
+		}
 		for (size_t i = 0; i < n; ++i) {
-			assert(parser->buf.data[i] != '\0');
 			++parser->pos.offset;
 			if (parser->buf.data[i] == '\n') {
 				++parser->pos.line;
@@ -202,6 +214,7 @@ char parser_read_char(struct mrsh_parser *parser) {
 
 void read_continuation_line(struct mrsh_parser *parser) {
 	char c = parser_read_char(parser);
+	if (parser->oom) return;
 	assert(c == '\n');
 	parser->continuation_line = true;
 }
@@ -219,6 +232,21 @@ bool is_operator_start(char c) {
 	}
 }
 
+/* Shared across nested substitution parsers: recursion consumes the same
+ * Macintosh application stack even when a new parser object is used. */
+static unsigned int parser_depth;
+bool parser_enter(struct mrsh_parser *parser) {
+ if (parser_depth >= 32) {
+  parser_set_error(parser, "parser recursion limit (32)");
+  return false;
+ }
+ ++parser_depth;
+ return true;
+}
+void parser_leave(void) { assert(parser_depth > 0); --parser_depth; }
+
+void parser_oom(struct mrsh_parser *parser) { parser->oom=true; parser->error.pos=parser->pos; }
+
 void parser_set_error(struct mrsh_parser *parser, const char *msg) {
 	if (msg != NULL) {
 		if (parser->error.msg != NULL) {
@@ -228,6 +256,7 @@ void parser_set_error(struct mrsh_parser *parser, const char *msg) {
 		parser->here_documents.len = 0;
 		parser->error.pos = parser->pos;
 		parser->error.msg = strdup(msg);
+		if (!parser->error.msg) parser_oom(parser);
 	} else {
 		free(parser->error.msg);
 
@@ -238,10 +267,11 @@ void parser_set_error(struct mrsh_parser *parser, const char *msg) {
 
 const char *mrsh_parser_error(struct mrsh_parser *parser,
 		struct mrsh_position *pos) {
+	if (!parser) return "out of memory";
 	if (pos != NULL) {
 		*pos = parser->error.pos;
 	}
-	return parser->error.msg;
+	return parser->oom ? "out of memory" : parser->error.msg;
 }
 
 void parser_begin(struct mrsh_parser *parser) {
@@ -252,7 +282,7 @@ void parser_begin(struct mrsh_parser *parser) {
 // See section 2.3 Token Recognition
 static void next_symbol(struct mrsh_parser *parser) {
 	parser->has_sym = true;
-
+again:;
 	char c = parser_peek_char(parser);
 
 	if (c == '\0') {
@@ -286,8 +316,7 @@ static void next_symbol(struct mrsh_parser *parser) {
 
 	if (isblank(c)) {
 		parser_read_char(parser);
-		next_symbol(parser);
-		return;
+		goto again;
 	}
 
 	if (c == '#') {
@@ -298,14 +327,14 @@ static void next_symbol(struct mrsh_parser *parser) {
 			}
 			parser_read_char(parser);
 		}
-		next_symbol(parser);
-		return;
+		goto again;
 	}
 
 	parser->sym = TOKEN;
 }
 
 enum symbol_name get_symbol(struct mrsh_parser *parser) {
+	if (parser->oom) return EOF_TOKEN;
 	if (!parser->has_sym) {
 		next_symbol(parser);
 	}
@@ -329,6 +358,7 @@ bool newline(struct mrsh_parser *parser) {
 		return false;
 	}
 	char c = parser_read_char(parser);
+	if (parser->oom) return false;
 	assert(c == '\n');
 	consume_symbol(parser);
 	return true;
@@ -365,6 +395,25 @@ bool mrsh_parser_continuation_line(struct mrsh_parser *parser) {
 
 void mrsh_parser_reset(struct mrsh_parser *parser) {
 	parser->buf.len = 0;
+	parser->oom = false;
+	parser_set_error(parser,NULL);
 	parser->has_sym = false;
 	parser->pos = (struct mrsh_position){0};
+}
+
+bool parser_word_add(struct mrsh_parser *p,struct mrsh_array *a,struct mrsh_word *w) {
+ /* A NULL child can be an already-diagnosed syntax error, not a failed
+  * array allocation. Preserve its cause; real allocation failures stay sticky. */
+ if(!w){if(!p->error.msg&&!p->oom)parser_oom(p);return false;}
+ if(mrsh_array_add(a,w)>=0)return true;
+ mrsh_word_destroy(w);parser_oom(p);return false;
+}
+struct mrsh_word_string *parser_string(struct mrsh_parser *p,char *s,bool q) {
+ struct mrsh_word_string *w=s?mrsh_word_string_create(s,q):NULL;
+ if(!w){free(s);parser_oom(p);}return w;
+}
+struct mrsh_word_list *parser_words(struct mrsh_parser *p,struct mrsh_array *a,bool q) {
+ struct mrsh_word_list *w=mrsh_word_list_create(a,q);
+ if(!w){word_array_finish(a);parser_oom(p);}else memset(a,0,sizeof *a);
+ return w;
 }

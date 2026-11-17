@@ -1,0 +1,7 @@
+{
+  "handled_safely": false,
+  "reproduced": true,
+  "status": -6,
+  "evidence": "work/shell-elastic/parser-probe/parser.c:58:10: runtime error: member access within null pointer of type 'struct mrsh_parser'",
+  "scope": "host-only parser construction failure; no guest fault injected"
+}

@@ -44,6 +44,7 @@ struct mrsh_parser {
 	int fd; // can be -1
 	struct mrsh_buffer *in_buf; // can be NULL
 	bool eof;
+	bool oom;
 
 	struct mrsh_buffer buf; // internal read buffer
 	struct mrsh_position pos;
@@ -78,6 +79,13 @@ bool expect_token(struct mrsh_parser *parser, const char *str,
 char *read_token(struct mrsh_parser *parser, size_t len,
 	struct mrsh_range *range);
 void read_continuation_line(struct mrsh_parser *parser);
+/* These helpers consume the passed ownership on either success or failure. */
+bool parser_word_add(struct mrsh_parser *,struct mrsh_array *,struct mrsh_word *);
+struct mrsh_word_string *parser_string(struct mrsh_parser *,char *,bool);
+struct mrsh_word_list *parser_words(struct mrsh_parser *,struct mrsh_array *,bool);
+bool parser_enter(struct mrsh_parser *);
+void parser_leave(void);
+void parser_oom(struct mrsh_parser *parser);
 void parser_set_error(struct mrsh_parser *parser, const char *msg);
 void parser_begin(struct mrsh_parser *parser);
 bool is_operator_start(char c);

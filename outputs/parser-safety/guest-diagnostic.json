@@ -1,0 +1,2972 @@
+{
+  "build": 2026111542,
+  "kind": "diagnostic build; parser hooks not in normal builds",
+  "platform": "Snow Plus 4 MB, reported System 6.0.7; fixed uncapped FFWD about 15\u201316x",
+  "regressions": [
+    {
+      "name": "80 variables",
+      "passed": true
+    },
+    {
+      "name": "long variable name",
+      "passed": true
+    },
+    {
+      "name": "read 0",
+      "passed": true
+    },
+    {
+      "name": "read 1",
+      "passed": true
+    },
+    {
+      "name": "read 127",
+      "passed": true
+    },
+    {
+      "name": "read 128",
+      "passed": true
+    },
+    {
+      "name": "read 2047",
+      "passed": true
+    },
+    {
+      "name": "read 2048",
+      "passed": true
+    },
+    {
+      "name": "read 4096",
+      "passed": true
+    },
+    {
+      "name": "read 8192",
+      "passed": true
+    },
+    {
+      "name": "read 65536",
+      "passed": true
+    },
+    {
+      "name": "large substitution",
+      "passed": true
+    },
+    {
+      "name": "100 arguments",
+      "passed": true
+    },
+    {
+      "name": "subshell arguments",
+      "passed": true
+    },
+    {
+      "name": "substitution arguments",
+      "passed": true
+    },
+    {
+      "name": "function zero and restore",
+      "passed": true
+    },
+    {
+      "name": "nested expansion lifetime",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b':a:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'a:b:c:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'::\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'  a : : b  \\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'last'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b':a:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'a:b:c:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'::\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'  a : : b  \\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'last'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b':a:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'a:b:c:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'::\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'  a : : b  \\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'last'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b':a:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'a:b:c:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'::\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'  a : : b  \\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'last'",
+      "passed": true
+    },
+    {
+      "name": "focused batch 0",
+      "passed": true
+    },
+    {
+      "name": "focused batch 1",
+      "passed": true
+    },
+    {
+      "name": "focused batch 2",
+      "passed": true
+    },
+    {
+      "name": "focused batch 3",
+      "passed": true
+    },
+    {
+      "name": "focused batch 4",
+      "passed": true
+    },
+    {
+      "name": "focused batch 5",
+      "passed": true
+    },
+    {
+      "name": "focused batch 6",
+      "passed": true
+    },
+    {
+      "name": "focused batch 7",
+      "passed": true
+    },
+    {
+      "name": "compound-doc",
+      "passed": true
+    },
+    {
+      "name": "utility-files",
+      "passed": true
+    },
+    {
+      "name": "report",
+      "passed": true
+    },
+    {
+      "name": "compound-pipe",
+      "passed": true
+    },
+    {
+      "name": "scopes",
+      "passed": true
+    },
+    {
+      "name": "recovery",
+      "passed": true
+    },
+    {
+      "name": "config",
+      "passed": true
+    },
+    {
+      "name": "records",
+      "passed": true
+    },
+    {
+      "name": "control",
+      "passed": true
+    },
+    {
+      "name": "documents",
+      "passed": true
+    },
+    {
+      "name": "redirect",
+      "passed": true
+    },
+    {
+      "name": "arguments",
+      "passed": true
+    }
+  ],
+  "capacity": [
+    {
+      "name": "script",
+      "status": 0,
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "tokens",
+      "status": 0,
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "functions",
+      "status": 0,
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "arguments",
+      "status": 0,
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "recover",
+      "status": 2,
+      "passed": true,
+      "stderr": "sh: expected a compound list\n"
+    },
+    {
+      "name": "nested",
+      "status": 2,
+      "passed": true,
+      "stderr": "sh: parser recursion limit (32)\n"
+    },
+    {
+      "name": "andor",
+      "status": 2,
+      "passed": true,
+      "stderr": "sh: AND-OR tree depth limit (64)\n"
+    },
+    {
+      "name": "arithmetic",
+      "status": 2,
+      "passed": true,
+      "stderr": "sh: arithmetic tree depth limit (64)\n"
+    }
+  ],
+  "trials": [
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 1,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 2,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 3,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 4,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 6,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 7,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 8,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 9,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 10,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 11,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 12,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 13,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 14,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 15,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 16,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 17,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 18,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 19,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 19,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 21,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 22,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 23,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 24,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 25,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 26,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 27,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 28,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 29,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 30,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 31,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 32,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 33,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 34,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 35,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 36,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 37,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 38,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 39,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 40,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 41,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 42,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 43,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 44,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 45,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 45,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 47,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 48,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 49,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 49,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 51,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 52,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 52,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 53,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 54,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 55,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 56,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 58,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 59,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 60,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 61,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 62,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 63,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 64,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 65,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 66,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 67,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 68,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 68,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 69,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 70,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 71,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 72,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 73,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 74,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 75,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 77,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 78,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 79,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 80,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 81,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 82,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 83,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 83,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 84,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 85,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 86,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 87,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 88,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 89,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 90,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 91,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 92,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 93,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 94,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 95,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 96,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 97,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 98,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 99,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 134,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 135,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 136,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 137,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 138,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 139,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 140,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 134,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 135,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 136,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 137,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 138,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 139,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 140,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 126,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 127,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 128,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 129,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 130,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 131,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 132,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 133,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 134,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 135,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 136,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 137,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 138,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 139,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 140,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": true,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 132,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 133,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 134,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 135,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 137,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 138,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 139,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 140,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 1,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 2,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 3,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 4,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 6,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 9,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 10,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 11,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 12,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 13,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 14,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 15,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 15,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 15,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 16,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 17,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 18,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 19,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 19,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 21,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 22,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 23,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 24,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 25,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 26,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 27,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 28,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 29,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 30,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 31,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 32,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 33,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 34,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 35,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 36,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 37,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 38,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 39,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 40,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 41,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 42,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 43,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 44,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 45,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 45,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 47,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 48,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 49,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 49,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 51,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 52,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 52,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 53,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 54,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 55,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 56,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 58,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 59,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 60,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 61,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 62,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 63,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 64,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 65,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 66,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 67,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 68,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 68,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 69,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 70,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 71,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 72,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 73,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 74,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 75,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 77,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 78,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 79,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 80,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 81,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 82,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 83,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 83,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 84,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 85,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 86,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 87,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 88,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 89,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 90,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 91,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 92,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 93,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 94,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 95,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 96,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 97,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 98,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 99,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 103,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 104,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 105,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 106,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 107,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 108,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 109,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 110,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 110,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 111,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 112,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 113,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 114,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 115,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 116,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 117,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 117,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 118,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 119,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 120,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 121,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 122,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 123,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 124,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 125,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 126,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 127,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 128,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 129,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 130,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 131,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 132,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 132,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 133,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 134,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 135,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 137,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 138,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 140,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": true,
+      "status": 2,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    },
+    {
+      "calls": 141,
+      "injected": false,
+      "status": 0,
+      "retained_bytes": 0
+    }
+  ],
+  "memory": [
+    [
+      "391170",
+      "227664"
+    ],
+    [
+      "391166",
+      "227664"
+    ],
+    [
+      "391170",
+      "227664"
+    ],
+    [
+      "391170",
+      "227664"
+    ],
+    [
+      "391166",
+      "227664"
+    ]
+  ],
+  "cancellation": "Command-period cancelled; Ctrl+C requires existing patched Snow and remains for normal-build validation"
+}

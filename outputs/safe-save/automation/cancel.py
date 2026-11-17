@@ -1,0 +1,8 @@
+exec(open('work/safe-save/run.py').read().split("send(b'\\x18')")[0])
+send(b'hfsattr --locked on /tmp/save-note\r');time.sleep(2)
+send(b'saveprobe /tmp/save-note > /tmp/locked-result\r');time.sleep(3)
+send(b'echo $? >> /tmp/locked-result\rhfsattr --locked off /tmp/save-note\r');time.sleep(2)
+send(b'nano /tmp/save-note\r');time.sleep(12)
+send(b'unsaved ');time.sleep(1);send(b'\x1c');time.sleep(2)
+send(b'echo $? > /tmp/nano-cancel\rstatus runtime >> /tmp/nano-cancel\r');time.sleep(1)
+print('DONE lock and cancellation checks submitted')

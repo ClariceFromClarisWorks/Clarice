@@ -8,11 +8,11 @@ resource 'SIZE' (-1) {
 };
 
 resource 'DLOG' (140) {
- {40, 75, 314, 435}, dBoxProc, visible, noGoAway, 0x0, 140, "Preferences", 0
+ {36, 75, 306, 435}, dBoxProc, visible, noGoAway, 0x0, 140, "Preferences", 0
 };
 resource 'DITL' (140) {{
- {242, 260, 264, 340}, Button { enabled, "OK" };
- {242, 168, 264, 248}, Button { enabled, "Cancel" };
+ {238, 260, 260, 340}, Button { enabled, "OK" };
+ {238, 168, 260, 248}, Button { enabled, "Cancel" };
  {10, 16, 28, 340}, StaticText { disabled, "Clarice preferences" };
  {38, 16, 56, 125}, StaticText { disabled, "Installed font:" };
  {36, 132, 58, 338}, UserItem { enabled };
@@ -23,14 +23,22 @@ resource 'DITL' (140) {{
  {98, 16, 116, 338}, CheckBox { enabled, "White text on black" };
  {128, 16, 146, 125}, StaticText { disabled, "Scrollback:" };
  {126, 132, 148, 338}, UserItem { enabled };
- {158, 16, 176, 125}, StaticText { disabled, "Paging:" };
- {156, 132, 178, 338}, UserItem { enabled };
- {188, 16, 206, 125}, StaticText { disabled, "Render cache:" };
- {186, 132, 208, 338}, UserItem { enabled };
- {216, 16, 234, 338}, CheckBox { enabled, "Fill screen (keep menu bar)" }
+ {212, 16, 230, 338}, CheckBox { enabled, "Fill screen (keep menu bar)" };
+ {186, 16, 204, 125}, StaticText { disabled, "Control key:" };
+ {184, 132, 206, 338}, UserItem { enabled }
 }};
 resource 'ALRT' (141) {{100, 65, 220, 445}, 141, {OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1}, 0};
 resource 'DITL' (141) {{
  {78, 278, 100, 358}, Button {enabled, "OK"};
  {14, 70, 65, 360}, StaticText {disabled, "Use size 6-24 and columns 20-130 that fit the screen and selected font."}
 }};
+
+resource 'ALRT' (151) { {80,60,210,452},151,{OK,visible,silent,OK,visible,silent,OK,visible,silent,OK,visible,silent},0 };
+resource 'DITL' (151) {{
+ {92,300,114,372}, Button {enabled,"OK"};
+ {14,16,82,370}, StaticText {disabled,"^0"}
+}};
+
+#include "update/version.h"
+type 'CLUP' { longint; longint; integer; integer; integer; integer; };
+resource 'CLUP' (128) { 'CLU1', CLARICE_UPDATE_BUILD, 0x0600, 1, 1, 2 };

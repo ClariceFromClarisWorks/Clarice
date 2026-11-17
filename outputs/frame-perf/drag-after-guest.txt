@@ -1,0 +1,1 @@
+DRAG mode=0 duration=723 draws=6 paint=79 worst=14 detected-to-painted=14 start=104 end=60 heap_delta=0

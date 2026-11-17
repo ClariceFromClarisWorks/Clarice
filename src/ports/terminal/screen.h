@@ -10,7 +10,7 @@ static void screen_init(CliScreen *s,int rows,int cols){memset(s,0,sizeof *s);s-
 static void screen_erase(CliScreen *s,int row,int from,int to){memset(s->cells[row]+from,0,to-from);memset(s->attrs[row]+from,0,to-from);s->dirty[row]=1;}
 static void screen_scroll(CliScreen *s){memmove(s->cells,s->cells+1,(s->rows-1)*SCREEN_COLS);memmove(s->attrs,s->attrs+1,(s->rows-1)*SCREEN_COLS);screen_erase(s,s->rows-1,0,s->cols);memset(s->dirty,1,sizeof s->dirty);}
 static void screen_feed(CliScreen *s,const unsigned char *p,unsigned long n){
- while(n--){unsigned char c=*p++;int old=s->row;s->dirty[old]=1;
+ while(n--){unsigned char c=*p++;int old=s->row,oldcol=s->col,oldcursor=s->cursor;
  if(s->state==1){s->state=c=='['?2:0;s->private_mode=0;s->param=0;memset(s->params,0,sizeof s->params);continue;}
  if(s->state==2){if(c=='?'){s->private_mode=1;continue;}if(c>='0'&&c<='9'){int *v=&s->params[s->param];if(*v<1000)*v=*v*10+c-'0';continue;}if(c==';'){if(s->param<7)s->param++;continue;}
   int a=s->params[0],b=s->params[1];if(c=='H'||c=='f'){s->row=a?a-1:0;s->col=b?b-1:0;}
@@ -25,8 +25,10 @@ static void screen_feed(CliScreen *s,const unsigned char *p,unsigned long n){
  else if(c=='\n'){if(++s->row>=s->rows){screen_scroll(s);s->row=s->rows-1;}}
  else if(c=='\b'){if(s->col)s->col--;}
  else if(c=='\t'){s->col=(s->col+8)&~7;}
- else if(c>=32&&c!=127){s->cells[s->row][s->col]=c;s->attrs[s->row][s->col]=s->reverse;if(s->col<s->cols-1)s->col++;}
- if(s->row<0)s->row=0;if(s->row>=s->rows)s->row=s->rows-1;if(s->col<0)s->col=0;if(s->col>=s->cols)s->col=s->cols-1;s->dirty[s->row]=1;
+ else if(c>=32&&c!=127){if(s->cells[s->row][s->col]!=c||s->attrs[s->row][s->col]!=s->reverse)s->dirty[s->row]=1;s->cells[s->row][s->col]=c;s->attrs[s->row][s->col]=s->reverse;if(s->col<s->cols-1)s->col++;}
+ if(s->row<0)s->row=0;if(s->row>=s->rows)s->row=s->rows-1;if(s->col<0)s->col=0;if(s->col>=s->cols)s->col=s->cols-1;/* Parser parameters and attribute changes do not change existing pixels.
+    Only changed cells, erasures and visible cursor transitions need repaint. */
+ if(oldcursor!=s->cursor||((oldcursor||s->cursor)&&(old!=s->row||oldcol!=s->col))){s->dirty[old]=1;s->dirty[s->row]=1;}
  }
 }
 #endif

@@ -1,0 +1,17 @@
+Genuine picohttpparser, unmodified picohttpparser.c and picohttpparser.h.
+Upstream https://github.com/h2o/picohttpparser
+Revision dd573d8fa9264c646a400e96ce9f07dea6f156e4
+Copyright Kazuho Oku, Tokuhiro Matsuno, Daisuke Murase, Shigeo Mitsunari.
+Clarice uses the MIT option; full licence is at the top of both source files.
+
+The response parser and streaming chunk decoder are linked with section garbage
+collection; request parsing is not used. Target builds use NDEBUG to omit the
+unreachable corrupt-decoder-state assertion (not malformed-input checks).
+Host sanitizer tests keep assertions enabled. No SSE on the 68000 target.
+../../http-response.inc contains policy and native input/allocation adaptation.
+Headers grow from 512 to at most 8192 bytes, preserving the previous wire bound.
+Header descriptors are sized from the received lines and freed before file I/O.
+No permanent Core state or custom duplicate HTTP/chunk grammar.
+HTTP policy remains strict CRLF, status 200, identity content encoding, exactly
+one unambiguous Content-Length or HTTP/1.1 chunked Transfer-Encoding. No redirects,
+TLS, EOF-delimited bodies or interim responses in this contained batch.

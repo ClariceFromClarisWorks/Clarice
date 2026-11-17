@@ -1,0 +1,4 @@
+# Local paired media contains a private installation token. Do not publish.
+build/
+physical-session.jsonl
+SE-*.png

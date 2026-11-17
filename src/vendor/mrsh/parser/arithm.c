@@ -42,7 +42,7 @@ static bool parse_str(struct mrsh_parser *parser, const char *str) {
 	size_t len = strlen(str);
 
 	for (size_t i = 0; i < len; ++i) {
-		parser_peek(parser, NULL, i + 1);
+		if (parser_peek(parser, NULL, i + 1) < i + 1) return 0;
 
 		if (parser->buf.data[i] != str[i]) {
 			return false;
@@ -56,7 +56,7 @@ static bool parse_str(struct mrsh_parser *parser, const char *str) {
 static size_t peek_literal(struct mrsh_parser *parser) {
 	size_t i = 0;
 	while (true) {
-		parser_peek(parser, NULL, i + 1);
+		if (parser_peek(parser, NULL, i + 1) < i + 1) return 0;
 
 		char c = parser->buf.data[i];
 		// TODO: 0x, 0b prefixes
@@ -77,6 +77,7 @@ static struct mrsh_arithm_literal *literal(struct mrsh_parser *parser) {
 	}
 
 	char *str = strndup(parser->buf.data, len);
+	if (!str) { parser_oom(parser); return NULL; }
 	parser_read(parser, NULL, len);
 
 	char *end;
@@ -89,7 +90,9 @@ static struct mrsh_arithm_literal *literal(struct mrsh_parser *parser) {
 	}
 	free(str);
 
-	return mrsh_arithm_literal_create(value);
+	struct mrsh_arithm_literal *result = mrsh_arithm_literal_create(value);
+	if (!result) parser_oom(parser);
+	return result;
 }
 
 static struct mrsh_arithm_variable *variable(struct mrsh_parser *parser) {
@@ -99,10 +102,13 @@ static struct mrsh_arithm_variable *variable(struct mrsh_parser *parser) {
 	}
 
 	char *name = malloc(name_len + 1);
+	if (!name) { parser_oom(parser); return NULL; }
 	parser_read(parser, name, name_len);
 	name[name_len] = '\0';
 
-	return mrsh_arithm_variable_create(name);
+	struct mrsh_arithm_variable *result = mrsh_arithm_variable_create(name);
+	if (!result) { free(name); parser_oom(parser); }
+	return result;
 }
 
 static struct mrsh_arithm_expr *arithm_expr(struct mrsh_parser *parser);
@@ -137,7 +143,9 @@ static struct mrsh_arithm_unop *unop(struct mrsh_parser *parser) {
 		return NULL;
 	}
 
-	return mrsh_arithm_unop_create(type, body);
+	struct mrsh_arithm_unop *result = mrsh_arithm_unop_create(type, body);
+	if (!result) { mrsh_arithm_expr_destroy(body); parser_oom(parser); }
+	return result;
 }
 
 static struct mrsh_arithm_expr *paren(struct mrsh_parser *parser) {
@@ -158,7 +166,14 @@ static struct mrsh_arithm_expr *paren(struct mrsh_parser *parser) {
 	return expr;
 }
 
+static struct mrsh_arithm_expr *term_inner(struct mrsh_parser *parser);
 static struct mrsh_arithm_expr *term(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_arithm_expr *result = term_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_arithm_expr *term_inner(struct mrsh_parser *parser) {
 	struct mrsh_arithm_expr *expr = paren(parser);
 	if (expr != NULL) {
 		return expr;
@@ -188,6 +203,7 @@ static struct mrsh_arithm_expr *factor(struct mrsh_parser *parser) {
 		return NULL;
 	}
 
+	unsigned int links = 0;
 	/* This loop ensures we parse factors as left-assossiative */
 	while (true) {
 		consume_whitespace(parser);
@@ -201,18 +217,21 @@ static struct mrsh_arithm_expr *factor(struct mrsh_parser *parser) {
 		} else {
 			return expr;
 		}
+		if (++links > 64) { mrsh_arithm_expr_destroy(expr); parser_set_error(parser,"arithmetic tree depth limit (64)"); return NULL; }
 		consume_whitespace(parser);
 
 		/* Instead of calling ourselves recursively, we call term for
 		 * left-associativity */
 		struct mrsh_arithm_expr *right = term(parser);
 		if (right == NULL) {
+			mrsh_arithm_expr_destroy(expr);
 			parser_set_error(parser, "expected a term after *, / or % operator");
 			return NULL;
 		}
 
 		struct mrsh_arithm_binop *bo =
 			mrsh_arithm_binop_create(type, expr, right);
+		if (!bo) { mrsh_arithm_expr_destroy(expr); mrsh_arithm_expr_destroy(right); parser_oom(parser); return NULL; }
 		expr = &bo->expr;
 	}
 }
@@ -223,6 +242,7 @@ static struct mrsh_arithm_expr *addend(struct mrsh_parser *parser) {
 		return NULL;
 	}
 
+	unsigned int links = 0;
 	/* This loop ensures we parse addends as left-assossiative */
 	while (true) {
 		// consume_whitespace() is not needed here, since the call to factor()
@@ -235,23 +255,33 @@ static struct mrsh_arithm_expr *addend(struct mrsh_parser *parser) {
 		} else {
 			return expr;
 		}
+		if (++links > 64) { mrsh_arithm_expr_destroy(expr); parser_set_error(parser,"arithmetic tree depth limit (64)"); return NULL; }
 		consume_whitespace(parser);
 
 		/* Instead of calling ourselves recursively, we call factor for
 		 * left-associativity */
 		struct mrsh_arithm_expr *right = factor(parser);
 		if (right == NULL) {
+			mrsh_arithm_expr_destroy(expr);
 			parser_set_error(parser, "expected a factor after + or - operator");
 			return NULL;
 		}
 
 		struct mrsh_arithm_binop *bo =
 			mrsh_arithm_binop_create(type, expr, right);
+		if (!bo) { mrsh_arithm_expr_destroy(expr); mrsh_arithm_expr_destroy(right); parser_oom(parser); return NULL; }
 		expr = &bo->expr;
 	}
 }
 
+static struct mrsh_arithm_expr *shift_inner(struct mrsh_parser *parser);
 static struct mrsh_arithm_expr *shift(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_arithm_expr *result = shift_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_arithm_expr *shift_inner(struct mrsh_parser *parser) {
 	struct mrsh_arithm_expr *left = addend(parser);
 	if (left == NULL) {
 		return NULL;
@@ -277,10 +307,18 @@ static struct mrsh_arithm_expr *shift(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_arithm_binop *bo = mrsh_arithm_binop_create(type, left, right);
+	if (!bo) { mrsh_arithm_expr_destroy(left); mrsh_arithm_expr_destroy(right); parser_oom(parser); return NULL; }
 	return &bo->expr;
 }
 
+static struct mrsh_arithm_expr *comp_inner(struct mrsh_parser *parser);
 static struct mrsh_arithm_expr *comp(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_arithm_expr *result = comp_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_arithm_expr *comp_inner(struct mrsh_parser *parser) {
 	struct mrsh_arithm_expr *left = shift(parser);
 	if (left == NULL) {
 		return NULL;
@@ -308,10 +346,18 @@ static struct mrsh_arithm_expr *comp(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_arithm_binop *bo = mrsh_arithm_binop_create(type, left, right);
+	if (!bo) { mrsh_arithm_expr_destroy(left); mrsh_arithm_expr_destroy(right); parser_oom(parser); return NULL; }
 	return &bo->expr;
 }
 
+static struct mrsh_arithm_expr *equal_inner(struct mrsh_parser *parser);
 static struct mrsh_arithm_expr *equal(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_arithm_expr *result = equal_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_arithm_expr *equal_inner(struct mrsh_parser *parser) {
 	struct mrsh_arithm_expr *left = comp(parser);
 	if (left == NULL) {
 		return NULL;
@@ -334,6 +380,7 @@ static struct mrsh_arithm_expr *equal(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_arithm_binop *bo = mrsh_arithm_binop_create(type, left, right);
+	if (!bo) { mrsh_arithm_expr_destroy(left); mrsh_arithm_expr_destroy(right); parser_oom(parser); return NULL; }
 	return &bo->expr;
 }
 
@@ -341,7 +388,7 @@ static bool parse_binop(struct mrsh_parser *parser, const char *str) {
 	size_t len = strlen(str);
 
 	for (size_t i = 0; i < len; ++i) {
-		parser_peek(parser, NULL, i + 1);
+		if (parser_peek(parser, NULL, i + 1) < i + 1) return 0;
 
 		if (parser->buf.data[i] != str[i]) {
 			return false;
@@ -349,7 +396,7 @@ static bool parse_binop(struct mrsh_parser *parser, const char *str) {
 	}
 
 	// Make sure we don't parse "&&" as "&"
-	parser_peek(parser, NULL, len + 1);
+	if (parser_peek(parser, NULL, len + 1) < len + 1) return false;
 	switch (parser->buf.data[len]) {
 	case '|':
 	case '&':
@@ -372,7 +419,9 @@ static struct mrsh_arithm_expr *binop(struct mrsh_parser *parser,
 	}
 	consume_whitespace(parser);
 
+	if (!parser_enter(parser)) { mrsh_arithm_expr_destroy(left); return NULL; }
 	struct mrsh_arithm_expr *right = binop(parser, type, str, term);
+	parser_leave();
 	if (right == NULL) {
 		mrsh_arithm_expr_destroy(left);
 		parser_set_error(parser, "expected a term");
@@ -380,6 +429,7 @@ static struct mrsh_arithm_expr *binop(struct mrsh_parser *parser,
 	}
 
 	struct mrsh_arithm_binop *bo = mrsh_arithm_binop_create(type, left, right);
+	if (!bo) { mrsh_arithm_expr_destroy(left); mrsh_arithm_expr_destroy(right); parser_oom(parser); return NULL; }
 	return &bo->expr;
 }
 
@@ -403,7 +453,14 @@ static struct mrsh_arithm_expr *logical_or(struct mrsh_parser *parser) {
 	return binop(parser, MRSH_ARITHM_BINOP_DOR, "||", logical_and);
 }
 
+static struct mrsh_arithm_expr *ternary_inner(struct mrsh_parser *parser);
 static struct mrsh_arithm_expr *ternary(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_arithm_expr *result = ternary_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_arithm_expr *ternary_inner(struct mrsh_parser *parser) {
 	struct mrsh_arithm_expr *expr = logical_or(parser);
 	if (expr == NULL) {
 		return NULL;
@@ -433,6 +490,7 @@ static struct mrsh_arithm_expr *ternary(struct mrsh_parser *parser) {
 
 	struct mrsh_arithm_cond *c =
 		mrsh_arithm_cond_create(condition, body, else_part);
+	if (!c) { mrsh_arithm_expr_destroy(else_part); parser_oom(parser); goto error_else_part; }
 	return &c->expr;
 
 error_else_part:
@@ -448,7 +506,7 @@ static bool peek_assign_op(struct mrsh_parser *parser, size_t *offset,
 	size_t len = strlen(str);
 
 	for (size_t i = 0; i < len; ++i) {
-		parser_peek(parser, NULL, *offset + i + 1);
+		if (parser_peek(parser, NULL, *offset + i + 1) < *offset + i + 1) return false;
 
 		if (parser->buf.data[*offset + i] != str[i]) {
 			return false;
@@ -495,6 +553,7 @@ static struct mrsh_arithm_expr *assignment(struct mrsh_parser *parser) {
 	// offset is now the offset till the end of the operator
 
 	char *name = malloc(name_len + 1);
+	if (!name) { parser_oom(parser); return NULL; }
 	parser_read(parser, name, name_len);
 	name[name_len] = '\0';
 
@@ -508,10 +567,18 @@ static struct mrsh_arithm_expr *assignment(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_arithm_assign *a = mrsh_arithm_assign_create(op, name, value);
+	if (!a) { free(name); mrsh_arithm_expr_destroy(value); parser_oom(parser); return NULL; }
 	return &a->expr;
 }
 
+static struct mrsh_arithm_expr *arithm_expr_inner(struct mrsh_parser *parser);
 static struct mrsh_arithm_expr *arithm_expr(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_arithm_expr *result = arithm_expr_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_arithm_expr *arithm_expr_inner(struct mrsh_parser *parser) {
 	struct mrsh_arithm_expr *expr = assignment(parser);
 	if (expr != NULL) {
 		return expr;
@@ -521,6 +588,7 @@ static struct mrsh_arithm_expr *arithm_expr(struct mrsh_parser *parser) {
 }
 
 struct mrsh_arithm_expr *mrsh_parse_arithm_expr(struct mrsh_parser *parser) {
+	if (!parser) return NULL;
 	consume_whitespace(parser);
 
 	struct mrsh_arithm_expr *expr = arithm_expr(parser);
@@ -528,7 +596,7 @@ struct mrsh_arithm_expr *mrsh_parse_arithm_expr(struct mrsh_parser *parser) {
 		return NULL;
 	}
 
-	if (parser_peek_char(parser) != '\0') {
+	if (parser_peek_char(parser) != '\0' || mrsh_parser_error(parser, NULL)) {
 		parser_set_error(parser,
 			"garbage at the end of the arithmetic expression");
 		mrsh_arithm_expr_destroy(expr);

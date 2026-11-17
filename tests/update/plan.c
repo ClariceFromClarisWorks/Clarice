@@ -1,0 +1,4 @@
+#include <assert.h>
+#include <stdio.h>
+#include "../../src/update/plan.h"
+int main(void){UpdatePlan p={0},q;unsigned char bytes[UPDATE_PLAN_SIZE],bad[UPDATE_PLAN_SIZE];strcpy(p.target,"Disk:Test:Clarice");p.build=2;p.original_id=42;p.resource_size=100;strcpy(p.stage,"Disk:Test:.cu-0000002a-00000002.new");strcpy(p.backup,"Disk:Test:.cu-0000002a-00000002.old");p.data_crc=0x01234567;p.resource_crc=0x89abcdef;memset(p.extra,0xa5,16);p.created=123;p.modified=456;assert(!update_plan_encode(&p,bytes));assert(!update_plan_decode(bytes,&q));assert(!memcmp(&p,&q,sizeof p));for(unsigned i=0;i<sizeof bytes;i++){memcpy(bad,bytes,sizeof bad);bad[i]^=1;assert(update_plan_decode(bad,&q));}strcpy(p.backup,"Other:Test:.cu-0000002a-00000002.old");assert(update_plan_encode(&p,bytes));strcpy(p.backup,p.target);assert(update_plan_encode(&p,bytes));puts("PASS: plan roundtrip, every byte corruption, unrelated/cross-volume/target backup rejected");}

@@ -1,0 +1,6 @@
+Using multiversal interfaces
+/src/work/hardware-update/system.hda: contains 1 HFS partition
+Volume name is "Sys6Unix"
+Volume was created on Sun Nov  8 05:23:44 2026
+Volume was last modified on Sat Nov 14 15:35:36 2026
+Volume has 8280576 bytes free

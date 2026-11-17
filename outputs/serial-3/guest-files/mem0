@@ -1,0 +1,2 @@
+Runtime: heap=404662 largest=404382 image=0 ticks=0 load=0 owned-peak=0 remaining=0
+Loader ticks: read=0 validate=0 imports=0 relocations=0 prepare=0 (successful execution only)

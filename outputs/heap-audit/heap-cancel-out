@@ -1,0 +1,6 @@
+499
+RECOVERY:0
+Runtime: heap=408006 largest=268048 image=136800 ticks=1120 load=410 owned-peak=124769 remaining=0
+Loader ticks: read=50 validate=233 imports=3 relocations=14 prepare=99 events=19 (events included above)
+Verification ticks: mode=full header=0 record=11 payload=233 metadata=0 structure=9 (structure included in relocations)
+STDOUT_RESTORED

@@ -1,0 +1,146 @@
+[
+  {
+    "action": [
+      "type",
+      "nano /tmp/ux-nano.txt"
+    ],
+    "start": 0.038173291,
+    "end": 6.095136583,
+    "response": "{\"ok\": true, \"queued\": 21, \"delivery\": \"verify screenshot; not an application acknowledgement\"}\n"
+  },
+  {
+    "action": [
+      "key",
+      "return"
+    ],
+    "start": 6.0965135,
+    "end": 6.38396325,
+    "response": "{\"ok\": true, \"queued\": 1, \"delivery\": \"verify screenshot; not an application acknowledgement\"}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-00.png"
+    ],
+    "start": 6.384377,
+    "end": 11.77183625,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-00.png\", \"seconds\": 5.333471874997485, \"guest_capture_ticks\": 1, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"2deb4e754b16a517f29cada18ab4ad285be3ad6a6de4431714498c4da4140ff6\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-01.png"
+    ],
+    "start": 12.277523833,
+    "end": 14.10780025,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-01.png\", \"seconds\": 1.7685227080073673, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"a6cc8c3dc3a06979b865a1bdb3c6b3ad25d8ad51dd551e9bd95929ced3ae3301\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-02.png"
+    ],
+    "start": 14.613211375,
+    "end": 16.327667416,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-02.png\", \"seconds\": 1.656462625003769, \"guest_capture_ticks\": 3, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"a6cc8c3dc3a06979b865a1bdb3c6b3ad25d8ad51dd551e9bd95929ced3ae3301\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-03.png"
+    ],
+    "start": 16.833443,
+    "end": 18.226233791,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-03.png\", \"seconds\": 1.3278872499940917, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"74a0c0fee9bb984a4e5b2ab44638206722aa407c33dc60ba4319b1b1444c9a5a\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-04.png"
+    ],
+    "start": 18.731640875,
+    "end": 20.754351791,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-04.png\", \"seconds\": 1.880397125001764, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"09c00bc40a50214923d8ce49f83ac83721815e6101343f988b86656d52727f06\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-05.png"
+    ],
+    "start": 21.25565825,
+    "end": 22.521971875,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-05.png\", \"seconds\": 1.2020127919968218, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"8ce8754d747ebe17e69fd225a5dc5b11ee6ff4dd43e4f8f29f8fc87af702c1bf\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-06.png"
+    ],
+    "start": 23.027601291,
+    "end": 24.227684833,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-06.png\", \"seconds\": 1.1341760830109706, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"4209348f405b074ccc8705578938faf60fc0f5e8f54829eaed725f8f489a336d\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-07.png"
+    ],
+    "start": 24.729283125,
+    "end": 25.976756875,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-07.png\", \"seconds\": 1.186339334002696, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"6822c5e1c519847783a1284cf10fbd6d2858a989dcd86ca27db16983370e7390\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-08.png"
+    ],
+    "start": 26.479673875,
+    "end": 27.745400583,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-08.png\", \"seconds\": 1.20918000000529, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"6822c5e1c519847783a1284cf10fbd6d2858a989dcd86ca27db16983370e7390\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-09.png"
+    ],
+    "start": 28.250977916,
+    "end": 29.371538041,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-09.png\", \"seconds\": 1.0558777090045623, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"6822c5e1c519847783a1284cf10fbd6d2858a989dcd86ca27db16983370e7390\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-10.png"
+    ],
+    "start": 29.877139583,
+    "end": 31.062122583,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-10.png\", \"seconds\": 1.1297115839988692, \"guest_capture_ticks\": 2, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"6822c5e1c519847783a1284cf10fbd6d2858a989dcd86ca27db16983370e7390\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-11.png"
+    ],
+    "start": 31.567672041,
+    "end": 32.655768541,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-11.png\", \"seconds\": 1.026286499996786, \"guest_capture_ticks\": 1, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"6822c5e1c519847783a1284cf10fbd6d2858a989dcd86ca27db16983370e7390\", \"bytes\": 21888}\n"
+  },
+  {
+    "action": [
+      "type",
+      "z"
+    ],
+    "start": 33.161437833,
+    "end": 33.538455541,
+    "response": "{\"ok\": true, \"queued\": 1, \"delivery\": \"verify screenshot; not an application acknowledgement\"}\n"
+  },
+  {
+    "action": [
+      "shot",
+      "outputs/loader-fast2/ready8-input.png"
+    ],
+    "start": 34.544354541,
+    "end": 36.622421333,
+    "response": "{\"ok\": true, \"action\": \"capture\", \"file\": \"/Users/williamprestwich/Documents/ChatGPT/Clarice/outputs/loader-fast2/ready8-input.png\", \"seconds\": 2.022178499988513, \"guest_capture_ticks\": 1, \"guest_free_heap_with_snapshot\": 4310, \"frame_sha256\": \"00db71e1b60d998df4c1785ca99fd2d16c2e513d53cdfd94ca910b7e8de6b533\", \"bytes\": 21888}\n"
+  }
+]

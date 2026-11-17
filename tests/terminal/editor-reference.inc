@@ -1,0 +1,5 @@
+static void draw_reference(void){CliScreen *s=editor_screen;SetPort(&prompt_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);
+ for(int row=0;row<s->rows;row++)if(force_draw||s->dirty[row]){Rect r,d;char line[SCREEN_COLS];SetRect(&r,0,0,s->cols*cell_w,line_h);EraseRect(&r);for(int x=0;x<s->cols;x++)line[x]=s->cells[row][x]?s->cells[row][x]:' ';MoveTo(0,font_ascent);if(mono)DrawText(line,0,s->cols);else for(int x=0;x<s->cols;x++){MoveTo(x*cell_w,font_ascent);DrawChar(line[x]);}
+ for(int x=0;x<s->cols;x++)if(s->attrs[row][x]^(s->cursor&&row==s->row&&x==s->col&&!background)){Rect c;SetRect(&c,x*cell_w,0,(x+1)*cell_w,line_h);InvertRect(&c);}
+ d=r;OffsetRect(&d,TEXT_LEFT,TEXT_TOP+row*line_h);SetPort(win);ForeColor(blackColor);BackColor(whiteColor);CopyBits(&prompt_port.portBits,&win->portBits,&r,&d,srcCopy,0);SetPort(&prompt_port);s->dirty[row]=0;}
+ SetPort(win);dirty=force_draw=0;last_paint=TickCount();nano_painted();}

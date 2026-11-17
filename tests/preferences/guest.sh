@@ -4,7 +4,8 @@ prefs size 12
 prefs colours dark
 prefs scrollback 32
 prefs renderer c
-prefs paging 100
+echo removed-renderer:$?
+prefs paging 100 # obsolete setting must return usage status
 prefs columns 40
 cat /etc/clarice/clarice.conf > /tmp/prefs-cli.conf
 prefs size 0
@@ -15,7 +16,8 @@ prefs columns 999
 echo invalid-columns:$?
 prefs font NoSuchInstalledFont
 echo missing-font:$?
-prefs renderer asm
+prefs cache on
+echo removed-cache:$?
 prefs fill
 cat /etc/clarice/clarice.conf > /tmp/prefs-fill.conf
 echo PREFERENCES-CLI-END

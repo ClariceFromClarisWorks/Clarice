@@ -1,0 +1,1 @@
+PASS: 45 upstream tail/sort comparisons; four 360 KB spilling sorts; three spill cancellations; disk-output failure cleanup; same-file sort; tee overwrite/append; tail follow append/cancel; explicit unsupported options and allocation bound.

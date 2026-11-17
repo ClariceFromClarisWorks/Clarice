@@ -1,0 +1,1 @@
+PASS 29,260 glyph-plane oracle cases; failed allocation/retry, purge, invalidation, phase fallback, ownership and 1000 paint acquisitions;24320 bytes

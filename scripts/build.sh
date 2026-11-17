@@ -5,10 +5,15 @@ IMAGE=ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae81958
 mkdir -p "$ROOT/outputs/namespace"
 mkdir -p "$ROOT/work/build"
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
-for name in files inspect misc; do
+for name in files inspect misc free; do
  m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -Wall -Wextra -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/$name.c -o /src/work/build/$name-main.o
+ extra=""
+ if [ "$name" = inspect ]; then
+  m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -I/src/src/vendor/musl-fnmatch -I/src/src/ports/fnmatch-include -c /src/src/ports/fnmatch-byte.c -o /src/work/build/fnmatch-byte.o
+  extra=/src/work/build/fnmatch-byte.o
+ fi
  libgcc=$(m68k-apple-macos-gcc -print-libgcc-file-name)
- m68k-apple-macos-ld -r --gc-sections -u clarice_main /src/work/build/$name-main.o "$libgcc" -o /src/work/build/$name.o
+ m68k-apple-macos-ld -r --gc-sections -u clarice_main /src/work/build/$name-main.o $extra "$libgcc" -o /src/work/build/$name.o
 done
 m68k-apple-macos-gcc -m68000 -Os -Wall -Wextra -Werror -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/serial.c -o /src/work/build/serial.o
 m68k-apple-macos-gcc -m68000 -Os -ffreestanding -fno-common -Wall -Wextra -Werror -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/core.c -o /src/work/build/core-main.o
@@ -17,12 +22,19 @@ m68k-apple-macos-gcc -m68000 -Os -ffreestanding -fno-common -Wall -Wextra -Werro
 m68k-apple-macos-ld -r /src/work/build/core-main.o /src/work/build/created.o /src/work/build/decimal.o -o /src/work/build/core.o
 '
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/core.o" "$ROOT/work/build/core.clx"
-python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/serial.o" "$ROOT/work/build/serial.clx"
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/serial.o" "$ROOT/work/build/serial.clx" --runtime 1.0
 for name in files inspect misc; do python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"; done
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/free.o" "$ROOT/work/build/free.clx" --runtime 1.4
 "$ROOT/scripts/build-ports.sh"
 "$ROOT/scripts/build-awk.sh"
 "$ROOT/scripts/build-pipelines.sh"
-python3 "$ROOT/scripts/command-resource.py"
+"$ROOT/scripts/build-kermit.sh"
+sh "$ROOT/scripts/build-network.sh"
+sh "$ROOT/scripts/build-ftp.sh"
+sh "$ROOT/scripts/build-telnet.sh"
+for name in ipconfig ping wget; do cp "$ROOT/work/network/$name.clx" "$ROOT/work/build/$name.clx"; done
+cp "$ROOT/work/ftp/ftp.clx" "$ROOT/work/telnet/telnet.clx" "$ROOT/work/build/"
+sh "$ROOT/scripts/build-update.sh"
 
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
 cmake -S /src/src -B /src/work/build -DCMAKE_TOOLCHAIN_FILE=/Retro68-build/toolchain/m68k-apple-macos/cmake/retro68.toolchain.cmake
@@ -36,3 +48,5 @@ humount
 ' >> "$ROOT/outputs/namespace/build.log" 2>&1
 cp "$ROOT/work/build/Clarice.bin" "$ROOT/work/build/Clarice.dsk" "$ROOT/outputs/namespace/"
 cat "$ROOT/outputs/namespace/build.log"
+
+python3 "$ROOT/scripts/package-utilities.py"

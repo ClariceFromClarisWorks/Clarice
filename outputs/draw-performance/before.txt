@@ -1,0 +1,11 @@
+DRAW_PROFILE cols=80 rows=26 cell=6 line=11 font=4/9 inverse=0
+mode=0 kind=ls100 total=256 paint=54 frames=5 compose=3 shift=8 raster=43 copy=8 bar=0 worst=0 heap=424352
+mode=0 kind=output total=190 paint=167 frames=24 compose=14 shift=61 raster=91 copy=9 bar=0 worst=7 heap=424352
+mode=0 kind=history total=232 paint=232 frames=24 compose=20 shift=53 raster=73 copy=5 bar=86 worst=11 heap=424352
+mode=1 kind=ls100 total=197 paint=56 frames=4 compose=3 shift=8 raster=22 copy=23 bar=0 worst=0 heap=394634
+mode=1 kind=output total=382 paint=359 frames=24 compose=13 shift=57 raster=82 copy=205 bar=0 worst=15 heap=394634
+mode=1 kind=history total=288 paint=287 frames=24 compose=18 shift=3 raster=156 copy=33 bar=77 worst=20 heap=394634
+mode=2 kind=ls100 total=187 paint=53 frames=4 compose=1 shift=8 raster=19 copy=25 bar=0 worst=0 heap=394634
+mode=2 kind=output total=353 paint=329 frames=24 compose=16 shift=37 raster=74 copy=202 bar=0 worst=14 heap=394634
+mode=2 kind=history total=272 paint=271 frames=24 compose=17 shift=2 raster=139 copy=34 bar=77 worst=17 heap=394634
+heap_delta=-1334 (native raster includes copy)

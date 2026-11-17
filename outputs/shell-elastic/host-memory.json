@@ -1,0 +1,25 @@
+{
+  "scope": "host adapter allocations only, excludes AST/libc; 64-bit host sizes, not physical SE measurements",
+  "cases": [
+    {
+      "source": ":",
+      "baseline1540": "ALLOC calls=2 peak=8472 remaining=0 fault=0",
+      "elastic1541": "ALLOC calls=4 peak=250 remaining=0 fault=0"
+    },
+    {
+      "source": "echo hello",
+      "baseline1540": "ALLOC calls=3 peak=8472 remaining=0 fault=0",
+      "elastic1541": "ALLOC calls=6 peak=259 remaining=0 fault=0"
+    },
+    {
+      "source": "x=small; echo \"$x\"",
+      "baseline1540": "ALLOC calls=5 peak=8472 remaining=0 fault=0",
+      "elastic1541": "ALLOC calls=9 peak=283 remaining=0 fault=0"
+    },
+    {
+      "source": "read x; echo \"$x\"",
+      "baseline1540": "ALLOC calls=6 peak=8472 remaining=0 fault=0",
+      "elastic1541": "ALLOC calls=14 peak=375 remaining=0 fault=0"
+    }
+  ]
+}

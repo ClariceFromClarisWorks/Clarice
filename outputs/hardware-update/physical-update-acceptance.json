@@ -1,0 +1,30 @@
+{
+  "environment": "physical Macintosh SE, user-reported 4 MB/System 6.0.8/MultiFinder; accelerator bypassed; earlier CPU code 1",
+  "target": "Macintosh HD:Clarice Update",
+  "from_build": 2026111402,
+  "to_build": 2026111502,
+  "source": "http://<MACBOOK_LAN_IP>:8080/update.txt",
+  "command": "clarice update",
+  "package_bytes": 941568,
+  "download_display_seconds": 58,
+  "download_display_kb_per_second": 15.85,
+  "stage_readback_ticks": 2113,
+  "automatic_relaunch": true,
+  "followup_check_installed_build": 2026111502,
+  "pwd_result": "/",
+  "previous_path": "Macintosh HD:.cu-00000a12-78c4020e.old",
+  "previous_catalog_data_bytes": 0,
+  "previous_catalog_resource_bytes": 941423,
+  "other_recovery_apps_preserved": [
+    "Macintosh HD:Clarice",
+    "Macintosh HD:Clarice Dev"
+  ],
+  "limitation": "SEControl heartbeat timed out during final handoff; user reopened SEControl only, then remote screenshots and commands verified the relaunched build. No manual Clarice restart was requested. Physical forks were not exported for host comparison; Snow extracted fork comparison passed.",
+  "evidence": [
+    "se-update-confirm.png",
+    "se-update-relaunch.png",
+    "se-update-backup.png",
+    "http-server.log",
+    "snow-full-integrity.json"
+  ]
+}

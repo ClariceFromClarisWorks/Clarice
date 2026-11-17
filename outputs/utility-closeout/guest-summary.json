@@ -1,0 +1,26 @@
+{
+  "build": 2026111546,
+  "guest": "Snow Plus / 4 MB / reported System 6.0.7",
+  "physical_acceptance": false,
+  "ls_operands": 100,
+  "df_operands": 100,
+  "profile_cancel": 130,
+  "prompt_cancel": 130,
+  "repeated_find_heap": [
+    [
+      396578,
+      393318,
+      0
+    ],
+    [
+      396576,
+      393318,
+      0
+    ],
+    [
+      396578,
+      393318,
+      0
+    ]
+  ]
+}

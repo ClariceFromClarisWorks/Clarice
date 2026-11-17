@@ -1,0 +1,131 @@
+{
+  "old": {
+    "memory": [
+      [
+        "366258",
+        "365980"
+      ],
+      [
+        "366160",
+        "365884"
+      ],
+      [
+        "366066",
+        "365788"
+      ],
+      [
+        "365968",
+        "365692"
+      ],
+      [
+        "365874",
+        "365596"
+      ]
+    ],
+    "heap_drop": 384,
+    "portable_remaining": [
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "raw": "Runtime: heap=366258 largest=365980 image=136736 ticks=366 load=329 owned-peak=26541 remaining=0\nLoader ticks: read=51 validate=239 imports=3 relocations=14 prepare=12 events=21 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=239 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=366160 largest=365884 image=136736 ticks=348 load=311 owned-peak=26541 remaining=0\nLoader ticks: read=51 validate=230 imports=3 relocations=14 prepare=3 events=11 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=366066 largest=365788 image=136736 ticks=347 load=311 owned-peak=26541 remaining=0\nLoader ticks: read=52 validate=229 imports=3 relocations=15 prepare=2 events=17 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=229 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=365968 largest=365692 image=136736 ticks=348 load=312 owned-peak=26541 remaining=0\nLoader ticks: read=52 validate=231 imports=2 relocations=15 prepare=2 events=17 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=1 structure=9 (structure included in relocations)\nRuntime: heap=365874 largest=365596 image=136736 ticks=347 load=311 owned-peak=26541 remaining=0\nLoader ticks: read=52 validate=230 imports=2 relocations=15 prepare=2 events=14 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\n",
+    "output": "0 0\n0 0\n0 0\n0 0\n0 0\n",
+    "sha256": "4d4d9c0e6059945ea2aa01d1c4cbdb6926b3c3e39e86a1e12b59f1d02c2ed1ab"
+  },
+  "new": {
+    "memory": [
+      [
+        "365776",
+        "365500"
+      ],
+      [
+        "365682",
+        "365404"
+      ],
+      [
+        "365584",
+        "365308"
+      ],
+      [
+        "365490",
+        "365212"
+      ],
+      [
+        "365392",
+        "365116"
+      ]
+    ],
+    "heap_drop": 384,
+    "portable_remaining": [
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "raw": "Runtime: heap=365776 largest=365500 image=136800 ticks=481 load=311 owned-peak=67723 remaining=0\nLoader ticks: read=51 validate=230 imports=3 relocations=14 prepare=4 events=13 (events included above)\nVerification ticks: mode=full header=0 record=9 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=365682 largest=365404 image=136800 ticks=488 load=319 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=3 relocations=14 prepare=12 events=15 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=365584 largest=365308 image=136800 ticks=488 load=318 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=11 events=16 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=365490 largest=365212 image=136800 ticks=488 load=319 owned-peak=67723 remaining=0\nLoader ticks: read=51 validate=229 imports=3 relocations=15 prepare=11 events=16 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=229 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=365392 largest=365116 image=136800 ticks=489 load=319 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=231 imports=2 relocations=15 prepare=11 events=18 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=231 metadata=0 structure=9 (structure included in relocations)\n",
+    "output": "30 512\n30 512\n30 512\n30 512\n30 512\n",
+    "sha256": "8350b03afdc1d3808f89fb65a544b4e9c1959e8caf00c1b5ce7a2f07ae497b6a"
+  },
+  "repeat": {
+    "memory": [
+      [
+        "409226",
+        "366956"
+      ],
+      [
+        "409126",
+        "366956"
+      ],
+      [
+        "409032",
+        "366938"
+      ],
+      [
+        "408938",
+        "367066"
+      ],
+      [
+        "408850",
+        "367084"
+      ],
+      [
+        "408746",
+        "367084"
+      ],
+      [
+        "408658",
+        "367084"
+      ],
+      [
+        "408554",
+        "367084"
+      ],
+      [
+        "408466",
+        "367084"
+      ],
+      [
+        "408358",
+        "367084"
+      ]
+    ],
+    "heap_drop": 868,
+    "portable_remaining": [
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "raw": "Runtime: heap=409226 largest=366956 image=136800 ticks=568 load=389 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=82 events=14 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=409126 largest=366956 image=136800 ticks=495 load=326 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=3 relocations=14 prepare=19 events=11 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=409032 largest=366938 image=136800 ticks=499 load=326 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=19 events=13 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=408938 largest=367066 image=136800 ticks=501 load=331 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=24 events=16 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=408850 largest=367084 image=136800 ticks=560 load=384 owned-peak=67723 remaining=0\nLoader ticks: read=51 validate=229 imports=3 relocations=15 prepare=77 events=15 (events included above)\nVerification ticks: mode=full header=0 record=9 payload=229 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=408746 largest=367084 image=136800 ticks=478 load=309 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=2 events=14 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=408658 largest=367084 image=136800 ticks=482 load=309 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=2 events=15 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=408554 largest=367084 image=136800 ticks=479 load=309 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=2 relocations=15 prepare=2 events=16 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=10 (structure included in relocations)\nRuntime: heap=408466 largest=367084 image=136800 ticks=482 load=309 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=3 relocations=14 prepare=2 events=17 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\nRuntime: heap=408358 largest=367084 image=136800 ticks=480 load=309 owned-peak=67723 remaining=0\nLoader ticks: read=50 validate=230 imports=3 relocations=14 prepare=2 events=14 (events included above)\nVerification ticks: mode=full header=0 record=10 payload=230 metadata=0 structure=9 (structure included in relocations)\n"
+  },
+  "interpretation": "Pre-existing native retention, approximately 96 bytes per invocation; origin and long-run bound unresolved. Not attributable to the elastic import change by this matched comparison."
+}

@@ -1,0 +1,23 @@
+
+tests/http/progress.c: PASS: width 1..200, current/total IEC sizes, unknown/zero totals, overflow-safe percentages, failure/final rows, throttle, redirected suppression
+
+
+tests/http/host.c: PASS: binary, fragmented headers/body, zero length, truncation, status, length bounds, duplicates, encoding, framing, existing file, write/close/rename/create failures, cancel, timeout, cleanup recovery path
+
+
+tests/update/confirmation.c: PASS: Enter/y/yes, n/no, EOF, truncation, invalid and binary responses
+
+
+tests/preferences/format.c: PASS: roundtrip, CR/LF, whitespace, all fields, invalid values, overflow, binary, size cap, duplicate keys
+
+
+tests/terminal/control.c: PASS: all modifier modes, ASCII control letters/punctuation, physical Control always available
+
+input-layout.py: PASS: wrapped input and cursor bounds across widths 3..130 and 0..1023 input bytes
+PASS: escaped, quoted and chained line continuation cases
+
+paste-host.py: PASS: bounded atomic insertion, CR/LF normalization, unsupported controls, allocation/read failure, typed overflow latch
+
+selection-host.py: PASS selection delta: forward/reverse/anchor crossing/stationary, 1–130 columns, 1–37 rows, native and cache
+
+scroll-guard.py: PASS: 1560 cursor positions/view heights; prompt and stale hidden rows cannot disable history pixel scrolling; cursors inside moved area still block it

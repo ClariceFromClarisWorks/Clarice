@@ -1,0 +1,38 @@
+[
+  {
+    "seconds_after_confirmation_return": 5.15,
+    "screen": "outputs/physical-perf/relaunch6-01.png"
+  },
+  {
+    "seconds_after_confirmation_return": 10.29,
+    "screen": "outputs/physical-perf/relaunch6-02.png"
+  },
+  {
+    "seconds_after_confirmation_return": 15.44,
+    "screen": "outputs/physical-perf/relaunch6-03.png"
+  },
+  {
+    "seconds_after_confirmation_return": 20.59,
+    "screen": "outputs/physical-perf/relaunch6-04.png"
+  },
+  {
+    "seconds_after_confirmation_return": 25.74,
+    "screen": "outputs/physical-perf/relaunch6-05.png"
+  },
+  {
+    "seconds_after_confirmation_return": 30.87,
+    "screen": "outputs/physical-perf/relaunch6-06.png"
+  },
+  {
+    "seconds_after_confirmation_return": 36.01,
+    "screen": "outputs/physical-perf/relaunch6-07.png"
+  },
+  {
+    "seconds_after_confirmation_return": 41.15,
+    "screen": "outputs/physical-perf/relaunch6-08.png"
+  },
+  {
+    "seconds_after_confirmation_return": 46.29,
+    "screen": "outputs/physical-perf/relaunch6-09.png"
+  }
+]

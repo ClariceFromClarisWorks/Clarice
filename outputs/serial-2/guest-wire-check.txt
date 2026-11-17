@@ -1,0 +1,1 @@
+PASS: exact ordered commands/DEL/Ctrl+C; pwd/ls/echo/cat, single echo, erase result, interrupt and reconnect markers.

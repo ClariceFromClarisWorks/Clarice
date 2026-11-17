@@ -1,0 +1,1 @@
+PASS: bounded strict manifest, every truncation, trailing/unknown fields, filename traversal/control, integer overflow

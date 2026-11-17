@@ -1,0 +1,648 @@
+{
+  "build": 2026111543,
+  "platform": "Snow Plus / 4 MB / reported System 6.0.7, fixed uncapped FFWD about 15\u201316x",
+  "cases": [
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "0\n<>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<prepost>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<prepost>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<a>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<preapost>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<preapost>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<aa>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<a>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<a>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "3\n<a b>\n<>\n<c>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "3\n<prea b>\n<>\n<cpost>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "3\n<prea b>\n<>\n<cpost>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "5\n<a b>\n<>\n<ca b>\n<>\n<c>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "3\n<a b>\n<>\n<c>\n",
+      "stderr": ""
+    },
+    {
+      "name": "quoted-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "3\n<a b>\n<>\n<c>\n",
+      "stderr": ""
+    },
+    {
+      "name": "empty-quote",
+      "passed": true,
+      "status": 0,
+      "stdout": "2\n<a>\n<>\n",
+      "stderr": ""
+    },
+    {
+      "name": "empty-quote",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n<a>\n",
+      "stderr": ""
+    },
+    {
+      "name": "empty-quote",
+      "passed": true,
+      "status": 0,
+      "stdout": "2\n<a>\n<suffix>\n",
+      "stderr": ""
+    },
+    {
+      "name": "scalar-at",
+      "passed": true,
+      "status": 0,
+      "stdout": "a:b\n",
+      "stderr": ""
+    },
+    {
+      "name": "local-export",
+      "passed": true,
+      "status": 0,
+      "stdout": "local:unset\nexported:private\nreassigned:changed\n",
+      "stderr": ""
+    },
+    {
+      "name": "export-unset",
+      "passed": true,
+      "status": 0,
+      "stdout": "\nchild:\nchild:value\n",
+      "stderr": ""
+    },
+    {
+      "name": "prefix-export",
+      "passed": true,
+      "status": 0,
+      "stdout": "child:new\nparent:old\nstill:unset\n",
+      "stderr": ""
+    },
+    {
+      "name": "export-assignment",
+      "passed": true,
+      "status": 0,
+      "stdout": "two words *\n",
+      "stderr": ""
+    },
+    {
+      "name": "export-subshell",
+      "passed": true,
+      "status": 0,
+      "stdout": "inner:parent\nouter:unset\n",
+      "stderr": ""
+    },
+    {
+      "name": "unset-export",
+      "passed": true,
+      "status": 0,
+      "stdout": "unset\n",
+      "stderr": ""
+    },
+    {
+      "name": "unset-function",
+      "passed": true,
+      "status": 0,
+      "stdout": "yes\nstatus:127\n",
+      "stderr": "command not found: f\n"
+    },
+    {
+      "name": "function-inheritance",
+      "passed": true,
+      "status": 0,
+      "stdout": "child:127\nparent\n",
+      "stderr": "command not found: f\n"
+    },
+    {
+      "name": "export-roundtrip",
+      "passed": true,
+      "status": 0,
+      "stdout": "a'b\n",
+      "stderr": ""
+    },
+    {
+      "name": "at-separate-groups",
+      "passed": true,
+      "status": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "name": "at-braced-group",
+      "passed": true,
+      "status": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "name": "function-exports",
+      "passed": true,
+      "status": 0,
+      "stdout": "unset:visible\nchanged:visible\n",
+      "stderr": ""
+    },
+    {
+      "name": "function-prefix",
+      "passed": true,
+      "status": 0,
+      "stdout": "new\nold:kept:value\nunset:value\n",
+      "stderr": ""
+    },
+    {
+      "name": "function-args",
+      "passed": true,
+      "status": 0,
+      "stdout": "<>\n<two words>\n7:parent\n",
+      "stderr": ""
+    },
+    {
+      "name": "source-scope",
+      "passed": true,
+      "status": 0,
+      "stdout": "6:sourced\nfunction\nunset:visible\n",
+      "stderr": ""
+    },
+    {
+      "name": "source-args",
+      "passed": true,
+      "status": 0,
+      "stdout": "<parent>\n4:changed\n",
+      "stderr": ""
+    },
+    {
+      "name": "subshell-scope",
+      "passed": true,
+      "status": 0,
+      "stdout": "inner:yes\nchanged\nouter:unset\noriginal\n",
+      "stderr": ""
+    },
+    {
+      "name": "printf-strings",
+      "passed": true,
+      "status": 0,
+      "stdout": "[     abc][xy   ][Z]\none:two\nthree:\n",
+      "stderr": ""
+    },
+    {
+      "name": "printf-integers",
+      "passed": true,
+      "status": 0,
+      "stdout": "-12 32 42 12 1f 1F\n[+00012][0x00001f][0][][-00012]\n",
+      "stderr": ""
+    },
+    {
+      "name": "printf-escapes",
+      "passed": true,
+      "status": 0,
+      "stdout": "A\tok\na\tb\ncenddone\n",
+      "stderr": ""
+    },
+    {
+      "name": "printf-binary",
+      "passed": true,
+      "status": 0,
+      "stdout": "A\u0000BC\u0000D\u0000  a\tb",
+      "stderr": ""
+    },
+    {
+      "name": "printf-missing",
+      "passed": true,
+      "status": 0,
+      "stdout": ":0:\u0000\n-ok-\n",
+      "stderr": ""
+    },
+    {
+      "name": "printf-character-number",
+      "passed": true,
+      "status": 0,
+      "stdout": "65 42\n",
+      "stderr": ""
+    },
+    {
+      "name": "printf-invalid",
+      "passed": true,
+      "status": 0,
+      "stdout": "0\nstatus:1\nstatus:2\n",
+      "stderr": "printf: invalid or out-of-range number\nsh: printf: unsupported conversion\n"
+    },
+    {
+      "name": "test-negation",
+      "passed": true,
+      "status": 0,
+      "stdout": "0\n0\n1\n",
+      "stderr": ""
+    },
+    {
+      "name": "test-groups",
+      "passed": true,
+      "status": 0,
+      "stdout": "0\n0\n1\n",
+      "stderr": ""
+    },
+    {
+      "name": "test-operands",
+      "passed": true,
+      "status": 0,
+      "stdout": "0\n0\n1\n0\n",
+      "stderr": ""
+    },
+    {
+      "name": "test-numbers",
+      "passed": true,
+      "status": 0,
+      "stdout": "2\n0\n2\n2\n",
+      "stderr": "sh: test: integer expected\nsh: test: integer expected\nsh: test: integer expected\n"
+    },
+    {
+      "name": "test-files",
+      "passed": true,
+      "status": 0,
+      "stdout": "0\n0\n0\n1\n0\n",
+      "stderr": ""
+    },
+    {
+      "name": "at-count",
+      "passed": true,
+      "status": 0,
+      "stdout": "3:0\n",
+      "stderr": ""
+    },
+    {
+      "name": "at-fallback",
+      "passed": true,
+      "status": 0,
+      "stdout": "<a b>\n<>\n<c>\n<a b>\n<>\n<c>\n",
+      "stderr": ""
+    },
+    {
+      "name": "at-empty-fallback",
+      "passed": true,
+      "status": 0,
+      "stdout": "<>\n",
+      "stderr": ""
+    }
+  ],
+  "regressions": [
+    {
+      "name": "80 variables",
+      "passed": true
+    },
+    {
+      "name": "long variable name",
+      "passed": true
+    },
+    {
+      "name": "read 0",
+      "passed": true
+    },
+    {
+      "name": "read 1",
+      "passed": true
+    },
+    {
+      "name": "read 127",
+      "passed": true
+    },
+    {
+      "name": "read 128",
+      "passed": true
+    },
+    {
+      "name": "read 2047",
+      "passed": true
+    },
+    {
+      "name": "read 2048",
+      "passed": true
+    },
+    {
+      "name": "read 4096",
+      "passed": true
+    },
+    {
+      "name": "read 8192",
+      "passed": true
+    },
+    {
+      "name": "read 65536",
+      "passed": true
+    },
+    {
+      "name": "large substitution",
+      "passed": true
+    },
+    {
+      "name": "100 arguments",
+      "passed": true
+    },
+    {
+      "name": "subshell arguments",
+      "passed": true
+    },
+    {
+      "name": "substitution arguments",
+      "passed": true
+    },
+    {
+      "name": "function zero and restore",
+      "passed": true
+    },
+    {
+      "name": "nested expansion lifetime",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b':a:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'a:b:c:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'::\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'  a : : b  \\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ':' b'last'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b':a:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'a:b:c:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'::\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'  a : : b  \\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ': ' b'last'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b':a:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'a:b:c:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'::\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'  a : : b  \\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs ' ' b'last'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b':a:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'a:b:c:\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'::\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'  a : : b  \\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true
+    },
+    {
+      "name": "read ifs '' b'last'",
+      "passed": true
+    },
+    {
+      "name": "focused-0",
+      "passed": true
+    },
+    {
+      "name": "focused-1",
+      "passed": true
+    },
+    {
+      "name": "focused-2",
+      "passed": true
+    },
+    {
+      "name": "focused-3",
+      "passed": true
+    },
+    {
+      "name": "focused-4",
+      "passed": true
+    },
+    {
+      "name": "focused-5",
+      "passed": true
+    },
+    {
+      "name": "focused-6",
+      "passed": true
+    },
+    {
+      "name": "focused-7",
+      "passed": true
+    },
+    {
+      "name": "compound-doc",
+      "passed": true
+    },
+    {
+      "name": "utility-files",
+      "passed": true
+    },
+    {
+      "name": "report",
+      "passed": true
+    },
+    {
+      "name": "compound-pipe",
+      "passed": true
+    },
+    {
+      "name": "scopes",
+      "passed": true
+    },
+    {
+      "name": "recovery",
+      "passed": true
+    },
+    {
+      "name": "config",
+      "passed": true
+    },
+    {
+      "name": "records",
+      "passed": true
+    },
+    {
+      "name": "control",
+      "passed": true
+    },
+    {
+      "name": "documents",
+      "passed": true
+    },
+    {
+      "name": "redirect",
+      "passed": true
+    },
+    {
+      "name": "arguments",
+      "passed": true
+    }
+  ],
+  "native_awk_export_visibility": true,
+  "memory": [
+    [
+      "314612",
+      "225530"
+    ],
+    [
+      "314612",
+      "225530"
+    ],
+    [
+      "314608",
+      "225530"
+    ]
+  ],
+  "cancellation": "CANCEL:130\n",
+  "restoration": "STDOUT_RESTORED\n",
+  "error_restoration": "STDERR_RESTORED\ntest-volume unmount: Mac OS error -47: File or directory is busy or not empty\n"
+}

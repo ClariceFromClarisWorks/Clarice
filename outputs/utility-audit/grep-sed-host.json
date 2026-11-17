@@ -1,0 +1,12 @@
+[
+  {
+    "tool": "grep",
+    "bytes": 65537,
+    "stats": "PORT_STATS peak=208272 remaining=0\n"
+  },
+  {
+    "tool": "sed",
+    "bytes": 65537,
+    "stats": "PORT_STATS peak=246494 remaining=0\n"
+  }
+]

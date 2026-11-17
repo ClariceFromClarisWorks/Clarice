@@ -1,0 +1,1 @@
+Terminal writer equivalence: 3000 randomized chunked cases PASS (5 widths, 3 retention limits, controls/high bytes/wrap/anchored history, ordinary and serial input).

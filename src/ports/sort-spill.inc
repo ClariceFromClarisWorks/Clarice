@@ -1,6 +1,7 @@
 /* Clarice bounded external merge driver; upstream sbase owns comparison/options.
  * Binary merge levels prevent quadratic repeated merging of the entire input.
  * All names are runtime-owned and removed on normal return, error or Ctrl+C. */
+#include <stdint.h>
 #define SORT_LINES 128
 #define SORT_BYTES 16384
 #define SORT_LEVELS 16
@@ -29,9 +30,14 @@ static void sort_flush(void){
 static void spill_add(FILE *fp){
  char *line=NULL;size_t cap=0;ssize_t n;
  while((n=getline(&line,&cap,fp))>0){
-  size_t len=n;int newline=line[len-1]!='\n';if(len+newline>16384)enprintf(2,"sort: line exceeds 16384-byte limit\n");
-  if(pending_count&&(pending_count==SORT_LINES||pending_bytes+len+newline>SORT_BYTES))sort_flush();
-  struct line *entry=&pending[pending_count++];entry->data=emalloc(len+newline+1);memcpy(entry->data,line,len);if(newline)entry->data[len++]='\n';entry->data[len]=0;entry->len=len;pending_bytes+=len;
+  size_t len=n;int newline=line[len-1]!='\n';
+  /* The batch budget is not a record-size limit. Preserve economical packed
+     copies for small records; transfer the getline buffer for oversized ones. */
+  if(newline){if(len>SIZE_MAX-2)enprintf(2,"sort: line size overflow\n");if(cap<len+2){line=erealloc(line,len+2);cap=len+2;}line[len++]='\n';line[len]=0;}
+  if(pending_count&&(pending_count==SORT_LINES||len>SORT_BYTES-pending_bytes))sort_flush();
+  struct line *entry=&pending[pending_count++];entry->len=len;
+  if(len>=SORT_BYTES){entry->data=line;line=NULL;cap=0;pending_bytes=len;sort_flush();}
+  else {entry->data=emalloc(len+1);memcpy(entry->data,line,len+1);pending_bytes+=len;}
  }
  free(line);if(ferror(fp))enprintf(2,"sort read:");
 }

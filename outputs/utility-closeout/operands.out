@@ -1,0 +1,17 @@
+LS:0
+DF:1
+BAD_LS:2
+FIND:0
+Runtime: heap=396284 largest=390598 image=6440 ticks=92 load=39 owned-peak=0 remaining=0
+Loader ticks: read=14 validate=13 imports=1 relocations=0 prepare=2 events=2 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=13 metadata=0 structure=0 (structure included in relocations)
+FIND:0
+Runtime: heap=396282 largest=390598 image=6440 ticks=92 load=39 owned-peak=0 remaining=0
+Loader ticks: read=13 validate=12 imports=1 relocations=1 prepare=2 events=1 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=12 metadata=0 structure=1 (structure included in relocations)
+FIND:0
+Runtime: heap=396284 largest=390598 image=6440 ticks=92 load=39 owned-peak=0 remaining=0
+Loader ticks: read=14 validate=13 imports=1 relocations=0 prepare=2 events=2 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=13 metadata=0 structure=0 (structure included in relocations)
+CLEANUP:0
+OPERANDS_DONE

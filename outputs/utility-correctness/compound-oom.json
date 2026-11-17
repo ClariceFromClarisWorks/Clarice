@@ -1,0 +1,110 @@
+[
+  {
+    "failure": 1,
+    "injected": true,
+    "status": 2,
+    "passed": true
+  },
+  {
+    "failure": 2,
+    "injected": true,
+    "status": 2,
+    "passed": true
+  },
+  {
+    "failure": 3,
+    "injected": true,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 4,
+    "injected": true,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 5,
+    "injected": true,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 6,
+    "injected": true,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 7,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 8,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 9,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 10,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 11,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 12,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 13,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 14,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 15,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 16,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 17,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  },
+  {
+    "failure": 18,
+    "injected": false,
+    "status": 0,
+    "passed": true
+  }
+]

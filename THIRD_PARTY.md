@@ -1,15 +1,15 @@
 # Third-party notices
 
-Clarice combines original shell/file utilities with source ports. The grep, sed, wc, head, tail, cut, tr, sort, uniq, tee, basename and dirname commands use **sbase**, not GNU grep or GNU sed. The development tree also contains a One True Awk port; nano is an experimental source port; vi remains planned.
+Clarice combines original shell/file utilities with source ports. The grep, sed, wc, head, tail, cut, tr, sort, uniq, tee, basename, dirname, cmp, cksum, sleep, printenv, mktemp and dd commands use **sbase**, not GNU grep or GNU sed. The development tree also contains a One True Awk port; nano is an experimental source port; vi remains planned.
 
-- **sbase grep, sed, wc, head, tail, cut, tr, sort, uniq, tee, basename and dirname**, the suckless developers and individual authors listed in `src/vendor/sbase/LICENSE` and source headers, MIT/ISC and retained per-file notices. Pinned commit `c546c3a5724c81cee9a11d816a38ccdf17472129` from https://git.suckless.org/sbase . Imported source is preserved verbatim. `scripts/prepare-ports.py` stages cooperative polling, explicit regex-execution errors and preservation of errno while printing diagnostics; `scripts/prepare-pipelines.py` adds help/cooperative polling, fixes the tail line-scan boundary and sort empty-input check, disables unsupported tail -m/tee -i options, and connects sort to the bounded merge driver in `src/ports/sort-spill.inc`; `src/ports/` supplies the Macintosh runtime. The source snapshot includes manual pages and the relevant utility/UTF helpers.
+- **sbase grep, sed, wc, head, tail, cut, tr, sort, uniq, tee, basename, dirname, cmp, cksum, sleep, printenv, mktemp and dd**, the suckless developers and individual authors listed in `src/vendor/sbase/LICENSE` and source headers, MIT/ISC and retained per-file notices. Pinned commit `c546c3a5724c81cee9a11d816a38ccdf17472129` from https://git.suckless.org/sbase . Imported source is preserved verbatim. `scripts/prepare-ports.py` stages cooperative polling, explicit regex-execution errors and preservation of errno while printing diagnostics; `scripts/prepare-pipelines.py` adds help/cooperative polling, fixes the tail line-scan boundary and sort empty-input check, disables unsupported tail -m/tee -i options, adds exclusive-create mktemp and elastic printenv environment adapters, checks dd size arithmetic and corrects seek to use output blocks, and connects sort to the bounded merge driver in `src/ports/sort-spill.inc`; `src/ports/` supplies the Macintosh runtime. `scripts/prepare-utf.py` stages allocation-free ASCII fast paths in the upstream rune I/O and whitespace helpers; Unicode decoding and source notices remain unchanged. The source snapshot includes manual pages and the relevant utility/UTF helpers.
 - **musl regular expression engine**, Rich Felker and contributors, with TRE-derived portions by Ville Laurikari. Pinned commit `7813e9119eb5fe681b6750b8a033a0490bca0941` from https://git.musl-libc.org/git/musl . Full copyright inventory is `src/vendor/musl-regex/COPYRIGHT`; TRE's notices remain in the source files. The standalone header in `src/ports/include/regex.h` replaces musl-internal type includes. The build stages cancellation hooks separately and uses untranslated C-locale error strings.
 
 Source revisions are also recorded in `src/vendor/USERLAND-SOURCES.json`. The awk entry identifies the source now bundled in the development tree; historical guest failures and later fixes are distinguished in the test reports.
 
 - **One True Awk**, Lucent Technologies and the authors/contributors credited in `src/vendor/awk/LICENSE`, `README.md` and source headers; pinned revision `72e9b56caddb4a6f8d1405315a5183c26b8650a4` from https://github.com/onetrueawk/awk . The original notices and licence accompany the source. `scripts/prepare-awk.py` stages Macintosh limits and cooperative polling separately; `src/ports/awk-runtime.c` supplies the adapter. The staged integer formatter fixes the guest runtime’s missing 64-bit printf support; host and Plus guest verification are recorded in outputs/userland-next.
 
-- **mrsh parser and AST**, copyright (c) 2018 emersion, MIT. Sources and full licence are in `src/vendor/mrsh/`. Imported from https://github.com/emersion/mrsh at commit `4c81598721bc5eeb28f9faa818b3102d0471b7f6`. This is a parser/AST adaptation, not an unmodified port of the complete mrsh shell. Local changes fix AND/OR associativity, arithmetic unary precedence/ternary whitespace and compiler portability; the original upstream execution/process layer is not included. `src/sh.inc` implements the bounded Macintosh adapter.
+- **mrsh parser and AST**, copyright (c) 2018 emersion, MIT. Sources and full licence are in `src/vendor/mrsh/`. Imported from https://github.com/emersion/mrsh at commit `4c81598721bc5eeb28f9faa818b3102d0471b7f6`. This is a parser/AST adaptation, not an unmodified port of the complete mrsh shell. Local changes fix AND/OR associativity, arithmetic unary precedence/ternary whitespace, parameter-token context (so `$#` after another expansion is not consumed as a comment), empty assignment boundaries, optional compound-command redirections with AST ownership/copying, and compiler portability; the original upstream execution/process layer is not included. `src/sh.inc` implements the bounded Macintosh adapter.
 - **Sys6 Mono** (retained historical source asset; no longer used for terminal rendering) is a monochrome 8×14 bitmap derivative of **JetBrains Mono**, copyright 2020 The JetBrains Mono Project Authors. The source TTF and SIL Open Font License are in `assets/font/`; a copy of the licence is in `licenses/JetBrainsMono-OFL.txt`. No font installation is required. `scripts/make-font.py` records the conversion. Original upstream: https://github.com/JetBrains/JetBrainsMono .
 - **Retro68 runtime**, copyright Wolfgang Thaller and contributors, GPL v3 or later with GCC Runtime Library Exception 3.1. Full licence and exception are in `licenses/`. The pinned Docker build is recorded in `scripts/build.sh`. Upstream: https://github.com/autc04/Retro68 . Runtime sources are not modified by this project.
 - **Multiversal interfaces/glue**, copyright 2019 Wolfgang Thaller, MIT. Full notice: `licenses/multiversal-MIT.txt`. Upstream: https://github.com/autc04/multiversal .
@@ -31,3 +31,39 @@ The development/test emulator is Snow by Thomas W. (https://github.com/twvd/snow
 ## Physical-device application disk
 
 The optional v0.4.0 HDA contains an unchanged Apple_Driver43 SCSI driver partition, copyright Apple, from the existing local formatted device template. It is separate from Clarice, not covered by Clarice or upstream utility licences. `outputs/release-0.4.0/HDA-PROVENANCE.json` records its checksum. The HFS partition is newly formatted; no System/Finder/ROM, user files or free-space contents from the template are copied.
+
+## Development checkpoint additions (no new release)
+
+- **E-Kermit 1.8**, Frank da Cruz / Trustees of Columbia University, revised
+  three-clause BSD. Unmodified upstream source and COPYING are retained in
+  `src/ports/ekermit/upstream`; bounds/transport adaptations and archive checksum
+  are recorded in `src/ports/ekermit/README.md`.
+- **Macinclaude MacTCP adapter**, Bart Decrem, MIT; pinned revision and local
+  changes in `src/commands/vendor/mactcp/README.md`, full LICENSE beside source.
+- **SEControl** is separate development infrastructure. Its MiniVNC-derived
+  mouse technique and integration are GPL-3.0-or-later, with Marcio Teixeira's
+  notices and source revision in `tools/se-control/vendor/`. Macinclaude network
+  files retain their MIT licence. None of this helper's mouse code is linked
+  into Clarice.
+- Nano's accepted generated target configuration and GNU helper headers are
+  preserved under `src/ports/nano/prepared/`, with original notices and GPL COPYING.
+  `scripts/prepare-nano.py` verifies nano 9.2's pinned source archive and restores
+  this preparation before the separately maintained adaptation scripts run.
+- Updater SHA-256 reference source retains sbase's public-domain notices and
+  revision in `src/update/vendor/README.md`; current LAN updates use CRC-32.
+
+## Networking in the 0.5.0 candidate
+
+Telnet uses genuine libtelnet by Sean Middleditch and contributors, with its
+public-domain dedication and authors retained under
+`src/commands/vendor/libtelnet`. `README.clarice` records provenance and bounded
+allocation adaptations. The native transport and terminal renderer are separate.
+
+HTTP response and chunk parsing uses pristine picohttpparser by Tokuhiro Matsuno,
+Kazuho Oku and contributors, revision dd573d8fa9264c646a400e96ce9f07dea6f156e4,
+under its MIT option; source, notices and licence are in
+`src/commands/vendor/picohttpparser`. Both licences are included in the offline kit.
+
+FTP and the bounded VT100 model remain independently implemented adapters; they
+are not claimed to be ftplib or libvterm ports. The release review records the
+upstream comparison and supported scope.

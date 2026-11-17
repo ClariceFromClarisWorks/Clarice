@@ -1,0 +1,3 @@
+PASS traversal: two volumes, raw/encoded names, nested directories, links, fork sizes, allocation failures, cancellation, catalog error, missing root, cleanup/recovery
+PASS: explicit refs, case/spaces, indexed lookup, absent/ambiguous/invalid/error fail closed
+PASS: regression rejects previous zero-reference behavior

@@ -1,0 +1,14 @@
+Physical stock SE / 4 MB / System 6.0.8, diagnostic 2026111708.
+Three paired trials; total ticks for 24 large-jump redraws, not milliseconds.
+Transcribed from complete saved guest reports displayed by awk; source screenshots adjacent.
+Columns: trial, baseline listing/dense, selected direct listing/dense.
+Light: 0 283/554 280/490; 1 283/556 285/486; 2 282/551 281/490.
+Dark: 0 330/620 330/537; 1 327/620 328/539; 2 325/623 328/537.
+Medians light: listing283->281, dense554->490 (11.55% fewer ticks).
+Medians dark: listing327->328, dense620->537 (13.39% fewer ticks).
+Light per23 staged frames: compose306/308/307, present37/35/33, invert0.
+Dark selected per23 staged frames: compose306/307/307, present34/33/34, invert45/48/46.
+Dark rejected notSrcCopy control: dense630/624/632; presentation168/165/171.
+After explicit cache disposal: light heap_delta44; dark heap_delta0.
+Earlier interim commentary's light486 figure was one trial, not the final median490.
+No new human visual acceptance; pixel equality does not establish absence of tearing.

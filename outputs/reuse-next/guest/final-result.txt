@@ -1,0 +1,41 @@
+/tmp/mktemp-before:0
+Runtime: heap=385310 largest=379442 image=10380 ticks=102 load=54 owned-peak=5716 remaining=0
+Loader ticks: read=20 validate=20 imports=2 relocations=1 prepare=2 events=2 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=20 metadata=0 structure=1 (structure included in relocations)
+/tmp/mktemp-final:0
+Runtime: heap=385256 largest=379442 image=11264 ticks=103 load=60 owned-peak=5716 remaining=0
+Loader ticks: read=21 validate=25 imports=2 relocations=1 prepare=2 events=4 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=25 metadata=0 structure=1 (structure included in relocations)
+dir:0
+Runtime: heap=385376 largest=379442 image=11264 ticks=94 load=67 owned-peak=5716 remaining=0
+Loader ticks: read=20 validate=33 imports=2 relocations=1 prepare=2 events=10 (events included above)
+Verification ticks: mode=full header=1 record=9 payload=32 metadata=0 structure=0 (structure included in relocations)
+kind:0
+/tmp/mktemp-before:0
+Runtime: heap=385258 largest=379442 image=10380 ticks=100 load=57 owned-peak=5716 remaining=0
+Loader ticks: read=19 validate=24 imports=1 relocations=2 prepare=1 events=4 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=24 metadata=0 structure=1 (structure included in relocations)
+/tmp/mktemp-final:0
+Runtime: heap=385246 largest=379442 image=11264 ticks=109 load=66 owned-peak=5716 remaining=0
+Loader ticks: read=19 validate=32 imports=2 relocations=1 prepare=3 events=10 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=32 metadata=0 structure=1 (structure included in relocations)
+dir:0
+Runtime: heap=385364 largest=379442 image=11264 ticks=88 load=60 owned-peak=5716 remaining=0
+Loader ticks: read=19 validate=26 imports=2 relocations=1 prepare=3 events=4 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=26 metadata=0 structure=0 (structure included in relocations)
+kind:0
+/tmp/mktemp-before:0
+Runtime: heap=385258 largest=379442 image=10380 ticks=106 load=64 owned-peak=5716 remaining=0
+Loader ticks: read=19 validate=30 imports=2 relocations=1 prepare=2 events=10 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=30 metadata=0 structure=1 (structure included in relocations)
+/tmp/mktemp-final:0
+Runtime: heap=385258 largest=379442 image=11264 ticks=103 load=60 owned-peak=5716 remaining=0
+Loader ticks: read=20 validate=25 imports=2 relocations=1 prepare=2 events=4 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=25 metadata=0 structure=0 (structure included in relocations)
+dir:0
+Runtime: heap=385376 largest=379442 image=11264 ticks=94 load=59 owned-peak=5716 remaining=0
+Loader ticks: read=20 validate=24 imports=2 relocations=1 prepare=2 events=4 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=24 metadata=0 structure=0 (structure included in relocations)
+kind:0
+output-error:0
+missing:1

@@ -93,6 +93,7 @@ static void apply_aliases(struct mrsh_parser *parser) {
 		}
 
 		char *name = strndup(parser->buf.data, alias_len);
+		if(!name){parser_oom(parser);return;}
 		const char *repl = parser->alias(name, parser->alias_user_data);
 		free(name);
 		if (repl == NULL || last_repl == repl) {
@@ -102,7 +103,7 @@ static void apply_aliases(struct mrsh_parser *parser) {
 		size_t trailing_len = parser->buf.len - alias_len;
 		size_t repl_len = strlen(repl);
 		if (repl_len > alias_len) {
-			mrsh_buffer_reserve(&parser->buf, repl_len - alias_len);
+			if(!mrsh_buffer_reserve(&parser->buf,repl_len-alias_len)){parser_oom(parser);return;}
 		}
 		memmove(&parser->buf.data[repl_len], &parser->buf.data[alias_len],
 			parser->buf.len - alias_len);
@@ -214,6 +215,7 @@ static struct mrsh_io_redirect *io_redirect(struct mrsh_parser *parser) {
 	if (io_file(parser, &redir)) {
 		struct mrsh_io_redirect *redir_ptr =
 			calloc(1, sizeof(struct mrsh_io_redirect));
+		if(!redir_ptr){mrsh_word_destroy(redir.name);parser_oom(parser);return NULL;}
 		memcpy(redir_ptr, &redir, sizeof(struct mrsh_io_redirect));
 		redir.op_range.end = parser->pos;
 		return redir_ptr;
@@ -221,9 +223,10 @@ static struct mrsh_io_redirect *io_redirect(struct mrsh_parser *parser) {
 	if (io_here(parser, &redir)) {
 		struct mrsh_io_redirect *redir_ptr =
 			calloc(1, sizeof(struct mrsh_io_redirect));
+		if(!redir_ptr){mrsh_word_destroy(redir.name);parser_oom(parser);return NULL;}
 		memcpy(redir_ptr, &redir, sizeof(struct mrsh_io_redirect));
 		redir.op_range.end = parser->pos;
-		mrsh_array_add(&parser->here_documents, redir_ptr);
+		if(mrsh_array_add(&parser->here_documents,redir_ptr)<0){mrsh_io_redirect_destroy(redir_ptr);parser_oom(parser);return NULL;}
 		return redir_ptr;
 	}
 
@@ -243,23 +246,31 @@ static struct mrsh_assignment *assignment_word(struct mrsh_parser *parser) {
 		return NULL;
 	}
 
-	parser_peek(parser, NULL, name_len + 1);
+	if(parser_peek(parser,NULL,name_len+1)<name_len+1)return 0;
 	if (parser->buf.data[name_len] != '=') {
 		return NULL;
 	}
 
 	struct mrsh_range name_range;
 	char *name = read_token(parser, name_len, &name_range);
+	if(!name)return NULL;
 
 	struct mrsh_position equal_pos = parser->pos;
 	parser_read(parser, NULL, 1);
 
+	/* Clarice: an empty assignment ends here; do not skip blanks into
+	 * the following command while obtaining a fresh token. */
+	parser->has_sym = true;
+	parser->sym = TOKEN;
 	struct mrsh_word *value = word(parser, 0);
 	if (value == NULL) {
-		value = &mrsh_word_string_create(strdup(""), false)->word;
+		if(mrsh_parser_error(parser,NULL)){free(name);return NULL;}
+		struct mrsh_word_string *empty=parser_string(parser,strdup(""),false);
+		if(!empty){free(name);return NULL;}value=&empty->word;
 	}
 
 	struct mrsh_assignment *assign = calloc(1, sizeof(struct mrsh_assignment));
+	if(!assign){free(name);mrsh_word_destroy(value);parser_oom(parser);return NULL;}
 	assign->name = name;
 	assign->value = value;
 	assign->name_range = name_range;
@@ -271,13 +282,13 @@ static bool cmd_prefix(struct mrsh_parser *parser,
 		struct mrsh_simple_command *cmd) {
 	struct mrsh_io_redirect *redir = io_redirect(parser);
 	if (redir != NULL) {
-		mrsh_array_add(&cmd->io_redirects, redir);
+		if(mrsh_array_add(&cmd->io_redirects,redir)<0){mrsh_io_redirect_destroy(redir);parser_oom(parser);return false;}
 		return true;
 	}
 
 	struct mrsh_assignment *assign = assignment_word(parser);
 	if (assign != NULL) {
-		mrsh_array_add(&cmd->assignments, assign);
+		if(mrsh_array_add(&cmd->assignments,assign)<0){mrsh_assignment_destroy(assign);parser_oom(parser);return false;}
 		return true;
 	}
 
@@ -303,7 +314,8 @@ static struct mrsh_word *cmd_name(struct mrsh_parser *parser) {
 	struct mrsh_range range;
 	char *str = read_token(parser, word_len, &range);
 
-	struct mrsh_word_string *ws = mrsh_word_string_create(str, false);
+	struct mrsh_word_string *ws = parser_string(parser,str,false);
+	if(!ws)return NULL;
 	ws->range = range;
 	return &ws->word;
 }
@@ -312,13 +324,13 @@ static bool cmd_suffix(struct mrsh_parser *parser,
 		struct mrsh_simple_command *cmd) {
 	struct mrsh_io_redirect *redir = io_redirect(parser);
 	if (redir != NULL) {
-		mrsh_array_add(&cmd->io_redirects, redir);
+		if(mrsh_array_add(&cmd->io_redirects,redir)<0){mrsh_io_redirect_destroy(redir);parser_oom(parser);return false;}
 		return true;
 	}
 
 	struct mrsh_word *arg = word(parser, 0);
 	if (arg != NULL) {
-		mrsh_array_add(&cmd->arguments, arg);
+		if(!parser_word_add(parser,&cmd->arguments,arg))return false;
 		return true;
 	}
 
@@ -335,15 +347,16 @@ static struct mrsh_simple_command *simple_command(struct mrsh_parser *parser) {
 
 	cmd.name = cmd_name(parser);
 	if (cmd.name == NULL && !has_prefix) {
-		return NULL;
+		redirect_array_finish(&cmd.io_redirects);assignment_array_finish(&cmd.assignments);return NULL;
 	} else if (cmd.name != NULL) {
 		while (cmd_suffix(parser, &cmd)) {
 			// This space is intentionally left blank
 		}
 	}
 
-	return mrsh_simple_command_create(cmd.name, &cmd.arguments,
-		&cmd.io_redirects, &cmd.assignments);
+	struct mrsh_simple_command *out=NULL;
+ if(!mrsh_parser_error(parser,NULL))out=mrsh_simple_command_create(cmd.name,&cmd.arguments,&cmd.io_redirects,&cmd.assignments);
+ if(!out){if(!mrsh_parser_error(parser,NULL))parser_oom(parser);mrsh_word_destroy(cmd.name);word_array_finish(&cmd.arguments);redirect_array_finish(&cmd.io_redirects);assignment_array_finish(&cmd.assignments);}return out;
 }
 
 static int separator(struct mrsh_parser *parser) {
@@ -372,6 +385,7 @@ static struct mrsh_command_list *term(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_command_list *cmd = mrsh_command_list_create();
+	if(!cmd){mrsh_and_or_list_destroy(and_or_list);parser_oom(parser);return NULL;}
 	cmd->and_or_list = and_or_list;
 
 	struct mrsh_position separator_pos = parser->pos;
@@ -388,10 +402,11 @@ static struct mrsh_command_list *term(struct mrsh_parser *parser) {
 			struct mrsh_io_redirect *redir = parser->here_documents.data[i];
 
 			char *delim = mrsh_word_str(redir->name);
-			bool ok = expect_here_document(parser, redir, delim);
+			bool ok=delim&&expect_here_document(parser,redir,delim);
+			if(!delim)parser_oom(parser);
 			free(delim);
 			if (!ok) {
-				return false;
+				mrsh_command_list_destroy(cmd);return NULL;
 			}
 		}
 
@@ -408,14 +423,14 @@ static bool compound_list(struct mrsh_parser *parser, struct mrsh_array *cmds) {
 	if (l == NULL) {
 		return false;
 	}
-	mrsh_array_add(cmds, l);
+	if(mrsh_array_add(cmds,l)<0){mrsh_command_list_destroy(l);parser_oom(parser);return false;}
 
 	while (true) {
 		l = term(parser);
 		if (l == NULL) {
 			break;
 		}
-		mrsh_array_add(cmds, l);
+		if(mrsh_array_add(cmds,l)<0){mrsh_command_list_destroy(l);parser_oom(parser);return false;}
 	}
 
 	return true;
@@ -424,6 +439,7 @@ static bool compound_list(struct mrsh_parser *parser, struct mrsh_array *cmds) {
 static bool expect_compound_list(struct mrsh_parser *parser,
 		struct mrsh_array *cmds) {
 	if (!compound_list(parser, cmds)) {
+		command_list_array_finish(cmds);
 		parser_set_error(parser, "expected a compound list");
 		return false;
 	}
@@ -449,6 +465,7 @@ static struct mrsh_brace_group *brace_group(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_brace_group *bg = mrsh_brace_group_create(&body);
+	if(!bg){command_list_array_finish(&body);parser_oom(parser);return NULL;}
 	bg->lbrace_pos = lbrace_pos;
 	bg->rbrace_pos = rbrace_pos;
 	return bg;
@@ -472,12 +489,20 @@ static struct mrsh_subshell *subshell(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_subshell *s = mrsh_subshell_create(&body);
+	if(!s){command_list_array_finish(&body);parser_oom(parser);return NULL;}
 	s->lparen_pos = lparen_pos;
 	s->rparen_pos = rparen_pos;
 	return s;
 }
 
+static struct mrsh_command *else_part_inner(struct mrsh_parser *parser);
 static struct mrsh_command *else_part(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_command *result = else_part_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_command *else_part_inner(struct mrsh_parser *parser) {
 	struct mrsh_range if_range = {0};
 	if (token(parser, "elif", &if_range)) {
 		struct mrsh_array cond = {0};
@@ -500,6 +525,7 @@ static struct mrsh_command *else_part(struct mrsh_parser *parser) {
 		struct mrsh_command *ep = else_part(parser);
 
 		struct mrsh_if_clause *ic = mrsh_if_clause_create(&cond, &body, ep);
+	if(!ic){command_list_array_finish(&cond);command_list_array_finish(&body);mrsh_command_destroy(ep);parser_oom(parser);return NULL;}
 		ic->if_range = if_range;
 		ic->then_range = then_range;
 		return &ic->command;
@@ -513,6 +539,7 @@ static struct mrsh_command *else_part(struct mrsh_parser *parser) {
 
 		// TODO: position information is missing
 		struct mrsh_brace_group *bg = mrsh_brace_group_create(&body);
+	if(!bg){command_list_array_finish(&body);parser_oom(parser);return NULL;}
 		return &bg->command;
 	}
 
@@ -548,6 +575,7 @@ static struct mrsh_if_clause *if_clause(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_if_clause *ic = mrsh_if_clause_create(&cond, &body, ep);
+	if(!ic){command_list_array_finish(&cond);command_list_array_finish(&body);mrsh_command_destroy(ep);parser_oom(parser);return NULL;}
 	ic->if_range = if_range;
 	ic->then_range = then_range;
 	ic->fi_range = fi_range;
@@ -577,7 +605,7 @@ static void wordlist(struct mrsh_parser *parser,
 		if (w == NULL) {
 			break;
 		}
-		mrsh_array_add(words, w);
+		if(!parser_word_add(parser,words,w))return;
 	}
 }
 
@@ -616,6 +644,7 @@ static struct mrsh_for_clause *for_clause(struct mrsh_parser *parser) {
 
 	struct mrsh_range name_range;
 	char *name = read_token(parser, name_len, &name_range);
+	if(!name)return NULL;
 
 	linebreak(parser);
 
@@ -643,6 +672,7 @@ static struct mrsh_for_clause *for_clause(struct mrsh_parser *parser) {
 
 	struct mrsh_for_clause *fc =
 		mrsh_for_clause_create(name, in, &words, &body);
+	if(!fc){command_list_array_finish(&body);parser_oom(parser);goto error_words;}
 	fc->for_range = for_range;
 	fc->name_range = name_range;
 	fc->in_range = in_range;
@@ -685,6 +715,7 @@ static struct mrsh_loop_clause *loop_clause(struct mrsh_parser *parser) {
 
 	struct mrsh_loop_clause *fc =
 		mrsh_loop_clause_create(type, &condition, &body);
+	if(!fc){command_list_array_finish(&condition);command_list_array_finish(&body);parser_oom(parser);return NULL;}
 	fc->while_until_range = while_until_range;
 	fc->do_range = do_range;
 	fc->done_range = done_range;
@@ -705,15 +736,15 @@ static struct mrsh_case_item *expect_case_item(struct mrsh_parser *parser,
 	}
 
 	struct mrsh_array patterns = {0};
-	mrsh_array_add(&patterns, w);
+	if(!parser_word_add(parser,&patterns,w))goto error_patterns;
 
 	while (token(parser, "|", NULL)) {
 		struct mrsh_word *w = word(parser, 0);
 		if (w == NULL) {
 			parser_set_error(parser, "expected a word");
-			return NULL;
+			goto error_patterns;
 		}
-		mrsh_array_add(&patterns, w);
+		if(!parser_word_add(parser,&patterns,w))goto error_patterns;
 	}
 
 	struct mrsh_position rparen_pos = parser->pos;
@@ -725,7 +756,7 @@ static struct mrsh_case_item *expect_case_item(struct mrsh_parser *parser,
 	struct mrsh_array body = {0};
 	compound_list(parser, &body);
 	if (mrsh_parser_error(parser, NULL)) {
-		goto error_patterns;
+		goto error_body;
 	}
 
 	struct mrsh_range dsemi_range = {0};
@@ -736,7 +767,7 @@ static struct mrsh_case_item *expect_case_item(struct mrsh_parser *parser,
 
 	struct mrsh_case_item *item = calloc(1, sizeof(struct mrsh_case_item));
 	if (item == NULL) {
-		goto error_body;
+		parser_oom(parser);goto error_body;
 	}
 	item->patterns = patterns;
 	item->body = body;
@@ -785,7 +816,7 @@ static struct mrsh_case_clause *case_clause(struct mrsh_parser *parser) {
 		if (item == NULL) {
 			goto error_items;
 		}
-		mrsh_array_add(&items, item);
+		if(mrsh_array_add(&items,item)<0){case_item_destroy(item);parser_oom(parser);goto error_items;}
 
 		if (!dsemi) {
 			// Only the last case can omit `;;`
@@ -797,6 +828,7 @@ static struct mrsh_case_clause *case_clause(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_case_clause *cc = mrsh_case_clause_create(w, &items);
+	if(!cc){parser_oom(parser);goto error_items;}
 	cc->case_range = case_range;
 	cc->in_range = in_range;
 	cc->esac_range = esac_range;
@@ -824,7 +856,7 @@ static struct mrsh_function_definition *function_definition(
 
 	size_t i = name_len;
 	while (true) {
-		parser_peek(parser, NULL, i + 1);
+		if(parser_peek(parser,NULL,i+1)<i+1)return NULL;
 
 		char c = parser->buf.data[i];
 		if (c == '(') {
@@ -838,15 +870,16 @@ static struct mrsh_function_definition *function_definition(
 
 	struct mrsh_range name_range;
 	char *name = read_token(parser, name_len, &name_range);
+	if(!name)return NULL;
 
 	struct mrsh_position lparen_pos = parser->pos;
 	if (!expect_token(parser, "(", NULL)) {
-		return NULL;
+		free(name);return NULL;
 	}
 
 	struct mrsh_position rparen_pos = parser->pos;
 	if (!expect_token(parser, ")", NULL)) {
-		return NULL;
+		free(name);return NULL;
 	}
 
 	linebreak(parser);
@@ -854,7 +887,7 @@ static struct mrsh_function_definition *function_definition(
 	struct mrsh_command *cmd = compound_command(parser);
 	if (cmd == NULL) {
 		parser_set_error(parser, "expected a compound command");
-		return NULL;
+		free(name);return NULL;
 	}
 
 	struct mrsh_array io_redirects = {0};
@@ -863,11 +896,11 @@ static struct mrsh_function_definition *function_definition(
 		if (redir == NULL) {
 			break;
 		}
-		mrsh_array_add(&io_redirects, redir);
+		if(mrsh_array_add(&io_redirects,redir)<0){mrsh_io_redirect_destroy(redir);parser_oom(parser);break;}
 	}
 
-	struct mrsh_function_definition *fd =
-		mrsh_function_definition_create(name, cmd, &io_redirects);
+	struct mrsh_function_definition *fd=mrsh_parser_error(parser,NULL)?NULL:mrsh_function_definition_create(name,cmd,&io_redirects);
+	if(!fd){free(name);mrsh_command_destroy(cmd);redirect_array_finish(&io_redirects);parser_oom(parser);return NULL;}
 	fd->name_range = name_range;
 	fd->lparen_pos = lparen_pos;
 	fd->rparen_pos = rparen_pos;
@@ -904,7 +937,7 @@ static bool unspecified_word(struct mrsh_parser *parser) {
 		return false;
 	}
 
-	parser_peek(parser, NULL, name_len + 1);
+	if(parser_peek(parser,NULL,name_len+1)<name_len+1)return 0;
 	if (parser->buf.data[name_len] == ':') {
 		parser_set_error(parser, "words that are the concatenation of a name "
 			"and a colon produce unspecified results");
@@ -914,7 +947,14 @@ static bool unspecified_word(struct mrsh_parser *parser) {
 	return false;
 }
 
+static struct mrsh_command *compound_command_inner(struct mrsh_parser *parser);
 static struct mrsh_command *compound_command(struct mrsh_parser *parser) {
+ if (!parser_enter(parser)) return NULL;
+ struct mrsh_command *result = compound_command_inner(parser);
+ parser_leave();
+ return result;
+}
+static struct mrsh_command *compound_command_inner(struct mrsh_parser *parser) {
 	struct mrsh_brace_group *bg = brace_group(parser);
 	if (bg != NULL) {
 		return &bg->command;
@@ -975,11 +1015,20 @@ static struct mrsh_command *command(struct mrsh_parser *parser) {
 	apply_aliases(parser);
 
 	struct mrsh_command *cmd = compound_command(parser);
-	if (cmd != NULL || mrsh_parser_error(parser, NULL)) {
+	if (cmd != NULL) {
+		/* Clarice: scope each redirect to this complete compound command. */
+		struct mrsh_io_redirect *redir;
+		while ((redir = io_redirect(parser)) != NULL) {
+			if (!cmd->redirects) cmd->redirects = calloc(1, sizeof *cmd->redirects);
+			if (!cmd->redirects || mrsh_array_add(cmd->redirects, redir) < 0) {
+				mrsh_io_redirect_destroy(redir);
+				parser_set_error(parser, "out of memory for compound redirection");
+				break;
+			}
+		}
+		if (mrsh_parser_error(parser, NULL)) {mrsh_command_destroy(cmd);return NULL;}
 		return cmd;
-	}
-
-	// TODO: compound_command redirect_list
+	} else if (mrsh_parser_error(parser, NULL)) return NULL;
 
 	struct mrsh_simple_command *sc = simple_command(parser);
 	if (sc != NULL) {
@@ -1000,7 +1049,7 @@ static struct mrsh_pipeline *pipeline(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_array commands = {0};
-	mrsh_array_add(&commands, cmd);
+	if(mrsh_array_add(&commands,cmd)<0){mrsh_command_destroy(cmd);parser_oom(parser);goto error_commands;}
 
 	while (token(parser, "|", NULL)) {
 		linebreak(parser);
@@ -1009,10 +1058,11 @@ static struct mrsh_pipeline *pipeline(struct mrsh_parser *parser) {
 			parser_set_error(parser, "expected a command");
 			goto error_commands;
 		}
-		mrsh_array_add(&commands, cmd);
+		if(mrsh_array_add(&commands,cmd)<0){mrsh_command_destroy(cmd);parser_oom(parser);goto error_commands;}
 	}
 
 	struct mrsh_pipeline *p = mrsh_pipeline_create(&commands, bang);
+	if(!p){parser_oom(parser);goto error_commands;}
 	p->bang_pos = bang_pos;
 	return p;
 
@@ -1029,15 +1079,18 @@ static struct mrsh_and_or_list *and_or(struct mrsh_parser *parser) {
  struct mrsh_pipeline *first = pipeline(parser);
  if (!first) return NULL;
  struct mrsh_and_or_list *left = &first->and_or_list;
+ unsigned int links=0;
  for (;;) {
   enum mrsh_binop_type op; struct mrsh_range range;
   if (operator(parser, AND_IF, &range)) op=MRSH_BINOP_AND;
   else if (operator(parser, OR_IF, &range)) op=MRSH_BINOP_OR;
   else return left;
+  if (++links>64) { mrsh_and_or_list_destroy(left); parser_set_error(parser,"AND-OR tree depth limit (64)"); return NULL; }
   linebreak(parser);
   struct mrsh_pipeline *right=pipeline(parser);
   if (!right) {mrsh_and_or_list_destroy(left);parser_set_error(parser,"expected pipeline");return NULL;}
   struct mrsh_binop *bin=mrsh_binop_create(op,left,&right->and_or_list);
+  if(!bin){mrsh_and_or_list_destroy(left);mrsh_and_or_list_destroy(&right->and_or_list);parser_oom(parser);return NULL;}
   bin->op_range=range;left=&bin->and_or_list;
  }
 }
@@ -1049,6 +1102,7 @@ static struct mrsh_command_list *list(struct mrsh_parser *parser) {
 	}
 
 	struct mrsh_command_list *cmd = mrsh_command_list_create();
+	if(!cmd){mrsh_and_or_list_destroy(and_or_list);parser_oom(parser);return NULL;}
 	cmd->and_or_list = and_or_list;
 
 	struct mrsh_position separator_pos = parser->pos;
@@ -1067,17 +1121,18 @@ static struct mrsh_command_list *list(struct mrsh_parser *parser) {
  * Append a new string word to `children` with the contents of `buf`, and reset
  * `buf`.
  */
-static void push_buffer_word_string(struct mrsh_array *children,
+static bool push_buffer_word_string(struct mrsh_parser *parser,struct mrsh_array *children,
 		struct mrsh_buffer *buf) {
 	if (buf->len == 0) {
-		return;
+		return true;
 	}
 
-	mrsh_buffer_append_char(buf, '\0');
+	if(!mrsh_buffer_append_char(buf,'\0')){parser_oom(parser);return false;}
 
 	char *data = mrsh_buffer_steal(buf);
-	struct mrsh_word_string *ws = mrsh_word_string_create(data, false);
-	mrsh_array_add(children, &ws->word);
+	struct mrsh_word_string *ws = parser_string(parser,data,false);
+	if(!ws)return false;
+	return parser_word_add(parser,children,&ws->word);
 }
 
 static struct mrsh_word *here_document_line(struct mrsh_parser *parser) {
@@ -1091,19 +1146,19 @@ static struct mrsh_word *here_document_line(struct mrsh_parser *parser) {
 		}
 
 		if (c == '$') {
-			push_buffer_word_string(&children, &buf);
+			if(!push_buffer_word_string(parser,&children,&buf))goto error;
 			struct mrsh_word *t = expect_dollar(parser);
 			if (t == NULL) {
-				return NULL;
+				goto error;
 			}
-			mrsh_array_add(&children, t);
+			if(!parser_word_add(parser,&children,t))goto error;
 			continue;
 		}
 
 		if (c == '`') {
-			push_buffer_word_string(&children, &buf);
+			if(!push_buffer_word_string(parser,&children,&buf))goto error;
 			struct mrsh_word *t = back_quotes(parser);
-			mrsh_array_add(&children, t);
+			if(!parser_word_add(parser,&children,t))goto error;
 			continue;
 		}
 
@@ -1123,10 +1178,10 @@ static struct mrsh_word *here_document_line(struct mrsh_parser *parser) {
 		}
 
 		parser_read_char(parser);
-		mrsh_buffer_append_char(&buf, c);
+		if(!mrsh_buffer_append_char(&buf,c)){parser_oom(parser);goto error;}
 	}
 
-	push_buffer_word_string(&children, &buf);
+	if(!push_buffer_word_string(parser,&children,&buf))goto error;
 	mrsh_buffer_finish(&buf);
 
 	if (children.len == 1) {
@@ -1134,9 +1189,12 @@ static struct mrsh_word *here_document_line(struct mrsh_parser *parser) {
 		mrsh_array_finish(&children); // TODO: don't allocate this array
 		return word;
 	} else {
-		struct mrsh_word_list *wl = mrsh_word_list_create(&children, false);
+		struct mrsh_word_list *wl = parser_words(parser,&children,false);
+		if(!wl)goto error;
 		return &wl->word;
 	}
+error:
+	mrsh_buffer_finish(&buf);word_array_finish(&children);return NULL;
 }
 
 static bool is_word_quoted(struct mrsh_word *word) {
@@ -1177,9 +1235,9 @@ static bool expect_here_document(struct mrsh_parser *parser,
 				break;
 			}
 
-			mrsh_buffer_append_char(&buf, parser_read_char(parser));
+			if(!mrsh_buffer_append_char(&buf,parser_read_char(parser))){parser_oom(parser);goto error;}
 		}
-		mrsh_buffer_append_char(&buf, '\0');
+		if(!mrsh_buffer_append_char(&buf,'\0')){parser_oom(parser);goto error;}
 
 		const char *line = buf.data;
 		if (trim_tabs) {
@@ -1196,7 +1254,7 @@ static bool expect_here_document(struct mrsh_parser *parser,
 		}
 		if (parser_peek_char(parser) == '\0') {
 			parser_set_error(parser, "unterminated here-document");
-			return false;
+			goto error;
 		}
 		read_continuation_line(parser);
 
@@ -1204,20 +1262,24 @@ static bool expect_here_document(struct mrsh_parser *parser,
 		if (expand_lines) {
 			struct mrsh_parser *subparser =
 				mrsh_parser_with_data(line, strlen(line));
+			if(!subparser){parser_oom(parser);goto error;}
 			word = here_document_line(subparser);
+			if(mrsh_parser_error(subparser,NULL)){parser_set_error(parser,mrsh_parser_error(subparser,NULL));mrsh_word_destroy(word);word=NULL;}
 			mrsh_parser_destroy(subparser);
 		} else {
 			struct mrsh_word_string *ws =
-				mrsh_word_string_create(strdup(line), true);
-			word = &ws->word;
+				parser_string(parser,strdup(line),true);
+			word = ws?&ws->word:NULL;
 		}
 
-		mrsh_array_add(&redir->here_document, word);
+		if(!parser_word_add(parser,&redir->here_document,word))goto error;
 	}
 	mrsh_buffer_finish(&buf);
 
 	consume_symbol(parser);
 	return true;
+error:
+	mrsh_buffer_finish(&buf);return false;
 }
 
 static bool complete_command(struct mrsh_parser *parser,
@@ -1226,14 +1288,14 @@ static bool complete_command(struct mrsh_parser *parser,
 	if (l == NULL) {
 		return false;
 	}
-	mrsh_array_add(cmds, l);
+	if(mrsh_array_add(cmds,l)<0){mrsh_command_list_destroy(l);parser_oom(parser);return false;}
 
 	while (true) {
 		l = list(parser);
 		if (l == NULL) {
 			break;
 		}
-		mrsh_array_add(cmds, l);
+		if(mrsh_array_add(cmds,l)<0){mrsh_command_list_destroy(l);parser_oom(parser);return false;}
 	}
 
 	if (parser->here_documents.len > 0) {
@@ -1247,7 +1309,8 @@ static bool complete_command(struct mrsh_parser *parser,
 			}
 
 			char *delim = mrsh_word_str(redir->name);
-			bool ok = expect_here_document(parser, redir, delim);
+			bool ok=delim&&expect_here_document(parser,redir,delim);
+			if(!delim)parser_oom(parser);
 			free(delim);
 			if (!ok) {
 				return false;
@@ -1273,7 +1336,7 @@ static bool expect_complete_command(struct mrsh_parser *parser,
 static struct mrsh_program *program(struct mrsh_parser *parser) {
 	struct mrsh_program *prog = mrsh_program_create();
 	if (prog == NULL) {
-		return NULL;
+		parser_oom(parser);return NULL;
 	}
 
 	linebreak(parser);
@@ -1301,6 +1364,7 @@ static struct mrsh_program *program(struct mrsh_parser *parser) {
 }
 
 struct mrsh_program *mrsh_parse_line(struct mrsh_parser *parser) {
+	if(!parser)return NULL;
 	parser_begin(parser);
 
 	if (eof(parser)) {
@@ -1309,7 +1373,7 @@ struct mrsh_program *mrsh_parse_line(struct mrsh_parser *parser) {
 
 	struct mrsh_program *prog = mrsh_program_create();
 	if (prog == NULL) {
-		return NULL;
+		parser_oom(parser);return NULL;
 	}
 
 	if (newline(parser)) {
@@ -1348,6 +1412,8 @@ error:
 }
 
 struct mrsh_program *mrsh_parse_program(struct mrsh_parser *parser) {
+	if(!parser)return NULL;
 	parser_begin(parser);
-	return program(parser);
+	struct mrsh_program *p=program(parser);
+	if(mrsh_parser_error(parser,NULL)){mrsh_program_destroy(p);parser->here_documents.len=0;return NULL;}return p;
 }

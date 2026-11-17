@@ -1,0 +1,6 @@
+{
+  "pass": false,
+  "error": "step 0: rx=bytearray(b'echo ok\\r') tx=bytearray(b'echo ok\\r\\nok\\r\\nMACBOOK> ')",
+  "steps": [],
+  "peer_returncode": 130
+}

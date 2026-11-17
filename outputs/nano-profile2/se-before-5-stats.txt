@@ -1,0 +1,32 @@
+é File Edit Tests Diew
+Macintosh HD
+Clarice
+Nano
+2125573 2125684 2125684 2125685 2125715 2125766 2125958 2125996 2126
+015 2125858 2125940 0 0; input batches=1 sum=12 max=12; initial-heap=423804
+tor startup: draws=13 rows=58 text=19 copy=22 total=71 ticks
+Ehses startup: refeshesei refresh-tickseip writes-18 bytes-6o1 feed-ticks=4
+al locs=162 FreeMem=3 NewPtr=43 reads=17 read=11 stdio=0 image-allo
+C=0 meta-al loc=0
+Lodder tIcksI
+read=38 val idate=2 imports=5 relocations=22 prepare=4 events=2 (ev
+ents includedabove)
+Verification ticks: mode=fast header=0 record=15 payload=0 metadata=2 structure=
+13 (structure included in relocations)
+› nano-profile /tmp/np-long
+status runtime
+Runtime: heap=419010 largest=418826 image=198560 ticks=1602 load=85 owned-peak=9
+5122 remaining=0
+Nano
+ticks: 2128240 2128350 2128351 2128351 2128382 2128433 2128624 2128660 2128
+679 2128495 2128606 0 0; input batches=1 sum=13 max=13;
+initial-heap=423804
+Editor startup: draws=11 rows=58 text=21 copy=23 total=69 ticks
+Curses startup: refreshes=1 refresh-ticks=15 writes=18 bytes=661 feed-ticks=5
+Native ticks:
+allocs=162 FreeMem=1 NewPtr=38 reads=17 read=b stdio=0 image-alloc
+=0 meta-al loc=0
+Loader ticks: read=39 validate=2 imports=4 relocations=22 prepare=4 events=2 (ev
+ents included above)
+Verification ticks: mode=fast header=0 record=14 payload=0 metadata=2 structure=
+14 (structure included in relocations)

@@ -1,0 +1,12 @@
+NANO:0
+Runtime: heap=399650 largest=236688 image=198600 ticks=67690 load=428 owned-peak=87684 remaining=0
+Loader ticks: read=64 validate=330 imports=3 relocations=20 prepare=3 events=26 (events included above)
+Verification ticks: mode=full header=0 record=8 payload=330 metadata=0 structure=13 (structure included in relocations)
+NANO:0
+Runtime: heap=399658 largest=236688 image=198600 ticks=5385 load=423 owned-peak=87684 remaining=0
+Loader ticks: read=63 validate=327 imports=4 relocations=19 prepare=2 events=28 (events included above)
+Verification ticks: mode=full header=0 record=8 payload=327 metadata=0 structure=12 (structure included in relocations)
+NANO:0
+Runtime: heap=399658 largest=236688 image=198600 ticks=6065 load=423 owned-peak=87684 remaining=0
+Loader ticks: read=63 validate=328 imports=3 relocations=20 prepare=1 events=23 (events included above)
+Verification ticks: mode=full header=0 record=8 payload=328 metadata=0 structure=12 (structure included in relocations)

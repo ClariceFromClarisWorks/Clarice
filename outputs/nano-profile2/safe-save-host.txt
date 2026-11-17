@@ -1,0 +1,1 @@
+PASS: success/new/metadata, 27 fault points, 27 interruption points, short-write, disk-full and paired faults/rollback, new-file faults, stale recovery collision, cancellation, read-only, locked, 20 repeated saves; no retained allocations

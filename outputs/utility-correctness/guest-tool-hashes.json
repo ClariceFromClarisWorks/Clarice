@@ -1,0 +1,172 @@
+{
+  "ls": {
+    "input": "work/build/core.clx",
+    "bytes": 12376,
+    "sha256": "cb5e03b5f1387cb79107f9650bd8c50cdceab04f86035bde881e9f486fc2ebe0"
+  },
+  "df": {
+    "input": "work/build/core.clx",
+    "bytes": 12376,
+    "sha256": "cb5e03b5f1387cb79107f9650bd8c50cdceab04f86035bde881e9f486fc2ebe0"
+  },
+  "cat": {
+    "input": "work/build/core.clx",
+    "bytes": 12376,
+    "sha256": "cb5e03b5f1387cb79107f9650bd8c50cdceab04f86035bde881e9f486fc2ebe0"
+  },
+  "cp": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "mv": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "touch": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "rmdir": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "mkdir": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "rm": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "ln": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "readlink": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "hfsattr": {
+    "input": "work/utility-correctness/files.clx",
+    "bytes": 12840,
+    "sha256": "2d737e122f8ff2a0db640acaa2e5f6398f376659c5a03bdc2d486bb1ff3b5c76"
+  },
+  "find": {
+    "input": "work/utility-correctness/inspect.clx",
+    "bytes": 9128,
+    "sha256": "112eff1cac172ff89f718c25c2c18a9bf7b234504009efa878a26b61ea2e1a12"
+  },
+  "du": {
+    "input": "work/utility-correctness/inspect.clx",
+    "bytes": 9128,
+    "sha256": "112eff1cac172ff89f718c25c2c18a9bf7b234504009efa878a26b61ea2e1a12"
+  },
+  "file": {
+    "input": "work/utility-correctness/inspect.clx",
+    "bytes": 9128,
+    "sha256": "112eff1cac172ff89f718c25c2c18a9bf7b234504009efa878a26b61ea2e1a12"
+  },
+  "more": {
+    "input": "work/build/misc.clx",
+    "bytes": 5848,
+    "sha256": "606aae6a67ebd6f03b18b084350d3865bd6e08f9ef50a27ea6cbbce786885c2b"
+  },
+  "od": {
+    "input": "work/build/misc.clx",
+    "bytes": 5848,
+    "sha256": "606aae6a67ebd6f03b18b084350d3865bd6e08f9ef50a27ea6cbbce786885c2b"
+  },
+  "grep": {
+    "input": "work/build/grep.clx",
+    "bytes": 45028,
+    "sha256": "325bf105bcec3408e2392427602bad31c2377508bafb759955f90a6c5df327dd"
+  },
+  "sed": {
+    "input": "work/build/sed.clx",
+    "bytes": 64684,
+    "sha256": "49858dd167d818db735430321cb6f3bd634f8eebfbb18701fe52141223020422"
+  },
+  "awk": {
+    "input": "work/utility-correctness/awk.clx",
+    "bytes": 188312,
+    "sha256": "4d4d9c0e6059945ea2aa01d1c4cbdb6926b3c3e39e86a1e12b59f1d02c2ed1ab"
+  },
+  "wc": {
+    "input": "work/build/wc.clx",
+    "bytes": 18388,
+    "sha256": "581a799992392255016f5b7932af35bd33f81dcf3c640a20abb659160e12ae03"
+  },
+  "head": {
+    "input": "work/build/head.clx",
+    "bytes": 17628,
+    "sha256": "259b6a1830d67a41d4e09a7c8f7f92b20f7f85b4a96f8cdf0a8a8117356cb0bf"
+  },
+  "cut": {
+    "input": "work/build/cut.clx",
+    "bytes": 20884,
+    "sha256": "7557ef78403580271095aa010b1c4b94e47ef338d671139e0081f00e8c145cd7"
+  },
+  "tr": {
+    "input": "work/build/tr.clx",
+    "bytes": 35940,
+    "sha256": "023431d01edfe68075de4f6729a4ec59ef0f0841a8fbc07c76993ad2de124131"
+  },
+  "uniq": {
+    "input": "work/build/uniq.clx",
+    "bytes": 18728,
+    "sha256": "4c313bdcdd3dd94c0da85f60c981cd2c8ee933de377e0324e4959cda5fd44a53"
+  },
+  "tee": {
+    "input": "work/build/tee.clx",
+    "bytes": 16328,
+    "sha256": "d0a5092cb41eadc4056571afb9742982a87e01bd05ec0114e9dae930a74267a5"
+  },
+  "tail": {
+    "input": "work/build/tail.clx",
+    "bytes": 20168,
+    "sha256": "63a06dec2a741e83b5ba0b9160aa624cbae39099b1d8e734108edd8930010db3"
+  },
+  "sort": {
+    "input": "work/build/sort.clx",
+    "bytes": 41460,
+    "sha256": "4b0f6328ab7998251942ced11ca917fa1ed8779df1b5b3cb617bb0d61379c876"
+  },
+  "basename": {
+    "input": "work/build/basename.clx",
+    "bytes": 16180,
+    "sha256": "0c89fb9c3308dcaf270108212e1064f133643e4d6f800cd17291a9a5e4222f15"
+  },
+  "dirname": {
+    "input": "work/build/dirname.clx",
+    "bytes": 16028,
+    "sha256": "bb010a3c898b534337b68fdfe07175e7c40c8232389a7e976e0f0433b3a2f213"
+  },
+  "serial": {
+    "input": "work/build/serial.clx",
+    "bytes": 9524,
+    "sha256": "eb2797ea0ccb0f97f5e2f5c02fbb89fe94ff8e6fe55a0775cfe76294331e6c8d"
+  },
+  "kermit": {
+    "input": "work/build/kermit.clx",
+    "bytes": 25400,
+    "sha256": "d3df9addc44b22a16e5a537581e51db11fd5fa908a961a5840ed85095e1f5d4b"
+  },
+  "wget": {
+    "input": "work/build/wget.clx",
+    "bytes": 18392,
+    "sha256": "459b7f9abb0c8e53350e8e59b69f61fa97ccc92f6171142f693505428528eeb1"
+  },
+  "clarice": {
+    "input": "work/build/clarice.clx",
+    "bytes": 99044,
+    "sha256": "0f317e33f1c6e620db198a394cb6c82ccba162ab54deec760ecf05016d75d548"
+  }
+}

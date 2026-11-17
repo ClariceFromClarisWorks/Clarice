@@ -1,0 +1,3 @@
+PASS: all 1000 exact sequential filenames, fork lengths and creation times; . and ..; final newline
+PASS: two-volume pwd/listing/guard contents, spaced volume/path and encoded name, hidden names, missing volume/path nonzero
+PASS: native pixel/reference and scrollbar staging checks

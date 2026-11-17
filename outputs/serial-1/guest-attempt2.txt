@@ -1,0 +1,14 @@
+Serial session; remote echo. Ctrl+] then q exits; Ctrl+C cancels.
+cancel 0: rc=130 pending=0 hold=999 KillIO=999 ioResult=0 heap_delta=0
+Serial session; remote echo. Ctrl+] then q exits; Ctrl+C cancels.
+cancel 1: rc=130 pending=0 hold=999 KillIO=999 ioResult=0 heap_delta=0
+Serial session; remote echo. Ctrl+] then q exits; Ctrl+C cancels.
+cancel 2: rc=130 pending=0 hold=999 KillIO=999 ioResult=0 heap_delta=0
+cancel-status=1
+modem-status=1
+SERIAL_TEST PASS: host replied CLARICE-PONG
+printer-status=0
+usage: serial [-b 4800|9600|19200|38400|57600] /dev/tty.modem|/dev/tty.printer [--test]
+invalid-status=2
+SERIAL_TEST PASS: host replied CLARICE-PONG
+reconnect-status=0

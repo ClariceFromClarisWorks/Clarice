@@ -1,0 +1,9 @@
+partial-output: partial/ > xy
+PASS partial output, canonical read, exact-width caret, wrapped input, scrollback, long editing, newlines, ring origin and background cursor
+PASS height-only viewport anchor
+failed reflow columns=20 out_col=17
+PASS failed reflow retains coherent model
+PASS height-only viewport anchor
+editable anchor before=104 after=108 command=100
+PASS input-continuation resize anchor round trip
+PASS newline-bearing command anchor round trip

@@ -32,13 +32,13 @@ with tempfile.TemporaryDirectory() as tmp:
  for label,args,body,env,status in [
   ('empty pattern',[''],b'alpha\n',{},0),
   ('word boundaries',['-w','word'],b'word word\n',{},0),
-  ('long line',['-F','a'],b'a'*17000,{},2),
+  ('long line',['-F','a'],b'a'*17000,{},0),
   ('cancel',['a'],b'a\n'*100000,{'CLARICE_CANCEL_AFTER':'4'},130),
   ('write error',['a'],b'a\n',{'CLARICE_FAIL_WRITE':'1'},2),
-  ('allocation bound',['-E','(a|b|c|d){255}'],b'a\n',{},2)]:
+  ('allocation bound',['-E','(a|b|c|d){255}'],b'a\n',{'CLARICE_TEST_ALLOC_BUDGET':'98304'},2)]:
   a=subprocess.run([str(port),*args],input=body,capture_output=True,env={**os.environ,**env},timeout=10)
   assert a.returncode==status,(label,a.returncode,a.stderr)
   assert b'AddressSanitizer' not in a.stderr and b'runtime error:' not in a.stderr,a.stderr
   results.append({'test':label,'status':a.returncode,'passed':True})
 (root/'outputs/grep/host-tests.json').write_text(json.dumps(results,indent=2)+'\n')
-print(f'PASS: {len(cases)} option comparisons plus 40 buffered-I/O comparisons; line/allocation bounds, cancellation and output failure')
+print(f'PASS: {len(cases)} option comparisons plus 40 buffered-I/O comparisons; long lines/allocation failure, cancellation and output failure')

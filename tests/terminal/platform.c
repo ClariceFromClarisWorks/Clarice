@@ -9,6 +9,7 @@
 #include "../../src/ports/terminal/platform.c"
 #undef malloc
 #undef free
+#undef realloc
 #undef memcpy
 #undef memset
 #undef puts
@@ -23,6 +24,8 @@ static size_t input_left;
 static int seen_signal;
 void *port_malloc(size_t n){return malloc(n);}
 void port_free(void *p){free(p);}
+void *port_realloc(void *p,size_t n){return realloc(p,n);}
+FILE *port_standard(int fd){return fd==2?stderr:stdout;}
 int cli_environment(int i,char *p,unsigned long n){const char *v=i==0?"HOME=/":i==1?"TEST=parent":0;if(!v)return 0;assert(strlen(v)+1<n);strcpy(p,v);return 1;}
 unsigned long cli_ticks(void){return clock_ticks;}
 int app_columns(void){return 54;}
@@ -53,6 +56,6 @@ int main(void){
  struct winsize w;assert(!ioctl(0,TIOCGWINSZ,&w)&&w.ws_row==25&&w.ws_col==54);
  fd_set f;FD_ZERO(&f);FD_SET(0,&f);struct timeval wait={0,50000};before=clock_ticks;assert(!select(1,&f,0,0,&wait)&&clock_ticks-before==3&&!FD_ISSET(0,&f));
  input("x");FD_SET(0,&f);assert(select(1,&f,0,0,&wait)==1&&FD_ISSET(0,&f));tcflush(0,TCIFLUSH);assert(!input_left);
- for(int i=0;i<24;i++)free(environment[i]);
+ while(environment){struct editor_env *e=environment;environment=e->next;free(e);}
  puts("PASS: environment isolation, signal handlers, canonical/raw input, timeout, size and readiness");
 }

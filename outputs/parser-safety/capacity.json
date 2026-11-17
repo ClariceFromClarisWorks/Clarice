@@ -1,0 +1,66 @@
+[
+  {
+    "case": "script",
+    "bytes": 32788,
+    "status": 0,
+    "stdout": "large-script\n",
+    "stderr": "",
+    "passed": true
+  },
+  {
+    "case": "tokens",
+    "bytes": 1817,
+    "status": 0,
+    "stdout": "many-tokens\n",
+    "stderr": "",
+    "passed": true
+  },
+  {
+    "case": "functions",
+    "bytes": 3351,
+    "status": 0,
+    "stdout": "f0\nf47\nf0\n",
+    "stderr": "",
+    "passed": true
+  },
+  {
+    "case": "arguments",
+    "bytes": 1317,
+    "status": 0,
+    "stdout": "200 arg199\n",
+    "stderr": "",
+    "passed": true
+  },
+  {
+    "case": "recover",
+    "bytes": 8,
+    "status": 2,
+    "stdout": "",
+    "stderr": "sh: expected a compound list\n",
+    "passed": true
+  },
+  {
+    "case": "nested",
+    "bytes": 101,
+    "status": 2,
+    "stdout": "",
+    "stderr": "sh: parser recursion limit (32)\n",
+    "passed": true
+  },
+  {
+    "case": "andor",
+    "bytes": 496,
+    "status": 2,
+    "stdout": "",
+    "stderr": "sh: AND-OR tree depth limit (64)\n",
+    "passed": true
+  },
+  {
+    "case": "arithmetic",
+    "bytes": 209,
+    "status": 2,
+    "stdout": "",
+    "stderr": "sh: arithmetic tree depth limit (64)\n",
+    "passed": true
+  }
+]

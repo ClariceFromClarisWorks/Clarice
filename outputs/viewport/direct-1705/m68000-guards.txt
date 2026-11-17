@@ -1,0 +1,4 @@
+PASS 3803 actual M68000 separated-output cases (3675 selected-unrolled mode; phase-zero and short-tail cases use the established fallback).
+Phases 0..15, tails 1..85, physical row offsets 0/2/14, dirty stage, read-only glyph source, per-scanline bounds, even multibyte accesses and C ABI callee-saved registers.
+Exact 1705 native_glyph_compose_at helper linked with its kernels.S, glyph-planes.S and planes-unrolled.S. No application build or Snow/SE execution.
+The C wrapper uses D2 as scratch under the selected Retro68 ABI; D3-D7/A2-A6 preservation checked.

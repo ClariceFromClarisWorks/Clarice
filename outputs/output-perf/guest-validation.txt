@@ -1,0 +1,4 @@
+PASS: normal guest redirected ls -la is byte-for-byte identical to accepted fixture; 1002 complete rows, all 1000 filenames, sizes, creation dates and final newline.
+PASS: ls -lah --full has 12 complete rows with expected flags, sizes and type/creator.
+NATIVE_SCROLL_TEST PASS; 24 bursts + 20 views; 0 pixel mismatches
+Scrollbar staging: 153 checks, 0 staging/reference mismatches

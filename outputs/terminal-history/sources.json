@@ -1,0 +1,58 @@
+{
+  "ncsa": {
+    "version": "2.7b5 source archive",
+    "archive_sha256": "f78839f1b447ff291bb9350c9070cf5e9833d15f18ed14ddfca66a3156bead01",
+    "archive_sha1_matches_repository": true,
+    "path": "work/terminal-history/read/ncsa/source"
+  },
+  "bettertelnet": {
+    "version": "2.0fc1",
+    "archive_sha256": "19548c0fbb45d5881d1eae944c52fd55ec77c324a04ef9b21c3dfe947a456e26",
+    "mirror_commit": "c57571f55b347295772a0b0b50535e958cf1aa45",
+    "path": "work/terminal-history/read/bettertelnet-original/telnet source/source"
+  },
+  "flynn": {
+    "commit": "6d12f6e6d942f9111fc4701de0b2f46e93a7c1c7",
+    "path": "work/terminal-history/flynn/src"
+  },
+  "source_files": {
+    "bettertelnet/Screens/rsmac.c": {
+      "normalized_sha256": "46c4817163923c5f041719202d9aa19dc083d185f18199a47d845269e1614701",
+      "matches_mirror": true
+    },
+    "bettertelnet/Screens/rsinterf.c": {
+      "normalized_sha256": "1c72f8da7525edb8a2bfcc7a57bbe9f56931589c34c6b62e5cc577b720419e43",
+      "matches_mirror": true
+    },
+    "bettertelnet/Screens/vsinterf.c": {
+      "normalized_sha256": "1f9465e34ac1edc8b9dc878caa86a9065dbf4f8805e89129a591d83672737b1e",
+      "matches_mirror": true
+    },
+    "bettertelnet/Screens/vsintern.c": {
+      "normalized_sha256": "033c66b9c2a10693729503520baf51abeae90c8dab3e851007df65185b9a8d36",
+      "matches_mirror": true
+    },
+    "ncsa/Screens/rsmac.c": {
+      "normalized_sha256": "9bb94d624b6bfd7d009d0bd8d5d28c3298a521a86e448f9b4ef7c038b61c22ef"
+    },
+    "ncsa/Screens/vsinterf.c": {
+      "normalized_sha256": "1b58d8c8e109dbe095f7b70b5df696afafc295035b40a14d261a4c4473f0572a"
+    },
+    "ncsa/Screens/vsintern.c": {
+      "normalized_sha256": "f885bd0a5c537cc7da0836f7caa47b84c9bd7363b6b95c78f1aeea629e957c2a"
+    },
+    "flynn/terminal_ui.c": {
+      "sha256": "d970d12b1491e83ff88fbaab6b2abb98514744073155b7ae260dfb6eb4766e87"
+    },
+    "flynn/terminal.c": {
+      "sha256": "fc54b11a9a37ee3c7be1239581e6aac8035f806964bf8d43a8f840667b9a8a19"
+    },
+    "flynn/main.c": {
+      "sha256": "9d6e220802ed9f7e6bfe4f411f61f064aaf12a02ce79aaf35cbc211973736ee7"
+    },
+    "flynn/terminal.h": {
+      "sha256": "2c9f220a42eb98369326d209a1d724a1adc629e104db580176f9315aa142a269"
+    }
+  },
+  "scope": "Source inspection only. No third-party benchmark, Clarice runtime edit, rebuild or new guest/hardware test."
+}

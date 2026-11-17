@@ -1,0 +1,3 @@
+clock iterations=100000 ticks=66 sum=4144466567
+clock iterations=200000 ticks=132 sum=150598631
+clock iterations=400000 ticks=264 sum=4144300327

@@ -1,0 +1,32 @@
+[
+  {
+    "env": {},
+    "status": 0,
+    "stdout": "PASS: 20 invocations, live allocations reclaimed at exit\n",
+    "stderr": ""
+  },
+  {
+    "env": {
+      "CLARICE_TEST_ALLOC_BUDGET": "65536"
+    },
+    "status": 0,
+    "stdout": "PASS: 20 invocations, live allocations reclaimed at exit\n",
+    "stderr": ""
+  },
+  {
+    "env": {
+      "CLARICE_TEST_ALLOC_BUDGET": "4096"
+    },
+    "status": 2,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "env": {
+      "CLARICE_CANCEL_AFTER": "2"
+    },
+    "status": 130,
+    "stdout": "",
+    "stderr": ""
+  }
+]

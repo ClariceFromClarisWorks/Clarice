@@ -29,7 +29,7 @@ pipe:0
 redirect:0
 invalid:1
 missing:1
-bound:2
+bound:0
 help:wc:0
 help:head:0
 help:cut:0
@@ -42,6 +42,6 @@ assert len(rows)==2 and rows[0]==rows[1] and rows[0][2]=='0',rows
 assert s.endswith('PIPELINES-END\n')
 cancel=(evidence/'guest-cancel.txt').read_text()
 assert cancel.startswith('130\n') and 'remaining=0' in cancel
-assert '16384' in (evidence/'guest-error.txt').read_text()
+assert not (evidence/'guest-error.txt').read_text()
 assert 'clarice-pipe-' not in (evidence/'tmp-listing.txt').read_text()
 print('PASS: exact Plus output/status fixtures, stable free heap/largest block after 25 repeated tool runs, Ctrl+C status 130, zero retained invocation allocations, no pipeline spools left.')

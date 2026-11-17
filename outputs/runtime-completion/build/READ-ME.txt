@@ -1,0 +1,7 @@
+Normal 68000 Clarice build, 14 November 2026. MacBinary application.
+Contains updated bundled portable commands; installed commands are NOT silently
+replaced at startup. Existing installations require explicit appinstall repair /
+replacement to select bundled updates. Preserve their recoverable previous copy.
+No experimental nano binary is bundled. Nano failed-save recovery is unresolved.
+Host and Snow evidence: ../PROGRESS.md. Physical acceptance remains pending.
+No release or publication performed.

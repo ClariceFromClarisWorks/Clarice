@@ -1,0 +1,8 @@
+Snow Plus/4MB/System6.0.8, renderer1709, normal emulator speed for input checks.
+Existing nano CLX acd7b7d40adc921fa38252443b952d56f5a9045e80aafb4d4643360f57b3d080.
+Opened /tmp/viewport-pages.txt (96 lines) via /mnt/GlyphFull/nano.
+Typed viewport prefix, Option-X, declined save: status0, prompt/history restored.
+Reopened original text without prefix; Option-X exit: status0 and command recovery.
+After both runs: nativeheap355234, largest351620, ownedpeak89448, remaining0.
+This validates edit/discard/exit and terminal restoration, not a new save/performance test.
+Initial focus-based input was contaminated; target-directed physical modifier events corrected test delivery.

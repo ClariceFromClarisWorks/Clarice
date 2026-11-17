@@ -1,0 +1,539 @@
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -3,7 +3,7 @@
+ if(CLARICE_OFFLINE_INSTALLER)
+  set(INSTALLER_RESOURCE Installer.r)
+ endif()
+-add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c kernels.S checksum.S App.r Icons.r ${INSTALLER_RESOURCE} TYPE APPL CREATOR CLRC)
++add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c planes-unrolled.S glyph-planes.S kernels.S checksum.S App.r Icons.r ${INSTALLER_RESOURCE} TYPE APPL CREATOR CLRC)
+ # Retro68's Rez rule tracks App.r itself, but not its included build stamp.
+ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/App.r.rsrc.bin" APPEND
+  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/update/version.h")
+--- a/src/app.c
++++ b/src/app.c
+@@ -301,6 +301,8 @@
+ #endif
+  return 1;
+ }
++#include "glyph-planes.inc"
++static int planes_enabled=1;
+ #include "native-glyphs.inc"
+ static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((aligned(2)));long first=current_line-visible+1-scrollback;int prompt_row=visible;if(first<0){first=0;prompt_row=(int)current_line;}int selection_a=select_start<select_end?select_start:select_end,selection_b=select_start>select_end?select_start:select_end;
+  if(!win)return;SetPort(win);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);DRAW_STAMP(native_stage);compose_input(screen,&first,&prompt_row);DRAW_ADD(0,native_stage);
+@@ -349,6 +351,7 @@
+ #endif
+  DRAW_STAMP(text_start);
+  int glyph_phase=0;if(!DIRECT_LEGACY&&!ALIGN_LEGACY&&buffered&&(right-left)*cell_w>=128&&!(win->portBits.rowBytes&0xc000)&&(win->portBits.rowBytes&0x3fff)==64){glyph_phase=(destination.left-win->portBits.bounds.left)&15;if(glyph_phase+(right-left)*cell_w>512)glyph_phase=0;}
++ history_raster_line=first+row;
+  if(!force_draw&&buffered&&row<prompt_row&&!selected&&!screen[row][COLS-1]&&(!last_screen[row][COLS-1]||(unsigned char)last_screen[row][COLS-1]==255)&&native_glyph_row(rendered+left,right-left,glyph_phase)){OffsetRect(&area,glyph_phase-area.left,0);}
+  else {EraseRect(&area);if(mono){int len=right;while(len>left&&rendered[len-1]==' ')len--;MoveTo(area.left,area.top+font_ascent);if(len>left)DrawText(rendered,left,len-left);}else for(x=left;x<right;x++){MoveTo((buffered?0:TEXT_LEFT)+x*cell_w,area.top+font_ascent);DrawChar(rendered[x]);}}
+ 
+@@ -359,7 +362,7 @@
+  if(screen[row][COLS-1]){int cx=(unsigned char)screen[row][COLS-1]-1;Rect caret;SetRect(&caret,(buffered?0:TEXT_LEFT)+cx*cell_w,area.top,(buffered?0:TEXT_LEFT)+(cx+1)*cell_w,area.bottom);InvertRect(&caret);}
+  if(buffered){SetPort(win);ForeColor(blackColor);BackColor(whiteColor);DRAW_STAMP(copy_start);present_native_row(&area,&destination);DRAW_ADD(3,copy_start);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);}memcpy(last_screen[row],screen[row],COLS);}}
+  DRAW_ADD(2,native_stage);
+- if(force_draw&&saved_clip){ForeColor(blackColor);BackColor(whiteColor);Rect grow=win->portRect;grow.left=grow.right-15;grow.top=grow.bottom-15;GetClip(saved_clip);ClipRect(&grow);DrawGrowIcon(win);SetClip(saved_clip);}drawn_first=first;drawn_prompt=prompt_row;dirty=force_draw=0;last_paint=TickCount();
++ if(force_draw&&saved_clip){ForeColor(blackColor);BackColor(whiteColor);Rect grow=win->portRect;grow.left=grow.right-15;grow.top=grow.bottom-15;GetClip(saved_clip);ClipRect(&grow);DrawGrowIcon(win);SetClip(saved_clip);}history_cache_end();glyph_planes_end();drawn_first=first;drawn_prompt=prompt_row;dirty=force_draw=0;last_paint=TickCount();
+ }
+ /* Cached system-font cells; all addresses remain inside the bounded bitmap. */
+ extern void asm_cells(unsigned char *,const unsigned char *,const unsigned char *,long,long,long);
+@@ -886,6 +889,7 @@
+ #endif
+ #ifdef CLARICE_USABILITY_DIAGNOSTICS
+ #include "../tests/terminal/usability-guest.inc"
++
+ #endif
+ static void welcome(void){
+  ClariceHardware h;char line[192],cpu[32],fpu[40],ram[32];cli_hardware(&h,sizeof h);
+@@ -949,6 +953,11 @@
+ #ifdef CLARICE_INPUT_DIAGNOSTICS
+  input_probe_tick();
+ #endif
++static int vtested;if(!vtested&&FrontWindow()==win){vtested=1;int original_theme=inverse;
++ term_puts("Rendering benchmark: baseline / planes / history cache.\n");
++ for(int theme=0;theme<2;theme++){inverse=theme;font_layout();jump_probe(3);}
++ inverse=original_theme;history_cache_dispose();glyph_planes_dispose();planes_enabled=2;history_raster_enabled=0;force_draw=dirty=1;draw();term_puts("PHYSICAL-BENCH-DONE\n");
++ }
+  int serviced=0;
+  for(int i=0;i<32&&!done;i++){
+   if(!busy&&ahead_count){unsigned int at=ahead_head;ahead_head=(ahead_head+1)%LINE_CAP;ahead_count--;key(ahead_keys[at],ahead_mods[at]);}
+@@ -956,7 +965,7 @@
+   serviced=1;
+  }
+  if(dirty)draw();if(serviced||ahead_count)continue;if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);}
+- UPDATE_LAUNCH_TRACE("cleanup begin");history_shutdown();if(tall_bar_pixels)DisposePtr(tall_bar_pixels);if(history_bar)DisposeControl(history_bar);if(frame_ready){ClosePort(&prompt_port);ClosePort(&frame_port);}if(frame_pixels)DisposePtr((Ptr)frame_pixels);if(transfer_region)DisposeRgn(transfer_region);if(visible_region)DisposeRgn(visible_region);if(scroll_region)DisposeRgn(scroll_region);if(saved_clip)DisposeRgn(saved_clip);CloseWindow(win);UPDATE_LAUNCH_TRACE("cleanup done");
++ UPDATE_LAUNCH_TRACE("cleanup begin");history_cache_dispose();glyph_planes_dispose();history_shutdown();if(tall_bar_pixels)DisposePtr(tall_bar_pixels);if(history_bar)DisposeControl(history_bar);if(frame_ready){ClosePort(&prompt_port);ClosePort(&frame_port);}if(frame_pixels)DisposePtr((Ptr)frame_pixels);if(transfer_region)DisposeRgn(transfer_region);if(visible_region)DisposeRgn(visible_region);if(scroll_region)DisposeRgn(scroll_region);if(saved_clip)DisposeRgn(saved_clip);CloseWindow(win);UPDATE_LAUNCH_TRACE("cleanup done");
+  if(update_handoff){
+   /* Invocation/stream/history cleanup has completed before transfer launch. */
+   int e=update_native_launch(update_handoff);DisposePtr(update_handoff);update_handoff=0;
+--- a/src/history-raster-cache.inc
++++ b/src/history-raster-cache.inc
+@@ -8,7 +8,7 @@
+ #define HISTORY_CACHE_ROW_BYTES (64*11)
+ typedef struct {
+  long line;
+- unsigned char valid;
++ unsigned short valid; /* Keep key and pixel block even-aligned for BlockMove. */
+  unsigned char key[HISTORY_CACHE_KEY_BYTES];
+  unsigned char pixels[HISTORY_CACHE_ROW_BYTES];
+ } HistoryRasterRow;
+--- a/src/listing.inc
++++ b/src/listing.inc
+@@ -107,7 +107,7 @@
+  "Directory type/creator use ---- ---- (not applicable).\n"
+  "-a includes Finder-invisible entries, dot names, . and ..\n"
+  "Explicit path operands are shown even when hidden.\n"
+- "-1 one entry per line; -P accepted for compatibility; catalog order.\n"
++ "-1 one entry per line; -P no paging; catalog order.\n"
+  "No invented owners, groups or Unix access permissions.\n");return output_error?1:0;}
+ int detail=0,all=0,paged=1,human=0,one=0,options=1,n=0,i;int operand=1,operand_options=1;
+  for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--] [path ...]\n");return 2;}}}else n++;}
+--- a/src/native-glyphs.inc
++++ b/src/native-glyphs.inc
+@@ -1,3 +1,10 @@
++extern void asm_ascii_planes_unrolled(unsigned char*,const unsigned char*,const unsigned char*,long);
++#include "history-raster-cache.inc"
++/* Diagnostic experiment: parent sets line identity immediately before each
++   native_glyph_row call, and releases the locked handle once after painting. */
++static int history_raster_enabled;
++static long history_raster_line=-1;
++static unsigned long history_raster_hits,history_raster_misses;
+ /* Monaco 9 ASCII cells share the unused part of the existing 4096-byte row
+    staging bitmap. No allocation: first 704 bytes remain the 11-pixel output
+    row; 95 * 32 glyph bytes occupy bytes 704..3743. Editor drawing may use the
+@@ -34,7 +41,8 @@
+     combine with prior contents. Clear those before either compositor runs. */
+  for(int y=0;y<11;y++){unsigned char *row=p+y*STRIDE;if(bits)row[0]=0;for(int i=start;i<end;i++)row[i]=0;}
+  if(bits){
+-  if(full)asm_ascii_groups_at(p,(const unsigned char*)s,glyphs,full,bits);
++  if(full){if(planes_enabled&&!glyph_planes_data&&bits==((TEXT_LEFT-win->portBits.bounds.left)&7))glyph_planes_begin(bits);
++ if(planes_enabled&&glyph_planes_prepare(glyphs,bits))(planes_enabled==2?asm_ascii_planes_unrolled:asm_ascii_planes_at)(p,(const unsigned char*)s,glyph_planes_data,full);else asm_ascii_groups_at(p,(const unsigned char*)s,glyphs,full,bits);}
+   if(count!=full)asm_ascii_cells_at(p+start,(const unsigned char*)s+full,glyphs,count-full,11,6,bits);
+  }else asm_ascii_cells(p,(const unsigned char*)s,glyphs,count,11,6);
+ }
+@@ -42,7 +50,19 @@
+  if(JUMP_LEGACY||!mono||font_id!=4||font_size!=9||cell_w!=6||line_h!=11||font_ascent!=9||count<1||count>85||phase<0||phase>15||phase+count*6>512)return 0;
+  for(int i=0;i<count;i++)if((unsigned char)s[i]<32||(unsigned char)s[i]>126)return 0;
+  unsigned char *glyphs=prompt_pixels+STRIDE*11;
+- if(!native_glyph_valid){
++ unsigned char history_key[HISTORY_CACHE_KEY_BYTES];int cacheable=history_raster_enabled&&scrollback>0&&count==columns&&history_raster_line>=0;
++ /* Rebuilt native font cells also invalidate their derived history pixels. */
++ if(!native_glyph_valid)history_cache_dispose();
++ if(cacheable){
++  memset(history_key,0,sizeof history_key);memcpy(history_key,s,count);
++  /* Diagnostic and clipped-row callers can change geometry inside one paint.
++     Never treat a held handle as proof that its pixels match this phase. */
++  if(history_cache_rows&&(history_cache_columns!=columns||history_cache_phase!=phase||history_cache_font!=font_id||history_cache_size!=font_size))history_cache_end();
++  if(!history_cache_rows)history_cache_begin(columns,phase,font_id,font_size,cell_w,line_h);
++  if(history_cache_load(history_raster_line,history_key,prompt_pixels)){history_raster_hits++;goto history_ink_ready;}
++  history_raster_misses++;
++ }
++ if(!native_glyph_valid){glyph_planes_invalidate();
+   DRAW_STAMP(build_start);
+   ForeColor(blackColor);BackColor(whiteColor);
+   for(int first=32;first<127;){
+@@ -67,6 +87,8 @@
+  }
+  if(phase)native_glyph_compose_at(s,count,phase);
+  else{native_glyph_clear(count);asm_ascii_cells(prompt_pixels,(const unsigned char*)s,glyphs,count,11,6);}
++ if(cacheable)history_cache_store(history_raster_line,history_key,prompt_pixels);
++history_ink_ready:
+  if(inverse){Rect r;SetRect(&r,phase,0,phase+count*6,11);InvertRect(&r);}
+  return 1;
+ }
+--- a/src/planes-unrolled.S
++++ b/src/planes-unrolled.S
+@@ -0,0 +1,276 @@
++.text
++/* Four pre-shifted Monaco 9 contribution planes; plain 68000, C ABI.
++   Each plane has 95 64-byte glyph slots, each with eleven longwords.
++   Existing caller clears boundary/tail bytes and guarantees even row base,
++   64-byte stride, 4..84 glyphs divisible by four and bounded output. */
++.globl asm_ascii_planes_unrolled
++asm_ascii_planes_unrolled:
++ movem.l %d2-%d7/%a2-%a6,-(%sp)
++ move.l 48(%sp),%a0
++ move.l 52(%sp),%a1
++ move.l 56(%sp),%a2
++ suba.l #2048,%a2
++ move.l 60(%sp),%d6
++ lsr.l #2,%d6
++.Lunrolled_group:
++ moveq #0,%d0
++ move.b (%a1)+,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a3
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a4
++ adda.l #6080,%a4
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a5
++ adda.l #12160,%a5
++ move.b (%a1)+,%d0
++ andi.w #255,%d0
++ lsl.w #6,%d0
++ lea (%a2,%d0.w),%a6
++ adda.l #18240,%a6
++ move.l %a0,%d0
++ btst #0,%d0
++ bne .Lunrolled_odd
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b (%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 64(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,64(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 128(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,128(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 192(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,192(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 256(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,256(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 320(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,320(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 384(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,384(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 448(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,448(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 512(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,512(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 576(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,576(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.b 640(%a0),%d1
++ ror.l #8,%d1
++ or.l %d1,%d0
++ move.l %d0,640(%a0)
++ bra .Lunrolled_next
++.Lunrolled_odd:
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w -1(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,-1(%a0)
++ move.b %d0,3(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 63(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,63(%a0)
++ move.b %d0,67(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 127(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,127(%a0)
++ move.b %d0,131(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 191(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,191(%a0)
++ move.b %d0,195(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 255(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,255(%a0)
++ move.b %d0,259(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 319(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,319(%a0)
++ move.b %d0,323(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 383(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,383(%a0)
++ move.b %d0,387(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 447(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,447(%a0)
++ move.b %d0,451(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 511(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,511(%a0)
++ move.b %d0,515(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 575(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,575(%a0)
++ move.b %d0,579(%a0)
++ move.l (%a3)+,%d0
++ or.l (%a4)+,%d0
++ or.l (%a5)+,%d0
++ or.l (%a6)+,%d0
++ moveq #0,%d1
++ move.w 639(%a0),%d1
++ swap %d1
++ move.l %d0,%d2
++ lsr.l #8,%d2
++ or.l %d1,%d2
++ move.l %d2,639(%a0)
++ move.b %d0,643(%a0)
++.Lunrolled_next:
++ lea 3(%a0),%a0
++ subq.w #1,%d6
++ bne .Lunrolled_group
++ movem.l (%sp)+,%d2-%d7/%a2-%a6
++ rts
+--- a/tests/terminal/align-guest.inc
++++ b/tests/terminal/align-guest.inc
+@@ -43,6 +43,6 @@
+  }
+  SetPort(win);SetClip(original);
+  InvalRect(&win->portRect);native_glyph_valid=0;force_draw=dirty=1;DisposeRgn(original);DisposeRgn(clip);DisposeRgn(hole);DisposePtr((Ptr)reference);char report[200];snprintf(report,sizeof report,"%s_PIXELS %s checks=%d failures=%d heap_delta=%ld\n",direct?"DIRECT":"ALIGN",failures?"FAIL":"PASS",checks,failures,FreeMem()-heap);
+- char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,direct?"direct-pixels.txt":"align-pixels.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=strlen(report);SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
++ char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,direct?inverse?"planes-pixels-dark.txt":"planes-pixels-light.txt":"align-pixels.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=strlen(report);SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
+  term_puts(report);return cancelled?130:failures?1:0;
+ }
+--- a/tests/terminal/jump-guest.inc
++++ b/tests/terminal/jump-guest.inc
+@@ -1,11 +1,11 @@
+ /* Large retained-history jumps. Report I/O and seeding are outside paint timing. */
+ static int jump_probe(int clearing){
+- char report[4096],line[COLS];int used=0,saved=render_mode,saved_page=page_mode,saved_busy=busy;
++ char report[8192],line[COLS];int used=0,saved=render_mode,saved_page=page_mode,saved_busy=busy;
+  render_mode=0;page_mode=0;build_font_cache();select_start=select_end=-1;
+  long heap_before=FreeMem();
+  used+=snprintf(report+used,sizeof report-used,"JUMP_PROFILE cols=%d rows=%d cell=%d line=%d inverse=%d\n",columns,visible,cell_w,line_h,inverse);
+- for(int run=0;run<3&&!cancelled;run++)for(int variant=0;variant<2&&!cancelled;variant++)for(int kind=0;kind<2&&!cancelled;kind++){
+-  direct_legacy=clearing==3?!variant:1;
++ for(int run=0;run<3&&!cancelled;run++)for(int variant=0;variant<3&&!cancelled;variant++)for(int kind=0;kind<2&&!cancelled;kind++){
++  direct_legacy=0;planes_enabled=variant?2:0;history_raster_enabled=variant==2;glyph_planes_dispose();history_cache_dispose();history_raster_hits=history_raster_misses=0;
+   jump_legacy=clearing?0:!variant;clear_legacy=clearing==1?!variant:0;align_legacy=clearing==2?!variant:0;native_glyph_valid=0;glyph_build_ticks=0;
+   app_clear();busy=1;
+   for(int i=0;i<128;i++){
+@@ -20,10 +20,13 @@
+    unsigned long start=TickCount();draw();unsigned long dt=TickCount()-start;total+=dt;if(dt>worst)worst=dt;
+    if(i%6==5)app_yield();
+   }
++  used+=snprintf(report+used,sizeof report-used,"hits=%lu misses=%lu\n",history_raster_hits,history_raster_misses);
+   used+=snprintf(report+used,sizeof report-used,"run=%d new=%d kind=%s ticks=%lu worst=%lu frames=%lu compose=%lu shift=%lu raster=%lu copy=%lu bar=%lu plan=%lu prepare=%lu text=%lu rows=%lu build=%lu align=%lu\n",run,variant,kind?"varied":"listing",total,worst,draw_frames,profile[0],profile[1],profile[2],profile[3],draw_bar_ticks,jump_detail[0],jump_detail[1],jump_detail[2],jump_detail[3],glyph_build_ticks,align_ticks);
+  }
+  direct_legacy=jump_legacy=clear_legacy=align_legacy=0;render_mode=saved;page_mode=saved_page;busy=saved_busy;scrollback=0;build_font_cache();force_draw=dirty=1;
++ history_cache_dispose();glyph_planes_dispose();
+  used+=snprintf(report+used,sizeof report-used,"heap_delta=%ld; phases overlap; total is sum of completed draw calls\n",FreeMem()-heap_before);
+- char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,clearing==3?"direct-profile.txt":clearing==2?"align-profile.txt":clearing?"clear-profile.txt":"jump-profile.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=used;SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
++ history_cache_dispose();glyph_planes_dispose();
++ char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,inverse?"physical-dark.txt":"physical-light.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=used;SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
+  term_puts(report);return cancelled?130:0;
+ }
+--- a/tests/terminal/viewport-host.py
++++ b/tests/terminal/viewport-host.py
+@@ -77,72 +77,3 @@
+ p=r/'work/viewport';p.mkdir(parents=True,exist_ok=True);(p/'compose.c').write_text(code)
+ subprocess.run(['cc','-std=c99','-fsanitize=address,undefined',str(p/'compose.c'),'-o',str(p/'compose')],check=True)
+ subprocess.run([str(p/'compose')],check=True)
+-# Exercise the real layout function against native-call stubs; no renderer or
+-# allocation policy is reimplemented here. Two regressions concern failure and
+-# an anchor inside the editable command's virtual continuation rows.
+-a=s.index('static void layout(void)');b=s.index('static void font_layout(void)',a)
+-pre=code[:code.index('int main(void)')]
+-pre=pre.replace('static int win=1;\nstatic int FrontWindow(void){return 1;}', '''
+-typedef struct {short top,left,bottom,right;} Rect;
+-struct Window {Rect portRect;};static struct Window window;
+-static struct Window *win=&window;
+-static struct Window *FrontWindow(void){return win;}
+-''')
+-layout_code=pre+r'''
+-#include <stdlib.h>
+-#include "reflow.h"
+-typedef char *Ptr;
+-#define TEXT_LEFT 4
+-#define TEXT_TOP 0
+-static int cell_w=6,line_h=12,retained=128,out_col,force_draw,dirty;
+-static int select_start=-1,select_end=-1,history_bar,fail_alloc;
+-static unsigned char wrapped[ROWS];static long page_start;
+-static void activity_hide(void){}
+-static Ptr NewPtr(long n){return fail_alloc?0:malloc(n);}
+-static void DisposePtr(Ptr p){free(p);}
+-static int scroll_limit(void){return viewport_live_first()-oldest_line;}
+-static void MoveControl(int a,int b,int c){(void)a;(void)b;(void)c;}
+-static void SizeControl(int a,int b,int c){(void)a;(void)b;(void)c;}
+-'''+s[a:b]+r'''
+-static void setup(void){
+- memset(text,0,sizeof text);memset(wrapped,0,sizeof wrapped);
+- current_line=100;oldest_line=0;columns=20;visible=4;
+- scrollback=busy=tty_reading=searching=cursor=background=paging=0;
+- input[0]=0;window.portRect=(Rect){0,0,60,140};
+- for(int i=0;i<100;i++)snprintf(text[i],COLS,"row %d",i);
+-}
+-int main(int argc,char **argv){char screen[40][COLS];long before,after;int prompt;
+- setup();scrollback=10;compose_input(screen,&before,&prompt);
+- window.portRect.bottom=36;layout();compose_input(screen,&after,&prompt);
+- assert(before==after);puts("PASS height-only viewport anchor");
+- setup();
+- if(argc>1&&!strcmp(argv[1],"allocation")){
+-  out_col=17;strcpy(text[100],"01234567890123456");
+-  fail_alloc=1;window.portRect.right=80;layout();
+-  printf("failed reflow columns=%d out_col=%d\n",columns,out_col);fflush(stdout);
+-  assert(columns==20&&out_col==17&&!strcmp(text[100],"01234567890123456"));
+-  puts("PASS failed reflow retains coherent model");
+- }else{
+-  memset(input,'z',200);input[200]=0;cursor=200;scrollback=2;
+-  compose_input(screen,&before,&prompt);assert(before>current_line);
+-  window.portRect.right=80;layout();compose_input(screen,&after,&prompt);
+-  printf("editable anchor before=%ld after=%ld command=%ld\n",before,after,current_line);fflush(stdout);
+-  assert(after==current_line+8);
+-  window.portRect.right=140;layout();compose_input(screen,&after,&prompt);
+-  assert(after==before);
+-  puts("PASS input-continuation resize anchor round trip");
+-  setup();memset(input,'z',200);input[200]=0;cursor=200;scrollback=2;
+-  for(int i=39;i<200;i+=40)input[i]='\n';
+-  compose_input(screen,&before,&prompt);
+-  window.portRect.right=80;layout();compose_input(screen,&after,&prompt);
+-  assert(after>=current_line);
+-  window.portRect.right=140;layout();compose_input(screen,&after,&prompt);
+-  assert(after==before);
+-  puts("PASS newline-bearing command anchor round trip");
+- }
+-}
+-'''
+-(p/'layout.c').write_text(layout_code)
+-subprocess.run(['cc','-std=c99','-fsanitize=address,undefined','-I',str(r/'src'),str(p/'layout.c'),str(r/'src/reflow.c'),'-o',str(p/'layout')],check=True)
+-results=[subprocess.run([str(p/'layout'),case]).returncode for case in ['allocation','input-anchor']]
+-if any(results):raise SystemExit('layout regressions failed: '+str(results))

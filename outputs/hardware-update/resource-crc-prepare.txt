@@ -1,0 +1,14 @@
+Using multiversal interfaces
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/update-guard/app
+[ 25%] Building C object CMakeFiles/ResourceCRC.dir/resource-crc-probe.c.obj
+[ 50%] Linking C executable ResourceCRC.code.bin
+[ 50%] Built target ResourceCRC
+[ 75%] Generating ResourceCRC.bin, ResourceCRC.APPL, ResourceCRC.dsk, ResourceCRC.ad, %ResourceCRC.ad
+[100%] Built target ResourceCRC_APPL
+/src/work/hardware-update/system.hda: contains 1 HFS partition
+Volume name is "Sys6Unix"
+Volume was created on Sun Nov  8 05:23:44 2026
+Volume was last modified on Sat Nov 14 13:13:06 2026
+Volume has 22177280 bytes free

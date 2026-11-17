@@ -1,0 +1,3 @@
+Runtime: heap=360744 largest=360454 image=7868 ticks=326 load=54 owned-peak=0 remaining=0
+Loader ticks: read=19 validate=1 imports=1 relocations=1 prepare=9 events=0 (events included above)
+Verification ticks: mode=full header=0 record=4 payload=0 metadata=0 structure=0 (structure included in relocations)

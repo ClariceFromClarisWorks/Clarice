@@ -1,0 +1,30 @@
+{
+  "checks": [
+    {
+      "test": "roundtrip",
+      "peer_exit": 0,
+      "seconds_including_typing": 6.214119542000001
+    },
+    {
+      "test": "cancel",
+      "peer_exit": 1,
+      "seconds_including_typing": 14.850994
+    },
+    {
+      "test": "recovery",
+      "peer_exit": 0,
+      "seconds_including_typing": 9.304080540999998
+    },
+    {
+      "test": "recovered",
+      "peer_exit": 0,
+      "seconds_including_typing": 6.416477875000005
+    },
+    {
+      "test": "empty",
+      "peer_exit": 0,
+      "seconds_including_typing": 4.437157625000005
+    }
+  ],
+  "binary_comparisons": true
+}

@@ -18,7 +18,7 @@ head -n bad /tmp/pipeline-data 2> /tmp/pipeline-error
 echo invalid:$?
 wc /tmp/no-such-pipeline-file 2> /tmp/pipeline-error
 echo missing:$?
-head /tmp/pipeline-long 2> /tmp/pipeline-error
+head /tmp/pipeline-long > /tmp/pipeline-long-out 2> /tmp/pipeline-error
 echo bound:$?
 for tool in wc head cut tr uniq; do $tool --help > /tmp/pipeline-help; echo help:$tool:$?; done
 status runtime

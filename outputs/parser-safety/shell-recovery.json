@@ -1,0 +1,27 @@
+[
+  {
+    "source": "f() { echo new; }; f; x=$(echo hi); { echo a; } > result",
+    "trials": 298,
+    "passed": true
+  },
+  {
+    "source": "while read x; do echo \"$x\"; done <<EOF > result\none\ntwo\nEOF\ncat result",
+    "trials": 226,
+    "passed": true
+  },
+  {
+    "source": "( seed=changed; original() { echo changed; }; original ); original",
+    "trials": 246,
+    "passed": true
+  },
+  {
+    "source": "for x in one two; do echo \"$x\"; done | cat",
+    "trials": 174,
+    "passed": true
+  },
+  {
+    "source": "echo $((1+2*3)); f() { (echo nested) > result; }; f",
+    "trials": 324,
+    "passed": true
+  }
+]

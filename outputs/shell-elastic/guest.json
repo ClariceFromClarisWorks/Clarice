@@ -1,0 +1,455 @@
+{
+  "build": 2026111541,
+  "platform": "Snow Plus 4 MB, System 6.0.7 reported, uncapped FFWD approximately 15\u201316x",
+  "elastic": [
+    {
+      "name": "80 variables",
+      "passed": true,
+      "output_bytes": 13,
+      "sha256": "5a40d0780a6c0ae98a2bfdbce45cebba9d3666afb4862f392e8fd29fe6011080",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "long variable name",
+      "passed": true,
+      "output_bytes": 4,
+      "sha256": "5040625b1fb6fa4af07226683f6e6003b29e5e70b16f8cfb24be7a752393f0ee",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 0",
+      "passed": true,
+      "output_bytes": 11,
+      "sha256": "01a6ee3544431f3c9b093587d68f0c38145b3c4af47c7646b2fb56191b5efe0d",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 1",
+      "passed": true,
+      "output_bytes": 12,
+      "sha256": "fc28efc771908dacba0b52fd95d951583112eddefe5c8a3b33662215be9e9efb",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 127",
+      "passed": true,
+      "output_bytes": 138,
+      "sha256": "bb8bae1eb2e06906597b075627712e2625c622bcb83094a725732746b12e9dbd",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 128",
+      "passed": true,
+      "output_bytes": 139,
+      "sha256": "a200129c3986be6bc5faab8664df58b99dd175c762905d3f82e15a42ba783d5f",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 2047",
+      "passed": true,
+      "output_bytes": 2058,
+      "sha256": "48d9a38a699d39c8d035d53a8dd7cc4ac4673f6dcf1b8934120f2d32c697e529",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 2048",
+      "passed": true,
+      "output_bytes": 2059,
+      "sha256": "9a92718879404b7c29d16d984ed5069be7b079f6fae5421151327250d511131c",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 4096",
+      "passed": true,
+      "output_bytes": 4107,
+      "sha256": "a0d9afe69649de205caf9afff7c1c60c9b1bb9f977f0a488ef90d0f93c8ef135",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 8192",
+      "passed": true,
+      "output_bytes": 8203,
+      "sha256": "c59bd8b3e63bab7710a8897962f221c866aca6af6c06ac06299f5bad51bcb994",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read 65536",
+      "passed": true,
+      "output_bytes": 65547,
+      "sha256": "1a01bfa38b3def614fe759ae17cc5c7cb26766658f55b85c865743bb5ed2e5e6",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "large substitution",
+      "passed": true,
+      "output_bytes": 8198,
+      "sha256": "e9dd58f8f3b9db1ca5350fb17bde6f62bf935aa7fd732469e1f0c4d007426706",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "100 arguments",
+      "passed": true,
+      "output_bytes": 499,
+      "sha256": "093c13816876bf77be99094e1ad4a14022d6728589e493340848eec1f16ffccf",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "subshell arguments",
+      "passed": true,
+      "output_bytes": 18,
+      "sha256": "e0f5ce1f77a9a97ab1a438178397f6dfc8cffdea2420892b30f6a134aea0768d",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "substitution arguments",
+      "passed": true,
+      "output_bytes": 18,
+      "sha256": "ddf29dd39a65c6f52e63096f552071d0a845e5880c5cb8671963da29d883129c",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "function zero and restore",
+      "passed": true,
+      "output_bytes": 42,
+      "sha256": "b4ee94f7985905c38114010dd1931d5959f8dd788ddedd3c9a82f5d8a5519dbe",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "nested expansion lifetime",
+      "passed": true,
+      "output_bytes": 7,
+      "sha256": "af941de21208c2c133cf3235412fe6d2bb4002f7e41790a52f15c8102481e4c8",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ':' b':a:\\n'",
+      "passed": true,
+      "output_bytes": 9,
+      "sha256": "7ee3669e8b2cb9c0623f5eb50b4d9f66c266a46d55d598cab62ef98ab5491d8f",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ':' b'a:b:c:\\n'",
+      "passed": true,
+      "output_bytes": 13,
+      "sha256": "0345b9a93382effba10c7e65adc7d7ea207982e22930b16a49f3ca0c994c6b9b",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ':' b'::\\n'",
+      "passed": true,
+      "output_bytes": 8,
+      "sha256": "5a21a5f87e632ddafb89ce4272c57298a8292e9ad4a56f58cb1333cbe4a643da",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ':' b'  a : : b  \\n'",
+      "passed": true,
+      "output_bytes": 18,
+      "sha256": "bdd92d4df86dbd5f148cfc55e912013e3a4de2bce90683c248c7c3fbcff67563",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ':' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true,
+      "output_bytes": 16,
+      "sha256": "bc9ed26b68c4d64d3f144f2f29eb2386c9429026360ad408a0caebb7745417cf",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ':' b'last'",
+      "passed": true,
+      "output_bytes": 12,
+      "sha256": "72dc60a226210bf92299e1a6c934f97efb6247e7a72fdc267379c7bf2989929e",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ': ' b':a:\\n'",
+      "passed": true,
+      "output_bytes": 9,
+      "sha256": "7ee3669e8b2cb9c0623f5eb50b4d9f66c266a46d55d598cab62ef98ab5491d8f",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ': ' b'a:b:c:\\n'",
+      "passed": true,
+      "output_bytes": 13,
+      "sha256": "0345b9a93382effba10c7e65adc7d7ea207982e22930b16a49f3ca0c994c6b9b",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ': ' b'::\\n'",
+      "passed": true,
+      "output_bytes": 8,
+      "sha256": "5a21a5f87e632ddafb89ce4272c57298a8292e9ad4a56f58cb1333cbe4a643da",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ': ' b'  a : : b  \\n'",
+      "passed": true,
+      "output_bytes": 12,
+      "sha256": "d3952e94bfe29d9636d7b0794e8e8982893b7125eee3f1d6a2151a0538990241",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ': ' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true,
+      "output_bytes": 15,
+      "sha256": "24ee1305c30963fd9e129e125dc64256cb9fd1da6ac130400239874308a853c7",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ': ' b'last'",
+      "passed": true,
+      "output_bytes": 12,
+      "sha256": "72dc60a226210bf92299e1a6c934f97efb6247e7a72fdc267379c7bf2989929e",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ' ' b':a:\\n'",
+      "passed": true,
+      "output_bytes": 11,
+      "sha256": "ce7d162128dcfab902cdd38efadfe53a09cdd578706180ca5a0d3e426d6706ee",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ' ' b'a:b:c:\\n'",
+      "passed": true,
+      "output_bytes": 14,
+      "sha256": "749e677b9e3a5a0cf4d9e3313965c3609e062898b19ef032510d60bad3a10ba6",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ' ' b'::\\n'",
+      "passed": true,
+      "output_bytes": 10,
+      "sha256": "75722827ce21c605874c75eb85a6a313cc35f9c8f92af44dded97f6492fc350a",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ' ' b'  a : : b  \\n'",
+      "passed": true,
+      "output_bytes": 14,
+      "sha256": "e8241159cf990fb93ae89f965e0fe7d3cbcb6c32f3f5f946a809c6f832c20abf",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ' ' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true,
+      "output_bytes": 15,
+      "sha256": "24ee1305c30963fd9e129e125dc64256cb9fd1da6ac130400239874308a853c7",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs ' ' b'last'",
+      "passed": true,
+      "output_bytes": 12,
+      "sha256": "72dc60a226210bf92299e1a6c934f97efb6247e7a72fdc267379c7bf2989929e",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs '' b':a:\\n'",
+      "passed": true,
+      "output_bytes": 11,
+      "sha256": "ce7d162128dcfab902cdd38efadfe53a09cdd578706180ca5a0d3e426d6706ee",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs '' b'a:b:c:\\n'",
+      "passed": true,
+      "output_bytes": 14,
+      "sha256": "749e677b9e3a5a0cf4d9e3313965c3609e062898b19ef032510d60bad3a10ba6",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs '' b'::\\n'",
+      "passed": true,
+      "output_bytes": 10,
+      "sha256": "75722827ce21c605874c75eb85a6a313cc35f9c8f92af44dded97f6492fc350a",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs '' b'  a : : b  \\n'",
+      "passed": true,
+      "output_bytes": 19,
+      "sha256": "4e9762ff9e265ef112f16e8c980db41bebcef3feac298be7951f2cf0f3eeb278",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs '' b'\\\\ a b\\\\ c d\\n'",
+      "passed": true,
+      "output_bytes": 16,
+      "sha256": "bc9ed26b68c4d64d3f144f2f29eb2386c9429026360ad408a0caebb7745417cf",
+      "status": 0,
+      "stderr": ""
+    },
+    {
+      "name": "read ifs '' b'last'",
+      "passed": true,
+      "output_bytes": 12,
+      "sha256": "72dc60a226210bf92299e1a6c934f97efb6247e7a72fdc267379c7bf2989929e",
+      "status": 0,
+      "stderr": ""
+    }
+  ],
+  "focused": [
+    {
+      "batch": 0,
+      "passed": true
+    },
+    {
+      "batch": 1,
+      "passed": true
+    },
+    {
+      "batch": 2,
+      "passed": true
+    },
+    {
+      "batch": 3,
+      "passed": true
+    },
+    {
+      "batch": 4,
+      "passed": true
+    },
+    {
+      "batch": 5,
+      "passed": true
+    },
+    {
+      "batch": 6,
+      "passed": true
+    },
+    {
+      "batch": 7,
+      "passed": true
+    }
+  ],
+  "whole_scripts": [
+    {
+      "name": "compound-doc",
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "utility-files",
+      "passed": true,
+      "stderr": "rmdir: Mac OS error -47: File or directory is busy or not empty\n"
+    },
+    {
+      "name": "report",
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "compound-pipe",
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "scopes",
+      "passed": true,
+      "stderr": "sh: output redirection failed\n"
+    },
+    {
+      "name": "recovery",
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "config",
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "records",
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "control",
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "documents",
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "name": "redirect",
+      "passed": true,
+      "stderr": "sh: output redirection failed\n"
+    },
+    {
+      "name": "arguments",
+      "passed": true,
+      "stderr": ""
+    }
+  ],
+  "low_memory_preserves_old_value": true,
+  "cancellation_130_no_following_command": true,
+  "repeated_heap": [
+    [
+      "409058",
+      "233372"
+    ],
+    [
+      "409068",
+      "233372"
+    ],
+    [
+      "409068",
+      "233372"
+    ],
+    [
+      "409068",
+      "233372"
+    ],
+    [
+      "409068",
+      "233372"
+    ]
+  ],
+  "after_cancel": "Runtime: heap=418118 largest=234058 image=7800 ticks=56 load=43 owned-peak=0 remaining=0\nLoader ticks: read=14 validate=16 imports=1 relocations=1 prepare=2 events=2 (events included above)\nVerification ticks: mode=full header=0 record=9 payload=16 metadata=0 structure=1 (structure included in relocations)\n"
+}

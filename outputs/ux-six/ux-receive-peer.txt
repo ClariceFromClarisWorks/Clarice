@@ -1,0 +1,2 @@
+Kermit send; binary mode, Ctrl+C cancels.
+kermit: transfer complete

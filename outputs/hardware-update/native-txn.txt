@@ -1,0 +1,2 @@
+fault=0 result=0 rollback=0 original_exact=1 candidate_exact=1 moves=2
+fault=1 result=-36 rollback=0 original_exact=1 candidate_exact=1 moves=3

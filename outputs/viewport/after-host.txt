@@ -1,0 +1,2 @@
+partial-output: partial/ > xy
+PASS partial-output prompt, multiline history position, cursor ownership

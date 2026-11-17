@@ -1,0 +1,11 @@
+{
+  "eight_exact": true,
+  "existing_exact": true,
+  "resource_exact": true,
+  "type_creator": true,
+  "flags": true,
+  "creation": true,
+  "no_staging_siblings": true,
+  "normal_build_save_exact": true,
+  "normal_build_two_exits_zero_remaining": true
+}

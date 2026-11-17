@@ -1,0 +1,8 @@
+PASS launch window in front
+PASS Command-C selected text
+PASS Command-V at insertion point
+PASS foreground ordered typeahead editing
+FAIL foreground paste queued atomically
+FAIL loading typeahead transferred to editor
+FAIL pinwheel inverse background
+failures=3 heap=407662

@@ -1,0 +1,14 @@
+setup:0
+kept:0
+damaged-check:126
+repair:0
+hello
+recovery:0
+brokenblocked:1
+partial:1
+unfinishedresumed:0
+reserve:0
+low-setup:1
+retry:0
+awk recovered
+DISTRIBUTION_DONE

@@ -33,5 +33,5 @@ with tempfile.TemporaryDirectory(dir='/tmp',prefix='clx-') as td:
  assert run('tee',['-i'],b'x').returncode==2
  assert run('tail',['-m','1'],b'x').returncode==2
  assert run('sort',['-c'],b'').returncode==0
- assert run('tail',['-n','10000'],b'x'*200000).returncode!=0
+ assert run('tail',['-n','10000'],b'x'*200000,env=dict(env,CLARICE_TEST_ALLOC_BUDGET='98304')).returncode!=0
 print('PASS: 45 upstream tail/sort comparisons; four 360 KB spilling sorts; three spill cancellations; disk-output failure cleanup; same-file sort; tee overwrite/append; tail follow append/cancel; explicit unsupported options and allocation bound.')

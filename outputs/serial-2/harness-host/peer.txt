@@ -1,0 +1,1 @@
+READY /dev/ttys002: MACBOOK> is the remote test shell; local Ctrl+C stops this bridge

@@ -1,0 +1,133 @@
+{
+  "pass": true,
+  "comparisons": {
+    "guest-files/cancel.dat": {
+      "bytes": 4104,
+      "sha256": "d7f745838dc47ebe6e4a71533a59ea8f0741ba21ec303ae3abc2a9821424e1ea",
+      "equal": true
+    },
+    "guest-files/persist.dat": {
+      "bytes": 4104,
+      "sha256": "d7f745838dc47ebe6e4a71533a59ea8f0741ba21ec303ae3abc2a9821424e1ea",
+      "equal": true
+    },
+    "from-guest.dat": {
+      "bytes": 4104,
+      "sha256": "d7f745838dc47ebe6e4a71533a59ea8f0741ba21ec303ae3abc2a9821424e1ea",
+      "equal": true
+    },
+    "from-guest-retry.dat": {
+      "bytes": 4104,
+      "sha256": "d7f745838dc47ebe6e4a71533a59ea8f0741ba21ec303ae3abc2a9821424e1ea",
+      "equal": true
+    },
+    "roundtrip.dat": {
+      "bytes": 4104,
+      "sha256": "d7f745838dc47ebe6e4a71533a59ea8f0741ba21ec303ae3abc2a9821424e1ea",
+      "equal": true
+    },
+    "recovered.dat": {
+      "bytes": 4104,
+      "sha256": "d7f745838dc47ebe6e4a71533a59ea8f0741ba21ec303ae3abc2a9821424e1ea",
+      "equal": true
+    }
+  },
+  "empty_file": true,
+  "statuses": {
+    "received": 0,
+    "roundtrip": 0,
+    "cancel": 130,
+    "recovery": 0,
+    "recovered": 0,
+    "empty": 0,
+    "refused": 1
+  },
+  "no_transfer_temporaries": true,
+  "memory": {
+    "received": {
+      "heap": 403360,
+      "largest": 398876,
+      "image": 17552,
+      "ticks": 453,
+      "load": 73,
+      "owned-peak": 0,
+      "remaining": 0,
+      "read": 11,
+      "validate": 35,
+      "imports": 8,
+      "relocations": 5,
+      "prepare": 14
+    },
+    "roundtrip": {
+      "heap": 403360,
+      "largest": 398876,
+      "image": 17552,
+      "ticks": 312,
+      "load": 66,
+      "owned-peak": 0,
+      "remaining": 0,
+      "read": 18,
+      "validate": 35,
+      "imports": 8,
+      "relocations": 5,
+      "prepare": 0
+    },
+    "cancel": {
+      "heap": 403360,
+      "largest": 398876,
+      "image": 17552,
+      "ticks": 149,
+      "load": 60,
+      "owned-peak": 0,
+      "remaining": 0,
+      "read": 12,
+      "validate": 35,
+      "imports": 8,
+      "relocations": 4,
+      "prepare": 1
+    },
+    "recovery": {
+      "heap": 403360,
+      "largest": 398876,
+      "image": 17552,
+      "ticks": 521,
+      "load": 66,
+      "owned-peak": 0,
+      "remaining": 0,
+      "read": 18,
+      "validate": 35,
+      "imports": 8,
+      "relocations": 5,
+      "prepare": 0
+    },
+    "recovered": {
+      "heap": 403360,
+      "largest": 398876,
+      "image": 17552,
+      "ticks": 313,
+      "load": 58,
+      "owned-peak": 0,
+      "remaining": 0,
+      "read": 10,
+      "validate": 35,
+      "imports": 8,
+      "relocations": 5,
+      "prepare": 0
+    },
+    "empty": {
+      "heap": 403360,
+      "largest": 398876,
+      "image": 17552,
+      "ticks": 115,
+      "load": 59,
+      "owned-peak": 0,
+      "remaining": 0,
+      "read": 10,
+      "validate": 35,
+      "imports": 8,
+      "relocations": 5,
+      "prepare": 1
+    }
+  },
+  "extraction_caveat": "Initial recv.dat offline extraction failed after emulator stop without guest exit and overlapping shutdown inspection. Excluded. Fresh persist.dat after normal guest exit extracted exactly."
+}

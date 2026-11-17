@@ -1,0 +1,50 @@
+Clarice Serial-3 - local development build (68000, 4 MB, System 6.0.8)
+Not a release. Physical hardware acceptance is pending.
+
+The HDA is application media, NOT a boot disk. Use an unused SCSI ID (the
+filename selects ID 6). Keep your existing System disk and backup application.
+Quit Clarice and copy the new Clarice application to your boot disk in Finder.
+Launch it. Absent bundled commands install automatically; existing ones do not.
+Explicitly update an existing serial or kermit command only when needed:
+  appinstall repair serial
+  appinstall repair kermit
+Keep the .clx-*.old recovery files; do not blindly delete prior recovery files.
+  serial --help
+  kermit --help
+
+SERIAL
+  serial -b 57600 /dev/tty.modem
+Ctrl+C is sent to the remote shell. Ctrl+] then q disconnects locally;
+Command-period cancels locally. Quit serial before running a transfer.
+
+KERMIT
+Guest receives a NEW file (existing destinations refused):
+  kermit receive /tmp/download.bin
+MacBook sends:
+  work/kermit/kermit -d /dev/cu.usbserial-YOUR-ADAPTER send source.bin
+
+Guest sends:
+  kermit send /tmp/download.bin
+MacBook receives a NEW file:
+  work/kermit/kermit -d /dev/cu.usbserial-YOUR-ADAPTER receive returned.bin
+Start the receiving endpoint first. On macOS, compile the supplied source peer
+from the checkout using scripts/build-kermit-host.sh. No server is installed.
+Use the Snow PTY path instead of the USB device when testing in Snow.
+Default: 57600 baud, 8N1, no flow control. Use -d /dev/tty.printer for printer.
+Both peers require forced CRC-16 (E-Kermit check type 5). No text conversion.
+Ctrl+C cancels; the other endpoint can take about 10 seconds to time out.
+Reconnect serial explicitly after the transfer. No automatic mode switching.
+
+Ordinary transfers preserve DATA FORKS ONLY. Use an existing MacBinary container
+for complete Macintosh files, resource forks and Finder metadata. Kermit does
+not automatically pack or unpack MacBinary. Compare bytes on the host with:
+  cmp source.bin returned.bin
+
+ACK loss at transaction end can leave a complete file with a failure status.
+Never assume success from file existence alone. There is no overwrite or resume.
+Five consecutive 2-second receive timeouts, 5-second transmit timeout, 10-minute
+whole-session limit. Full performance and cable reliability require hardware tests.
+
+E-Kermit: Frank da Cruz / Columbia University, revised 3-clause BSD.
+See KERMIT-LICENSE.txt. Adaptations and test evidence are in the checkout's
+src/ports/ekermit/README.md and outputs/serial-3/TEST-REPORT.md.

@@ -1,0 +1,4 @@
+PASS demand allocation >96KB, failed realloc, exhaustion and recovery
+0
+Runtime: heap=400394 largest=400344 image=8472 ticks=308 load=42 owned-peak=346080 remaining=0
+Loader ticks: read=10 validate=18 imports=11 relocations=1 prepare=2 events=2 (events included above)

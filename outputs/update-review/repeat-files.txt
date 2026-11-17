@@ -1,0 +1,14 @@
+Using multiversal interfaces
+/src/work/update-review/kit-repeat.hda: contains 1 HFS partition
+Volume name is "Clarice"
+Volume was created on Tue Nov 17 02:18:16 2026
+Volume was last modified on Tue Nov 17 02:36:26 2026
+Volume has 30985216 bytes free
+f  APPL/CLRC    265190         0 Nov 17 01:57 .cu-00000010-78c402d6.old
+f  APPL/CLRC    265350         0 Nov 17 02:30 Clarice
+fi FNDR/ERIK       778         0 Nov 17  2026 Desktop
+f  APPL/CLRC    267802         0 Nov 17 01:57 Install Clarice
+d         14 items               Nov 17 02:18 Licenses
+f  TEXT/ttxt         0      6656 Nov 17 02:18 Read Me
+f  ????/UNIX         0     10297 Nov 17 02:18 Third Party
+d         47 items               Nov 17 02:18 Utilities

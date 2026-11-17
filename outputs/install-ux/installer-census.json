@@ -1,0 +1,132 @@
+{
+  "package_bytes": 267904,
+  "data_fork": 0,
+  "resource_fork": 267758,
+  "resource_payload": 267112,
+  "resource_map_bytes": 322,
+  "clx_payload": 0,
+  "code_payload": 265839,
+  "other_payload": 1273,
+  "installed_command_data": 0,
+  "resources": [
+    {
+      "type": "ALRT",
+      "id": 141,
+      "bytes": 14,
+      "attributes": 0,
+      "sha256": "6e2865ec7d82f3fd4727efe45156efbd6957902311b9d1360d177a4c8bf02ca4"
+    },
+    {
+      "type": "ALRT",
+      "id": 151,
+      "bytes": 14,
+      "attributes": 0,
+      "sha256": "58b0f1fc80bff1bbf3f98267041f9190bfd464c108644df8089861a8b99724a2"
+    },
+    {
+      "type": "ALRT",
+      "id": 152,
+      "bytes": 14,
+      "attributes": 0,
+      "sha256": "0816c4cf11eb45a47da0ef59a92258fd12106df107173e62c9b9d056c3af75f5"
+    },
+    {
+      "type": "BNDL",
+      "id": 128,
+      "bytes": 28,
+      "attributes": 0,
+      "sha256": "aa56733c53c58244b5c06384f8f9d32e6e4c24846d0e10dc07dfa9e7275199f7"
+    },
+    {
+      "type": "CLRC",
+      "id": 0,
+      "bytes": 8,
+      "attributes": 0,
+      "sha256": "b18a69ff92713c526e9a5764fd91bf92c9e295828ccd359a940e0b6f69de39e1"
+    },
+    {
+      "type": "CLUP",
+      "id": 128,
+      "bytes": 16,
+      "attributes": 0,
+      "sha256": "5949de401e9ba77904fbf24f9478e3273e9f725e7a00d79d9086b70d2c36247b"
+    },
+    {
+      "type": "CODE",
+      "id": 0,
+      "bytes": 24,
+      "attributes": 0,
+      "sha256": "068d9076ddd62561e4264bc0aa72148963de71522d6379ed9c6220eb0d5882c0"
+    },
+    {
+      "type": "CODE",
+      "id": 1,
+      "bytes": 265815,
+      "attributes": 0,
+      "sha256": "4accc85848e814c46aa19a5d7a6781305ab7ecfd7bfddf266ad0b115335d4d06"
+    },
+    {
+      "type": "DITL",
+      "id": 140,
+      "bytes": 388,
+      "attributes": 0,
+      "sha256": "837378804330951414ae08dc0c784230468dbd5a513fe413fea27fc9b812c843"
+    },
+    {
+      "type": "DITL",
+      "id": 141,
+      "bytes": 104,
+      "attributes": 0,
+      "sha256": "9913d09352ef934f2c8020f45f82ed6068fe1762174f5767d14f2026f82616ee"
+    },
+    {
+      "type": "DITL",
+      "id": 151,
+      "bytes": 34,
+      "attributes": 0,
+      "sha256": "b2a949de0fdfad6ee9a529c73636dddabe22250fd23920651cdc23818869621c"
+    },
+    {
+      "type": "DITL",
+      "id": 152,
+      "bytes": 282,
+      "attributes": 0,
+      "sha256": "23df8559934abe6cd7ffd46017bbb6889c31aa237268a5d47374355d76d3f030"
+    },
+    {
+      "type": "DLOG",
+      "id": 140,
+      "bytes": 34,
+      "attributes": 0,
+      "sha256": "32dce1198baa0907197b9b6ffaa0691ce21af063a131df20286637cc2dbf58ad"
+    },
+    {
+      "type": "FREF",
+      "id": 128,
+      "bytes": 7,
+      "attributes": 0,
+      "sha256": "6ae70fda6b5f837884e8d6de071429e82370e929a86f133fd3c2b8775a9d594b"
+    },
+    {
+      "type": "ICN#",
+      "id": 128,
+      "bytes": 256,
+      "attributes": 0,
+      "sha256": "a00e4ff4366ec9b622aa24866bfe69296475f4921bd3a677c6536a74b941f10c"
+    },
+    {
+      "type": "SIZE",
+      "id": -1,
+      "bytes": 10,
+      "attributes": 0,
+      "sha256": "e47d6489ae1f7a4eb2b97bc5351d32dbed5ed36edcd39855f2bba89ff047280c"
+    },
+    {
+      "type": "ics#",
+      "id": 128,
+      "bytes": 64,
+      "attributes": 0,
+      "sha256": "ba3ff6bd4f0f8b5cdec2ce1ff32ff4cdaae155d8375ac99a9a93f334a41c0385"
+    }
+  ]
+}

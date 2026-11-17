@@ -1,0 +1,5 @@
+CANCEL:130
+/mnt/Audit/tools
+Runtime: heap=408794 largest=390598 image=6440 ticks=47 load=38 owned-peak=0 remaining=0
+Loader ticks: read=13 validate=14 imports=1 relocations=0 prepare=1 events=2 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=14 metadata=0 structure=0 (structure included in relocations)

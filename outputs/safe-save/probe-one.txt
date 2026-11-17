@@ -1,0 +1,4 @@
+PASS 20 saves, exact contents, partial-save abort; pending transaction for invocation cleanup
+0
+Runtime: heap=398322 largest=394044 image=5960 ticks=1348 load=31 owned-peak=2128 remaining=0
+Loader ticks: read=9 validate=14 imports=7 relocations=1 prepare=0 events=3 (events included above)

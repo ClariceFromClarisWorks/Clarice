@@ -1,0 +1,194 @@
+[
+  {
+    "name": "arguments",
+    "passed": true,
+    "actual": {
+      "stdout": "<a b>\n<>\n<*.txt>\n<a b::*.txt>\nworker:two words:1\nsubstitution:1\nsubstitution:1\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "<a b>\n<>\n<*.txt>\n<a b::*.txt>\nworker:two words:1\nsubstitution:1\nsubstitution:1\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "compound-doc",
+    "passed": true,
+    "actual": {
+      "stdout": "<one>\n<two>\ncopied\ncopied\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "<one>\n<two>\ncopied\ncopied\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "compound-pipe",
+    "passed": true,
+    "actual": {
+      "stdout": "beta\nfirst\nsecond\nvisible\nredirected\nbeta\na\nb\ngood\ncase\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "beta\nfirst\nsecond\nvisible\nredirected\nbeta\na\nb\ngood\ncase\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "config",
+    "passed": true,
+    "actual": {
+      "stdout": "<two words>\n<default>\ninside\noutside\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "<two words>\n<default>\ninside\noutside\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "control",
+    "passed": true,
+    "actual": {
+      "stdout": "1:one\n2:two\ninner\n3:outer value:2\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "1:one\n2:two\ninner\n3:outer value:2\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "documents",
+    "passed": true,
+    "actual": {
+      "stdout": "hello reader\nliteral $name\nafter\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "hello reader\nliteral $name\nafter\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "records",
+    "passed": true,
+    "actual": {
+      "stdout": "1:<  apple  >\n2:<pear\\tree>\n3:<last>\n<a:b::c>\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "1:<  apple  >\n2:<pear\\tree>\n3:<last>\n<a:b::c>\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "recovery",
+    "passed": true,
+    "actual": {
+      "stdout": "absent:1\nfound\npipeline:0\npipeline:1\n<two words>\nsecond\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "absent:1\nfound\npipeline:0\npipeline:1\n<two words>\nsecond\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "redirect",
+    "passed": true,
+    "actual": {
+      "stdout": "status:4\nok\nerror\nfirst\nsecond\nfailed\n",
+      "stderr": "sh: output redirection failed\n",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "status:4\nok\nerror\nfirst\nsecond\nfailed\n",
+      "stderr": "sh: 9: cannot create absent/file: Directory nonexistent\n",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "report",
+    "passed": true,
+    "actual": {
+      "stdout": "1=apple 7\n2=pear 2\napple 7\npear 2\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "1=apple 7\n2=pear 2\napple 7\npear 2\n",
+      "stderr": "",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "scopes",
+    "passed": true,
+    "actual": {
+      "stdout": "1:b\n2:b\nreturn:7\nfunction\nsub\nerr\nfailure\nrestored\n",
+      "stderr": "sh: output redirection failed\n",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "1:b\n2:b\nreturn:7\nfunction\nsub\nerr\nfailure\nrestored\n",
+      "stderr": "sh: 19: cannot create missing/file: Directory nonexistent\n",
+      "status": 0,
+      "files": {}
+    }
+  },
+  {
+    "name": "utility-files",
+    "passed": true,
+    "actual": {
+      "stdout": "sub/copy\nabc\ntree/renamed\ntree/source\ntree/sub/copy\ncopy\ntree/sub\n4\n61 62 63 0a\nnonempty\n",
+      "stderr": "rmdir: tree: Directory not empty\n",
+      "status": 0,
+      "files": {}
+    },
+    "reference": {
+      "stdout": "sub/copy\nabc\ntree/renamed\ntree/source\ntree/sub/copy\ncopy\ntree/sub\n4\n61 62 63 0a\nnonempty\n",
+      "stderr": "rmdir: tree: Directory not empty\n",
+      "status": 0,
+      "files": {}
+    }
+  }
+]

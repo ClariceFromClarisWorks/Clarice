@@ -1,0 +1,5 @@
+appinstall: existing commands are kept unchanged, not checked.
+Installed sed
+Installed awk
+Installed clarice
+appinstall: complete (existing files kept by install/setup)

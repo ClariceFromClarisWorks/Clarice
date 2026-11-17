@@ -1,0 +1,374 @@
+[
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 16,
+    "status": 0,
+    "peak": 6048,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 16,
+    "status": 0,
+    "peak": 23113,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 17,
+    "status": 0,
+    "peak": 6048,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 17,
+    "status": 0,
+    "peak": 23113,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 16383,
+    "status": 0,
+    "peak": 61072,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 16383,
+    "status": 0,
+    "peak": 54497,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 16384,
+    "status": 0,
+    "peak": 61072,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 16384,
+    "status": 0,
+    "peak": 54497,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 16384,
+    "status": 0,
+    "peak": 61072,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 16384,
+    "status": 0,
+    "peak": 56545,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 16385,
+    "status": 0,
+    "peak": 61072,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 16385,
+    "status": 0,
+    "peak": 56545,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 16385,
+    "status": 0,
+    "peak": 61072,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 16385,
+    "status": 0,
+    "peak": 56545,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 16386,
+    "status": 0,
+    "peak": 61072,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 16386,
+    "status": 0,
+    "peak": 56545,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 20000,
+    "status": 0,
+    "peak": 61072,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 20000,
+    "status": 0,
+    "peak": 62689,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 20001,
+    "status": 0,
+    "peak": 61072,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 20001,
+    "status": 0,
+    "peak": 62689,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 65536,
+    "status": 0,
+    "peak": 208528,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 65536,
+    "status": 0,
+    "peak": 154849,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 65537,
+    "status": 0,
+    "peak": 208528,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 65537,
+    "status": 0,
+    "peak": 154849,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 60364,
+    "status": 0,
+    "peak": 135916,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [
+      "-r"
+    ],
+    "input_bytes": 60364,
+    "status": 0,
+    "peak": 135363,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [
+      "-u"
+    ],
+    "input_bytes": 60364,
+    "status": 0,
+    "peak": 135916,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [
+      "-k",
+      "1,1"
+    ],
+    "input_bytes": 60364,
+    "status": 0,
+    "peak": 135916,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print NF,length($0),length($NF)}"
+    ],
+    "input_bytes": 40004,
+    "status": 0,
+    "peak": 7009982,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 65537,
+    "status": 2,
+    "peak": 19520,
+    "remaining": 0,
+    "budget": "24000"
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 2,
+    "status": 0,
+    "peak": 6048,
+    "remaining": 0,
+    "budget": "24000"
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 301820,
+    "status": 130,
+    "peak": 35944,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 65537,
+    "status": 2,
+    "peak": 23657,
+    "remaining": 0,
+    "budget": "24000"
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 2,
+    "status": 0,
+    "peak": 23113,
+    "remaining": 0,
+    "budget": "24000"
+  },
+  {
+    "command": "awk",
+    "args": [
+      "{print length($0)}"
+    ],
+    "input_bytes": 301820,
+    "status": 130,
+    "peak": 42209,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 60364,
+    "status": 2,
+    "peak": 135916,
+    "remaining": 0,
+    "budget": null
+  },
+  {
+    "command": "sort",
+    "args": [],
+    "input_bytes": 60364,
+    "status": 2,
+    "peak": 60520,
+    "remaining": 0,
+    "budget": null
+  }
+]

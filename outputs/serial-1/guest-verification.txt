@@ -1,0 +1,1 @@
+PASS: 3 native pending writes cancelled with abortErr and no heap delta; modem/printer/reconnect statuses 0; invalid path 2; mounted media check 0; bundled repair matches packaged serial.clx.

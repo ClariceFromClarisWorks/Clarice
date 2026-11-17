@@ -1,0 +1,2 @@
+HOpenResFile=00400806 OpenRFPerm=0041381a Unimplemented=00400806 h_available=0 older_available=1
+stamp_error=0 build=2026111402 system=0600 free_before=3250 free_after=3250

@@ -1,0 +1,252 @@
+{
+  "machine": "Snow Plus, 4 MB, System 6.0.8, normal speed; no physical tests this task",
+  "before_8KB": {
+    "marks": [
+      13296,
+      13510,
+      13510,
+      13511,
+      13538,
+      13584,
+      13739,
+      13817,
+      13913,
+      13638,
+      13728,
+      0,
+      0
+    ],
+    "total": 617,
+    "load": 186,
+    "heap": 395380,
+    "remaining": 0
+  },
+  "inverse_only_8KB": {
+    "marks": [
+      20724,
+      20937,
+      20937,
+      20938,
+      20965,
+      21013,
+      21167,
+      21232,
+      21330,
+      21066,
+      21156,
+      0,
+      0
+    ],
+    "total": 606,
+    "load": 185,
+    "heap": 395358,
+    "remaining": 0
+  },
+  "limitations": [
+    "Interrupted baseline stats recovered after returning to Snow; startup counters retained, interactive lifetime excluded.",
+    "after-* files are INVALID: Finder icon moved on replacement and an older nonprofiling app was launched. Corrected inverse-valid-* files used.",
+    "First inverse-only empty launch required full verification after prior incompatible host revoked its receipt; not comparable to fast baseline.",
+    "instrumented-* invalid: child emulator exited with launcher; untargeted input reached host chat. Subsequent harness targets Snow PID for ASCII and window capture, checks foreground before modifier chords."
+  ],
+  "instrumented_first_8KB": {
+    "marks": [
+      3419,
+      3749,
+      3750,
+      3750,
+      3777,
+      3832,
+      3990,
+      4054,
+      4156,
+      3887,
+      3979,
+      0,
+      0
+    ],
+    "total": 737,
+    "load": 302,
+    "draws": 20,
+    "rows": 99,
+    "draw_text": 36,
+    "draw_copy": 57,
+    "draw_total": 118,
+    "heap": 394472,
+    "remaining": 0
+  },
+  "batched_first_8KB": {
+    "marks": [
+      5091,
+      5421,
+      5421,
+      5422,
+      5462,
+      5521,
+      5677,
+      5739,
+      5827,
+      5576,
+      5666,
+      0,
+      0
+    ],
+    "total": 736,
+    "load": 302,
+    "draws": 20,
+    "rows": 83,
+    "draw_text": 45,
+    "draw_copy": 29,
+    "draw_total": 96,
+    "heap": 394654,
+    "remaining": 0
+  },
+  "batched_warm_empty": {
+    "marks": [
+      11891,
+      12104,
+      12105,
+      12106,
+      12133,
+      12179,
+      12269,
+      12295,
+      12299,
+      12233,
+      12259,
+      0,
+      0
+    ],
+    "total": 408,
+    "load": 185,
+    "draws": 8,
+    "rows": 60,
+    "draw_text": 21,
+    "draw_copy": 21,
+    "draw_total": 61,
+    "heap": 394654,
+    "remaining": 0,
+    "owned_peak": 78548
+  },
+  "batched_warm_8KB": {
+    "marks": [
+      14689,
+      14903,
+      14904,
+      14905,
+      14932,
+      14978,
+      15121,
+      15181,
+      15268,
+      15032,
+      15110,
+      0,
+      0
+    ],
+    "total": 579,
+    "load": 185,
+    "draws": 19,
+    "rows": 83,
+    "draw_text": 42,
+    "draw_copy": 26,
+    "draw_total": 96,
+    "heap": 394654,
+    "remaining": 0,
+    "owned_peak": 105172
+  },
+  "save_and_search": {
+    "save_ticks": 90,
+    "remaining": 0,
+    "heap": 394654,
+    "owned_peak": 80596,
+    "note": "Typed batch prefix, saved, searched original, exited. Both forks and applicable Finder metadata compared offline.",
+    "fork_verification": {
+      "data_exact": true,
+      "resource_exact": true,
+      "type_creator": true,
+      "flags": true,
+      "creation": true
+    }
+  },
+  "history_guard_probe": {
+    "evidence": "history-guard-only.txt",
+    "native": {
+      "old_ticks": 170,
+      "new_ticks": 149,
+      "steps": 12,
+      "pixel_mismatches": 0,
+      "heap_delta": 0
+    },
+    "cached_experiment_rejected": {
+      "old_ticks": 137,
+      "new_ticks": 188,
+      "reason": "Full cached frame movement slower than changed spans; preserve prompt guard in cached mode"
+    },
+    "limitations": "Programmatic view changes through actual draw path, not end-to-end mouse latency; similar text fixture only."
+  },
+  "typing_after_click": {
+    "old_ticks_range": [
+      32,
+      45
+    ],
+    "new_ticks_range": [
+      3,
+      4
+    ],
+    "cases": 8,
+    "pixel_mismatches": 0,
+    "evidence": "selection-guest.txt"
+  },
+  "ls100_baseline": {
+    "path": "/mnt/Sys6Unix/Bench/n100",
+    "total_ticks": [
+      121,
+      110,
+      112
+    ],
+    "paint_ticks_three_runs": 143,
+    "event_ticks_three_runs": 3,
+    "evidence": "ls100-before.png",
+    "notes": "Existing listing benchmark; includes enumeration/formatting/painting but excludes CLX launch and final shell prompt. No ls speedup claimed."
+  },
+  "scan100_normal": {
+    "total_ticks": [
+      43,
+      58,
+      44
+    ],
+    "paint_ticks": 0,
+    "event_ticks": 8,
+    "evidence": "scan100-normal.png",
+    "note": "Same HFS fixture, catalog-only run; distinct session/heap layout from listing baseline."
+  },
+  "production_build": {
+    "version": 2026111508,
+    "bytes": 938624,
+    "resource_bytes": 938494,
+    "resource_growth_vs_1507": 327,
+    "new_permanent_allocations": 0
+  },
+  "normal_cached_scroll_test": {
+    "bursts": 24,
+    "views": 20,
+    "pixel_mismatches": 0,
+    "scrollbar_checks": 153,
+    "premature_screen_changes": 0,
+    "evidence": "normal-scroll-check.png"
+  },
+  "normal_nano_smoke": {
+    "file": "/tmp/eight.txt",
+    "rendered": true,
+    "exit_returned_to_shell": true,
+    "owned_peak_bytes": 105172,
+    "owned_remaining_bytes": 0,
+    "free_heap_bytes": 396258,
+    "load_ticks": 275,
+    "evidence": [
+      "normal-final-0-ready.png",
+      "normal-final-0-stats.png"
+    ],
+    "note": "Smoke test; invocation duration includes deliberate waiting, not a startup measurement."
+  }
+}

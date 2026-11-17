@@ -1,0 +1,1 @@
+PASS: existing typeahead preserved outside serial, transferred on entry, 10240 ordered queue bytes, fail-closed overflow, no remote suffix replay

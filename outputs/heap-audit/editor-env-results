@@ -1,0 +1,25 @@
+PASS editor 40 exported 2048-byte values, TERM override, private exclusion, set/unset
+RESULT:0
+Runtime: heap=309742 largest=306934 image=7404 ticks=207 load=49 owned-peak=97220 remaining=0
+Loader ticks: read=12 validate=14 imports=2 relocations=0 prepare=14 events=0 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=14 metadata=0 structure=0 (structure included in relocations)
+PASS editor 40 exported 2048-byte values, TERM override, private exclusion, set/unset
+RESULT:0
+Runtime: heap=309744 largest=306934 image=7404 ticks=186 load=40 owned-peak=97220 remaining=0
+Loader ticks: read=12 validate=14 imports=1 relocations=1 prepare=4 events=0 (events included above)
+Verification ticks: mode=full header=0 record=8 payload=14 metadata=0 structure=1 (structure included in relocations)
+PASS editor 40 exported 2048-byte values, TERM override, private exclusion, set/unset
+RESULT:0
+Runtime: heap=309742 largest=306934 image=7404 ticks=186 load=40 owned-peak=97220 remaining=0
+Loader ticks: read=13 validate=14 imports=1 relocations=1 prepare=4 events=0 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=14 metadata=0 structure=1 (structure included in relocations)
+PASS editor 40 exported 2048-byte values, TERM override, private exclusion, set/unset
+RESULT:0
+Runtime: heap=309744 largest=306934 image=7404 ticks=187 load=41 owned-peak=97220 remaining=0
+Loader ticks: read=12 validate=15 imports=1 relocations=1 prepare=4 events=0 (events included above)
+Verification ticks: mode=full header=0 record=8 payload=15 metadata=0 structure=0 (structure included in relocations)
+PASS editor 40 exported 2048-byte values, TERM override, private exclusion, set/unset
+RESULT:0
+Runtime: heap=309742 largest=306934 image=7404 ticks=186 load=40 owned-peak=97220 remaining=0
+Loader ticks: read=12 validate=14 imports=1 relocations=1 prepare=4 events=3 (events included above)
+Verification ticks: mode=full header=0 record=8 payload=14 metadata=0 structure=1 (structure included in relocations)

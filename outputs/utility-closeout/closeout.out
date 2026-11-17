@@ -1,0 +1,23 @@
+PROFILE_STATUS:130
+/tmp/closeout/a/fruit.txt
+TYPES:0
+/tmp/closeout/b/file space.txt
+/tmp/closeout/a
+MISSING:1
+find [path ...] [-name pattern] [-path pattern] [-type f|d|l] [-maxdepth N] [-print]
+Walk HFS directories without following symbolic links. Default path: .
+-name matches encoded basenames; -path matches the printed pathname.
+Patterns support * and ?; quote them. All predicates must match.
+Predicates combine with AND. [], -o, -exec and other expressions are unsupported.
+Traversal grows with available memory; -maxdepth explicitly limits it.
+Status: 0 success, 1 file error, 2 usage, 130 interrupted.
+INVALID:2
+      1 apple
+      2 pear
+</tmp/closeout/a/fruit.txt>
+</tmp/closeout/b/file space.txt>
+CLEANUP:0
+Runtime: heap=396146 largest=395942 image=7800 ticks=269 load=44 owned-peak=0 remaining=0
+Loader ticks: read=14 validate=17 imports=2 relocations=1 prepare=1 events=2 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=17 metadata=0 structure=0 (structure included in relocations)
+CLOSEOUT_DONE

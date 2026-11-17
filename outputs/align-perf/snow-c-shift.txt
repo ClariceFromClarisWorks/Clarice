@@ -1,0 +1,14 @@
+JUMP_PROFILE cols=80 rows=24 cell=6 line=11 inverse=0
+run=0 new=0 kind=listing ticks=233 worst=15 frames=24 compose=13 shift=1 raster=174 copy=59 bar=45 plan=40 prepare=9 text=32 rows=576 build=4 align=0
+run=0 new=0 kind=varied ticks=618 worst=26 frames=24 compose=18 shift=1 raster=554 copy=249 bar=45 plan=3 prepare=40 text=239 rows=569 build=4 align=0
+run=0 new=1 kind=listing ticks=263 worst=16 frames=24 compose=16 shift=2 raster=199 copy=88 bar=46 plan=26 prepare=6 text=47 rows=576 build=4 align=37
+run=0 new=1 kind=varied ticks=907 worst=39 frames=24 compose=17 shift=1 raster=844 copy=501 bar=44 plan=9 prepare=40 text=260 rows=569 build=3 align=422
+run=1 new=0 kind=listing ticks=234 worst=14 frames=24 compose=17 shift=2 raster=169 copy=55 bar=45 plan=42 prepare=8 text=34 rows=576 build=3 align=0
+run=1 new=0 kind=varied ticks=618 worst=26 frames=24 compose=17 shift=1 raster=555 copy=241 bar=44 plan=6 prepare=41 text=238 rows=569 build=4 align=0
+run=1 new=1 kind=listing ticks=263 worst=16 frames=24 compose=14 shift=3 raster=199 copy=86 bar=46 plan=23 prepare=8 text=53 rows=576 build=4 align=38
+run=1 new=1 kind=varied ticks=907 worst=39 frames=24 compose=16 shift=1 raster=845 copy=503 bar=43 plan=9 prepare=44 text=261 rows=569 build=3 align=429
+run=2 new=0 kind=listing ticks=234 worst=14 frames=24 compose=17 shift=1 raster=170 copy=57 bar=46 plan=41 prepare=10 text=31 rows=576 build=3 align=0
+run=2 new=0 kind=varied ticks=618 worst=26 frames=24 compose=16 shift=1 raster=555 copy=259 bar=44 plan=7 prepare=40 text=223 rows=569 build=4 align=0
+run=2 new=1 kind=listing ticks=263 worst=15 frames=24 compose=17 shift=1 raster=200 copy=71 bar=44 plan=32 prepare=18 text=54 rows=576 build=3 align=21
+run=2 new=1 kind=varied ticks=908 worst=39 frames=24 compose=17 shift=1 raster=844 copy=506 bar=44 plan=6 prepare=48 text=256 rows=569 build=4 align=440
+heap_delta=0; phases overlap; total is sum of completed draw calls

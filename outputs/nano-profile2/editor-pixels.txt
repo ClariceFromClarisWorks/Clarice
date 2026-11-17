@@ -1,0 +1,2 @@
+PASS: 300 complete production-renderer comparisons, mixed dirty rows, font metrics, attributes, cursor, colours and clipping; full screen copies 25 -> 5; staging bounds checked
+PASS: 20000 pixel comparisons across widths, inverse patterns and existing cursor states; full inverse row 80 calls -> 1; no allocation

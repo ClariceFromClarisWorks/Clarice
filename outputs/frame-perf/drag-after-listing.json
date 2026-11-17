@@ -1,0 +1,44 @@
+[
+  {
+    "first_text_change_seconds" : null,
+    "last_text_change_seconds" : null,
+    "samples" : 14,
+    "step" : 1,
+    "target_y" : 694
+  },
+  {
+    "first_text_change_seconds" : 0.098252083174884319,
+    "last_text_change_seconds" : 0.25140204164199531,
+    "samples" : 14,
+    "step" : 2,
+    "target_y" : 664
+  },
+  {
+    "first_text_change_seconds" : 0.098517958307638764,
+    "last_text_change_seconds" : 0.24628987489268184,
+    "samples" : 15,
+    "step" : 3,
+    "target_y" : 634
+  },
+  {
+    "first_text_change_seconds" : 0.096949458355084062,
+    "last_text_change_seconds" : 0.23579737497493625,
+    "samples" : 15,
+    "step" : 4,
+    "target_y" : 604
+  },
+  {
+    "first_text_change_seconds" : 0.10180470836348832,
+    "last_text_change_seconds" : 0.25110250012949109,
+    "samples" : 14,
+    "step" : 5,
+    "target_y" : 574
+  },
+  {
+    "first_text_change_seconds" : 0.096377624897286296,
+    "last_text_change_seconds" : 0.24292862485162914,
+    "samples" : 15,
+    "step" : 6,
+    "target_y" : 544
+  }
+]

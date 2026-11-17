@@ -1,0 +1,30 @@
+[
+  {
+    "renderer": "native",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "cancel-native-off-status.png",
+    "note": "Screenshots require inspection; elapsed host script time is not guest interrupt latency."
+  },
+  {
+    "renderer": "native",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "cancel-native-screen-status.png",
+    "note": "Screenshots require inspection; elapsed host script time is not guest interrupt latency."
+  },
+  {
+    "renderer": "asm",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "cancel-asm-off-status.png",
+    "note": "Screenshots require inspection; elapsed host script time is not guest interrupt latency."
+  },
+  {
+    "renderer": "asm",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "cancel-asm-screen-status.png",
+    "note": "Screenshots require inspection; elapsed host script time is not guest interrupt latency."
+  }
+]

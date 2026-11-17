@@ -1,0 +1,2 @@
+snow-kermit-complete
+PASS: two 4096-byte roundtrips, cancellation and recovery; inspect guest statuses/allocations

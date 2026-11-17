@@ -1,0 +1,13 @@
+Using multiversal interfaces
+Volume name is "SE Control"
+Volume was created on Sat Nov 14 09:22:40 2026
+Volume was last modified on Sat Nov 14 09:22:40 2026
+Volume has 33020416 bytes free
+/src/outputs/hardware-control/build/SE-Control.hda: contains 1 HFS partition
+Volume name is "SE Control"
+Volume was created on Sat Nov 14 09:22:40 2026
+Volume was last modified on Sat Nov 14 09:22:40 2026
+Volume has 33020416 bytes free
+f  ????/UNIX         0      1068 Nov 14 09:22 License
+f  TEXT/ttxt         0        52 Nov 14 09:22 SE Control.cfg
+f  APPL/SECT     92411         0 Nov 14 09:22 SEControl

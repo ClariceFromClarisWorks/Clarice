@@ -1,0 +1,5 @@
+PASS guest UTF/malformed/binary wc and tr vs unchanged upstream host reference
+PASS find/du absolute/relative/two-volume output equivalence
+PASS disposable fixture data/resource forks, type, creator, Finder flags and creation date preserved
+PASS final direct-catalog traversal and production UTF outputs repeated after final build
+LIMIT final find guest cancellation: Command-period returned prompt; Control-C became plain c; status/heap export missing

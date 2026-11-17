@@ -1,0 +1,1 @@
+Final normal guest: 315 byte ordered input/echo in 7.814 host seconds (40.31 bytes/sec). Automation requested 20 ms key intervals. This measures test input rate, not maximum serial throughput or end-to-end latency.

@@ -1,0 +1,34 @@
+[
+  {
+    "renderer": "native",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "patched-cancel-native-off-status.png",
+    "note": "Existing patched Snow maps host Control to guest Option on Plus. No precise interrupt latency measured.",
+    "result": "PASS: screenshot inspected; ^C, returned prompt, echo $? = 130"
+  },
+  {
+    "renderer": "native",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "patched-cancel-native-screen-status.png",
+    "note": "Existing patched Snow maps host Control to guest Option on Plus. No precise interrupt latency measured.",
+    "result": "PASS: screenshot inspected; ^C, returned prompt, echo $? = 130"
+  },
+  {
+    "renderer": "asm",
+    "paging": "off",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "patched-cancel-asm-off-status.png",
+    "note": "Existing patched Snow maps host Control to guest Option on Plus. No precise interrupt latency measured.",
+    "result": "PASS: screenshot inspected; ^C, returned prompt, echo $? = 130"
+  },
+  {
+    "renderer": "asm",
+    "paging": "screen",
+    "host_action": "Control+C HID modifier/key transitions",
+    "status_evidence": "patched-cancel-asm-screen-status.png",
+    "note": "Existing patched Snow maps host Control to guest Option on Plus. No precise interrupt latency measured.",
+    "result": "PASS: screenshot inspected; ^C, returned prompt, echo $? = 130"
+  }
+]

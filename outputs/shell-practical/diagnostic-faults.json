@@ -1,0 +1,5 @@
+{
+  "result": "PASS 128 injected diagnostic failures; syntax vs OOM and subsequent recovery",
+  "sanitizers": "ASan/UBSan",
+  "injected_failures": 128
+}

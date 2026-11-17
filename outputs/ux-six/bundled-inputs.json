@@ -1,0 +1,86 @@
+{
+  "awk.clx": {
+    "bytes": 189900,
+    "sha256": "9f90e80f61e15b3c78220c7c5a61a932ca738b5dcaca25dc09378dd234c63374"
+  },
+  "basename.clx": {
+    "bytes": 15388,
+    "sha256": "cb91072671cf8bb936ce3b095accc8ec4e3d683cede897271b461757dac05ce7"
+  },
+  "clarice.clx": {
+    "bytes": 99044,
+    "sha256": "0f317e33f1c6e620db198a394cb6c82ccba162ab54deec760ecf05016d75d548"
+  },
+  "core.clx": {
+    "bytes": 12376,
+    "sha256": "cb5e03b5f1387cb79107f9650bd8c50cdceab04f86035bde881e9f486fc2ebe0"
+  },
+  "cut.clx": {
+    "bytes": 20092,
+    "sha256": "fcac522cfb28050405a3c9f86839e8044e11879d510bda2315dc9f99f8ddc528"
+  },
+  "dirname.clx": {
+    "bytes": 15232,
+    "sha256": "cd8441da2d26f6954dbabc812d4e03435484fcf5db056fcb98c5b991be636a0c"
+  },
+  "files.clx": {
+    "bytes": 12132,
+    "sha256": "485675395ccf0d304652ec784d9ab7c8ca9ae8f7835b37518796e4938e4e5fab"
+  },
+  "grep.clx": {
+    "bytes": 44320,
+    "sha256": "d779b4b5d9d0c0c8267af9e34dc4062fe999ba40ff88768759b60b9a75052e63"
+  },
+  "head.clx": {
+    "bytes": 16832,
+    "sha256": "796bac8a8751684cebce677d562a8d9b33bbe9f65b08a2ad453524c3b1932dd9"
+  },
+  "inspect.clx": {
+    "bytes": 8716,
+    "sha256": "89db31cee6ecdaa9244541c8355826ebfded1ec9f829fe9325c80ea3ed8af10c"
+  },
+  "kermit.clx": {
+    "bytes": 25400,
+    "sha256": "d3df9addc44b22a16e5a537581e51db11fd5fa908a961a5840ed85095e1f5d4b"
+  },
+  "misc.clx": {
+    "bytes": 5848,
+    "sha256": "606aae6a67ebd6f03b18b084350d3865bd6e08f9ef50a27ea6cbbce786885c2b"
+  },
+  "sed.clx": {
+    "bytes": 63492,
+    "sha256": "cfb4c8e069ecd21c374a7a5358b87c063b71bd6c813a33d16ec2e13a2371c0e2"
+  },
+  "serial.clx": {
+    "bytes": 9524,
+    "sha256": "eb2797ea0ccb0f97f5e2f5c02fbb89fe94ff8e6fe55a0775cfe76294331e6c8d"
+  },
+  "sort.clx": {
+    "bytes": 40420,
+    "sha256": "470cb37fd16d58c2c1408147486d8e1c313637a9bf179d0b01a60e4748df6238"
+  },
+  "tail.clx": {
+    "bytes": 19372,
+    "sha256": "0583e5a2529b7f0ea97ecfb43bdf888a8c666e5abf4613a46720ebe8dbadd8d2"
+  },
+  "tee.clx": {
+    "bytes": 15532,
+    "sha256": "589a5443b0ffec4041f346a426219454f489c5d10b2d9f6444c00f57ac919218"
+  },
+  "tr.clx": {
+    "bytes": 35236,
+    "sha256": "8ac915f7637132ca11a0ef26f431ecc996abde042057b629e4b0e500725fc0ec"
+  },
+  "uniq.clx": {
+    "bytes": 17932,
+    "sha256": "10e85fcc0d06851a389c5b69efe51bf973d02180149991a8c9a4f8ae9bbdf505"
+  },
+  "wc.clx": {
+    "bytes": 17596,
+    "sha256": "ad3b90b5bbfa7ed9d6491770e62c4901bb61f957eba59f9c2085dd75b39c4811"
+  },
+  "wget.clx": {
+    "bytes": 18392,
+    "sha256": "459b7f9abb0c8e53350e8e59b69f61fa97ccc92f6171142f693505428528eeb1"
+  }
+}

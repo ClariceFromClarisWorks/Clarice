@@ -1,0 +1,12 @@
+127.0.0.1 - - [14/Nov/2026 22:02:39] "GET /binary HTTP/1.1" 200 -
+127.0.0.1 - - [14/Nov/2026 22:02:39] code 404, message Not Found
+127.0.0.1 - - [14/Nov/2026 22:02:39] "GET / HTTP/1.1" 404 -
+127.0.0.1 - - [14/Nov/2026 22:02:39] code 404, message Not Found
+127.0.0.1 - - [14/Nov/2026 22:02:39] "GET /escape HTTP/1.1" 404 -
+127.0.0.1 - - [14/Nov/2026 22:02:39] code 404, message Not Found
+127.0.0.1 - - [14/Nov/2026 22:02:39] "GET /../private HTTP/1.1" 404 -
+127.0.0.1 - - [14/Nov/2026 22:02:39] code 405, message Method Not Allowed
+127.0.0.1 - - [14/Nov/2026 22:02:39] "HEAD /binary HTTP/1.1" 405 -
+127.0.0.1 - - [14/Nov/2026 22:02:39] code 403, message Unexpected peer
+127.0.0.1 - - [14/Nov/2026 22:02:39] "GET /binary HTTP/1.1" 403 -
+PASS: binary Content-Length, no listing, symlink/traversal escape refused, unsupported method, unexpected peer

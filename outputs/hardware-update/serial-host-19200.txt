@@ -1,0 +1,1 @@
+Echoing /dev/cu.usbmodem1401: 19200 8N1, no flow control
