@@ -5,6 +5,26 @@ commands are separate CLX files. Nano is optional and is not in this collection.
 Use a complete distribution for first installation; a core-only update does not
 install, inspect or replace utilities.
 
+## Networking and optional applications
+
+Networking clients and diagnostics are **Standard Unix Utilities**, installed as
+external commands in Clarice Data (`/bin`), not part of Clarice Core. This includes
+`ipconfig`/network status, `ping`, `wget`, `ftp` and the Telnet client once their
+required validation and integration review are complete. The networking development
+versions are not yet promoted into the separate 0.5.0 release candidate; its
+existing utility collection remains unchanged.
+
+Core works without an installed or configured networking stack. Network commands
+use the available native Macintosh stack and report unavailable services; no
+specific TCP/IP stack, BlueSCSI hardware, DaynaPORT or MoofPort is required by
+Core. Shared transport and DNS support is loaded on demand with the commands,
+without networking startup work or idle-memory overhead in Core.
+
+Use the same offline installer, `appinstall`, external repair sources and recovery
+rules below for these utilities. Nano and future editors remain optional,
+independently installed applications. A future Telnet server would be an optional,
+disabled-by-default service, not a permanently resident Core component.
+
 ## Offline installation — no commands or file copying required
 
 1. Open the **Clarice** distribution disk in Finder.

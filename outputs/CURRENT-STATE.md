@@ -20,10 +20,64 @@ screen replacement still requires review for its substantial memory increase.
 
 16 November 2026, Adelaide. Development **2026111550** separates Core from the
 standard utility collection. Host and fixed-maximum-speed Snow Plus/4 MB/
-**reported System 6.0.7** validation only; physical SE remains off. No release,
+**reported System 6.0.7** validation, with bounded physical System6.0.8 acceptance below. No release,
 tag or main change. Development checkpoint branch:
-`codex/core-distribution-2026111550`; accepted `c5075e5` has been pushed.
+`codex/core-distribution-2026111550`; accepted `0686839` has been pushed.
 Offline-installer UX follow-up is locally validated; ordinary Core remains 1550.
+
+## SEControl / PowerBook 180 preparation
+
+- Separate helper adds optional eight-key bursts with native queue backpressure,
+  no automatic Return, and dynamic monochrome screenshots/mouse bounds.
+  No Clarice production changes. Helper partition224→256KiB; no resident bitmap.
+- 16 host tests pass; Snow Plus ordered burst/invalid-input/backpressure and
+  cancellation/release checks pass. Mac II640×480 capture and off-SE-range mouse
+  movement pass. Foreground Clarice burst/pwd, close/reopen and background capture
+  also pass with stable post-capture heap24992 in the existing older-app fixture.
+  Physical SE burst input now passes:67 characters19.545→4.062s (4.8×),
+  exact output checksum verified. PowerBook/System7.1 remains pending.
+- Private test kit: work/powerbook-180-kit/Clarice-PowerBook-Test.hda, containing
+  accepted1550 Core, native installer,43 utilities and new helper/source/licences.
+  Not bootable; private config included, not for public distribution. Existing
+  physical helper retained; separate SEControl Fast now active. Snapshot heap
+  returns to27068; capture7–15ticks versus old1–3 is a documented regression.
+  Details: se-control-upgrade/REPORT.md.
+
+## 0.5.0 physical acceptance — ready for release-candidate review
+
+- Stock SE/68000/4MB; Finder About confirms System6.0.8/Finder6.1.8. Clarice's
+  6.0.7 greeting is a display/reporting defect. Physical results are distinct
+  from the Snow6.0.7 fixture. Details: [acceptance report](acceptance-050/REPORT.md).
+- Remote Core1514→1550 update/relaunch passed; no error28 observed this run,
+  intermittent fault not proved fixed. All original recovery apps retained.
+- Native offline fresh installation cancelled and resumed successfully, then
+  auto-launched Core1550. All43 freshly installed commands fully verified;
+  fresh awk and mixed pipeline passed. Repeat installer preserved private-wc,
+  modified wc/Finder creatorT050 and profile checksum/exported sentinel.
+  Full-collection bytewise comparison was cancelled as redundant/slow, not passed.
+- Original Data restored; profile/preferences and /bin checksums match pre-test
+  records. Canonical running app confirmed Macintosh HD:System 6.0.8:Clarice.
+  Disposable Data retained as Clarice Data Tested 050; original independent
+  utility versions deliberately preserved. Core ordinary startup has no utility
+  installation/scanning; no new matched physical startup benchmark collected.
+- Two physical pairs: wc~71%, tr~39%, find/du~88% faster. Guest module ticks
+  include loading/full verification of temporary images; exact breakdown in
+  acceptance-050/physical-timings.json. No universal emulator/hardware ratio.
+- Portable script failures0; binary/file/text/pipeline/error paths passed.
+  Ctrl+C/Cmd-period returned130, zero owned survivors and subsequent recovery.
+  Repeated wc/tr/find heap382008 stable, largest381826→381812. Genuine awk
+  exhaustion2 then recovery0, heap381546/largest381378 stable, remaining0.
+- Nano edit/save/exit/terminal restoration passed, ownedpeak77160/remaining0.
+  Native APPL copy fork lengths/type/creator/creation date preserved; independent
+  physical resource-byte comparison not performed. Installer verified staged
+  Core forks by CRC/length; accepted Snow fork/failure tests remain separate.
+- Immediate themes, selection, scrolling/history, typing-to-live, Up/Down,
+  pending-line cancellation and foreground typeahead passed. Original prefs
+  restored byte-for-byte. Unchanged renderer has no new human sub-frame test.
+- No new functional/data-integrity blocker observed. Proceed to dedicated RC
+  review, not publication. Known updater28/slow handoff, wrong OS greeting and
+  unmet nano3s target remain explicit. PowerBook/System7.1 deferred. Physical
+  disk-full/power-loss failure was not forced; no power-loss atomicity claim.
 
 ## 0.5.0 bounded utility performance audit — Snow validated
 
@@ -38,7 +92,7 @@ Offline-installer UX follow-up is locally validated; ordinary Core remains 1550.
   comparisons pass across volumes, relative/encoded names, forks and UTF/binary.
   Final find cancellation returned via Command-period; automated Ctrl+C arrived
   as plain c and follow-up counters were not captured. Hardware keyboard/cleanup
-  acceptance remains pending. No physical-SE/System6.0.8 acceptance claimed.
+  acceptance is recorded above.
 - [Audit, timing limits and evidence](performance-050/REPORT.md). Stop this bounded
   optimisation batch and proceed to consolidated hardware acceptance. sed regex,
   disk-spilling sort and command-substitution costs remain; no speculative rewrite.
@@ -1001,3 +1055,142 @@ hashes, not new acceptance. Existing pinned build scripts remain authoritative;
 generated resources/packages and local configuration stay outside Git. Generated
 timestamps are not guaranteed bit-identical on rebuild. Focused input, progress
 and confirmation checks are rerun for this checkpoint; no fresh hardware run.
+
+## Independent native networking foundation — 17 November 2026
+
+Isolated in `Clarice-Network` / `codex/native-network-foundation`; the 0.5 RC
+checkout is unchanged. Optional 68000 ipconfig (1,756 bytes),
+ping (3,944) and hostname-enabled wget (19,328) build with existing CLX imports.
+Shared command-local .IPP/DNR services add no resident shell service or settings
+writes. Public-interface research and implementation are in
+[the networking report](network-foundation/REPORT.md).
+
+Host sanitizer/fault tests pass. Snow Plus/4 MB now passes all four pairings:
+MoofTCP 1.0 / BlueSCSI-patched Apple MacTCP “2.1”, each with MoofPort 1.0 and
+DaynaPORT SCSI/Link from the 7.5.3 installer. Follow-up adds 15 byte-exact 4 KiB
+hostname downloads, native status, ICMP replies/timeouts, DNS/HTTP errors,
+ICMP cancellation/recovery on all three additional pairings, and active HTTP
+cancellation/partial-file cleanup on both DaynaPORT pairings. Five repeated
+HTTP invocations per pairing show free heap within two bytes, constant largest
+block (391,182 or 391,218), and zero tracked remaining allocations.
+
+[Matrix evidence](network-foundation/matrix/README.md) records exact binaries,
+configuration and limits. Restoring the missing native DA Handler enabled the
+fixture's MacTCP Control Panel; selecting Ethernet fixed an initial LocalTalk
+misconfiguration. No Clarice production changes/rebuild were needed this pass.
+Direct System-file `vers` evidence identifies 6.0.8 despite SysEnvirons reporting
+6.0.7; this corrects the prior fixture label. No full physical matrix/System 7.1 acceptance,
+unmodified MacTCP 2.0.6 acceptance, or performance comparison is claimed.
+DNR cancellation must drain the installed resolver; no public hard-abort guarantee.
+No release, push or RC changes. FTP follow-up below; Telnet not begun.
+
+## Native FTP follow-up — 17 November 2026
+
+Small external `ftp get/put`, 19,056-byte 68000 CLX, reuses native transport/DNR,
+HFS operations and progress display. Bounded streaming, passive EPSV/PASV,
+password stdin, explicit errors/status, non-overwriting staged downloads. PUT
+uses STOR; failed uploads may leave a remote partial file. Data forks only; use
+MacBinary for complete Macintosh files. No new Core service/idle allocation.
+
+[FTP evidence and usage](ftp/REPORT.md): sanitizer/fault tests and Snow
+MoofTCP/DaynaPORT plus Apple MacTCP/DaynaPORT binary round trips pass; six64KiB
+round trips, empty files, hostname/numeric hosts, missing/existing-file errors.
+Byte comparisons pass. Moof download cancellation, timeout cleanup and subsequent
+FTP execution pass; upload cancellation host-tested only. Three repeated cycles
+per stack keep free application heap within2bytes and largest block constant;
+zero tracked remaining allocations. Native driver system-heap peak/stability
+was not directly measured. Physical FTP follow-up below; System7.1 acceptance remains pending.
+
+Physical SE foundation smoke test: existing Core1550 unchanged, temporary CLX
+files only. ipconfig returned192.168.1.252/255.255.255.0; named HTTP download
+returned0 for4096bytes. Ping to MacBook timed out(-23035), so no physical echo
+reply acceptance. `cksum` absent: physical download byte integrity unverified.
+[Screen evidence](network-foundation/physical/result.png). No installed network
+configuration, app, utility collection or recovery copy was replaced.
+
+### Physical FTP acceptance — 17 November 2026
+
+Existing SE Core1550 and installed network stack unchanged; FTP executed from
+/tmp only, isolated from0.5 RC. Five64KiB round trips byte-exact, empty GET/PUT,
+missing550 and existing-file refusal pass. First script was manually interrupted;
+rerun preserved its first successful download and correctly refused that existing
+target. [Actual logs/screens/limitations](ftp/REPORT.md#physical-se-follow-up--17-november-2026).
+
+Ctrl+C download cancellation and Command-period upload cancellation both returned
+130; no partial local destination or .ftp temporary files remained. Upload
+warning correctly permits a remote partial/complete file: in this test all bytes
+had already been queued and the complete file remained on the server. Fresh
+GET/PUT after both cancellations passed byte comparison. Five repeated runs:
+application heap387,038–387,040, largest386,986 stable, remaining0; recovery pair
+heap394,952/largest394,784 unchanged. Native system-heap peak remains unmeasured.
+64KiB upload totals320–371ticks including loader51–69ticks; no claimed perfectly
+isolated throughput benchmark. No production changes required; servers stopped,
+SEControl retained, no Core/bin/config updates, no push/release. Telnet not begun.
+
+Open Transport is not a System6/stockSE target: Apple specifies68030/040 or
+PowerPC, supported System7.1+ releases and5MB minimum on68k. Future suitably
+configured PowerBook180 testing should first try OT's MacTCP compatibility
+interface; DNS/resource discovery and ICMP need explicit testing. No OT backend
+or compatibility claim added; source in network-foundation/RESEARCH.md.
+
+## Native Telnet client — 17 November 2026
+
+External networking branch now adds bounded monochrome VT100/ANSI to the accepted
+NVT client: `telnet [--dumb] HOST [PORT]`. Reuses native TCP/DNR and Core's existing
+nano screen/keyboard/rendering services; no Core or FTP changes. TTYPE/NAWS,
+cursor/erase/wrap/scroll regions, insert/delete, inverse, application arrows and
+status replies. Ctrl+] then q exits; Command-period cancels; Ctrl+C sends IP.
+
+[Actual implementation, evidence and limits](telnet/REPORT.md#vt100ansi-acceptance):
+ASan/UBSan,200k VT fuzz bytes, Core pixel-state bridge comparison, allocation and
+acquisition failure, cancellation and repeated cleanup pass. Snow Plus/4MB/6.0.8
+then physical stock SE/4MB/6.0.8 passed real macOS Vim9.1 edits/saves (host bytes
+verified), paging/search, and less668 search/inverse display. Physical application
+arrows verified on the wire. Cancel130, reconnect/remote exit0, local escape0 and
+local terminal restored. Snow warm heap403,262/largest401,056; SE
+heap402,672/largest398,880 stable, remaining0. System-heap peak not measured.
+
+CLX17,924B, runtime image12,612B; VT model11,116B plus existing on-demand Core
+screen10,804B and native ring16,384B. No idle allocation or extra bitmap. Physical
+load52–54ticks; no all-in latency or redraw-speed claim. Burst painting bounded
+to4KiB with input checks each512bytes. Client remains an explicit VT100 subset:
+ASCII/monochrome, approximated DEC graphics, no colour/UTF-8/bold/underline/blink,
+alternate-screen history, VT52, application keypad/function-key translation,
+TLS or urgent SYNCH. Session dimensions fixed. System7/OT/arbitrary telnetd and
+remote GNU nano unverified. Host nano is Pico; only Vim/less are claimed.
+
+Temporary servers/Snow stopped, all seven PTY shells reaped, SEControl retained.
+Only `/tmp/telnet-vt2` downloaded on SE; installed Core/bin/settings and0.5 RC
+unchanged. No push/release. Prior NVT and real-shell evidence remains in the report.
+
+## Networking distribution policy
+
+Network status/ipconfig, ping, wget, FTP and Telnet client are **Standard Unix
+Utilities**, external `/bin` commands, gated on required validation/integration
+review before promotion. The separate0.5 candidate remains unchanged. Shared
+native TCP/DNR code is linked into invocation-owned CLX commands, not Core;
+no networking startup/idle overhead or required stack/driver/BlueSCSI hardware.
+Core works without networking. Reuse existing installer/appinstall and Clarice
+Data; nano/editors remain optional, future Telnet server optional/off by default.
+AGENTS.md and INSTALL.md record this policy; no new packaging mechanism.
+
+## libtelnet port — Snow validated, 2026-11-17
+
+[Port evidence](telnet/LIBTELNET-PORT.md) supersedes the earlier review-only
+recommendation following explicit port authorisation. Unmodified pinned upstream
+libtelnet now owns protocol/negotiation; thin invocation allocator adapter;
+native TCP/DNR and VT renderer unchanged. No duplicate parser, idle allocation,
+Core/FTP/0.5 RC changes. SE left off; previous source/binary and guest candidate
+retained for recovery. No push/release.
+
+CLX24,920B (was17,924), runtime18,260B (was12,612). Ordinary m68k protocol storage
+574B plus allocator overhead; upstream SB capacity bounded16KiB, demand allocated
+and released. Host ASan/UBSan, all11 upstream fixtures, allocation/growth failure,
+queued negotiation, existing VT fuzz and restoration regressions pass.
+Snow Plus4MB/actual6.0.8 MoofTCP/DaynaPORT: real Bash/Vim save/less search, IP,
+local cancellation130, reconnect/exit0, local escape0, --dumb0; malformed/oversized/
+truncated rejection1/1/1 followed by recovery0. Three PTY children reaped.
+Repeated heap400166/400168/400166; largest399480, no progressive loss observed.
+Matched short-session median165vs163 guest ticks; loader53vs48. Network deadline
+included, not a CPU speed claim. All-system peak and physical performance pending.
+Existing ASCII/renderer, binary-refusal and no-urgent-SYNCH limitations remain.
