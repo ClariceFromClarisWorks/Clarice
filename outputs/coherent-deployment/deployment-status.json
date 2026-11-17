@@ -1,12 +1,17 @@
 {
   "main_pushed": "110f937",
-  "experiment_pushed": "0cc324c",
+  "experiment_pushed": "f3eee87",
   "se_running_build": 2026111713,
-  "se_evidence": "read-only clarice update --check; installed build 2026111713, no newer update",
+  "se_evidence": "current-se/se-verified.png; all47 standard utilities verified, settings/pipeline smoke passes",
   "snow_running_build": 2026111713,
-  "snow_evidence": "MacBinary CLUP validated; both executable forks equal accepted1713 excluding native resource scratch; greeting/prompt visible",
+  "snow_evidence": "current-se/snow-installed.png; all47 standard utilities verified; accepted diagnostic Core1713 retained",
   "core_replaced": false,
-  "utilities_replaced": false,
+  "utilities_replaced": true,
   "complete_release_deployment": false,
-  "blocker": "Native coordinated installer/updater and recovery integration unfinished"
+  "blocker": "Native coordinated installer/updater and durable recovery integration unfinished; diagnostic Core retained rather than normal packaged Core",
+  "date": "2026-11-18",
+  "standard_utility_count": 47,
+  "standard_collection_verified": true,
+  "supervised_deployment_complete": true,
+  "automatic_coordinated_update_complete": false
 }

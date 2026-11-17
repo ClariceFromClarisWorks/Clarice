@@ -1,15 +1,22 @@
 # Clarice current state
 
-## Coherent deployment — host build/package batch, native integration unfinished
+## Coherent deployment — current SE/Snow utilities, automatic coordination unfinished
+
+18 November: supervised complete utility deployment now passes on physical SE
+and Snow, both retaining the accepted diagnostic Core2026111713. All47 standard
+utilities transferred in one bundle, fully loader-checked before installation,
+replaced using existing appinstall, and read back against manifest lengths/CRCs.
+Physical preferences/profile comparison and command/pipeline smoke checks pass.
+Previous utilities retained; six older recovery files archived through Clarice.
+Optional nano/user files were not replaced. [Evidence and exact scope](coherent-deployment/current-se/README.md).
+The diagnostic Core differs from the normal Core in the generated bundle; this
+is a compatible supervised development deployment, not whole-manifest Core binary
+identity or acceptance of the future coordinated updater.
 
 Branch codex/coherent-deployment from main110f937; transaction approach approved.
-Packaging checkpoint0cc324c pushed to its development branch; accepted main110f937
-also pushed at user request. No release. Later read-only SE check confirms running
-build2026111713; Snow viewport fixture Core forks match accepted1713 and it was
-started at its prompt. No application or utility replacement performed. Full
-/bin consistency remains unverified/outdated on the SE; experimental bundled
-activation must be completed before claiming both installations current. Root causes: skip-existing
-setup, Core-only HTTP updates, unbound utility manifest and reusable build outputs.
+Host packaging checkpoint pushed; main110f937 also pushed at user request. No
+release or tag. Root causes remain skip-existing setup, Core-only HTTP updates,
+unbound utility manifests and reusable build outputs in the previous workflow.
 
 Implemented: fresh full-build directory (previous build retained), invalidated
 seal before rebuild, partial-command override disabled for full builds, source/
@@ -31,7 +38,9 @@ Outstanding: native staging, journal decoding/recovery and startup gate; integra
 bundle with offline installer, appinstall and HTTP updater; managed-file ownership
 and legacy conflicts; test actual native failure paths, cancellation/low memory,
 repeat upgrades and Snow. Existing updater/installer still have their old behaviour.
-Do not deploy this experimental bundle or claim release consistency is guaranteed.
+Do not treat this bundle as a completed automatic updater or claim future
+release consistency is guaranteed. The supervised deployment above uses existing
+per-command recovery, not the unfinished collection transaction.
 No new startup memory, runtime checks or executable-format changes are active yet.
 
 ## Recovery steering — separate development helper
