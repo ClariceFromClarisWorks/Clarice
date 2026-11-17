@@ -29,7 +29,11 @@ python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/free.o" "$ROOT/work/bu
 "$ROOT/scripts/build-awk.sh"
 "$ROOT/scripts/build-pipelines.sh"
 "$ROOT/scripts/build-kermit.sh"
-sh "$ROOT/scripts/build-wget.sh"
+sh "$ROOT/scripts/build-network.sh"
+sh "$ROOT/scripts/build-ftp.sh"
+sh "$ROOT/scripts/build-telnet.sh"
+for name in ipconfig ping wget; do cp "$ROOT/work/network/$name.clx" "$ROOT/work/build/$name.clx"; done
+cp "$ROOT/work/ftp/ftp.clx" "$ROOT/work/telnet/telnet.clx" "$ROOT/work/build/"
 sh "$ROOT/scripts/build-update.sh"
 
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '

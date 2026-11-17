@@ -1,6 +1,26 @@
 # Clarice current state
 
-## Userland upstream reuse — separate Network development
+## 0.5.0 integrated candidate — hardware acceptance pending
+
+17 November: build **2026111701**, branch `codex/release-0.5.0-rc`.
+[Candidate review and evidence](release-050-candidate/REPORT.md). Recovery baseline
+74b5132 retains prior networking source. Normal build/offline kit now include
+47 external commands, with native DNS/status/ping, pico HTTP, FTP and libtelnet
+Telnet. No networking linked into Core or added to startup. Nano stays optional.
+Focused FTP warning/diagnostic and unsupported ESC-consumption fixes pass host
+sanitizers; truncated terminal-control EOF fails cleanly. Fresh graphical Snow
+installation/relaunch, installed Core fork comparison, command checks/help,
+pipelines, binary FTP round trips, chunked HTTP, remote Vim/less, reconnect and
+local cancellation exercised. Core/awk also work without .IPP or Ethernet.
+FTP heap379554/379552/379554, largest379298, tracked survivors0. Not hardware
+performance measurements. Initial offline result extraction lost buffered writes;
+repeat batch sent closed evidence over FTP and explicitly flushed destination.
+SE unavailable: final consolidated stock-SE acceptance and post-acceptance review
+remain blockers. No release/tag/main merge. Existing updater28/slow handoff and
+reported6.0.7 greeting remain; no new updater handoff or physical safety claim.
+
+
+## Prior upstream reuse evidence
 
 17 November: [inventory](reuse-audit/REPORT.md) and [next batch](reuse-next/REPORT.md).
 Find uses genuine musl matching (checkpoint d299d46). Mktemp now restores sbase

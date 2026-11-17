@@ -1,0 +1,66 @@
+Runtime: heap=380990 largest=380822 image=0 ticks=0 load=0 owned-peak=0 remaining=0
+Loader ticks: read=0 validate=0 imports=0 relocations=0 prepare=0 events=0 (events included above)
+Verification ticks: mode=full header=0 record=0 payload=0 metadata=0 structure=0 (structure included in relocations)
+check-ipconfig:0
+help-ipconfig:0
+check-ping:0
+help-ping:0
+check-wget:0
+help-wget:0
+check-ftp:0
+help-ftp:0
+check-telnet:0
+usage: telnet [--dumb] HOST [PORT]
+Native TCP/DNS; monochrome VT100/ANSI screen, TERM=vt100, NAWS.
+--dumb retains line-oriented NVT. Ctrl+] then q exits locally;
+Ctrl+] twice sends Ctrl+]. Cmd-period cancels; Ctrl+C sends Telnet IP.
+Return sends CR LF; Backspace sends DEL; application arrows supported.
+libtelnet protocol engine; ASCII text; inverse video, cursor/erase/scroll regions, insert/delete.
+DEC line graphics use ASCII approximations; no colour, UTF-8, double-size
+lines, alternate-screen history, bold/underline/blink or VT52.
+Screen size is fixed at connection: resize before connecting. No TLS,
+autologin, transfers or TCP urgent SYNCH. Data is unencrypted.
+Both streams must be terminals. Native TCP/DNS may delay cancellation.
+No idle timeout; incomplete Telnet controls time out after 30s.
+Input overflow/oversized controls stop explicitly.
+Statuses: 0 peer close/local escape, 1 error, 2 usage, 130 local cancel.
+help-telnet:0
+47
+alpha
+AWK_READY
+/tmp/rc-3e0100
+Interface: .IPP (installed Macintosh TCP/IP)
+IPv4: 10.0.0.2
+Subnet mask: 255.255.255.0
+Gateway/DNS/link settings: consult the installed TCP/IP control panel.
+ip:0
+Downloaded 4096 bytes
+get-4:0
+Uploaded 4096 bytes
+put-4:0
+Runtime: heap=379554 largest=379298 image=13220 ticks=96 load=31 owned-peak=0 remaining=0
+Loader ticks: read=12 validate=0 imports=1 relocations=2 prepare=5 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)
+Downloaded 4096 bytes
+get-5:0
+Uploaded 4096 bytes
+put-5:0
+Runtime: heap=379552 largest=379298 image=13220 ticks=92 load=32 owned-peak=0 remaining=0
+Loader ticks: read=12 validate=0 imports=2 relocations=1 prepare=6 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)
+Downloaded 4096 bytes
+get-6:0
+Uploaded 4096 bytes
+put-6:0
+Runtime: heap=379554 largest=379298 image=13220 ticks=103 load=32 owned-peak=0 remaining=0
+Loader ticks: read=12 validate=2 imports=2 relocations=1 prepare=4 events=2 (events included above)
+Verification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=0 (structure included in relocations)
+ftp: destination exists (not overwritten)
+exists:1
+Downloaded 4.00 KB to /tmp/http-final
+http:0
+bytes:0
+Runtime: heap=379662 largest=379298 image=8508 ticks=81 load=29 owned-peak=4748 remaining=0
+Loader ticks: read=10 validate=1 imports=1 relocations=1 prepare=6 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)
+RC_DONE

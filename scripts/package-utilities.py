@@ -24,6 +24,9 @@ for name,source in {
  'awk-LICENSE.txt':'src/vendor/awk/LICENSE',
  'mrsh-LICENSE.txt':'src/vendor/mrsh/LICENSE',
  'ekermit-COPYING.txt':'src/ports/ekermit/upstream/COPYING',
+ 'libtelnet-COPYING.txt':'src/commands/vendor/libtelnet/COPYING',
+ 'libtelnet-AUTHORS.txt':'src/commands/vendor/libtelnet/AUTHORS',
+ 'pico-LICENSE.txt':'src/commands/vendor/picohttpparser/LICENSE',
  'mactcp-LICENSE.txt':'src/commands/vendor/mactcp/LICENSE',
 }.items(): shutil.copyfile(root/source,out/'Licenses'/name)
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

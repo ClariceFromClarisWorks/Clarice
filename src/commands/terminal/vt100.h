@@ -99,14 +99,17 @@ static int vt_byte(Vt100 *v,unsigned char c){
  if(v->parser==1){v->parser=0;
   if(c=='['){v->parser=2;v->argc=v->priv=v->discard=v->intermediate=0;memset(v->args,0,sizeof v->args);}
   else if(c==']'||c=='P'||c=='^'||c=='_')v->parser=4;
-  else if(c=='('||c==')'||c=='#'){v->parser=3;v->intermediate=c;}
+  else if(c>=32&&c<=47){v->parser=3;v->intermediate=c;}
   else if(c=='7')vt_save(v);else if(c=='8')vt_restore(v);
   else if(c=='D')vt_index(v,1);else if(c=='M')vt_index(v,-1);else if(c=='E'){vt_index(v,1);s->col=0;}
   else if(c=='H')v->tabs[s->col]=1;else if(c=='=')v->keypad=1;else if(c=='>')v->keypad=0;
   else if(c=='c')vt_reset(v,s->rows,s->cols);else if(c=='Z')return vt_response(v,"\033[?1;0c");
   return 1;
  }
- if(v->parser==3){v->parser=0;
+ if(v->parser==3){
+  /* Consume unsupported ESC intermediates through their final byte. */
+  if(c>=32&&c<=47){v->intermediate=0;return 1;}
+  v->parser=0;
   if(v->intermediate=='(')v->g0=c=='0';else if(v->intermediate==')')v->g1=c=='0';
   else if(v->intermediate=='#'&&c=='8'){for(int r=0;r<s->rows;r++){memset(s->cells[r],'E',s->cols);memset(s->attrs[r],0,s->cols);s->dirty[r]=1;}}return 1;
  }

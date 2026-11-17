@@ -54,6 +54,7 @@ int main(void){
  reset();telnet_free(engine);engine=0;overflow=1;assert(clarice_main(2,va)==1&&!allocations&&!terminal&&!conn.open);
  reset();telnet_free(engine);engine=0;closed=1;outfail=1;assert(clarice_main(2,va)==1&&!allocations&&!terminal&&!conn.open);
  for(int i=0;i<20;i++){reset();telnet_free(engine);engine=0;closed=1;assert(clarice_main(2,va)==0&&!allocations&&!terminal&&!conn.open);}
+ reset();telnet_free(engine);engine=0;input[in++]=27;input[in++]='[';closed=1;assert(clarice_main(2,va)==1&&!allocations&&!terminal&&!conn.open);
  reset();vt=cli_alloc(sizeof *vt);memset(vt,0,sizeof *vt);vt->reply=reply;vt_reset(vt,4,8);dumb=0;
  unsigned char opts[]={IAC,DO,TTYPE,IAC,SB,TTYPE,1,IAC,SE,IAC,DO,NAWS};feed(opts,sizeof opts);
  unsigned char vtoptions[]={IAC,WILL,TTYPE,IAC,SB,TTYPE,0,'V','T','1','0','0',IAC,SE,IAC,WILL,NAWS,IAC,SB,NAWS,0,8,0,4,IAC,SE};assert(sn==sizeof vtoptions&&!memcmp(sent,vtoptions,sn));

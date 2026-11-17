@@ -9,10 +9,9 @@ install, inspect or replace utilities.
 
 Networking clients and diagnostics are **Standard Unix Utilities**, installed as
 external commands in Clarice Data (`/bin`), not part of Clarice Core. This includes
-`ipconfig`/network status, `ping`, `wget`, `ftp` and the Telnet client once their
-required validation and integration review are complete. The networking development
-versions are not yet promoted into the separate 0.5.0 release candidate; its
-existing utility collection remains unchanged.
+`ipconfig`/network status, `ping`, hostname-aware `wget`, `ftp` and `telnet`.
+The 0.5.0 candidate contains 47 standard commands. This is a development candidate:
+consolidated physical-SE acceptance is pending; no release has been published.
 
 Core works without an installed or configured networking stack. Network commands
 use the available native Macintosh stack and report unavailable services; no

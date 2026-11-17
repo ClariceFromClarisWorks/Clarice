@@ -51,3 +51,19 @@ The optional v0.4.0 HDA contains an unchanged Apple_Driver43 SCSI driver partiti
   this preparation before the separately maintained adaptation scripts run.
 - Updater SHA-256 reference source retains sbase's public-domain notices and
   revision in `src/update/vendor/README.md`; current LAN updates use CRC-32.
+
+## Networking in the 0.5.0 candidate
+
+Telnet uses genuine libtelnet by Sean Middleditch and contributors, with its
+public-domain dedication and authors retained under
+`src/commands/vendor/libtelnet`. `README.clarice` records provenance and bounded
+allocation adaptations. The native transport and terminal renderer are separate.
+
+HTTP response and chunk parsing uses pristine picohttpparser by Tokuhiro Matsuno,
+Kazuho Oku and contributors, revision dd573d8fa9264c646a400e96ce9f07dea6f156e4,
+under its MIT option; source, notices and licence are in
+`src/commands/vendor/picohttpparser`. Both licences are included in the offline kit.
+
+FTP and the bounded VT100 model remain independently implemented adapters; they
+are not claimed to be ftplib or libvterm ports. The release review records the
+upstream comparison and supported scope.

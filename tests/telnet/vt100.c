@@ -21,6 +21,7 @@ int main(void){
  reset();feed("a\033]52;c;evil\007b\033Pignored\033\\c");assert(!memcmp(v.s.cells[0],"abc",3));
  feed("\033[999999999999;9999999999HX");assert(v.s.row==5&&v.s.col==7);
  feed("\033[1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17H");assert(v.s.row==5&&v.s.col==7);
+ reset();feed("a\033%Gb\033( %Gc");assert(!memcmp(v.s.cells[0],"abc",3));
  reset();feed("\033[5n\033[c");assert(!strcmp(response,"\033[0n\033[?1;0c"));
  reset();feed("\033]");for(int i=0;i<4095;i++)assert(vt_byte(&v,'a'));assert(!vt_byte(&v,'a'));
  reset();unsigned seed=1;for(int i=0;i<200000;i++){seed=seed*1664525u+1013904223u;if(!vt_byte(&v,seed>>24))vt_reset(&v,6,8);assert(v.s.row>=0&&v.s.row<6&&v.s.col>=0&&v.s.col<8);assert(v.top>=0&&v.top<=v.bottom&&v.bottom<6);}

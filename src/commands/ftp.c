@@ -81,8 +81,10 @@ int clarice_main(int argc,char **argv){
  failure="control connection";mac_error=NetConnect(&control,ip,port);if(mac_error)goto done;activity=cli_ticks();
  int c=reply();if(c==120)c=reply();if(!expected(c,220))goto done;
  c=command("USER",user);if(c==331)c=command("PASS",password);memset(password,0,sizeof password);if(!expected(c,230)||!expected(command("TYPE","I"),200))goto done;
- if(!put){c=command("SIZE",remote);if(c==213){if(!decimal(reply_text+4,&total)){failure="invalid SIZE reply";goto done;}known=1;}else if(c<0||c==421)goto done;}
+ if(!put){c=command("SIZE",remote);if(c==213){if(!decimal(reply_text+4,&total)){failure="invalid SIZE reply";goto done;}known=1;}else if(c<0||c==421){if(c==421)failure=reply_text;goto done;}}
  if(!passive(ip))goto done;
+ /* STOR may truncate remotely before its preliminary reply reaches us. */
+ if(put)started=1;
  c=command(put?"STOR":"RETR",remote);if(c!=125&&c!=150){if(c>=0)failure=reply_text;goto done;}started=1;
  if(!put){strcpy(stage,native);char *leaf=strrchr(stage,':');if(!leaf||(size_t)(leaf-stage)+20>=255){failure="temporary path too long";goto done;}
   failure="creating temporary file";for(unsigned j=0;j<16;j++){snprintf(leaf+1,20,".ftp-%08lx-%x",cli_ticks(),j);mac_error=cli_native_create(stage,'BINA','CLRC');if(mac_error!=dupFNErr)break;}if(mac_error)goto done;owned=1;mac_error=cli_native_open(stage,0,1,&file);if(mac_error)goto done;

@@ -140,7 +140,7 @@ int clarice_main(int argc,char **argv){
  for(;;){
   if(app_yield()){result=130;break;}
   long n=NetAvailable(&conn);
-  if(n<0){if(clarice_telnet_pending(engine)){reason="connection ended inside Telnet control";goto end;}result=0;break;}
+  if(n<0){if(clarice_telnet_pending(engine)){reason="connection ended inside Telnet control";goto end;}if(vt&&vt->parser){reason="connection ended inside terminal control";goto end;}result=0;break;}
   if(n){if(n>(long)sizeof rx)n=sizeof rx;n=NetRecv(&conn,rx,n,1);if(n<=0){reason="receive failed";goto end;}
    for(long i=0;i<n;i++)if(!receive(rx[i]))goto end;paint_bytes+=(unsigned)n;
   }

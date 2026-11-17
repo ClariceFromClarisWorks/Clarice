@@ -1,0 +1,20 @@
+PASS FTP: binary/empty GET and PUT; fragmented/multiline replies; EPSV/PASV peer isolation; unknown size; truncation/final failure; existing destination; timeout/cancel; allocation/create/write/close/rename failures; cleanup diagnostics; repeated resource release.
+PASS ownership: injected allocation failures, subsequent recovery, Q queued reversal; ordinary host peak 11744 bytes
+PASS Telnet: fragmented NVT/IAC, echo transitions/duplicates, TTYPE, refused options, CRLF/CRNUL, escaped IAC, IP, malformed/bounded controls, timeout, EOF, cancel/escape, overflow, connect/send/output failures and repeated restoration
+PASS VT: wrap, regions/index/reverse-index, origin/CPR, save/restore, insert/delete, ACS, modes, strings, parameter bounds, 200000 fuzz bytes; model 11128 bytes
+PASS upstream environ01
+PASS upstream environ02
+PASS upstream environ03
+PASS upstream mssp01
+PASS upstream rfc1143
+PASS upstream simple01
+PASS upstream simple02
+PASS upstream ttype01
+PASS upstream zmp01
+PASS upstream zmp02
+PASS upstream zmp03
+PASS native adapter: status, numeric, immediate/deferred DNS, DNS error/missing/open failure, cancellation/deadline drain, ICMP submit/reply/timeout/cancel, repeated cleanup
+PASS network command options, status, output errors, numeric formatting, timeout and cancellation statuses
+HTTP final header peak=608 bytes; all allocations released
+PASS: binary, fragmented headers/body, zero length, truncation, status, length bounds, duplicates, encoding, framing, existing file, write/close/rename/create failures, cancel, timeout, cleanup recovery path
+PASS 482 transaction scenarios: creation/replacement, every operation failure, rollback failure, busy candidate/target, invalid candidate, retained backup refusal; neither version deleted
