@@ -22,3 +22,9 @@ No AppleBridge code or VNC protocol is incorporated.
 Additional adapter change: after draining unread bytes, TCPStatus detects a
 connection state other than ESTABLISHED (8), so a peer FIN does not leave the
 helper polling for five minutes. See Apple MacTCP Programmer's Guide, TCPStatus.
+
+Recovery adaptation: TCPActiveOpen is asynchronous with a caller event poll and
+owned-stream TCPAbort for cancellation (Apple Q&A PLAT04). Close aborts/releases
+only the helper stream, avoiding a graceful network wait. Failed TCPRelease
+retains the ring and stream identity for retry rather than allocating over it.
+No shared driver unload/restart.

@@ -62,11 +62,11 @@ class Wire:
         self.sock.sendall(command.encode('ascii') + b'\n')
 
 
-def png(frame):
+def png(frame, width=512, height=342, stride=64):
     def chunk(kind, data):
         return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data))
-    rows = b''.join(b'\0' + bytes(x ^ 255 for x in frame[y*64:(y+1)*64]) for y in range(342))
-    return (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', 512, 342, 1, 0, 0, 0, 0))
+    rows = b''.join(b'\0' + bytes(x ^ 255 for x in frame[y*stride:y*stride+(width+7)//8]) for y in range(height))
+    return (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 1, 0, 0, 0, 0))
             + chunk(b'IDAT', zlib.compress(rows)) + chunk(b'IEND', b''))
 
 
@@ -74,18 +74,21 @@ def capture(wire, dest):
     start = time.monotonic()
     wire.send('GRAB')
     fields = wire.line().split()
-    if len(fields) != 7 or fields[:5] != ['FRAME', '512', '342', '64', '21888']:
+    if len(fields) != 7 or fields[0] != 'FRAME':
         raise ValueError('Invalid screen header: ' + ' '.join(fields))
-    ticks, heap = map(int, fields[5:])
-    frame = wire.exact(21888)
+    width,height,stride,size,ticks,heap = map(int,fields[1:])
+    if not (1<=width<=1024 and 1<=height<=768 and stride==((width+15)//16)*2 and size==stride*height):
+        raise ValueError('Invalid screen dimensions')
+    frame = wire.exact(size)
+    wire.screen_size=(width,height)
     # Do not leave a plausible but truncated screenshot on failure.
-    data = png(frame) if dest.suffix.lower() == '.png' else b'P4\n512 342\n' + frame
+    data = png(frame,width,height,stride) if dest.suffix.lower() == '.png' else ('P4\n%d %d\n'%(width,height)).encode()+b''.join(frame[y*stride:y*stride+(width+7)//8] for y in range(height))
     tmp = dest.with_name(dest.name + '.part')
     tmp.write_bytes(data)
     tmp.replace(dest)
     return dict(action='capture', file=str(dest), seconds=time.monotonic()-start,
                 guest_capture_ticks=ticks, guest_free_heap_with_snapshot=heap,
-                frame_sha256=hashlib.sha256(frame).hexdigest(), bytes=len(frame))
+                frame_sha256=hashlib.sha256(frame).hexdigest(), bytes=len(frame),width=width,height=height)
 
 
 def main():

@@ -1,7 +1,8 @@
 # SEControl graphical development helper
 
 Separate from Clarice. System 6.0.8 / MultiFinder, 68000 Plus/SE, 4 MB,
-512×342 monochrome. No extensions, trap/ROM patches, startup installation,
+Dynamic main-screen capture (up to 1024×768), delivered as monochrome.
+PowerBook 180/System 7.1 is a new test target, not hardware-accepted yet. No extensions, trap/ROM patches, startup installation,
 Clarice changes, file transfer or updater. New helper speaks HIL2; the original
 one-shot `host.py` HIL1 entry point is retained only for the earlier proof.
 
@@ -33,8 +34,9 @@ python3 tools/se-control/control.py serve \
 
 Keep that process running. It uses a private local Unix socket for other commands,
 accepts only the named peer and token, and maintains the connection with heartbeats.
-Relauch the helper after an intentional disconnect. The listener accepts a new
-session; it never replays earlier input. If macOS asks, allow this listener on the
+The recovery build retries a dropped session after five guest seconds. The
+listener accepts a new session; it never replays earlier input. An explicit
+`quit` still exits; it does not reconnect. If macOS asks, allow this listener on the
 trusted LAN. No public bind, router forwarding or firewall disabling.
 
 ## Host controls
@@ -54,7 +56,8 @@ python3 tools/se-control/control.py quit
 python3 tools/se-control/control.py stop
 ```
 
-Coordinates are actual SE screen pixels, not scaled MacBook display coordinates.
+Capture a screenshot first to establish the connected screen dimensions.
+Coordinates are actual Macintosh screen pixels, not scaled MacBook display coordinates.
 Inspect a fresh screenshot before clicking. An exposed Finder title bar is a
 reliable focus target; bare desktop clicks do not always activate Finder.
 Select Clarice's icon, `key cmd+o`, wait for its prompt, then type. `key cmd+q`
@@ -64,7 +67,12 @@ must exist. PNG/PBM files are written only after a complete frame arrives.
 
 `key` supports return, tab, escape, backspace, arrows and cmd/shift/option/ctrl
 modifiers. Text is prevalidated US ASCII, max 1024 characters/request, paced at
-no more than ten keys/second. No hardware GetKeys state, held modifiers or repeat.
+no more than ten keys/second in the legacy single-key mode.
+`type 'echo ready' --fast` uses eight-key bursts with one acknowledgement each,
+no per-character sleep, and native event-queue backpressure. It requires the new
+helper; old helpers fail clearly. Fast mode accepts only printable ASCII, never
+Return, Tab or control shortcuts. Inspect a screenshot before `key return`.
+BUSY is retried for at most ten seconds; partial/error responses are never replayed. No hardware GetKeys state, held modifiers or repeat.
 `QUEUED` means posted, not accepted by the target app: verify the screenshot.
 A partial-send error reports how many keys were queued; never blindly retry.
 No automatic window recognition or background command execution in Clarice.
@@ -91,20 +99,25 @@ control resumes afterward; final pointer position is retained, not rewound.
 for testing. Default waits for completion/release or an explicit error.
 Screenshot acquisition or other commands may wait while foreground code refuses
 to yield. Host deadlines distinguish a timeout from success, not a freeze from
-network loss. Relaunch SEControl after a lost connection; no unattended recovery.
+network loss. The recovery build reconnects after connection loss, releasing its own mouse
+action and discarding the unfinished command. This is not crash recovery.
 
 ## Footprint / network boundaries
 
-224 KiB application partition (32 KiB more reserved than the original proof),
+256 KiB application partition (32 KiB more reserved than the previous helper),
 16 KiB system TCP ring plus 314-byte mouse state and MacTCP's own overhead.
-A 21,888-byte snapshot exists only during capture, inside the app partition.
+A snapshot exists only during capture inside the app partition: 21,888 bytes
+on the SE, 32,000 on the PowerBook 180, 38,400 at 640×480. Colour QuickDraw
+uses native CopyBits into a temporary monochrome bitmap, with a full-screen
+clip independent of the background helper window. Low memory fails capture
+explicitly. No claim of colour-fidelity screenshots.
 No history/frame cache. FreeMem is current free heap, not total partition headroom.
 Main loop sleeps six ticks; mouse timer runs ~60 times/sec only during a gesture.
 CPU percentage and physical input latency require hardware measurement.
 
 Plaintext trusted-LAN pairing, not encryption against hostile LAN participants.
-Host private Unix socket is owner-only. Individual synchronous MacTCP calls have
-five-second timeouts; capture stops new chunks after 15 seconds. TCPStatus detects
+Host private Unix socket is owner-only. Reads/sends retain five-second synchronous MacTCP timeouts;
+connection attempts yield to Macintosh events through native asynchronous I/O; capture stops new chunks after 15 seconds. TCPStatus detects
 peer closure after draining buffered data. Silent network loss can take longer
 (up to the five-minute guest command-idle timeout); host heartbeat detects failure.
 If TCPRelease fails, the receive ring is deliberately retained rather than freed
@@ -138,5 +151,37 @@ SE. Explicit screenshot, typing and status requests still communicate; avoid
 those during a timed workload. `quiet 0` resumes normal heartbeats immediately.
 For long foreground workloads, start the listener with `--response-timeout 120`
 (default 20; bounded 1–120 seconds). This changes only the MacBook listener,
-not SEControl's resident memory or the guest's own network timeouts. Reopening
-SEControl is necessary after restarting an established listener connection.
+not SEControl's resident memory or the guest's own network timeouts. The recovery build reconnects after a listener restart; no earlier command is
+replayed. A genuinely crashed helper still needs independent relaunch.
+
+### System 7.1 / PowerBook preparation
+
+Use the same 68000 build; no CPU-specific binary or ROM patch is needed. Install
+MacTCP and configure a working network interface separately. A PowerBook does
+not inherit the SE's BlueSCSI networking configuration. Use a distinct peer IP;
+stop the SE listener or run a second listener with a different port and --socket.
+Keep the old helper as recovery. Initial testing is pending on System 7.1 and
+the PowerBook LCD/trackball; Snow Plus and Mac II checks are separate evidence.
+
+New protocol: CAPS reports keys=8 and screen dimensions; KEYS takes 1–8
+hex-encoded (character,keycode,16-bit modifiers) records. Validate every record
+before posting. BUSY posts none; ERR keys posted=N reports a partial native
+posting failure. No keyboard queue is retained by the helper. The Macintosh's
+existing EventQueue is inspected read-only through the toolchain's low-memory
+accessor because its GetEvQHdr declaration has no linked implementation.
+
+### Recovery development boundary
+
+See [measured recovery checks](../../outputs/se-control-recovery/REPORT.md).
+Only owned TCP streams are aborted/released; the shared .IPP driver is never
+closed/unloaded. Failed release retains the existing system ring and prevents
+allocating a replacement ring over it. A permanently wedged driver may prevent
+safe completion. MacTCP is not an independently killable Unix service.
+
+A serial maintenance endpoint inside Clarice is proposed for independent helper
+relaunch. It is not implemented by this reconnect build. Existing Serial/Kermit
+clients own their ports directly; an always-listening endpoint first needs an
+explicit shared ownership/interlock so it cannot steal their receive buffer.
+Generic process killing, OS reset, full shell service and startup hooks are not
+provided. No recovery mechanism can run ordinary application code while the
+cooperative Macintosh system is completely wedged.

@@ -1,0 +1,10 @@
+{
+  "artifact": "work/se-control-recovery/SEControl.bin",
+  "bytes": 98176,
+  "sha256": "61ef294dee1082a8eb096211c654c23165475ab55f2f2c4a71d527eba1b17fe8",
+  "previous_bytes": 97920,
+  "partition_bytes": 262144,
+  "ring_bytes": 16384,
+  "mouse_state_bytes": 314,
+  "physical_recovery_acceptance": "two socket disconnects/reconnects passed; crash/global driver/serial recovery not claimed"
+}

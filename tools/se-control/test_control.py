@@ -24,21 +24,27 @@ class Commands(unittest.TestCase):
             with self.assertRaises(ValueError): control.execute(w,req)
             self.assertEqual(w.commands,[])
     def test_fast_batches_without_submit(self):
-        w=Fake(['QUEUED']*9)
+        w=Fake(['CAPS keys=8 width=512 height=342','BUSY','QUEUED 8','QUEUED 1'])
         with patch('control.time.sleep'):
             result=control.execute(w,{'op':'type','text':'abcdefghi','fast':True})
         self.assertEqual(result['queued'],9)
-        self.assertEqual([len(x.splitlines()) for x in w.commands],[4,4,1])
-        for text in ('echo x\r','a\nb'):
+        self.assertEqual(w.commands[0],'CAPS')
+        self.assertEqual(w.commands[1],w.commands[2])
+        self.assertEqual(len(w.commands[2]),69)
+        self.assertEqual(len(w.commands[3]),13)
+        for text in ('echo x\r','a\nb','abcdefgh\t'):
             w=Fake([])
             with self.assertRaises(ValueError):control.execute(w,{'op':'type','text':text,'fast':True})
             self.assertEqual(w.commands,[])
-    def test_fast_drains_failed_batch_and_stops(self):
-        w=Fake(['QUEUED','ERR event post','QUEUED','QUEUED'])
-        with self.assertRaisesRegex(RuntimeError,'partial line'):
+    def test_fast_partial_stops(self):
+        w=Fake(['CAPS keys=8 width=512 height=342','ERR keys posted=2'])
+        with self.assertRaisesRegex(RuntimeError,'posted=2'):
             control.execute(w,{'op':'type','text':'abcdefghi','fast':True})
-        self.assertEqual(len(w.commands),1)
-        self.assertEqual(list(w.replies),[])
+        self.assertEqual(len(w.commands),2)
+    def test_larger_screen_coordinates(self):
+        w=Fake(['QUEUED',IDLE]);w.screen_size=(640,400)
+        control.execute(w,{'op':'click','x':630,'y':390})
+        self.assertEqual(w.commands[0],'CLICK 630 390 1')
     def test_finite_drag(self):
         w=Fake(['QUEUED',IDLE])
         s=control.execute(w,{'op':'drag','x':10,'y':20,'x2':100,'y2':200})

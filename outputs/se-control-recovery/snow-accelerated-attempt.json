@@ -1,0 +1,99 @@
+[
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "connected",
+    "seconds": 21.082
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 30622 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "action": "capture",
+    "file": "outputs/se-control-recovery/snow-connected.png",
+    "seconds": 0.2886617919999992,
+    "guest_capture_ticks": 8,
+    "guest_free_heap_with_snapshot": 4914,
+    "frame_sha256": "2eac85ea49f235687d87db0fbb0198fca27ebce8f911bf1a1627c2e21a32f04e",
+    "bytes": 21888,
+    "width": 512,
+    "height": 342
+  },
+  {
+    "event": "connected",
+    "seconds": 0.371
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 31285 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "action": "capture",
+    "file": "outputs/se-control-recovery/snow-partial-discard.png",
+    "seconds": 0.28435683400000045,
+    "guest_capture_ticks": 8,
+    "guest_free_heap_with_snapshot": 4914,
+    "frame_sha256": "2eac85ea49f235687d87db0fbb0198fca27ebce8f911bf1a1627c2e21a32f04e",
+    "bytes": 21888,
+    "width": 512,
+    "height": 342
+  },
+  {
+    "event": "connected",
+    "seconds": 0.359
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 32082 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 0.632
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 32723 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "listener-off"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "connected",
+    "seconds": 40.369
+  }
+]

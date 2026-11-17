@@ -1,0 +1,21 @@
+test_cancel (test_control.Commands) ... ok
+test_error_not_success (test_control.Commands) ... ok
+test_fast_batches_without_submit (test_control.Commands) ... ok
+test_fast_partial_stops (test_control.Commands) ... ok
+test_finite_drag (test_control.Commands) ... ok
+test_keys (test_control.Commands) ... ok
+test_larger_screen_coordinates (test_control.Commands) ... ok
+test_partial_input_never_replayed (test_control.Commands) ... ok
+test_validate_before_sending (test_control.Commands) ... ok
+test_bad_header (test_host.Protocol) ... ok
+test_capture_fragmentation_and_disconnect (test_host.Protocol) ... ok
+test_deadline (test_host.Protocol) ... ok
+test_larger_padded_capture (test_host.Protocol) ... ok
+test_local_only (test_host.Protocol) ... ok
+test_png_pixels (test_host.Protocol) ... ok
+test_pairing_disconnect_reconnect (test_session.Session) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.162s
+
+OK

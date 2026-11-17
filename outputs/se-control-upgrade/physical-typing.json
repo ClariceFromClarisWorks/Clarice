@@ -1,0 +1,26 @@
+[
+  {
+    "fast": false,
+    "characters": 67,
+    "seconds": 19.544820583,
+    "chars_per_second": 3.428018165501929,
+    "result": {
+      "ok": true,
+      "queued": 67,
+      "delivery": "verify screenshot; not an application acknowledgement"
+    }
+  },
+  {
+    "fast": true,
+    "characters": 67,
+    "seconds": 4.062115209,
+    "chars_per_second": 16.493869955129576,
+    "result": {
+      "ok": true,
+      "queued": 67,
+      "delivery": "unsubmitted line; verify screenshot before Return",
+      "batch": 8,
+      "seconds": 3.585370166000075
+    }
+  }
+]

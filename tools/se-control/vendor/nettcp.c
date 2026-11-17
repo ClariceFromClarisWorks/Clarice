@@ -3,6 +3,7 @@
  */
 #include <Devices.h>
 #include <Memory.h>
+#include <OSUtils.h>
 #include <Multiverse.h> /* pinned Multiversal includes MacTCP declarations */
 #include "nettcp.h"
 #include <string.h>
@@ -48,16 +49,16 @@ unsigned long NetParseIP(const char *dotted)
 	return ip;
 }
 
-OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port)
+OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port, NetPoll poll)
 {
 	TCPiopb pb;
 	memset(&pb, 0, sizeof pb);
 	OSErr err;
 
-	c->stream = 0;
-	c->rcvBuff = nil;
-	c->rcvBuffLen = 0;
-	c->isOpen = 0;
+	/* A failed release still owns its ring. Do not allocate over that state. */
+	err = NetClose(c);
+	if (err != noErr) return err;
+	if (poll && poll()) return -128;
 
 	err = NetInit();
 	if (err != noErr)
@@ -112,16 +113,32 @@ OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port)
 	pb.csParam.open.security = 0;
 	pb.csParam.open.optionCnt = 0;
 	pb.csParam.open.userDataPtr = nil;
-	err = PBControlSync((ParmBlkPtr)&pb);
+	/* Native asynchronous open keeps Finder responsive during reconnects. No
+	 * completion callback; the PB stays alive until the driver completes it.
+	 * Apple PLAT04: KillIO cannot cancel MacTCP; abort this stream instead. */
+	unsigned long started = TickCount();
+	int stopped = 0;
+	err = PBControlAsync((ParmBlkPtr)&pb);
+	if (err >= noErr) {
+		while (*(volatile short *)&pb.ioResult > 0) {
+			int cancel = poll && poll();
+			if (!stopped && (cancel || TickCount()-started >= 60UL*6)) {
+				TCPiopb abortPB;
+				memset(&abortPB, 0, sizeof abortPB);
+				abortPB.ioCRefNum = gIPPRefNum;
+				abortPB.csCode = TCPAbort;
+				abortPB.tcpStream = c->stream;
+				(void)PBControlSync((ParmBlkPtr)&abortPB);
+				stopped = cancel ? -128 : commandTimeout;
+			}
+			/* Even after cancellation, never return a pending stack PB to caller.
+			 * A wedged driver cannot safely be unloaded by this application. */
+			SystemTask();
+		}
+		err = stopped ? stopped : pb.ioResult;
+	}
 	if (err != noErr) {
-		/* release the stream we created */
-		pb.ioCRefNum = gIPPRefNum;
-		pb.csCode = TCPRelease;
-		pb.tcpStream = c->stream;
-		if (PBControlSync((ParmBlkPtr)&pb) != noErr) return err;
-		DisposePtr(c->rcvBuff);
-		c->rcvBuff = nil;
-		c->stream = 0;
+		(void)NetClose(c); /* preserve failed release for a later retry */
 		return err;
 	}
 
@@ -209,26 +226,24 @@ OSErr NetSend(NetConn *c, const void *buf, unsigned short len)
 	return PBControlSync((ParmBlkPtr)&pb);
 }
 
-void NetClose(NetConn *c)
+OSErr NetClose(NetConn *c)
 {
 	TCPiopb pb;
 	memset(&pb, 0, sizeof pb);
 
 	if (c->stream != 0) {
-		if (c->isOpen) {
-			pb.ioCRefNum = gIPPRefNum;
-			pb.csCode = TCPClose;
-			pb.tcpStream = c->stream;
-			pb.csParam.close.ulpTimeoutValue = 5;
-			pb.csParam.close.ulpTimeoutAction = 1;
-			pb.csParam.close.validityFlags = 0xC0;
-			pb.csParam.close.userDataPtr = nil;
-			(void)PBControlSync((ParmBlkPtr)&pb);
-		}
+		/* This helper has no unsent file data. Abort avoids a graceful-close
+		 * network wait and affects no other application's connections. */
+		pb.ioCRefNum = gIPPRefNum;
+		pb.csCode = TCPAbort;
+		pb.tcpStream = c->stream;
+		(void)PBControlSync((ParmBlkPtr)&pb);
+
 		pb.ioCRefNum = gIPPRefNum;
 		pb.csCode = TCPRelease;
 		pb.tcpStream = c->stream;
-		if (PBControlSync((ParmBlkPtr)&pb) != noErr) { c->isOpen = 0; return; }
+		OSErr err = PBControlSync((ParmBlkPtr)&pb);
+		if (err != noErr) { c->isOpen = 0; return err; }
 		c->stream = 0;
 	}
 	if (c->rcvBuff != nil) {
@@ -236,6 +251,8 @@ void NetClose(NetConn *c)
 		c->rcvBuff = nil;
 	}
 	c->isOpen = 0;
+	c->rcvBuffLen = 0;
+	return noErr;
 }
 
 const char *NetErrStr(OSErr e)

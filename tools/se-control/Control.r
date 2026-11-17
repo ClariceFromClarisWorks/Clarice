@@ -4,5 +4,5 @@ resource 'SIZE' (-1) {
  needsActivateOnFGSwitch, backgroundAndForeground, dontGetFrontClicks,
  ignoreChildDiedEvents, is32BitCompatible, notHighLevelEventAware,
  onlyLocalHLEvents, notStationeryAware, dontUseTextEditServices,
- reserved, reserved, reserved, 224 * 1024, 224 * 1024
+ reserved, reserved, reserved, 256 * 1024, 256 * 1024
 };

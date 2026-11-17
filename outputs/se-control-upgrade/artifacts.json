@@ -1,0 +1,29 @@
+{
+  "core_build": 2026111550,
+  "source_checkpoint": "0686839",
+  "helper_changes": "uncommitted, no production source changes",
+  "files": [
+    {
+      "name": "Clarice-Core-1550.bin",
+      "bytes": 265344,
+      "sha256": "6ad99b5716da13f963264f78c447576c515e92512b2e2a7e96fd38693181ae32"
+    },
+    {
+      "name": "Clarice-PowerBook-Test.hda",
+      "bytes": 33605120,
+      "sha256": "74f9b0dfe92e7a28be1febd6bc3cee4b3693d3e466677d0ec0c1629a751dbc51"
+    },
+    {
+      "name": "SEControl-Source.zip",
+      "bytes": 43817,
+      "sha256": "46c1bc15c1cc739c7dca1f81810c494bee84ccc416e718e381ae063b389db322"
+    },
+    {
+      "name": "SEControl.bin",
+      "bytes": 97920,
+      "sha256": "b076513bddd1ee2548b0989c02f7742abf3b62eed403ef93bbe98579952beb3d"
+    }
+  ],
+  "system_7_1_accepted": false,
+  "physical_burst_throughput_measured": false
+}

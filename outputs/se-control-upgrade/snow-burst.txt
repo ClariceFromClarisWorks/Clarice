@@ -1,0 +1,26 @@
+EVENT 8 0038499c 0081
+EVENT 6 0038499c 0080
+CAPS keys=8 width=512 height=342
+PONG 6208 2464 bg=0 active=0 down=0 error=0 state=314
+QUEUED 8
+EVENT 3 00000041 0280
+BUSY
+EVENT 3 00000b62 0080
+EVENT 3 00000863 0080
+EVENT 3 00001231 0080
+EVENT 3 00001332 0080
+EVENT 3 00001433 0080
+EVENT 3 00001221 0280
+EVENT 3 00002c3f 0280
+SAVE :HIL Results:burst.pbm 1
+ERR keys value
+ERR keys encoding
+PONG 6414 24992 bg=0 active=0 down=0 error=0 state=314
+CHECK-CANCEL started=1 held=1 active=0 down=0 button=128 elapsed=15 error=0
+EVENT 1 00000000 0000
+CHECK-NOHOST started=1 held=1 active=0 down=0 button=128 elapsed=180 error=0
+EVENT 2 00000000 0080
+PONG 6619 24992 bg=0 active=0 down=0 error=0 state=314
+EVENT 1 00000000 0000
+BYE
+CLEANUP active=0 down=0 button=128 mb_delta=-2

@@ -1,0 +1,161 @@
+[
+  {
+    "event": "connected",
+    "seconds": 41.658
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 3307 4282 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "action": "capture",
+    "file": "outputs/se-control-recovery/snow-connected.png",
+    "seconds": 0.6527236669999965,
+    "guest_capture_ticks": 9,
+    "guest_free_heap_with_snapshot": 4914,
+    "frame_sha256": "2eac85ea49f235687d87db0fbb0198fca27ebce8f911bf1a1627c2e21a32f04e",
+    "bytes": 21888,
+    "width": 512,
+    "height": 342
+  },
+  {
+    "event": "connected",
+    "seconds": 3.904
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 3745 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "action": "capture",
+    "file": "outputs/se-control-recovery/snow-partial-discard.png",
+    "seconds": 0.6857474170000017,
+    "guest_capture_ticks": 8,
+    "guest_free_heap_with_snapshot": 4914,
+    "frame_sha256": "2eac85ea49f235687d87db0fbb0198fca27ebce8f911bf1a1627c2e21a32f04e",
+    "bytes": 21888,
+    "width": 512,
+    "height": 342
+  },
+  {
+    "event": "connected",
+    "seconds": 3.762
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 4185 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 4.262
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 4605 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 3.795
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 4961 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 3.816
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 5318 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 3.829
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 5674 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 3.808
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 6029 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 3.786
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 6384 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 3.804
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 6739 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 3.8
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 7095 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "connected",
+    "seconds": 3.755
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 7448 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "event": "cycles-pass",
+    "heaps": [
+      26810,
+      26810,
+      26810,
+      26810,
+      26810,
+      26810,
+      26810,
+      26810
+    ]
+  },
+  {
+    "event": "listener-off"
+  },
+  {
+    "event": "stale-NAT-candidate-rejected"
+  },
+  {
+    "event": "connected",
+    "seconds": 5.793
+  },
+  {
+    "event": "ping",
+    "reply": "PONG 8911 26810 bg=0 active=0 down=0 error=0 state=314"
+  },
+  {
+    "action": "capture",
+    "file": "outputs/se-control-recovery/snow-final.png",
+    "seconds": 0.705214667000007,
+    "guest_capture_ticks": 8,
+    "guest_free_heap_with_snapshot": 4914,
+    "frame_sha256": "eb7b7d2b9ae017c9b0b6554308a729a8f23680551839411648a60aa507ea0de7",
+    "bytes": 21888,
+    "width": 512,
+    "height": 342
+  },
+  {
+    "event": "quit-pass"
+  }
+]
