@@ -2,7 +2,7 @@
 
 ## 0.5.0 integrated candidate — hardware acceptance pending
 
-17 November: build **2026111701**, branch `codex/release-0.5.0-rc`.
+17 November: build **2026111702**, branch `codex/release-0.5.0-rc`.
 [Candidate review and evidence](release-050-candidate/REPORT.md). Recovery baseline
 74b5132 retains prior networking source. Normal build/offline kit now include
 47 external commands, with native DNS/status/ping, pico HTTP, FTP and libtelnet
@@ -15,9 +15,14 @@ local cancellation exercised. Core/awk also work without .IPP or Ethernet.
 FTP heap379554/379552/379554, largest379298, tracked survivors0. Not hardware
 performance measurements. Initial offline result extraction lost buffered writes;
 repeat batch sent closed evidence over FTP and explicitly flushed destination.
-SE unavailable: final consolidated stock-SE acceptance and post-acceptance review
-remain blockers. No release/tag/main merge. Existing updater28/slow handoff and
-reported6.0.7 greeting remain; no new updater handoff or physical safety claim.
+User will perform physical-SE testing later; no agent hardware session planned.
+Candidate1701 HDA/MacBinary hashes and47-image manifest rechecked17 November.
+Final stock-SE acceptance and post-acceptance review remain release blockers. No release/tag/main merge. Existing updater28/slow handoff remain. Greeting now reads the native System-file version (6.0.8).
+[Focused greeting/updater review](update-review/REPORT.md): two disposable Snow
+1701→1702 HTTP updates automatically relaunched; both forks and recovery copies
+verified offline, with type/creator/flags/creation date preserved. Error28 did not
+reproduce and is not declared fixed. Updated offline kit includes47 utilities.
+No physical acceptance claim.
 
 
 ## Prior upstream reuse evidence

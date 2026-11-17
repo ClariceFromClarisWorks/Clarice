@@ -1,6 +1,7 @@
 #include <Multiverse.h>
 #include <string.h>
 #include "hardware.h"
+#include "system-version.h"
 extern unsigned long sys6_memtop(void);
 int cli_hardware(ClariceHardware *out,unsigned long size){
  if(!out||size<sizeof *out)return -50;
@@ -25,6 +26,19 @@ int cli_hardware(ClariceHardware *out,unsigned long size){
     memcpy(out->model_name,name+1,n);out->model_name[n]=0;}
   }
  }
+ /* System 6.0.8 can retain the 6.0.7 SysEnvirons/Gestalt value.
+    Resource Manager refNum 0 explicitly selects the System file. */
+ short previous=CurResFile();UseResFile(0);
+ if(!ResError()){
+  Handle version=Get1Resource('vers',1);
+  if(version){
+   signed char state=HGetState(version);HLock(version);
+   unsigned number=clarice_system_version((const unsigned char *)*version,GetHandleSize(version));
+   HSetState(version,state);ReleaseResource(version);
+   if(number)out->system=number;
+  }
+ }
+ UseResFile(previous);
  if(!out->model_name[0]){const char *name=0;
   switch(env.machineType){case 2:name="Macintosh Plus";break;case 3:name="Macintosh SE";break;
    case 4:name="Macintosh II";break;case 5:name="Macintosh IIx";break;
