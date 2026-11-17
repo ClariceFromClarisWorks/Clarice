@@ -40,29 +40,60 @@ static void draw_status(void) {
 static void notice(const char *s) {strncpy(status,s,sizeof status-1);status[sizeof status-1]=0;draw_status();}
 static int send_line(const char *s) {if(local_script){fputs(s,logfile);fflush(logfile);return 1;}return NetSend(&conn,s,strlen(s))==noErr;}
 
-/* One immutable 21,888-byte snapshot; never stream a changing framebuffer. */
+/* Native QuickDraw converts the main display to a temporary monochrome bitmap.
+ * No persistent screen cache; the classic 1-bit path remains a direct row copy. */
+static short screen_width,screen_height,screen_stride;
+static long screen_bytes;
+static int screen_info(void) {
+ Rect r=qd.screenBits.bounds;
+ screen_width=r.right-r.left;screen_height=r.bottom-r.top;
+ if(screen_width<1||screen_width>1024||screen_height<1||screen_height>768)return 0;
+ screen_stride=((screen_width+15)/16)*2;
+ screen_bytes=(long)screen_stride*screen_height;return 1;
+}
 static unsigned char *snapshot(void) {
- BitMap *b=&qd.screenBits;
- if(b->bounds.right-b->bounds.left!=512 || b->bounds.bottom-b->bounds.top!=342 || (b->rowBytes&0x3fff)!=64)return NULL;
- unsigned long start=TickCount(); unsigned char *p=(unsigned char*)NewPtr(21888);
+ if(!screen_info())return NULL;
+ unsigned long start=TickCount();unsigned char *p=(unsigned char*)NewPtrClear(screen_bytes);
  if(!p)return NULL;
- memcpy(p,b->baseAddr,21888); capture_ticks=TickCount()-start;return p;
+ SysEnvRec env;BitMap *source=&qd.screenBits;
+ if(SysEnvirons(1,&env)==noErr&&env.hasColorQD){
+  GDHandle device=GetMainDevice();
+  if(!device||!(*device)->gdPMap){DisposePtr((Ptr)p);return NULL;}
+  source=(BitMap*)*(*device)->gdPMap;
+ }
+ if(!(source->rowBytes&0x8000)){
+  for(short y=0;y<screen_height;y++)memcpy(p+(long)y*screen_stride,
+   source->baseAddr+(long)y*(source->rowBytes&0x3fff),(screen_width+7)/8);
+ }else{
+  BitMap dest;dest.baseAddr=(Ptr)p;dest.rowBytes=screen_stride;
+  SetRect(&dest.bounds,0,0,screen_width,screen_height);
+  /* CopyBits honours the current port's clip. Use a temporary full-screen
+     bitmap port so the background helper window cannot clip the screenshot. */
+  GrafPort port;GrafPtr saved;GetPort(&saved);OpenPort(&port);SetPortBits(&dest);
+  port.portRect=dest.bounds;ClipRect(&dest.bounds);ForeColor(blackColor);BackColor(whiteColor);
+  CopyBits(source,&dest,&source->bounds,&dest.bounds,srcCopy,NULL);
+  ClosePort(&port);SetPort(saved);
+ }
+ capture_ticks=TickCount()-start;return p;
 }
 static int grab(void) {
- unsigned long started=TickCount();
- unsigned char *p=snapshot(); if(!p)return send_line("ERR capture\n");
- char h[128];snprintf(h,sizeof h,"FRAME 512 342 64 21888 %lu %ld\n",capture_ticks,(long)FreeMem());
+ unsigned long started=TickCount();unsigned char *p=snapshot();
+ if(!p)return send_line("ERR capture\n");
+ char h[128];snprintf(h,sizeof h,"FRAME %d %d %d %ld %lu %ld\n",
+  screen_width,screen_height,screen_stride,screen_bytes,capture_ticks,(long)FreeMem());
  int ok=send_line(h);
- for(long i=0;ok&&i<21888;i+=1024){
+ for(long i=0;ok&&i<screen_bytes;i+=1024){
   if(TickCount()-started>60UL*15){ok=0;break;}
-  unsigned short n=21888-i>1024?1024:21888-i;ok=NetSend(&conn,p+i,n)==noErr;
+  unsigned short n=screen_bytes-i>1024?1024:screen_bytes-i;ok=NetSend(&conn,p+i,n)==noErr;
  }
  DisposePtr((Ptr)p);return ok;
 }
 static int save_capture(const char *name) {
  unsigned char *p=snapshot();if(!p)return 0;
  FILE *f=fopen(name,"wb");int ok=0;
- if(f){ok=fwrite("P4\n512 342\n",1,11,f)==11 && fwrite(p,1,21888,f)==21888;if(fclose(f))ok=0;}
+ if(f){fprintf(f,"P4\n%d %d\n",screen_width,screen_height);ok=1;
+  for(short y=0;y<screen_height;y++)if(fwrite(p+(long)y*screen_stride,1,(screen_width+7)/8,f)!=(size_t)(screen_width+7)/8)ok=0;
+  if(fclose(f))ok=0;}
  DisposePtr((Ptr)p);return ok;
 }
 static OSErr key(unsigned int ch,unsigned int code,unsigned int mods) {
@@ -71,7 +102,7 @@ static OSErr key(unsigned int ch,unsigned int code,unsigned int mods) {
 }
 static int mouse_plan(int kind,int x,int y,int x2,int y2,int ticks) {
  if(!mouse||mouse->active||!(*(volatile unsigned char*)0x0172&0x80))return 0;
- if(x<0||x>511||y<0||y>341||x2<0||x2>511||y2<0||y2>341)return 0;
+ if(x<0||x>=screen_width||y<0||y>=screen_height||x2<0||x2>=screen_width||y2<0||y2>=screen_height)return 0;
  mouse->index=mouse->count=mouse->error=mouse->cancel=0;
  if(kind==0){mouse->steps[0]=(MouseStep){x,y,0,1};mouse->count=1;}
  else if(kind==1||kind==2){
@@ -87,9 +118,35 @@ static int mouse_plan(int kind,int x,int y,int x2,int y2,int ticks) {
  }
  mouse->started=TickCount();mouse->active=1;PrimeTime((QElemPtr)&mouse->task,16);return 1;
 }
+/* Batch validation is all-or-nothing. No submit/control characters in bursts.
+ * Backpressure inspects the native event queue; never removes other events. */
+static int hexval(char c){if(c>='0'&&c<='9')return c-'0';if(c>='a'&&c<='f')return c-'a'+10;return -1;}
+static int key_batch(const char *s){
+ unsigned char bytes[32];size_t n=strlen(s);
+ if(!n||n>64||n%8)return send_line("ERR keys encoding\n");
+ for(size_t i=0;i<n;i+=2){int a=hexval(s[i]),b=hexval(s[i+1]);if(a<0||b<0)return send_line("ERR keys encoding\n");bytes[i/2]=(a<<4)|b;}
+ unsigned int count=n/8;
+ for(unsigned int i=0;i<count;i++){
+  unsigned char *k=bytes+i*4;unsigned int mods=((unsigned int)k[2]<<8)|k[3];
+  if(k[0]<32||k[0]>126||k[1]>=128||(mods&~shiftKey))return send_line("ERR keys value\n");
+ }
+ if(mouse->active)return send_line("BUSY\n");
+ QElemPtr q=LMGetEventQueue().qHead;unsigned int queued=0;
+ while(q&&queued<5){queued++;q=(QElemPtr)((EvQElPtr)q)->qLink;}
+ if(queued>4)return send_line("BUSY\n");
+ for(unsigned int i=0;i<count;i++){
+  unsigned char *k=bytes+i*4;
+  if(key(k[0],k[1],((unsigned int)k[2]<<8)|k[3])){
+   char reply[48];snprintf(reply,sizeof reply,"ERR keys posted=%u\n",i);return send_line(reply);
+  }
+ }
+ char reply[32];snprintf(reply,sizeof reply,"QUEUED %u\n",count);return send_line(reply);
+}
 static int command(const char *s) {
  last_command=TickCount();
  if(!strcmp(s,"GRAB"))return grab();
+ if(!strcmp(s,"CAPS")){char b[80];snprintf(b,sizeof b,"CAPS keys=8 width=%d height=%d\n",screen_width,screen_height);return send_line(b);}
+ if(!strncmp(s,"KEYS ",5))return key_batch(s+5);
  if(!strcmp(s,"PING")){char b[150];snprintf(b,sizeof b,"PONG %lu %ld bg=%d active=%d down=%d error=%d state=%lu\n",TickCount(),(long)FreeMem(),background,mouse->active,mouse->down,mouse->error,(unsigned long)sizeof *mouse);return send_line(b);}
  if(!strcmp(s,"CANCEL")){mouse->cancel=1;return send_line("CANCELLING\n");}
  int x,y,x2,y2,duration;unsigned int count;char tail;
@@ -125,8 +182,15 @@ static void events(void) {
   else {observed=e.message&255;draw_status();}break;
  }
 }
+static int connect_poll(void) { events(); return done; }
+static void release_mouse(void) {
+ RmvTime((QElemPtr)&mouse->task);hil_release(mouse);
+ InsTime((QElemPtr)&mouse->task);
+}
 int main(void) {
+ char host[32],token[65],extra;unsigned int port=0;unsigned long ip=0;
  InitGraf(&qd.thePort);InitFonts();InitWindows();InitMenus();TEInit();InitDialogs(NULL);InitCursor();
+ if(!screen_info())return 1;
  MenuHandle apple=NewMenu(128,(ConstStringPtr)"\p\024");AppendMenu(apple,(ConstStringPtr)"\pAbout SE Control");InsertMenu(apple,0);
  MenuHandle file=NewMenu(129,(ConstStringPtr)"\pFile");AppendMenu(file,(ConstStringPtr)"\pQuit/Q");InsertMenu(file,0);DrawMenuBar();
  mouse=(MousePlan*)NewPtrSysClear(sizeof *mouse);if(!mouse)return 1;mouse->task.tmAddr=(ProcPtr)hil_timer;InsTime((QElemPtr)&mouse->task);
@@ -145,25 +209,26 @@ int main(void) {
   FlushVol(NULL,0);RmvTime((QElemPtr)&mouse->task);hil_release(mouse);DisposePtr((Ptr)mouse);DisposeWindow(window);return observed=='x'&&before&&after?0:1;
  }
  if(local_script)goto run;
- char host[32],token[65],extra;unsigned int port;
  f=fopen("SE Control.cfg","r");int valid=f&&fscanf(f,"%31s %u %64s %c",host,&port,token,&extra)==3;
  if(f)fclose(f);
- unsigned long ip=valid?NetParseIP(host):0;
+ ip=valid?NetParseIP(host):0;
  /* Numeric private/loopback destinations only. No DNS or inbound SE listener. */
  int local=(ip>>24)==10 || (ip>>16)==0xc0a8 || ((ip>>20)==0xac1) || (ip>>24)==127;
  if(!valid||!local||!port||port>65535||strlen(token)!=32){notice("Missing/invalid SE Control.cfg. See README.");while(!done)events();goto cleanup;}
+connect:
+ if(done)goto cleanup;
  notice("Connecting to configured local host...");
- OSErr err=NetConnect(&conn,ip,port);
- if(err){char b[100];snprintf(b,sizeof b,"MacTCP connect error %d. Close to exit.",err);notice(b);while(!done)events();goto cleanup;}
+ OSErr err=NetConnect(&conn,ip,port,connect_poll);
+ if(err){char b[100];snprintf(b,sizeof b,"MacTCP error %d; retrying in 5 seconds.",err);notice(b);goto retry;}
  char hello[80];snprintf(hello,sizeof hello,"HIL2 %s\n",token);
- if(!send_line(hello))goto cleanup;
+ if(!send_line(hello))goto disconnected;
  notice("Connected. Background screen and input control.");
 run:
  last_command=TickCount();
- char line[128];unsigned int used=0;
- while(!done){
+ char line[128];unsigned int used=0;int failed=0;
+ while(!done&&!failed){
   events();if(done)break;
-  if(TickCount()-last_command>60UL*300){notice("Session idle timeout. Close or relaunch.");break;}
+  if(TickCount()-last_command>60UL*300){break;}
   if(local_script){
    if((long)(TickCount()-script_wait)>=0){char b[128];
     if(!fgets(b,sizeof b,script)){done=1;break;}b[strcspn(b,"\r\n")]=0;
@@ -186,13 +251,22 @@ run:
    }continue;
   }
   long available=NetAvailable(&conn);if(available<0)break;
-  if(available){char bytes[64];long n=NetRecv(&conn,bytes,available>64?64:available,1);if(n<=0)break;
-   for(long i=0;i<n;i++){char c=bytes[i];if(c=='\n'){line[used]=0;used=0;if(!command(line)){done=1;break;}}
+  if(available){char bytes[128];long n=NetRecv(&conn,bytes,available>128?128:available,1);if(n<=0)break;
+   for(long i=0;i<n;i++){char c=bytes[i];if(c=='\n'){line[used]=0;used=0;if(!command(line)||done){failed=1;break;}}
     else if(c=='\r')continue;
-    else if(c<32||c>126||used==sizeof line-1){done=1;break;}
+    else if(c<32||c>126||used==sizeof line-1){failed=1;break;}
     else line[used++]=c;}
   }
  }
+ if(done||local_script)goto cleanup;
+disconnected:
+ notice("Disconnected; retrying in 5 seconds.");
+retry:
+ /* Never carry a gesture or a partially received command into a new session. */
+ release_mouse();
+ (void)NetClose(&conn);
+ {unsigned long wait=TickCount();while(!done&&TickCount()-wait<60UL*5)events();}
+ goto connect;
 cleanup:
  RmvTime((QElemPtr)&mouse->task);hil_release(mouse);
  if(local_script&&logfile)fprintf(logfile,"CLEANUP active=%d down=%d button=%u mb_delta=%ld\n",mouse->active,mouse->down,(unsigned int)*(volatile unsigned char*)0x0172,(long)(*(volatile unsigned long*)0x016e - TickCount()));

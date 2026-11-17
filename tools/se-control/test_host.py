@@ -51,6 +51,21 @@ class Protocol(unittest.TestCase):
                     self.assertEqual(path.read_bytes(),b'P4\n512 342\n'+b'\xaa'*21888)
             t.join()
 
+    def test_larger_padded_capture(self):
+        for width,height in ((640,400),(639,400),(513,342)):
+            stride=((width+15)//16)*2;size=stride*height
+            a,b=socket.socketpair()
+            def peer():
+                with b:
+                    b.recv(64)
+                    b.sendall(('FRAME %d %d %d %d 2 30000\n'%(width,height,stride,size)).encode()+b'\xaa'*size)
+            t=threading.Thread(target=peer);t.start()
+            with a,tempfile.TemporaryDirectory() as d:
+                path=Path(d)/'screen.pbm';result=host.capture(host.Wire(a),path)
+                self.assertEqual(result['width'],width)
+                self.assertEqual(path.read_bytes(),('P4\n%d %d\n'%(width,height)).encode()+b'\xaa'*(((width+7)//8)*height))
+            t.join()
+
     def test_deadline(self):
         a,b=socket.socketpair()
         with a,b:

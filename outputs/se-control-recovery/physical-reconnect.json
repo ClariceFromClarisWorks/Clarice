@@ -1,0 +1,50 @@
+[
+  {
+    "trial": 1,
+    "before": {
+      "ok": true,
+      "ticks": 722270,
+      "free_heap": 26802,
+      "bg": 0,
+      "active": 0,
+      "down": 0,
+      "error": 0,
+      "state": 314
+    },
+    "after": {
+      "ok": true,
+      "ticks": 722638,
+      "free_heap": 26802,
+      "bg": 0,
+      "active": 0,
+      "down": 0,
+      "error": 0,
+      "state": 314
+    },
+    "seconds": 5.94
+  },
+  {
+    "trial": 2,
+    "before": {
+      "ok": true,
+      "ticks": 722648,
+      "free_heap": 26802,
+      "bg": 0,
+      "active": 0,
+      "down": 0,
+      "error": 0,
+      "state": 314
+    },
+    "after": {
+      "ok": true,
+      "ticks": 723024,
+      "free_heap": 26802,
+      "bg": 0,
+      "active": 0,
+      "down": 0,
+      "error": 0,
+      "state": 314
+    },
+    "seconds": 6.16
+  }
+]

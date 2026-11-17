@@ -46,9 +46,9 @@ def key_spec(spec):
     return ch,code,mods|auto
 
 
-def point(x,y):
-    if type(x)!=int or type(y)!=int or not 0<=x<512 or not 0<=y<342:
-        raise ValueError('Coordinates must be inside 512x342 screen')
+def point(x,y,size=(512,342)):
+    if type(x)!=int or type(y)!=int or not 0<=x<size[0] or not 0<=y<size[1]:
+        raise ValueError('Coordinates must be inside %dx%d screen'%size)
 
 
 def response(w,command,expected=None):
@@ -79,23 +79,28 @@ def execute(w,request):
             if not isinstance(text,str) or len(text)>1024:raise ValueError('Maximum 1024 characters per request')
             keys=[character(c) for c in text] # validate ALL before sending any
         fast=bool(request.get('fast',False))
-        if fast and (op!='type' or any(c in text for c in '\r\n')):
+        if fast and (op!='type' or any(not 32<=ord(c)<=126 for c in text)):
             raise ValueError('Fast typing accepts one unsubmitted line; inspect it before sending Return')
         sent=0
         if fast:
-            # Four events fit comfortably within the classic event queue. The
-            # installed helper already accepts multiple newline-framed commands.
-            for start in range(0,len(keys),4):
-                group=keys[start:start+4]
-                w.send('\n'.join('KEY %d %d %d'%key for key in group))
-                failure=None
-                for _ in group:
-                    reply=w.line()
-                    if reply=='QUEUED':sent+=1
-                    elif failure is None:failure=reply
-                if failure:raise RuntimeError('Fast typing stopped after %d acknowledged keys; inspect partial line: %s'%(sent,failure))
-                time.sleep(.10)
-            return {'queued':sent,'delivery':'unsubmitted line; verify screenshot before Return','batch':4}
+            # One reply per bounded burst. BUSY means nothing was posted.
+            # Never retry an ambiguous/partial acknowledgement or submit Return.
+            cap=response(w,'CAPS').split()
+            if len(cap)!=4 or cap[0]!='CAPS' or cap[1]!='keys=8':
+                raise RuntimeError('Fast typing requires the updated SEControl helper')
+            started=time.monotonic()
+            for start in range(0,len(keys),8):
+                group=keys[start:start+8]
+                cmd='KEYS '+''.join('%02x%02x%04x'%key for key in group)
+                deadline=time.monotonic()+10
+                while True:
+                    reply=response(w,cmd)
+                    if reply=='QUEUED %d'%len(group):break
+                    if reply!='BUSY':raise RuntimeError('Unexpected batch acknowledgement: '+reply)
+                    if time.monotonic()>=deadline:raise TimeoutError('Keyboard queue remained busy; inspect partial line')
+                    time.sleep(.05)
+                sent+=len(group)
+            return {'queued':sent,'delivery':'unsubmitted line; verify screenshot before Return','batch':8,'seconds':time.monotonic()-started}
         try:
             for key in keys:
                 response(w,'KEY %d %d %d'%key,'QUEUED');sent+=1;time.sleep(.10)
@@ -103,14 +108,14 @@ def execute(w,request):
             raise RuntimeError('Stopped after %d/%d queued keys; do not retry blindly: %s'%(sent,len(keys),e)) from e
         return {'queued':sent,'delivery':'verify screenshot; not an application acknowledgement'}
     elif op in ('move','click','drag'):
-        x,y=request['x'],request['y'];point(x,y)
+        x,y=request['x'],request['y'];point(x,y,getattr(w,'screen_size',(512,342)))
         if op=='move':cmd='MOVE %d %d'%(x,y)
         elif op=='click':
             count=request.get('count',1)
             if type(count)!=int or count not in (1,2):raise ValueError('Click count must be 1 or 2')
             cmd='CLICK %d %d %d'%(x,y,count)
         else:
-            x2,y2=request['x2'],request['y2'];point(x2,y2);ticks=request.get('ticks',60)
+            x2,y2=request['x2'],request['y2'];point(x2,y2,getattr(w,'screen_size',(512,342)));ticks=request.get('ticks',60)
             if type(ticks)!=int or not 30<=ticks<=180:raise ValueError('Drag duration must be 30..180 ticks')
             cmd='DRAG %d %d %d %d %d'%(x,y,x2,y2,ticks)
         response(w,cmd,'QUEUED')
@@ -213,7 +218,7 @@ def main():
     for name in ('status','cancel','quit','disconnect','stop'):sub.add_parser(name)
     s=sub.add_parser('shot');s.add_argument('path',type=lambda x:str(Path(x).resolve()))
     s=sub.add_parser('key');s.add_argument('key')
-    s=sub.add_parser('type');s.add_argument('text');s.add_argument('--enter',action='store_true');s.add_argument('--fast',action='store_true',help='Batch four keys; single line only, no --enter')
+    s=sub.add_parser('type');s.add_argument('text');s.add_argument('--enter',action='store_true');s.add_argument('--fast',action='store_true',help='Bounded eight-key bursts with queue backpressure; updated helper required, no --enter')
     for name in ('move','click','drag'):
         s=sub.add_parser(name);s.add_argument('x',type=int);s.add_argument('y',type=int);s.add_argument('--nowait',action='store_true')
         if name=='click':s.add_argument('--count',type=int,default=1)

@@ -2,10 +2,86 @@
 
 16 November 2026, Adelaide. Development **2026111550** separates Core from the
 standard utility collection. Host and fixed-maximum-speed Snow Plus/4 MB/
-**reported System 6.0.7** validation only; physical SE remains off. No release,
+**reported System 6.0.7** validation, with bounded physical System6.0.8 acceptance below. No release,
 tag or main change. Development checkpoint branch:
-`codex/core-distribution-2026111550`; accepted `c5075e5` has been pushed.
+`codex/core-distribution-2026111550`; accepted `0686839` has been pushed.
 Offline-installer UX follow-up is locally validated; ordinary Core remains 1550.
+
+## SEControl recovery — Snow and physical reconnect validated
+
+17November: [focused report](se-control-recovery/REPORT.md). Dropped sessions now
+release mouse state/discard partial input and reconnect after300guest ticks;
+explicit Quit still exits. Native asynchronous connect yields to Finder; owned
+stream abort/release preserves driver storage on release failure.16 host tests,
+C sanitizer/fault cases and Snow Plus/MoofTCP actual reconnect/drag/capture/
+listener-restart/eight repeated cycles pass. Settled heap26810B; MacBinary+256B,
+unchanged256KiB partition/16KiB system ring. Earlier accelerated NAT failures are
+retained and distinguished. Ready build under work/se-control-recovery. Downloaded/installed via Clarice,
+new connection verified before quitting old helper. Two physical disconnects
+reconnected unaided in5.94/6.16s; heap26802 stable,266B less free than old helper.
+Both app copies retained. New listener socket work/se-control-recovery/physical.sock. Independent serial crash recovery/shared port ownership remains
+unimplemented; no safe arbitrary process kill or shared MacTCP restart claimed.
+
+
+Disk cleanup now archived25 old builds/packages through Clarice into
+Macintosh HD:Clarice Archive 20261117. Normalized fork-length/type/creator/flag
+manifests compare equal; active app/two recent recovery copies/helpers retained.
+Older installed ls lacks -d and cmp is absent; verified with existing shell
+facilities instead. No permanent deletion or utility upgrade; staging stays in/tmp.
+
+## SEControl / PowerBook 180 preparation
+
+- Separate helper adds optional eight-key bursts with native queue backpressure,
+  no automatic Return, and dynamic monochrome screenshots/mouse bounds.
+  No Clarice production changes. Helper partition224→256KiB; no resident bitmap.
+- 16 host tests pass; Snow Plus ordered burst/invalid-input/backpressure and
+  cancellation/release checks pass. Mac II640×480 capture and off-SE-range mouse
+  movement pass. Foreground Clarice burst/pwd, close/reopen and background capture
+  also pass with stable post-capture heap24992 in the existing older-app fixture.
+  Physical SE burst input now passes:67 characters19.545→4.062s (4.8×),
+  exact output checksum verified. PowerBook/System7.1 remains pending.
+- Private test kit: work/powerbook-180-kit/Clarice-PowerBook-Test.hda, containing
+  accepted1550 Core, native installer,43 utilities and new helper/source/licences.
+  Not bootable; private config included, not for public distribution. Existing
+  physical helper retained; separate SEControl Fast now active. Snapshot heap
+  returns to27068; capture7–15ticks versus old1–3 is a documented regression.
+  Details: se-control-upgrade/REPORT.md.
+
+## 0.5.0 physical acceptance — ready for release-candidate review
+
+- Stock SE/68000/4MB; Finder About confirms System6.0.8/Finder6.1.8. Clarice's
+  6.0.7 greeting is a display/reporting defect. Physical results are distinct
+  from the Snow6.0.7 fixture. Details: [acceptance report](acceptance-050/REPORT.md).
+- Remote Core1514→1550 update/relaunch passed; no error28 observed this run,
+  intermittent fault not proved fixed. All original recovery apps retained.
+- Native offline fresh installation cancelled and resumed successfully, then
+  auto-launched Core1550. All43 freshly installed commands fully verified;
+  fresh awk and mixed pipeline passed. Repeat installer preserved private-wc,
+  modified wc/Finder creatorT050 and profile checksum/exported sentinel.
+  Full-collection bytewise comparison was cancelled as redundant/slow, not passed.
+- Original Data restored; profile/preferences and /bin checksums match pre-test
+  records. Canonical running app confirmed Macintosh HD:System 6.0.8:Clarice.
+  Disposable Data retained as Clarice Data Tested 050; original independent
+  utility versions deliberately preserved. Core ordinary startup has no utility
+  installation/scanning; no new matched physical startup benchmark collected.
+- Two physical pairs: wc~71%, tr~39%, find/du~88% faster. Guest module ticks
+  include loading/full verification of temporary images; exact breakdown in
+  acceptance-050/physical-timings.json. No universal emulator/hardware ratio.
+- Portable script failures0; binary/file/text/pipeline/error paths passed.
+  Ctrl+C/Cmd-period returned130, zero owned survivors and subsequent recovery.
+  Repeated wc/tr/find heap382008 stable, largest381826→381812. Genuine awk
+  exhaustion2 then recovery0, heap381546/largest381378 stable, remaining0.
+- Nano edit/save/exit/terminal restoration passed, ownedpeak77160/remaining0.
+  Native APPL copy fork lengths/type/creator/creation date preserved; independent
+  physical resource-byte comparison not performed. Installer verified staged
+  Core forks by CRC/length; accepted Snow fork/failure tests remain separate.
+- Immediate themes, selection, scrolling/history, typing-to-live, Up/Down,
+  pending-line cancellation and foreground typeahead passed. Original prefs
+  restored byte-for-byte. Unchanged renderer has no new human sub-frame test.
+- No new functional/data-integrity blocker observed. Proceed to dedicated RC
+  review, not publication. Known updater28/slow handoff, wrong OS greeting and
+  unmet nano3s target remain explicit. PowerBook/System7.1 deferred. Physical
+  disk-full/power-loss failure was not forced; no power-loss atomicity claim.
 
 ## 0.5.0 bounded utility performance audit — Snow validated
 
@@ -20,7 +96,7 @@ Offline-installer UX follow-up is locally validated; ordinary Core remains 1550.
   comparisons pass across volumes, relative/encoded names, forks and UTF/binary.
   Final find cancellation returned via Command-period; automated Ctrl+C arrived
   as plain c and follow-up counters were not captured. Hardware keyboard/cleanup
-  acceptance remains pending. No physical-SE/System6.0.8 acceptance claimed.
+  acceptance is recorded above.
 - [Audit, timing limits and evidence](performance-050/REPORT.md). Stop this bounded
   optimisation batch and proceed to consolidated hardware acceptance. sed regex,
   disk-spilling sort and command-substitution costs remain; no speculative rewrite.

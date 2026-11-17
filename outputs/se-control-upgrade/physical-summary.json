@@ -1,0 +1,46 @@
+{
+  "deployment": "Native binUnpk decoded a separate SEControl Fast copy; old app untouched, old helper quit cleanly after new connection succeeded",
+  "listener_socket": "work/se-control-upgrade/physical.sock",
+  "typing": [
+    {
+      "fast": false,
+      "characters": 67,
+      "seconds": 19.544820583,
+      "chars_per_second": 3.428018165501929,
+      "result": {
+        "ok": true,
+        "queued": 67,
+        "delivery": "verify screenshot; not an application acknowledgement"
+      }
+    },
+    {
+      "fast": true,
+      "characters": 67,
+      "seconds": 4.062115209,
+      "chars_per_second": 16.493869955129576,
+      "result": {
+        "ok": true,
+        "queued": 67,
+        "delivery": "unsubmitted line; verify screenshot before Return",
+        "batch": 8,
+        "seconds": 3.585370166000075
+      }
+    }
+  ],
+  "checksum": {
+    "posix_cksum": 2262502815,
+    "bytes": 48,
+    "matches_host": true,
+    "evidence": "physical-checksum.png"
+  },
+  "steady_free_heap": 27068,
+  "snapshot_free_heap": 5172,
+  "capture_ticks_observed": [
+    7,
+    8,
+    10,
+    11,
+    12
+  ],
+  "note": "Capture slower than old helper 1-3 ticks; packet throughput improvement is remote input only, not native keyboard throughput"
+}

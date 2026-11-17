@@ -6,13 +6,9 @@
  * to the mini multiplexer over RS-422, we open a real TCP socket through the
  * BlueSCSI DaynaPORT (Ethernet emulation) + MacTCP.
  *
- * Everything here is SYNCHRONOUS (PBControlSync). On a 68000 a bulk transfer
- * blocks the machine for a few seconds; that is fine for these single-shot
- * request/response apps. Draw a "working" status BEFORE calling, since no events
- * are processed while a call is in flight.
- *
- * Connect by IP literal only — no DNS resolver (dnr.c) is pulled in. The mini is
- * 192.168.1.50 on the LAN; NetParseIP() turns a dotted quad into an ip_addr.
+ * Reads/sends are synchronous and bounded. Connection attempts use native
+ * asynchronous I/O with an event-poll callback, so reconnects do not freeze
+ * Finder while the remote host is unavailable. Numeric local addresses only.
  */
 #ifndef NETTCP_H
 #define NETTCP_H
@@ -35,8 +31,9 @@ OSErr NetInit(void);
 unsigned long NetParseIP(const char *dotted);
 
 /* Create a stream and actively open a connection to host:port.
-   Blocks until connected or the open times out (~20s). */
-OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port);
+   Uses an asynchronous open, yielding through poll until completion or timeout. */
+typedef int (*NetPoll)(void); /* service events; nonzero requests cancellation */
+OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port, NetPoll poll);
 
 /* Non-blocking poll: bytes currently waiting to be read (won't block).
    Returns >=0 unread bytes, or -1 if the connection is gone. Use this to drive
@@ -51,9 +48,10 @@ long NetRecv(NetConn *c, void *buf, unsigned short maxlen, unsigned char timeout
 /* Send len bytes (pushed immediately). Blocks until acked or timeout. */
 OSErr NetSend(NetConn *c, const void *buf, unsigned short len);
 
-/* Graceful close + release the stream + free the receive buffer.
-   Safe to call on a half-open / never-opened NetConn. */
-void NetClose(NetConn *c);
+/* Abort ONLY this stream, release it, then free its receive buffer.
+   On release failure retain ownership and return the error; never reuse or free
+   the driver-owned storage. Safe on half-open / never-opened connections. */
+OSErr NetClose(NetConn *c);
 
 /* Human-readable string for the MacTCP error codes these apps actually hit. */
 const char *NetErrStr(OSErr e);

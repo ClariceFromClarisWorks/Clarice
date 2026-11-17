@@ -1,0 +1,9 @@
+EVENT 8 0037df84 0181
+EVENT 6 0037df84 0180
+CAPS keys=8 width=640 height=480
+PONG 13383 2376 bg=0 active=0 down=0 error=0 state=314
+SAVE :HIL Results:colour.pbm 1
+QUEUED
+PONG 13451 41288 bg=0 active=0 down=0 error=0 state=314
+BYE
+CLEANUP active=0 down=0 button=128 mb_delta=-8724
