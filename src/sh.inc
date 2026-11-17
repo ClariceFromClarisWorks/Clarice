@@ -37,12 +37,12 @@ char unixdir[PATH_CAP];
 struct sh_function *functions;};
 static struct sh_saved *sh_save(void){
 #ifndef SH_HOST_TEST
- if(FreeMem()<65536)return 0;
+ if(!native_heap_room(0,65536L,1))return 0;
 #endif
  struct sh_saved *s=malloc(sizeof *s);if(!s)return 0;if(env_clone(sh_env,&s->env)){free(s);return 0;}s->env_defaults=sh_env_defaults;s->argc=sh_argc;s->args=sh_positions_copy(sh_argc,sh_argv,&s->argv);if(!s->args){env_free(s->env);free(s);return 0;}strcpy(s->cwd,shell_cwd);
 #ifndef SH_HOST_TEST
 strcpy(s->unixdir,unix_cwd);
-if(FreeMem()<65536){env_free(s->env);free(s->args);free(s);return 0;}
+if(!native_heap_room(0,65536L,1)){env_free(s->env);free(s->args);free(s);return 0;}
 #endif
 if(sh_functions_clone(sh_functions,&s->functions)){env_free(s->env);free(s->args);free(s);return 0;}return s;}
 static void sh_restore(struct sh_saved *s){sh_env_defaults=s->env_defaults;env_free(sh_env);sh_env=s->env;free(sh_owned_args);sh_owned_args=s->args;sh_argv=s->argv;sh_argc=s->argc;strcpy(shell_cwd,s->cwd);
@@ -339,7 +339,7 @@ static int sh_array(struct mrsh_array *a){size_t i;int rc=0;for(i=0;i<a->len&&!s
 static int sh_source(const char *source){struct mrsh_parser *parser;struct mrsh_program *program;int rc;size_t n=strlen(source);
 if(sh_depth>=SH_DEPTH||sh_source_depth>=8)return sh_fail("source nesting limit");
 #ifndef SH_HOST_TEST
- if(FreeMem()<16384)return sh_fail("insufficient parser working memory");
+ if(!native_heap_room(0,16384L,1))return sh_fail("insufficient parser working memory");
 #endif
  sh_source_depth++;parser=mrsh_parser_with_data(source,n);rc=0;
  /* mrsh may finish a program at a consumed here-document terminator. Keep

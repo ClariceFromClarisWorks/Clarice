@@ -7,15 +7,16 @@ static void cli_port_stats(unsigned long peak,unsigned long remaining){port_peak
 #ifdef CLARICE_NANO_PERF
 static unsigned long perf_allocs,perf_free_ticks,perf_new_ticks,perf_read_ticks,perf_reads,perf_stdio_ticks,perf_image_ticks,perf_meta_ticks;
 #endif
+#include "heap-admission.h"
 static void *cli_alloc(unsigned long n){
 #ifdef CLARICE_NANO_PERF
  unsigned long t=TickCount();perf_allocs++;
 #endif
- long available=FreeMem();
+ int room=native_heap_room(n,32768L,1);
 #ifdef CLARICE_NANO_PERF
  perf_free_ticks+=TickCount()-t;t=TickCount();
 #endif
- if(n>0x7fffffffUL||available<32768L||n>(unsigned long)(available-32768L)){errno=ENOMEM;return NULL;}
+ if(!room){errno=ENOMEM;return NULL;}
  void *p=NewPtr(n);
 #ifdef CLARICE_NANO_PERF
  perf_new_ticks+=TickCount()-t;

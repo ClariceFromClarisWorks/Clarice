@@ -11,7 +11,7 @@ static int presentation_probe(void){
  for(int run=0;run<3&&!cancelled;run++){
   for(int variant=0;variant<2;variant++)for(int n=0;n<2;n++){
    clear_legacy=!variant;int count=n?51:80;unsigned long start=TickCount();
-   for(int i=0;i<2000;i++)native_glyph_clear(count);
+   for(int i=0;i<2000;i++)native_glyph_clear(prompt_pixels,count);
    used+=snprintf(report+used,sizeof report-used,"clear run=%d new=%d count=%d calls=2000 ticks=%lu\n",run,variant,count,TickCount()-start);
   }
   clear_legacy=0;

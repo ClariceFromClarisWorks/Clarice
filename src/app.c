@@ -301,8 +301,11 @@ static int scroll_window_rows(int shift){
 #endif
  return 1;
 }
+#include "glyph-planes.inc"
+static int planes_enabled=2;
 #include "native-glyphs.inc"
-static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((aligned(2)));long first=current_line-visible+1-scrollback;int prompt_row=visible;if(first<0){first=0;prompt_row=(int)current_line;}int selection_a=select_start<select_end?select_start:select_end,selection_b=select_start>select_end?select_start:select_end;
+static unsigned long scroll_exposed_ticks,scroll_exposed_worst;
+static void draw_native(void){unsigned long exposed_start=0;int row,x;char screen[40][COLS] __attribute__((aligned(2)));long first=current_line-visible+1-scrollback;int prompt_row=visible;if(first<0){first=0;prompt_row=(int)current_line;}int selection_a=select_start<select_end?select_start:select_end,selection_b=select_start>select_end?select_start:select_end;
  if(!win)return;SetPort(win);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);DRAW_STAMP(native_stage);compose_input(screen,&first,&prompt_row);DRAW_ADD(0,native_stage);
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  native_stage=TickCount();
@@ -313,6 +316,7 @@ static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((ali
  if(!force_draw&&select_start<0&&!scroll_area_has_caret()&&prompt_row>=visible&&drawn_prompt>=visible&&first!=drawn_first&&labs(first-drawn_first)<visible&&prefer_pixel_scroll(screen,(int)(first-drawn_first))){
   int shift=(int)(first-drawn_first);
   if(scroll_window_rows(shift)){
+   exposed_start=TickCount();
    ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);
    /* System 6 BlockMove handles overlap and uses word/long transfers at
       either even alignment; libc memmove falls back to bytes at 2 mod 4. */
@@ -349,6 +353,7 @@ static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((ali
 #endif
  DRAW_STAMP(text_start);
  int glyph_phase=0;if(!DIRECT_LEGACY&&!ALIGN_LEGACY&&buffered&&(right-left)*cell_w>=128&&!(win->portBits.rowBytes&0xc000)&&(win->portBits.rowBytes&0x3fff)==64){glyph_phase=(destination.left-win->portBits.bounds.left)&15;if(glyph_phase+(right-left)*cell_w>512)glyph_phase=0;}
+ history_raster_line=first+row;
  if(!force_draw&&buffered&&row<prompt_row&&!selected&&!screen[row][COLS-1]&&(!last_screen[row][COLS-1]||(unsigned char)last_screen[row][COLS-1]==255)&&native_glyph_row(rendered+left,right-left,glyph_phase)){OffsetRect(&area,glyph_phase-area.left,0);}
  else {EraseRect(&area);if(mono){int len=right;while(len>left&&rendered[len-1]==' ')len--;MoveTo(area.left,area.top+font_ascent);if(len>left)DrawText(rendered,left,len-left);}else for(x=left;x<right;x++){MoveTo((buffered?0:TEXT_LEFT)+x*cell_w,area.top+font_ascent);DrawChar(rendered[x]);}}
 
@@ -359,7 +364,8 @@ static void draw_native(void){int row,x;char screen[40][COLS] __attribute__((ali
  if(screen[row][COLS-1]){int cx=(unsigned char)screen[row][COLS-1]-1;Rect caret;SetRect(&caret,(buffered?0:TEXT_LEFT)+cx*cell_w,area.top,(buffered?0:TEXT_LEFT)+(cx+1)*cell_w,area.bottom);InvertRect(&caret);}
  if(buffered){SetPort(win);ForeColor(blackColor);BackColor(whiteColor);DRAW_STAMP(copy_start);present_native_row(&area,&destination);DRAW_ADD(3,copy_start);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);}memcpy(last_screen[row],screen[row],COLS);}}
  DRAW_ADD(2,native_stage);
- if(force_draw&&saved_clip){ForeColor(blackColor);BackColor(whiteColor);Rect grow=win->portRect;grow.left=grow.right-15;grow.top=grow.bottom-15;GetClip(saved_clip);ClipRect(&grow);DrawGrowIcon(win);SetClip(saved_clip);}drawn_first=first;drawn_prompt=prompt_row;dirty=force_draw=0;last_paint=TickCount();
+ if(exposed_start){unsigned long dt=TickCount()-exposed_start;scroll_exposed_ticks+=dt;if(dt>scroll_exposed_worst)scroll_exposed_worst=dt;}
+ if(force_draw&&saved_clip){ForeColor(blackColor);BackColor(whiteColor);Rect grow=win->portRect;grow.left=grow.right-15;grow.top=grow.bottom-15;GetClip(saved_clip);ClipRect(&grow);DrawGrowIcon(win);SetClip(saved_clip);}history_cache_end();glyph_planes_end();drawn_first=first;drawn_prompt=prompt_row;dirty=force_draw=0;last_paint=TickCount();
 }
 /* Cached system-font cells; all addresses remain inside the bounded bitmap. */
 extern void asm_cells(unsigned char *,const unsigned char *,const unsigned char *,long,long,long);
@@ -490,7 +496,8 @@ static void draw_cached(void){
 }
 static unsigned long paint_ticks,event_ticks;
 void app_profile(unsigned long *paint,unsigned long *events){*paint=paint_ticks;*events=event_ticks;}
-static void draw(void){if(!win)return;if(editor_screen){native_glyph_valid=0;draw_editor();return;}activity_hide();unsigned long start=TickCount();int full=force_draw;hide_caret();unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(render_mode&&frame_pixels)draw_cached();else draw_native();if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}DRAW_STAMP(bar_start);sync_history_bar(full);
+#include "direct-view.inc"
+static void draw(void){if(!win)return;if(editor_screen){native_glyph_valid=0;draw_editor();return;}activity_hide();unsigned long start=TickCount();int full=force_draw;hide_caret();unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(render_mode&&frame_pixels)draw_cached();else draw_native_direct();if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}DRAW_STAMP(bar_start);sync_history_bar(full);
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  draw_bar_ticks+=TickCount()-bar_start;draw_frames++;
 #endif
@@ -527,6 +534,10 @@ static int native_scroll_check(int cached){
 #include "../tests/terminal/jump-guest.inc"
 #include "../tests/terminal/presentation-guest.inc"
 #include "../tests/terminal/align-guest.inc"
+#include "../tests/terminal/direct-guest.inc"
+#include "../tests/terminal/live-guest.inc"
+#include "../tests/terminal/arrows-guest.inc"
+#include "../tests/terminal/admission-guest.inc"
 #include "../tests/terminal/dispatch-guest.inc"
 #include "../tests/terminal/catalog-guest.inc"
 #include "../tests/terminal/listing-render-guest.inc"
@@ -534,6 +545,10 @@ static int native_scroll_check(int cached){
 /* Executed inside the 68000 guest, not host timing or inferred performance. */
 int app_scroll_bench(int quick){
 #ifdef CLARICE_DRAW_DIAGNOSTICS
+ if(quick==20)return arrows_probe();
+ if(quick==19)return live_output_probe();
+ if(quick==18){admission_probe();return 0;}
+ if(quick==17)return direct_view_pixels();
  if(quick==16)return alignment_pixels(1);
  if(quick==15)return jump_probe(3);
  if(quick==14)return alignment_pixels(0);
@@ -886,6 +901,7 @@ if(base)c=base;}
 #endif
 #ifdef CLARICE_USABILITY_DIAGNOSTICS
 #include "../tests/terminal/usability-guest.inc"
+
 #endif
 static void welcome(void){
  ClariceHardware h;char line[192],cpu[32],fpu[40],ram[32];cli_hardware(&h,sizeof h);
@@ -956,7 +972,7 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
   serviced=1;
  }
  if(dirty)draw();if(serviced||ahead_count)continue;if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);}
- UPDATE_LAUNCH_TRACE("cleanup begin");history_shutdown();if(tall_bar_pixels)DisposePtr(tall_bar_pixels);if(history_bar)DisposeControl(history_bar);if(frame_ready){ClosePort(&prompt_port);ClosePort(&frame_port);}if(frame_pixels)DisposePtr((Ptr)frame_pixels);if(transfer_region)DisposeRgn(transfer_region);if(visible_region)DisposeRgn(visible_region);if(scroll_region)DisposeRgn(scroll_region);if(saved_clip)DisposeRgn(saved_clip);CloseWindow(win);UPDATE_LAUNCH_TRACE("cleanup done");
+ UPDATE_LAUNCH_TRACE("cleanup begin");direct_stage_dispose();history_cache_dispose();glyph_planes_dispose();history_shutdown();if(tall_bar_pixels)DisposePtr(tall_bar_pixels);if(history_bar)DisposeControl(history_bar);if(frame_ready){ClosePort(&prompt_port);ClosePort(&frame_port);}if(frame_pixels)DisposePtr((Ptr)frame_pixels);if(transfer_region)DisposeRgn(transfer_region);if(visible_region)DisposeRgn(visible_region);if(scroll_region)DisposeRgn(scroll_region);if(saved_clip)DisposeRgn(saved_clip);CloseWindow(win);UPDATE_LAUNCH_TRACE("cleanup done");
  if(update_handoff){
   /* Invocation/stream/history cleanup has completed before transfer launch. */
   int e=update_native_launch(update_handoff);DisposePtr(update_handoff);update_handoff=0;

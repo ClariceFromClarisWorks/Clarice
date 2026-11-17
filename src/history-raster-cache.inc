@@ -8,7 +8,7 @@
 #define HISTORY_CACHE_ROW_BYTES (64*11)
 typedef struct {
  long line;
- unsigned char valid;
+ unsigned short valid; /* Keep key and pixel block even-aligned for BlockMove. */
  unsigned char key[HISTORY_CACHE_KEY_BYTES];
  unsigned char pixels[HISTORY_CACHE_ROW_BYTES];
 } HistoryRasterRow;

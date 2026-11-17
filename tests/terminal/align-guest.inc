@@ -43,6 +43,6 @@ static int alignment_pixels(int direct){
  }
  SetPort(win);SetClip(original);
  InvalRect(&win->portRect);native_glyph_valid=0;force_draw=dirty=1;DisposeRgn(original);DisposeRgn(clip);DisposeRgn(hole);DisposePtr((Ptr)reference);char report[200];snprintf(report,sizeof report,"%s_PIXELS %s checks=%d failures=%d heap_delta=%ld\n",direct?"DIRECT":"ALIGN",failures?"FAIL":"PASS",checks,failures,FreeMem()-heap);
- char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,direct?"direct-pixels.txt":"align-pixels.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=strlen(report);SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
+ char full[PATH_CAP];unsigned char path[256];short ref;shell_temp_path(full,direct?inverse?"planes-pixels-dark.txt":"planes-pixels-light.txt":"align-pixels.txt");pstr(path,full);HCreate(0,0,path,'CLRC','TEXT');if(!HOpen(0,0,path,fsWrPerm,&ref)){long n=strlen(report);SetEOF(ref,0);FSWrite(ref,&n,report);FSClose(ref);}
  term_puts(report);return cancelled?130:failures?1:0;
 }

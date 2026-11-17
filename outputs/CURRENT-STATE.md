@@ -3,7 +3,7 @@
 ## Recovery steering — separate development helper
 
 17November: shared Clarice tools/se-control now has a Snow-tested reconnect
-candidate; [report](../../Clarice/outputs/se-control-recovery/REPORT.md). Partial
+candidate; [report](se-control-recovery/REPORT.md). Partial
 input/drag/capture loss, listener restart, repeated heap checks and offline Quit
 pass. No renderer/RC changes for recovery. Helper now installed through Clarice;
 two physical disconnects reconnected unaided in5.94/6.16s, heap26802 stable.
@@ -19,9 +19,12 @@ manifests compare equal; active app/two recent recovery copies/helpers retained.
 Older installed ls lacks -d and cmp is absent; verified with existing shell
 facilities instead. No permanent deletion or utility upgrade; staging stays in/tmp.
 
-## Isolated terminal experiment — in progress
+## Terminal renderer — build 1713 integrated for development
 
-17 November: `codex/terminal-viewport`, based on RC `2df1684`; RC unchanged.
+17 November: user-authorised main integration of the 34 hash-verified build1713
+source files; original RC branch/tag unchanged. Earlier draft source is retained
+in its own checkpoint. Focused viewport/HFS and SEControl regressions pass.
+No new binary, hardware session or release acceptance is implied by this merge.
 [Report and evidence](viewport/REPORT.md). Viewport/prompt composition, resize
 anchoring, long-input reflow and clipped scrollbar staging pass focused host/Snow
 tests. Cross-volume preference rename/flush corrected; native negative/recovery

@@ -4,6 +4,7 @@
    prepared; other phases rebuild or use the existing no-allocation path.
    begin/end surround a paint; invalidate after rebuilding native glyphs. */
 #include <stdint.h>
+#include "heap-admission.h"
 #define GLYPH_PLANES_BYTES (4*95*64)
 static Handle glyph_planes_handle;
 static unsigned char *glyph_planes_data;
@@ -26,7 +27,7 @@ static int glyph_planes_begin(int phase){
  if(glyph_planes_handle&&!*glyph_planes_handle){DisposeHandle(glyph_planes_handle);glyph_planes_handle=0;glyph_planes_phase=-1;}
  if(!glyph_planes_handle){
   unsigned long now=TickCount();if(glyph_planes_waiting&&(unsigned long)(now-glyph_planes_retry)<60)return 0;
-  glyph_planes_handle=NewHandle(GLYPH_PLANES_BYTES);
+  glyph_planes_handle=native_heap_room(GLYPH_PLANES_BYTES,32768L,0)?NewHandle(GLYPH_PLANES_BYTES):0;
   if(!glyph_planes_handle){glyph_planes_waiting=1;glyph_planes_retry=now;return 0;}
   glyph_planes_waiting=0;glyph_planes_phase=-1;
  }

@@ -6,6 +6,9 @@
 #include <string.h>
 typedef char **Handle;static unsigned long ticks;static int fail,owned,locked,purgeable;static size_t bytes;
 static unsigned long TickCount(void){return ticks;}
+static long free_bytes=100000;
+static long FreeMem(void){return free_bytes;}
+static void PurgeMem(long n){(void)n;assert(!"cache must not request purging");}
 static Handle NewHandle(long n){if(fail)return NULL;Handle h=malloc(sizeof *h);assert(h);*h=malloc(n);assert(*h);memset(*h,0xa5,n);bytes=n;owned++;return h;}
 static void DisposeHandle(Handle h){free(*h);free(h);owned--;locked=purgeable=0;bytes=0;}
 static void HLock(Handle h){assert(h&&*h);locked=1;}
@@ -29,5 +32,6 @@ int main(void){
  free(*glyph_planes_handle);*glyph_planes_handle=NULL;assert(glyph_planes_begin(3));assert(glyph_planes_phase==-1);assert(glyph_planes_prepare(glyphs,3));glyph_planes_end();
  for(int i=0;i<1000;i++){assert(glyph_planes_begin(3));assert(glyph_planes_prepare(glyphs,3));glyph_planes_end();}assert(owned==1);
  glyph_planes_dispose();assert(!owned&&!bytes);assert(!glyph_planes_begin(0));assert(!glyph_planes_begin(8));
- puts("PASS 29,260 glyph-plane oracle cases; failed allocation/retry, purge, invalidation, phase fallback, ownership and 1000 paint acquisitions;24320 bytes");
+ free_bytes=32768+GLYPH_PLANES_BYTES-1;ticks+=60;assert(!glyph_planes_begin(3)&&!owned);free_bytes++;ticks+=60;assert(glyph_planes_begin(3));glyph_planes_end();glyph_planes_dispose();assert(!owned);
+ puts("PASS cache reserve admission; 29,260 glyph-plane oracle cases; failed allocation/retry, purge, invalidation, phase fallback, ownership and 1000 paint acquisitions;24320 bytes");
 }
