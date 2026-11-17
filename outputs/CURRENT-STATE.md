@@ -3,7 +3,12 @@
 ## Coherent deployment — host build/package batch, native integration unfinished
 
 Branch codex/coherent-deployment from main110f937; transaction approach approved.
-No physical connections, deployment, push or release. Root causes: skip-existing
+Packaging checkpoint0cc324c pushed to its development branch; accepted main110f937
+also pushed at user request. No release. Later read-only SE check confirms running
+build2026111713; Snow viewport fixture Core forks match accepted1713 and it was
+started at its prompt. No application or utility replacement performed. Full
+/bin consistency remains unverified/outdated on the SE; experimental bundled
+activation must be completed before claiming both installations current. Root causes: skip-existing
 setup, Core-only HTTP updates, unbound utility manifest and reusable build outputs.
 
 Implemented: fresh full-build directory (previous build retained), invalidated

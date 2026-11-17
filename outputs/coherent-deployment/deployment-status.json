@@ -1,0 +1,12 @@
+{
+  "main_pushed": "110f937",
+  "experiment_pushed": "0cc324c",
+  "se_running_build": 2026111713,
+  "se_evidence": "read-only clarice update --check; installed build 2026111713, no newer update",
+  "snow_running_build": 2026111713,
+  "snow_evidence": "MacBinary CLUP validated; both executable forks equal accepted1713 excluding native resource scratch; greeting/prompt visible",
+  "core_replaced": false,
+  "utilities_replaced": false,
+  "complete_release_deployment": false,
+  "blocker": "Native coordinated installer/updater and recovery integration unfinished"
+}
