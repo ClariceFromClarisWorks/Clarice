@@ -1,4 +1,7 @@
 #include "sys6.h"
+#include "session.h"
+#include "service.h"
+#include "remote-settings.h"
 #include <Quickdraw.h>
 #include <Fonts.h>
 #include <Windows.h>
@@ -86,7 +89,7 @@ static int output_legacy;
 #else
 #define listing_paint_interval 96
 #endif
-void app_output_batch(int bulk){output_paint_ticks=bulk?listing_paint_interval:3;}
+void app_output_batch(int bulk){if(shell_session_remote_io())return;output_paint_ticks=bulk?listing_paint_interval:3;}
 static int select_start=-1,select_end=-1;
 static short test_ref=-1;
 static long initial_free;
@@ -180,10 +183,11 @@ static void newline(void){current_line++;if(current_line-retained+1>oldest_line)
 static void soft_newline(void){wrapped[current_line%ROWS]=1;newline();}
 static int serial_input; /* mode 2: remote tty byte/control semantics */
 /* Copy printable runs with one bounded operation per terminal row. */
-void term_write(const char *s,long n){if(n>0){activity_hide();activity_output_tick=TickCount();}long i=0;if(test_ref>=0){long k=n;FSWrite(test_ref,&k,s);}while(i<n){unsigned char c=s[i++];if(serial_input==2&&c=='\r'){out_col=0;last_cr=0;}else if(serial_input==2&&c==8){if(out_col)out_col--;}else if(c=='\n'){if(!last_cr)newline();last_cr=0;}else if(c=='\r'){newline();last_cr=1;}else if(c=='\t'){int k=4-(out_col%4);while(k--){if(out_col>=columns)soft_newline();text[current_line%ROWS][out_col++]=' ';}}else if(c>=32){last_cr=0;if(out_col>=columns)soft_newline();i--;long room=columns-out_col;if(room>n-i)room=n-i;long k=copy_printable(text[current_line%ROWS]+out_col,s+i,room);out_col+=k;i+=k;}}dirty=1;}
+void term_write(const char *s,long n){if(shell_session_output(s,n))return;if(n>0){activity_hide();activity_output_tick=TickCount();}long i=0;if(test_ref>=0){long k=n;FSWrite(test_ref,&k,s);}while(i<n){unsigned char c=s[i++];if(serial_input==2&&c=='\r'){out_col=0;last_cr=0;}else if(serial_input==2&&c==8){if(out_col)out_col--;}else if(c=='\n'){if(!last_cr)newline();last_cr=0;}else if(c=='\r'){newline();last_cr=1;}else if(c=='\t'){int k=4-(out_col%4);while(k--){if(out_col>=columns)soft_newline();text[current_line%ROWS][out_col++]=' ';}}else if(c>=32){last_cr=0;if(out_col>=columns)soft_newline();i--;long room=columns-out_col;if(room>n-i)room=n-i;long k=copy_printable(text[current_line%ROWS]+out_col,s+i,room);out_col+=k;i+=k;}}dirty=1;}
 void term_puts(const char *s){term_write(s,(long)asm_length(s));}
 /* One bounded local progress row. No input ownership, allocation or ANSI mode. */
 void app_progress(const char *s,int finish){
+ if(shell_session_remote_io()){shell_session_output("\r",1);if(s)shell_session_output(s,strlen(s));shell_session_output("\033[K",3);if(finish)shell_session_output("\n",1);return;}
  if(editor_screen)return;
  out_col=0;last_cr=0;memset(text[current_line%ROWS],0,COLS);wrapped[current_line%ROWS]=0;
  for(int i=0;s&&s[i]&&i<columns-1;i++){unsigned char c=s[i];text[current_line%ROWS][out_col++]=c>=32&&c<127?c:'?';}
@@ -191,13 +195,13 @@ void app_progress(const char *s,int finish){
 }
 
 void app_clear(void){memset(text,0,sizeof text);memset(wrapped,0,sizeof wrapped);current_line=oldest_line=0;out_col=scrollback=0;dirty=force_draw=1;}
-void app_quit(void){done=1;cancelled=1;}
+void app_quit(void){if(shell_session_active()||shell_service_stop()){SysBeep(1);return;}done=1;cancelled=1;}
 int app_update_handoff(const char *native){
- if(update_handoff||!native||strlen(native)>255||!strchr(native,':')||native[0]==':')return paramErr;
+ if(shell_session_active()||shell_service_stop()||update_handoff||!native||strlen(native)>255||!strchr(native,':')||native[0]==':')return paramErr;
  char *copy=(char*)NewPtr(strlen(native)+1);if(!copy)return memFullErr;
  strcpy(copy,native);update_handoff=copy;app_quit();return 0;
 }
-int app_columns(void){return columns;}
+int app_columns(void){return shell_session_remote_io()?80:columns;}
 void app_metrics(int human){char b[256],free_size[32],launch_size[32];
  (void)human;display_size(free_size,(unsigned long)FreeMem());display_size(launch_size,(unsigned long)initial_free);
  snprintf(b,sizeof b,"CPU code %d; System API %04x\nFree app heap: %s; launch: %s\nLaunch-to-ready %lu ticks; commands %lu\nHistory: disk ring 128 entries; 1 KB retrieval\nKB = 1024 bytes\n",system_info.processor,(unsigned short)system_info.systemVersion,free_size,launch_size,start_tick,shell_commands);term_puts(b);
@@ -650,14 +654,42 @@ static void save_preferences(void){
  }
  if(e){HDelete(0,0,tn);{char msg[110];snprintf(msg,sizeof msg,"Preferences save failed (%d); previous file retained.\n",e);term_puts(msg);}}shell_flush_native(prefs_path);
 }
-int app_pager_begin(void){int old=page_mode;page_mode=1;page_start=current_line;app_activity_interactive(1);return old;}
-int app_pager_end(int old){int quit=cancelled&&!interrupted&&!done;if(quit)cancelled=0;page_mode=old;app_activity_interactive(0);return quit;}
-void app_page_begin(void){page_start=current_line;}
-int app_page(void){EventRecord ev;long limit=visible-1;if(!page_mode||test_ref>=0)return app_yield();if(limit<1)limit=1;if(current_line-page_start<limit)return app_yield();paging=1;page_action=0;dirty=1;draw();while(!page_action&&!cancelled&&!done){if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);if(dirty)draw();}paging=0;if(page_action==2)page_start=current_line-limit+1;else page_start=current_line;dirty=1;return cancelled||done;}
+int app_pager_begin(void){if(shell_session_remote_io())return 0;int old=page_mode;page_mode=1;page_start=current_line;app_activity_interactive(1);return old;}
+int app_pager_end(int old){if(shell_session_remote_io())return 0;int quit=cancelled&&!interrupted&&!done;if(quit)cancelled=0;page_mode=old;app_activity_interactive(0);return quit;}
+void app_page_begin(void){if(shell_session_remote_io())return;page_start=current_line;}
+int app_page(void){if(shell_session_active())return app_yield();EventRecord ev;long limit=visible-1;if(!page_mode||test_ref>=0)return app_yield();if(limit<1)limit=1;if(current_line-page_start<limit)return app_yield();paging=1;page_action=0;dirty=1;draw();while(!page_action&&!cancelled&&!done){if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);if(dirty)draw();}paging=0;if(page_action==2)page_start=current_line-limit+1;else page_start=current_line;dirty=1;return cancelled||done;}
 static void fill_window(void){if(!filled){Point origin={0,0};SetPort(win);LocalToGlobal(&origin);normal_bounds=win->portRect;OffsetRect(&normal_bounds,origin.h,origin.v);MoveWindow(win,4,40,1);SizeWindow(win,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-44,1);filled=1;}else{MoveWindow(win,normal_bounds.left,normal_bounds.top,1);SizeWindow(win,normal_bounds.right-normal_bounds.left,normal_bounds.bottom-normal_bounds.top,1);filled=0;}layout();}
 static void dialog_text(DialogPtr d,short item,const char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);pstr(p,s);SetDialogItemText(h,p);}
 static void dialog_read(DialogPtr d,short item,char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);GetDialogItemText(h,p);memcpy(s,p+1,p[0]);s[p[0]]=0;}
 static ControlHandle dialog_control(DialogPtr d,short item){short type;Handle h;Rect r;GetDialogItem(d,item,&type,&h,&r);return (ControlHandle)h;}
+/* Password bytes never enter TextEdit, Scrap, shell history or argv. */
+static char *remote_password;
+static pascal Boolean remote_password_filter(DialogPtr d,EventRecord *ev,short *item){
+ if((ev->what==keyDown||ev->what==autoKey)&&((DialogPeek)d)->editField==6){
+  unsigned char c=ev->message&255;size_t n=strlen(remote_password);
+  if(c==9||c==13||c==27)return 0;
+  if(ev->modifiers&cmdKey){SysBeep(1);return 1;}
+  if(c==8||c==127){if(n)remote_password[--n]=0;}
+  else if(c>=32&&c<127&&n<127){remote_password[n++]=c;remote_password[n]=0;}
+  else {SysBeep(1);return 1;}
+  char stars[128];memset(stars,'*',n);stars[n]=0;dialog_text(d,7,stars);SelectDialogItemText(d,7,n,n);*item=0;return 1;
+ }return 0;
+}
+int app_remote_settings(ClariceRemoteSettings *settings){
+ if(shell_session_active())return -1;
+ DialogPtr d=GetNewDialog(142,0,(WindowPtr)-1);if(!d)return -1;
+ char b[256];short item=0;settings->password[0]=0;remote_password=settings->password;
+ dialog_text(d,4,settings->peer);snprintf(b,sizeof b,"%u",settings->port);dialog_text(d,6,b);
+ SetControlValue(dialog_control(d,8),settings->enabled);SelectDialogItemText(d,4,0,32767);
+ for(;;){ModalDialog(remote_password_filter,&item);
+  if(item==8){ControlHandle c=dialog_control(d,8);SetControlValue(c,!GetControlValue(c));}
+  if(item==1){dialog_read(d,4,b);if(strlen(b)>15){SysBeep(1);continue;}strcpy(settings->peer,b);
+   dialog_read(d,6,b);char *end;unsigned long n=strtoul(b,&end,10);if(!*b||*end||!n||n>65535){SysBeep(1);continue;}settings->port=n;
+   settings->enabled=GetControlValue(dialog_control(d,8));break;}
+  if(item==2){memset(settings->password,0,sizeof settings->password);break;}
+ }
+ remote_password=0;DisposeDialog(d);SetPort(win);dirty=force_draw=1;return item==1?1:0;
+}
 static MenuHandle pref_popup_menus[3];
 static int pref_popup_choices[3];
 static int popup_slot(int item){return item==5?0:item==12?1:2;}
@@ -677,6 +709,7 @@ static void preferences_window(void){
  SetControlValue(dialog_control(d,10),inverse);SetControlValue(dialog_control(d,13),filled);popup_title(d,12,lines,cap);popup_title(d,15,controls,ctrl);
  SelectDialogItemText(d,7,0,32767);
  while(item!=2){ModalDialog(0,&item);
+  if(item==16){shell_run("/bin/telnetd --preferences");SetPort(d);}
   if(item==10||item==13){ControlHandle c=dialog_control(d,item);SetControlValue(c,!GetControlValue(c));}
   if(item==5){chosen=dialog_popup(d,5,fonts,chosen);popup_title(d,5,fonts,chosen);}
   if(item==12){cap=dialog_popup(d,12,lines,cap);popup_title(d,12,lines,cap);}
@@ -723,11 +756,11 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
  else if(argc==3&&!strcmp(argv[1],"columns")){int n=preference_number(argv[2]),width=n*cell_w+TEXT_LEFT+16;if(n<20||n>130||width>qd.screenBits.bounds.right-8){term_puts("Requested columns do not fit this screen/font.\n");return 2;}if(filled)fill_window();SizeWindow(win,width,win->portRect.bottom,1);}
  else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | columns N | fill]\n");return 2;}
  font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();term_present();return 0;}
-int app_yield(void){EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return cancelled||done;unsigned long t=TickCount();for(int i=0;i<16&&!cancelled&&!done;i++){if(!WaitNextEvent(everyEvent,&ev,0,0))break;handle(&ev);}event_ticks+=TickCount()-t;if(dirty&&TickCount()-last_paint>=output_paint_ticks){
+int app_yield(void){shell_service_poll(0);EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return (shell_session_active()?shell_session_cancelled():cancelled)||done;int ui=shell_session_ui_begin();unsigned long t=TickCount();for(int i=0;i<16&&!cancelled&&!done;i++){if(!WaitNextEvent(everyEvent,&ev,0,0))break;handle(&ev);}event_ticks+=TickCount()-t;if(dirty&&TickCount()-last_paint>=output_paint_ticks){
 #ifdef CLARICE_DRAW_DIAGNOSTICS
 if(output_paint_ticks==listing_paint_interval&&out_col)listing_partial_frames++;
 #endif
- draw();}last_yield=TickCount();activity_tick(last_yield);return cancelled||done;}
+ draw();}last_yield=TickCount();activity_tick(last_yield);shell_session_ui_end(ui);return (shell_session_active()?shell_session_cancelled():cancelled)||done;}
 /* Canonical terminal stdin: fixed 1 KiB queue, EOF on Ctrl-D, cancellable. */
 long app_terminal_read(void *data,unsigned long count){
  if(!count)return 0;
@@ -737,12 +770,13 @@ long app_terminal_read(void *data,unsigned long count){
  }
  unsigned long n=tty_count-tty_offset;if(n>count)n=count;memcpy(data,tty_buffer+tty_offset,n);tty_offset+=n;return n;
 }
-int cli_pause_ticks(unsigned long ticks){EventRecord ev;unsigned long start=TickCount();while(TickCount()-start<ticks&&!cancelled&&!done){if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);activity_tick(TickCount());}return cancelled||done;}
-void term_present(void){if(dirty)draw();last_yield=TickCount();}
+int cli_pause_ticks(unsigned long ticks){EventRecord ev;unsigned long start=TickCount();while(TickCount()-start<ticks){if(app_yield())return 1;int ui=shell_session_ui_begin();if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,1,0))handle(&ev);shell_session_ui_end(ui);}return 0;}
+void term_present(void){int ui=shell_session_ui_begin();if(dirty)draw();shell_session_ui_end(ui);last_yield=TickCount();}
 /* Fixed queue, replayed only by the outer event loop: no recursive execute. */
 static unsigned char ahead_keys[LINE_CAP];
 static unsigned short ahead_mods[LINE_CAP];
 static unsigned int ahead_head,ahead_count;
+static int remote_pending;
 #define PASTED_KEY 0x8000
 static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+1)*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1)b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
 static void insert_char(unsigned char c){size_t n=strlen(input);if(input_blocked)return;if(n>=LINE_CAP-1){input_fail("command exceeds 1023 bytes");return;}memmove(input+cursor+1,input+cursor,n-cursor+1);input[cursor++]=(char)c;dirty=1;}
@@ -772,6 +806,7 @@ static void input_fail(const char *reason){
 /* Reuse the idle typeahead storage while serial owns keyboard input. */
 static int serial_head,serial_count,serial_overflow;
 int app_serial_input(int enabled){
+ if(shell_session_active())return -1;
  if(enabled&&!serial_input){serial_head=ahead_head;serial_count=ahead_count;serial_overflow=0;ahead_head=ahead_count=0;}
  else if(!enabled&&serial_input){if(serial_overflow)input_fail("serial keyboard queue overflow");serial_head=serial_count=serial_overflow=0;}
  serial_input=enabled;last_cr=0;return 0;
@@ -779,7 +814,9 @@ int app_serial_input(int enabled){
 /* Separate import lets old runtimes reject remote-tty clients safely. */
 int app_serial_tty(int enabled){return app_serial_input(enabled?2:0);}
 int app_serial_key(void){if(serial_overflow)return -2;if(!serial_count)return -1;int c=ahead_keys[serial_head];serial_head=(serial_head+1)%LINE_CAP;serial_count--;return c;}
-static void key(unsigned char c,unsigned short mods){if(mods==PASTED_KEY&&!busy){selection_clear();scrollback=0;insert_char(c);return;}int n=strlen(input);if(scrollback&&!((mods&shiftKey)&&(c==30||c==31))){selection_clear();scrollback=0;dirty=1;}if(paging){if((mods&shiftKey)&&(c==30||c==31)){scrollback+=c==30?visible:-visible;if(scrollback<0)scrollback=0;if(scrollback>scroll_limit())scrollback=scroll_limit();dirty=1;return;}if(c==' '){page_action=1;return;}if(c==13){page_action=2;return;}if(c=='q'||c=='Q'){cancelled=1;return;}}if((mods&ControlKey)&&c>=32&&c<127)c=control_ascii(c);if((mods&cmdKey)&&c=='.')c=3;if(input_blocked){if(c!=3)return;input_blocked=0;ahead_head=ahead_count=0;}if(tty_reading&&c!=3){
+static void key(unsigned char c,unsigned short mods){
+ if(shell_session_active()&&remote_pending){if(ahead_count<LINE_CAP){unsigned at=(ahead_head+ahead_count++)%LINE_CAP;ahead_keys[at]=c;ahead_mods[at]=mods;}else input_fail("pending input queue overflow");return;}
+if(mods==PASTED_KEY&&!busy){selection_clear();scrollback=0;insert_char(c);return;}int n=strlen(input);if(scrollback&&!((mods&shiftKey)&&(c==30||c==31))){selection_clear();scrollback=0;dirty=1;}if(paging){if((mods&shiftKey)&&(c==30||c==31)){scrollback+=c==30?visible:-visible;if(scrollback<0)scrollback=0;if(scrollback>scroll_limit())scrollback=scroll_limit();dirty=1;return;}if(c==' '){page_action=1;return;}if(c==13){page_action=2;return;}if(c=='q'||c=='Q'){cancelled=1;return;}}if((mods&ControlKey)&&c>=32&&c<127)c=control_ascii(c);if((mods&cmdKey)&&c=='.')c=3;if(input_blocked){if(c!=3)return;input_blocked=0;ahead_head=ahead_count=0;}if(tty_reading&&c!=3){
  if(c==13||c==4){if(c==4&&!n){tty_ready=1;return;}memcpy(tty_buffer,input,n);tty_count=n;if(c==13)tty_buffer[tty_count++]='\n';tty_offset=0;term_write(input,n);if(c==13)term_puts("\n");input[0]=0;cursor=0;tty_ready=1;dirty=1;return;}
  if(c==8||c==127){if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}}
  else if(c==21){input[0]=0;cursor=0;}
@@ -795,7 +832,7 @@ static void key(unsigned char c,unsigned short mods){if(mods==PASTED_KEY&&!busy)
  /* Clear only the existing highlight; a click alone changes no pixels. */
  selection_clear();
  if(!((mods&shiftKey)&&(c==30||c==31)))scrollback=0;
- switch(c){case 13:execute();break;case 9:{int k;busy=1;cancelled=0;k=shell_complete(input,&cursor);busy=0;if(!k)SysBeep(1);break;}case 8:case 127:if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}break;
+ switch(c){case 13:if(shell_session_active())remote_pending=1;else execute();break;case 9:{int k;busy=1;cancelled=0;k=shell_complete(input,&cursor);busy=0;if(!k)SysBeep(1);break;}case 8:case 127:if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}break;
  case 1:cursor=0;break;case 5:cursor=n;break;case 2:case 28:if(cursor)cursor--;break;case 6:case 29:if(cursor<n)cursor++;break;
  case 16:case 30:if(mods&shiftKey){scrollback+=visible;if(scrollback>scroll_limit())scrollback=scroll_limit();}else history_move(-1);break;
  case 14:case 31:if(mods&shiftKey){scrollback-=visible;if(scrollback<0)scrollback=0;}else history_move(1);break;
@@ -968,6 +1005,8 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
 #ifdef CLARICE_INPUT_DIAGNOSTICS
  input_probe_tick();
 #endif
+ if(remote_pending&&!shell_session_active()&&!busy){remote_pending=0;execute();}
+ shell_service_poll(!busy&&!done);
  int serviced=0;
  for(int i=0;i<32&&!done;i++){
   if(!busy&&ahead_count){unsigned int at=ahead_head;ahead_head=(ahead_head+1)%LINE_CAP;ahead_count--;key(ahead_keys[at],ahead_mods[at]);}

@@ -1,10 +1,48 @@
 # Clarice current state
 
+## Password-protected supplementary Telnet — Snow validated
+
+Core **2026111810** (runtime 1.8), optional `telnetd` **2026111811**, deployed through
+new repository manifests and `clarice update`, including automatic Core relaunch.
+No SE access or push. Service disabled after acceptance; no pending repository upgrades.
+
+- Preferences → **Telnet server…** controls the allowed IPv4 peer, port, masked
+  password and enable/disable. Also `telnetd --preferences`. Settings persist in
+  `/etc/clarice/telnet.conf` through existing fork-preserving safe replacement.
+  Blank password preserves its verifier. Server intentionally stays off after
+  Clarice restarts; `telnetd` starts it with the saved password settings.
+- Genuine libtelnet retained. Password checking uses Joseph Birr-Pixton's CC0
+  fastpbkdf2 with existing public-domain libutil SHA256, inside the optional module.
+  Salted verifier only; no plaintext password in settings, history or argv.
+  No shell before authentication; no password echo; overlong input rejected;
+  60-second login deadline and five-second failed-login cooldown. Explicit
+  `--no-password --peer` remains available for controlled tests.
+- Plus/4 MiB/System 6.0.8 Snow, fixed maximum acceleration (~15×): wrong/empty/
+  overlong passwords, password change, no pre-auth execution, cancellation and
+  reconnection pass. Preferences save/reopen/port change/Cancel/restart persistence
+  pass. Locked settings save preserves original bytes; malformed settings refuse
+  startup and recover after restoring the saved file. Local input/scrolling,
+  serialized commands, streams, interrupts and lifecycle regressions remain passing.
+- Host ASan/UBSan, upstream KDF known answer, allocation/cancellation/recovery tests,
+  31 shell comparisons + 3 cancellation cases, and 193/195 import checks pass.
+- Enabled image **27,928 B**, native driver storage unchanged **20,692 B**, plus
+  demand-owned session/protocol state. Three enable/stop cycles: heap
+  **365156 → 365154 → 365156**, largest block **363042** throughout; no progressive
+  loss. No disabled-service networking allocations. Core MacBinary +1,408 B versus
+  1804; package size is not a RAM/startup measurement. Final authenticated login
+  **1.42–1.47 s host elapsed at accelerated Snow speed**, not physical-SE timing.
+
+Telnet is **unencrypted**. The 1,000-round PBKDF2 setting is a legacy CPU compromise,
+not contemporary offline password hardening; use a unique strong password on a
+trusted network. HFS provides no credential-file access protection. Physical SE,
+MoofTCP and System 7 acceptance remain pending. No serial remote sessions or GUI
+editor support added. [Evidence and usage](remote-sessions/README.md).
+
 ## Resumable repository updater — Snow accepted, build 2026111802
 
 18 November: the simpler per-package updater now works end to end in disposable
 Plus/4 MiB/System 6.0.8 Snow at fixed maximum acceleration (~15×). SE untouched;
-no push, tag or release. Remote sessions remain deferred.
+no push, tag or release. Remote-session development is separate.
 
 - `clarice update [-y] [--check] [--source URL]` compares a private HTTP repository,
   adds newly listed tools, preserves known newer versions, and installs tools

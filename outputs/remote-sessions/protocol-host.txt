@@ -1,0 +1,2 @@
+Host two-endpoint peak: 712 B; retained: 0 B
+PASS libtelnet server role: fragmented negotiation, duplicate options, bidirectional binary/IAC, interrupt, NAWS, 20 repeats

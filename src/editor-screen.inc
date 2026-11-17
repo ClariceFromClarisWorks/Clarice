@@ -3,7 +3,7 @@
 #include "ports/terminal/screen.h"
 static CliScreen *editor_screen;
 int app_screen_active(void){return editor_screen!=0;}
-int app_screen_open(void){if(editor_screen)return -1;editor_screen=(CliScreen*)NewPtr(sizeof *editor_screen);if(!editor_screen)return -1;screen_init(editor_screen,visible+1,columns);if(claim_pending_screen()){DisposePtr((Ptr)editor_screen);editor_screen=0;return -1;}app_activity_interactive(1);force_draw=dirty=1;return 0;}
+int app_screen_open(void){if(shell_session_active())return -1;if(editor_screen)return -1;editor_screen=(CliScreen*)NewPtr(sizeof *editor_screen);if(!editor_screen)return -1;screen_init(editor_screen,visible+1,columns);if(claim_pending_screen()){DisposePtr((Ptr)editor_screen);editor_screen=0;return -1;}app_activity_interactive(1);force_draw=dirty=1;return 0;}
 void app_screen_close(void){if(editor_screen){DisposePtr((Ptr)editor_screen);editor_screen=0;app_activity_interactive(0);force_draw=dirty=1;}}
 int app_screen_rows(void){return editor_screen?editor_screen->rows:visible+1;}
 long app_screen_write(const void *p,unsigned long n){if(!editor_screen)return -1;

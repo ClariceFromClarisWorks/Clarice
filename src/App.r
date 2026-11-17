@@ -25,7 +25,8 @@ resource 'DITL' (140) {{
  {126, 132, 148, 338}, UserItem { enabled };
  {212, 16, 230, 338}, CheckBox { enabled, "Fill screen (keep menu bar)" };
  {186, 16, 204, 125}, StaticText { disabled, "Control key:" };
- {184, 132, 206, 338}, UserItem { enabled }
+ {184, 132, 206, 338}, UserItem { enabled };
+ {154, 132, 176, 338}, Button { enabled, "Telnet server..." }
 }};
 resource 'ALRT' (141) {{100, 65, 220, 445}, 141, {OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1}, 0};
 resource 'DITL' (141) {{
@@ -42,3 +43,17 @@ resource 'DITL' (151) {{
 #include "update/version.h"
 type 'CLUP' { longint; longint; integer; integer; integer; integer; };
 resource 'CLUP' (128) { 'CLU1', CLARICE_UPDATE_BUILD, 0x0600, 1, 1, 2 };
+
+resource 'DLOG' (142) {{40,60,300,452},dBoxProc,visible,noGoAway,0x0,142,"Telnet server",0};
+resource 'DITL' (142) {{
+ {228,290,250,372},Button {enabled,"Apply"};
+ {228,196,250,278},Button {enabled,"Cancel"};
+ {12,16,30,170},StaticText {disabled,"Allowed peer (IPv4):"};
+ {12,180,30,370},EditText {enabled,""};
+ {42,16,60,170},StaticText {disabled,"Port:"};
+ {42,180,60,260},EditText {enabled,"2323"};
+ {96,180,114,370},EditText {enabled,""};
+ {130,16,148,370},CheckBox {enabled,"Enable now (off after Clarice restarts)"};
+ {78,16,118,172},StaticText {disabled,"Password: blank keeps existing"};
+ {164,16,218,370},StaticText {disabled,"One remote shell. Password required. Telnet sends data without encryption; use only a trusted network. Apply disconnects any remote session."}
+}};

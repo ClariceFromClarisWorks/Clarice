@@ -30,7 +30,11 @@ static int sh_isset(const char *name){if(!strcmp(name,"HOME")||!strcmp(name,"PWD
 static char *sh_positions_copy(int n,char **v,char ***out){size_t bytes;if(n<1||(size_t)n>((size_t)-1/sizeof(char*))-1)return 0;bytes=((size_t)n+1)*sizeof(char*);for(int i=0;i<n;i++){size_t len=strlen(v[i])+1;if(len>(size_t)-1-bytes)return 0;bytes+=len;}char *storage=malloc(bytes);if(!storage)return 0;char **args=(char**)storage;char *p=storage+((size_t)n+1)*sizeof(char*);for(int i=0;i<n;i++){size_t len=strlen(v[i])+1;args[i]=p;memcpy(p,v[i],len);p+=len;}args[n]=0;*out=args;return storage;}
 static int sh_positions(int n,char **v){char **args;char *storage=sh_positions_copy(n,v,&args);if(!storage)return sh_fail("out of memory storing positional parameters");free(sh_owned_args);sh_owned_args=storage;sh_argv=args;sh_argc=n;return 0;}
 static int sh_pattern(const char *p,const char *s){while(*p){if(*p=='*'){while(*p=='*')p++;if(!*p)return 1;do{if(sh_pattern(p,s))return 1;}while(*s++);return 0;}if(*p=='?'){if(!*s)return 0;p++;s++;continue;}if(*p=='['){int yes=0,neg=0;unsigned char c=*s++;if(!c)return 0;p++;if(*p=='!'||*p=='^'){neg=1;p++;}while(*p&&*p!=']'){unsigned char lo=*p++,hi=lo;if(*p=='-'&&p[1]&&p[1]!=']'){p++;hi=*p++;}if(c>=lo&&c<=hi)yes=1;}if(*p!=']'||yes==neg)return 0;p++;continue;}if(*p=='\\'&&p[1])p++;if(*p++!=*s++)return 0;}return !*s;}
-struct sh_saved {struct sh_env *env;char *args;char **argv;int argc,env_defaults;char cwd[PATH_CAP];
+struct sh_saved {
+#if !defined(SH_HOST_TEST)||defined(SH_SESSION_HOST_TEST)
+int session_exit;
+#endif
+struct sh_env *env;char *args;char **argv;int argc,env_defaults;char cwd[PATH_CAP];
 #ifndef SH_HOST_TEST
 char unixdir[PATH_CAP];
 #endif
@@ -44,8 +48,15 @@ static struct sh_saved *sh_save(void){
 strcpy(s->unixdir,unix_cwd);
 if(!native_heap_room(0,65536L,1)){env_free(s->env);free(s->args);free(s);return 0;}
 #endif
+#if !defined(SH_HOST_TEST)||defined(SH_SESSION_HOST_TEST)
+s->session_exit=session_exit_requested;
+#endif
 if(sh_functions_clone(sh_functions,&s->functions)){env_free(s->env);free(s->args);free(s);return 0;}return s;}
-static void sh_restore(struct sh_saved *s){sh_env_defaults=s->env_defaults;env_free(sh_env);sh_env=s->env;free(sh_owned_args);sh_owned_args=s->args;sh_argv=s->argv;sh_argc=s->argc;strcpy(shell_cwd,s->cwd);
+static void sh_restore(struct sh_saved *s){
+#if !defined(SH_HOST_TEST)||defined(SH_SESSION_HOST_TEST)
+session_exit_requested=s->session_exit;
+#endif
+sh_env_defaults=s->env_defaults;env_free(sh_env);sh_env=s->env;free(sh_owned_args);sh_owned_args=s->args;sh_argv=s->argv;sh_argc=s->argc;strcpy(shell_cwd,s->cwd);
 #ifndef SH_HOST_TEST
 strcpy(unix_cwd,s->unixdir);
 #endif
@@ -257,7 +268,11 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
  if(!strcmp(v[0],":")||!strcmp(v[0],"true"))return 0;if(!strcmp(v[0],"false"))return 1;
  if(!strcmp(v[0],"test")||!strcmp(v[0],"[")){if(v[0][0]=='['){if(n<2||strcmp(v[n-1],"]"))return sh_fail("missing ]");n--;}return sh_test(n-1,v+1);}
  if(!strcmp(v[0],"break")||!strcmp(v[0],"continue")){if(!sh_loop||n>1)return sh_fail("break/continue requires a loop; numeric levels unsupported");sh_flow=v[0][0]=='b'?1:2;return 0;}
- if(!strcmp(v[0],"return")||!strcmp(v[0],"exit")){int rc=n>1?atoi(v[1]):shell_status;if(!script_depth&&!sh_functions_active&&v[0][0]=='r')return sh_fail("return outside script/function");if(!script_depth&&!sh_functions_active&&v[0][0]=='e'){app_quit();return rc;}sh_flow=v[0][0]=='r'?3:4;sh_flow_status=rc;return rc;}
+ if(!strcmp(v[0],"return")||!strcmp(v[0],"exit")){int rc=n>1?atoi(v[1]):shell_status;
+#if !defined(SH_HOST_TEST) || defined(SH_SESSION_HOST_TEST)
+ if(session_io&&v[0][0]=='e'){session_exit_requested=1;sh_flow=4;sh_flow_status=rc;return rc;}
+#endif
+ if(!script_depth&&!sh_functions_active&&v[0][0]=='r')return sh_fail("return outside script/function");if(!script_depth&&!sh_functions_active&&v[0][0]=='e'){app_quit();return rc;}sh_flow=v[0][0]=='r'?3:4;sh_flow_status=rc;return rc;}
  if(!strcmp(v[0],"export")){if(n==1||(n==2&&!strcmp(v[1],"-p"))){for(struct sh_env *e=sh_env;e;e=e->next)if(e->flags&SH_ENV_EXPORT){say("export ");say(e->name);if(e->flags&SH_ENV_SET){say("=");sh_quote_value(e->value);}say("\n");}return output_error?1:0;}for(i=1;i<n;i++)if(env_set(v[i]))return sh_fail("export: invalid name or out of memory");return 0;}
  if(!strcmp(v[0],"unset")){int funcs=n>1&&!strcmp(v[1],"-f");i=n>1&&(!strcmp(v[1],"-v")||funcs)?2:1;for(;i<n;i++){if(!env_name(v[i],strlen(v[i])))return sh_fail("unset: invalid name");if(funcs){struct sh_function **slot=&sh_functions;while(*slot&&strcmp((*slot)->name,v[i]))slot=&(*slot)->next;if(*slot){struct sh_function *old=*slot;*slot=old->next;old->next=0;sh_functions_free(old);}}else free(env_take(&sh_env,v[i]));}return 0;}
  if(!strcmp(v[0],"shift")){int count=n>1?atoi(v[1]):1;if(count<0||count>=sh_argc)return 1;memmove(sh_argv+1,sh_argv+1+count,(sh_argc-count-1)*sizeof(char*));sh_argc-=count;return 0;}
@@ -288,7 +303,7 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  dispatch_kind_ticks=TickCount()-dispatch_start;
 #endif
- if(found<0)return 126;if(found){shell_commands++;return kind==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
+ if(found<0)return 126;if(found){if(session_io){const char *base=strrchr(candidate,'/');base=base?base+1:candidate;if(!strcmp(base,"clarice")||!strcmp(base,"serial")||!strcmp(base,"telnet")||!strcmp(base,"kermit")){errsay("command currently requires local input ownership\n");return 2;}}shell_commands++;return kind==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
  if(!strcmp(v[0],"chmod")){errsay("chmod: command not found; did you mean hfsattr?\n");return 127;}
  errsay("command not found: ");errsay(v[0]);errsay("\n");command_install_hint(v[0]);return 127;}
 #endif

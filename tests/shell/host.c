@@ -21,7 +21,12 @@ static char shell_cwd[PATH_CAP]="./",home_path[PATH_CAP]="./";
 static FILE *refs[128];
 
 static int cancel_after,polls;
-static int app_yield(void){return cancel_after&&++polls>=cancel_after;}
+static int app_yield(void){
+#ifdef SH_SESSION_HOST_TEST
+ if(session_io)return session_io->cancelled(session_io->context);
+#endif
+ return cancel_after&&++polls>=cancel_after;
+}
 static void app_quit(void){}
 static void history_add(const char*s){(void)s;}
 static void term_write(const char*s,long n){fwrite(s,1,n,stdout);}

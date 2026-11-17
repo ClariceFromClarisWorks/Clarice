@@ -19,7 +19,7 @@ static void activity_hide(void){
  }
  activity_visible=0;activity_phase=-1;
 }
-void app_activity_interactive(int enabled){activity_interactive=enabled!=0;if(enabled)activity_hide();}
+void app_activity_interactive(int enabled){if(shell_session_active())return;activity_interactive=enabled!=0;if(enabled)activity_hide();}
 static void activity_tick(unsigned long now){
  int phase=activity_due(&activity_clock,now,activity_output_tick,activity_command&&busy&&!cancelled&&!done,activity_interactive||tty_reading||paging||background);
  if(phase==-1){activity_hide();return;}if(phase==-2)return;

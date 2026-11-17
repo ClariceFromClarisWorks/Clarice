@@ -1,0 +1,44 @@
+[
+  {
+    "command": "pwd",
+    "status": 0,
+    "text": "pwd; printf '\\nREMOTE_END_1:%d\\n' $?\r\n/\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 0.03782433299999999
+  },
+  {
+    "command": "cd /tmp; pwd",
+    "status": 0,
+    "text": "cd /tmp; pwd; printf '\\nREMOTE_END_2:%d\\n' $?\r\n/tmp\r\n\r\nREMOTE_END_2:0\r\ntmp > ",
+    "host_seconds": 0.052365417
+  },
+  {
+    "command": "REMOTE_VALUE=independent; export REMOTE_VALUE; f() { printf 'function:%s\\n' \"$1\"; }; set -- argument",
+    "status": 0,
+    "text": "REMOTE_VALUE=independent; export REMOTE_VALUE; f() { printf 'function:%s\\n' \"$1\"; }; set -- argument; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\ntmp > ",
+    "host_seconds": 0.07904820799999998
+  },
+  {
+    "command": "printf \"%s:%s\\n\" \"$REMOTE_VALUE\" \"$1\"; f yes",
+    "status": 0,
+    "text": "printf \"%s:%s\\n\" \"$REMOTE_VALUE\" \"$1\"; f yes; printf '\\nREMOTE_END_4:%d\\n' $?\r\nindependent:argument\r\nfunction:yes\r\n\r\nREMOTE_END_4:0\r\ntmp > ",
+    "host_seconds": 0.05693929200000003
+  },
+  {
+    "command": "printf 'one\\ntwo\\n' | grep two",
+    "status": 0,
+    "text": "printf 'one\\ntwo\\n' | grep two; printf '\\nREMOTE_END_5:%d\\n' $?\r\ntwo\r\n\r\nREMOTE_END_5:0\r\ntmp > ",
+    "host_seconds": 0.19029695800000002
+  },
+  {
+    "command": "printf data > /tmp/remote-test.txt; cat /tmp/remote-test.txt",
+    "status": 0,
+    "text": "printf data > /tmp/remote-test.txt; cat /tmp/remote-test.txt; printf '\\nREMOTE_END_6:%d\\n' $?\r\ndata\r\nREMOTE_END_6:0\r\ntmp > ",
+    "host_seconds": 0.12699150000000003
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=344438 largest=342448 image=8104 ticks=39 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=1 imports=1 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\ntmp > ",
+    "host_seconds": 0.04671245800000001
+  }
+]
