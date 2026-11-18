@@ -1,0 +1,217 @@
+[
+  {
+    "command": "printf '' > /tmp/bbt-empty",
+    "status": 0,
+    "text": "printf '' > /tmp/bbt-empty; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "bbwc  < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbwc  < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=357930 largest=355502 image=14032 ticks=47 load=43 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=5 FreeMem=0 NewPtr=2 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=16 validate=4 imports=1 relocations=2 prepare=3 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=17 payload=0 metadata=4 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "bbtr a-z A-Z < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbtr a-z A-Z < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=357930 largest=355502 image=14576 ticks=47 load=44 owned-peak=6568 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=7 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=17 validate=2 imports=1 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=17 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "bbcmp /tmp/bbt-empty < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbcmp /tmp/bbt-empty < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=357930 largest=355502 image=14208 ticks=55 load=43 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=6 FreeMem=0 NewPtr=1 reads=1 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=17 validate=1 imports=1 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "command": "bbsort  < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbsort  < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_9:%d\\n' $?\r\nRuntime: heap=357930 largest=355502 image=19968 ticks=50 load=47 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=5 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=19 validate=2 imports=2 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  },
+  {
+    "command": "bbsed p < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbsed p < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_11:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=42240 ticks=60 load=57 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=6 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=25 validate=4 imports=2 relocations=4 prepare=4 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=4 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "command": "bbgrep alpha < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 1,
+    "text": "bbgrep alpha < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:1\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_13:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=38304 ticks=57 load=54 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=6 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=24 validate=2 imports=2 relocations=4 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_13:0\r\n/ > "
+  },
+  {
+    "command": "bbcat  < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbcat  < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r\nREMOTE_END_14:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_15:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=13424 ticks=47 load=44 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=5 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=17 validate=2 imports=1 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_15:0\r\n/ > "
+  },
+  {
+    "command": "bbcut -c 1 < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbcut -c 1 < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r\nREMOTE_END_16:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_17:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=15408 ticks=46 load=43 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=6 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=18 validate=2 imports=1 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_17:0\r\n/ > "
+  },
+  {
+    "command": "bbhead  < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbhead  < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_19:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=13392 ticks=47 load=44 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=5 FreeMem=1 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=18 validate=4 imports=1 relocations=2 prepare=3 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=4 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_19:0\r\n/ > "
+  },
+  {
+    "command": "bbtail  < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbtail  < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\r\nREMOTE_END_20:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_21:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=16672 ticks=49 load=46 owned-peak=5772 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=7 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=19 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_21:0\r\n/ > "
+  },
+  {
+    "command": "bbuniq  < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbuniq  < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_22:%d\\n' $?\r\n\r\nREMOTE_END_22:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_23:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=14512 ticks=48 load=45 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=5 FreeMem=1 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=1 meta-alloc=0\r\nLoader ticks: read=17 validate=2 imports=2 relocations=1 prepare=6 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=17 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_23:0\r\n/ > "
+  },
+  {
+    "command": "bbtee  < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbtee  < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r\nREMOTE_END_24:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_25:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=14720 ticks=47 load=45 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=5 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=17 validate=2 imports=2 relocations=1 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_25:0\r\n/ > "
+  },
+  {
+    "command": "bbcksum  < /tmp/bbt-empty > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbcksum  < /tmp/bbt-empty > /tmp/bbt-out; printf '\\nREMOTE_END_26:%d\\n' $?\r\n\r\nREMOTE_END_26:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_27:%d\\n' $?\r\nRuntime: heap=357916 largest=355502 image=14720 ticks=51 load=46 owned-peak=6768 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=6 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=18 validate=3 imports=2 relocations=1 prepare=4 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_27:0\r\n/ > "
+  },
+  {
+    "command": "bbtail -c 100 < /tmp/bbt-binary.dat > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbtail -c 100 < /tmp/bbt-binary.dat > /tmp/bbt-candidate; printf '\\nREMOTE_END_28:%d\\n' $?\r\n\r\nREMOTE_END_28:0\r\n/ > "
+  },
+  {
+    "command": "tail -c 100 < /tmp/bbt-binary.dat > /tmp/bbt-reference",
+    "status": 0,
+    "text": "tail -c 100 < /tmp/bbt-binary.dat > /tmp/bbt-reference; printf '\\nREMOTE_END_29:%d\\n' $?\r\n\r\nREMOTE_END_29:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-candidate /tmp/bbt-reference",
+    "status": 0,
+    "text": "cmp /tmp/bbt-candidate /tmp/bbt-reference; printf '\\nREMOTE_END_30:%d\\n' $?\r\n\r\nREMOTE_END_30:0\r\n/ > "
+  },
+  {
+    "command": "printf 'alpha\\nbeta\\n' | bbgrep alpha | bbwc -l",
+    "status": 0,
+    "text": "printf 'alpha\\nbeta\\n' | bbgrep alpha | bbwc -l; printf '\\nREMOTE_END_31:%d\\n' $?\r\n1\r\n\r\nREMOTE_END_31:0\r\n/ > "
+  },
+  {
+    "command": "cp /tmp/bbt-small.txt /tmp/bbt-locked",
+    "status": 0,
+    "text": "cp /tmp/bbt-small.txt /tmp/bbt-locked; printf '\\nREMOTE_END_32:%d\\n' $?\r\n\r\nREMOTE_END_32:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr --locked on /tmp/bbt-locked",
+    "status": 0,
+    "text": "hfsattr --locked on /tmp/bbt-locked; printf '\\nREMOTE_END_33:%d\\n' $?\r\n\r\nREMOTE_END_33:0\r\n/ > "
+  },
+  {
+    "command": "bbtee /tmp/bbt-locked < /tmp/bbt-ordinary.txt > /tmp/bbt-out",
+    "status": 1,
+    "text": "bbtee /tmp/bbt-locked < /tmp/bbt-ordinary.txt > /tmp/bbt-out; printf '\\nREMOTE_END_34:%d\\n' $?\r\ntee: /tmp/bbt-locked: Permission denied\r\n\r\nREMOTE_END_34:1\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-locked /tmp/bbt-small.txt",
+    "status": 0,
+    "text": "cmp /tmp/bbt-locked /tmp/bbt-small.txt; printf '\\nREMOTE_END_35:%d\\n' $?\r\n\r\nREMOTE_END_35:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr --locked off /tmp/bbt-locked",
+    "status": 0,
+    "text": "hfsattr --locked off /tmp/bbt-locked; printf '\\nREMOTE_END_36:%d\\n' $?\r\n\r\nREMOTE_END_36:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/bbt-pressure http://192.168.1.112:8097/sort-pressure.txt",
+    "status": 0,
+    "text": "wget -O /tmp/bbt-pressure http://192.168.1.112:8097/sort-pressure.txt; printf '\\nREMOTE_END_37:%d\\n' $?\r\n\r[                                                  ]   0% 1.82 KiB / 256.00 KiB\u001b[K\r[===                                  ]  10% 25.82 KiB / 256.00 KiB 25.82 KiB/s\u001b[K\r[=======                              ]  19% 49.82 KiB / 256.00 KiB 24.91 KiB/s\u001b[K\r[==========                           ]  28% 73.82 KiB / 256.00 KiB 24.60 KiB/s\u001b[K\r[==============                       ]  38% 97.82 KiB / 256.00 KiB 24.45 KiB/s\u001b[K\r[================                    ]  47% 121.82 KiB / 256.00 KiB 24.36 KiB/s\u001b[K\r[====================                ]  56% 143.82 KiB / 256.00 KiB 23.97 KiB/s\u001b[K\r[=======================             ]  64% 165.82 KiB / 256.00 KiB 23.69 KiB/s\u001b[K\r[==========================          ]  73% 187.82 KiB / 256.00 KiB 23.48 KiB/s\u001b[K\r[=============================       ]  81% 207.82 KiB / 256.00 KiB 23.09 KiB/s\u001b[K\r[===============================     ]  88% 227.82 KiB / 256.00 KiB 22.78 KiB/s\u001b[K\r[==================================  ]  97% 249.82 KiB / 256.00 KiB 22.71 KiB/s\u001b[K\r[====================================] 100% 256.00 KiB / 256.00 KiB 23.27 KiB/s\u001b[K\r\nDownloaded 256.00 KB to /tmp/bbt-pressure\r\n\r\nREMOTE_END_37:0\r\n/ > "
+  },
+  {
+    "command": "time bbsort /tmp/bbt-pressure > /tmp/bbt-pressure-out; pressure_status=$?; status runtime; printf \"PRESSURE_STATUS=%s\\n\" \"$pressure_status\"",
+    "status": 0,
+    "text": "time bbsort /tmp/bbt-pressure > /tmp/bbt-pressure-out; pressure_status=$?; status runtime; printf \"PRESSURE_STATUS=%s\\n\" \"$pressure_status\"; printf '\\nREMOTE_END_38:%d\\n' $?\r\nsort: out of memory\r\nreal 17.16 s\r\nRuntime: heap=355882 largest=355502 image=19968 ticks=1014 load=45 owned-peak=300684 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=178 FreeMem=5 NewPtr=57 reads=257 read=87 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=19 validate=1 imports=1 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=17 payload=0 metadata=1 structure=2 (structure included in relocations)\r\nPRESSURE_STATUS=2\r\n\r\nREMOTE_END_38:0\r\n/ > "
+  },
+  {
+    "command": "time sort /tmp/bbt-pressure > /tmp/bbt-pressure-out; pressure_status=$?; status runtime; printf \"PRESSURE_STATUS=%s\\n\" \"$pressure_status\"",
+    "status": 0,
+    "text": "time sort /tmp/bbt-pressure > /tmp/bbt-pressure-out; pressure_status=$?; status runtime; printf \"PRESSURE_STATUS=%s\\n\" \"$pressure_status\"; printf '\\nREMOTE_END_39:%d\\n' $?\r\nreal 263.40 s\r\nRuntime: heap=355894 largest=355502 image=30360 ticks=15787 load=50 owned-peak=25964 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=271 FreeMem=11 NewPtr=87 reads=3648 read=1869 stdio=0 image-alloc=0 meta-alloc=1\r\nLoader ticks: read=21 validate=2 imports=1 relocations=3 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=18 payload=0 metadata=2 structure=2 (structure included in relocations)\r\nPRESSURE_STATUS=0\r\n\r\nREMOTE_END_39:0\r\n/ > "
+  },
+  {
+    "command": "sort -c /tmp/bbt-pressure-out",
+    "status": 0,
+    "text": "sort -c /tmp/bbt-pressure-out; printf '\\nREMOTE_END_40:%d\\n' $?\r\n\r\nREMOTE_END_40:0\r\n/ > "
+  },
+  {
+    "command": "wc -c < /tmp/bbt-pressure-out",
+    "status": 0,
+    "text": "wc -c < /tmp/bbt-pressure-out; printf '\\nREMOTE_END_41:%d\\n' $?\r\n262144\r\n\r\nREMOTE_END_41:0\r\n/ > "
+  },
+  {
+    "command": "bbwc -c < /tmp/bbt-small.txt",
+    "status": 0,
+    "text": "bbwc -c < /tmp/bbt-small.txt; printf '\\nREMOTE_END_42:%d\\n' $?\r\n512\r\n\r\nREMOTE_END_42:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_43:%d\\n' $?\r\nRuntime: heap=357892 largest=355502 image=14032 ticks=44 load=37 owned-peak=5716 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=5 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=13 validate=2 imports=2 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=14 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_43:0\r\n/ > "
+  }
+]

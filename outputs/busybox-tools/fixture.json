@@ -1,0 +1,17 @@
+{
+  "branch": "codex/busybox-tools-comparison-20261118",
+  "base": "d9bf254",
+  "model": "Macintosh Plus",
+  "ram": 4194304,
+  "system_reported": "6.0.8",
+  "core": 2026111823,
+  "telnetd": 2026111814,
+  "app": "org.clarice.BusyboxToolsSnow",
+  "pid": 54434,
+  "telnet_forward": "23243,10.0.0.2:2323",
+  "repository_port": 8097,
+  "physical_hardware_used": false,
+  "completed": true,
+  "guest_closed": true,
+  "private_http_stopped": true
+}

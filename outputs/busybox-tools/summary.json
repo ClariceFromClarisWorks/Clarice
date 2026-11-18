@@ -1,0 +1,2211 @@
+[
+  {
+    "workload": "wc-bytes",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        14.06,
+        13.8,
+        13.8
+      ],
+      "median": 13.8,
+      "repeat_median": 13.8,
+      "peak": 1620,
+      "image": 9800,
+      "loads": [
+        42,
+        33,
+        32
+      ],
+      "heap": [
+        355846,
+        355860,
+        355860
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        7.6,
+        7.31,
+        7.33
+      ],
+      "median": 7.33,
+      "repeat_median": 7.32,
+      "peak": 5716,
+      "image": 14032,
+      "loads": [
+        46,
+        34,
+        37
+      ],
+      "heap": [
+        355838,
+        355836,
+        355830
+      ]
+    },
+    "busybox_reduction_percent": 46.9
+  },
+  {
+    "workload": "tr",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        47.15,
+        47.01,
+        47.06
+      ],
+      "median": 47.06,
+      "repeat_median": 47.035,
+      "peak": 3668,
+      "image": 25300,
+      "loads": [
+        36,
+        36,
+        37
+      ],
+      "heap": [
+        355756,
+        355762,
+        355762
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        4.06,
+        4.2,
+        4.18
+      ],
+      "median": 4.18,
+      "repeat_median": 4.1899999999999995,
+      "peak": 6568,
+      "image": 14576,
+      "loads": [
+        30,
+        37,
+        34
+      ],
+      "heap": [
+        355746,
+        355746,
+        355746
+      ]
+    },
+    "busybox_reduction_percent": 91.1
+  },
+  {
+    "workload": "wc-all",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        13.81,
+        13.81,
+        13.8
+      ],
+      "median": 13.81,
+      "repeat_median": 13.805,
+      "peak": 1620,
+      "image": 9800,
+      "loads": [
+        34,
+        34,
+        33
+      ],
+      "heap": [
+        355950,
+        355950,
+        355950
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        7.33,
+        7.35,
+        7.33
+      ],
+      "median": 7.33,
+      "repeat_median": 7.34,
+      "peak": 5716,
+      "image": 14032,
+      "loads": [
+        35,
+        36,
+        37
+      ],
+      "heap": [
+        355936,
+        355942,
+        355942
+      ]
+    },
+    "busybox_reduction_percent": 46.9
+  },
+  {
+    "workload": "cmp",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        10.81,
+        10.75,
+        10.85
+      ],
+      "median": 10.81,
+      "repeat_median": 10.8,
+      "peak": 4748,
+      "image": 8508,
+      "loads": [
+        33,
+        29,
+        33
+      ],
+      "heap": [
+        355880,
+        355876,
+        355876
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        10.51,
+        10.55,
+        10.55
+      ],
+      "median": 10.55,
+      "repeat_median": 10.55,
+      "peak": 5716,
+      "image": 14208,
+      "loads": [
+        37,
+        36,
+        36
+      ],
+      "heap": [
+        355886,
+        355886,
+        355886
+      ]
+    },
+    "busybox_reduction_percent": 2.4
+  },
+  {
+    "workload": "sort",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        50.46,
+        51.33,
+        50.48
+      ],
+      "median": 50.48,
+      "repeat_median": 50.905,
+      "peak": 25964,
+      "image": 30360,
+      "loads": [
+        42,
+        39,
+        39
+      ],
+      "heap": [
+        356018,
+        356018,
+        356018
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        16.66,
+        16.7,
+        16.63
+      ],
+      "median": 16.66,
+      "repeat_median": 16.665,
+      "peak": 157324,
+      "image": 19968,
+      "loads": [
+        38,
+        38,
+        34
+      ],
+      "heap": [
+        356004,
+        356010,
+        356010
+      ]
+    },
+    "busybox_reduction_percent": 67.0
+  },
+  {
+    "workload": "sed",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        47.11,
+        47.33,
+        47.36
+      ],
+      "median": 47.33,
+      "repeat_median": 47.345,
+      "peak": 13464,
+      "image": 46260,
+      "loads": [
+        48,
+        48,
+        49
+      ],
+      "heap": [
+        355886,
+        355886,
+        355882
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        48.08,
+        48.2,
+        48.05
+      ],
+      "median": 48.08,
+      "repeat_median": 48.125,
+      "peak": 13180,
+      "image": 42240,
+      "loads": [
+        46,
+        46,
+        48
+      ],
+      "heap": [
+        355886,
+        355886,
+        355884
+      ]
+    },
+    "busybox_reduction_percent": -1.6
+  },
+  {
+    "workload": "grep-fixed",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        8.43,
+        8.43,
+        8.41
+      ],
+      "median": 8.43,
+      "repeat_median": 8.42,
+      "peak": 6824,
+      "image": 32708,
+      "loads": [
+        43,
+        43,
+        43
+      ],
+      "heap": [
+        355800,
+        355830,
+        355830
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        11.13,
+        11.15,
+        11.16
+      ],
+      "median": 11.15,
+      "repeat_median": 11.155000000000001,
+      "peak": 6540,
+      "image": 38304,
+      "loads": [
+        44,
+        46,
+        45
+      ],
+      "heap": [
+        355814,
+        355814,
+        355814
+      ]
+    },
+    "busybox_reduction_percent": -32.3
+  },
+  {
+    "workload": "grep-regex",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        21.53,
+        21.51,
+        21.58
+      ],
+      "median": 21.53,
+      "repeat_median": 21.545,
+      "peak": 12996,
+      "image": 32708,
+      "loads": [
+        43,
+        43,
+        45
+      ],
+      "heap": [
+        355794,
+        355800,
+        355796
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        21.71,
+        21.73,
+        21.73
+      ],
+      "median": 21.73,
+      "repeat_median": 21.73,
+      "peak": 12440,
+      "image": 38304,
+      "loads": [
+        44,
+        44,
+        44
+      ],
+      "heap": [
+        355788,
+        355796,
+        355796
+      ]
+    },
+    "busybox_reduction_percent": -0.9
+  },
+  {
+    "workload": "cat",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        1.95,
+        1.95,
+        1.95
+      ],
+      "median": 1.95,
+      "repeat_median": 1.95,
+      "peak": 0,
+      "image": 8104,
+      "loads": [
+        35,
+        33,
+        34
+      ],
+      "heap": [
+        356018,
+        356018,
+        356018
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.86,
+        1.88,
+        1.86
+      ],
+      "median": 1.86,
+      "repeat_median": 1.87,
+      "peak": 5716,
+      "image": 13424,
+      "loads": [
+        36,
+        35,
+        36
+      ],
+      "heap": [
+        356018,
+        356018,
+        356018
+      ]
+    },
+    "busybox_reduction_percent": 4.6
+  },
+  {
+    "workload": "cut",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        12.75,
+        12.65,
+        12.75
+      ],
+      "median": 12.75,
+      "repeat_median": 12.7,
+      "peak": 4492,
+      "image": 12240,
+      "loads": [
+        35,
+        31,
+        37
+      ],
+      "heap": [
+        355642,
+        355642,
+        355632
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        17.85,
+        17.88,
+        17.9
+      ],
+      "median": 17.88,
+      "repeat_median": 17.89,
+      "peak": 8588,
+      "image": 15408,
+      "loads": [
+        37,
+        37,
+        38
+      ],
+      "heap": [
+        355628,
+        355640,
+        355632
+      ]
+    },
+    "busybox_reduction_percent": -40.2
+  },
+  {
+    "workload": "head",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        1.06,
+        1.05,
+        1.05
+      ],
+      "median": 1.05,
+      "repeat_median": 1.05,
+      "peak": 4492,
+      "image": 9708,
+      "loads": [
+        34,
+        34,
+        34
+      ],
+      "heap": [
+        355830,
+        355830,
+        355830
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.23,
+        1.25,
+        1.25
+      ],
+      "median": 1.25,
+      "repeat_median": 1.25,
+      "peak": 5716,
+      "image": 13392,
+      "loads": [
+        38,
+        38,
+        36
+      ],
+      "heap": [
+        355830,
+        355830,
+        355830
+      ]
+    },
+    "busybox_reduction_percent": -19.0
+  },
+  {
+    "workload": "tail",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        1.98,
+        1.9,
+        1.98
+      ],
+      "median": 1.98,
+      "repeat_median": 1.94,
+      "peak": 9868,
+      "image": 11480,
+      "loads": [
+        36,
+        32,
+        35
+      ],
+      "heap": [
+        355830,
+        355830,
+        355830
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        3.01,
+        3.03,
+        3.0
+      ],
+      "median": 3.01,
+      "repeat_median": 3.0149999999999997,
+      "peak": 9128,
+      "image": 16672,
+      "loads": [
+        37,
+        38,
+        37
+      ],
+      "heap": [
+        355830,
+        355830,
+        355830
+      ]
+    },
+    "busybox_reduction_percent": -52.0
+  },
+  {
+    "workload": "uniq",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        8.05,
+        8.03,
+        7.93
+      ],
+      "median": 8.03,
+      "repeat_median": 7.9799999999999995,
+      "peak": 6540,
+      "image": 10388,
+      "loads": [
+        34,
+        36,
+        30
+      ],
+      "heap": [
+        356018,
+        356018,
+        356018
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        11.48,
+        11.53,
+        11.53
+      ],
+      "median": 11.53,
+      "repeat_median": 11.53,
+      "peak": 6540,
+      "image": 14512,
+      "loads": [
+        34,
+        37,
+        38
+      ],
+      "heap": [
+        356004,
+        356010,
+        356010
+      ]
+    },
+    "busybox_reduction_percent": -43.6
+  },
+  {
+    "workload": "tee",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        2.61,
+        2.63,
+        2.61
+      ],
+      "median": 2.61,
+      "repeat_median": 2.62,
+      "peak": 3668,
+      "image": 8392,
+      "loads": [
+        32,
+        32,
+        32
+      ],
+      "heap": [
+        355936,
+        355938,
+        355940
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        2.73,
+        2.71,
+        2.71
+      ],
+      "median": 2.71,
+      "repeat_median": 2.71,
+      "peak": 5716,
+      "image": 14720,
+      "loads": [
+        36,
+        34,
+        35
+      ],
+      "heap": [
+        355920,
+        355928,
+        355920
+      ]
+    },
+    "busybox_reduction_percent": -3.8
+  },
+  {
+    "workload": "cksum",
+    "size": "large",
+    "existing": {
+      "seconds": [
+        3.55,
+        3.53,
+        3.56
+      ],
+      "median": 3.55,
+      "repeat_median": 3.545,
+      "peak": 1620,
+      "image": 9572,
+      "loads": [
+        34,
+        33,
+        34
+      ],
+      "heap": [
+        355928,
+        355934,
+        355932
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        3.48,
+        3.51,
+        3.5
+      ],
+      "median": 3.5,
+      "repeat_median": 3.505,
+      "peak": 6768,
+      "image": 14720,
+      "loads": [
+        35,
+        35,
+        35
+      ],
+      "heap": [
+        355928,
+        355934,
+        355928
+      ]
+    },
+    "busybox_reduction_percent": 1.4
+  },
+  {
+    "workload": "wc-bytes",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        2.4,
+        2.4,
+        2.4
+      ],
+      "median": 2.4,
+      "repeat_median": 2.4,
+      "peak": 1620,
+      "image": 9800,
+      "loads": [
+        33,
+        32,
+        35
+      ],
+      "heap": [
+        355824,
+        355848,
+        355848
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.65,
+        1.65,
+        1.65
+      ],
+      "median": 1.65,
+      "repeat_median": 1.65,
+      "peak": 5716,
+      "image": 14032,
+      "loads": [
+        35,
+        35,
+        35
+      ],
+      "heap": [
+        355844,
+        355848,
+        355848
+      ]
+    },
+    "busybox_reduction_percent": 31.2
+  },
+  {
+    "workload": "tr",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        6.61,
+        6.56,
+        6.61
+      ],
+      "median": 6.61,
+      "repeat_median": 6.585,
+      "peak": 3668,
+      "image": 25300,
+      "loads": [
+        36,
+        38,
+        38
+      ],
+      "heap": [
+        355738,
+        355746,
+        355746
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.18,
+        1.26,
+        1.25
+      ],
+      "median": 1.25,
+      "repeat_median": 1.255,
+      "peak": 6568,
+      "image": 14576,
+      "loads": [
+        30,
+        35,
+        36
+      ],
+      "heap": [
+        355746,
+        355746,
+        355746
+      ]
+    },
+    "busybox_reduction_percent": 81.1
+  },
+  {
+    "workload": "wc-all",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        2.4,
+        2.41,
+        2.33
+      ],
+      "median": 2.4,
+      "repeat_median": 2.37,
+      "peak": 1620,
+      "image": 9800,
+      "loads": [
+        32,
+        32,
+        29
+      ],
+      "heap": [
+        355934,
+        355934,
+        355934
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.65,
+        1.66,
+        1.66
+      ],
+      "median": 1.66,
+      "repeat_median": 1.66,
+      "peak": 5716,
+      "image": 14032,
+      "loads": [
+        35,
+        35,
+        36
+      ],
+      "heap": [
+        355934,
+        355934,
+        355934
+      ]
+    },
+    "busybox_reduction_percent": 30.8
+  },
+  {
+    "workload": "cmp",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        2.25,
+        2.25,
+        2.26
+      ],
+      "median": 2.25,
+      "repeat_median": 2.255,
+      "peak": 4748,
+      "image": 8508,
+      "loads": [
+        35,
+        35,
+        33
+      ],
+      "heap": [
+        355864,
+        355860,
+        355854
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        2.28,
+        2.26,
+        2.3
+      ],
+      "median": 2.28,
+      "repeat_median": 2.28,
+      "peak": 5716,
+      "image": 14208,
+      "loads": [
+        37,
+        36,
+        37
+      ],
+      "heap": [
+        355870,
+        355870,
+        355870
+      ]
+    },
+    "busybox_reduction_percent": -1.3
+  },
+  {
+    "workload": "sort",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        2.63,
+        2.61,
+        2.63
+      ],
+      "median": 2.63,
+      "repeat_median": 2.62,
+      "peak": 22924,
+      "image": 30360,
+      "loads": [
+        41,
+        41,
+        41
+      ],
+      "heap": [
+        356002,
+        356002,
+        356002
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        2.8,
+        2.81,
+        2.83
+      ],
+      "median": 2.81,
+      "repeat_median": 2.8200000000000003,
+      "peak": 23756,
+      "image": 19968,
+      "loads": [
+        38,
+        40,
+        41
+      ],
+      "heap": [
+        356002,
+        356002,
+        356002
+      ]
+    },
+    "busybox_reduction_percent": -6.8
+  },
+  {
+    "workload": "sed",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        7.03,
+        6.98,
+        6.91
+      ],
+      "median": 6.98,
+      "repeat_median": 6.945,
+      "peak": 13464,
+      "image": 46260,
+      "loads": [
+        48,
+        48,
+        44
+      ],
+      "heap": [
+        355880,
+        355886,
+        355872
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        7.05,
+        7.06,
+        7.08
+      ],
+      "median": 7.06,
+      "repeat_median": 7.07,
+      "peak": 13180,
+      "image": 42240,
+      "loads": [
+        46,
+        46,
+        47
+      ],
+      "heap": [
+        355882,
+        355882,
+        355882
+      ]
+    },
+    "busybox_reduction_percent": -1.1
+  },
+  {
+    "workload": "grep-fixed",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        2.01,
+        2.01,
+        2.03
+      ],
+      "median": 2.01,
+      "repeat_median": 2.0199999999999996,
+      "peak": 6824,
+      "image": 32708,
+      "loads": [
+        43,
+        44,
+        43
+      ],
+      "heap": [
+        355784,
+        355810,
+        355812
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        2.38,
+        2.38,
+        2.31
+      ],
+      "median": 2.38,
+      "repeat_median": 2.3449999999999998,
+      "peak": 6540,
+      "image": 38304,
+      "loads": [
+        46,
+        46,
+        40
+      ],
+      "heap": [
+        355810,
+        355812,
+        355812
+      ]
+    },
+    "busybox_reduction_percent": -18.4
+  },
+  {
+    "workload": "grep-regex",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        3.71,
+        3.68,
+        3.73
+      ],
+      "median": 3.71,
+      "repeat_median": 3.705,
+      "peak": 12996,
+      "image": 32708,
+      "loads": [
+        44,
+        43,
+        44
+      ],
+      "heap": [
+        355772,
+        355784,
+        355784
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        3.73,
+        3.75,
+        3.66
+      ],
+      "median": 3.73,
+      "repeat_median": 3.705,
+      "peak": 12440,
+      "image": 38304,
+      "loads": [
+        45,
+        46,
+        39
+      ],
+      "heap": [
+        355784,
+        355784,
+        355784
+      ]
+    },
+    "busybox_reduction_percent": -0.5
+  },
+  {
+    "workload": "cat",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        0.9,
+        0.95,
+        1.01
+      ],
+      "median": 0.95,
+      "repeat_median": 0.98,
+      "peak": 0,
+      "image": 8104,
+      "loads": [
+        29,
+        31,
+        34
+      ],
+      "heap": [
+        356014,
+        356014,
+        356014
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.0,
+        1.1,
+        1.08
+      ],
+      "median": 1.08,
+      "repeat_median": 1.09,
+      "peak": 5716,
+      "image": 13424,
+      "loads": [
+        31,
+        36,
+        37
+      ],
+      "heap": [
+        356000,
+        356002,
+        355994
+      ]
+    },
+    "busybox_reduction_percent": -13.7
+  },
+  {
+    "workload": "cut",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        2.48,
+        2.43,
+        2.33
+      ],
+      "median": 2.43,
+      "repeat_median": 2.38,
+      "peak": 4492,
+      "image": 12240,
+      "loads": [
+        35,
+        35,
+        30
+      ],
+      "heap": [
+        355614,
+        355612,
+        355622
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        3.11,
+        3.1,
+        3.13
+      ],
+      "median": 3.11,
+      "repeat_median": 3.115,
+      "peak": 8588,
+      "image": 15408,
+      "loads": [
+        36,
+        37,
+        36
+      ],
+      "heap": [
+        355612,
+        355622,
+        355612
+      ]
+    },
+    "busybox_reduction_percent": -28.0
+  },
+  {
+    "workload": "head",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        1.06,
+        1.05,
+        1.05
+      ],
+      "median": 1.05,
+      "repeat_median": 1.05,
+      "peak": 4492,
+      "image": 9708,
+      "loads": [
+        36,
+        34,
+        35
+      ],
+      "heap": [
+        355800,
+        355814,
+        355814
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.23,
+        1.23,
+        1.23
+      ],
+      "median": 1.23,
+      "repeat_median": 1.23,
+      "peak": 5716,
+      "image": 13392,
+      "loads": [
+        37,
+        38,
+        37
+      ],
+      "heap": [
+        355814,
+        355814,
+        355814
+      ]
+    },
+    "busybox_reduction_percent": -17.1
+  },
+  {
+    "workload": "tail",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        1.11,
+        1.13,
+        1.11
+      ],
+      "median": 1.11,
+      "repeat_median": 1.12,
+      "peak": 9868,
+      "image": 11480,
+      "loads": [
+        36,
+        37,
+        37
+      ],
+      "heap": [
+        355814,
+        355814,
+        355814
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.26,
+        1.26,
+        1.26
+      ],
+      "median": 1.26,
+      "repeat_median": 1.26,
+      "peak": 9128,
+      "image": 16672,
+      "loads": [
+        39,
+        39,
+        38
+      ],
+      "heap": [
+        355814,
+        355814,
+        355814
+      ]
+    },
+    "busybox_reduction_percent": -13.5
+  },
+  {
+    "workload": "uniq",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        1.85,
+        1.83,
+        1.83
+      ],
+      "median": 1.83,
+      "repeat_median": 1.83,
+      "peak": 6540,
+      "image": 10388,
+      "loads": [
+        36,
+        34,
+        35
+      ],
+      "heap": [
+        356002,
+        356002,
+        356002
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        2.31,
+        2.3,
+        2.3
+      ],
+      "median": 2.3,
+      "repeat_median": 2.3,
+      "peak": 6540,
+      "image": 14512,
+      "loads": [
+        37,
+        38,
+        38
+      ],
+      "heap": [
+        356002,
+        356002,
+        356002
+      ]
+    },
+    "busybox_reduction_percent": -25.7
+  },
+  {
+    "workload": "tee",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        1.0,
+        1.0,
+        0.98
+      ],
+      "median": 1.0,
+      "repeat_median": 0.99,
+      "peak": 3668,
+      "image": 8392,
+      "loads": [
+        34,
+        34,
+        34
+      ],
+      "heap": [
+        355924,
+        355934,
+        355932
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.06,
+        1.05,
+        1.08
+      ],
+      "median": 1.06,
+      "repeat_median": 1.065,
+      "peak": 5716,
+      "image": 14720,
+      "loads": [
+        36,
+        35,
+        36
+      ],
+      "heap": [
+        355928,
+        355934,
+        355928
+      ]
+    },
+    "busybox_reduction_percent": -6.0
+  },
+  {
+    "workload": "cksum",
+    "size": "ordinary",
+    "existing": {
+      "seconds": [
+        1.11,
+        1.15,
+        1.13
+      ],
+      "median": 1.13,
+      "repeat_median": 1.14,
+      "peak": 1620,
+      "image": 9572,
+      "loads": [
+        33,
+        34,
+        34
+      ],
+      "heap": [
+        355934,
+        355928,
+        355934
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.21,
+        1.21,
+        1.21
+      ],
+      "median": 1.21,
+      "repeat_median": 1.21,
+      "peak": 6768,
+      "image": 14720,
+      "loads": [
+        36,
+        36,
+        36
+      ],
+      "heap": [
+        355930,
+        355934,
+        355930
+      ]
+    },
+    "busybox_reduction_percent": -7.1
+  },
+  {
+    "workload": "wc-bytes",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        0.9,
+        0.86,
+        0.88
+      ],
+      "median": 0.88,
+      "repeat_median": 0.87,
+      "peak": 1620,
+      "image": 9800,
+      "loads": [
+        35,
+        32,
+        35
+      ],
+      "heap": [
+        355834,
+        355846,
+        355848
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        0.9,
+        0.78,
+        0.9
+      ],
+      "median": 0.9,
+      "repeat_median": 0.8400000000000001,
+      "peak": 5716,
+      "image": 14032,
+      "loads": [
+        36,
+        31,
+        36
+      ],
+      "heap": [
+        355848,
+        355848,
+        355848
+      ]
+    },
+    "busybox_reduction_percent": -2.3
+  },
+  {
+    "workload": "tr",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.2,
+        1.2,
+        1.2
+      ],
+      "median": 1.2,
+      "repeat_median": 1.2,
+      "peak": 3668,
+      "image": 25300,
+      "loads": [
+        36,
+        38,
+        38
+      ],
+      "heap": [
+        355748,
+        355754,
+        355762
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        0.86,
+        0.88,
+        0.85
+      ],
+      "median": 0.86,
+      "repeat_median": 0.865,
+      "peak": 6568,
+      "image": 14576,
+      "loads": [
+        37,
+        36,
+        35
+      ],
+      "heap": [
+        355740,
+        355746,
+        355736
+      ]
+    },
+    "busybox_reduction_percent": 28.3
+  },
+  {
+    "workload": "wc-all",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        0.86,
+        0.86,
+        0.81
+      ],
+      "median": 0.86,
+      "repeat_median": 0.835,
+      "peak": 1620,
+      "image": 9800,
+      "loads": [
+        33,
+        33,
+        30
+      ],
+      "heap": [
+        355950,
+        355950,
+        355950
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        0.88,
+        0.88,
+        0.91
+      ],
+      "median": 0.88,
+      "repeat_median": 0.895,
+      "peak": 5716,
+      "image": 14032,
+      "loads": [
+        35,
+        35,
+        37
+      ],
+      "heap": [
+        355936,
+        355942,
+        355942
+      ]
+    },
+    "busybox_reduction_percent": -2.3
+  },
+  {
+    "workload": "cmp",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.08,
+        1.1,
+        1.08
+      ],
+      "median": 1.08,
+      "repeat_median": 1.09,
+      "peak": 4748,
+      "image": 8508,
+      "loads": [
+        33,
+        35,
+        34
+      ],
+      "heap": [
+        355880,
+        355876,
+        355876
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.18,
+        1.16,
+        1.06
+      ],
+      "median": 1.16,
+      "repeat_median": 1.1099999999999999,
+      "peak": 5716,
+      "image": 14208,
+      "loads": [
+        36,
+        37,
+        31
+      ],
+      "heap": [
+        355886,
+        355886,
+        355886
+      ]
+    },
+    "busybox_reduction_percent": -7.4
+  },
+  {
+    "workload": "sort",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.1,
+        1.11,
+        1.05
+      ],
+      "median": 1.1,
+      "repeat_median": 1.08,
+      "peak": 6540,
+      "image": 30360,
+      "loads": [
+        40,
+        42,
+        38
+      ],
+      "heap": [
+        356018,
+        356018,
+        356018
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.11,
+        1.13,
+        1.05
+      ],
+      "median": 1.11,
+      "repeat_median": 1.0899999999999999,
+      "peak": 6828,
+      "image": 19968,
+      "loads": [
+        39,
+        40,
+        35
+      ],
+      "heap": [
+        356004,
+        356010,
+        356010
+      ]
+    },
+    "busybox_reduction_percent": -0.9
+  },
+  {
+    "workload": "sed",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.63,
+        1.63,
+        1.53
+      ],
+      "median": 1.63,
+      "repeat_median": 1.58,
+      "peak": 13464,
+      "image": 46260,
+      "loads": [
+        50,
+        50,
+        44
+      ],
+      "heap": [
+        355886,
+        355886,
+        355882
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.55,
+        1.55,
+        1.56
+      ],
+      "median": 1.55,
+      "repeat_median": 1.5550000000000002,
+      "peak": 13180,
+      "image": 42240,
+      "loads": [
+        46,
+        47,
+        48
+      ],
+      "heap": [
+        355886,
+        355886,
+        355884
+      ]
+    },
+    "busybox_reduction_percent": 4.9
+  },
+  {
+    "workload": "grep-fixed",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.16,
+        1.16,
+        1.18
+      ],
+      "median": 1.16,
+      "repeat_median": 1.17,
+      "peak": 6824,
+      "image": 32708,
+      "loads": [
+        45,
+        45,
+        45
+      ],
+      "heap": [
+        355804,
+        355814,
+        355814
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.21,
+        1.2,
+        1.21
+      ],
+      "median": 1.21,
+      "repeat_median": 1.205,
+      "peak": 6540,
+      "image": 38304,
+      "loads": [
+        46,
+        46,
+        46
+      ],
+      "heap": [
+        355814,
+        355806,
+        355814
+      ]
+    },
+    "busybox_reduction_percent": -4.3
+  },
+  {
+    "workload": "grep-regex",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.33,
+        1.33,
+        1.31
+      ],
+      "median": 1.33,
+      "repeat_median": 1.32,
+      "peak": 12996,
+      "image": 32708,
+      "loads": [
+        45,
+        44,
+        43
+      ],
+      "heap": [
+        355778,
+        355800,
+        355800
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.33,
+        1.35,
+        1.36
+      ],
+      "median": 1.35,
+      "repeat_median": 1.355,
+      "peak": 12440,
+      "image": 38304,
+      "loads": [
+        44,
+        44,
+        45
+      ],
+      "heap": [
+        355796,
+        355794,
+        355792
+      ]
+    },
+    "busybox_reduction_percent": -1.5
+  },
+  {
+    "workload": "cat",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        0.88,
+        0.9,
+        0.88
+      ],
+      "median": 0.88,
+      "repeat_median": 0.89,
+      "peak": 0,
+      "image": 8104,
+      "loads": [
+        35,
+        34,
+        34
+      ],
+      "heap": [
+        356018,
+        356018,
+        356018
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.0,
+        0.98,
+        1.0
+      ],
+      "median": 1.0,
+      "repeat_median": 0.99,
+      "peak": 5716,
+      "image": 13424,
+      "loads": [
+        37,
+        38,
+        37
+      ],
+      "heap": [
+        356004,
+        356010,
+        356010
+      ]
+    },
+    "busybox_reduction_percent": -13.6
+  },
+  {
+    "workload": "cut",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.03,
+        1.03,
+        1.05
+      ],
+      "median": 1.03,
+      "repeat_median": 1.04,
+      "peak": 4492,
+      "image": 12240,
+      "loads": [
+        36,
+        35,
+        35
+      ],
+      "heap": [
+        355642,
+        355642,
+        355632
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.13,
+        1.13,
+        1.13
+      ],
+      "median": 1.13,
+      "repeat_median": 1.13,
+      "peak": 8588,
+      "image": 15408,
+      "loads": [
+        38,
+        38,
+        38
+      ],
+      "heap": [
+        355612,
+        355626,
+        355618
+      ]
+    },
+    "busybox_reduction_percent": -9.7
+  },
+  {
+    "workload": "head",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.01,
+        0.98,
+        1.0
+      ],
+      "median": 1.0,
+      "repeat_median": 0.99,
+      "peak": 4492,
+      "image": 9708,
+      "loads": [
+        37,
+        35,
+        37
+      ],
+      "heap": [
+        355830,
+        355830,
+        355830
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.08,
+        1.08,
+        1.06
+      ],
+      "median": 1.08,
+      "repeat_median": 1.07,
+      "peak": 5716,
+      "image": 13392,
+      "loads": [
+        38,
+        38,
+        38
+      ],
+      "heap": [
+        355830,
+        355830,
+        355830
+      ]
+    },
+    "busybox_reduction_percent": -8.0
+  },
+  {
+    "workload": "tail",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        0.96,
+        0.98,
+        0.96
+      ],
+      "median": 0.96,
+      "repeat_median": 0.97,
+      "peak": 5744,
+      "image": 11480,
+      "loads": [
+        36,
+        36,
+        36
+      ],
+      "heap": [
+        355830,
+        355830,
+        355830
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.01,
+        1.03,
+        1.03
+      ],
+      "median": 1.03,
+      "repeat_median": 1.03,
+      "peak": 6284,
+      "image": 16672,
+      "loads": [
+        39,
+        39,
+        39
+      ],
+      "heap": [
+        355830,
+        355830,
+        355830
+      ]
+    },
+    "busybox_reduction_percent": -7.3
+  },
+  {
+    "workload": "uniq",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "median": 1.0,
+      "repeat_median": 1.0,
+      "peak": 6540,
+      "image": 10388,
+      "loads": [
+        36,
+        36,
+        36
+      ],
+      "heap": [
+        356018,
+        356018,
+        356018
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        1.05,
+        1.08,
+        1.06
+      ],
+      "median": 1.06,
+      "repeat_median": 1.07,
+      "peak": 6540,
+      "image": 14512,
+      "loads": [
+        38,
+        38,
+        37
+      ],
+      "heap": [
+        356004,
+        356010,
+        356010
+      ]
+    },
+    "busybox_reduction_percent": -6.0
+  },
+  {
+    "workload": "tee",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        0.8,
+        0.8,
+        0.8
+      ],
+      "median": 0.8,
+      "repeat_median": 0.8,
+      "peak": 3668,
+      "image": 8392,
+      "loads": [
+        35,
+        33,
+        34
+      ],
+      "heap": [
+        355936,
+        355938,
+        355940
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        0.85,
+        0.85,
+        0.85
+      ],
+      "median": 0.85,
+      "repeat_median": 0.85,
+      "peak": 5716,
+      "image": 14720,
+      "loads": [
+        36,
+        37,
+        36
+      ],
+      "heap": [
+        355920,
+        355928,
+        355920
+      ]
+    },
+    "busybox_reduction_percent": -6.2
+  },
+  {
+    "workload": "cksum",
+    "size": "small",
+    "existing": {
+      "seconds": [
+        0.81,
+        0.83,
+        0.81
+      ],
+      "median": 0.81,
+      "repeat_median": 0.8200000000000001,
+      "peak": 1620,
+      "image": 9572,
+      "loads": [
+        35,
+        34,
+        35
+      ],
+      "heap": [
+        355928,
+        355934,
+        355932
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        0.91,
+        0.91,
+        0.9
+      ],
+      "median": 0.91,
+      "repeat_median": 0.905,
+      "peak": 6768,
+      "image": 14720,
+      "loads": [
+        37,
+        36,
+        36
+      ],
+      "heap": [
+        355928,
+        355934,
+        355928
+      ]
+    },
+    "busybox_reduction_percent": -12.3
+  },
+  {
+    "workload": "basename",
+    "size": "path",
+    "existing": {
+      "seconds": [
+        0.76,
+        0.8,
+        0.8
+      ],
+      "median": 0.8,
+      "repeat_median": 0.8,
+      "peak": 1620,
+      "image": 7420,
+      "loads": [
+        33,
+        34,
+        35
+      ],
+      "heap": [
+        355898,
+        355916,
+        355916
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        0.83,
+        0.85,
+        0.85
+      ],
+      "median": 0.85,
+      "repeat_median": 0.85,
+      "peak": 3668,
+      "image": 12880,
+      "loads": [
+        37,
+        37,
+        37
+      ],
+      "heap": [
+        355900,
+        355892,
+        355900
+      ]
+    },
+    "busybox_reduction_percent": -6.2
+  },
+  {
+    "workload": "dirname",
+    "size": "path",
+    "existing": {
+      "seconds": [
+        0.8,
+        0.76,
+        0.76
+      ],
+      "median": 0.76,
+      "repeat_median": 0.76,
+      "peak": 1620,
+      "image": 7304,
+      "loads": [
+        34,
+        33,
+        33
+      ],
+      "heap": [
+        356010,
+        356008,
+        356014
+      ]
+    },
+    "busybox": {
+      "seconds": [
+        0.81,
+        0.8,
+        0.8
+      ],
+      "median": 0.8,
+      "repeat_median": 0.8,
+      "peak": 3668,
+      "image": 7968,
+      "loads": [
+        36,
+        35,
+        35
+      ],
+      "heap": [
+        355990,
+        356002,
+        355994
+      ]
+    },
+    "busybox_reduction_percent": -5.3
+  }
+]

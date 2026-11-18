@@ -1,5 +1,29 @@
 # Clarice current state
 
+## BusyBox overlapping tools — 18 November 2026, comparison complete
+
+- Separate `codex/busybox-tools-comparison-20261118` worktree, based on `d9bf254`.
+  15 genuine BusyBox 1.37.0 applets installed under `bb` names through Clarice
+  update in an isolated Snow guest. Existing utility packages remain available
+  for matched comparisons. No Core change, physical SE use, merge or push.
+- Reproducible clean rebuild and CLX/import checks pass. Functional regression
+  harness completed 190 observations, including expected error exits, output
+  equality, binary fixtures and CPU-only sed cancellation over Telnet.
+- 64 KiB matched medians: wc -c 13.80 -> 7.33 seconds; tr ASCII case
+  conversion 47.06 -> 4.18 seconds. Three runs per implementation, complete
+  commands with redirected output. Emulator evidence only, not hardware acceptance.
+  Sort 50.48 -> 16.66 seconds, 157324 B peak / zero remaining. All 282 timed
+  invocations across 47 groups passed; 43 robustness observations passed.
+- User approved wc/tr and subsequently sort (conditional on releasing temporary
+  RAM) as replacements; production replacement
+  remains pending. Byte-oriented Unicode/option differences must be retained in
+  the integration decision. Other tested tools favor current code or offer no material speed gain.
+  BusyBox sort fails cleanly on 256 KiB input (status 2, zero remaining); existing
+  spill sort completes in 263.40 seconds. Recommend retaining it as a fallback.
+  Private guest closed and HTTP server stopped. No new Telnet defect observed.
+- [Evidence, scope and compatibility](busybox-tools/README.md).
+
+
 
 ## BusyBox vi evaluation — 18 November 2026, isolated branch
 

@@ -113,3 +113,14 @@ Separable adaptations: `src/ports/vi`; test status and limitations:
   `src/ports/busybox/` contains separate configuration, patch and Macintosh
   boundaries. This is not a port of the whole BusyBox suite. See
   `outputs/busybox/README.md` for enabled features, tests and limitations.
+
+- **BusyBox overlapping utility experiments 1.37.0**: selected upstream wc, tr,
+  cmp, sort, sed, grep, cat, cut, head, tail, uniq, tee, cksum, basename and dirname
+  with required libbb sources; source/archive pin and licences are the same as
+  bbvi above. Authors' notices remain in each original source; adaptations in
+  scripts/prepare-busybox-tools.py and src/ports/busybox-tools. No whole-suite
+  replacement or publication is implied. See outputs/busybox-tools/README.md.
+- **newlib getopt**, Gregory Pietsch (public-domain notice retained):
+  src/vendor/newlib-getopt/getopt.c, pinned source URL/SHA256 in SOURCE.json.
+  Compiled against existing Clarice stream/environment services; native newlib
+  internal stdio globals are not imported or exposed by Core.

@@ -1,0 +1,122 @@
+[
+  {
+    "name": "wc",
+    "package_bytes": 21124,
+    "image_bytes": 14032,
+    "relocations": 395,
+    "imports": 36,
+    "sha256": "5d83b5a5b2a48222a141e8ad913d786fbd9b0d8ac425ff192c0c2bd12c6401fb"
+  },
+  {
+    "name": "tr",
+    "package_bytes": 21464,
+    "image_bytes": 14576,
+    "relocations": 378,
+    "imports": 36,
+    "sha256": "79cec0c7f4d224b874c8f43726f4fbe99f31706aa053166516fbd3a7d505e7bd"
+  },
+  {
+    "name": "cmp",
+    "package_bytes": 21448,
+    "image_bytes": 14208,
+    "relocations": 402,
+    "imports": 37,
+    "sha256": "0d649881a70c1c3721a6d64d3de537fd40accd2405acb4f5b7dad3fbab73a60a"
+  },
+  {
+    "name": "sort",
+    "package_bytes": 28756,
+    "image_bytes": 19968,
+    "relocations": 515,
+    "imports": 40,
+    "sha256": "d3d192654fad06c6150d1d09a78c9aa139e531ccc6d2d57370f3c2b543a9a383"
+  },
+  {
+    "name": "sed",
+    "package_bytes": 58428,
+    "image_bytes": 42240,
+    "relocations": 1057,
+    "imports": 54,
+    "sha256": "d86148ab639a49f47283cbd80550d787e1da1711f5c671d36ee41d2456a17534"
+  },
+  {
+    "name": "grep",
+    "package_bytes": 52568,
+    "image_bytes": 38304,
+    "relocations": 918,
+    "imports": 50,
+    "sha256": "d7a66775d6011ec71b274f2e34cd42576713c7ec9da55c8406cec020fe1c2fe7"
+  },
+  {
+    "name": "cat",
+    "package_bytes": 20236,
+    "image_bytes": 13424,
+    "relocations": 377,
+    "imports": 35,
+    "sha256": "2dd545d69dc63566962a2a0fdda7a6aabe51d46cebeb2e022bffd97051b1838e"
+  },
+  {
+    "name": "cut",
+    "package_bytes": 22984,
+    "image_bytes": 15408,
+    "relocations": 430,
+    "imports": 37,
+    "sha256": "e25877d46fca0e537d8d8069968177d6378af091e3cbe834f530a638b71a9b66"
+  },
+  {
+    "name": "head",
+    "package_bytes": 20600,
+    "image_bytes": 13392,
+    "relocations": 410,
+    "imports": 35,
+    "sha256": "18a4dfead717b62353c9029dda4c5f3bc7760b5a8c6b7be4c1d68a9809fdc0a3"
+  },
+  {
+    "name": "tail",
+    "package_bytes": 24528,
+    "image_bytes": 16672,
+    "relocations": 448,
+    "imports": 38,
+    "sha256": "76aefdef4522d4e60923a8b64a710b7fed2a8e6d57928881182466787ca3755e"
+  },
+  {
+    "name": "uniq",
+    "package_bytes": 21800,
+    "image_bytes": 14512,
+    "relocations": 406,
+    "imports": 37,
+    "sha256": "ac23883f44a4248f6e5269198e9c7ba0c4c78d5f16273e9c9df9b425ec2400e9"
+  },
+  {
+    "name": "tee",
+    "package_bytes": 21716,
+    "image_bytes": 14720,
+    "relocations": 387,
+    "imports": 36,
+    "sha256": "75367f45b572eb7a361302c8b5818879515cbbb8682013128edcdda57a74299f"
+  },
+  {
+    "name": "cksum",
+    "package_bytes": 21688,
+    "image_bytes": 14720,
+    "relocations": 390,
+    "imports": 35,
+    "sha256": "e5c5d42166c7561cb6bc79717bc6c5b321d8695d091377d3a301d5ecd161526a"
+  },
+  {
+    "name": "basename",
+    "package_bytes": 19356,
+    "image_bytes": 12880,
+    "relocations": 349,
+    "imports": 35,
+    "sha256": "c2deda2a0746ea79e0c25cb788425f88ffd0965931f57ea1e752efc84e266b76"
+  },
+  {
+    "name": "dirname",
+    "package_bytes": 12644,
+    "image_bytes": 7968,
+    "relocations": 231,
+    "imports": 29,
+    "sha256": "a11ed2c17a245169c3f1458a5cceccdf0ac806bb5c534f2722bba488c1bf8598"
+  }
+]

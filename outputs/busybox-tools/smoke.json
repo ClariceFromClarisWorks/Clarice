@@ -1,0 +1,353 @@
+[
+  {
+    "command": "time bbwc --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbwc --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_1:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental wc\r\nreal 0.83 s\r\nRuntime: heap=331914 largest=331174 image=14032 ticks=38 load=34 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 1.6743447919999994,
+    "guest_seconds": 0.83,
+    "heap": 331914,
+    "largest": 331174,
+    "image": 14032,
+    "ticks": 38,
+    "load": 34,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "wc"
+  },
+  {
+    "command": "bbwc --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbwc --help > /tmp/bbt-help; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 1.3107998330000008
+  },
+  {
+    "command": "time bbtr --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbtr --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_3:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental tr\r\nreal 0.75 s\r\nRuntime: heap=331934 largest=331174 image=14576 ticks=35 load=33 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=1\r\nLoader ticks: read=12 validate=1 imports=1 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 1.4547504169999996,
+    "guest_seconds": 0.75,
+    "heap": 331934,
+    "largest": 331174,
+    "image": 14576,
+    "ticks": 35,
+    "load": 33,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "tr"
+  },
+  {
+    "command": "bbtr --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbtr --help > /tmp/bbt-help; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 1.160586207999998
+  },
+  {
+    "command": "time bbcmp --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbcmp --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_5:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental cmp\r\nreal 0.80 s\r\nRuntime: heap=331930 largest=331174 image=14208 ticks=38 load=35 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 1.6870457079999994,
+    "guest_seconds": 0.8,
+    "heap": 331930,
+    "largest": 331174,
+    "image": 14208,
+    "ticks": 38,
+    "load": 35,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "cmp"
+  },
+  {
+    "command": "bbcmp --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbcmp --help > /tmp/bbt-help; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 1.2922263329999986
+  },
+  {
+    "command": "time bbsort --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbsort --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_7:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental sort\r\nreal 0.95 s\r\nRuntime: heap=331938 largest=331174 image=19968 ticks=47 load=40 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=4\r\nLoader ticks: read=14 validate=2 imports=2 relocations=3 prepare=7 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=12 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > ",
+    "host_seconds": 1.819544540999999,
+    "guest_seconds": 0.95,
+    "heap": 331938,
+    "largest": 331174,
+    "image": 19968,
+    "ticks": 47,
+    "load": 40,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "sort"
+  },
+  {
+    "command": "bbsort --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbsort --help > /tmp/bbt-help; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\n/ > ",
+    "host_seconds": 1.2016941669999994
+  },
+  {
+    "command": "time bbsed --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbsed --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_9:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental sed\r\nreal 1.00 s\r\nRuntime: heap=331938 largest=331174 image=42240 ticks=51 load=47 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=2 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=22 validate=0 imports=3 relocations=5 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > ",
+    "host_seconds": 1.5881656669999984,
+    "guest_seconds": 1.0,
+    "heap": 331938,
+    "largest": 331174,
+    "image": 42240,
+    "ticks": 51,
+    "load": 47,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "sed"
+  },
+  {
+    "command": "bbsed --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbsed --help > /tmp/bbt-help; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r\nREMOTE_END_10:0\r\n/ > ",
+    "host_seconds": 1.544780750000001
+  },
+  {
+    "command": "time bbgrep --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbgrep --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_11:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental grep\r\nreal 0.96 s\r\nRuntime: heap=331932 largest=331174 image=38304 ticks=48 load=45 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=1 meta-alloc=0\r\nLoader ticks: read=20 validate=0 imports=3 relocations=4 prepare=6 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_11:0\r\n/ > ",
+    "host_seconds": 1.6462243330000028,
+    "guest_seconds": 0.96,
+    "heap": 331932,
+    "largest": 331174,
+    "image": 38304,
+    "ticks": 48,
+    "load": 45,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "grep"
+  },
+  {
+    "command": "bbgrep --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbgrep --help > /tmp/bbt-help; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\n/ > ",
+    "host_seconds": 1.2569252920000054
+  },
+  {
+    "command": "time bbcat --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbcat --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_13:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental cat\r\nreal 0.78 s\r\nRuntime: heap=331938 largest=331174 image=13424 ticks=37 load=34 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=1 meta-alloc=0\r\nLoader ticks: read=13 validate=0 imports=2 relocations=2 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_13:0\r\n/ > ",
+    "host_seconds": 1.6712679170000015,
+    "guest_seconds": 0.78,
+    "heap": 331938,
+    "largest": 331174,
+    "image": 13424,
+    "ticks": 37,
+    "load": 34,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "cat"
+  },
+  {
+    "command": "bbcat --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbcat --help > /tmp/bbt-help; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r\nREMOTE_END_14:0\r\n/ > ",
+    "host_seconds": 1.2261213330000018
+  },
+  {
+    "command": "time bbcut --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbcut --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_15:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental cut\r\nreal 0.80 s\r\nRuntime: heap=331930 largest=331174 image=15408 ticks=38 load=35 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_15:0\r\n/ > ",
+    "host_seconds": 1.6990004999999968,
+    "guest_seconds": 0.8,
+    "heap": 331930,
+    "largest": 331174,
+    "image": 15408,
+    "ticks": 38,
+    "load": 35,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "cut"
+  },
+  {
+    "command": "bbcut --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbcut --help > /tmp/bbt-help; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r\nREMOTE_END_16:0\r\n/ > ",
+    "host_seconds": 1.1329911670000001
+  },
+  {
+    "command": "time bbhead --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbhead --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_17:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental head\r\nreal 0.81 s\r\nRuntime: heap=331932 largest=331174 image=13392 ticks=39 load=37 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=13 validate=3 imports=2 relocations=1 prepare=5 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_17:0\r\n/ > ",
+    "host_seconds": 2.310612333999998,
+    "guest_seconds": 0.81,
+    "heap": 331932,
+    "largest": 331174,
+    "image": 13392,
+    "ticks": 39,
+    "load": 37,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "head"
+  },
+  {
+    "command": "bbhead --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbhead --help > /tmp/bbt-help; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\n/ > ",
+    "host_seconds": 1.2166195000000002
+  },
+  {
+    "command": "time bbtail --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbtail --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_19:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental tail\r\nreal 0.83 s\r\nRuntime: heap=331938 largest=331174 image=16672 ticks=40 load=35 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=1\r\nLoader ticks: read=12 validate=2 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_19:0\r\n/ > ",
+    "host_seconds": 1.781042959000004,
+    "guest_seconds": 0.83,
+    "heap": 331938,
+    "largest": 331174,
+    "image": 16672,
+    "ticks": 40,
+    "load": 35,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "tail"
+  },
+  {
+    "command": "bbtail --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbtail --help > /tmp/bbt-help; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\r\nREMOTE_END_20:0\r\n/ > ",
+    "host_seconds": 1.2631050410000029
+  },
+  {
+    "command": "time bbuniq --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbuniq --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_21:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental uniq\r\nreal 0.83 s\r\nRuntime: heap=331932 largest=331174 image=14512 ticks=40 load=35 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_21:0\r\n/ > ",
+    "host_seconds": 1.769322416999998,
+    "guest_seconds": 0.83,
+    "heap": 331932,
+    "largest": 331174,
+    "image": 14512,
+    "ticks": 40,
+    "load": 35,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "uniq"
+  },
+  {
+    "command": "bbuniq --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbuniq --help > /tmp/bbt-help; printf '\\nREMOTE_END_22:%d\\n' $?\r\n\r\nREMOTE_END_22:0\r\n/ > ",
+    "host_seconds": 1.1431356249999993
+  },
+  {
+    "command": "time bbtee --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbtee --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_23:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental tee\r\nreal 0.78 s\r\nRuntime: heap=331938 largest=331174 image=14720 ticks=37 load=34 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=1\r\nLoader ticks: read=13 validate=0 imports=2 relocations=2 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_23:0\r\n/ > ",
+    "host_seconds": 1.6976793329999964,
+    "guest_seconds": 0.78,
+    "heap": 331938,
+    "largest": 331174,
+    "image": 14720,
+    "ticks": 37,
+    "load": 34,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "tee"
+  },
+  {
+    "command": "bbtee --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbtee --help > /tmp/bbt-help; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r\nREMOTE_END_24:0\r\n/ > ",
+    "host_seconds": 1.2406119589999989
+  },
+  {
+    "command": "time bbcksum --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbcksum --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_25:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental cksum\r\nreal 0.80 s\r\nRuntime: heap=331932 largest=331174 image=14720 ticks=38 load=35 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_25:0\r\n/ > ",
+    "host_seconds": 1.701597666000005,
+    "guest_seconds": 0.8,
+    "heap": 331932,
+    "largest": 331174,
+    "image": 14720,
+    "ticks": 38,
+    "load": 35,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "cksum"
+  },
+  {
+    "command": "bbcksum --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbcksum --help > /tmp/bbt-help; printf '\\nREMOTE_END_26:%d\\n' $?\r\n\r\nREMOTE_END_26:0\r\n/ > ",
+    "host_seconds": 1.3119184170000011
+  },
+  {
+    "command": "time bbbasename --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbbasename --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_27:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental basename\r\nreal 0.80 s\r\nRuntime: heap=331908 largest=331174 image=12880 ticks=38 load=34 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=1 meta-alloc=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_27:0\r\n/ > ",
+    "host_seconds": 1.6381293329999949,
+    "guest_seconds": 0.8,
+    "heap": 331908,
+    "largest": 331174,
+    "image": 12880,
+    "ticks": 38,
+    "load": 34,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "basename"
+  },
+  {
+    "command": "bbbasename --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbbasename --help > /tmp/bbt-help; printf '\\nREMOTE_END_28:%d\\n' $?\r\n\r\nREMOTE_END_28:0\r\n/ > ",
+    "host_seconds": 1.2715827500000003
+  },
+  {
+    "command": "time bbdirname --version; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time bbdirname --version; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_29:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice experimental dirname\r\nreal 0.73 s\r\nRuntime: heap=331928 largest=331174 image=7968 ticks=34 load=32 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=11 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_29:0\r\n/ > ",
+    "host_seconds": 1.5811991249999977,
+    "guest_seconds": 0.73,
+    "heap": 331928,
+    "largest": 331174,
+    "image": 7968,
+    "ticks": 34,
+    "load": 32,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "dirname"
+  },
+  {
+    "command": "bbdirname --help > /tmp/bbt-help",
+    "status": 0,
+    "text": "bbdirname --help > /tmp/bbt-help; printf '\\nREMOTE_END_30:%d\\n' $?\r\n\r\nREMOTE_END_30:0\r\n/ > ",
+    "host_seconds": 1.1185247920000023
+  },
+  {
+    "command": "bbwc -c < /tmp/bbt-small.txt",
+    "status": 0,
+    "text": "bbwc -c < /tmp/bbt-small.txt; printf '\\nREMOTE_END_31:%d\\n' $?\r\n512\r\n\r\nREMOTE_END_31:0\r\n/ > ",
+    "host_seconds": 1.2157871249999985
+  },
+  {
+    "command": "bbtr a-z A-Z < /tmp/bbt-small.txt > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbtr a-z A-Z < /tmp/bbt-small.txt > /tmp/bbt-out; printf '\\nREMOTE_END_32:%d\\n' $?\r\n\r\nREMOTE_END_32:0\r\n/ > ",
+    "host_seconds": 1.5108484170000054
+  },
+  {
+    "command": "bbcmp /tmp/bbt-large.txt /tmp/bbt-copy.txt",
+    "status": 0,
+    "text": "bbcmp /tmp/bbt-large.txt /tmp/bbt-copy.txt; printf '\\nREMOTE_END_33:%d\\n' $?\r\n\r\nREMOTE_END_33:0\r\n/ > ",
+    "host_seconds": 8.506005082999998
+  },
+  {
+    "command": "bbsort /tmp/bbt-small.txt > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbsort /tmp/bbt-small.txt > /tmp/bbt-out; printf '\\nREMOTE_END_34:%d\\n' $?\r\n\r\nREMOTE_END_34:0\r\n/ > ",
+    "host_seconds": 1.49252970900001
+  },
+  {
+    "command": "bbsed 's/alpha/ALPHA/g' /tmp/bbt-small.txt > /tmp/bbt-out",
+    "status": 0,
+    "text": "bbsed 's/alpha/ALPHA/g' /tmp/bbt-small.txt > /tmp/bbt-out; printf '\\nREMOTE_END_35:%d\\n' $?\r\n\r\nREMOTE_END_35:0\r\n/ > ",
+    "host_seconds": 1.841722875000002
+  },
+  {
+    "command": "bbgrep -c alpha /tmp/bbt-small.txt",
+    "status": 0,
+    "text": "bbgrep -c alpha /tmp/bbt-small.txt; printf '\\nREMOTE_END_36:%d\\n' $?\r\n6\r\n\r\nREMOTE_END_36:0\r\n/ > ",
+    "host_seconds": 1.4228302499999899
+  }
+]

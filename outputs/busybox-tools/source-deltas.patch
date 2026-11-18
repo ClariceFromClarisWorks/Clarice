@@ -1,0 +1,400 @@
+--- a/coreutils/tail.c
++++ b/coreutils/tail.c
+@@ -147,6 +147,7 @@
+ 			&str_c, &str_n IF_FEATURE_FANCY_TAIL(,&sleep_period)
+ 	);
+ #define FOLLOW (opt & 0x1)
++ if(opt & (1|16|64)) bb_simple_error_msg_and_die("follow mode unavailable in this port");
+ #define COUNT_BYTES (opt & 0x2)
+ 	//if (opt & 0x1) // -f
+ 	if (opt & 0x2) count = eat_num(str_c); // -c
+@@ -338,80 +339,6 @@
+ 
+ 	fmt = NULL;
+ 
+-	if (FOLLOW) while (1) {
+-		sleep(sleep_period);
+-
+-		i = 0;
+-		do {
+-			int nread;
+-			const char *filename = argv[i];
+-			int fd = fds[i];
+-			int new_fd = -1;
+-			struct stat sbuf;
+-
+-			if (FOLLOW_RETRY) {
+-				struct stat fsbuf;
+-
+-				if (fd < 0
+-				 || fstat(fd, &fsbuf) < 0
+-				 || stat(filename, &sbuf) < 0
+-				 || fsbuf.st_dev != sbuf.st_dev
+-				 || fsbuf.st_ino != sbuf.st_ino
+-				) {
+-					/* Looks like file has been created/renamed/deleted */
+-					new_fd = open(filename, O_RDONLY);
+-					if (new_fd >= 0) {
+-						bb_error_msg("%s has %s; following end of new file",
+-							filename, (fd < 0) ? "appeared" : "been replaced"
+-						);
+-						if (fd < 0) {
+-							/* No previously open fd for this file,
+-							 * start using new_fd immediately. */
+-							fds[i] = fd = new_fd;
+-							new_fd = -1;
+-						}
+-					} else if (fd >= 0) {
+-						bb_perror_msg("%s has been renamed or deleted", filename);
+-					}
+-				}
+-			}
+-			if (ENABLE_FEATURE_FANCY_TAIL && fd < 0)
+-				continue;
+-			if (nfiles > header_threshold) {
+-				fmt = header_fmt_str;
+-			}
+-			for (;;) {
+-				/* tail -f keeps following files even if they are truncated */
+-				/* /proc files report zero st_size, don't lseek them */
+-				if (fstat(fd, &sbuf) == 0
+-				 /* && S_ISREG(sbuf.st_mode) TODO? */
+-				 && sbuf.st_size > 0
+-				) {
+-					off_t current = lseek(fd, 0, SEEK_CUR);
+-					if (sbuf.st_size < current) {
+-						//bb_perror_msg("%s: file truncated", filename); - says coreutils 8.32
+-						xlseek(fd, 0, SEEK_SET);
+-					}
+-				}
+-
+-				nread = tail_read(fd, tailbuf, BUFSIZ);
+-				if (nread <= 0) {
+-					if (new_fd < 0)
+-						break;
+-					/* Switch to "tail -F"ing the new file */
+-					xmove_fd(new_fd, fd);
+-					new_fd = -1;
+-					continue;
+-				}
+-				if (fmt && (fd != prev_fd)) {
+-					tail_xprint_header(fmt, filename);
+-					fmt = NULL;
+-					prev_fd = fd;
+-				}
+-				xwrite(STDOUT_FILENO, tailbuf, nread);
+-			}
+-		} while (++i < nfiles);
+-	} /* while (1) */
+ 
+ 	if (ENABLE_FEATURE_CLEAN_UP) {
+ 		free(fds);
+--- a/coreutils/cksum.c
++++ b/coreutils/cksum.c
+@@ -72,7 +72,7 @@
+ 			} else {
+ 				IF_CKSUM(uoff_t t;)
+ 
+-				close(fd);
++				if (fd != STDIN_FILENO && close(fd)) bb_simple_perror_msg_and_die("close");
+ 				if (IS_CRC32)
+ 					break;
+ #if ENABLE_CKSUM
+--- a/coreutils/uniq.c
++++ b/coreutils/uniq.c
+@@ -44,6 +44,7 @@
+ int uniq_main(int argc UNUSED_PARAM, char **argv)
+ {
+ 	const char *input_filename;
++ FILE *input=stdin;
+ 	unsigned skip_fields, skip_chars, max_chars;
+ 	unsigned opt;
+ 	char eol;
+@@ -72,8 +73,7 @@
+ 		const char *output;
+ 
+ 		if (input_filename[0] != '-' || input_filename[1]) {
+-			close(STDIN_FILENO); /* == 0 */
+-			xopen(input_filename, O_RDONLY); /* fd will be 0 */
++			input=xfopen_stdin(input_filename);
+ 		}
+ 		output = argv[1];
+ 		if (output) {
+@@ -83,7 +83,7 @@
+ 				// Won't work with "uniq - FILE" and closed stdin:
+ 				//close(STDOUT_FILENO);
+ 				//xopen(output, O_WRONLY | O_CREAT | O_TRUNC);
+-				xmove_fd(xopen(output, O_WRONLY | O_CREAT | O_TRUNC), STDOUT_FILENO);
++				bb_simple_error_msg_and_die("output operand unavailable; use shell redirection");
+ 			}
+ 		}
+ 	}
+@@ -102,7 +102,7 @@
+ 		dups = 0;
+ 
+ 		/* gnu uniq ignores newlines */
+-		while ((cur_line = xmalloc_fgetline(stdin)) != NULL) {
++		while ((cur_line = xmalloc_fgetline(input)) != NULL) {
+ 			cur_compare = cur_line;
+ 			for (i = skip_fields; i; i--) {
+ 				cur_compare = skip_whitespace(cur_compare);
+@@ -137,7 +137,7 @@
+ 		}
+ 	} while (cur_line);
+ 
+-	die_if_ferror(stdin, input_filename);
++	die_if_ferror(input, input_filename ? input_filename : "stdin");
+ 
+ 	fflush_stdout_and_exit_SUCCESS();
+ }
+--- a/coreutils/tee.c
++++ b/coreutils/tee.c
+@@ -79,7 +79,7 @@
+ 	mode += (retval & 2);	/* Since 'a' is the 2nd option... */
+ 
+ 	if (retval & 1) {
+-		signal(SIGINT, SIG_IGN);
++		bb_simple_error_msg_and_die("-i unavailable; cancellation remains enabled");
+ 	}
+ 	retval = EXIT_SUCCESS;
+ 	/* if (opt_p || opt_output_error)
+--- a/coreutils/sort.c
++++ b/coreutils/sort.c
+@@ -277,6 +277,7 @@
+ /* Iterate through keys list and perform comparisons */
+ static int compare_keys(const void *xarg, const void *yarg)
+ {
++ port_poll();
+ 	int flags = option_mask32, retval = 0;
+ 	char *x, *y;
+ 
+@@ -352,22 +353,8 @@
+ 			}
+ 			break;
+ 		}
+-		case FLAG_M: {
+-			struct tm thyme;
+-			int dx;
+-			char *xx, *yy;
+-
+-			xx = strptime(skip_whitespace(x), "%b", &thyme);
+-			dx = thyme.tm_mon;
+-			yy = strptime(skip_whitespace(y), "%b", &thyme);
+-			if (!xx)
+-				retval = (!yy) ? 0 : -1;
+-			else if (!yy)
+-				retval = 1;
+-			else
+-				retval = dx - thyme.tm_mon;
+-			break;
+-		}
++		case FLAG_M: bb_simple_error_msg_and_die("-M unavailable in this port");
++
+ 		/* Full floating point version of -n */
+ 		case FLAG_n: {
+ 			double dx = atof(x);
+@@ -467,6 +454,7 @@
+ 			sort_opt_str,
+ 			&str_ignored, &str_ignored, &str_o, &lst_k, &str_t
+ 	);
++ if(opts & (FLAG_o|FLAG_M|FLAG_V|FLAG_m|FLAG_S|FLAG_T)) bb_simple_error_msg_and_die("unsupported option: -o/-M/-V/-m/-S/-T");
+ #if ENABLE_FEATURE_SORT_OPTIMIZE_MEMORY
+ 	/* Can drop dups only if -u but no "complicating" options,
+ 	 * IOW: if we do a full line compares. Safe options:
+@@ -672,7 +660,7 @@
+ #if ENABLE_FEATURE_SORT_BIG
+ 	/* Open output file _after_ we read all input ones */
+ 	if (option_mask32 & FLAG_o)
+-		xmove_fd(xopen(str_o, O_WRONLY|O_CREAT|O_TRUNC), STDOUT_FILENO);
++		bb_simple_error_msg_and_die("-o unavailable; use shell redirection to a separate file");
+ #endif
+ 	{
+ 		int ch = (option_mask32 & FLAG_z) ? '\0' : '\n';
+--- a/editors/sed.c
++++ b/editors/sed.c
+@@ -251,7 +251,7 @@
+ 
+ static void cleanup_outname(void)
+ {
+-	if (G.outname) unlink(G.outname);
++	/* In-place editing excluded; no temporary output is created. */
+ }
+ 
+ /* strcpy, replacing "\from" with 'to'. If to is NUL, replacing "\any" with 'any' */
+@@ -923,7 +923,7 @@
+ 	} while (regexec(current_regex, line, 10, G.regmatch, REG_NOTBOL) != REG_NOMATCH);
+ 
+ 	/* Copy rest of string into output pipeline */
+-	while (1) {
++	while (1) { port_poll();
+ 		char c = *line++;
+ 		pipe_putc(c);
+ 		if (c == '\0')
+@@ -940,7 +940,7 @@
+ {
+ 	sed_cmd_t *sed_cmd;
+ 
+-	for (sed_cmd = G.sed_cmd_head; sed_cmd; sed_cmd = sed_cmd->next) {
++	for (sed_cmd = G.sed_cmd_head; sed_cmd; sed_cmd = sed_cmd->next) { port_poll();
+ 		if (sed_cmd->cmd == ':'
+ 		 && sed_cmd->string
+ 		 && strcmp(sed_cmd->string, label) == 0
+@@ -1134,7 +1134,7 @@
+ 
+ 	/* For every line, go through all the commands */
+  restart:
+-	for (sed_cmd = G.sed_cmd_head; sed_cmd; sed_cmd = sed_cmd->next) {
++	for (sed_cmd = G.sed_cmd_head; sed_cmd; sed_cmd = sed_cmd->next) { port_poll();
+ 		int old_matched, matched;
+ 
+ 		old_matched = sed_cmd->in_match;
+@@ -1223,7 +1223,7 @@
+ 		if (sed_cmd->cmd == '{') {
+ 			if (sed_cmd->invert ? matched : !matched) {
+ 				unsigned nest_cnt = 0;
+-				while (1) {
++				while (1) { port_poll();
+ 					if (sed_cmd->cmd == '{')
+ 						nest_cnt++;
+ 					if (sed_cmd->cmd == '}') {
+@@ -1572,7 +1572,7 @@
+ 	//argc -= optind;
+ 	argv += optind;
+ 	if (opt & OPT_in_place) { // -i
+-		die_func = cleanup_outname;
++		bb_simple_error_msg_and_die("-i unavailable; use shell redirection to a separate file");
+ 	}
+ 	if (opt & (2|4))
+ 		G.regex_type |= REG_EXTENDED; // -r or -E
+@@ -1630,47 +1630,6 @@
+ 				continue;
+ 			}
+ 
+-			/* -i: process each FILE separately: */
+-
+-			if (stat(*argv, &statbuf) != 0) {
+-				bb_simple_perror_msg(*argv);
+-				G.exitcode = EXIT_FAILURE;
+-				G.current_input_file++;
+-				continue;
+-			}
+-			G.outname = xasprintf("%sXXXXXX", *argv);
+-			nonstdoutfd = xmkstemp(G.outname);
+-			G.nonstdout = xfdopen_for_write(nonstdoutfd);
+-			/* Set permissions/owner of output file */
+-			/* chmod'ing AFTER chown would preserve suid/sgid bits,
+-			 * but GNU sed 4.2.1 does not preserve them either */
+-			fchmod(nonstdoutfd, statbuf.st_mode);
+-			fchown(nonstdoutfd, statbuf.st_uid, statbuf.st_gid);
+-
+-			process_files();
+-			fflush(G.nonstdout);
+-			if (ferror(G.nonstdout)) {
+-				xfunc_error_retval = 4;  /* It's what gnu sed exits with... */
+-				bb_simple_error_msg_and_die(bb_msg_write_error);
+-			}
+-			fclose(G.nonstdout);
+-			G.nonstdout = stdout;
+-
+-			if (opt_i) {
+-				char *backupname = xasprintf("%s%s", *argv, opt_i);
+-				xrename(*argv, backupname);
+-				free(backupname);
+-			}
+-			/* else unlink(*argv); - rename below does this */
+-			xrename(G.outname, *argv); //TODO: rollback backup on error?
+-			free(G.outname);
+-			G.outname = NULL;
+-
+-			/* Fix disabled range matches and mangled ",+N" ranges */
+-			for (sed_cmd = G.sed_cmd_head; sed_cmd; sed_cmd = sed_cmd->next) {
+-				sed_cmd->beg_line = sed_cmd->beg_line_orig;
+-				sed_cmd->end_line = sed_cmd->end_line_orig;
+-			}
+ 		}
+ 		/* Here, to handle "sed 'cmds' nonexistent_file" case we did:
+ 		 * if (G.current_input_file[G.current_input_file] == NULL)
+--- a/findutils/grep.c
++++ b/findutils/grep.c
+@@ -654,56 +654,6 @@
+ 		llist_add_to(lst, new_grep_list_data(p, 0));
+ }
+ 
+-static int FAST_FUNC file_action_grep(struct recursive_state *state UNUSED_PARAM,
+-		const char *filename,
+-		struct stat *statbuf)
+-{
+-	FILE *file;
+-
+-	/* If we are given a link to a directory, we should bail out now, rather
+-	 * than trying to open the "file" and hoping getline gives us nothing,
+-	 * since that is not portable across operating systems (FreeBSD for
+-	 * example will return the raw directory contents). */
+-	if (S_ISLNK(statbuf->st_mode)) {
+-		struct stat sb;
+-		if (stat(filename, &sb) != 0) {
+-			if (!SUPPRESS_ERR_MSGS)
+-				bb_simple_perror_msg(filename);
+-			return 0;
+-		}
+-		if (S_ISDIR(sb.st_mode))
+-			return 1;
+-	}
+-
+-	file = fopen_for_read(filename);
+-	if (file == NULL) {
+-		if (!SUPPRESS_ERR_MSGS)
+-			bb_simple_perror_msg(filename);
+-		open_errors = 1;
+-		return 0;
+-	}
+-	cur_file = filename;
+-	*(int*)state->userData |= grep_file(file);
+-	fclose(file);
+-	return 1;
+-}
+-
+-static int grep_dir(const char *dir)
+-{
+-	int matched = 0;
+-	recursive_action(dir, 0
+-		| ACTION_RECURSE
+-		| ((option_mask32 & OPT_R) ? ACTION_FOLLOWLINKS : 0)
+-		| ACTION_FOLLOWLINKS_L0 /* grep -r ... SYMLINK follows it */
+-		| ACTION_DEPTHFIRST
+-		| 0,
+-		/* fileAction= */ file_action_grep,
+-		/* dirAction= */ NULL,
+-		/* userData= */ &matched
+-	);
+-	return matched;
+-}
+-
+ int grep_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int grep_main(int argc UNUSED_PARAM, char **argv)
+ {
+@@ -827,6 +777,7 @@
+ 	if (option_mask32 & OPT_h)
+ 		print_filename = 0;
+ 
++	if(option_mask32 & (OPT_r|OPT_R)) bb_simple_error_msg_and_die("recursive grep unavailable in this port");
+ 	/* If no files were specified, or '-' was specified, take input from
+ 	 * stdin. Otherwise, we grep through all the files specified. */
+ 	matched = 0;
+@@ -836,15 +787,7 @@
+ 		if (!cur_file || LONE_DASH(cur_file)) {
+ 			cur_file = "(standard input)";
+ 		} else {
+-			if (option_mask32 & (OPT_r|OPT_R)) {
+-				struct stat st;
+-				if (stat(cur_file, &st) == 0 && S_ISDIR(st.st_mode)) {
+-					if (!(option_mask32 & OPT_h))
+-						print_filename = 1;
+-					matched |= grep_dir(cur_file);
+-					goto grep_done;
+-				}
+-			}
++
+ 			/* else: fopen(dir) will succeed, but reading won't */
+ 			file = fopen_for_read(cur_file);
+ 			if (file == NULL) {

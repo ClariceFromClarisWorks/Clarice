@@ -1,0 +1,44 @@
+[
+  {
+    "command": "wget -O /tmp/bbt-small.txt http://192.168.1.112:8097/small.txt",
+    "status": 0,
+    "text": "wget -O /tmp/bbt-small.txt http://192.168.1.112:8097/small.txt; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r[==========================================================] 100% 512 B / 512 B\u001b[K\r[==========================================================] 100% 512 B / 512 B\u001b[K\r\nDownloaded 512 B to /tmp/bbt-small.txt\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 2.3579046249999998
+  },
+  {
+    "command": "wget -O /tmp/bbt-ordinary.txt http://192.168.1.112:8097/ordinary.txt",
+    "status": 0,
+    "text": "wget -O /tmp/bbt-ordinary.txt http://192.168.1.112:8097/ordinary.txt; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r[===========                                         ]  22% 1.82 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/bbt-ordinary.txt\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 2.5599618750000026
+  },
+  {
+    "command": "wget -O /tmp/bbt-large.txt http://192.168.1.112:8097/large.txt",
+    "status": 0,
+    "text": "wget -O /tmp/bbt-large.txt http://192.168.1.112:8097/large.txt; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r[=                                                  ]   2% 1.82 KiB / 64.00 KiB\u001b[K\r[===============                       ]  40% 25.82 KiB / 64.00 KiB 25.82 KiB/s\u001b[K\r[==========================            ]  71% 45.82 KiB / 64.00 KiB 22.91 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 32.00 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/bbt-large.txt\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 4.873507416999999
+  },
+  {
+    "command": "wget -O /tmp/bbt-binary.dat http://192.168.1.112:8097/binary.dat",
+    "status": 0,
+    "text": "wget -O /tmp/bbt-binary.dat http://192.168.1.112:8097/binary.dat; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r[=                                                  ]   2% 1.80 KiB / 64.00 KiB\u001b[K\r[==============                        ]  37% 23.80 KiB / 64.00 KiB 23.80 KiB/s\u001b[K\r[=========================             ]  68% 43.80 KiB / 64.00 KiB 21.90 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/bbt-binary.dat\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 4.884423167000001
+  },
+  {
+    "command": "wget -O /tmp/bbt-unicode.txt http://192.168.1.112:8097/unicode.txt",
+    "status": 0,
+    "text": "wget -O /tmp/bbt-unicode.txt http://192.168.1.112:8097/unicode.txt; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r[============================================================] 100% 28 B / 28 B\u001b[K\r[============================================================] 100% 28 B / 28 B\u001b[K\r\nDownloaded 28 B to /tmp/bbt-unicode.txt\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 2.4755256669999994
+  },
+  {
+    "command": "wget -O /tmp/bbt-long.txt http://192.168.1.112:8097/long.txt",
+    "status": 0,
+    "text": "wget -O /tmp/bbt-long.txt http://192.168.1.112:8097/long.txt; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r[=                                                  ]   2% 1.82 KiB / 64.00 KiB\u001b[K\r[==============                        ]  37% 23.82 KiB / 64.00 KiB 23.82 KiB/s\u001b[K\r[========================              ]  65% 41.82 KiB / 64.00 KiB 20.91 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 32.00 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/bbt-long.txt\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 4.652760499999999
+  },
+  {
+    "command": "cp /tmp/bbt-large.txt /tmp/bbt-copy.txt",
+    "status": 0,
+    "text": "cp /tmp/bbt-large.txt /tmp/bbt-copy.txt; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\n/ > ",
+    "host_seconds": 2.6960377079999986
+  }
+]

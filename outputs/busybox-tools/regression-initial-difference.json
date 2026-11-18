@@ -1,0 +1,142 @@
+[
+  {
+    "command": "printf 'alpha beta\\nalpha beta\\nGamma\\nlast' > /tmp/bbt-cases",
+    "status": 0,
+    "text": "printf 'alpha beta\\nalpha beta\\nGamma\\nlast' > /tmp/bbt-cases; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/bbt-binary.dat > /tmp/bbt-reference",
+    "status": 0,
+    "text": "cat /tmp/bbt-binary.dat > /tmp/bbt-reference; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "bbcat /tmp/bbt-binary.dat > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbcat /tmp/bbt-binary.dat > /tmp/bbt-candidate; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 0,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "tr -s 'a' < /tmp/bbt-cases > /tmp/bbt-reference",
+    "status": 0,
+    "text": "tr -s 'a' < /tmp/bbt-cases > /tmp/bbt-reference; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "bbtr -s 'a' < /tmp/bbt-cases > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbtr -s 'a' < /tmp/bbt-cases > /tmp/bbt-candidate; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 0,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "command": "tr -cd 'a-z\\n' < /tmp/bbt-cases > /tmp/bbt-reference",
+    "status": 0,
+    "text": "tr -cd 'a-z\\n' < /tmp/bbt-cases > /tmp/bbt-reference; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "command": "bbtr -cd 'a-z\\n' < /tmp/bbt-cases > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbtr -cd 'a-z\\n' < /tmp/bbt-cases > /tmp/bbt-candidate; printf '\\nREMOTE_END_9:%d\\n' $?\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 0,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "command": "tr '[:lower:]' '[:upper:]' < /tmp/bbt-cases > /tmp/bbt-reference",
+    "status": 0,
+    "text": "tr '[:lower:]' '[:upper:]' < /tmp/bbt-cases > /tmp/bbt-reference; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "command": "bbtr '[:lower:]' '[:upper:]' < /tmp/bbt-cases > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbtr '[:lower:]' '[:upper:]' < /tmp/bbt-cases > /tmp/bbt-candidate; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 0,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r\nREMOTE_END_13:0\r\n/ > "
+  },
+  {
+    "command": "sort -r /tmp/bbt-cases > /tmp/bbt-reference",
+    "status": 0,
+    "text": "sort -r /tmp/bbt-cases > /tmp/bbt-reference; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r\nREMOTE_END_14:0\r\n/ > "
+  },
+  {
+    "command": "bbsort -r /tmp/bbt-cases > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbsort -r /tmp/bbt-cases > /tmp/bbt-candidate; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r\nREMOTE_END_15:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 0,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r\nREMOTE_END_16:0\r\n/ > "
+  },
+  {
+    "command": "sort -u /tmp/bbt-cases > /tmp/bbt-reference",
+    "status": 0,
+    "text": "sort -u /tmp/bbt-cases > /tmp/bbt-reference; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r\nREMOTE_END_17:0\r\n/ > "
+  },
+  {
+    "command": "bbsort -u /tmp/bbt-cases > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbsort -u /tmp/bbt-cases > /tmp/bbt-candidate; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 0,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\r\nREMOTE_END_19:0\r\n/ > "
+  },
+  {
+    "command": "sort -t ' ' -k 1,1n /tmp/bbt-ordinary.txt > /tmp/bbt-reference",
+    "status": 0,
+    "text": "sort -t ' ' -k 1,1n /tmp/bbt-ordinary.txt > /tmp/bbt-reference; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\r\nREMOTE_END_20:0\r\n/ > "
+  },
+  {
+    "command": "bbsort -t ' ' -k 1,1n /tmp/bbt-ordinary.txt > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbsort -t ' ' -k 1,1n /tmp/bbt-ordinary.txt > /tmp/bbt-candidate; printf '\\nREMOTE_END_21:%d\\n' $?\r\n\r\nREMOTE_END_21:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 0,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_22:%d\\n' $?\r\n\r\nREMOTE_END_22:0\r\n/ > "
+  },
+  {
+    "command": "sed -n '2,3p' /tmp/bbt-cases > /tmp/bbt-reference",
+    "status": 0,
+    "text": "sed -n '2,3p' /tmp/bbt-cases > /tmp/bbt-reference; printf '\\nREMOTE_END_23:%d\\n' $?\r\n\r\nREMOTE_END_23:0\r\n/ > "
+  },
+  {
+    "command": "bbsed -n '2,3p' /tmp/bbt-cases > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbsed -n '2,3p' /tmp/bbt-cases > /tmp/bbt-candidate; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r\nREMOTE_END_24:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 0,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_25:%d\\n' $?\r\n\r\nREMOTE_END_25:0\r\n/ > "
+  },
+  {
+    "command": "sed -e 's/alpha/A/g' -e 's/beta/B/g' /tmp/bbt-cases > /tmp/bbt-reference",
+    "status": 0,
+    "text": "sed -e 's/alpha/A/g' -e 's/beta/B/g' /tmp/bbt-cases > /tmp/bbt-reference; printf '\\nREMOTE_END_26:%d\\n' $?\r\n\r\nREMOTE_END_26:0\r\n/ > "
+  },
+  {
+    "command": "bbsed -e 's/alpha/A/g' -e 's/beta/B/g' /tmp/bbt-cases > /tmp/bbt-candidate",
+    "status": 0,
+    "text": "bbsed -e 's/alpha/A/g' -e 's/beta/B/g' /tmp/bbt-cases > /tmp/bbt-candidate; printf '\\nREMOTE_END_27:%d\\n' $?\r\n\r\nREMOTE_END_27:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/bbt-reference /tmp/bbt-candidate",
+    "status": 1,
+    "text": "cmp /tmp/bbt-reference /tmp/bbt-candidate; printf '\\nREMOTE_END_28:%d\\n' $?\r\ncmp: EOF on /tmp/bbt-candidate\r\n\r\nREMOTE_END_28:1\r\n/ > "
+  }
+]
