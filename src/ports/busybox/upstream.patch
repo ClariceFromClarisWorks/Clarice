@@ -1,0 +1,92 @@
+--- a/editors/vi.c
++++ b/editors/vi.c
+@@ -1070,7 +1070,7 @@
+ 			memcpy(sp+cs, out_buf+cs, ce-cs+1);
+ 			place_cursor(li, cs);
+ 			// write line out to terminal
+-			fwrite(&sp[cs], ce - cs + 1, 1, stdout);
++			bb_out(&sp[cs], ce - cs + 1);
+ 		}
+ 	}
+ 
+@@ -2030,7 +2030,7 @@
+ 	 && ((access(fn, W_OK) < 0) ||
+ 		// root will always have access()
+ 		// so we check fileperms too
+-		!(statbuf.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH))
++		0 /* HFS lock is checked by access(), not Unix permission bits */
+ 	    )
+ 	) {
+ 		SET_READONLY_FILE(readonly_mode);
+@@ -2363,23 +2363,8 @@
+ 		status_line_bold("No current filename");
+ 		return -2;
+ 	}
+-	// By popular request we do not open file with O_TRUNC,
+-	// but instead ftruncate() it _after_ successful write.
+-	// Might reduce amount of data lost on power fail etc.
+-	fd = open(fn, (O_WRONLY | O_CREAT), 0666);
+-	if (fd < 0)
+-		return -1;
+ 	cnt = last - first + 1;
+-	charcnt = full_write(fd, first, cnt);
+-	ftruncate(fd, charcnt);
+-	if (charcnt == cnt) {
+-		// good write
+-		//modified_count = FALSE;
+-	} else {
+-		charcnt = 0;
+-	}
+-	close(fd);
+-	return charcnt;
++	return bb_save_file(fn, first, cnt);
+ }
+ 
+ #if ENABLE_FEATURE_VI_SEARCH
+@@ -3046,7 +3031,7 @@
+ 			r = end_line(dot);
+ 		}
+ 		go_bottom_and_clear_to_eol();
+-		puts("\r");
++		write1("\r\n");
+ 		for (; q <= r; q++) {
+ 			int c_is_no_print;
+ 
+@@ -4979,7 +4964,7 @@
+ 
+ 	// 0: all of our options are disabled by default in vim
+ 	//vi_setops = 0;
+-	opts = getopt32(argv, VI_OPTSTR IF_FEATURE_VI_COLON(, &initial_cmds));
++	opts = bb_vi_options(argc, argv, &initial_cmds);
+ 
+ #if ENABLE_FEATURE_VI_CRASHME
+ 	if (opts & OPT_C)
+@@ -5007,27 +4992,9 @@
+ 
+ 		if (exinit) {
+ 			cmds = xstrdup(exinit);
+-		} else {
+-			const char *home = getenv("HOME");
+-
+-			if (home && *home) {
+-				char *exrc = concat_path_file(home, ".exrc");
+-				struct stat st;
+-
+-				// .exrc must belong to and only be writable by user
+-				if (stat(exrc, &st) == 0) {
+-					if ((st.st_mode & (S_IWGRP|S_IWOTH)) == 0
+-					 && st.st_uid == getuid()
+-					) {
+-						cmds = xmalloc_open_read_close(exrc, NULL);
+-					} else {
+-						status_line_bold(".exrc: permission denied");
+-					}
+-				}
+-				free(exrc);
+-			}
+ 		}
+ 
++
+ 		if (cmds) {
+ 			init_text_buffer(NULL);
+ 			run_cmds(cmds);

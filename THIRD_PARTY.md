@@ -104,3 +104,12 @@ Berkeley and its contributors. This product includes software developed or
 owned by Caldera International, Inc.
 Separable adaptations: `src/ports/vi`; test status and limitations:
 `outputs/vi/README.md`. Not a production-complete port.
+
+- **BusyBox vi 1.37.0** (experimental optional `bbvi`): Sterling Huxley and
+  BusyBox contributors; GPL notices and AUTHORS in `licenses/busybox/` and
+  retained source headers. Official archive SHA-256
+  `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`.
+  `scripts/prepare-busybox-vi.py` stages genuine editor and selected libbb sources;
+  `src/ports/busybox/` contains separate configuration, patch and Macintosh
+  boundaries. This is not a port of the whole BusyBox suite. See
+  `outputs/busybox/README.md` for enabled features, tests and limitations.

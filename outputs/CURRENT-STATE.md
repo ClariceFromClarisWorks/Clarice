@@ -1,6 +1,27 @@
 # Clarice current state
 
 
+## BusyBox vi evaluation — 18 November 2026, isolated branch
+
+- Optional genuine BusyBox1.37.0 `bbvi`, build2026111871, installed through
+  Clarice update in private Snow. No Core/sbase/other utility replacement,
+  physical SE use, merge or push. Branch codex/busybox-evaluation-20261118.
+- 36912 B loaded image (78% below Heirloom167504 B), 56704 B package,
+  1352 relocations. Same runtime1.9/raw terminal and safe HFS save services.
+- Three matched Snow runs: median8KiB ready1.884s vs Heirloom6.248s/xvi11.910s;
+  whole open/insert/discard3.026s vs6.849s/12.810s. Not physical timing.
+  First visible insertion is slower:267–332ms vs Heirloom61–74ms.
+  Working peak21266 B empty/23314 B file; remaining0 throughout.
+- 43 guest observations and full8192 B save equality pass; host sanitized save
+  failure injection passes. Clean final rebuild byte-identical. Literal search
+  only; limited ex, no process/filter/autoexrc or unsaved disconnect recovery.
+- Keep sbase/awk/shell/network. Shortlist additional applets individually:
+  base64, diff, then safe patch; standalone compression needs separate assessment.
+  This evaluation does not port or authorise integration of those commands.
+- [Full evidence and limitations](busybox/README.md),
+  [Telnet observations](busybox/TELNET-FINDINGS.md).
+
+
 ## Original vi versus xvi — isolated Snow comparison, 18 November
 
 Separate `codex/upstream-vi-comparison-20261118` branch based on xvi investigation;
