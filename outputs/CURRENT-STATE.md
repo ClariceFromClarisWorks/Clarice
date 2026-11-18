@@ -11,7 +11,8 @@
 - Host loader/resource/repository/recovery tests pass. Isolated Snow migration
   1882→1901→1902 and automatic completion pass, including the full repository
   with external updater/downloader absent before the final handoff.
-  No physical acceptance, merge, push or release.
+  PB180/System 7.1 hardware update/relaunch and builtin repeat checks also pass;
+  stock-SE acceptance remains separate. No merge, push or public release.
 - [Design, measured costs, evidence and migration boundaries](self-update/README.md).
 
 ## Resource fork validation gap resolved — 18 November 2026

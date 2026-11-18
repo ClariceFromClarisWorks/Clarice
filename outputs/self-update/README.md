@@ -138,3 +138,10 @@ The isolated guest was closed cleanly and its test HTTP server stopped. Other
 agents' workspaces and user-facing update servers were left untouched. Candidate
 is not merged, pushed or published. Recommended next step is review/integration
 with the concurrent updater fixes, followed by physical System 6 validation.
+
+## Physical PB180 follow-up
+
+User-authorized System 7.1 test passes: Core1882→1902 automatic handoff, builtin
+help and repeat repository update with the external updater archived, cleanup
+and utility smoke checks. Help0.31/0.26s; no-change update3.10s. This is 68030
+PB180 evidence, not stock-SE acceptance. [Full record and limits](pb180/README.md).
