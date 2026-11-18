@@ -76,3 +76,17 @@ Source: https://github.com/rxi/microtar . A separate restricted release reader
 checks field bounds and approved member names before calling upstream parsing.
 No general archive extraction or compression support is added. Native product
 integration remains unfinished.
+
+
+## Optional experimental xvi
+
+The separate xvi investigation uses Chris and John Downey's STEVIE-derived xvi,
+original work by Tim Thompson and Tony Andrews, later maintained by Martin Guy.
+Pinned upstream: https://github.com/martinwguy/xvi commit
+`109d2f39849ec81cc36001dbc341aaa45ff7e8ce` (source version string 2.50).
+This is the portable editor with Atari ST/TOS support, not an X Windows frontend.
+See [copying permission](licenses/xvi/COPYING), [preparation](scripts/prepare-xvi.py)
+and [investigation](outputs/xvi/README.md). Original source/notices remain intact;
+Clarice-specific adaptations are separately located in `src/ports/xvi` and are
+provided under those copying terms. Distribute corresponding source with any
+compiled xvi package; this investigation does not publish a binary release.

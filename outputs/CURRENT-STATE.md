@@ -1,5 +1,22 @@
 # Clarice current state
 
+## xvi investigation — separate branch, Snow only, 18 November
+
+Experimental genuine STEVIE-derived xvi port on `codex/xvi-investigation-20261118`;
+base `7e3e036`, with runtime 1.9 dependency supplied by the newer local guest
+Core 2026111823. No Core/Telnet source changes, merge, push or SE access.
+Installed optional xvi 2026111841, then help-only 1843 via `clarice update`
+in isolated Snow. Final package 156044 B; measured image 99300 B.
+Telnet insert/search/substitution/save/reopen and locked/readonly protection pass;
+host safe-save adapter sanitizer/failure tests pass. Remote emergency preservation
+is a production blocker: cancellation bypasses upstream hangup recovery.
+Local save and final-package Telnet smoke pass. Resource data/map/application
+area preserved; 39 system-reserved header bytes differ, explicitly recorded.
+Not production-complete.
+See [investigation, costs and remaining validation](xvi/README.md) and
+[Telnet/runtime issues for the ongoing rework](xvi/TELNET-FINDINGS.md).
+
+
 ## Password-protected supplementary Telnet — Snow validated
 
 Core **2026111810** (runtime 1.8), optional `telnetd` **2026111811**, deployed through

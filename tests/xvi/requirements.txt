@@ -1,0 +1,2 @@
+# Host-only ANSI screen oracle for measure.py; never linked into Clarice/xvi.
+pyte==0.8.2

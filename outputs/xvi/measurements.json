@@ -1,0 +1,101 @@
+{
+  "note": "Snow only; host timings include 1-second quiet wait; guest command ticks include automation/input waiting; no stock SE or cold-boot acceptance",
+  "runs": [
+    {
+      "command": "xvi",
+      "host_seconds_to_quiet_screen": 3.008934958000001,
+      "transcript_bytes": 1247,
+      "heap": 333600,
+      "largest": 331260,
+      "image": 99300,
+      "command_ticks_including_wait": 260,
+      "loader_ticks": 79,
+      "owned_peak": 23728,
+      "remaining": 0
+    },
+    {
+      "command": "xvi",
+      "host_seconds_to_quiet_screen": 3.1030092909999993,
+      "transcript_bytes": 1247,
+      "heap": 333600,
+      "largest": 331260,
+      "image": 99300,
+      "command_ticks_including_wait": 267,
+      "loader_ticks": 92,
+      "owned_peak": 23728,
+      "remaining": 0
+    },
+    {
+      "command": "xvi",
+      "host_seconds_to_quiet_screen": 2.8580812500000015,
+      "transcript_bytes": 1247,
+      "heap": 333600,
+      "largest": 331260,
+      "image": 99300,
+      "command_ticks_including_wait": 247,
+      "loader_ticks": 78,
+      "owned_peak": 23728,
+      "remaining": 0
+    },
+    {
+      "command": "xvi /tmp/xvi-8k",
+      "host_seconds_to_quiet_screen": 3.0653801249999972,
+      "transcript_bytes": 13490,
+      "heap": 333600,
+      "largest": 331260,
+      "image": 99300,
+      "command_ticks_including_wait": 749,
+      "loader_ticks": 78,
+      "owned_peak": 45996,
+      "remaining": 0
+    },
+    {
+      "command": "xvi /tmp/xvi-8k",
+      "host_seconds_to_quiet_screen": 3.114889667,
+      "transcript_bytes": 13490,
+      "heap": 333600,
+      "largest": 331260,
+      "image": 99300,
+      "command_ticks_including_wait": 747,
+      "loader_ticks": 78,
+      "owned_peak": 45996,
+      "remaining": 0
+    },
+    {
+      "command": "xvi /tmp/xvi-8k",
+      "host_seconds_to_quiet_screen": 3.1280967499999974,
+      "transcript_bytes": 13490,
+      "heap": 333600,
+      "largest": 331260,
+      "image": 99300,
+      "command_ticks_including_wait": 752,
+      "loader_ticks": 78,
+      "owned_peak": 45996,
+      "remaining": 0
+    },
+    {
+      "command": "xvi /tmp/xvi-edit.txt",
+      "host_seconds_to_quiet_screen": 3.4388183749999968,
+      "transcript_bytes": 2694,
+      "heap": 333586,
+      "largest": 331260,
+      "image": 99300,
+      "command_ticks_including_wait": 486,
+      "loader_ticks": 78,
+      "owned_peak": 24268,
+      "remaining": 0
+    },
+    {
+      "command": "xvi /tmp/xvi-8k",
+      "host_seconds_to_quiet_screen": 3.0629923750000074,
+      "transcript_bytes": 15313,
+      "heap": 333586,
+      "largest": 331260,
+      "image": 99300,
+      "command_ticks_including_wait": 1142,
+      "loader_ticks": 77,
+      "owned_peak": 45996,
+      "remaining": 0
+    }
+  ]
+}

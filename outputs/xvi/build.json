@@ -1,0 +1,14 @@
+{
+  "package_bytes": 155908,
+  "image_bytes": 99300,
+  "relocations": 4404,
+  "imports": 58,
+  "runtime": "1.9",
+  "sha256": "110648340e090529212b3ca12b9f2f38528c950ac46f61f35279f244a7800a95",
+  "imports_checked_against": "Clarice-Main local runtime 1.10",
+  "tested_revision": 2026111841,
+  "final_help_only_revision": 2026111843,
+  "final_help_only_package_bytes": 156044,
+  "final_help_only_image_bytes": 99436,
+  "final_help_only_sha256": "b83041b928686fc98863e72b7ce67cf7d7ce15c2f7b35336ea320b917d8773b2"
+}

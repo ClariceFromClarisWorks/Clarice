@@ -1,0 +1,17 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333602 largest=331174 image=99300 ticks=2832 load=96 owned-peak=26760 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 75003 0 0 0 0; input batches=15 sum=84 max=20; initial-heap=0\r\nEditor startup: draws=4 rows=76 text=3 copy=6 total=38 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=3 bytes=1234 feed-ticks=7\r\nNative ticks: allocs=27 FreeMem=0 NewPtr=3 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=23\r\nLoader ticks: read=40 validate=1 imports=3 relocations=16 prepare=26 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=10 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/xvi-local.txt",
+    "status": 0,
+    "text": "cat /tmp/xvi-local.txt; printf '\\nREMOTE_END_2:%d\\n' $?\r\nLocal xvi works\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "ls -l /tmp/xvi-forks",
+    "status": 0,
+    "text": "ls -l /tmp/xvi-forks; printf '\\nREMOTE_END_3:%d\\n' $?\r\n---         18     280364 2026-11-17 16:08 /tmp/xvi-forks\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]
