@@ -6,6 +6,7 @@
 #include <locale.h>
 #include <time.h>
 #include <libgen.h>
+#include "buffered-getc.h"
 int port_nano_stat(const char *,struct stat *);
 int port_nano_access(const char *,int);
 char *port_nano_realpath(const char *,char *);

@@ -1,0 +1,37 @@
+[
+  {
+    "command": "cat /tmp/nb-cancel0 /tmp/nb-cancel1 /tmp/nb-cancel2",
+    "status": 0,
+    "text": "cat /tmp/nb-cancel0 /tmp/nb-cancel1 /tmp/nb-cancel2; printf '\\nREMOTE_END_1:%d\\n' $?\r\n130\r\n130\r\n130\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/nb-clean0 /tmp/nb-clean1 /tmp/nb-clean2",
+    "status": 0,
+    "text": "cat /tmp/nb-clean0 /tmp/nb-clean1 /tmp/nb-clean2; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=364234 largest=360544 image=199176 ticks=152 load=100 owned-peak=59954 remaining=0\r\nNano ticks: 9226107 9226224 9226224 9226225 9226252 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=365082\r\nEditor startup: draws=1 rows=25 text=0 copy=2 total=11 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=108 FreeMem=0 NewPtr=20 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=0 imports=4 relocations=20 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=12 (structure included in relocations)\r\nRuntime: heap=364246 largest=360438 image=199176 ticks=261 load=101 owned-peak=87394 remaining=0\r\nNano ticks: 9229525 9229642 9229644 9229646 9229685 9229727 0 0 0 9229763 0 0 0; input batches=0 sum=0 max=0; initial-heap=365084\r\nEditor startup: draws=3 rows=51 text=1 copy=7 total=24 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=4 bytes=47 feed-ticks=1\r\nNative ticks: allocs=131 FreeMem=2 NewPtr=51 reads=8 read=3 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=0 imports=3 relocations=21 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=13 (structure included in relocations)\r\nRuntime: heap=364246 largest=360438 image=199176 ticks=488 load=108 owned-peak=101736 remaining=0\r\nNano ticks: 9233034 9233160 9233161 9233162 9233189 9233219 9233329 9233377 9233460 9233275 9233319 0 0; input batches=0 sum=0 max=0; initial-heap=365088\r\nEditor startup: draws=19 rows=77 text=32 copy=3 total=64 ticks\r\nCurses startup: refreshes=1 refresh-ticks=80 writes=36 bytes=1922 feed-ticks=21\r\nNative ticks: allocs=138 FreeMem=0 NewPtr=34 reads=17 read=8 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=64 validate=2 imports=3 relocations=21 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=14 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/nfast-save",
+    "status": 0,
+    "text": "cat /tmp/nfast-save; printf '\\nREMOTE_END_3:%d\\n' $?\r\nEDIT ORIGINAL\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr /tmp/nfast-save",
+    "status": 0,
+    "text": "hfsattr /tmp/nfast-save; printf '\\nREMOTE_END_4:%d\\n' $?\r\n/tmp/nfast-save: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/nb-save",
+    "status": 0,
+    "text": "cat /tmp/nb-save; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=364246 largest=360388 image=199176 ticks=4128 load=108 owned-peak=77160 remaining=0\r\nNano ticks: 9237045 9237171 9237172 9237173 9237200 9237230 9237287 9237312 9237318 9237268 9237268 9240373 9240461; input batches=7 sum=85 max=58; initial-heap=365088\r\nEditor startup: draws=8 rows=56 text=3 copy=5 total=32 ticks\r\nCurses startup: refreshes=1 refresh-ticks=4 writes=16 bytes=478 feed-ticks=3\r\nNative ticks: allocs=127 FreeMem=4 NewPtr=24 reads=2 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=66 validate=2 imports=3 relocations=21 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "wc -lc /tmp/nshort /tmp/nlong",
+    "status": 0,
+    "text": "wc -lc /tmp/nshort /tmp/nlong; printf '\\nREMOTE_END_6:%d\\n' $?\r\n128 8192 /tmp/nshort\r\n2 8192 /tmp/nlong\r\n130 16384 total\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "echo POST-EDITOR-OK",
+    "status": 0,
+    "text": "echo POST-EDITOR-OK; printf '\\nREMOTE_END_7:%d\\n' $?\r\nPOST-EDITOR-OK\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  }
+]

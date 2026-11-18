@@ -1,0 +1,42 @@
+[
+  {
+    "command": "mkdir -p /tmp/nverify; mkdir -p /mnt/GlyphFull/nverify",
+    "status": 0,
+    "text": "mkdir -p /tmp/nverify; mkdir -p /mnt/GlyphFull/nverify; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "printf 'BOOT\\n' > /tmp/nverify/file; printf 'OTHER\\n' > /mnt/GlyphFull/nverify/file",
+    "status": 0,
+    "text": "printf 'BOOT\\n' > /tmp/nverify/file; printf 'OTHER\\n' > /mnt/GlyphFull/nverify/file; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "rm -f /tmp/nverify/link; ln -s /mnt/GlyphFull/nverify /tmp/nverify/link; cd /tmp/nverify; test \"$(cat link/file)\" = OTHER; test \"$(cat file)\" = BOOT",
+    "status": 0,
+    "text": "rm -f /tmp/nverify/link; ln -s /mnt/GlyphFull/nverify /tmp/nverify/link; cd /tmp/nverify; test \"$(cat link/file)\" = OTHER; test \"$(cat file)\" = BOOT; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\nnverify > "
+  },
+  {
+    "command": "cd link; test \"$(pwd)\" = /mnt/GlyphFull/nverify; test \"$(cat file)\" = OTHER",
+    "status": 0,
+    "text": "cd link; test \"$(pwd)\" = /mnt/GlyphFull/nverify; test \"$(cat file)\" = OTHER; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\nnverify > "
+  },
+  {
+    "command": "cd /tmp; cat /mnt/NoSuchVolume/nverify/file",
+    "status": 1,
+    "text": "cd /tmp; cat /mnt/NoSuchVolume/nverify/file; printf '\\nREMOTE_END_5:%d\\n' $?\r\ncat: Mac OS error -35: Volume not found\r\n\r\nREMOTE_END_5:1\r\ntmp > "
+  },
+  {
+    "command": "printf BAD > /mnt/NoSuchVolume/nverify/file",
+    "status": 2,
+    "text": "printf BAD > /mnt/NoSuchVolume/nverify/file; printf '\\nREMOTE_END_6:%d\\n' $?\r\nsh: output redirection failed\r\n\r\nREMOTE_END_6:2\r\ntmp > "
+  },
+  {
+    "command": "test \"$(cat /tmp/nverify/file)\" = BOOT; test \"$(cat /mnt/GlyphFull/nverify/file)\" = OTHER",
+    "status": 0,
+    "text": "test \"$(cat /tmp/nverify/file)\" = BOOT; test \"$(cat /mnt/GlyphFull/nverify/file)\" = OTHER; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\ntmp > "
+  },
+  {
+    "command": "hfsattr --type TEXT --creator ttxt /tmp/nverify/file; hfsattr /tmp/nverify/file",
+    "status": 0,
+    "text": "hfsattr --type TEXT --creator ttxt /tmp/nverify/file; hfsattr /tmp/nverify/file; printf '\\nREMOTE_END_8:%d\\n' $?\r\n/tmp/nverify/file: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nREMOTE_END_8:0\r\ntmp > "
+  }
+]

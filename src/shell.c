@@ -122,7 +122,7 @@ static int selftest(void){unsigned long t=TickCount(),n;int fail=0;char b[2048],
 static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  shell_commands++;
  if(session_io&&(!strcmp(av[0],"prefs")||!strcmp(av[0],"scrollbench")||!strcmp(av[0],"checks")||!strcmp(av[0],"selftest")||(!strcmp(av[0],"status")&&argc<2))){errsay("command requires the local graphical terminal\n");return 2;}
- if(!strcmp(av[0],"remote")){if(argc==2&&!strcmp(av[1],"off"))status=shell_service_stop()?1:0;else if(argc==2&&!strcmp(av[1],"status"))say(service_image?"Telnet service enabled\n":"Telnet service disabled\n");else{say("remote status | off; start with telnetd --no-password --peer IPv4 [--port N]\n");status=argc==1?0:2;}}
+ if(!strcmp(av[0],"remote")){if(argc==2&&!strcmp(av[1],"off"))status=shell_service_stop()?1:0;else if(argc==2&&!strcmp(av[1],"status")){say(service_image?"Telnet service enabled\n":"Telnet service disabled\n");say(serial_service_image?"Serial service enabled\n":"Serial service disabled\n");}else{say("remote status | off; start with telnetd --no-password --peer IPv4 [--port N]\n");status=argc==1?0:2;}}
  else if(!strcmp(av[0],"help"))status=help_command(argc,av);
  else if(!strcmp(av[0],"appinstall"))status=appinstall_command(argc,av);
  else if(!strcmp(av[0],"pwd")){say(unix_cwd);say("\n");}

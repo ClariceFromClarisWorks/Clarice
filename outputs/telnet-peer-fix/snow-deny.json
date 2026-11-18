@@ -1,0 +1,23 @@
+[
+  {
+    "sample": 0,
+    "mode": "deny",
+    "outcome": "eof",
+    "received_hex": "",
+    "host_seconds": 0.168685416
+  },
+  {
+    "sample": 1,
+    "mode": "deny",
+    "outcome": "eof",
+    "received_hex": "",
+    "host_seconds": 0.20142591600000004
+  },
+  {
+    "sample": 2,
+    "mode": "deny",
+    "outcome": "eof",
+    "received_hex": "",
+    "host_seconds": 0.08368737500000023
+  }
+]

@@ -1,0 +1,1 @@
+PASS nano buffered getc: binary bytes, buffer boundaries, pushback, EOF, interrupted refill and recovery; libc owns streams

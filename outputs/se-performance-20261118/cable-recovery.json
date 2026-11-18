@@ -1,0 +1,5 @@
+{
+  "login_seconds": 23.177158458,
+  "status": 0,
+  "text": "echo PHYSICAL_RECONNECTED; status runtime; printf '\\nSE_END_1:%d\\n' $?\r\nPHYSICAL_RECONNECTED\r\nRuntime: heap=318584 largest=317302 image=20688 ticks=51 load=37 owned-peak=0 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=0 FreeMem=0 NewPtr=0 reads=1 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=14 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nSE_END_1:0\r\n/ > "
+}

@@ -1,10 +1,11 @@
+import os
 """Snow-only UI/session acceptance; no physical-machine connection."""
 from client import Client
 import subprocess,time,json,re,sys
 from pathlib import Path
 pid=sys.argv[1];base=Path('/Users/williamprestwich/Documents/ChatGPT/Clarice/work')
 control=str(base/'snow-performance/control');click=str(base/'se-control-upgrade/click');drag=str(base/'ux-six/drag')
-out=Path('outputs/remote-sessions');rows=[]
+out=Path(os.environ.get('CLARICE_REMOTE_OUTPUT', 'outputs/remote-sessions'));rows=[]
 def call(*args):subprocess.run(list(args),check=True,timeout=20)
 def shot(name):
  p=out/(name+'.png');call(control,pid,'shot',str(p));call('sips','-Z','1000',str(p),'--out',str(p))

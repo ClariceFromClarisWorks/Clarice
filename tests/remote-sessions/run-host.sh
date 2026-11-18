@@ -15,3 +15,7 @@ cc -g -fsanitize=address,undefined -Wno-unknown-escape-sequence \
  -I tests/remote-sessions/include tests/remote-sessions/service-host.c \
  src/commands/network/telnet-engine.c -o work/remote-sessions/service-host
 work/remote-sessions/service-host
+
+cc -g -fsanitize=address,undefined -I tests/remote-sessions/include \
+ tests/remote-sessions/serial-host.c -o work/remote-sessions/serial-host
+work/remote-sessions/serial-host

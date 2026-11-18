@@ -1,0 +1,142 @@
+[
+  {
+    "variant": "b",
+    "fixture": "buffer",
+    "first_ticks": 259,
+    "repeat_ticks": [
+      264,
+      294,
+      311
+    ],
+    "warm_mean_ticks": 289.6666666666667,
+    "warm_median_ticks": 294,
+    "file_ticks": [
+      5,
+      5,
+      5,
+      6
+    ],
+    "owned_peak": [
+      74572
+    ]
+  },
+  {
+    "variant": "b",
+    "fixture": "empty",
+    "first_ticks": 342,
+    "repeat_ticks": [],
+    "warm_mean_ticks": null,
+    "warm_median_ticks": null,
+    "file_ticks": [
+      71
+    ],
+    "owned_peak": [
+      75112
+    ]
+  },
+  {
+    "variant": "b",
+    "fixture": "short",
+    "first_ticks": 558,
+    "repeat_ticks": [
+      499,
+      508,
+      499
+    ],
+    "warm_mean_ticks": 502,
+    "warm_median_ticks": 499,
+    "file_ticks": [
+      161,
+      147,
+      147,
+      147
+    ],
+    "owned_peak": [
+      101736
+    ]
+  },
+  {
+    "variant": "b",
+    "fixture": "long",
+    "first_ticks": 424,
+    "repeat_ticks": [],
+    "warm_mean_ticks": null,
+    "warm_median_ticks": null,
+    "file_ticks": [
+      181
+    ],
+    "owned_peak": [
+      95662
+    ]
+  },
+  {
+    "variant": "a",
+    "fixture": "buffer",
+    "first_ticks": 260,
+    "repeat_ticks": [
+      254,
+      259,
+      254
+    ],
+    "warm_mean_ticks": 255.66666666666666,
+    "warm_median_ticks": 254,
+    "file_ticks": [
+      5,
+      5,
+      6,
+      5
+    ],
+    "owned_peak": [
+      74572
+    ]
+  },
+  {
+    "variant": "a",
+    "fixture": "empty",
+    "first_ticks": 294,
+    "repeat_ticks": [],
+    "warm_mean_ticks": null,
+    "warm_median_ticks": null,
+    "file_ticks": [
+      71
+    ],
+    "owned_peak": [
+      75112
+    ]
+  },
+  {
+    "variant": "a",
+    "fixture": "short",
+    "first_ticks": 542,
+    "repeat_ticks": [
+      578,
+      474,
+      479
+    ],
+    "warm_mean_ticks": 510.3333333333333,
+    "warm_median_ticks": 479,
+    "file_ticks": [
+      146,
+      134,
+      128,
+      130
+    ],
+    "owned_peak": [
+      101736
+    ]
+  },
+  {
+    "variant": "a",
+    "fixture": "long",
+    "first_ticks": 490,
+    "repeat_ticks": [],
+    "warm_mean_ticks": null,
+    "warm_median_ticks": null,
+    "file_ticks": [
+      156
+    ],
+    "owned_peak": [
+      95662
+    ]
+  }
+]

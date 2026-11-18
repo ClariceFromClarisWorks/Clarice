@@ -3,6 +3,7 @@
 typedef struct {
  struct sh_saved shell;
  ClariceSessionIO io;
+ ClariceSessionWire wire;
  int closed,status,flow,flow_status,depth,source_depth,loop,functions_active;
  int substatus,script_depth,output_error,history_enabled;
  unsigned long substitutions,commands,history_count;
@@ -109,3 +110,8 @@ static int shell_relocate_cwd(const char *oldpath,const char *newpath,int commit
  return 0;
 }
 #endif
+int cli_session_set_wire(void *opaque,ClariceSessionWire wire){if(opaque!=remote_session||local_session)return -1;remote_session->wire=wire;return 0;}
+long cli_remote_wire(int op,void *data,unsigned long size){
+ if(!session_io||!remote_session||!remote_session->wire)return op==0?0:-1;
+ return remote_session->wire(op,data,size);
+}

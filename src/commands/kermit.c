@@ -11,6 +11,9 @@
 #include "../ports/ekermit/upstream/kermit.h"
 #include "../ports/ekermit/files.h"
 static void message(int fd,const char *format,...){
+#ifndef KERMIT_HOST
+ if(remote_wire)return; /* Never mix diagnostics with protocol bytes. */
+#endif
  char text[1024];va_list ap;va_start(ap,format);int n=vsnprintf(text,sizeof text,format,ap);va_end(ap);
  if(n<0)return;if(n>=(int)sizeof text)n=sizeof text-1;
 #ifdef KERMIT_HOST
@@ -27,7 +30,7 @@ static int progress_columns(void){struct winsize w;return !ioctl(2,TIOCGWINSZ,&w
 static void progress_row(const char *s,int done){message(2,"\r\033[K%s%s",s,done?"\n":"");}
 #else
 extern int cli_isatty(int),app_columns(void);
-#define progress_tty() cli_isatty(2)
+#define progress_tty() (!remote_wire&&cli_isatty(2))
 #define progress_row app_progress
 #define progress_columns app_columns
 #endif
@@ -68,7 +71,7 @@ static const char help[]=
  "       kermit [-b 57600] [-d DEVICE] receive NEWFILE\n"
  "Binary data-fork transfer using E-Kermit 1.8; CRC-16, short packets, one\nfile.\n"
  "Default modem, 57600 baud, 8N1, no flow control. Existing destinations\nrefused.\n"
- "Exit serial first (Ctrl+] then q); start the peer's complementary\ntransfer.\n"
+ "From a remote shell, uses that session; wait for Kermit ready.\nTelnet requires binary negotiation. Locally, exit serial first.\n"
  "Ctrl+C or Command-period cancels. Reconnect serial afterward for text.\n"
  "Complete Macintosh files require a MacBinary container; no automatic\nfork conversion.\n"
  "Frank da Cruz / Columbia University; revised 3-clause BSD licence.\n"
@@ -115,6 +118,10 @@ end:
  if(progress_enabled){progress_update(transfer_bytes,transfer_size,transfer_size_known,result?-1:1);progress_enabled=0;}
  e=file_close();if(e)result=1;
  if(owned&&file_finish(0)) {message(2,"kermit: temporary cleanup failed: %s\n",temporary);result=1;}
+
+#ifndef KERMIT_HOST
+ remote_transfer_failed=result!=0;
+#endif
  e=transport_close();if(e){message(2,"kermit: serial cleanup failed (%d)\n",e);result=1;}
  message(2,"kermit: %s%s\n",result==0?"transfer complete":result==130?"cancelled":"transfer failed",completed&&result?" (complete file may already be present)":"");
  return result;
