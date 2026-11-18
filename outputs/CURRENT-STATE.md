@@ -1,5 +1,26 @@
 # Clarice current state
 
+
+## Original vi versus xvi — isolated Snow comparison, 18 November
+
+Separate `codex/upstream-vi-comparison-20261118` branch based on xvi investigation;
+genuine Heirloom/Berkeley vi pinned at `3f1e9786d249`. Optional vi 2026111864 installed
+through Clarice update; Core 2026111823 and telnetd 2026111814 unchanged. No SE use,
+merge, push or release. 256780 B package / 167504 B image versus xvi's
+156044 B / 99436 B. O2 LTO brings vi within existing CLX limits.
+
+Matched interleaved Snow/Telnet tests: 8 KiB full-screen startup vi **5.3–5.5 s**,
+xvi **9.1–10.3 s**; empty vi **2.3–2.9 s**, xvi **2.2–2.4 s**. Emulator only,
+not physical performance acceptance. Vi startup output is roughly eight times
+smaller; its larger executable does not imply slower file interaction.
+44 guest regression observations and host safe-save/temp-I/O sanitizer checks
+pass, including full 8 KiB save byte comparison. Clean rebuild reproduces the
+installed package. HFS temp seeks, open-file unlinking and read-only detection
+adapted without Core changes. Unsaved disconnect recovery remains a production
+blocker; not a production-complete port. See [comparison and measured costs](vi/README.md)
+and [Telnet findings](vi/TELNET-FINDINGS.md). Recommended next performance work:
+xvi terminal adapter improvement, then repeat the same comparison; not started.
+
 ## xvi investigation — separate branch, Snow only, 18 November
 
 Experimental genuine STEVIE-derived xvi port on `codex/xvi-investigation-20261118`;

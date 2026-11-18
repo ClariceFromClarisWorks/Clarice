@@ -1,0 +1,1 @@
+PASS: begin/open/short-write/close/commit failures; error unwind; retry; success; unrelated descriptor

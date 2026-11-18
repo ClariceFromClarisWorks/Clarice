@@ -1,0 +1,688 @@
+--- a/ex.c
++++ b/ex.c
+@@ -200,19 +200,8 @@
+ int 
+ iownit(char *file)
+ {
+-	struct stat sb;
+-
+-	if (*file == '.' && value(EXRC) == 0)
+-		return 0;
+-	if (stat(file, &sb))
+-		return 0;
+-	if (value(SOURCEANY))
+-		return 1;
+-	if (sb.st_uid != getuid())
+-		return 0;
+-	if (sb.st_mode & (S_IWOTH | S_IWGRP))
+-		return 0;
+-	return 1;
++	/* No Unix ownership model: never auto-source exrc files. */
++	(void)file; return 0;
+ }
+ 
+ shand 
+@@ -234,7 +223,7 @@
+ #endif
+ 	/*EMPTY*/ ;
+ 	}
+-	if (sigaction(signum, &nact, &oact) != 0)
++	if (vi_sigaction(signum, &nact, &oact) != 0)
+ 		return SIG_ERR;
+ 	return oact.sa_handler;
+ }
+@@ -291,7 +280,7 @@
+ 	 * Initialize the built-in memory allocator.
+ 	 */
+ #ifdef	VMUNIX
+-	poolsbrk(0);
++	/* Clarice uses invocation-owned malloc, no Unix break allocator. */
+ #endif
+ 
+ 	/*
+@@ -307,7 +296,7 @@
+ 	 */
+ 	gTTY(1);
+ 	normf = tty;
+-	ppid = getpid();
++	ppid = vi_temp_id();
+ 	/*
+ 	 * Defend against d's, v's, w's, and a's in directories of
+ 	 * path leading to our true name.
+--- a/ex.h
++++ b/ex.h
+@@ -175,9 +175,7 @@
+ #endif
+ #endif
+ 
+-#ifndef	LISPCODE
+-#define	LISPCODE
+-#endif
++/* Optional Lisp mode disabled in Clarice small build. */
+ #ifndef	CHDIR
+ #define	CHDIR
+ #endif
+@@ -270,9 +268,9 @@
+ 
+ #endif	/* !TRACE */
+ 
+-typedef	sigjmp_buf	JMP_BUF;
+-#define	SETJMP(a)	sigsetjmp(a, 1)
+-#define	LONGJMP(a, b)	siglongjmp(a, b)
++typedef	jmp_buf	JMP_BUF;
++#define	SETJMP(a)	setjmp(a)
++#define	LONGJMP(a, b)	longjmp(a, b)
+ 
+ #undef	MAXBSIZE
+ #define	MAXBSIZE	(2*LBSIZE)
+--- a/ex_cmds2.c
++++ b/ex_cmds2.c
+@@ -200,10 +200,10 @@
+ 	bool die;
+ 
+ 	if (io > 0) {
+-		close(io);
++		vi_save_abort_close(io);
+ 		io = -1;
+ 	}
+-	die = (getpid() != ppid);	/* Only children die */
++	die = 0; /* No child processes on this execution path. */	/* Only children die */
+ 	inappend = inglobal = 0;
+ 	globp = NULL, vmacp = NULL, vglobp = NULL;
+ 	if (vcatch && !die) {
+--- a/ex_data.c
++++ b/ex_data.c
+@@ -90,7 +90,7 @@
+  * These initializations are done char by char instead of as strings
+  * to confuse xstr so it will leave them alone.
+  */
+-#ifdef	notdef
++#if defined(CLARICE)
+ char	direct[ONMSZ] =
+ 	{'/', 't', 'm', 'p'}; 
+ #else
+--- a/ex_io.c
++++ b/ex_io.c
+@@ -334,7 +334,7 @@
+ 		*argv = cp;
+ 		for (;;) {
+ 			if (read(io, &ch, 1) != 1) {
+-				close(io);
++				if (vi_save_close(io) < 0) syserror();
+ 				c = -1;
+ 			} else
+ 				c = ch & TRIM;
+@@ -459,7 +459,7 @@
+ 			value(READONLY) = ovro;
+ 			denied = 0;
+ 		}
+-		if ((stbuf.st_mode & 0222) == 0 || access(file, W_OK) < 0) {
++		if (access(file, W_OK) < 0) {
+ 			ovro = value(READONLY);
+ 			denied = 1;
+ 			value(READONLY) = 1;
+@@ -519,8 +519,8 @@
+ iostats(void)
+ {
+ 
+-	fsync(io);
+-	close(io);
++	/* vi_save_close commits and flushes native safe replacement. */
++	if (vi_save_close(io) < 0) syserror();
+ 	io = -1;
+ 	if (hush == 0) {
+ 		if (value(TERSE))
+@@ -679,7 +679,7 @@
+ 			if (!isatty(io))
+ 				serror(catgets(catd, 1, 111,
+ 	" File exists| File exists - use \"w! %s\" to overwrite"), file);
+-			close(io);
++			if (vi_save_close(io) < 0) syserror();
+ 			break;
+ 
+ 		case EDF:
+@@ -699,7 +699,7 @@
+ /*
+ 		synctmp();
+ */
+-		io = creat(file, 0666);
++		io = vi_save_create(file);
+ 		if (io < 0)
+ 			syserror();
+ 		writing = 1;
+@@ -713,6 +713,7 @@
+ 		break;
+ 
+ 	case 2:
++		error("Append writes unsupported on Clarice");
+ 		io = open(file, O_WRONLY);
+ 		if (io < 0) {
+ 			if (exclam || value(WRITEANY))
+--- a/ex_subr.c
++++ b/ex_subr.c
+@@ -1129,7 +1129,7 @@
+ 		error(0);
+ #ifdef	TIOCGWINSZ
+ 	else {
+-		if (ioctl(0, TIOCGWINSZ, &win) >= 0)
++		if (vi_ioctl(0, TIOCGWINSZ, &win) >= 0)
+ 			if (win.ws_row != winsz.ws_row ||
+ 			    win.ws_col != winsz.ws_col)
+ 				onwinch(SIGWINCH);
+--- a/ex_temp.c
++++ b/ex_temp.c
+@@ -110,7 +110,7 @@
+ 	register char *p;
+ 	struct stat stbuf;
+ 	register int i, j;
+-	pid_t mypid = getpid();
++	pid_t mypid = vi_temp_id();
+ 	char *tfend;
+ 	int attempts = 0;
+ 
+@@ -147,7 +147,7 @@
+ 	ichang2 = 0;
+ #ifdef	notdef	/* GR */
+ 	ignore(strcat(tfname, "/ExXXXXX"));
+-	for (p = strend(tfname), i = 5, j = getpid(); i > 0; i--, j /= 10)
++	for (p = strend(tfname), i = 5, j = vi_temp_id(); i > 0; i--, j /= 10)
+ 		*--p = j % 10 | '0';
+ 	tfile = creat(tfname, 0600);
+ #else
+@@ -158,7 +158,7 @@
+ 				i > 0; i--, j /= 10)
+ 			*--p = j % 10 | '0';
+ 		tfile = open(tfname, O_CREAT|O_EXCL|O_RDWR
+-#ifdef	O_NOFOLLOW
++#if defined(O_NOFOLLOW) && !defined(CLARICE)
+ 				|O_NOFOLLOW
+ #endif	/* O_NOFOLLOW */
+ 				, 0600);
+@@ -183,12 +183,15 @@
+ 		putpad(TE);
+ 		flush();
+ 	}
+-	if (havetmp)
++	if (havetmp) {
++		/* HFS cannot unlink an open file. */
++		if (tfile >= 0) { close(tfile); tfile = -1; }
+ 		unlink(tfname);
++	}
+ 	havetmp = 0;
+ 	if (all && rfile >= 0) {
++		close(rfile);
+ 		unlink(rfname);
+-		close(rfile);
+ 		rfile = -1;
+ 	}
+ }
+@@ -318,7 +321,9 @@
+ 	} else if (stilinc)
+ 		tflush();
+ #endif
+-	lseek(tfile, (off_t) ((b & BLKMSK) * BUFSIZ), SEEK_SET);
++	if (vi_temp_seek(tfile, (off_t) ((b & BLKMSK) * BUFSIZ),
++		iofcn == (ssize_t(*)(int, void *, size_t))write) < 0)
++		filioerr(tfname);
+ 	if ((*iofcn)(tfile, buf, BUFSIZ) != BUFSIZ)
+ 		filioerr(tfname);
+ }
+@@ -338,7 +343,7 @@
+ 	bbloc i = stilinc;
+ 	
+ 	stilinc = 0;
+-	lseek(tfile, (off_t) 0, SEEK_SET);
++	if (vi_temp_seek(tfile, (off_t) 0, 1) < 0) filioerr(tfname);
+ 	if (write(tfile, pagrnd(incorb[1]), i * BUFSIZ) != (i * BUFSIZ))
+ 		filioerr(tfname);
+ }
+@@ -370,7 +375,7 @@
+ 	if (oblock != -1)
+ 		blkio(oblock, obuff, (ssize_t(*)(int, void *, size_t))write);
+ 	time(&H.Time);
+-	uid = getuid();
++	uid = 0; /* Format field only; no Unix identity/recovery service. */
+ 	*zero = (line) H.Time;
+ 	up = blocks + LBLKS;
+ 	for (a = zero, bp = blocks; a <= dol; a += BUFSIZ / sizeof *a, bp++) {
+@@ -386,7 +391,8 @@
+ 			oblock = *bp + 1;
+ 			bp[1] = -1;
+ 		}
+-		lseek(tfile, (off_t) ((*bp & BLKMSK) * BUFSIZ), SEEK_SET);
++		if (vi_temp_seek(tfile, (off_t) ((*bp & BLKMSK) * BUFSIZ), 1) < 0)
++			goto oops;
+ 		cnt = ((dol - a) + 2) * sizeof (line);
+ 		if (cnt > BUFSIZ)
+ 			cnt = BUFSIZ;
+@@ -398,7 +404,7 @@
+ 		*zero = 0;
+ 	}
+ 	flines = lineDOL();
+-	lseek(tfile, (off_t) 0, SEEK_SET);
++	if (vi_temp_seek(tfile, (off_t) 0, 1) < 0) filioerr(tfname);
+ 	if (write(tfile, (char *) &H, sizeof H) != sizeof H)
+ 		goto oops;
+ #ifdef notdef
+@@ -475,7 +481,7 @@
+ 	char *rfend;
+ 	int attempts = 0;
+ 	register int i, j;
+-	pid_t mypid = getpid();
++	pid_t mypid = vi_temp_id();
+ 
+ 	if (rfile == -1) {
+ 		rfname = realloc(rfname, strlen(svalue(DIRECTORY)) + 14);
+@@ -491,7 +497,7 @@
+ 					i > 0; i--, j /= 10)
+ 				*--p = j % 10 | '0';
+ 			rfile = open(rfname, O_CREAT|O_EXCL|O_RDWR
+-#ifdef	O_NOFOLLOW
++#if defined(O_NOFOLLOW) && !defined(CLARICE)
+ 					|O_NOFOLLOW
+ #endif	/* O_NOFOLLOW */
+ 					, 0600);
+@@ -500,7 +506,9 @@
+ oops:
+ 			filioerr(rfname);
+ 	}
+-	lseek(rfile, (off_t) ((b & BLKMSK) * BUFSIZ), SEEK_SET);
++	if (vi_temp_seek(rfile, (off_t) ((b & BLKMSK) * BUFSIZ),
++		iofcn == (ssize_t(*)(int, void *, size_t))write) < 0)
++		filioerr(rfname);
+ 	if ((*iofcn)(rfile, rbuf, BUFSIZ) != BUFSIZ)
+ 		goto oops;
+ 	rblock = b;
+--- a/ex_tty.c
++++ b/ex_tty.c
+@@ -273,7 +273,7 @@
+ 	char *e;
+ 
+ #ifdef	TIOCGWINSZ
+-	i = ioctl(0, TIOCGWINSZ, &win);
++	i = vi_ioctl(0, TIOCGWINSZ, &win);
+ #endif
+ 	TLINES = TCOLUMNS = 0;
+ 	e = getenv("COLUMNS");
+--- a/ex_tune.h
++++ b/ex_tune.h
+@@ -164,9 +164,9 @@
+  */
+ #ifdef	VMUNIX
+ #if	(BUFSIZ - 0) <= 16384
+-#define	INCORB		(65536/BUFSIZ)
++/* Clarice: upstream optional in-core temp-file cache disabled. */
+ #else	/* Huge-memory systems. */
+-#define	INCORB		4
++/* no fixed temp-file cache */
+ #endif	/* Huge-memory systems. */
+ #endif	/* VMUNIX */
+ 
+--- a/ex_unix.c
++++ b/ex_unix.c
+@@ -93,358 +93,10 @@
+  * First part of a shell escape,
+  * parse the line, expanding # and % and ! and printing if implied.
+  */
+-void 
+-unix0(int warn)
+-{
+-	register char *up, *fp;
+-	register short c;
+-	char printub, puxb[UXBSIZE + sizeof (int)];
+-
+-	printub = 0;
+-	lcpy(puxb, uxb, sizeof puxb);
+-	c = getchar();
+-	if (c == '\n' || c == EOF)
+-		error(catgets(catd, 1, 192,
+-	"Incomplete shell escape command@- use 'shell' to get a shell"));
+-	up = uxb;
+-	do {
+-		switch (c) {
+-
+-		case '\\':
+-			if (any(peekchar(), "%#!"))
+-				c = getchar();
+-		default:
+-			if (up >= &uxb[UXBSIZE]) {
+-tunix:
+-				uxb[0] = 0;
+-				error(catgets(catd, 1, 193,
+-							"Command too long"));
+-			}
+-			*up++ = c;
+-			break;
+-
+-		case '!':
+-			fp = puxb;
+-			if (*fp == 0) {
+-				uxb[0] = 0;
+-				error(catgets(catd, 1, 194,
+-			"No previous command@to substitute for !"));
+-			}
+-			printub++;
+-			while (*fp) {
+-				if (up >= &uxb[UXBSIZE])
+-					goto tunix;
+-				*up++ = *fp++;
+-			}
+-			break;
+-
+-		case '#':
+-			fp = altfile;
+-			if (*fp == 0) {
+-				uxb[0] = 0;
+-				error(catgets(catd, 1, 195,
+-				"No alternate filename@to substitute for #"));
+-			}
+-			goto uexp;
+-
+-		case '%':
+-			fp = savedfile;
+-			if (*fp == 0) {
+-				uxb[0] = 0;
+-				error(catgets(catd, 1, 196,
+-					"No filename@to substitute for %%"));
+-			}
+-uexp:
+-			printub++;
+-			while (*fp) {
+-				if (up >= &uxb[UXBSIZE])
+-					goto tunix;
+-#ifndef	BIT8
+-				*up++ = *fp++ | QUOTE;
+-#else
+-				*up++ = *fp++;
+-#endif
+-			}
+-			break;
+-		}
+-		c = getchar();
+-	} while (c == '"' || c == '|' || !endcmd(c));
+-	if (c == EOF)
+-		ungetchar(c);
+-	*up = 0;
+-	if (!inopen)
+-		resetflav();
+-	if (warn)
+-		ckaw();
+-	if (warn && hush == 0 && chng && xchng != chng && value(WARN) && dol > zero) {
+-		xchng = chng;
+-		vnfl();
+-		ex_printf(mesg(catgets(catd, 1, 197,
+-				"[No write]|[No write since last change]")));
+-		noonl();
+-		flush();
+-	} else
+-		warn = 0;
+-	if (printub) {
+-		if (uxb[0] == 0)
+-			error(catgets(catd, 1, 198,
+-					"No previous command@to repeat"));
+-		if (inopen) {
+-			splitw++;
+-			vclean();
+-			vgoto(WECHO, 0);
+-		}
+-		if (warn)
+-			vnfl();
+-		if (hush == 0)
+-			lprintf("!%s", uxb);
+-		if (inopen && Outchar != termchar) {
+-			vclreol();
+-			vgoto(WECHO, 0);
+-		} else
+-			putnl();
+-		flush();
+-	}
+-}
+-
+-/*
+- * Do the real work for execution of a shell escape.
+- * Mode is like the number passed to open system calls
+- * and indicates filtering.  If input is implied, newstdin
+- * must have been setup already.
+- */
+-struct termios 
+-unixex(char *opt, char *up, int newstdin, int mode)
+-{
+-	int pvec[2];
+-	struct termios f;
+-
+-	signal(SIGINT, SIG_IGN);
+-#ifdef SIGTSTP
+-	if (dosusp)
+-		signal(SIGTSTP, SIG_DFL);
+-#endif
+-	/*if (inopen)*/
+-		f = setty(normf);
+-	if ((mode & 1) && pipe(pvec) < 0) {
+-		/* Newstdin should be io so it will be closed */
+-		if (inopen)
+-			setty(f);
+-		error(catgets(catd, 1, 199, "Can't make pipe for filter"));
+-	}
+-#ifndef VFORK
+-	pid = fork();
+-#else
+-	pid = vfork();
+-#endif
+-	if (pid < 0) {
+-		if (mode & 1) {
+-			close(pvec[0]);
+-			close(pvec[1]);
+-		}
+-		setrupt();
+-		error(catgets(catd, 1, 200, "No more processes"));
+-	}
+-	if (pid == 0) {
+-		if (mode & 2) {
+-			close(0);
+-			dup(newstdin);
+-			close(newstdin);
+-		}
+-		if (mode & 1) {
+-			close(pvec[0]);
+-			close(1);
+-			dup(pvec[1]);
+-			if (inopen) {
+-				close(2);
+-				dup(1);
+-			}
+-			close(pvec[1]);
+-		}
+-		if (io)
+-			close(io);
+-		if (tfile)
+-			close(tfile);
+-#ifndef VMUNIX
+-		close(erfile);
+-#endif
+-		signal(SIGHUP, oldhup);
+-		signal(SIGQUIT, oldquit);
+-#ifdef	SIGXFSZ
+-		signal(SIGXFSZ, oldxfsz);
+-#endif
+-		if (ruptible)
+-			signal(SIGINT, SIG_DFL);
+-		execl(svalue(SHELL), "sh", opt, up, (char *)0);
+-		ex_printf(catgets(catd, 1, 201, "No %s!\n"), svalue(SHELL));
+-		error(NOSTR);
+-	}
+-	if (mode & 1) {
+-		io = pvec[0];
+-		close(pvec[1]);
+-	}
+-	if (newstdin)
+-		close(newstdin);
+-	return (f);
+-}
+-
+-/*
+- * Wait for the command to complete.
+- * F is for restoration of tty mode if from open/visual.
+- * C flags suppression of printing.
+- */
+-void 
+-unixwt(int c, struct termios f)
+-{
+-
+-	waitfor();
+-#ifdef SIGTSTP
+-	if (dosusp)
+-		signal(SIGTSTP, onsusp);
+-#endif
+-	if (inopen)
+-		setty(f);
+-	setrupt();
+-	if (!inopen && c && hush == 0) {
+-		ex_printf("!\n");
+-		flush();
+-		termreset();
+-		gettmode();
+-	}
+-}
+-
+-/*
+- * Setup a pipeline for the filtration implied by mode
+- * which is like a open number.  If input is required to
+- * the filter, then a child editor is created to write it.
+- * If output is catch it from io which is created by unixex.
+- */
+-void 
+-filter(register int mode)
+-{
+-	static int pvec[2];
+-	struct termios f;	/* mjm: was register */
+-	register int lines = lineDOL();
+-	struct stat statb;
+-
+-	mode++;
+-	if (mode & 2) {
+-		signal(SIGINT, SIG_IGN);
+-		if (pipe(pvec) < 0)
+-			error(catgets(catd, 1, 202, "Can't make pipe"));
+-		pid = fork();
+-		io = pvec[0];
+-		if (pid < 0) {
+-			setrupt();
+-			close(pvec[1]);
+-			error(catgets(catd, 1, 203, "No more processes"));
+-		}
+-		if (pid == 0) {
+-			setrupt();
+-			io = pvec[1];
+-			close(pvec[0]);
+-			putfile(1);
+-			exitex(0);
+-		}
+-		close(pvec[1]);
+-		io = pvec[0];
+-		setrupt();
+-	}
+-	f = unixex("-c", uxb, (mode & 2) ? pvec[0] : 0, mode);
+-	if (mode == 3) {
+-		delete(0);
+-		addr2 = addr1 - 1;
+-	} else if (mode == 1)
+-		deletenone();
+-	if (mode & 1) {
+-		if(FIXUNDO)
+-			undap1 = undap2 = addr2+1;
+-		if (fstat(io, &statb) < 0 || statb.st_blksize > LBSIZE)
+-			bsize = LBSIZE;
+-		else {
+-			bsize = statb.st_blksize;
+-			if (bsize <= 0)
+-				bsize = LBSIZE;
+-		}
+-		ignore(append(getfile, addr2));
+-#ifdef TRACE
+-		if (trace)
+-			vudump("after append in filter");
+-#endif
+-	}
+-	close(io);
+-	io = -1;
+-	unixwt(!inopen, f);
+-	netchHAD(lines);
+-}
+-
+-/*
+- * Set up to do a recover, getting io to be a pipe from
+- * the recover process.
+- */
+-void 
+-recover(void)
+-{
+-	static int pvec[2];
+-
+-	if (pipe(pvec) < 0)
+-		error(catgets(catd, 1, 204, " Can't make pipe for recovery"));
+-	pid = fork();
+-	io = pvec[0];
+-	if (pid < 0) {
+-		close(pvec[1]);
+-		error(catgets(catd, 1, 205, " Can't fork to execute recovery"));
+-	}
+-	if (pid == 0) {
+-		close(2);
+-		dup(1);
+-		close(1);
+-		dup(pvec[1]);
+-	        close(pvec[1]);
+-		execl(EXRECOVER, "exrecover", svalue(DIRECTORY), file, (char *) 0);
+-		close(1);
+-		dup(2);
+-		error(catgets(catd, 1, 206, " No recovery routine"));
+-	}
+-	close(pvec[1]);
+-}
+-
+-/*
+- * Wait for the process (pid an external) to complete.
+- */
+-void 
+-waitfor(void)
+-{
+-	int stat = 0;
+-	pid_t wpid;
+-
+-	do {
+-		wpid = wait(&stat);
+-		if (wpid == pid) {
+-			status = stat;
+-			rpid = wpid;
+-		}
+-	} while (wpid != -1);
+-	if (status) {
+-		if (WIFEXITED(status))
+-			status = WEXITSTATUS(status);
+-		else
+-			status = 0;
+-	}
+-}
+-
+-/*
+- * The end of a recover operation.  If the process
+- * exits non-zero, force not edited; otherwise force
+- * a write.
+- */
+-void 
+-revocer(void)
+-{
+-
+-	waitfor();
+-	if (pid == rpid && status != 0)
+-		edited = 0;
+-	else
+-		change();
+-}
++void unix0(int warn){(void)warn;error("Shell commands unsupported on Clarice");}
++struct termios unixex(char *a,char *b,int c,int d){(void)a;(void)b;(void)c;(void)d;error("Processes unsupported on Clarice");return normf;}
++void unixwt(int c,struct termios f){(void)c;(void)f;error("Processes unsupported on Clarice");}
++void filter(int mode){(void)mode;error("Filters unsupported on Clarice");}
++void recover(void){error("Recovery unsupported in this Clarice experiment");}
++void waitfor(void){error("Processes unsupported on Clarice");}
++void revocer(void){error("Recovery unsupported in this Clarice experiment");}

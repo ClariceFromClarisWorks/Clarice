@@ -1,0 +1,8 @@
+{
+  "package_bytes": 256780,
+  "image_bytes": 167504,
+  "relocations": 7137,
+  "imports": 56,
+  "missing_imports": [],
+  "sha256": "e0ea558090b2f2df97a1f803cd1823bd621dd9c77d02543b29bb909be9f508c7"
+}

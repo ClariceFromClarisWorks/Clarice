@@ -1,0 +1,12 @@
+{
+  "phase": "initial rendering, before inserted text was observed",
+  "version": 2026111864,
+  "reconnects": [
+    "EOF before password",
+    "authenticated"
+  ],
+  "tracked_remaining": 0,
+  "subsequent_edit_succeeded": true,
+  "original_file_unchanged": true,
+  "note": "Summary of earlier lifecycle run; final full-screen lifecycle has separate raw evidence."
+}

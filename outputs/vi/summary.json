@@ -1,0 +1,198 @@
+[
+  {
+    "editor": "xvi",
+    "file_bytes": 0,
+    "host_submit_to_full_screen_seconds": [
+      2.2756,
+      2.4157,
+      2.2278
+    ],
+    "host_submit_to_key_response_seconds": [
+      2.414,
+      2.5107,
+      2.3508
+    ],
+    "host_key_response_seconds": [
+      0.1384,
+      0.095,
+      0.123
+    ],
+    "host_complete_open_key_quit_seconds": [
+      2.6654,
+      2.8469,
+      2.5969
+    ],
+    "startup_bytes": [
+      1138,
+      1138,
+      1138
+    ],
+    "guest_ticks": [
+      186,
+      214,
+      184
+    ],
+    "loader_ticks": [
+      88,
+      92,
+      87
+    ],
+    "tracked_peak_bytes": [
+      23728,
+      23728,
+      23728
+    ],
+    "heap_after": [
+      333536,
+      333594,
+      333556
+    ]
+  },
+  {
+    "editor": "xvi",
+    "file_bytes": 8192,
+    "host_submit_to_full_screen_seconds": [
+      9.1383,
+      10.271,
+      9.7804
+    ],
+    "host_submit_to_key_response_seconds": [
+      9.2686,
+      10.4045,
+      9.9312
+    ],
+    "host_key_response_seconds": [
+      0.1303,
+      0.1335,
+      0.1508
+    ],
+    "host_complete_open_key_quit_seconds": [
+      9.7169,
+      10.8969,
+      10.3674
+    ],
+    "startup_bytes": [
+      13380,
+      13380,
+      13380
+    ],
+    "guest_ticks": [
+      793,
+      810,
+      811
+    ],
+    "loader_ticks": [
+      88,
+      87,
+      87
+    ],
+    "tracked_peak_bytes": [
+      45996,
+      45996,
+      45996
+    ],
+    "heap_after": [
+      333596,
+      333538,
+      333578
+    ]
+  },
+  {
+    "editor": "vi",
+    "file_bytes": 0,
+    "host_submit_to_full_screen_seconds": [
+      2.792,
+      2.8941,
+      2.3402
+    ],
+    "host_submit_to_key_response_seconds": [
+      2.8768,
+      2.9601,
+      2.4343
+    ],
+    "host_key_response_seconds": [
+      0.0848,
+      0.066,
+      0.0941
+    ],
+    "host_complete_open_key_quit_seconds": [
+      3.2585,
+      3.2853,
+      2.7758
+    ],
+    "startup_bytes": [
+      139,
+      139,
+      139
+    ],
+    "guest_ticks": [
+      202,
+      193,
+      197
+    ],
+    "loader_ticks": [
+      115,
+      120,
+      119
+    ],
+    "tracked_peak_bytes": [
+      36292,
+      36292,
+      36292
+    ],
+    "heap_after": [
+      333580,
+      333570,
+      333572
+    ]
+  },
+  {
+    "editor": "vi",
+    "file_bytes": 8192,
+    "host_submit_to_full_screen_seconds": [
+      5.5099,
+      5.4666,
+      5.3243
+    ],
+    "host_submit_to_key_response_seconds": [
+      5.5665,
+      5.5294,
+      5.4291
+    ],
+    "host_key_response_seconds": [
+      0.0566,
+      0.0628,
+      0.1049
+    ],
+    "host_complete_open_key_quit_seconds": [
+      6.0178,
+      5.9871,
+      5.9
+    ],
+    "startup_bytes": [
+      1671,
+      1671,
+      1671
+    ],
+    "guest_ticks": [
+      460,
+      453,
+      453
+    ],
+    "loader_ticks": [
+      126,
+      120,
+      120
+    ],
+    "tracked_peak_bytes": [
+      36292,
+      36292,
+      36292
+    ],
+    "heap_after": [
+      333570,
+      333574,
+      333568
+    ]
+  }
+]

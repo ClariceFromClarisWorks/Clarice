@@ -90,3 +90,17 @@ and [investigation](outputs/xvi/README.md). Original source/notices remain intac
 Clarice-specific adaptations are separately located in `src/ports/xvi` and are
 provided under those copying terms. Distribute corresponding source with any
 compiled xvi package; this investigation does not publish a binary release.
+
+## Original Berkeley/Heirloom ex/vi — comparison prototype
+
+`https://github.com/n-t-roff/heirloom-ex-vi`, pinned
+`3f1e9786d249d18012600ae21175eb3521579402`, with bundled BSD termcap and
+Heirloom libcommon traditional `regexp.h` pinned by `scripts/prepare-vi.py`.
+Bill Joy, Mark Horton, the Regents of the University of California, Gunnar
+Ritter and Caldera authorship retained. Terms: `licenses/vi/LICENSE` and
+`licenses/vi/regexp-NOTICE`; all upstream notices remain in fetched source.
+This product includes software developed by the University of California,
+Berkeley and its contributors. This product includes software developed or
+owned by Caldera International, Inc.
+Separable adaptations: `src/ports/vi`; test status and limitations:
+`outputs/vi/README.md`. Not a production-complete port.
