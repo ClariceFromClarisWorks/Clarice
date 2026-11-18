@@ -1,0 +1,17 @@
+[
+  {
+    "command": "mv /bin/.clx-patch.old /tmp/ba-patch-1890.clx",
+    "status": 0,
+    "text": "mv /bin/.clx-patch.old /tmp/ba-patch-1890.clx; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "mv /bin/.clx-xxd.old /tmp/ba-xxd-1890.clx",
+    "status": 0,
+    "text": "mv /bin/.clx-xxd.old /tmp/ba-xxd-1890.clx; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "mv /bin/.clx-tar.old /tmp/ba-tar-1890.clx",
+    "status": 0,
+    "text": "mv /bin/.clx-tar.old /tmp/ba-tar-1890.clx; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

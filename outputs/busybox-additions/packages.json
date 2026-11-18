@@ -1,0 +1,65 @@
+[
+  {
+    "name": "diff",
+    "package_bytes": 30076,
+    "image_bytes": 20720,
+    "relocations": 525,
+    "imports": 47,
+    "sha256": "4df0cdd3bc4b6e408219d3a599b39c3876ce09b664a4b86c6d822afe92e966d7",
+    "crc32": "1cd01767"
+  },
+  {
+    "name": "base64",
+    "package_bytes": 22020,
+    "image_bytes": 14608,
+    "relocations": 411,
+    "imports": 38,
+    "sha256": "e46305df80bdeb0f59fd600e8b18530d911fc27b9df36c7128fd0d340ecb9c70",
+    "crc32": "7d5f8661"
+  },
+  {
+    "name": "xxd",
+    "package_bytes": 31840,
+    "image_bytes": 21984,
+    "relocations": 588,
+    "imports": 43,
+    "sha256": "153d144741ee739ddbd1847d09140c9355fe7921b83182b764d2fe44f6518474",
+    "crc32": "c8a4411e"
+  },
+  {
+    "name": "patch",
+    "package_bytes": 28196,
+    "image_bytes": 18368,
+    "relocations": 575,
+    "imports": 45,
+    "sha256": "558282c44bc553be6d5d378cfe3605a9bf49d487198b6aaabb1bc1ab88cb075a",
+    "crc32": "c063c817"
+  },
+  {
+    "name": "gzip",
+    "package_bytes": 29348,
+    "image_bytes": 20736,
+    "relocations": 527,
+    "imports": 35,
+    "sha256": "63fa9add02726a134d1343bd24687d3dc20e21ed9a5a53bf330167622497ba43",
+    "crc32": "f2bced26"
+  },
+  {
+    "name": "gunzip",
+    "package_bytes": 26908,
+    "image_bytes": 19232,
+    "relocations": 449,
+    "imports": 35,
+    "sha256": "3aea0c0c498899bd69f2c56f3dbbb1be7079acefa8dc61c136bedf76e30d437b",
+    "crc32": "bcdfab3f"
+  },
+  {
+    "name": "tar",
+    "package_bytes": 25080,
+    "image_bytes": 17088,
+    "relocations": 470,
+    "imports": 36,
+    "sha256": "efd98495cddc3df88c13c3fd4aa00f6572ceaa0c643132ac4e4ff1f98149f415",
+    "crc32": "e15aad0e"
+  }
+]

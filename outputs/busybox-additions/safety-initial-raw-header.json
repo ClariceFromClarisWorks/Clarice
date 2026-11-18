@@ -1,0 +1,38 @@
+[
+  {
+    "command": "cp native:GlyphFull:Clarice /tmp/ba-forks",
+    "status": 0,
+    "text": "cp native:GlyphFull:Clarice /tmp/ba-forks; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 3.7929506670000013
+  },
+  {
+    "command": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/ba-forks; hfsattr --type TEXT --creator TEST /tmp/ba-forks",
+    "status": 0,
+    "text": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/ba-forks; hfsattr --type TEXT --creator TEST /tmp/ba-forks; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 1.4945399589999973
+  },
+  {
+    "command": "forksum /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-forks; printf '\\nREMOTE_END_3:%d\\n' $?\r\nresource 279414 7abcd9a8\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 12.677968917000001
+  },
+  {
+    "command": "patch -i /tmp/add-diff /tmp/ba-forks",
+    "status": 0,
+    "text": "patch -i /tmp/add-diff /tmp/ba-forks; printf '\\nREMOTE_END_4:%d\\n' $?\r\npatching file /tmp/ba-forks\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 4.513975959
+  },
+  {
+    "command": "cmp /tmp/ba-forks /tmp/add-new",
+    "status": 0,
+    "text": "cmp /tmp/ba-forks /tmp/add-new; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 1.1464127089999963
+  },
+  {
+    "command": "forksum /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-forks; printf '\\nREMOTE_END_6:%d\\n' $?\r\nresource 279414 759af67d\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 12.714883458000003
+  }
+]

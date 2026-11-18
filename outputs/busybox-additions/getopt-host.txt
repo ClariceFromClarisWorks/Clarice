@@ -1,0 +1,1 @@
+PASS staged getopt lone dash, empty operand, permutation, --, missing argument (ASan/UBSan)

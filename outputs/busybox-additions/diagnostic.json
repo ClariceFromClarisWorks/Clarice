@@ -1,0 +1,27 @@
+[
+  {
+    "command": "diff -- - /tmp/add-new < /tmp/add-old",
+    "status": 1,
+    "text": "diff -- - /tmp/add-new < /tmp/add-old; printf '\\nREMOTE_END_1:%d\\n' $?\r\n--- -\r\n+++ /tmp/add-new\r\n@@ -1,3 +1,3 @@\r\n alpha\r\n-beta\r\n+BETA\r\n gamma\r\n\r\nREMOTE_END_1:1\r\n/ > "
+  },
+  {
+    "command": "diff /tmp/add-old - < /tmp/add-new",
+    "status": 2,
+    "text": "diff /tmp/add-old - < /tmp/add-new; printf '\\nREMOTE_END_2:%d\\n' $?\r\ndiff: invalid arguments; use --help\r\n\r\nREMOTE_END_2:2\r\n/ > "
+  },
+  {
+    "command": "base64 - < /tmp/add-old",
+    "status": 2,
+    "text": "base64 - < /tmp/add-old; printf '\\nREMOTE_END_3:%d\\n' $?\r\nbase64: invalid arguments; use --help\r\n\r\nREMOTE_END_3:2\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/add-old | wc -c",
+    "status": 0,
+    "text": "cat /tmp/add-old | wc -c; printf '\\nREMOTE_END_4:%d\\n' $?\r\n17\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "patch --dry-run -i /tmp/add-diff /tmp/add-old",
+    "status": 0,
+    "text": "patch --dry-run -i /tmp/add-diff /tmp/add-old; printf '\\nREMOTE_END_5:%d\\n' $?\r\npatching file /tmp/add-old\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  }
+]

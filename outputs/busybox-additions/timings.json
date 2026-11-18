@@ -1,0 +1,92 @@
+[
+  {
+    "name": "base64",
+    "size": "8k",
+    "first_host_seconds": 2.0675841669999926,
+    "median_host_seconds": 2.0655493340000106,
+    "median_guest_seconds": 1.8666666666666667,
+    "owned_peak": 5716,
+    "runs": 3
+  },
+  {
+    "name": "xxd",
+    "size": "8k",
+    "first_host_seconds": 10.075976417000007,
+    "median_host_seconds": 10.216335083000004,
+    "median_guest_seconds": 13.4,
+    "owned_peak": 7764,
+    "runs": 3
+  },
+  {
+    "name": "gzip",
+    "size": "8k",
+    "first_host_seconds": 2.435884750000014,
+    "median_host_seconds": 2.2787530420000053,
+    "median_guest_seconds": 2.1666666666666665,
+    "owned_peak": 242240,
+    "runs": 3
+  },
+  {
+    "name": "gunzip",
+    "size": "8k",
+    "first_host_seconds": 1.7711131660000206,
+    "median_host_seconds": 1.795708832999992,
+    "median_guest_seconds": 1.4333333333333333,
+    "owned_peak": 63200,
+    "runs": 3
+  },
+  {
+    "name": "diff",
+    "size": "8k",
+    "first_host_seconds": 1.8209346249999783,
+    "median_host_seconds": 1.8209346249999783,
+    "median_guest_seconds": 1.65,
+    "owned_peak": 6796,
+    "runs": 3
+  },
+  {
+    "name": "base64",
+    "size": "64k",
+    "first_host_seconds": 7.544623000000001,
+    "median_host_seconds": 7.544623000000001,
+    "median_guest_seconds": 9.566666666666666,
+    "owned_peak": 5716,
+    "runs": 3
+  },
+  {
+    "name": "xxd",
+    "size": "64k",
+    "first_host_seconds": 71.241671,
+    "median_host_seconds": 73.687435833,
+    "median_guest_seconds": 101.4,
+    "owned_peak": 7764,
+    "runs": 3
+  },
+  {
+    "name": "gzip",
+    "size": "64k",
+    "first_host_seconds": 5.797444832999986,
+    "median_host_seconds": 5.384097125000039,
+    "median_guest_seconds": 6.8,
+    "owned_peak": 242240,
+    "runs": 3
+  },
+  {
+    "name": "gunzip",
+    "size": "64k",
+    "first_host_seconds": 3.166933125000014,
+    "median_host_seconds": 3.166933125000014,
+    "median_guest_seconds": 3.933333333333333,
+    "owned_peak": 57312,
+    "runs": 3
+  },
+  {
+    "name": "diff",
+    "size": "64k",
+    "first_host_seconds": 4.306941624999979,
+    "median_host_seconds": 4.2018239160000235,
+    "median_guest_seconds": 5.55,
+    "owned_peak": 6796,
+    "runs": 3
+  }
+]

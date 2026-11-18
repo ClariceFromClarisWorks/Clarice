@@ -1,5 +1,25 @@
 # Clarice current state
 
+## Optional BusyBox additions — 18 November 2026
+
+- Separate `codex/busybox-additions-20261118` tree adds genuine BusyBox 1.37.0
+  diff, base64, xxd, patch, gzip, gunzip and tar as independent runtime 1.10 CLX
+  packages. Existing Core and standard catalog are unchanged.
+- 68000 builds/import checks and host parser regression pass; private updater
+  installs and Telnet tests run in an isolated Snow Plus / System 6 / 4 MB fixture.
+  Physical SE and MultiFinder/System 7 validation remain pending.
+- Explicit boundaries: file-only diff, single-existing-file safe patch, streaming
+  gzip/gunzip, tar listing/stdout extraction only. No tar creation/filesystem
+  extraction yet. xxd adds reverse/C-array workflows but is slow; retain od.
+- Snow 8 KiB changed-text medians: diff 5.85 s / 17500 B peak owned; patch
+  2.93 s / 11880 B. 256 KiB diff fails out-of-memory with status 2, frees its
+  290944 B peak, and a later small comparison succeeds. No large-file acceptance.
+- Resource payload preservation is checked separately from native File Manager's
+  documented mutable header area. One immediate Telnet reconnect closed before
+  authentication; later connection succeeded. No Telnet change in this branch.
+- [Port report, measured costs, evidence and remaining decisions](busybox-additions/README.md).
+  Optional evaluation only; no default promotion, Main merge, push or release.
+
 ## Approved BusyBox defaults — 18 November 2026
 
 - Private build **2026111882**, based on validated checkpoint1cb4844: standard

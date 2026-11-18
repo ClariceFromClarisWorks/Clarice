@@ -1,0 +1,302 @@
+[
+  {
+    "command": "diff --version",
+    "status": 0,
+    "text": "diff --version; printf '\\nREMOTE_END_1:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice diff\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 1.4079402079999994
+  },
+  {
+    "command": "diff --help",
+    "status": 0,
+    "text": "diff --help; printf '\\nREMOTE_END_2:%d\\n' $?\r\nUsage: diff [OPTIONS] FILE1 FILE2\r\nUnified differences; - selects stdin (spooled to an invocation temporary).\r\n-a text; -b/-w space changes/all space; -i case; -B blank lines; -E tab expansion;\r\n-d minimal; -u unified; -U N context; -L LABEL; -p C function; -q brief;\r\n-s report equal; -t expand tabs; -T initial tab.\r\nNo directory comparison, -r/-N/-S. Byte-oriented, no Unicode case folding.\r\nStatus: 0 equal, 1 different, 2 error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 1.1802775839999988
+  },
+  {
+    "command": "base64 --version",
+    "status": 0,
+    "text": "base64 --version; printf '\\nREMOTE_END_3:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice base64\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 0.9847593749999994
+  },
+  {
+    "command": "base64 --help",
+    "status": 0,
+    "text": "base64 --help; printf '\\nREMOTE_END_4:%d\\n' $?\r\nUsage: base64 [-d] [-i] [-w N] [FILE]\r\nEncode stdin or FILE; -d decode; -w wrap (default 76, 0 disables).\r\nBusyBox decoder ignores nonalphabet characters; -i is accepted for compatibility.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 1.051439000000002
+  },
+  {
+    "command": "xxd --version",
+    "status": 0,
+    "text": "xxd --version; printf '\\nREMOTE_END_5:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice xxd\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 1.0797016659999983
+  },
+  {
+    "command": "xxd --help",
+    "status": 0,
+    "text": "xxd --help; printf '\\nREMOTE_END_6:%d\\n' $?\r\nUsage: xxd [-pri] [-g N] [-c N] [-l LEN] [-s OFS] [-o OFS] [FILE]\r\nHex dump stdin or FILE; -p plain hex; -r reverse; -i C array; -g grouping;\r\n-c columns; -l byte limit; -s seek offset; -o display offset.\r\nOutput is stdout; redirect to a different file. No -a autoskip.\r\nReverse mode follows upstream permissive parsing. Backward output seeks need a seekable stream.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 1.0536749579999984
+  },
+  {
+    "command": "patch --version",
+    "status": 0,
+    "text": "patch --version; printf '\\nREMOTE_END_7:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice patch\r\n\r\nREMOTE_END_7:0\r\n/ > ",
+    "host_seconds": 1.044980959
+  },
+  {
+    "command": "patch --help",
+    "status": 0,
+    "text": "patch --help; printf '\\nREMOTE_END_8:%d\\n' $?\r\nUsage: patch [-RuNf] [-i DIFF] [--dry-run] TARGET [PATCHFILE]\r\nApply a unified diff to one explicit existing file. Default patch input: stdin.\r\n-R reverse; -N skip already applied; -u unified; -f noninteractive.\r\nHFS-safe replacement preserves resource fork and Finder metadata.\r\nNo multiple-file, creation/deletion, -p/-E/-g, or missing-final-newline patches.\r\nNo change on mismatch, incomplete patch, cancellation or write failure.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_8:0\r\n/ > ",
+    "host_seconds": 1.1309548330000005
+  },
+  {
+    "command": "gzip --version",
+    "status": 0,
+    "text": "gzip --version; printf '\\nREMOTE_END_9:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice gzip\r\n\r\nREMOTE_END_9:0\r\n/ > ",
+    "host_seconds": 0.9985677499999994
+  },
+  {
+    "command": "gzip --help",
+    "status": 0,
+    "text": "gzip --help; printf '\\nREMOTE_END_10:%d\\n' $?\r\nUsage: gzip [-c] [-kqn] [-1..9] [FILE]...\r\nCompress stdin to stdout, or -c FILEs to stdout. Inputs are never removed.\r\nLevels 1-3 use level 4, as upstream; default 6. -n omits name/time (default).\r\nNo in-place compression, -f/-v, or recursive mode. Use gunzip for decompression.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_10:0\r\n/ > ",
+    "host_seconds": 1.2138987919999984
+  },
+  {
+    "command": "gunzip --version",
+    "status": 0,
+    "text": "gunzip --version; printf '\\nREMOTE_END_11:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice gunzip\r\n\r\nREMOTE_END_11:0\r\n/ > ",
+    "host_seconds": 1.0200230830000017
+  },
+  {
+    "command": "gunzip --help",
+    "status": 0,
+    "text": "gunzip --help; printf '\\nREMOTE_END_12:%d\\n' $?\r\nUsage: gunzip [-c] [-t] [FILE]...\r\nDecompress stdin to stdout, or -c FILEs to stdout. -t verifies without output.\r\nChecks CRC and uncompressed size; supports concatenated gzip members.\r\nInputs are never removed; no automatic filename replacement.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_12:0\r\n/ > ",
+    "host_seconds": 1.0643142920000024
+  },
+  {
+    "command": "tar --version",
+    "status": 0,
+    "text": "tar --version; printf '\\nREMOTE_END_13:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice tar\r\n\r\nREMOTE_END_13:0\r\n/ > ",
+    "host_seconds": 0.9835135830000006
+  },
+  {
+    "command": "tar --help",
+    "status": 0,
+    "text": "tar --help; printf '\\nREMOTE_END_14:%d\\n' $?\r\nUsage: tar -t[v]f ARCHIVE [MEMBER...] | -xOf ARCHIVE [MEMBER...]\r\nList or extract data to stdout from uncompressed POSIX tar. -f - reads stdin.\r\nNames match exactly, not glob patterns. -v lists member names.\r\nNo creation, filesystem extraction, -C, compression, GNU/PAX extended names,\r\nlinks or Unix metadata restoration. Use gunzip separately for .tar.gz input.\r\nData forks only; this is not a Macintosh backup format.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_14:0\r\n/ > ",
+    "host_seconds": 1.197054125000001
+  },
+  {
+    "command": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/add-old; printf 'alpha\\nBETA\\ngamma\\n' > /tmp/add-new",
+    "status": 0,
+    "text": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/add-old; printf 'alpha\\nBETA\\ngamma\\n' > /tmp/add-new; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r\nREMOTE_END_15:0\r\n/ > ",
+    "host_seconds": 0.973126624999999
+  },
+  {
+    "command": "diff /tmp/add-old /tmp/add-old",
+    "status": 0,
+    "text": "diff /tmp/add-old /tmp/add-old; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r\nREMOTE_END_16:0\r\n/ > ",
+    "host_seconds": 1.3033085
+  },
+  {
+    "command": "diff /tmp/add-old /tmp/add-new > /tmp/add-diff",
+    "status": 1,
+    "text": "diff /tmp/add-old /tmp/add-new > /tmp/add-diff; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r\nREMOTE_END_17:1\r\n/ > ",
+    "host_seconds": 1.998474500000004
+  },
+  {
+    "command": "diff -i /tmp/add-old /tmp/add-new",
+    "status": 0,
+    "text": "diff -i /tmp/add-old /tmp/add-new; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\n/ > ",
+    "host_seconds": 1.5032312920000024
+  },
+  {
+    "command": "diff /tmp/absent-additions /tmp/add-new",
+    "status": 2,
+    "text": "diff /tmp/absent-additions /tmp/add-new; printf '\\nREMOTE_END_19:%d\\n' $?\r\ndiff: /tmp/absent-additions: No such file or directory\r\n\r\nREMOTE_END_19:2\r\n/ > ",
+    "host_seconds": 1.2214744589999995
+  },
+  {
+    "command": "cat /tmp/add-old | diff - /tmp/add-new",
+    "status": 1,
+    "text": "cat /tmp/add-old | diff - /tmp/add-new; printf '\\nREMOTE_END_20:%d\\n' $?\r\n--- -\r\n+++ /tmp/add-new\r\n@@ -1,3 +1,3 @@\r\n alpha\r\n-beta\r\n+BETA\r\n gamma\r\n\r\nREMOTE_END_20:1\r\n/ > ",
+    "host_seconds": 2.453121582999998
+  },
+  {
+    "command": "patch --dry-run -i /tmp/add-diff /tmp/add-old",
+    "status": 0,
+    "text": "patch --dry-run -i /tmp/add-diff /tmp/add-old; printf '\\nREMOTE_END_21:%d\\n' $?\r\npatching file /tmp/add-old\r\n\r\nREMOTE_END_21:0\r\n/ > ",
+    "host_seconds": 1.8102544999999992
+  },
+  {
+    "command": "diff /tmp/add-old /tmp/add-new",
+    "status": 1,
+    "text": "diff /tmp/add-old /tmp/add-new; printf '\\nREMOTE_END_22:%d\\n' $?\r\n--- /tmp/add-old\r\n+++ /tmp/add-new\r\n@@ -1,3 +1,3 @@\r\n alpha\r\n-beta\r\n+BETA\r\n gamma\r\n\r\nREMOTE_END_22:1\r\n/ > ",
+    "host_seconds": 1.4204999159999971
+  },
+  {
+    "command": "patch -i /tmp/add-diff /tmp/add-old",
+    "status": 0,
+    "text": "patch -i /tmp/add-diff /tmp/add-old; printf '\\nREMOTE_END_23:%d\\n' $?\r\npatching file /tmp/add-old\r\n\r\nREMOTE_END_23:0\r\n/ > ",
+    "host_seconds": 1.9875431660000018
+  },
+  {
+    "command": "cmp /tmp/add-old /tmp/add-new",
+    "status": 0,
+    "text": "cmp /tmp/add-old /tmp/add-new; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r\nREMOTE_END_24:0\r\n/ > ",
+    "host_seconds": 1.2142238750000018
+  },
+  {
+    "command": "patch -R -i /tmp/add-diff /tmp/add-old",
+    "status": 0,
+    "text": "patch -R -i /tmp/add-diff /tmp/add-old; printf '\\nREMOTE_END_25:%d\\n' $?\r\npatching file /tmp/add-old\r\n\r\nREMOTE_END_25:0\r\n/ > ",
+    "host_seconds": 2.225467249999994
+  },
+  {
+    "command": "diff /tmp/add-old /tmp/add-new",
+    "status": 1,
+    "text": "diff /tmp/add-old /tmp/add-new; printf '\\nREMOTE_END_26:%d\\n' $?\r\n--- /tmp/add-old\r\n+++ /tmp/add-new\r\n@@ -1,3 +1,3 @@\r\n alpha\r\n-beta\r\n+BETA\r\n gamma\r\n\r\nREMOTE_END_26:1\r\n/ > ",
+    "host_seconds": 1.674821999999999
+  },
+  {
+    "command": "printf 'different\\n' > /tmp/add-bad; cp /tmp/add-bad /tmp/add-keep",
+    "status": 0,
+    "text": "printf 'different\\n' > /tmp/add-bad; cp /tmp/add-bad /tmp/add-keep; printf '\\nREMOTE_END_27:%d\\n' $?\r\n\r\nREMOTE_END_27:0\r\n/ > ",
+    "host_seconds": 2.1005258749999953
+  },
+  {
+    "command": "patch -i /tmp/add-diff /tmp/add-bad",
+    "status": 1,
+    "text": "patch -i /tmp/add-diff /tmp/add-bad; printf '\\nREMOTE_END_28:%d\\n' $?\r\npatching file /tmp/add-bad\r\nHunk 1 FAILED 1/1.\r\n alpha\r\n-beta\r\n+BETA\r\n gamma\r\npatch: patch rejected; original preserved\r\n\r\nREMOTE_END_28:1\r\n/ > ",
+    "host_seconds": 2.084027374999998
+  },
+  {
+    "command": "cmp /tmp/add-bad /tmp/add-keep",
+    "status": 0,
+    "text": "cmp /tmp/add-bad /tmp/add-keep; printf '\\nREMOTE_END_29:%d\\n' $?\r\n\r\nREMOTE_END_29:0\r\n/ > ",
+    "host_seconds": 1.1898619580000016
+  },
+  {
+    "command": "printf 'ABC\\000\\377\\200xyz\\n' > /tmp/add-bin",
+    "status": 0,
+    "text": "printf 'ABC\\000\\377\\200xyz\\n' > /tmp/add-bin; printf '\\nREMOTE_END_30:%d\\n' $?\r\n\r\nREMOTE_END_30:0\r\n/ > ",
+    "host_seconds": 0.7004336669999986
+  },
+  {
+    "command": "base64 /tmp/add-bin > /tmp/add-b64",
+    "status": 0,
+    "text": "base64 /tmp/add-bin > /tmp/add-b64; printf '\\nREMOTE_END_31:%d\\n' $?\r\n\r\nREMOTE_END_31:0\r\n/ > ",
+    "host_seconds": 1.2554614159999957
+  },
+  {
+    "command": "base64 -d /tmp/add-b64 > /tmp/add-dec",
+    "status": 0,
+    "text": "base64 -d /tmp/add-b64 > /tmp/add-dec; printf '\\nREMOTE_END_32:%d\\n' $?\r\n\r\nREMOTE_END_32:0\r\n/ > ",
+    "host_seconds": 1.384016165999995
+  },
+  {
+    "command": "cmp /tmp/add-bin /tmp/add-dec",
+    "status": 0,
+    "text": "cmp /tmp/add-bin /tmp/add-dec; printf '\\nREMOTE_END_33:%d\\n' $?\r\n\r\nREMOTE_END_33:0\r\n/ > ",
+    "host_seconds": 1.2197620419999993
+  },
+  {
+    "command": "xxd /tmp/add-bin > /tmp/add-hex",
+    "status": 0,
+    "text": "xxd /tmp/add-bin > /tmp/add-hex; printf '\\nREMOTE_END_34:%d\\n' $?\r\n\r\nREMOTE_END_34:0\r\n/ > ",
+    "host_seconds": 1.4381569170000006
+  },
+  {
+    "command": "xxd -r /tmp/add-hex > /tmp/add-dec",
+    "status": 0,
+    "text": "xxd -r /tmp/add-hex > /tmp/add-dec; printf '\\nREMOTE_END_35:%d\\n' $?\r\n\r\nREMOTE_END_35:0\r\n/ > ",
+    "host_seconds": 1.2468482919999957
+  },
+  {
+    "command": "cmp /tmp/add-bin /tmp/add-dec",
+    "status": 0,
+    "text": "cmp /tmp/add-bin /tmp/add-dec; printf '\\nREMOTE_END_36:%d\\n' $?\r\n\r\nREMOTE_END_36:0\r\n/ > ",
+    "host_seconds": 1.1200132499999995
+  },
+  {
+    "command": "xxd -p /tmp/add-bin > /tmp/add-hex",
+    "status": 0,
+    "text": "xxd -p /tmp/add-bin > /tmp/add-hex; printf '\\nREMOTE_END_37:%d\\n' $?\r\n\r\nREMOTE_END_37:0\r\n/ > ",
+    "host_seconds": 1.283436917000003
+  },
+  {
+    "command": "xxd -rp /tmp/add-hex > /tmp/add-dec",
+    "status": 0,
+    "text": "xxd -rp /tmp/add-hex > /tmp/add-dec; printf '\\nREMOTE_END_38:%d\\n' $?\r\n\r\nREMOTE_END_38:0\r\n/ > ",
+    "host_seconds": 1.3012180839999985
+  },
+  {
+    "command": "cmp /tmp/add-bin /tmp/add-dec",
+    "status": 0,
+    "text": "cmp /tmp/add-bin /tmp/add-dec; printf '\\nREMOTE_END_39:%d\\n' $?\r\n\r\nREMOTE_END_39:0\r\n/ > ",
+    "host_seconds": 1.1382884169999983
+  },
+  {
+    "command": "gzip -c /tmp/add-bin > /tmp/add.gz",
+    "status": 0,
+    "text": "gzip -c /tmp/add-bin > /tmp/add.gz; printf '\\nREMOTE_END_40:%d\\n' $?\r\n\r\nREMOTE_END_40:0\r\n/ > ",
+    "host_seconds": 1.6133854580000104
+  },
+  {
+    "command": "gunzip -t /tmp/add.gz",
+    "status": 0,
+    "text": "gunzip -t /tmp/add.gz; printf '\\nREMOTE_END_41:%d\\n' $?\r\n\r\nREMOTE_END_41:0\r\n/ > ",
+    "host_seconds": 1.2156656669999961
+  },
+  {
+    "command": "gunzip -c /tmp/add.gz > /tmp/add-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/add.gz > /tmp/add-dec; printf '\\nREMOTE_END_42:%d\\n' $?\r\n\r\nREMOTE_END_42:0\r\n/ > ",
+    "host_seconds": 1.3982337919999992
+  },
+  {
+    "command": "cmp /tmp/add-bin /tmp/add-dec",
+    "status": 0,
+    "text": "cmp /tmp/add-bin /tmp/add-dec; printf '\\nREMOTE_END_43:%d\\n' $?\r\n\r\nREMOTE_END_43:0\r\n/ > ",
+    "host_seconds": 1.455104042000002
+  },
+  {
+    "command": "cat /tmp/add.gz /tmp/add.gz > /tmp/add-cat.gz; cat /tmp/add-bin /tmp/add-bin > /tmp/add-twice",
+    "status": 0,
+    "text": "cat /tmp/add.gz /tmp/add.gz > /tmp/add-cat.gz; cat /tmp/add-bin /tmp/add-bin > /tmp/add-twice; printf '\\nREMOTE_END_44:%d\\n' $?\r\n\r\nREMOTE_END_44:0\r\n/ > ",
+    "host_seconds": 2.151603332999997
+  },
+  {
+    "command": "gunzip -c /tmp/add-cat.gz > /tmp/add-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/add-cat.gz > /tmp/add-dec; printf '\\nREMOTE_END_45:%d\\n' $?\r\n\r\nREMOTE_END_45:0\r\n/ > ",
+    "host_seconds": 1.5981230409999938
+  },
+  {
+    "command": "cmp /tmp/add-twice /tmp/add-dec",
+    "status": 0,
+    "text": "cmp /tmp/add-twice /tmp/add-dec; printf '\\nREMOTE_END_46:%d\\n' $?\r\n\r\nREMOTE_END_46:0\r\n/ > ",
+    "host_seconds": 1.2134749580000062
+  },
+  {
+    "command": "gunzip -t /tmp/add-bin",
+    "status": 1,
+    "text": "gunzip -t /tmp/add-bin; printf '\\nREMOTE_END_47:%d\\n' $?\r\ngunzip: invalid gzip signature\r\n\r\nREMOTE_END_47:1\r\n/ > ",
+    "host_seconds": 1.1635867500000074
+  },
+  {
+    "command": "gzip /tmp/add-bin",
+    "status": 1,
+    "text": "gzip /tmp/add-bin; printf '\\nREMOTE_END_48:%d\\n' $?\r\ngzip: use -c FILE to write stdout; in-place mode unavailable\r\n\r\nREMOTE_END_48:1\r\n/ > ",
+    "host_seconds": 1.3843600839999937
+  },
+  {
+    "command": "tar -xf /tmp/none",
+    "status": 1,
+    "text": "tar -xf /tmp/none; printf '\\nREMOTE_END_49:%d\\n' $?\r\ntar: filesystem extraction unavailable; use -xO\r\n\r\nREMOTE_END_49:1\r\n/ > ",
+    "host_seconds": 1.1598632500000008
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_50:%d\\n' $?\r\nRuntime: heap=333726 largest=331486 image=17104 ticks=44 load=36 owned-peak=7764 remaining=0\r\nLoader ticks: read=14 validate=0 imports=2 relocations=3 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_50:0\r\n/ > ",
+    "host_seconds": 0.5750108750000038
+  }
+]

@@ -1,0 +1,140 @@
+[
+  {
+    "command": "cp native:GlyphFull:Clarice /tmp/ba-forks",
+    "status": 0,
+    "text": "cp native:GlyphFull:Clarice /tmp/ba-forks; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 3.924918959000001
+  },
+  {
+    "command": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/ba-forks; hfsattr --type TEXT --creator TEST /tmp/ba-forks",
+    "status": 0,
+    "text": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/ba-forks; hfsattr --type TEXT --creator TEST /tmp/ba-forks; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 1.4799670829999982
+  },
+  {
+    "command": "cp /tmp/ba-forks /tmp/ba-resource-baseline",
+    "status": 0,
+    "text": "cp /tmp/ba-forks /tmp/ba-resource-baseline; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 4.286678625
+  },
+  {
+    "command": "forksum /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-forks; printf '\\nREMOTE_END_4:%d\\n' $?\r\nresource 279414 4d3246c6\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 14.590188874999999
+  },
+  {
+    "command": "patch -i /tmp/add-diff /tmp/ba-forks",
+    "status": 0,
+    "text": "patch -i /tmp/add-diff /tmp/ba-forks; printf '\\nREMOTE_END_5:%d\\n' $?\r\npatching file /tmp/ba-forks\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 4.942237416999994
+  },
+  {
+    "command": "cmp /tmp/ba-forks /tmp/add-new",
+    "status": 0,
+    "text": "cmp /tmp/ba-forks /tmp/add-new; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 1.1183951249999993
+  },
+  {
+    "command": "forksum /tmp/ba-resource-baseline /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-resource-baseline /tmp/ba-forks; printf '\\nREMOTE_END_7:%d\\n' $?\r\nresource compared 279414 bytes: reserved differences=38 other differences=0\r\n\r\nREMOTE_END_7:0\r\n/ > ",
+    "host_seconds": 5.685360166999999
+  },
+  {
+    "command": "forksum /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-forks; printf '\\nREMOTE_END_8:%d\\n' $?\r\nresource 279414 4d3246c6\r\n\r\nREMOTE_END_8:0\r\n/ > ",
+    "host_seconds": 14.170879458000002
+  },
+  {
+    "command": "file /tmp/ba-forks",
+    "status": 0,
+    "text": "file /tmp/ba-forks; printf '\\nREMOTE_END_9:%d\\n' $?\r\n/tmp/ba-forks: HFS file, type 'TEXT', creator 'TEST', data 17 bytes, resource 279414 bytes\r\n\r\nREMOTE_END_9:0\r\n/ > ",
+    "host_seconds": 0.9666765000000055
+  },
+  {
+    "command": "patch -R -i /tmp/add-diff /tmp/ba-forks",
+    "status": 0,
+    "text": "patch -R -i /tmp/add-diff /tmp/ba-forks; printf '\\nREMOTE_END_10:%d\\n' $?\r\npatching file /tmp/ba-forks\r\n\r\nREMOTE_END_10:0\r\n/ > ",
+    "host_seconds": 4.3595875000000035
+  },
+  {
+    "command": "cmp /tmp/ba-forks /tmp/add-old",
+    "status": 0,
+    "text": "cmp /tmp/ba-forks /tmp/add-old; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\r\nREMOTE_END_11:0\r\n/ > ",
+    "host_seconds": 1.0472367079999998
+  },
+  {
+    "command": "cat /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k > /tmp/ba-forks",
+    "status": 0,
+    "text": "cat /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k /tmp/ba-text8k > /tmp/ba-forks; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\n/ > ",
+    "host_seconds": 7.740596499999995
+  },
+  {
+    "command": "cp /tmp/ba-forks /tmp/ba-forks-before",
+    "status": 0,
+    "text": "cp /tmp/ba-forks /tmp/ba-forks-before; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r\nREMOTE_END_13:0\r\n/ > ",
+    "host_seconds": 5.91884837500001
+  },
+  {
+    "command": "printf '--- a\\n+++ b\\n@@ -1,1 +1,1 @@\\n-NO_MATCH_IN_TARGET\\n+replacement\\n' > /tmp/ba-cancel.patch",
+    "status": 0,
+    "text": "printf '--- a\\n+++ b\\n@@ -1,1 +1,1 @@\\n-NO_MATCH_IN_TARGET\\n+replacement\\n' > /tmp/ba-cancel.patch; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r\nREMOTE_END_14:0\r\n/ > ",
+    "host_seconds": 1.069624250000004
+  },
+  {
+    "command": "printf 'CANCEL_STATUS=%s\\n' $?",
+    "status": 0,
+    "text": "printf 'CANCEL_STATUS=%s\\n' $?; printf '\\nREMOTE_END_15:%d\\n' $?\r\nCANCEL_STATUS=130\r\n\r\nREMOTE_END_15:0\r\n/ > ",
+    "host_seconds": 0.7282692920000073
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_16:%d\\n' $?\r\nRuntime: heap=333730 largest=331486 image=18368 ticks=211 load=38 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=3 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_16:0\r\n/ > ",
+    "host_seconds": 0.6289539590000004
+  },
+  {
+    "command": "cmp /tmp/ba-forks /tmp/ba-forks-before",
+    "status": 0,
+    "text": "cmp /tmp/ba-forks /tmp/ba-forks-before; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r\nREMOTE_END_17:0\r\n/ > ",
+    "host_seconds": 27.321245458000007
+  },
+  {
+    "command": "forksum /tmp/ba-resource-baseline /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-resource-baseline /tmp/ba-forks; printf '\\nREMOTE_END_18:%d\\n' $?\r\nresource compared 279414 bytes: reserved differences=38 other differences=0\r\n\r\nREMOTE_END_18:0\r\n/ > ",
+    "host_seconds": 5.731557874999993
+  },
+  {
+    "command": "forksum /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-forks; printf '\\nREMOTE_END_19:%d\\n' $?\r\nresource 279414 4d3246c6\r\n\r\nREMOTE_END_19:0\r\n/ > ",
+    "host_seconds": 14.417105124999992
+  },
+  {
+    "command": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/ba-forks",
+    "status": 0,
+    "text": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/ba-forks; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\r\nREMOTE_END_20:0\r\n/ > ",
+    "host_seconds": 0.7414416249999931
+  },
+  {
+    "command": "patch -i /tmp/add-diff /tmp/ba-forks",
+    "status": 0,
+    "text": "patch -i /tmp/add-diff /tmp/ba-forks; printf '\\nREMOTE_END_21:%d\\n' $?\r\npatching file /tmp/ba-forks\r\n\r\nREMOTE_END_21:0\r\n/ > ",
+    "host_seconds": 4.449562917000009
+  },
+  {
+    "command": "cmp /tmp/ba-forks /tmp/add-new",
+    "status": 0,
+    "text": "cmp /tmp/ba-forks /tmp/add-new; printf '\\nREMOTE_END_22:%d\\n' $?\r\n\r\nREMOTE_END_22:0\r\n/ > ",
+    "host_seconds": 1.0347006249999993
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_23:%d\\n' $?\r\nRuntime: heap=333730 largest=331486 image=8508 ticks=51 load=31 owned-peak=4748 remaining=0\r\nLoader ticks: read=12 validate=0 imports=2 relocations=1 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_23:0\r\n/ > ",
+    "host_seconds": 0.5342141669999876
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "name": "Clarice",
+    "expected": "core\tClarice\t2026111882\t279552\tb70ced53",
+    "matched": true
+  },
+  {
+    "name": "ls",
+    "expected": "tool\tls\t2026111882\t12604\t96cdfa42",
+    "matched": true
+  },
+  {
+    "name": "df",
+    "expected": "tool\tdf\t2026111882\t12604\t96cdfa42",
+    "matched": true
+  },
+  {
+    "name": "cat",
+    "expected": "tool\tcat\t2026111882\t12604\t96cdfa42",
+    "matched": true
+  },
+  {
+    "name": "benchls",
+    "expected": "tool\tbenchls\t2026111882\t12604\t96cdfa42",
+    "matched": true
+  },
+  {
+    "name": "benchscan",
+    "expected": "tool\tbenchscan\t2026111882\t12604\t96cdfa42",
+    "matched": true
+  },
+  {
+    "name": "grep",
+    "expected": "tool\tgrep\t2026111882\t46044\tba928b81",
+    "matched": true
+  },
+  {
+    "name": "sed",
+    "expected": "tool\tsed\t2026111882\t65760\t6714d29c",
+    "matched": true
+  },
+  {
+    "name": "awk",
+    "expected": "tool\tawk\t2026111882\t188956\t44b0e0d6",
+    "matched": true
+  },
+  {
+    "name": "serial",
+    "expected": "tool\tserial\t2026111882\t9552\tc43bf37e",
+    "matched": true
+  },
+  {
+    "name": "wc",
+    "expected": "tool\twc\t2026111882\t21108\t8273c98e",
+    "matched": true
+  },
+  {
+    "name": "wc-sbase",
+    "expected": "tool\twc-sbase\t2026111882\t15576\t2694ca6c",
+    "matched": true
+  },
+  {
+    "name": "head",
+    "expected": "tool\thead\t2026111882\t15620\tffff63a7",
+    "matched": true
+  },
+  {
+    "name": "cut",
+    "expected": "tool\tcut\t2026111882\t18868\tdb9a8735",
+    "matched": true
+  },
+  {
+    "name": "tr",
+    "expected": "tool\ttr\t2026111882\t21464\tf00418a2",
+    "matched": true
+  },
+  {
+    "name": "tr-sbase",
+    "expected": "tool\ttr-sbase\t2026111882\t32536\t964457ca",
+    "matched": true
+  },
+  {
+    "name": "uniq",
+    "expected": "tool\tuniq\t2026111882\t16716\t7ef83872",
+    "matched": true
+  },
+  {
+    "name": "tee",
+    "expected": "tool\ttee\t2026111882\t13460\t09c78836",
+    "matched": true
+  },
+  {
+    "name": "tail",
+    "expected": "tool\ttail\t2026111882\t17924\t14bc1ce3",
+    "matched": true
+  },
+  {
+    "name": "sort",
+    "expected": "tool\tsort\t2026111882\t28836\tc840ec68",
+    "matched": true
+  },
+  {
+    "name": "sort-sbase",
+    "expected": "tool\tsort-sbase\t2026111882\t40100\t3c3d966a",
+    "matched": true
+  },
+  {
+    "name": "cp",
+    "expected": "tool\tcp\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "mv",
+    "expected": "tool\tmv\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "touch",
+    "expected": "tool\ttouch\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "rmdir",
+    "expected": "tool\trmdir\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "mkdir",
+    "expected": "tool\tmkdir\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "rm",
+    "expected": "tool\trm\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "ln",
+    "expected": "tool\tln\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "readlink",
+    "expected": "tool\treadlink\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "hfsattr",
+    "expected": "tool\thfsattr\t2026111882\t13348\tae0f2334",
+    "matched": true
+  },
+  {
+    "name": "find",
+    "expected": "tool\tfind\t2026111882\t12892\t285ea017",
+    "matched": true
+  },
+  {
+    "name": "du",
+    "expected": "tool\tdu\t2026111882\t12892\t285ea017",
+    "matched": true
+  },
+  {
+    "name": "file",
+    "expected": "tool\tfile\t2026111882\t12892\t285ea017",
+    "matched": true
+  },
+  {
+    "name": "od",
+    "expected": "tool\tod\t2026111882\t6008\tf94c8c88",
+    "matched": true
+  },
+  {
+    "name": "more",
+    "expected": "tool\tmore\t2026111882\t6008\tf94c8c88",
+    "matched": true
+  },
+  {
+    "name": "basename",
+    "expected": "tool\tbasename\t2026111882\t12100\tbb624aa1",
+    "matched": true
+  },
+  {
+    "name": "dirname",
+    "expected": "tool\tdirname\t2026111882\t11948\tee16b635",
+    "matched": true
+  },
+  {
+    "name": "kermit",
+    "expected": "tool\tkermit\t2026111882\t25904\t1acbce9e",
+    "matched": true
+  },
+  {
+    "name": "wget",
+    "expected": "tool\twget\t2026111882\t23244\t42e1314b",
+    "matched": true
+  },
+  {
+    "name": "clarice",
+    "expected": "tool\tclarice\t2026111882\t113312\t09044410",
+    "matched": true
+  },
+  {
+    "name": "cmp",
+    "expected": "tool\tcmp\t2026111882\t13564\t663dedfc",
+    "matched": true
+  },
+  {
+    "name": "cksum",
+    "expected": "tool\tcksum\t2026111882\t14808\tcd02b705",
+    "matched": true
+  },
+  {
+    "name": "free",
+    "expected": "tool\tfree\t2026111882\t2736\ta28f71ec",
+    "matched": true
+  },
+  {
+    "name": "sleep",
+    "expected": "tool\tsleep\t2026111882\t12688\t6a39b8f5",
+    "matched": true
+  },
+  {
+    "name": "printenv",
+    "expected": "tool\tprintenv\t2026111882\t13168\t88482482",
+    "matched": true
+  },
+  {
+    "name": "mktemp",
+    "expected": "tool\tmktemp\t2026111882\t18092\tc8f5c164",
+    "matched": true
+  },
+  {
+    "name": "dd",
+    "expected": "tool\tdd\t2026111882\t18264\t30911e06",
+    "matched": true
+  },
+  {
+    "name": "ipconfig",
+    "expected": "tool\tipconfig\t2026111882\t1756\t2ccd7316",
+    "matched": true
+  },
+  {
+    "name": "ping",
+    "expected": "tool\tping\t2026111882\t3944\t2114b55c",
+    "matched": true
+  },
+  {
+    "name": "ftp",
+    "expected": "tool\tftp\t2026111882\t19176\t33c4a72b",
+    "matched": true
+  },
+  {
+    "name": "telnet",
+    "expected": "tool\ttelnet\t2026111882\t25048\t4411fd17",
+    "matched": true
+  },
+  {
+    "name": "telnetd",
+    "expected": "tool\ttelnetd\t2026111882\t40824\t80705253",
+    "matched": true
+  },
+  {
+    "name": "diff",
+    "expected": "tool\tdiff\t2026111891\t30076\t1cd01767",
+    "matched": true
+  },
+  {
+    "name": "base64",
+    "expected": "tool\tbase64\t2026111891\t22020\t7d5f8661",
+    "matched": true
+  },
+  {
+    "name": "xxd",
+    "expected": "tool\txxd\t2026111892\t31840\tc8a4411e",
+    "matched": true
+  },
+  {
+    "name": "patch",
+    "expected": "tool\tpatch\t2026111892\t28196\tc063c817",
+    "matched": true
+  },
+  {
+    "name": "gzip",
+    "expected": "tool\tgzip\t2026111891\t29348\tf2bced26",
+    "matched": true
+  },
+  {
+    "name": "gunzip",
+    "expected": "tool\tgunzip\t2026111891\t26908\tbcdfab3f",
+    "matched": true
+  },
+  {
+    "name": "tar",
+    "expected": "tool\ttar\t2026111893\t25080\te15aad0e",
+    "matched": true
+  },
+  {
+    "name": "forksum",
+    "expected": "tool\tforksum\t2026111893\t11304\t6c04185d",
+    "matched": true
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "command": "forksum /tmp/ba-forks /tmp/ba-forkcopy",
+    "status": 1,
+    "text": "forksum /tmp/ba-forks /tmp/ba-forkcopy; printf '\\nREMOTE_END_1:%d\\n' $?\r\nresource differs at 49: 2e 43\r\n\r\nREMOTE_END_1:1\r\n/ > "
+  },
+  {
+    "command": "forksum /tmp/ba-forks /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-forks /tmp/ba-forks; printf '\\nREMOTE_END_2:%d\\n' $?\r\nresource identical 279414 bytes\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cp native:GlyphFull:Clarice /tmp/ba-corecopy",
+    "status": 0,
+    "text": "cp native:GlyphFull:Clarice /tmp/ba-corecopy; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "forksum native:GlyphFull:Clarice /tmp/ba-corecopy",
+    "status": 1,
+    "text": "forksum native:GlyphFull:Clarice /tmp/ba-corecopy; printf '\\nREMOTE_END_4:%d\\n' $?\r\nresource differs at 48: 19 15\r\n\r\nREMOTE_END_4:1\r\n/ > "
+  }
+]

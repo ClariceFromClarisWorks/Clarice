@@ -1,0 +1,122 @@
+[
+  {
+    "command": "diff --version",
+    "status": 0,
+    "text": "diff --version; printf '\\nREMOTE_END_1:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice diff\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 1.0847995000000008
+  },
+  {
+    "command": "diff --help",
+    "status": 0,
+    "text": "diff --help; printf '\\nREMOTE_END_2:%d\\n' $?\r\nUsage: diff [OPTIONS] FILE1 FILE2\r\nUnified differences; - selects stdin (spooled to an invocation temporary).\r\n-a text; -b/-w space changes/all space; -i case; -B blank lines; -E tab expansion;\r\n-d minimal; -u unified; -U N context; -L LABEL; -p C function; -q brief;\r\n-s report equal; -t expand tabs; -T initial tab.\r\nNo directory comparison, -r/-N/-S. Byte-oriented, no Unicode case folding.\r\nStatus: 0 equal, 1 different, 2 error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 1.703610541999998
+  },
+  {
+    "command": "base64 --version",
+    "status": 0,
+    "text": "base64 --version; printf '\\nREMOTE_END_3:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice base64\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 1.036030708000002
+  },
+  {
+    "command": "base64 --help",
+    "status": 0,
+    "text": "base64 --help; printf '\\nREMOTE_END_4:%d\\n' $?\r\nUsage: base64 [-d] [-i] [-w N] [FILE]\r\nEncode stdin or FILE; -d decode; -w wrap (default 76, 0 disables).\r\nBusyBox decoder ignores nonalphabet characters; -i is accepted for compatibility.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 1.0637170410000003
+  },
+  {
+    "command": "xxd --version",
+    "status": 0,
+    "text": "xxd --version; printf '\\nREMOTE_END_5:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice xxd\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 1.0324336669999994
+  },
+  {
+    "command": "xxd --help",
+    "status": 0,
+    "text": "xxd --help; printf '\\nREMOTE_END_6:%d\\n' $?\r\nUsage: xxd [-pri] [-g N] [-c N] [-l LEN] [-s OFS] [-o OFS] [FILE]\r\nHex dump stdin or FILE; -p plain hex; -r reverse; -i C array; -g grouping;\r\n-c columns; -l byte limit; -s seek offset; -o display offset.\r\nOutput is stdout; redirect to a different file. No -a autoskip.\r\nReverse mode follows upstream permissive parsing. Backward output seeks need a seekable stream.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 1.0981634579999984
+  },
+  {
+    "command": "patch --version",
+    "status": 0,
+    "text": "patch --version; printf '\\nREMOTE_END_7:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice patch\r\n\r\nREMOTE_END_7:0\r\n/ > ",
+    "host_seconds": 1.0268201670000003
+  },
+  {
+    "command": "patch --help",
+    "status": 0,
+    "text": "patch --help; printf '\\nREMOTE_END_8:%d\\n' $?\r\nUsage: patch [-RuNf] [-i DIFF] [--dry-run] TARGET [PATCHFILE]\r\nApply a unified diff to one explicit existing file. Default patch input: stdin.\r\n-R reverse; -N skip already applied; -u unified; -f noninteractive.\r\nHFS-safe replacement preserves resource fork and Finder metadata.\r\nNo multiple-file, creation/deletion, -p/-E/-g, or missing-final-newline patches.\r\nNo change on mismatch, incomplete patch, cancellation or write failure.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_8:0\r\n/ > ",
+    "host_seconds": 1.2753462909999982
+  },
+  {
+    "command": "gzip --version",
+    "status": 0,
+    "text": "gzip --version; printf '\\nREMOTE_END_9:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice gzip\r\n\r\nREMOTE_END_9:0\r\n/ > ",
+    "host_seconds": 1.073810334000001
+  },
+  {
+    "command": "gzip --help",
+    "status": 0,
+    "text": "gzip --help; printf '\\nREMOTE_END_10:%d\\n' $?\r\nUsage: gzip [-c] [-kqn] [-1..9] [FILE]...\r\nCompress stdin to stdout, or -c FILEs to stdout. Inputs are never removed.\r\nLevels 1-3 use level 4, as upstream; default 6. -n omits name/time (default).\r\nNo in-place compression, -f/-v, or recursive mode. Use gunzip for decompression.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_10:0\r\n/ > ",
+    "host_seconds": 1.160881332999999
+  },
+  {
+    "command": "gunzip --version",
+    "status": 0,
+    "text": "gunzip --version; printf '\\nREMOTE_END_11:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice gunzip\r\n\r\nREMOTE_END_11:0\r\n/ > ",
+    "host_seconds": 0.9892282080000001
+  },
+  {
+    "command": "gunzip --help",
+    "status": 0,
+    "text": "gunzip --help; printf '\\nREMOTE_END_12:%d\\n' $?\r\nUsage: gunzip [-c] [-t] [FILE]...\r\nDecompress stdin to stdout, or -c FILEs to stdout. -t verifies without output.\r\nChecks CRC and uncompressed size; supports concatenated gzip members.\r\nInputs are never removed; no automatic filename replacement.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_12:0\r\n/ > ",
+    "host_seconds": 1.0360707080000005
+  },
+  {
+    "command": "tar --version",
+    "status": 0,
+    "text": "tar --version; printf '\\nREMOTE_END_13:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice tar\r\n\r\nREMOTE_END_13:0\r\n/ > ",
+    "host_seconds": 1.128005040999998
+  },
+  {
+    "command": "tar --help",
+    "status": 0,
+    "text": "tar --help; printf '\\nREMOTE_END_14:%d\\n' $?\r\nUsage: tar -t[v]f ARCHIVE [MEMBER...] | -xOf ARCHIVE [MEMBER...]\r\nList or extract data to stdout from uncompressed POSIX tar. -f - reads stdin.\r\nNames match exactly, not glob patterns. -v lists member names.\r\nNo creation, filesystem extraction, -C, compression, GNU/PAX extended names,\r\nlinks or Unix metadata restoration. Use gunzip separately for .tar.gz input.\r\nData forks only; this is not a Macintosh backup format.\r\nStatus: 0 success, nonzero error, 130 cancelled.\r\nData forks only. BusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_14:0\r\n/ > ",
+    "host_seconds": 1.0685567079999991
+  },
+  {
+    "command": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/add-old; printf 'alpha\\nBETA\\ngamma\\n' > /tmp/add-new",
+    "status": 0,
+    "text": "printf 'alpha\\nbeta\\ngamma\\n' > /tmp/add-old; printf 'alpha\\nBETA\\ngamma\\n' > /tmp/add-new; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r\nREMOTE_END_15:0\r\n/ > ",
+    "host_seconds": 1.2051132080000002
+  },
+  {
+    "command": "diff /tmp/add-old /tmp/add-old",
+    "status": 0,
+    "text": "diff /tmp/add-old /tmp/add-old; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r\nREMOTE_END_16:0\r\n/ > ",
+    "host_seconds": 1.3078214999999958
+  },
+  {
+    "command": "diff /tmp/add-old /tmp/add-new > /tmp/add-diff",
+    "status": 1,
+    "text": "diff /tmp/add-old /tmp/add-new > /tmp/add-diff; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r\nREMOTE_END_17:1\r\n/ > ",
+    "host_seconds": 1.6532536670000013
+  },
+  {
+    "command": "diff -i /tmp/add-old /tmp/add-new",
+    "status": 0,
+    "text": "diff -i /tmp/add-old /tmp/add-new; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\n/ > ",
+    "host_seconds": 1.5684290000000018
+  },
+  {
+    "command": "diff /tmp/absent-additions /tmp/add-new",
+    "status": 2,
+    "text": "diff /tmp/absent-additions /tmp/add-new; printf '\\nREMOTE_END_19:%d\\n' $?\r\ndiff: /tmp/absent-additions: No such file or directory\r\n\r\nREMOTE_END_19:2\r\n/ > ",
+    "host_seconds": 1.1968602910000001
+  },
+  {
+    "command": "cat /tmp/add-old | diff - /tmp/add-new",
+    "status": 2,
+    "text": "cat /tmp/add-old | diff - /tmp/add-new; printf '\\nREMOTE_END_20:%d\\n' $?\r\ndiff: invalid arguments; use --help\r\n\r\nREMOTE_END_20:2\r\n/ > ",
+    "host_seconds": 2.0877664169999974
+  }
+]

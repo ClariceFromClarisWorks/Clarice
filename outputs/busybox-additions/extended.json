@@ -1,0 +1,704 @@
+[
+  {
+    "command": "diff --bogus",
+    "status": 2,
+    "text": "diff --bogus; printf '\\nREMOTE_END_1:%d\\n' $?\r\ndiff: invalid arguments; use --help\r\n\r\nREMOTE_END_1:2\r\n/ > ",
+    "host_seconds": 1.0502818749999996
+  },
+  {
+    "command": "base64 --bogus",
+    "status": 2,
+    "text": "base64 --bogus; printf '\\nREMOTE_END_2:%d\\n' $?\r\nbase64: invalid arguments; use --help\r\n\r\nREMOTE_END_2:2\r\n/ > ",
+    "host_seconds": 1.187171000000001
+  },
+  {
+    "command": "xxd --bogus",
+    "status": 2,
+    "text": "xxd --bogus; printf '\\nREMOTE_END_3:%d\\n' $?\r\nxxd: invalid arguments; use --help\r\n\r\nREMOTE_END_3:2\r\n/ > ",
+    "host_seconds": 0.994126957999999
+  },
+  {
+    "command": "patch --bogus",
+    "status": 2,
+    "text": "patch --bogus; printf '\\nREMOTE_END_4:%d\\n' $?\r\npatch: invalid arguments; use --help\r\n\r\nREMOTE_END_4:2\r\n/ > ",
+    "host_seconds": 1.1722510000000028
+  },
+  {
+    "command": "gzip --bogus",
+    "status": 2,
+    "text": "gzip --bogus; printf '\\nREMOTE_END_5:%d\\n' $?\r\ngzip: invalid arguments; use --help\r\n\r\nREMOTE_END_5:2\r\n/ > ",
+    "host_seconds": 1.0231357089999982
+  },
+  {
+    "command": "gunzip --bogus",
+    "status": 2,
+    "text": "gunzip --bogus; printf '\\nREMOTE_END_6:%d\\n' $?\r\ngunzip: invalid arguments; use --help\r\n\r\nREMOTE_END_6:2\r\n/ > ",
+    "host_seconds": 0.9807009999999998
+  },
+  {
+    "command": "tar --bogus",
+    "status": 2,
+    "text": "tar --bogus; printf '\\nREMOTE_END_7:%d\\n' $?\r\ntar: invalid arguments; use --help\r\n\r\nREMOTE_END_7:2\r\n/ > ",
+    "host_seconds": 1.0612553749999982
+  },
+  {
+    "command": "wget -O /tmp/ba-binary8k http://192.168.1.112:8099/binary8k",
+    "status": 0,
+    "text": "wget -O /tmp/ba-binary8k http://192.168.1.112:8099/binary8k; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r[===========                                         ]  22% 1.80 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/ba-binary8k\r\n\r\nREMOTE_END_8:0\r\n/ > ",
+    "host_seconds": 2.003842291999998
+  },
+  {
+    "command": "wget -O /tmp/ba-binary64k http://192.168.1.112:8099/binary64k",
+    "status": 0,
+    "text": "wget -O /tmp/ba-binary64k http://192.168.1.112:8099/binary64k; printf '\\nREMOTE_END_9:%d\\n' $?\r\n\r[=                                                  ]   2% 1.80 KiB / 64.00 KiB\u001b[K\r[==============                        ]  37% 23.80 KiB / 64.00 KiB 23.80 KiB/s\u001b[K\r[=========================             ]  68% 43.80 KiB / 64.00 KiB 21.90 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 32.00 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/ba-binary64k\r\n\r\nREMOTE_END_9:0\r\n/ > ",
+    "host_seconds": 4.190697208
+  },
+  {
+    "command": "wget -O /tmp/ba-text8k http://192.168.1.112:8099/text8k",
+    "status": 0,
+    "text": "wget -O /tmp/ba-text8k http://192.168.1.112:8099/text8k; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r[===========                                         ]  22% 1.80 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/ba-text8k\r\n\r\nREMOTE_END_10:0\r\n/ > ",
+    "host_seconds": 2.011574666999998
+  },
+  {
+    "command": "wget -O /tmp/ba-host.gz http://192.168.1.112:8099/host.gz",
+    "status": 0,
+    "text": "wget -O /tmp/ba-host.gz http://192.168.1.112:8099/host.gz; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\r[==========================================================] 100% 365 B / 365 B\u001b[K\r[==========================================================] 100% 365 B / 365 B\u001b[K\r\nDownloaded 365 B to /tmp/ba-host.gz\r\n\r\nREMOTE_END_11:0\r\n/ > ",
+    "host_seconds": 1.8609755000000021
+  },
+  {
+    "command": "wget -O /tmp/ba-bad.gz http://192.168.1.112:8099/bad.gz",
+    "status": 0,
+    "text": "wget -O /tmp/ba-bad.gz http://192.168.1.112:8099/bad.gz; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r[==========================================================] 100% 365 B / 365 B\u001b[K\r[==========================================================] 100% 365 B / 365 B\u001b[K\r\nDownloaded 365 B to /tmp/ba-bad.gz\r\n\r\nREMOTE_END_12:0\r\n/ > ",
+    "host_seconds": 1.9255639159999944
+  },
+  {
+    "command": "wget -O /tmp/ba-host.tar http://192.168.1.112:8099/host.tar",
+    "status": 0,
+    "text": "wget -O /tmp/ba-host.tar http://192.168.1.112:8099/host.tar; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r[====                                               ]   9% 1.81 KiB / 20.00 KiB\u001b[K\r[==================================================] 100% 20.00 KiB / 20.00 KiB\u001b[K\r\nDownloaded 20.00 KB to /tmp/ba-host.tar\r\n\r\nREMOTE_END_13:0\r\n/ > ",
+    "host_seconds": 2.597278208000006
+  },
+  {
+    "command": "wget -O /tmp/ba-truncated.tar http://192.168.1.112:8099/truncated.tar",
+    "status": 0,
+    "text": "wget -O /tmp/ba-truncated.tar http://192.168.1.112:8099/truncated.tar; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/ba-truncated.tar\r\n\r\nREMOTE_END_14:0\r\n/ > ",
+    "host_seconds": 2.0312121669999996
+  },
+  {
+    "command": "gunzip -c /tmp/ba-host.gz > /tmp/ba-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/ba-host.gz > /tmp/ba-dec; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r\nREMOTE_END_15:0\r\n/ > ",
+    "host_seconds": 2.0014394999999965
+  },
+  {
+    "command": "cmp /tmp/ba-binary8k /tmp/ba-dec",
+    "status": 0,
+    "text": "cmp /tmp/ba-binary8k /tmp/ba-dec; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r\nREMOTE_END_16:0\r\n/ > ",
+    "host_seconds": 2.2220060419999967
+  },
+  {
+    "command": "gunzip -t /tmp/ba-bad.gz",
+    "status": 1,
+    "text": "gunzip -t /tmp/ba-bad.gz; printf '\\nREMOTE_END_17:%d\\n' $?\r\ngunzip: crc error\r\n\r\nREMOTE_END_17:1\r\n/ > ",
+    "host_seconds": 1.6780775410000004
+  },
+  {
+    "command": "tar -tf /tmp/ba-host.tar",
+    "status": 0,
+    "text": "tar -tf /tmp/ba-host.tar; printf '\\nREMOTE_END_18:%d\\n' $?\r\nbinary8k\r\nhello.txt\r\n\r\nREMOTE_END_18:0\r\n/ > ",
+    "host_seconds": 1.6535304160000024
+  },
+  {
+    "command": "tar -xOf /tmp/ba-host.tar binary8k > /tmp/ba-dec",
+    "status": 0,
+    "text": "tar -xOf /tmp/ba-host.tar binary8k > /tmp/ba-dec; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\r\nREMOTE_END_19:0\r\n/ > ",
+    "host_seconds": 1.6391114589999987
+  },
+  {
+    "command": "cmp /tmp/ba-binary8k /tmp/ba-dec",
+    "status": 0,
+    "text": "cmp /tmp/ba-binary8k /tmp/ba-dec; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\r\nREMOTE_END_20:0\r\n/ > ",
+    "host_seconds": 2.0877048329999965
+  },
+  {
+    "command": "cat /tmp/ba-host.tar | tar -xOf - hello.txt",
+    "status": 0,
+    "text": "cat /tmp/ba-host.tar | tar -xOf - hello.txt; printf '\\nREMOTE_END_21:%d\\n' $?\r\nhello tar\r\n\r\nREMOTE_END_21:0\r\n/ > ",
+    "host_seconds": 2.6273582500000003
+  },
+  {
+    "command": "tar -xOf /tmp/ba-host.tar missing",
+    "status": 1,
+    "text": "tar -xOf /tmp/ba-host.tar missing; printf '\\nREMOTE_END_22:%d\\n' $?\r\ntar: missing: not found in archive\r\n\r\nREMOTE_END_22:1\r\n/ > ",
+    "host_seconds": 1.6143884580000005
+  },
+  {
+    "command": "tar -tf /tmp/ba-truncated.tar",
+    "status": 1,
+    "text": "tar -tf /tmp/ba-truncated.tar; printf '\\nREMOTE_END_23:%d\\n' $?\r\nbinary8k\r\ntar: short read\r\n\r\nREMOTE_END_23:1\r\n/ > ",
+    "host_seconds": 1.2727572080000016
+  },
+  {
+    "command": "printf '' > /tmp/ba-empty; base64 /tmp/ba-empty > /tmp/ba-dec; cmp /tmp/ba-empty /tmp/ba-dec",
+    "status": 0,
+    "text": "printf '' > /tmp/ba-empty; base64 /tmp/ba-empty > /tmp/ba-dec; cmp /tmp/ba-empty /tmp/ba-dec; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r\nREMOTE_END_24:0\r\n/ > ",
+    "host_seconds": 2.527948541999997
+  },
+  {
+    "command": "printf 'A' | base64",
+    "status": 0,
+    "text": "printf 'A' | base64; printf '\\nREMOTE_END_25:%d\\n' $?\r\nQQ==\r\n\r\nREMOTE_END_25:0\r\n/ > ",
+    "host_seconds": 1.532269915999997
+  },
+  {
+    "command": "printf 'Q' | base64 -d",
+    "status": 1,
+    "text": "printf 'Q' | base64 -d; printf '\\nREMOTE_END_26:%d\\n' $?\r\nbase64: truncated input\r\n\r\nREMOTE_END_26:1\r\n/ > ",
+    "host_seconds": 1.554667416000001
+  },
+  {
+    "command": "base64 -w 0 /tmp/ba-binary8k > /tmp/ba-encoded; base64 -d /tmp/ba-encoded > /tmp/ba-dec; cmp /tmp/ba-binary8k /tmp/ba-dec",
+    "status": 0,
+    "text": "base64 -w 0 /tmp/ba-binary8k > /tmp/ba-encoded; base64 -d /tmp/ba-encoded > /tmp/ba-dec; cmp /tmp/ba-binary8k /tmp/ba-dec; printf '\\nREMOTE_END_27:%d\\n' $?\r\n\r\nREMOTE_END_27:0\r\n/ > ",
+    "host_seconds": 6.076285958
+  },
+  {
+    "command": "xxd -i -l 4 /tmp/ba-binary8k",
+    "status": 0,
+    "text": "xxd -i -l 4 /tmp/ba-binary8k; printf '\\nREMOTE_END_28:%d\\n' $?\r\nunsigned char _tmp_ba_binary8k[] = {\r\n  0x00, 0x01, 0x02, 0x03,\r\n};\r\nunsigned int _tmp_ba_binary8k_len = 4;\r\n\r\nREMOTE_END_28:0\r\n/ > ",
+    "host_seconds": 1.528935374999989
+  },
+  {
+    "command": "xxd -ps 256 -l 4 /tmp/ba-binary8k",
+    "status": 0,
+    "text": "xxd -ps 256 -l 4 /tmp/ba-binary8k; printf '\\nREMOTE_END_29:%d\\n' $?\r\n00010203\r\n\r\nREMOTE_END_29:0\r\n/ > ",
+    "host_seconds": 1.6259442090000107
+  },
+  {
+    "command": "xxd -a /tmp/ba-empty",
+    "status": 1,
+    "text": "xxd -a /tmp/ba-empty; printf '\\nREMOTE_END_30:%d\\n' $?\r\nxxd: -a unavailable in BusyBox xxd\r\n\r\nREMOTE_END_30:1\r\n/ > ",
+    "host_seconds": 1.34353212500001
+  },
+  {
+    "command": "cat /tmp/add-hex | xxd -rp - > /tmp/ba-dec",
+    "status": 0,
+    "text": "cat /tmp/add-hex | xxd -rp - > /tmp/ba-dec; printf '\\nREMOTE_END_31:%d\\n' $?\r\n\r\nREMOTE_END_31:0\r\n/ > ",
+    "host_seconds": 2.4128916669999967
+  },
+  {
+    "command": "cmp /tmp/add-bin /tmp/ba-dec",
+    "status": 0,
+    "text": "cmp /tmp/add-bin /tmp/ba-dec; printf '\\nREMOTE_END_32:%d\\n' $?\r\n\r\nREMOTE_END_32:0\r\n/ > ",
+    "host_seconds": 1.3837302499999993
+  },
+  {
+    "command": "tar -xvOf /tmp/ba-host.tar hello.txt",
+    "status": 1,
+    "text": "tar -xvOf /tmp/ba-host.tar hello.txt; printf '\\nREMOTE_END_33:%d\\n' $?\r\ntar: -v with -O unavailable; list separately\r\n\r\nREMOTE_END_33:1\r\n/ > ",
+    "host_seconds": 1.2726356659999993
+  },
+  {
+    "command": "printf '--- a\\n+++ b\\n@@ -1,2 +1,2 @@\\n-alpha\\n' > /tmp/ba-incomplete; cp /tmp/add-old /tmp/ba-keep",
+    "status": 0,
+    "text": "printf '--- a\\n+++ b\\n@@ -1,2 +1,2 @@\\n-alpha\\n' > /tmp/ba-incomplete; cp /tmp/add-old /tmp/ba-keep; printf '\\nREMOTE_END_34:%d\\n' $?\r\n\r\nREMOTE_END_34:0\r\n/ > ",
+    "host_seconds": 2.2316871249999934
+  },
+  {
+    "command": "patch -i /tmp/ba-incomplete /tmp/add-old",
+    "status": 1,
+    "text": "patch -i /tmp/ba-incomplete /tmp/add-old; printf '\\nREMOTE_END_35:%d\\n' $?\r\npatching file /tmp/add-old\r\npatch: incomplete patch; original preserved\r\n\r\nREMOTE_END_35:1\r\n/ > ",
+    "host_seconds": 1.8149747500000046
+  },
+  {
+    "command": "cmp /tmp/add-old /tmp/ba-keep",
+    "status": 0,
+    "text": "cmp /tmp/add-old /tmp/ba-keep; printf '\\nREMOTE_END_36:%d\\n' $?\r\n\r\nREMOTE_END_36:0\r\n/ > ",
+    "host_seconds": 1.2624358329999978
+  },
+  {
+    "command": "hfsattr --locked on /tmp/add-old",
+    "status": 0,
+    "text": "hfsattr --locked on /tmp/add-old; printf '\\nREMOTE_END_37:%d\\n' $?\r\n\r\nREMOTE_END_37:0\r\n/ > ",
+    "host_seconds": 1.3950812079999935
+  },
+  {
+    "command": "patch -i /tmp/add-diff /tmp/add-old",
+    "status": 1,
+    "text": "patch -i /tmp/add-diff /tmp/add-old; printf '\\nREMOTE_END_38:%d\\n' $?\r\npatching file /tmp/add-old\r\npatch: begin replacement: Permission denied\r\n\r\nREMOTE_END_38:1\r\n/ > ",
+    "host_seconds": 1.4018736670000038
+  },
+  {
+    "command": "cmp /tmp/add-old /tmp/ba-keep",
+    "status": 0,
+    "text": "cmp /tmp/add-old /tmp/ba-keep; printf '\\nREMOTE_END_39:%d\\n' $?\r\n\r\nREMOTE_END_39:0\r\n/ > ",
+    "host_seconds": 1.184761457999997
+  },
+  {
+    "command": "hfsattr --locked off /tmp/add-old",
+    "status": 0,
+    "text": "hfsattr --locked off /tmp/add-old; printf '\\nREMOTE_END_40:%d\\n' $?\r\n\r\nREMOTE_END_40:0\r\n/ > ",
+    "host_seconds": 1.1362353749999983
+  },
+  {
+    "command": "base64 /tmp/ba-binary8k > /tmp/ba-encoded",
+    "status": 0,
+    "text": "base64 /tmp/ba-binary8k > /tmp/ba-encoded; printf '\\nREMOTE_END_41:%d\\n' $?\r\n\r\nREMOTE_END_41:0\r\n/ > ",
+    "host_seconds": 2.0675841669999926,
+    "repeat": 0,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_42:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=14608 ticks=112 load=36 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=2 imports=2 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_42:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_42:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=14608 ticks=112 load=36 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=2 imports=2 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_42:0\r\n/ > ",
+    "host_seconds": 0.5802002499999901
+  },
+  {
+    "command": "base64 /tmp/ba-binary8k > /tmp/ba-encoded",
+    "status": 0,
+    "text": "base64 /tmp/ba-binary8k > /tmp/ba-encoded; printf '\\nREMOTE_END_43:%d\\n' $?\r\n\r\nREMOTE_END_43:0\r\n/ > ",
+    "host_seconds": 2.0655493340000106,
+    "repeat": 1,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_44:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=14608 ticks=113 load=36 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_44:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_44:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=14608 ticks=113 load=36 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_44:0\r\n/ > ",
+    "host_seconds": 0.5654648330000072
+  },
+  {
+    "command": "base64 /tmp/ba-binary8k > /tmp/ba-encoded",
+    "status": 0,
+    "text": "base64 /tmp/ba-binary8k > /tmp/ba-encoded; printf '\\nREMOTE_END_45:%d\\n' $?\r\n\r\nREMOTE_END_45:0\r\n/ > ",
+    "host_seconds": 1.94978887500001,
+    "repeat": 2,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_46:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=14608 ticks=111 load=34 owned-peak=5716 remaining=0\r\nLoader ticks: read=14 validate=0 imports=2 relocations=2 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_46:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_46:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=14608 ticks=111 load=34 owned-peak=5716 remaining=0\r\nLoader ticks: read=14 validate=0 imports=2 relocations=2 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_46:0\r\n/ > ",
+    "host_seconds": 0.5055559590000058
+  },
+  {
+    "command": "xxd -p /tmp/ba-binary8k > /tmp/ba-hex",
+    "status": 0,
+    "text": "xxd -p /tmp/ba-binary8k > /tmp/ba-hex; printf '\\nREMOTE_END_47:%d\\n' $?\r\n\r\nREMOTE_END_47:0\r\n/ > ",
+    "host_seconds": 10.075976417000007,
+    "repeat": 0,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_48:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=21984 ticks=802 load=37 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_48:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_48:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=21984 ticks=802 load=37 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_48:0\r\n/ > ",
+    "host_seconds": 0.5424823750000058
+  },
+  {
+    "command": "xxd -p /tmp/ba-binary8k > /tmp/ba-hex",
+    "status": 0,
+    "text": "xxd -p /tmp/ba-binary8k > /tmp/ba-hex; printf '\\nREMOTE_END_49:%d\\n' $?\r\n\r\nREMOTE_END_49:0\r\n/ > ",
+    "host_seconds": 10.216335083000004,
+    "repeat": 1,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_50:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=21984 ticks=804 load=41 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=4 imports=2 relocations=3 prepare=4 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=4 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_50:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_50:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=21984 ticks=804 load=41 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=4 imports=2 relocations=3 prepare=4 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=4 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_50:0\r\n/ > ",
+    "host_seconds": 0.5863779590000036
+  },
+  {
+    "command": "xxd -p /tmp/ba-binary8k > /tmp/ba-hex",
+    "status": 0,
+    "text": "xxd -p /tmp/ba-binary8k > /tmp/ba-hex; printf '\\nREMOTE_END_51:%d\\n' $?\r\n\r\nREMOTE_END_51:0\r\n/ > ",
+    "host_seconds": 10.384836125000007,
+    "repeat": 2,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_52:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=21984 ticks=804 load=41 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=3 imports=2 relocations=3 prepare=5 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_52:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_52:%d\\n' $?\r\nRuntime: heap=333730 largest=331412 image=21984 ticks=804 load=41 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=3 imports=2 relocations=3 prepare=5 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_52:0\r\n/ > ",
+    "host_seconds": 0.5284746250000012
+  },
+  {
+    "command": "gzip -c /tmp/ba-binary8k > /tmp/ba-data.gz",
+    "status": 0,
+    "text": "gzip -c /tmp/ba-binary8k > /tmp/ba-data.gz; printf '\\nREMOTE_END_53:%d\\n' $?\r\n\r\nREMOTE_END_53:0\r\n/ > ",
+    "host_seconds": 2.435884750000014,
+    "repeat": 0,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_54:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=128 load=37 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=2 imports=2 relocations=2 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_54:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_54:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=128 load=37 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=2 imports=2 relocations=2 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_54:0\r\n/ > ",
+    "host_seconds": 0.670788291000008
+  },
+  {
+    "command": "gzip -c /tmp/ba-binary8k > /tmp/ba-data.gz",
+    "status": 0,
+    "text": "gzip -c /tmp/ba-binary8k > /tmp/ba-data.gz; printf '\\nREMOTE_END_55:%d\\n' $?\r\n\r\nREMOTE_END_55:0\r\n/ > ",
+    "host_seconds": 2.209144333000012,
+    "repeat": 1,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_56:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=130 load=39 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=2 imports=2 relocations=3 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_56:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_56:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=130 load=39 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=2 imports=2 relocations=3 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_56:0\r\n/ > ",
+    "host_seconds": 0.5736110419999818
+  },
+  {
+    "command": "gzip -c /tmp/ba-binary8k > /tmp/ba-data.gz",
+    "status": 0,
+    "text": "gzip -c /tmp/ba-binary8k > /tmp/ba-data.gz; printf '\\nREMOTE_END_57:%d\\n' $?\r\n\r\nREMOTE_END_57:0\r\n/ > ",
+    "host_seconds": 2.2787530420000053,
+    "repeat": 2,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_58:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=130 load=38 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=3 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_58:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_58:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=130 load=38 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=3 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_58:0\r\n/ > ",
+    "host_seconds": 0.5230185829999812
+  },
+  {
+    "command": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec; printf '\\nREMOTE_END_59:%d\\n' $?\r\n\r\nREMOTE_END_59:0\r\n/ > ",
+    "host_seconds": 1.7711131660000206,
+    "repeat": 0,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_60:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=87 load=38 owned-peak=63200 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_60:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_60:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=87 load=38 owned-peak=63200 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_60:0\r\n/ > ",
+    "host_seconds": 0.5684512919999918
+  },
+  {
+    "command": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec; printf '\\nREMOTE_END_61:%d\\n' $?\r\n\r\nREMOTE_END_61:0\r\n/ > ",
+    "host_seconds": 1.795708832999992,
+    "repeat": 1,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_62:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=86 load=39 owned-peak=63200 remaining=0\r\nLoader ticks: read=14 validate=2 imports=2 relocations=3 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_62:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_62:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=86 load=39 owned-peak=63200 remaining=0\r\nLoader ticks: read=14 validate=2 imports=2 relocations=3 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_62:0\r\n/ > ",
+    "host_seconds": 0.5539922499999932
+  },
+  {
+    "command": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec; printf '\\nREMOTE_END_63:%d\\n' $?\r\n\r\nREMOTE_END_63:0\r\n/ > ",
+    "host_seconds": 2.3652643750000095,
+    "repeat": 2,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_64:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=86 load=38 owned-peak=63200 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_64:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_64:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=86 load=38 owned-peak=63200 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_64:0\r\n/ > ",
+    "host_seconds": 0.6080094999999801
+  },
+  {
+    "command": "diff /tmp/ba-binary8k /tmp/ba-binary8k",
+    "status": 0,
+    "text": "diff /tmp/ba-binary8k /tmp/ba-binary8k; printf '\\nREMOTE_END_65:%d\\n' $?\r\n\r\nREMOTE_END_65:0\r\n/ > ",
+    "host_seconds": 1.8209346249999783,
+    "repeat": 0,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_66:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=99 load=41 owned-peak=6796 remaining=0\r\nLoader ticks: read=14 validate=3 imports=2 relocations=3 prepare=6 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_66:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_66:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=99 load=41 owned-peak=6796 remaining=0\r\nLoader ticks: read=14 validate=3 imports=2 relocations=3 prepare=6 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_66:0\r\n/ > ",
+    "host_seconds": 0.6148647499999811
+  },
+  {
+    "command": "diff /tmp/ba-binary8k /tmp/ba-binary8k",
+    "status": 0,
+    "text": "diff /tmp/ba-binary8k /tmp/ba-binary8k; printf '\\nREMOTE_END_67:%d\\n' $?\r\n\r\nREMOTE_END_67:0\r\n/ > ",
+    "host_seconds": 1.851244166000015,
+    "repeat": 1,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_68:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=99 load=39 owned-peak=6796 remaining=0\r\nLoader ticks: read=14 validate=1 imports=3 relocations=2 prepare=6 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_68:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_68:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=99 load=39 owned-peak=6796 remaining=0\r\nLoader ticks: read=14 validate=1 imports=3 relocations=2 prepare=6 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_68:0\r\n/ > ",
+    "host_seconds": 0.49039045800000736
+  },
+  {
+    "command": "diff /tmp/ba-binary8k /tmp/ba-binary8k",
+    "status": 0,
+    "text": "diff /tmp/ba-binary8k /tmp/ba-binary8k; printf '\\nREMOTE_END_69:%d\\n' $?\r\n\r\nREMOTE_END_69:0\r\n/ > ",
+    "host_seconds": 1.704748459000001,
+    "repeat": 2,
+    "size": "8k",
+    "stats": "status runtime; printf '\\nREMOTE_END_70:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=98 load=40 owned-peak=6796 remaining=0\r\nLoader ticks: read=15 validate=2 imports=3 relocations=2 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_70:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_70:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=98 load=40 owned-peak=6796 remaining=0\r\nLoader ticks: read=15 validate=2 imports=3 relocations=2 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_70:0\r\n/ > ",
+    "host_seconds": 0.6547487500000102
+  },
+  {
+    "command": "cmp /tmp/ba-binary8k /tmp/ba-dec",
+    "status": 0,
+    "text": "cmp /tmp/ba-binary8k /tmp/ba-dec; printf '\\nREMOTE_END_71:%d\\n' $?\r\n\r\nREMOTE_END_71:0\r\n/ > ",
+    "host_seconds": 2.0187879169999974
+  },
+  {
+    "command": "base64 /tmp/ba-binary64k > /tmp/ba-encoded",
+    "status": 0,
+    "text": "base64 /tmp/ba-binary64k > /tmp/ba-encoded; printf '\\nREMOTE_END_72:%d\\n' $?\r\n\r\nREMOTE_END_72:0\r\n/ > ",
+    "host_seconds": 7.544623000000001,
+    "repeat": 0,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_73:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=14608 ticks=574 load=38 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=3 imports=2 relocations=3 prepare=4 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_73:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_73:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=14608 ticks=574 load=38 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=3 imports=2 relocations=3 prepare=4 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_73:0\r\n/ > ",
+    "host_seconds": 0.5411132910000163
+  },
+  {
+    "command": "base64 /tmp/ba-binary64k > /tmp/ba-encoded",
+    "status": 0,
+    "text": "base64 /tmp/ba-binary64k > /tmp/ba-encoded; printf '\\nREMOTE_END_74:%d\\n' $?\r\n\r\nREMOTE_END_74:0\r\n/ > ",
+    "host_seconds": 7.418287125000006,
+    "repeat": 1,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_75:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=14608 ticks=575 load=36 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_75:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_75:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=14608 ticks=575 load=36 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_75:0\r\n/ > ",
+    "host_seconds": 0.547008792000014
+  },
+  {
+    "command": "base64 /tmp/ba-binary64k > /tmp/ba-encoded",
+    "status": 0,
+    "text": "base64 /tmp/ba-binary64k > /tmp/ba-encoded; printf '\\nREMOTE_END_76:%d\\n' $?\r\n\r\nREMOTE_END_76:0\r\n/ > ",
+    "host_seconds": 7.589587541000014,
+    "repeat": 2,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_77:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=14608 ticks=574 load=39 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=4 imports=3 relocations=1 prepare=6 events=3 (events included above)\r\nVerification ticks: mode=fast header=1 record=12 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_77:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_77:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=14608 ticks=574 load=39 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=4 imports=3 relocations=1 prepare=6 events=3 (events included above)\r\nVerification ticks: mode=fast header=1 record=12 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_77:0\r\n/ > ",
+    "host_seconds": 0.5609128330000033
+  },
+  {
+    "command": "xxd -p /tmp/ba-binary64k > /tmp/ba-hex",
+    "status": 0,
+    "text": "xxd -p /tmp/ba-binary64k > /tmp/ba-hex; printf '\\nREMOTE_END_78:%d\\n' $?\r\n\r\nREMOTE_END_78:0\r\n/ > ",
+    "host_seconds": 71.241671,
+    "repeat": 0,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_79:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=21984 ticks=6085 load=39 owned-peak=7764 remaining=0\r\nLoader ticks: read=16 validate=1 imports=3 relocations=3 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=1 record=12 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_79:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_79:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=21984 ticks=6085 load=39 owned-peak=7764 remaining=0\r\nLoader ticks: read=16 validate=1 imports=3 relocations=3 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=1 record=12 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_79:0\r\n/ > ",
+    "host_seconds": 0.5313319580000098
+  },
+  {
+    "command": "xxd -p /tmp/ba-binary64k > /tmp/ba-hex",
+    "status": 0,
+    "text": "xxd -p /tmp/ba-binary64k > /tmp/ba-hex; printf '\\nREMOTE_END_80:%d\\n' $?\r\n\r\nREMOTE_END_80:0\r\n/ > ",
+    "host_seconds": 89.87400308300002,
+    "repeat": 1,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_81:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=21984 ticks=6084 load=40 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=4 imports=2 relocations=3 prepare=3 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=4 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_81:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_81:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=21984 ticks=6084 load=40 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=4 imports=2 relocations=3 prepare=3 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=4 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_81:0\r\n/ > ",
+    "host_seconds": 0.6072708749999833
+  },
+  {
+    "command": "xxd -p /tmp/ba-binary64k > /tmp/ba-hex",
+    "status": 0,
+    "text": "xxd -p /tmp/ba-binary64k > /tmp/ba-hex; printf '\\nREMOTE_END_82:%d\\n' $?\r\n\r\nREMOTE_END_82:0\r\n/ > ",
+    "host_seconds": 73.687435833,
+    "repeat": 2,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_83:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=21984 ticks=6078 load=36 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=0 imports=2 relocations=2 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_83:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_83:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=21984 ticks=6078 load=36 owned-peak=7764 remaining=0\r\nLoader ticks: read=15 validate=0 imports=2 relocations=2 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_83:0\r\n/ > ",
+    "host_seconds": 0.832731874999979
+  },
+  {
+    "command": "gzip -c /tmp/ba-binary64k > /tmp/ba-data.gz",
+    "status": 0,
+    "text": "gzip -c /tmp/ba-binary64k > /tmp/ba-data.gz; printf '\\nREMOTE_END_84:%d\\n' $?\r\n\r\nREMOTE_END_84:0\r\n/ > ",
+    "host_seconds": 5.797444832999986,
+    "repeat": 0,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_85:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=408 load=38 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_85:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_85:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=408 load=38 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_85:0\r\n/ > ",
+    "host_seconds": 0.5302740839999842
+  },
+  {
+    "command": "gzip -c /tmp/ba-binary64k > /tmp/ba-data.gz",
+    "status": 0,
+    "text": "gzip -c /tmp/ba-binary64k > /tmp/ba-data.gz; printf '\\nREMOTE_END_86:%d\\n' $?\r\n\r\nREMOTE_END_86:0\r\n/ > ",
+    "host_seconds": 5.384097125000039,
+    "repeat": 1,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_87:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=407 load=38 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=3 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_87:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_87:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=407 load=38 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=3 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_87:0\r\n/ > ",
+    "host_seconds": 0.4486256669999875
+  },
+  {
+    "command": "gzip -c /tmp/ba-binary64k > /tmp/ba-data.gz",
+    "status": 0,
+    "text": "gzip -c /tmp/ba-binary64k > /tmp/ba-data.gz; printf '\\nREMOTE_END_88:%d\\n' $?\r\n\r\nREMOTE_END_88:0\r\n/ > ",
+    "host_seconds": 5.186248708999983,
+    "repeat": 2,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_89:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=408 load=39 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=2 imports=2 relocations=3 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_89:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_89:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20736 ticks=408 load=39 owned-peak=242240 remaining=0\r\nLoader ticks: read=15 validate=2 imports=2 relocations=3 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_89:0\r\n/ > ",
+    "host_seconds": 0.5011532089999946
+  },
+  {
+    "command": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec; printf '\\nREMOTE_END_90:%d\\n' $?\r\n\r\nREMOTE_END_90:0\r\n/ > ",
+    "host_seconds": 3.166933125000014,
+    "repeat": 0,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_91:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=235 load=37 owned-peak=57312 remaining=0\r\nLoader ticks: read=14 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_91:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_91:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=235 load=37 owned-peak=57312 remaining=0\r\nLoader ticks: read=14 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_91:0\r\n/ > ",
+    "host_seconds": 0.4858508329999722
+  },
+  {
+    "command": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec; printf '\\nREMOTE_END_92:%d\\n' $?\r\n\r\nREMOTE_END_92:0\r\n/ > ",
+    "host_seconds": 3.102216917000021,
+    "repeat": 1,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_93:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=236 load=37 owned-peak=57312 remaining=0\r\nLoader ticks: read=14 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_93:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_93:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=236 load=37 owned-peak=57312 remaining=0\r\nLoader ticks: read=14 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_93:0\r\n/ > ",
+    "host_seconds": 0.5760334160000298
+  },
+  {
+    "command": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec",
+    "status": 0,
+    "text": "gunzip -c /tmp/ba-data.gz > /tmp/ba-dec; printf '\\nREMOTE_END_94:%d\\n' $?\r\n\r\nREMOTE_END_94:0\r\n/ > ",
+    "host_seconds": 3.1895729999999958,
+    "repeat": 2,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_95:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=238 load=37 owned-peak=57312 remaining=0\r\nLoader ticks: read=14 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_95:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_95:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=19232 ticks=238 load=37 owned-peak=57312 remaining=0\r\nLoader ticks: read=14 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_95:0\r\n/ > ",
+    "host_seconds": 0.5290450000000533
+  },
+  {
+    "command": "diff /tmp/ba-binary64k /tmp/ba-binary64k",
+    "status": 0,
+    "text": "diff /tmp/ba-binary64k /tmp/ba-binary64k; printf '\\nREMOTE_END_96:%d\\n' $?\r\n\r\nREMOTE_END_96:0\r\n/ > ",
+    "host_seconds": 4.306941624999979,
+    "repeat": 0,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_97:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=332 load=40 owned-peak=6796 remaining=0\r\nLoader ticks: read=15 validate=2 imports=3 relocations=2 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_97:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_97:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=332 load=40 owned-peak=6796 remaining=0\r\nLoader ticks: read=15 validate=2 imports=3 relocations=2 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_97:0\r\n/ > ",
+    "host_seconds": 0.5165052920000335
+  },
+  {
+    "command": "diff /tmp/ba-binary64k /tmp/ba-binary64k",
+    "status": 0,
+    "text": "diff /tmp/ba-binary64k /tmp/ba-binary64k; printf '\\nREMOTE_END_98:%d\\n' $?\r\n\r\nREMOTE_END_98:0\r\n/ > ",
+    "host_seconds": 4.168694291999998,
+    "repeat": 1,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_99:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=334 load=39 owned-peak=6796 remaining=0\r\nLoader ticks: read=14 validate=1 imports=3 relocations=2 prepare=6 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_99:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_99:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=334 load=39 owned-peak=6796 remaining=0\r\nLoader ticks: read=14 validate=1 imports=3 relocations=2 prepare=6 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_99:0\r\n/ > ",
+    "host_seconds": 0.46487100000001647
+  },
+  {
+    "command": "diff /tmp/ba-binary64k /tmp/ba-binary64k",
+    "status": 0,
+    "text": "diff /tmp/ba-binary64k /tmp/ba-binary64k; printf '\\nREMOTE_END_100:%d\\n' $?\r\n\r\nREMOTE_END_100:0\r\n/ > ",
+    "host_seconds": 4.2018239160000235,
+    "repeat": 2,
+    "size": "64k",
+    "stats": "status runtime; printf '\\nREMOTE_END_101:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=333 load=41 owned-peak=6796 remaining=0\r\nLoader ticks: read=14 validate=3 imports=2 relocations=3 prepare=6 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_101:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_101:%d\\n' $?\r\nRuntime: heap=333722 largest=331486 image=20720 ticks=333 load=41 owned-peak=6796 remaining=0\r\nLoader ticks: read=14 validate=3 imports=2 relocations=3 prepare=6 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_101:0\r\n/ > ",
+    "host_seconds": 0.6143494579999924
+  },
+  {
+    "command": "cmp /tmp/ba-binary64k /tmp/ba-dec",
+    "status": 0,
+    "text": "cmp /tmp/ba-binary64k /tmp/ba-dec; printf '\\nREMOTE_END_102:%d\\n' $?\r\n\r\nREMOTE_END_102:0\r\n/ > ",
+    "host_seconds": 7.43173250000001
+  }
+]

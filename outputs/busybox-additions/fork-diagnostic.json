@@ -1,0 +1,37 @@
+[
+  {
+    "command": "forksum /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-forks; printf '\\nREMOTE_END_1:%d\\n' $?\r\nresource 279414 759af67d\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "forksum /tmp/ba-forks",
+    "status": 0,
+    "text": "forksum /tmp/ba-forks; printf '\\nREMOTE_END_2:%d\\n' $?\r\nresource 279414 759af67d\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "forksum native:GlyphFull:Clarice",
+    "status": 0,
+    "text": "forksum native:GlyphFull:Clarice; printf '\\nREMOTE_END_3:%d\\n' $?\r\nresource 279414 054e2fca\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "cp /tmp/ba-forks /tmp/ba-forkcopy",
+    "status": 0,
+    "text": "cp /tmp/ba-forks /tmp/ba-forkcopy; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "forksum /tmp/ba-forkcopy",
+    "status": 0,
+    "text": "forksum /tmp/ba-forkcopy; printf '\\nREMOTE_END_5:%d\\n' $?\r\nresource 279414 d654077d\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "file /tmp/ba-forks",
+    "status": 0,
+    "text": "file /tmp/ba-forks; printf '\\nREMOTE_END_6:%d\\n' $?\r\n/tmp/ba-forks: HFS file, type 'TEXT', creator 'TEST', data 17 bytes, resource 279414 bytes\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=333736 largest=331486 image=9172 ticks=48 load=39 owned-peak=0 remaining=0\r\nLoader ticks: read=15 validate=0 imports=2 relocations=0 prepare=6 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  }
+]
