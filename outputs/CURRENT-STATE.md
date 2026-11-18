@@ -1,5 +1,60 @@
 # Clarice current state
 
+## ls output buffering — 18 November 2026
+
+User-authorised follow-up in `Clarice-Ls-Asm`: direct plain-name formatting,
+one write per terminal line/row, optional4KiB native-file output buffer for plain
+and detailed listings. Existing native allocation admission/headroom; failure falls
+back to streaming. Per-entry cancellation remains; buffered prefixes flush on
+cancellation/errors, and all exits free storage. No idle cache or Core change.
+
+576 ASan/UBSan byte/status comparisons plus formatter/resolver/operand regressions
+and68000 builds pass.36 normal-speed Snow commands all succeed;16 output comparisons
+match.1000-file redirected repeated medians: plain11.16→6.46s (42.1% less),
+long10.95→8.83s (19.4%). Small terminal smoke shows little change; no terminal
+speed claim. Real redirected Ctrl+C returns130 with an exact653-line output prefix.
+Post-command heap stays within52B and largest block is stable after first sample.
+Direct allocation is not covered by the runtime owned counters; host ownership
+checks and native cleanup paths cover the4096B buffer. Image+316B, temporary loader
+metadata+116B, package+432B versus preceding catalog candidate.
+
+[Report and evidence](ls-output/REPORT.md). Physical SE and final-prompt timing
+remain pending. Only disposable packages/media tested; no push, merge or release.
+
+## ls catalog-request and formatter follow-up — 18 November 2026
+
+In isolated `codex/ls-asm-investigation-20261118`, reuse same-operation target/
+parent metadata and skip unused parent metadata for name-only listings. Keep C
+with the shorter inline-DIVU loop; no full assembly rewrite or new cache. Core
+utility package declares runtime1.10 for the existing metadata service.
+
+176 matched resolver/listing host cases, formatter/operand regressions and native
+68000 builds pass.48 normal-speed Snow invocations succeed with zero owned
+survivors;16 detailed-output comparisons and offline size/name checks pass.
+Terminal medians baseline→combined:100 files2.35→2.21s;1,000 files9.88→9.76s.
+Redirected1,000-file timings vary too much to advertise their larger median gain.
+Real Ctrl+C returns130 with cleanup. Image+60B, temporary import metadata+64B;
+normal package+140B including its declared-runtime header. Stack frames unchanged.
+
+Only disposable /tmp packages tested; no standard installation, push or release.
+Physical SE and submission-through-final-prompt acceptance remain pending. Next
+catalog opportunity: count repeated mounted-volume scans in deep path resolution.
+[Report, limits and evidence](ls-catalog/REPORT.md).
+
+
+## ls assembly investigation — 18 November 2026
+
+Isolated `codex/ls-asm-investigation-20261118` prototypes only; production unchanged.
+Existing ls already uses native streaming catalog enumeration and inline 68000
+DIVU. Hand assembly and a smaller C/inline-DIVU specialisation each pass 75,567
+functional CPU-emulation cases. At an 8 KiB fork size, executed instructions fall
+97 → 63 / 68 respectively; this is not elapsed-time or full-command acceptance.
+Isolated routines add 68 / 22 bytes, with no heap/cache allocation. Prefer a
+matched complete-ls benchmark of the C specialisation before any production
+rewrite. No new Snow/hardware run, deployment, push or release.
+[Investigation and reproducible evidence](ls-asm/REPORT.md).
+
+
 ## Approved BusyBox defaults — 18 November 2026
 
 - Private build **2026111882**, based on validated checkpoint1cb4844: standard

@@ -1,0 +1,9 @@
+{
+  "output_bytes": 49091,
+  "output_lines": 1002,
+  "sha256": "a80bcc8992aa1067cabdf5e0ccaafbf04199f6f46d18c5c5ca8c639f4d6b0b10",
+  "cancel_bytes": 31990,
+  "cancel_lines": 653,
+  "cancel_status": 130,
+  "cancel_is_exact_output_prefix": true
+}

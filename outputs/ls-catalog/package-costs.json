@@ -1,0 +1,26 @@
+{
+  "base": {
+    "package": 12620,
+    "image": 8104,
+    "relocations": 175,
+    "imports": 37,
+    "runtime": "1.10",
+    "all_imports_available": true
+  },
+  "fmt": {
+    "package": 12640,
+    "image": 8124,
+    "relocations": 175,
+    "imports": 37,
+    "runtime": "1.10",
+    "all_imports_available": true
+  },
+  "next": {
+    "package": 12744,
+    "image": 8164,
+    "relocations": 175,
+    "imports": 38,
+    "runtime": "1.10",
+    "all_imports_available": true
+  }
+}

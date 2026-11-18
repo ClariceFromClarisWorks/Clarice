@@ -23,7 +23,7 @@ m68k-apple-macos-gcc -m68000 -Os -ffreestanding -fno-common -Wall -Wextra -Werro
 m68k-apple-macos-gcc -m68000 -Os -ffreestanding -fno-common -Wall -Wextra -Werror -c /src/src/commands/decimal.c -o /src/work/build/decimal.o
 m68k-apple-macos-ld -r /src/work/build/core-main.o /src/work/build/created.o /src/work/build/decimal.o -o /src/work/build/core.o
 '
-python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/core.o" "$ROOT/work/build/core.clx"
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/core.o" "$ROOT/work/build/core.clx" --runtime 1.10
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/serial.o" "$ROOT/work/build/serial.clx" --runtime 1.0
 for name in files inspect misc; do python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"; done
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/free.o" "$ROOT/work/build/free.clx" --runtime 1.4

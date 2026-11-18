@@ -1,7 +1,7 @@
 """Actual listing loop, hostile HFS output blocks; no emulated HFS timing claims."""
 from pathlib import Path
 import subprocess,tempfile
-s=Path('src/listing.inc').read_text();a=s.index('static int list_impl(');b=s.index('/* Batch bulk paints',a)
+s=Path('src/listing.inc').read_text();a=s.index('static int list_walk(');b=s.index('/* Batch bulk paints',a)
 source=s[a:b]
 preamble=r'''
 #include <assert.h>
@@ -15,7 +15,7 @@ enum {fnfErr=-43,nsvErr=-35,bdNamErr=-37};
 typedef struct {unsigned short fdFlags;} FInfo;
 typedef struct {unsigned char *ioNamePtr;short ioVRefNum,ioFDirIndex;long ioDirID;unsigned char ioFlAttrib;FInfo ioFlFndrInfo;} HInfo;
 typedef union {HInfo hFileInfo;struct {unsigned char *name;short ioVRefNum,index;long ioDrDirID;} dirInfo;} CInfoPBRec;
-typedef struct {int detail,human,paged,multi,used,presented;char row[132];} Listing;
+typedef struct {int detail,human,paged,multi,used,presented;char row[132];char *buffer;} Listing;
 static unsigned long list_ticks,list_first,list_entries;
 static int output_ref=-1,script_depth,output_error,seen,calls,cancel,fault,oversize;
 static short expected_volume;
@@ -29,6 +29,7 @@ static int resolve_ex(const char *s,char *np,char *up,int follow){(void)follow;i
 static int resolve(const char *s,char *np){strcpy(np,s);return 0;}
 static void parent_path(char *s){strcpy(s,"/mnt");}
 static int info(const char *s,CInfoPBRec *p){memset(p,0,sizeof *p);p->hFileInfo.ioVRefNum=strstr(s,"Test 2")?-2:-1;p->hFileInfo.ioDirID=42;p->hFileInfo.ioFlAttrib=16;return 0;}
+static int cli_resolve_info(const char *s,char *np,char *up,CInfoPBRec *p){char canonical[PATH_CAP];int e=resolve_ex(s,np,canonical,1);if(e)return e;if(up)strcpy(up,canonical);if(!strcmp(s,"/mnt"))return fnfErr;return info(np,p);}
 static int volume_name(int i,char *raw){if(i>2)return nsvErr;strcpy(raw,i==1?"Boot":"Test 2");return 0;}
 static int encode_name(const char *s,char *out,size_t cap){size_t n=0;while(*s){unsigned char c=*s++;if(n+4>=cap)return bdNamErr;if(c=='/'||c=='%'){out[n++]='%';out[n++]='2';out[n++]=c=='/'?'F':'5';}else out[n++]=c;}out[n]=0;return 0;}
 static int PBGetCatInfoSync(CInfoPBRec *p){
@@ -42,6 +43,10 @@ static int PBGetCatInfoSync(CInfoPBRec *p){
 }
 static int list_item(Listing *l,const char *name,const CInfoPBRec *pb){(void)l;(void)pb;strcpy(seen_names[seen++],name);return cancel?130:0;}
 static int list_flush(Listing *l){(void)l;return 0;}
+#define LIST_BUFFER_SIZE 4096
+static void *cli_alloc(unsigned long n){(void)n;return 0;}
+static void cli_free(void *p){(void)p;}
+static void list_drain(Listing *l){(void)l;}
 '''
 main=r'''
 static void reset(void){seen=calls=cancel=fault=oversize=0;memset(seen_names,0,sizeof seen_names);}

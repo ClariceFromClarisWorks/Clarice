@@ -1,0 +1,29 @@
+PASS: 176 matched real-resolver/listing cases; paths, links, errors, metadata, virtual /mnt without backing directory; no stale result
+0 0 0 / : catalog metadata calls 2 -> 1
+0 0 0 . : catalog metadata calls 3 -> 1
+0 0 0 .. : catalog metadata calls 3 -> 2
+0 0 0 file : catalog metadata calls 3 -> 2
+0 0 0 /tmp/file : catalog metadata calls 3 -> 2
+0 0 0 /tmp/. : catalog metadata calls 3 -> 1
+0 0 0 /tmp/.. : catalog metadata calls 3 -> 2
+0 0 0 /alias/file : catalog metadata calls 5 -> 4
+0 0 0 /tmp/ref : catalog metadata calls 5 -> 4
+0 0 0 /tmp/up : catalog metadata calls 5 -> 4
+0 0 0 /alias/../tmp/file : catalog metadata calls 6 -> 5
+0 0 0 /mnt/Test 2/file : catalog metadata calls 4 -> 3
+0 0 0 native:/tmp/file : catalog metadata calls 3 -> 2
+0 0 0 ~ : catalog metadata calls 2 -> 1
+0 0 0 ~/tmp/file : catalog metadata calls 3 -> 2
+0 0 0 /mnt : catalog metadata calls 2 -> 1
+0 0 0 /mnt/. : catalog metadata calls 2 -> 1
+0 0 0 /mnt/../mnt : catalog metadata calls 3 -> 2
+0 0 1 . : catalog metadata calls 3 -> 2
+0 0 1 file : catalog metadata calls 3 -> 2
+0 0 1 /tmp/file : catalog metadata calls 3 -> 2
+0 0 1 /tmp/. : catalog metadata calls 3 -> 2
+0 0 1 /alias/file : catalog metadata calls 5 -> 4
+0 0 1 /tmp/ref : catalog metadata calls 5 -> 4
+0 0 1 /alias/../tmp/file : catalog metadata calls 6 -> 5
+0 0 1 /mnt/Test 2/file : catalog metadata calls 4 -> 3
+0 0 1 native:/tmp/file : catalog metadata calls 3 -> 2
+0 0 1 ~/tmp/file : catalog metadata calls 3 -> 2

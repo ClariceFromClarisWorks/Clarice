@@ -1,0 +1,16 @@
+{
+  "before": {
+    "package_bytes": 12744,
+    "image_bytes": 8164,
+    "relocations": 175,
+    "imports": 38,
+    "loader_metadata_bytes": 4532
+  },
+  "after": {
+    "package_bytes": 13176,
+    "image_bytes": 8480,
+    "relocations": 174,
+    "imports": 40,
+    "loader_metadata_bytes": 4648
+  }
+}
