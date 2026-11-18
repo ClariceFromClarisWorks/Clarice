@@ -36,6 +36,17 @@ extern int cli_remove(const char *);
 static jmp_buf escape;
 static int exit_status,cleaning,write_failed;
 static unsigned poll_count;
+#ifdef PORT_ALLOC_TRACE
+#include "../memory-info.h"
+static unsigned long realloc_old,realloc_request,resize_hits,resize_saved,resize_copies,resize_copy_bytes;
+static void allocation_failure(size_t n){
+ int saved=errno;ClariceMemory m={0};cli_memory(&m,sizeof m);
+ char b[256];int len=snprintf(b,sizeof b,"ALLOC_FAIL request=%lu old=%lu realloc=%lu owned=%lu peak=%lu free=%lu largest=%lu reclaimable=%lu contiguous=%lu\n",(unsigned long)n,realloc_old,realloc_request,owned,peak,(unsigned long)m.free_bytes,(unsigned long)m.largest,(unsigned long)m.after_purge,(unsigned long)m.largest_after_purge);
+ if(len>0)cli_write(2,b,len<(int)sizeof b?len:sizeof b-1);errno=saved;
+}
+#else
+#define allocation_failure(n) ((void)0)
+#endif
 void port_exit(int status){exit_status=status;longjmp(escape,1);}
 void port_poll(void){int saved=errno;if(!cleaning&&!(++poll_count&255)&&app_yield())port_exit(130);errno=saved;}
 static void yield_now(void){int saved=errno;if(!cleaning&&app_yield())port_exit(130);errno=saved;}
@@ -50,7 +61,7 @@ void *port_malloc(size_t n){
  else {
   if(owned>ULONG_MAX-n-sizeof(*p)){errno=ENOMEM;return NULL;}
   p=allocation_new(n);if(!p&&spares){discard_spares();p=allocation_new(n);}
-  if(!p){errno=ENOMEM;return NULL;}
+  if(!p){errno=ENOMEM;allocation_failure(n);return NULL;}
   if(owned>peak)peak=owned;
  }
  p->prev=NULL;p->next=allocations;if(allocations)allocations->prev=p;allocations=p;return p+1;
@@ -62,7 +73,7 @@ void port_free(void *ptr){
  else {allocation_delete(p);}
 }
 void *port_calloc(size_t n,size_t size){if(size&&n>SIZE_MAX/size){errno=ENOMEM;return NULL;}size*=n;void *p=port_malloc(size);if(p)memset(p,0,size);return p;}
-void *port_realloc(void *ptr,size_t n){if(!ptr)return port_malloc(n);if(!n){port_free(ptr);return NULL;}Allocation *p=(Allocation*)ptr-1;void *q=port_malloc(n);if(q){memcpy(q,ptr,n<p->size?n:p->size);port_free(ptr);}return q;}
+#include "realloc.inc"
 char *port_strndup(const char *s,size_t n){size_t len=0;while(len<n&&s[len])len++;char *p=port_malloc(len+1);if(p){memcpy(p,s,len);p[len]=0;}return p;}
 char *port_strdup(const char *s){return port_strndup(s,strlen(s));}
 static int stream_read(void *cookie,char *buf,int n){Stream *s=cookie;int saved=errno;yield_now();errno=0;long got=s->kind==3?0:s->kind==4?port_read(s->fd,buf,n):s->kind==1?cli_file_read(s->fd,buf,n):cli_read(s->fd,buf,n);if(got<0){if(!errno)errno=EIO;}else errno=saved;return got;}
@@ -158,6 +169,9 @@ int clarice_main(int argc,char **argv){
  for(int i=0;i<TEMP_LIMIT;i++)if(temporary[i][0]&&cli_remove(temporary[i]))write_failed=1;
  while(allocations)port_free(allocations+1);discard_spares();descriptors=NULL;descriptor_capacity=0;memset(streams,0,sizeof streams);
  cli_port_stats(peak,owned);
+#ifdef PORT_ALLOC_TRACE
+ {char b[160];int n=snprintf(b,sizeof b,"REALLOC_STATS inplace=%lu avoided_copy=%lu copies=%lu copied=%lu\n",resize_hits,resize_saved,resize_copies,resize_copy_bytes);if(n>0)cli_write(2,b,n<(int)sizeof b?n:sizeof b-1);}
+#endif
  if(write_failed&&exit_status!=130)exit_status=2;
  return exit_status;
 }

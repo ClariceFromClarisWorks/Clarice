@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Additions/tests/realloc/compare.py", line 11, in <module>
+    run('alloctest');stats()
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Additions/tests/realloc/compare.py", line 7, in run
+    t=time.monotonic();rc,text=c.command(cmd,timeout);row=dict(command=cmd,status=rc,text=text,host_seconds=time.monotonic()-t);rows.append(row);(r/'outputs/realloc/compare.json').write_text(json.dumps(rows,indent=2)+'\n');assert (rc in expected if isinstance(expected,tuple) else rc==expected),(cmd,rc,text);print('PASS',cmd,flush=True);return row
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Additions/tests/remote-sessions/client.py", line 30, in command
+    raise TimeoutError(repr(data))
+TimeoutError: b"alloctest; printf '\\nREMOTE_END_1:%d\\n' $?\r\nALLOC_FAIL request=1048576 old=32768 realloc=1048576 owned=34416 peak=34416 free=315742 largest=315008 reclaimable=315742 contiguous=315016\r\nALLOC_FAIL request=1458 old=833 realloc=1458 owned=26758 peak=35281 free=323140 largest=966 reclaimable=4962 contiguous=974\r\n"

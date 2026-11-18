@@ -1,0 +1,27 @@
+PASS status runtime
+PASS diffgrow /tmp/ba-lines256k /tmp/ba-edited256k > /tmp/ra-grow.diff
+PASS status runtime
+PASS difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff
+PASS status runtime
+PASS diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff
+PASS status runtime
+PASS cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff
+PASS difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff
+PASS status runtime
+PASS diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff
+PASS status runtime
+PASS cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff
+PASS difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff
+PASS status runtime
+PASS diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff
+PASS status runtime
+PASS cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff
+PASS diffgrow /tmp/add-old /tmp/add-old
+PASS status runtime
+PASS diffgrow /tmp/add-old /tmp/ra-nonexistent
+PASS status runtime
+PASS printf 'CANCEL_STATUS=%s\n' $?
+PASS status runtime
+PASS alloctest
+PASS status runtime
+PASS allocator semantics, diff comparison, cancellation and subsequent invocation recovery

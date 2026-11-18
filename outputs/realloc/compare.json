@@ -1,0 +1,158 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=358064 largest=355770 image=8896 ticks=3435 load=31 owned-peak=35281 remaining=0\r\nLoader ticks: read=11 validate=1 imports=1 relocations=2 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 0.5336636250000009
+  },
+  {
+    "command": "diffgrow /tmp/ba-lines256k /tmp/ba-edited256k > /tmp/ra-grow.diff",
+    "status": 2,
+    "text": "diffgrow /tmp/ba-lines256k /tmp/ba-edited256k > /tmp/ra-grow.diff; printf '\\nREMOTE_END_2:%d\\n' $?\r\nALLOC_FAIL request=102480 old=93168 realloc=102480 owned=293756 peak=298692 free=41762 largest=33860 reclaimable=41762 contiguous=33868\r\ndiff: out of memory\r\nREALLOC_STATS inplace=68 avoided_copy=1249744 copies=2 copied=8976\r\n\r\nREMOTE_END_2:2\r\n/ > ",
+    "host_seconds": 103.21422341600001
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=358062 largest=355782 image=21792 ticks=9755 load=39 owned-peak=298692 remaining=0\r\nLoader ticks: read=17 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 0.4395431670000107
+  },
+  {
+    "command": "difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff",
+    "status": 1,
+    "text": "difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff; printf '\\nREMOTE_END_4:%d\\n' $?\r\nREALLOC_STATS inplace=0 avoided_copy=0 copies=8 copied=7768\r\n\r\nREMOTE_END_4:1\r\n/ > ",
+    "host_seconds": 5.377812165999998
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=358062 largest=355782 image=21264 ticks=438 load=42 owned-peak=17500 remaining=0\r\nLoader ticks: read=18 validate=4 imports=2 relocations=2 prepare=3 events=3 (events included above)\r\nVerification ticks: mode=fast header=1 record=13 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 0.4827663749999971
+  },
+  {
+    "command": "diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff",
+    "status": 1,
+    "text": "diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff; printf '\\nREMOTE_END_6:%d\\n' $?\r\nREALLOC_STATS inplace=8 avoided_copy=7768 copies=0 copied=0\r\n\r\nREMOTE_END_6:1\r\n/ > ",
+    "host_seconds": 5.378347958999981
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=358062 largest=355782 image=21792 ticks=435 load=40 owned-peak=14412 remaining=0\r\nLoader ticks: read=17 validate=0 imports=3 relocations=2 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > ",
+    "host_seconds": 0.6570992080000053
+  },
+  {
+    "command": "cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff",
+    "status": 0,
+    "text": "cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\n/ > ",
+    "host_seconds": 1.1573439999999948
+  },
+  {
+    "command": "difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff",
+    "status": 1,
+    "text": "difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff; printf '\\nREMOTE_END_9:%d\\n' $?\r\nREALLOC_STATS inplace=0 avoided_copy=0 copies=8 copied=7768\r\n\r\nREMOTE_END_9:1\r\n/ > ",
+    "host_seconds": 5.206614124999987
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_10:%d\\n' $?\r\nRuntime: heap=358060 largest=355782 image=21264 ticks=439 load=42 owned-peak=17500 remaining=0\r\nLoader ticks: read=18 validate=0 imports=3 relocations=3 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\n/ > ",
+    "host_seconds": 0.5362567909999996
+  },
+  {
+    "command": "diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff",
+    "status": 1,
+    "text": "diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff; printf '\\nREMOTE_END_11:%d\\n' $?\r\nREALLOC_STATS inplace=8 avoided_copy=7768 copies=0 copied=0\r\n\r\nREMOTE_END_11:1\r\n/ > ",
+    "host_seconds": 5.299006916999986
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_12:%d\\n' $?\r\nRuntime: heap=358060 largest=355782 image=21792 ticks=438 load=44 owned-peak=14412 remaining=0\r\nLoader ticks: read=18 validate=2 imports=3 relocations=3 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=14 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_12:0\r\n/ > ",
+    "host_seconds": 0.5096498749999796
+  },
+  {
+    "command": "cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff",
+    "status": 0,
+    "text": "cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r\nREMOTE_END_13:0\r\n/ > ",
+    "host_seconds": 1.0757352920000187
+  },
+  {
+    "command": "difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff",
+    "status": 1,
+    "text": "difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-difftrace.diff; printf '\\nREMOTE_END_14:%d\\n' $?\r\nREALLOC_STATS inplace=0 avoided_copy=0 copies=8 copied=7768\r\n\r\nREMOTE_END_14:1\r\n/ > ",
+    "host_seconds": 5.284829874999986
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_15:%d\\n' $?\r\nRuntime: heap=358060 largest=355782 image=21264 ticks=439 load=42 owned-peak=17500 remaining=0\r\nLoader ticks: read=18 validate=1 imports=3 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_15:0\r\n/ > ",
+    "host_seconds": 0.485999540999984
+  },
+  {
+    "command": "diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff",
+    "status": 1,
+    "text": "diffgrow /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-diffgrow.diff; printf '\\nREMOTE_END_16:%d\\n' $?\r\nREALLOC_STATS inplace=8 avoided_copy=7768 copies=0 copied=0\r\n\r\nREMOTE_END_16:1\r\n/ > ",
+    "host_seconds": 5.2331226670000035
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_17:%d\\n' $?\r\nRuntime: heap=358060 largest=355782 image=21792 ticks=438 load=44 owned-peak=14412 remaining=0\r\nLoader ticks: read=18 validate=2 imports=3 relocations=3 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_17:0\r\n/ > ",
+    "host_seconds": 0.509472417000012
+  },
+  {
+    "command": "cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff",
+    "status": 0,
+    "text": "cmp /tmp/ra-difftrace.diff /tmp/ra-diffgrow.diff; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\n/ > ",
+    "host_seconds": 1.1196004580000078
+  },
+  {
+    "command": "diffgrow /tmp/add-old /tmp/add-old",
+    "status": 0,
+    "text": "diffgrow /tmp/add-old /tmp/add-old; printf '\\nREMOTE_END_19:%d\\n' $?\r\nREALLOC_STATS inplace=0 avoided_copy=0 copies=0 copied=0\r\n\r\nREMOTE_END_19:0\r\n/ > ",
+    "host_seconds": 1.3187414159999946
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_20:%d\\n' $?\r\nRuntime: heap=358060 largest=355782 image=21792 ticks=70 load=42 owned-peak=6796 remaining=0\r\nLoader ticks: read=18 validate=0 imports=3 relocations=3 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_20:0\r\n/ > ",
+    "host_seconds": 0.6405728749999753
+  },
+  {
+    "command": "diffgrow /tmp/add-old /tmp/ra-nonexistent",
+    "status": 2,
+    "text": "diffgrow /tmp/add-old /tmp/ra-nonexistent; printf '\\nREMOTE_END_21:%d\\n' $?\r\ndiff: /tmp/ra-nonexistent: No such file or directory\r\nREALLOC_STATS inplace=0 avoided_copy=0 copies=0 copied=0\r\n\r\nREMOTE_END_21:2\r\n/ > ",
+    "host_seconds": 1.1672486659999777
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_22:%d\\n' $?\r\nRuntime: heap=358060 largest=355782 image=21792 ticks=63 load=44 owned-peak=5716 remaining=0\r\nLoader ticks: read=18 validate=2 imports=3 relocations=2 prepare=6 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_22:0\r\n/ > ",
+    "host_seconds": 0.5950699159999999
+  },
+  {
+    "command": "printf 'CANCEL_STATUS=%s\\n' $?",
+    "status": 0,
+    "text": "printf 'CANCEL_STATUS=%s\\n' $?; printf '\\nREMOTE_END_23:%d\\n' $?\r\nCANCEL_STATUS=130\r\n\r\nREMOTE_END_23:0\r\n/ > ",
+    "host_seconds": 0.48953808300001356
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_24:%d\\n' $?\r\nRuntime: heap=358066 largest=355722 image=8896 ticks=177 load=35 owned-peak=35281 remaining=0\r\nLoader ticks: read=12 validate=2 imports=1 relocations=2 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_24:0\r\n/ > ",
+    "host_seconds": 0.5721910829999786
+  },
+  {
+    "command": "alloctest",
+    "status": 0,
+    "text": "alloctest; printf '\\nREMOTE_END_25:%d\\n' $?\r\nALLOC_TEST begin\r\nALLOC_FAIL request=1048576 old=32768 realloc=1048576 owned=34416 peak=34416 free=314764 largest=314074 reclaimable=314764 contiguous=314082\r\nALLOC_TEST edge cases passed\r\nALLOC_TEST iteration 0\r\nALLOC_TEST iteration 10\r\nALLOC_TEST iteration 20\r\nALLOC_TEST iteration 30\r\nALLOC_TEST iteration 40\r\nALLOC_TEST iteration 50\r\nALLOC_TEST iteration 60\r\nALLOC_TEST iteration 70\r\nALLOC_TEST iteration 80\r\nALLOC_TEST iteration 90\r\nALLOC_TEST iteration 100\r\nALLOC_TEST iteration 110\r\nALLOC_TEST iteration 120\r\nALLOC_TEST iteration 130\r\nALLOC_TEST iteration 140\r\nALLOC_TEST iteration 150\r\nALLOC_TEST iteration 160\r\nALLOC_TEST iteration 170\r\nALLOC_TEST iteration 180\r\nALLOC_TEST iteration 190\r\nALLOC_TEST iteration 200\r\nALLOC_TEST iteration 210\r\nALLOC_TEST iteration 220\r\nALLOC_TEST iteration 230\r\nALLOC_TEST iteration 240\r\nALLOC_TEST iteration 250\r\nALLOC_TEST iteration 260\r\nALLOC_TEST iteration 270\r\nALLOC_TEST iteration 280\r\nALLOC_TEST iteration 290\r\nALLOC_TEST iteration 300\r\nALLOC_TEST iteration 310\r\nALLOC_TEST iteration 320\r\nALLOC_TEST iteration 330\r\nALLOC_TEST iteration 340\r\nALLOC_TEST iteration 350\r\nALLOC_TEST iteration 360\r\nALLOC_TEST iteration 370\r\nALLOC_TEST iteration 380\r\nALLOC_TEST iteration 390\r\nALLOC_TEST iteration 400\r\nALLOC_TEST iteration 410\r\nALLOC_TEST iteration 420\r\nALLOC_TEST iteration 430\r\nALLOC_TEST iteration 440\r\nALLOC_TEST iteration 450\r\nALLOC_TEST iteration 460\r\nALLOC_TEST iteration 470\r\nALLOC_TEST iteration 480\r\nALLOC_TEST iteration 490\r\nALLOC_TEST iteration 500\r\nALLOC_TEST iteration 510\r\nALLOC_TEST iteration 520\r\nALLOC_TEST iteration 530\r\nALLOC_TEST iteration 540\r\nALLOC_TEST iteration 550\r\nALLOC_TEST iteration 560\r\nALLOC_TEST iteration 570\r\nALLOC_TEST iteration 580\r\nALLOC_TEST iteration 590\r\nALLOC_TEST iteration 600\r\nALLOC_TEST iteration 610\r\nALLOC_TEST iteration 620\r\nALLOC_TEST iteration 630\r\nALLOC_TEST iteration 640\r\nALLOC_TEST iteration 650\r\nALLOC_TEST iteration 660\r\nALLOC_TEST iteration 670\r\nALLOC_TEST iteration 680\r\nALLOC_TEST iteration 690\r\nALLOC_TEST iteration 700\r\nALLOC_TEST iteration 710\r\nALLOC_TEST iteration 720\r\nALLOC_TEST iteration 730\r\nALLOC_TEST iteration 740\r\nALLOC_TEST iteration 750\r\nALLOC_TEST iteration 760\r\nALLOC_TEST iteration 770\r\nALLOC_TEST iteration 780\r\nALLOC_TEST iteration 790\r\nALLOC_TEST iteration 800\r\nALLOC_TEST iteration 810\r\nALLOC_TEST iteration 820\r\nALLOC_TEST iteration 830\r\nALLOC_TEST iteration 840\r\nALLOC_TEST iteration 850\r\nALLOC_TEST iteration 860\r\nALLOC_TEST iteration 870\r\nRESIZE_STATUS trap=-108 MemErr=0 old=136 new=1457 actual=136\r\nALLOC_TEST iteration 880\r\nALLOC_TEST iteration 890\r\nALLOC_TEST iteration 900\r\nALLOC_TEST iteration 910\r\nALLOC_TEST iteration 920\r\nALLOC_TEST iteration 930\r\nALLOC_TEST iteration 940\r\nALLOC_TEST iteration 950\r\nALLOC_TEST iteration 960\r\nALLOC_TEST iteration 970\r\nALLOC_TEST iteration 980\r\nALLOC_TEST iteration 990\r\nALLOC_TEST iteration 1000\r\nALLOC_TEST iteration 1010\r\nALLOC_TEST iteration 1020\r\nALLOC_TEST iteration 1030\r\nALLOC_TEST iteration 1040\r\nALLOC_TEST iteration 1050\r\nALLOC_TEST iteration 1060\r\nALLOC_TEST iteration 1070\r\nALLOC_TEST iteration 1080\r\nALLOC_TEST iteration 1090\r\nALLOC_TEST iteration 1100\r\nALLOC_TEST iteration 1110\r\nALLOC_TEST iteration 1120\r\nALLOC_TEST iteration 1130\r\nALLOC_TEST iteration 1140\r\nALLOC_TEST iteration 1150\r\nALLOC_TEST iteration 1160\r\nALLOC_TEST iteration 1170\r\nALLOC_TEST iteration 1180\r\nALLOC_TEST iteration 1190\r\nALLOC_TEST iteration 1200\r\nALLOC_TEST iteration 1210\r\nALLOC_TEST iteration 1220\r\nALLOC_TEST iteration 1230\r\nALLOC_TEST iteration 1240\r\nALLOC_TEST iteration 1250\r\nALLOC_TEST iteration 1260\r\nALLOC_TEST iteration 1270\r\nALLOC_TEST iteration 1280\r\nALLOC_TEST iteration 1290\r\nALLOC_TEST iteration 1300\r\nALLOC_TEST iteration 1310\r\nALLOC_TEST iteration 1320\r\nALLOC_TEST iteration 1330\r\nALLOC_TEST iteration 1340\r\nALLOC_TEST iteration 1350\r\nALLOC_TEST iteration 1360\r\nALLOC_TEST iteration 1370\r\nALLOC_TEST iteration 1380\r\nALLOC_TEST iteration 1390\r\nALLOC_TEST iteration 1400\r\nALLOC_TEST iteration 1410\r\nALLOC_TEST iteration 1420\r\nALLOC_TEST iteration 1430\r\nALLOC_TEST iteration 1440\r\nALLOC_TEST iteration 1450\r\nALLOC_TEST iteration 1460\r\nALLOC_TEST iteration 1470\r\nALLOC_TEST iteration 1480\r\nALLOC_TEST iteration 1490\r\nALLOC_TEST iteration 1500\r\nALLOC_TEST iteration 1510\r\nALLOC_TEST iteration 1520\r\nALLOC_TEST iteration 1530\r\nALLOC_TEST iteration 1540\r\nALLOC_TEST iteration 1550\r\nALLOC_TEST iteration 1560\r\nALLOC_TEST iteration 1570\r\nALLOC_TEST iteration 1580\r\nALLOC_TEST iteration 1590\r\nALLOC_TEST iteration 1600\r\nALLOC_TEST iteration 1610\r\nALLOC_TEST iteration 1620\r\nALLOC_TEST iteration 1630\r\nALLOC_TEST iteration 1640\r\nALLOC_TEST iteration 1650\r\nALLOC_TEST iteration 1660\r\nALLOC_TEST iteration 1670\r\nALLOC_TEST iteration 1680\r\nALLOC_TEST iteration 1690\r\nALLOC_TEST iteration 1700\r\nALLOC_TEST iteration 1710\r\nALLOC_TEST iteration 1720\r\nALLOC_TEST iteration 1730\r\nALLOC_TEST iteration 1740\r\nALLOC_TEST iteration 1750\r\nALLOC_TEST iteration 1760\r\nALLOC_TEST iteration 1770\r\nALLOC_TEST iteration 1780\r\nALLOC_TEST iteration 1790\r\nALLOC_TEST iteration 1800\r\nALLOC_TEST iteration 1810\r\nALLOC_TEST iteration 1820\r\nALLOC_TEST iteration 1830\r\nALLOC_TEST iteration 1840\r\nALLOC_TEST iteration 1850\r\nALLOC_TEST iteration 1860\r\nALLOC_TEST iteration 1870\r\nALLOC_TEST iteration 1880\r\nALLOC_TEST iteration 1890\r\nALLOC_TEST iteration 1900\r\nALLOC_TEST iteration 1910\r\nALLOC_TEST iteration 1920\r\nALLOC_TEST iteration 1930\r\nALLOC_TEST iteration 1940\r\nALLOC_TEST iteration 1950\r\nALLOC_TEST iteration 1960\r\nALLOC_TEST iteration 1970\r\nALLOC_TEST iteration 1980\r\nALLOC_TEST iteration 1990\r\nPASS native realloc content, shrink, grow, failed-grow preservation, NULL/zero/overflow and 2000 mixed operations\r\nREALLOC_STATS inplace=1562 avoided_copy=789613 copies=407 copied=185668\r\n\r\nREMOTE_END_25:0\r\n/ > ",
+    "host_seconds": 35.93323295799999
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_26:%d\\n' $?\r\nRuntime: heap=358052 largest=355782 image=8896 ticks=3402 load=34 owned-peak=35281 remaining=0\r\nLoader ticks: read=11 validate=1 imports=2 relocations=1 prepare=6 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_26:0\r\n/ > ",
+    "host_seconds": 0.5441372080000235
+  }
+]

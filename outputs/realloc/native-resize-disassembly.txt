@@ -1,0 +1,114 @@
+Using multiversal interfaces
+
+/src/work/realloc/native-resize.o:     file format elf32-m68k
+
+
+Disassembly of section .text.port_native_resize:
+
+00000000 <port_native_resize>:
+   0:	4fef ff74      	lea %sp@(-140),%sp
+   4:	48e7 1802      	moveml %d3-%d4/%fp,%sp@-
+   8:	262f 00a4      	movel %sp@(164),%d3
+   c:	4aaf 009c      	tstl %sp@(156)
+  10:	660c           	bnes 1e <port_native_resize+0x1e>
+  12:	7000           	moveq #0,%d0
+  14:	4cdf 4018      	moveml %sp@+,%d3-%d4/%fp
+  18:	4fef 008c      	lea %sp@(140),%sp
+  1c:	4e75           	rts
+  1e:	4a83           	tstl %d3
+  20:	6df0           	blts 12 <port_native_resize+0x12>
+  22:	b6af 00a0      	cmpl %sp@(160),%d3
+  26:	621e           	bhis 46 <port_native_resize+0x46>
+  28:	2003           	movel %d3,%d0
+  2a:	206f 009c      	moveal %sp@(156),%a0
+  2e:	a020           	.short 0xa020
+  30:	2c40           	moveal %d0,%fp
+  32:	3838 0220      	movew 220 <port_native_resize+0x220>,%d4
+  36:	b044           	cmpw %d4,%d0
+  38:	663a           	bnes 74 <port_native_resize+0x74>
+  3a:	320e           	movew %fp,%d1
+  3c:	57c0           	seq %d0
+  3e:	4880           	extw %d0
+  40:	48c0           	extl %d0
+  42:	4480           	negl %d0
+  44:	60ce           	bras 14 <port_native_resize+0x14>
+  46:	2c43           	moveal %d3,%fp
+  48:	9def 00a0      	subal %sp@(160),%fp
+  4c:	bdfc 7fff 7fff 	cmpal #2147450879,%fp
+  52:	62be           	bhis 12 <port_native_resize+0x12>
+  54:	ddfc 0000 8000 	addal #32768,%fp
+  5a:	a01c           	.short 0xa01c
+  5c:	4a80           	tstl %d0
+  5e:	6d04           	blts 64 <port_native_resize+0x64>
+  60:	b08e           	cmpl %fp,%d0
+  62:	64c4           	bccs 28 <port_native_resize+0x28>
+  64:	200e           	movel %fp,%d0
+  66:	a04d           	.short 0xa04d
+  68:	a01c           	.short 0xa01c
+  6a:	4a80           	tstl %d0
+  6c:	6da4           	blts 12 <port_native_resize+0x12>
+  6e:	b08e           	cmpl %fp,%d0
+  70:	64b6           	bccs 28 <port_native_resize+0x28>
+  72:	609e           	bras 12 <port_native_resize+0x12>
+  74:	4ab9 0000 0000 	tstl 0 <port_native_resize>
+			76: R_68K_32	.bss.reported.0
+  7a:	66be           	bnes 3a <port_native_resize+0x3a>
+  7c:	206f 009c      	moveal %sp@(156),%a0
+  80:	a021           	.short 0xa021
+  82:	2f00           	movel %d0,%sp@-
+  84:	2f03           	movel %d3,%sp@-
+  86:	2f2f 00a8      	movel %sp@(168),%sp@-
+  8a:	3044           	moveaw %d4,%a0
+  8c:	2f08           	movel %a0,%sp@-
+  8e:	300e           	movew %fp,%d0
+  90:	48c0           	extl %d0
+  92:	2f00           	movel %d0,%sp@-
+  94:	4879 0000 0000 	pea 0 <port_native_resize>
+			96: R_68K_32	.rodata.port_native_resize.str1.1
+  9a:	4878 008c      	pea 8c <port_native_resize+0x8c>
+  9e:	7628           	moveq #40,%d3
+  a0:	d68f           	addl %sp,%d3
+  a2:	2f03           	movel %d3,%sp@-
+  a4:	4eb9 0000 0000 	jsr 0 <port_native_resize>
+			a6: R_68K_32	snprintf
+  aa:	4fef 001c      	lea %sp@(28),%sp
+  ae:	2e80           	movel %d0,%sp@
+  b0:	2f03           	movel %d3,%sp@-
+  b2:	4878 0002      	pea 2 <port_native_resize+0x2>
+  b6:	4eb9 0000 0000 	jsr 0 <port_native_resize>
+			b8: R_68K_32	cli_write
+  bc:	7001           	moveq #1,%d0
+  be:	23c0 0000 0000 	movel %d0,0 <port_native_resize>
+			c0: R_68K_32	.bss.reported.0
+  c4:	4fef 000c      	lea %sp@(12),%sp
+  c8:	6000 ff70      	braw 3a <port_native_resize+0x3a>
+
+Disassembly of section .text.port_native_resize.macsbug:
+
+00000000 <.text.port_native_resize.macsbug>:
+   0:	4e75           	rts
+   2:	9270 6f72 745f 	subw %a0@(745f6e61)@(7469),%d1
+   8:	6e61 7469 
+   c:	7665           	moveq #101,%d3
+   e:	Address 0x16 is out of bounds.
+
+
+Disassembly of section .text.port_native_capacity:
+
+00000000 <port_native_capacity>:
+   0:	206f 0004      	moveal %sp@(4),%a0
+   4:	a021           	.short 0xa021
+   6:	4e75           	rts
+
+Disassembly of section .text.port_native_capacity.macsbug:
+
+00000000 <.text.port_native_capacity.macsbug>:
+   0:	9470 6f72 745f 	subw %a0@(745f6e61)@(7469),%d2
+   6:	6e61 7469 
+   a:	7665           	moveq #101,%d3
+   c:	5f63           	subqw #7,%a3@-
+   e:	6170           	bsrs 80 <port_native_resize+0x80>
+  10:	6163           	bsrs 75 <port_native_resize+0x75>
+  12:	6974           	bvss 88 <port_native_resize+0x88>
+  14:	7900           	.short 0x7900
+	...

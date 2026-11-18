@@ -13,7 +13,7 @@ u=work/busybox/busybox-1.37.0
 flags="-std=gnu99 -m68000 -Os -funsigned-char -ffunction-sections -fdata-sections -I/src/src/ports/busybox-additions -I/src/src/ports/busybox-tools -I/src/work/busybox-additions -I/src/src/ports/include"
 compile() {
  srcfile="$1"; objfile="$2"; shift 2
- key=$( (echo "$flags $*"; cat "$srcfile" work/busybox-additions/bb_archive.h work/busybox-additions/dump.h src/ports/safe-save.h src/ports/alloc-pages.inc src/ports/busybox-additions/libbb.h src/ports/busybox-tools/libbb.h src/ports/busybox-tools/common_bufsiz.h work/busybox-additions/config.h work/busybox-additions/help.h src/ports/compat.h) | sha256sum | cut -d" " -f1)
+ key=$( (echo "$flags $*"; cat "$srcfile" work/busybox-additions/bb_archive.h work/busybox-additions/dump.h src/ports/safe-save.h src/ports/alloc-pages.inc src/ports/realloc.inc src/ports/busybox-additions/libbb.h src/ports/busybox-tools/libbb.h src/ports/busybox-tools/common_bufsiz.h work/busybox-additions/config.h work/busybox-additions/help.h src/ports/compat.h) | sha256sum | cut -d" " -f1)
  if [ -f "$objfile" ] && [ -f "$objfile.key" ] && [ "$(cat "$objfile.key")" = "$key" ]; then return; fi
  m68k-apple-macos-gcc $flags "$@" -c "$srcfile" -o "$objfile"
  echo "$key" > "$objfile.key"

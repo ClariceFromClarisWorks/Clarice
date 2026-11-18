@@ -1,0 +1,46 @@
+alloctest; printf '\nRESULT=%s\n' $?
+ALLOC_TEST begin
+ALLOC_FAIL request=1048576 old=32768 realloc=1048576 owned=34416 peak=34416 free=314850 largest=314358 reclaimable=314850 contiguous=314366
+ALLOC_TEST edge cases passed
+ALLOC_TEST iteration 0
+ALLOC_TEST iteration 10
+ALLOC_TEST iteration 20
+ALLOC_TEST iteration 30
+ALLOC_TEST iteration 40
+ALLOC_TEST iteration 50
+ALLOC_TEST iteration 60
+ALLOC_TEST iteration 70
+ALLOC_TEST iteration 80
+ALLOC_TEST iteration 90
+ALLOC_TEST iteration 100
+ALLOC_TEST iteration 110
+ALLOC_TEST iteration 120
+ALLOC_TEST iteration 130
+ALLOC_TEST iteration 140
+ALLOC_TEST iteration 150
+ALLOC_TEST iteration 160
+ALLOC_TEST iteration 170
+ALLOC_TEST iteration 180
+ALLOC_TEST iteration 190
+ALLOC_TEST iteration 200
+ALLOC_TEST iteration 210
+ALLOC_TEST iteration 220
+ALLOC_TEST iteration 230
+ALLOC_TEST iteration 240
+ALLOC_TEST iteration 250
+ALLOC_TEST iteration 260
+ALLOC_TEST iteration 270
+ALLOC_TEST iteration 280
+ALLOC_TEST iteration 290
+ALLOC_TEST iteration 300
+ALLOC_TEST iteration 310
+ALLOC_TEST iteration 320
+ALLOC_TEST iteration 330
+ALLOC_TEST iteration 340
+ALLOC_TEST iteration 350
+ALLOC_TEST iteration 360
+BAD CAPACITY i=361 n=1463 stored=1463 native=49
+REALLOC_STATS inplace=256 avoided_copy=152476 copies=76 copied=40638
+
+RESULT=23
+/ > 

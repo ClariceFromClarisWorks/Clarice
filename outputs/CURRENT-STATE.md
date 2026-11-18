@@ -1,5 +1,19 @@
 # Clarice current state
 
+## Native realloc investigation — 18 November 2026
+
+- Separate additions branch instruments the 256 KiB diff failure: full replacement
+  allocation exceeds the largest contiguous block despite adequate total free RAM.
+- Opt-in native SetPtrSize avoids duplication with safe copy fallback and the same
+  32 KiB recovery margin. Snow caught a stale MemErr result; binding now captures
+  the documented D0 trap result directly. Capacity/content stress checks pass.
+- 8 KiB diff peak owned falls 17500→14412 B, all eight copies eliminated, output
+  identical; 5.285 vs 5.299 s host medians show no speed improvement. Diagnostic
+  image overhead 528 B. Large repeated-line diff gets further but still fails
+  safely as its working set reaches available memory/headroom; no large-file fix.
+- Production defaults unchanged. Physical SE and System 7 remain unvalidated.
+  [Evidence, native-error finding and next decision](realloc/README.md).
+
 ## Optional BusyBox additions — 18 November 2026
 
 - Separate `codex/busybox-additions-20261118` tree adds genuine BusyBox 1.37.0
@@ -18,7 +32,7 @@
   documented mutable header area. One immediate Telnet reconnect closed before
   authentication; later connection succeeded. No Telnet change in this branch.
 - [Port report, measured costs, evidence and remaining decisions](busybox-additions/README.md).
-  Optional evaluation only; no default promotion, Main merge, push or release.
+  Optional evaluation only; no default promotion, Main merge or release. Separate branch push authorized.
 
 ## Approved BusyBox defaults — 18 November 2026
 

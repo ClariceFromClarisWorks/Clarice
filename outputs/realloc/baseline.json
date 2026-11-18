@@ -1,0 +1,26 @@
+[
+  {
+    "command": "difftrace /tmp/ba-lines256k /tmp/ba-edited256k > /tmp/ra-baseline.diff",
+    "status": 2,
+    "text": "difftrace /tmp/ba-lines256k /tmp/ba-edited256k > /tmp/ra-baseline.diff; printf '\\nREMOTE_END_1:%d\\n' $?\r\nALLOC_FAIL request=47844 old=43500 realloc=47844 owned=244088 peak=290944 free=91884 largest=39580 reclaimable=91884 contiguous=39588\r\ndiff: out of memory\r\nREALLOC_STATS inplace=0 avoided_copy=0 copies=62 copied=761832\r\n\r\nREMOTE_END_1:2\r\n/ > ",
+    "host_seconds": 83.065930208
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=358056 largest=355740 image=21264 ticks=7815 load=48 owned-peak=290944 remaining=0\r\nLoader ticks: read=20 validate=3 imports=2 relocations=2 prepare=4 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=17 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 0.4661771250000015
+  },
+  {
+    "command": "difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-small.diff",
+    "status": 1,
+    "text": "difftrace /tmp/ba-lines8k /tmp/ba-edited8k > /tmp/ra-small.diff; printf '\\nREMOTE_END_3:%d\\n' $?\r\nREALLOC_STATS inplace=0 avoided_copy=0 copies=8 copied=7768\r\n\r\nREMOTE_END_3:1\r\n/ > ",
+    "host_seconds": 5.570708416999992
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nRuntime: heap=358056 largest=355740 image=21264 ticks=451 load=48 owned-peak=17500 remaining=0\r\nLoader ticks: read=21 validate=3 imports=2 relocations=2 prepare=4 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 0.5260518329999968
+  }
+]

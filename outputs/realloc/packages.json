@@ -1,0 +1,20 @@
+[
+  {
+    "name": "difftrace",
+    "package_bytes": 31036,
+    "image_bytes": 21264,
+    "sha256": "bc8f81f9e5cf913596636b84d9aca0b9ee1330269528f91fab0c85d31e93ff13"
+  },
+  {
+    "name": "diffgrow",
+    "package_bytes": 31792,
+    "image_bytes": 21792,
+    "sha256": "c1d74ebff5ef6bec1afffaf45c095ae1913d46d551f824f726acc0257c682de5"
+  },
+  {
+    "name": "alloctest",
+    "package_bytes": 13916,
+    "image_bytes": 8896,
+    "sha256": "efa9502472b596a9be3728d84106253dddb42821c68b39235d34519e155c5f6f"
+  }
+]
