@@ -1,4 +1,4 @@
-"""Actual listing, buffered errors/cleanup and byte equivalence to prior implementation."""
+"""Actual listing, buffered errors/cleanup and legacy-column equivalence."""
 from pathlib import Path
 import ast, subprocess, tempfile
 root=Path.cwd()
@@ -58,7 +58,8 @@ with tempfile.TemporaryDirectory() as d:
        for one in [0,1]:
         args=[detail,ref,fail,cancel,0,fault,width,one]
         old,om=run(bins[0],args);new,nm=run(bins[1],args)
-        assert old==new,(args,len(old),len(new));assert om[0]==nm[0],(args,om,nm)
+        projected=b''.join(line[:26]+line[36:] for line in new.splitlines(keepends=True)) if detail==1 else new
+        assert old==projected,(args,len(old),len(new));assert om[0]==nm[0] and om[3]==nm[3],(args,om,nm)
         assert nm[2]==(4096 if ref>=0 and not fail else 0)
         count+=1
  for detail in [0,1,2]:

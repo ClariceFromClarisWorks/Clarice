@@ -11,6 +11,18 @@ bytes 16–127; the old synthetic test incorrectly required these to remain equa
 No production change or added runtime cost. Physical SE/System 7 acceptance
 remains separate. [Validation and reproducible tests](file-progress/resource/REPORT.md).
 
+## Long listing type and creator codes — 18 November 2026
+
+Normal ls -l/-la/-lah includes stored type/creator codes; --full retains extra
+Finder flags. Optional --legend implies -l and adds field explanations/aligned
+headings. No extra catalog queries or heap allocation; +10 output bytes per row.
+Native loaded utility +716 bytes, loader metadata +132 bytes, entry stack +4 bytes.
+4000 formatter cases, 576 output/status cases, catalog/options tests and 68000
+build pass. Snow: 24 timed commands pass; repeated medians, before/after:
+100-entry -lah redirected 2.21/2.26 s, 1000-entry -la 9.35/9.10 s (overlapping
+variation, no speedup claim), small terminal -lah 1.65/1.68 s. Physical SE still
+requires validation on the next build. [Details and evidence](ls-codes/REPORT.md).
+
 ## Default file-operation progress — 18 November 2026
 
 Developed/tested/staged in `Clarice-File-Progress` on `codex/file-progress-20261118`.

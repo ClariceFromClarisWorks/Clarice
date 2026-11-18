@@ -1,0 +1,1 @@
+PASS -l/-la/-lah, --legend implies -l, human/full headings, one explanation/multiple headers, -- operands, help/stdout, invalid options/stderr, output failure before catalog work, explicit redirected/script legend

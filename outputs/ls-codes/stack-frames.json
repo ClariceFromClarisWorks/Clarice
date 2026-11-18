@@ -1,0 +1,12 @@
+{
+  "before": {
+    "list_item_frame": 748,
+    "clarice_main_frame": 1192,
+    "saved_registers_each": 32
+  },
+  "after": {
+    "list_item_frame": 748,
+    "clarice_main_frame": 1196,
+    "saved_registers_each": 32
+  }
+}

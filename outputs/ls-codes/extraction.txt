@@ -1,0 +1,6 @@
+Using multiversal interfaces
+/src/work/ls-codes/system.hda: contains 1 HFS partition
+Volume name is "RCGuest"
+Volume was created on Tue Nov 17 01:58:42 2026
+Volume was last modified on Wed Nov 18 12:38:25 2026
+Volume has 5587968 bytes free

@@ -29,14 +29,14 @@ static int list_item(Listing *l,const char *name,const CInfoPBRec *pb){
  int dir=!pb||(pb->hFileInfo.ioFlAttrib&16),e;
  if(l->detail){char meta[PATH_CAP+128],data[32],resource[32],kind[6],type[10];unsigned int flags=pb?pb->hFileInfo.ioFlFndrInfo.fdFlags:0;int j;
   kind[0]=dir?'d':is_link(pb)?'l':'-';kind[1]=pb&&(pb->hFileInfo.ioFlAttrib&1)?'L':'-';kind[2]=flags&0x4000?'I':'-';kind[3]=flags&0x1000?'N':'-';kind[4]=flags&0x2000?'B':'-';kind[5]=0;
-  if(l->detail==2)for(j=0;j<8;j++){unsigned char c=dir?'-':((unsigned char*)&pb->hFileInfo.ioFlFndrInfo)[j];type[j+(j>=4)]=(c>=32&&c<127)?c:'.';}type[4]=' ';type[9]=0;
+  for(j=0;j<8;j++){unsigned char c=dir?'-':((unsigned char*)&pb->hFileInfo.ioFlFndrInfo)[j];type[j+(j>=4)]=(c>=32&&c<127)?c:'.';}type[4]=' ';type[9]=0;
   /* Avoid general printf parsing for every catalog entry. */
   int k=0,n;static const char hex[]= "0123456789ABCDEF";k=l->detail==2?5:3;memcpy(meta,kind,k);meta[k++]=' ';
   if(l->detail==2){for(j=12;j>=0;j-=4)meta[k++]=pb?hex[(flags>>j)&15]:'-';meta[k++]=' ';}
   if(!pb||dir){memset(meta+k,' ',22);k+=22;}
   else if(!l->human){format_decimal_field(meta+k,(unsigned long)pb->hFileInfo.ioFlLgLen);k+=10;meta[k++]=' ';format_decimal_field(meta+k,(unsigned long)pb->hFileInfo.ioFlRLgLen);k+=10;meta[k++]=' ';}
   else{format_size(data,(unsigned long)pb->hFileInfo.ioFlLgLen,1);format_size(resource,(unsigned long)pb->hFileInfo.ioFlRLgLen,1);const char *sizes[2]={data,resource};for(j=0;j<2;j++){n=strlen(sizes[j]);if(n<10){memset(meta+k,' ',10-n);k+=10-n;}memcpy(meta+k,sizes[j],n);k+=n;meta[k++]=' ';}}
-  if(l->detail==2){memcpy(meta+k,type,9);k+=9;meta[k++]=' ';}if(pb){unsigned long seconds=dir?(unsigned long)pb->dirInfo.ioDrCrDat:(unsigned long)pb->hFileInfo.ioFlCrDat;
+  memcpy(meta+k,type,9);k+=9;meta[k++]=' ';if(pb){unsigned long seconds=dir?(unsigned long)pb->dirInfo.ioDrCrDat:(unsigned long)pb->hFileInfo.ioFlCrDat;
    /* One invocation-local value, exact timestamp key; no directory cache. */
    if(!l->created_valid||l->created_seconds!=seconds){format_created(l->created,seconds);l->created_seconds=seconds;l->created_valid=1;}memcpy(meta+k,l->created,16);}else memset(meta+k,' ',16);k+=16;meta[k++]=' ';n=strlen(name);memcpy(meta+k,name,n);k+=n;if(dir&&strcmp(name,".")&&strcmp(name,".."))meta[k++]='/';meta[k++]='\n';LS_PHASE(2);list_write(l,meta,k);return output_error?1:ls_yield(l->paged)?130:0;
  }
@@ -118,15 +118,16 @@ static const char *listing_operand(int argc,char **av,int *index,int *options){
 }
 static int ls_command(int argc,char **av){
  if(argc==2&&!strcmp(av[1],"--help")){say(
- "usage: ls [-lah1P] [--full] [--] [path ...]\n"
- "-l columns: kind+LI  data-bytes  resource-bytes  created  name\n"
+ "usage: ls [-lah1P] [--full] [--legend] [--] [path ...]\n"
+ "-l columns: kind+LI  data-bytes  resource-bytes  type  creator  created  name\n"
  "Created: YYYY-MM-DD HH:MM, from the HFS catalog.\n"
  "Kind: d directory, l Clarice link, - ordinary file.\n"
  "L: locked; I: Finder-invisible; -: flag clear.\n"
  "Fork sizes are logical bytes; -h uses KiB/MiB; zero is empty.\n"
  "Directories have blank fork sizes: these are not applicable.\n"
  "Virtual entries leave unavailable sizes/dates blank.\n"
- "--full adds N/B flag bits, raw Finder hex, type and creator.\n"
+ "--full adds N/B flag bits and raw Finder hex.\n"
+ "--legend adds column explanations and headings; implies -l.\n"
  "N: name-locked bit; B: bundle bit (OS-dependent meaning).\n"
  "Type/creator: stored codes; '.' replaces nonprintable bytes.\n"
  "Stored ???? is literal metadata, not our placeholder.\n"
@@ -135,9 +136,19 @@ static int ls_command(int argc,char **av){
  "Explicit path operands are shown even when hidden.\n"
  "-1 one entry per line; -P accepted for compatibility; catalog order.\n"
  "No invented owners, groups or Unix access permissions.\n");return output_error?1:0;}
-int detail=0,all=0,paged=1,human=0,one=0,options=1,n=0,i;int operand=1,operand_options=1;
- for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--] [path ...]\n");return 2;}}}else n++;}
- int result=0;for(i=0;i<(n?n:1);i++){const char *path=n?listing_operand(argc,av,&operand,&operand_options):".";if(n>1){if(i)say("\n");say(path);say(":\n");}int e=list(path,detail,all,paged&&output_ref<0&&!script_depth,human,one);if(e==130)return e;if(e)result=e;if(output_error)return 1;}return result;
+int detail=0,all=0,paged=1,human=0,one=0,legend=0,options=1,n=0,i;int operand=1,operand_options=1;
+ for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--legend")){legend=1;continue;}if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--legend] [--] [path ...]\n");return 2;}}}else n++;}
+ if(legend){if(!detail)detail=1;
+  say("FLG: kind (d directory, l link, - file), L locked, I invisible.\n"
+      "DATA/RESOURCE: logical fork sizes; blank for directories.\n"
+      "TYPE/CREA: Macintosh type/creator; '.' marks nonprintable bytes.\n"
+      "CREATED: HFS creation date/time. NAME: encoded filename.\n");
+  if(human)say("Sizes use KiB/MiB; zero means an empty fork.\n");
+  else say("Sizes are bytes; zero means an empty fork.\n");
+  if(detail==2)say("FLAGS also has N name-locked, B bundle; HEX is raw Finder flags.\n");
+  if(output_error)return 1;
+ }
+ int result=0;for(i=0;i<(n?n:1);i++){const char *path=n?listing_operand(argc,av,&operand,&operand_options):".";if(n>1){if(i)say("\n");say(path);say(":\n");}if(legend){say(detail==2?"FLAGS HEX  ":"FLG ");say("      DATA   RESOURCE TYPE CREA CREATED          NAME\n");if(output_error)return 1;}int e=list(path,detail,all,paged&&output_ref<0&&!script_depth,human,one);if(e==130)return e;if(e)result=e;if(output_error)return 1;}return result;
 }
 static int df_row(HParamBlockRec *pb,int human){
  char size[32],used[32],free_space[32],line[224],raw[32],mount[100];unsigned long blocks=(unsigned short)pb->volumeParam.ioVNmAlBlks,free_blocks=(unsigned short)pb->volumeParam.ioVFrBlk,block_size=(unsigned long)pb->volumeParam.ioVAlBlkSiz;

@@ -1,0 +1,6 @@
+100 entries + dots: 1020 extra output bytes; other columns identical
+1000 entries + dots: 10020 extra output bytes; other columns identical
+file 100 {"before": {"first": 2.46, "repeats": [2.15, 2.21, 2.21], "median": 2.21}, "after": {"first": 2.65, "repeats": [2.31, 2.21, 2.26], "median": 2.26}} delta 0.05 s 2.26 %
+file 1000 {"before": {"first": 8.25, "repeats": [8.78, 9.35, 9.35], "median": 9.35}, "after": {"first": 9.3, "repeats": [9.08, 9.1, 9.65], "median": 9.1}} delta -0.25 s -2.67 %
+screen 5 {"before": {"first": 1.61, "repeats": [1.51, 1.66, 1.65], "median": 1.65}, "after": {"first": 1.51, "repeats": [1.68, 1.66, 1.7], "median": 1.68}} delta 0.03 s 1.82 %
+PASS 24 timed commands; exact +10 byte long-format extension; plain/full unchanged; actual HFS type/creator metadata, legends, invalid options and cleanup

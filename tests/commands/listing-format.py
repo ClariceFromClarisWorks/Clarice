@@ -39,9 +39,9 @@ static void oracle(char *out,Listing *l,const char *name,const CInfoPBRec *pb){
  if(pb&&!dir){if(l->human){format_size(data,pb->hFileInfo.ioFlLgLen,1);format_size(resource,pb->hFileInfo.ioFlRLgLen,1);}else{snprintf(data,sizeof data,"%lu",pb->hFileInfo.ioFlLgLen);snprintf(resource,sizeof resource,"%lu",pb->hFileInfo.ioFlRLgLen);}}
  if(pb)reference_created(created,dir?pb->dirInfo.ioDrCrDat:pb->hFileInfo.ioFlCrDat);
  const char *slash=dir&&strcmp(name,".")&&strcmp(name,"..")?"/":"";
- if(l->detail==1)snprintf(out,1024,"%.3s %10s %10s %s %s%s\n",kind,data,resource,created,name,slash);
- else{for(int j=0;j<8;j++){unsigned char c=dir?'-':((unsigned char*)&pb->hFileInfo.ioFlFndrInfo)[j];type[j+(j>=4)]=(c>=32&&c<127)?c:'.';}type[4]=' ';type[9]=0;
-  char flag[5];if(pb)snprintf(flag,sizeof flag,"%04X",flags);else strcpy(flag,"----");
+ for(int j=0;j<8;j++){unsigned char c=dir?'-':((unsigned char*)&pb->hFileInfo.ioFlFndrInfo)[j];type[j+(j>=4)]=(c>=32&&c<127)?c:'.';}type[4]=' ';type[9]=0;
+ if(l->detail==1)snprintf(out,1024,"%.3s %10s %10s %s %s %s%s\n",kind,data,resource,type,created,name,slash);
+ else{char flag[5];if(pb)snprintf(flag,sizeof flag,"%04X",flags);else strcpy(flag,"----");
   snprintf(out,1024,"%s %s %10s %10s %s %s %s%s\n",kind,flag,data,resource,type,created,name,slash);
  }
 }
@@ -51,7 +51,7 @@ const char *names[]={"space name",".","..","encoded%2Fname"};
 for(int detail=1;detail<=2;detail++)for(int human=0;human<2;human++){
  memset(&l,0,sizeof l);l.detail=detail;l.human=human;
  for(int i=0;i<1000;i++){
-  p.hFileInfo.ioFlAttrib=(i%3)?0:16;p.hFileInfo.ioFlFndrInfo.fdFlags=i;
+  memcpy(&p.hFileInfo.ioFlFndrInfo,(i%2)?"SITxSITx":"CLX\0C\1RC",8);p.hFileInfo.ioFlAttrib=(i%3)?0:16;p.hFileInfo.ioFlFndrInfo.fdFlags=i;
   p.hFileInfo.ioFlLgLen=sizes[i%10];p.hFileInfo.ioFlRLgLen=sizes[(i/10)%10];
   p.hFileInfo.ioFlCrDat=p.dirInfo.ioDrCrDat=times[i%10];
   const char *name=names[i%4];const CInfoPBRec *entry=i%17?&p:0;
@@ -59,6 +59,11 @@ for(int detail=1;detail<=2;detail++)for(int human=0;human<2;human++){
   Listing cold={0};cold.detail=detail;cold.human=human;used=0;
   assert(!list_item(&cold,name,entry));assert(!strcmp(expected,output));assert(used&&output[used-1]=='\n');
  }
+}
+for(int detail=1;detail<=2;detail++){
+ l.detail=detail;p.hFileInfo.ioFlAttrib=0;memcpy(&p.hFileInfo.ioFlFndrInfo,"SITxSITx",8);used=0;assert(!list_item(&l,"archive",&p));assert(strstr(output,"SITx SITx"));
+ memcpy(&p.hFileInfo.ioFlFndrInfo,"CLX\0C\1RC",8);used=0;assert(!list_item(&l,"command",&p));assert(strstr(output,"CLX. C.RC"));
+ p.hFileInfo.ioFlAttrib=16;used=0;assert(!list_item(&l,"folder",&p));assert(strstr(output,"---- ----"));
 }
 memset(&l,0,sizeof l);l.detail=1;p.hFileInfo.ioFlAttrib=0;p.hFileInfo.ioFlCrDat=0;calls=0;
 for(int i=0;i<100;i++){used=0;assert(!list_item(&l,"same",&p));}assert(calls==1);
