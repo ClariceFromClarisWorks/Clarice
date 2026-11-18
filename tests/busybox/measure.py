@@ -19,10 +19,10 @@ try:
  rc,text=c.command('cat /tmp/vi-8k',60);assert rc==0,text
  expected=''.join(f'{i:063d}\r\n' for i in range(128));assert expected in text
  rc,text=c.command('wc -c /tmp/vi-8k',60);assert rc==0 and '8192' in text,text
- Path('outputs/busybox/fixture.json').write_text(json.dumps(dict(command='cat and wc -c /tmp/vi-8k',exact_128_numbered_lines=True,text=text),indent=2)+'\n')
+ Path('outputs/busybox-completion/fixture.json' if len(sys.argv)>2 else 'outputs/busybox/fixture.json').write_text(json.dumps(dict(command='cat and wc -c /tmp/vi-8k',exact_128_numbered_lines=True,text=text),indent=2)+'\n')
  for run in range(3):
   for path in ['', '/tmp/vi-8k']:
-   for editor in (['bbvi','vi','xvi'] if run%2==0 else ['xvi','vi','bbvi']):
+   for editor in ([sys.argv[3]] if len(sys.argv)>3 else (['bbvi','vi','xvi'] if run%2==0 else ['xvi','vi','bbvi'])):
     screen=pyte.Screen(80,24);stream=pyte.Stream(screen);command=editor+(' '+path if path else '')
     start=time.monotonic();c.t.write(command.encode()+b'\r\n')
     def ready():
@@ -33,5 +33,5 @@ try:
     input_at=time.monotonic();c.t.write(b'\x1b');time.sleep(.15);c.t.write(b':q!\r');raw+=c.t.read_until(b' > ',60);end=time.monotonic();assert raw.endswith(b' > ')
     rc,metrics=c.command('status runtime',60);assert rc==0 and 'remaining=0' in metrics
     row=dict(editor=editor,command=command,run=run+1,host_submit_to_full_screen_seconds=ready_at-start,host_submit_to_key_response_seconds=input_at-start,host_key_response_seconds=input_at-ready_at,host_complete_open_key_quit_seconds=end-start,startup_bytes=startup_bytes,total_bytes=len(raw),metrics=metrics)
-    rows.append(row);Path('outputs/busybox/measurements.json').write_text(json.dumps(rows,indent=2)+'\n');print(editor,path,run+1,round(ready_at-start,3),round(end-start,3),flush=True)
+    rows.append(row);Path(sys.argv[2] if len(sys.argv)>2 else 'outputs/busybox/measurements.json').write_text(json.dumps(rows,indent=2)+'\n');print(editor,path,run+1,round(ready_at-start,3),round(end-start,3),flush=True)
 finally:c.close()

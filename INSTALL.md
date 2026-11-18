@@ -186,3 +186,18 @@ Apple Driver43 device header/driver; provenance is recorded separately. Supply
 a compatible template path as the script’s first argument if necessary. The MacBinary core preserves both forks;
 CLX utility files are ordinary data files. Copying the native app through a
 non-Macintosh filesystem requires its MacBinary container or an HFS image.
+
+## Optional BusyBox vi
+
+The upstream BusyBox1.37.0 editor is an independent CLX runtime1.9 application,
+not part of Core. Build with `scripts/build-busybox-vi.sh`; install
+`work/busybox/vi.clx` through the existing repository as `vi`, or use
+`appinstall install /mnt/DISK/vi.clx vi` for an absent command. Replacing an
+existing vi is an explicit update/replacement and retains its recovery copy.
+See [installation and tested limitations](outputs/busybox-completion/README.md).
+
+Use `vi FILE`, `i`, Escape (or Ctrl-[), `:wq`; `:q!` deliberately discards edits. Abnormal
+invocation exit attempts to preserve unsaved text in `/etc/clarice/vi-*.recover`.
+Inspect `.part` files as incomplete. Recovery needs writable disk space and is
+not protection from OS crashes or power failure. Normal saves continue to use
+Clarice's fork-preserving safe replacement.

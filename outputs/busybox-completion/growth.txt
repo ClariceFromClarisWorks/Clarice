@@ -1,0 +1,1 @@
+PASS actual vi growth: allocation failure preserves old bounds/content; moving growth; overflow rejection

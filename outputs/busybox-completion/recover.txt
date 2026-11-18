@@ -1,0 +1,10 @@
+vi: unsaved text preserved at /etc/clarice/vi-00000007.recover
+vi: cannot preserve unsaved text from original
+vi: unsaved text preserved at /etc/clarice/vi-00000008.recover
+vi: incomplete recovery retained at /etc/clarice/vi-00000007.part
+vi: unsaved text preserved at /etc/clarice/vi-00000007.recover
+vi: incomplete recovery retained at /etc/clarice/vi-00000007.part
+vi: incomplete recovery retained at /etc/clarice/vi-00000007.part
+vi: incomplete recovery retained at /etc/clarice/vi-00000007.part
+vi: unsaved text preserved at /etc/clarice/vi-00000007.recover
+PASS recovery: exclusive collisions, bounded short writes, create/write/close/resolve/rename failures, empty buffer

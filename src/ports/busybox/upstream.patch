@@ -9,7 +9,34 @@
  		}
  	}
  
-@@ -2030,7 +2030,7 @@
+@@ -1499,11 +1499,14 @@
+ 
+ 	if (size <= 0)
+ 		return bias;
+-	end += size;		// adjust the new END
+-	if (end >= (text + text_size)) {
++	/* Keep the old buffer valid if allocation fails or polling cancels. */
++	if (size > INT_MAX - (end - text) - 10240)
++		bb_simple_error_msg_and_die("text buffer too large");
++	if (end - text + size >= text_size) {
+ 		char *new_text;
+-		text_size += end - (text + text_size) + 10240;
+-		new_text = xrealloc(text, text_size);
++		int new_size = end - text + size + 10240;
++		new_text = xrealloc(text, new_size);
++		text_size = new_size;
+ 		bias = (new_text - text);
+ 		screenbegin += bias;
+ 		dot         += bias;
+@@ -1519,6 +1522,7 @@
+ #endif
+ 		text = new_text;
+ 	}
++	end += size;
+ 	memmove(p + size, p, end - size - p);
+ 	memset(p, ' ', size);	// clear new hole
+ 	return bias;
+@@ -2030,7 +2034,7 @@
  	 && ((access(fn, W_OK) < 0) ||
  		// root will always have access()
  		// so we check fileperms too
@@ -18,7 +45,15 @@
  	    )
  	) {
  		SET_READONLY_FILE(readonly_mode);
-@@ -2363,23 +2363,8 @@
+@@ -2310,6 +2314,7 @@
+ 
+ 	// allocate/reallocate text buffer
+ 	free(text);
++	text = end = NULL;
+ 	text_size = 10240;
+ 	screenbegin = dot = end = text = xzalloc(text_size);
+ 
+@@ -2363,23 +2368,8 @@
  		status_line_bold("No current filename");
  		return -2;
  	}
@@ -43,7 +78,7 @@
  }
  
  #if ENABLE_FEATURE_VI_SEARCH
-@@ -3046,7 +3031,7 @@
+@@ -3046,7 +3036,7 @@
  			r = end_line(dot);
  		}
  		go_bottom_and_clear_to_eol();
@@ -52,7 +87,7 @@
  		for (; q <= r; q++) {
  			int c_is_no_print;
  
-@@ -4979,7 +4964,7 @@
+@@ -4979,7 +4969,7 @@
  
  	// 0: all of our options are disabled by default in vim
  	//vi_setops = 0;
@@ -61,7 +96,7 @@
  
  #if ENABLE_FEATURE_VI_CRASHME
  	if (opts & OPT_C)
-@@ -5007,27 +4992,9 @@
+@@ -5007,26 +4997,8 @@
  
  		if (exinit) {
  			cmds = xstrdup(exinit);
@@ -71,7 +106,8 @@
 -			if (home && *home) {
 -				char *exrc = concat_path_file(home, ".exrc");
 -				struct stat st;
--
++		}
+ 
 -				// .exrc must belong to and only be writable by user
 -				if (stat(exrc, &st) == 0) {
 -					if ((st.st_mode & (S_IWGRP|S_IWOTH)) == 0
@@ -84,9 +120,19 @@
 -				}
 -				free(exrc);
 -			}
- 		}
+-		}
  
-+
  		if (cmds) {
  			init_text_buffer(NULL);
- 			run_cmds(cmds);
+@@ -5051,3 +5023,11 @@
+ 
+ 	return 0;
+ }
++
++/* Called before invocation allocations are released, with polling disabled.
++ * Does not emulate signals or overwrite the user's original file. */
++void bb_vi_recover(int status)
++{
++ if (status && ptr_to_globals && text && end && (modified_count || undo_queue_state != UNDO_EMPTY) && end >= text)
++  bb_preserve(current_filename, text, end - text);
++}

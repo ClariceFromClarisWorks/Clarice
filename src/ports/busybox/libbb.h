@@ -42,6 +42,7 @@ char *strchrnul(const char *,int);
 void bb_simple_error_msg_and_die(const char *) __attribute__((noreturn));
 void bb_show_usage(void);
 int bb_vi_options(int,char **,llist_t **);
+void bb_preserve(const char *,const char *,size_t);
 int bb_save_file(const char *,const char *,size_t);
 int bb_access(const char *,int),bb_stat(const char *,struct stat *);
 #define access bb_access

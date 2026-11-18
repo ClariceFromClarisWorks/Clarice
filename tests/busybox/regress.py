@@ -5,10 +5,12 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'xvi'))
 from client import XviClient
 c=XviClient(port=23241,password=Path(sys.argv[1]).read_text().strip());rows=[]
 def cmd(source,expected=0,contains=None):
+ if len(sys.argv)>3 and source.startswith("bbvi"):source=sys.argv[3]+source[4:]
  rc,text=c.command(source,90);rows.append(dict(command=source,status=rc,text=text));assert rc==expected,(source,rc,text)
  if contains is not None:assert contains in text,(contains,text)
  return text
 def edit(source,keys):
+ if len(sys.argv)>3 and source.startswith("bbvi"):source=sys.argv[3]+source[4:]
  screen=pyte.Screen(80,24);stream=pyte.Stream(screen);c.t.write(source.encode()+b'\r\n');start=time.monotonic();raw=b''
  while time.monotonic()-start<60:
   data=c.t.read_very_eager();raw+=data;stream.feed(data.decode('latin1'))
@@ -44,5 +46,5 @@ try:
  cmd('cp /tmp/vi-8k /tmp/bbvi-reference');edit('bbvi /tmp/vi-8k',b':wq\r');cmd('cmp /tmp/vi-8k /tmp/bbvi-reference')
  cmd('test ! -f /etc/clarice/update.incomplete');cmd('cat /etc/clarice/installed.catalog',contains='bbvi');cmd('status runtime',contains='remaining=0')
 finally:
- c.close();Path('outputs/busybox/regression.json').write_text(json.dumps(rows,indent=2)+'\n')
+ c.close();Path(sys.argv[2] if len(sys.argv)>2 else 'outputs/busybox/regression.json').write_text(json.dumps(rows,indent=2)+'\n')
 print('PASS',len(rows),'observations')
