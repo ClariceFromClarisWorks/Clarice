@@ -1,0 +1,8 @@
+[
+  {
+    "command": "wget -O /tmp/su-cases.sh http://192.168.1.112:8100/cases.sh",
+    "status": 0,
+    "text": "wget -O /tmp/su-cases.sh http://192.168.1.112:8100/cases.sh; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r[==========================================================] 100% 505 B / 505 B\u001b[K\r[==========================================================] 100% 505 B / 505 B\u001b[K\r\nDownloaded 505 B to /tmp/su-cases.sh\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 1.825386
+  }
+]

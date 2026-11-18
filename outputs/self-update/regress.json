@@ -1,0 +1,56 @@
+[
+  {
+    "command": "cat /tmp/su-cases.log",
+    "status": 0,
+    "text": "cat /tmp/su-cases.log; printf '\\nREMOTE_END_1:%d\\n' $?\r\nREPLACE=0\r\nRuntime: heap=323356 largest=323188 image=100604 ticks=895 load=149 owned-peak=0 remaining=0\r\nLoader ticks: read=0 validate=143 imports=3 relocations=3 prepare=0 events=3 (events included above)\r\nVerification ticks: mode=full header=0 record=0 payload=143 metadata=0 structure=2 (structure included in relocations)\r\nPROBE2\r\nCORRUPT=1\r\nRuntime: heap=323356 largest=323188 image=100604 ticks=539 load=152 owned-peak=0 remaining=0\r\nLoader ticks: read=0 validate=146 imports=2 relocations=4 prepare=0 events=11 (events included above)\r\nVerification ticks: mode=full header=0 record=0 payload=146 metadata=0 structure=2 (structure included in relocations)\r\nPROBE2\r\nNO_DOWNGRADE=0\r\nPROBE2\r\nNO_UPDATER_FILE=0\r\nNO_PENDING=0\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 1.2634475829999996
+  },
+  {
+    "command": "cat /tmp/su-bad.log",
+    "status": 0,
+    "text": "cat /tmp/su-bad.log; printf '\\nREMOTE_END_2:%d\\n' $?\r\nChecking repository...\r\nDownloaded 115 B to /tmp/clarice-sort-55616-5\r\nselfprobe -> build 3\r\nInstalling selfprobe...\r\nDownloaded 36 B to /tmp/clarice-sort-55898-6\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 1.0568621659999984
+  },
+  {
+    "command": "cat /tmp/su-old.log",
+    "status": 0,
+    "text": "cat /tmp/su-old.log; printf '\\nREMOTE_END_3:%d\\n' $?\r\nChecking repository...\r\nDownloaded 174 B to /tmp/clarice-sort-56268-7\r\nAll standard tools are current. Update complete.\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 1.0832320839999987
+  },
+  {
+    "command": "appinstall check /bin/selfprobe",
+    "status": 0,
+    "text": "appinstall check /bin/selfprobe; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 0.9081147919999992
+  },
+  {
+    "command": "cp /tmp/su-old-updater /bin/clarice",
+    "status": 0,
+    "text": "cp /tmp/su-old-updater /bin/clarice; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 2.7879032499999994
+  },
+  {
+    "command": "command -v clarice",
+    "status": 0,
+    "text": "command -v clarice; printf '\\nREMOTE_END_6:%d\\n' $?\r\nclarice\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 0.5094103749999981
+  },
+  {
+    "command": "cksum /bin/clarice",
+    "status": 0,
+    "text": "cksum /bin/clarice; printf '\\nREMOTE_END_7:%d\\n' $?\r\n3027871785 113312 /bin/clarice\r\n\r\nREMOTE_END_7:0\r\n/ > ",
+    "host_seconds": 4.525642916999999
+  },
+  {
+    "command": "clarice --help",
+    "status": 0,
+    "text": "clarice --help; printf '\\nREMOTE_END_8:%d\\n' $?\r\nclarice update [-y] [--check] [--source http://IPv4:port/index.txt]\r\nUpdates standard tools, adds new tools, then updates and relaunches Core.\r\nSource: /etc/clarice/update.conf. Catalog: /etc/clarice/installed.catalog.\r\nInterrupted updates retain completed tools; repeat the command to resume.\r\nPrivate HTTP uses CRC-32 for corruption detection, not authentication.\r\nUnlisted files and preferences are preserved. Newer versions are not downgraded.\r\n\r\nREMOTE_END_8:0\r\n/ > ",
+    "host_seconds": 2.6233337500000005
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_9:%d\\n' $?\r\nRuntime: heap=332798 largest=330376 image=100604 ticks=167 load=164 owned-peak=0 remaining=0\r\nLoader ticks: read=0 validate=159 imports=2 relocations=3 prepare=0 events=18 (events included above)\r\nVerification ticks: mode=full header=0 record=0 payload=159 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > ",
+    "host_seconds": 0.6281645000000005
+  }
+]

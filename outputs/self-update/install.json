@@ -1,0 +1,38 @@
+[
+  {
+    "command": "cat /tmp/su1.log",
+    "status": 0,
+    "text": "cat /tmp/su1.log; printf '\\nREMOTE_END_1:%d\\n' $?\r\nChecking repository...\r\nDownloaded 174 B to /tmp/clarice-sort-42648-1\r\nselfprobe -> build 1\r\nInstalling selfprobe...\r\nDownloaded 188 B to /tmp/clarice-sort-42947-2\r\nAll standard tools are current. Update complete.\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 1.2187198330000015
+  },
+  {
+    "command": "selfprobe",
+    "status": 0,
+    "text": "selfprobe; printf '\\nREMOTE_END_2:%d\\n' $?\r\nPROBE1\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 0.8051609169999985
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=332832 largest=331930 image=52 ticks=27 load=24 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 0.6619630409999999
+  },
+  {
+    "command": "test ! -f /bin/clarice",
+    "status": 0,
+    "text": "test ! -f /bin/clarice; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 0.5996141669999986
+  },
+  {
+    "command": "test ! -f /etc/clarice/update.incomplete",
+    "status": 0,
+    "text": "test ! -f /etc/clarice/update.incomplete; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 0.6744546249999992
+  },
+  {
+    "command": "ls /etc/clarice",
+    "status": 0,
+    "text": "ls /etc/clarice; printf '\\nREMOTE_END_6:%d\\n' $?\r\ncancel-resume.log               cancel.log      clarice.conf    clarice.conf.bak\r\nclarice.history                 clx-alloctest.ok                clx-awk.ok\r\nclx-base64.ok   clx-basename.ok                 clx-bbbasename.ok\r\nclx-bbcat.ok    clx-bbcksum.ok  clx-bbcmp.ok    clx-bbcut.ok    clx-bbdirname.ok\r\nclx-bbgrep.ok   clx-bbhead.ok   clx-bbsed.ok    clx-bbsort.ok   clx-bbtail.ok\r\nclx-bbtee.ok    clx-bbtr.ok     clx-bbuniq.ok   clx-bbvi.ok     clx-bbwc.ok\r\nclx-benchls.ok  clx-benchscan.ok                clx-cat.ok      clx-cksum.ok\r\nclx-clarice.ok  clx-cmp.ok      clx-cp.ok       clx-cut.ok      clx-dd.ok\r\nclx-df.ok       clx-diff.ok     clx-diffgrow.ok                 clx-difftrace.ok\r\nclx-dirname.ok  clx-du.ok       clx-file.ok     clx-find.ok     clx-flush-wc.ok\r\nclx-forksum.ok  clx-free.ok     clx-ftp.ok      clx-grep.ok     clx-gunzip.ok\r\nclx-gzip.ok     clx-head.ok     clx-hfsattr.ok  clx-ipconfig.ok\r\nclx-kermit.ok   clx-ln.ok       clx-ls.ok       clx-mkdir.ok    clx-mktemp.ok\r\nclx-more.ok     clx-mv.ok       clx-nano-profile.ok             clx-nano.ok\r\nclx-od.ok       clx-patch.ok    clx-ping.ok     clx-printenv.ok\r\nclx-readlink.ok                 clx-repobad.ok  clx-repoone.ok\r\nclx-reporestart.ok              clx-reposlow.ok                 clx-repotwo.ok\r\nclx-rm.ok       clx-rmdir.ok    clx-sed.ok      clx-selfprobe.ok\r\nclx-serial.ok   clx-seriald.ok  clx-sleep.ok    clx-sort-sbase.ok\r\nclx-sort.ok     clx-tail.ok     clx-tar.ok      clx-tee.ok      clx-telnet.ok\r\nclx-telnetd.ok  clx-touch.ok    clx-tr-sbase.ok                 clx-tr.ok\r\nclx-uniq.ok     clx-vi.ok       clx-wc-sbase.ok                 clx-wc.ok\r\nclx-wget.ok     clx-xvi.ok      clx-xxd.ok      corrupt.log     default.log\r\ndeployment1713.log              final.log       full-update.log\r\ninstalled.catalog               partial.log     profile\r\nremote-protocol.log             repo-user.txt   repo.log        restart.log\r\nrestarted.log   resume.log      serial.conf     telnet.conf     update.conf\r\nUpdater-26e9e674de30            Updater-6679fb59e82f\r\nUpdater-b584ca8ef775\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 3.875111916999998
+  }
+]

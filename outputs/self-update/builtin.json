@@ -1,0 +1,50 @@
+[
+  {
+    "command": "command -v clarice",
+    "status": 0,
+    "text": "command -v clarice; printf '\\nREMOTE_END_1:%d\\n' $?\r\nclarice\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 0.5020376670000015
+  },
+  {
+    "command": "clarice --help",
+    "status": 0,
+    "text": "clarice --help; printf '\\nREMOTE_END_2:%d\\n' $?\r\nclarice update [-y] [--check] [--source http://IPv4:port/index.txt]\r\nUpdates standard tools, adds new tools, then updates and relaunches Core.\r\nSource: /etc/clarice/update.conf. Catalog: /etc/clarice/installed.catalog.\r\nInterrupted updates retain completed tools; repeat the command to resume.\r\nPrivate HTTP uses CRC-32 for corruption detection, not authentication.\r\nUnlisted files and preferences are preserved. Newer versions are not downgraded.\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 2.767720583000001
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=332816 largest=331930 image=100604 ticks=165 load=162 owned-peak=0 remaining=0\r\nLoader ticks: read=0 validate=157 imports=2 relocations=3 prepare=0 events=20 (events included above)\r\nVerification ticks: mode=full header=0 record=0 payload=157 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 0.5532588749999974
+  },
+  {
+    "command": "clarice --help",
+    "status": 0,
+    "text": "clarice --help; printf '\\nREMOTE_END_4:%d\\n' $?\r\nclarice update [-y] [--check] [--source http://IPv4:port/index.txt]\r\nUpdates standard tools, adds new tools, then updates and relaunches Core.\r\nSource: /etc/clarice/update.conf. Catalog: /etc/clarice/installed.catalog.\r\nInterrupted updates retain completed tools; repeat the command to resume.\r\nPrivate HTTP uses CRC-32 for corruption detection, not authentication.\r\nUnlisted files and preferences are preserved. Newer versions are not downgraded.\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 2.7591279590000006
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=332816 largest=331930 image=100604 ticks=167 load=165 owned-peak=0 remaining=0\r\nLoader ticks: read=1 validate=158 imports=2 relocations=4 prepare=0 events=18 (events included above)\r\nVerification ticks: mode=full header=0 record=0 payload=158 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 0.6258787499999983
+  },
+  {
+    "command": "help clarice",
+    "status": 0,
+    "text": "help clarice; printf '\\nREMOTE_END_6:%d\\n' $?\r\nclarice update [-y] [--check] [--source http://IPv4:port/index.txt]\r\nBuilt into Clarice; checks Core and repository tools, preserves newer tools.\r\nNo separately installed updater command is required. Native replacement helper\r\nis supplied automatically. Local input required; --help works remotely.\r\nPrivate HTTP/CRC detects corruption, not authenticity.\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 0.7068471669999994
+  },
+  {
+    "command": "clarice update --check",
+    "status": 2,
+    "text": "clarice update --check; printf '\\nREMOTE_END_7:%d\\n' $?\r\nclarice update currently requires local input ownership\r\n\r\nREMOTE_END_7:2\r\n/ > ",
+    "host_seconds": 0.4122791670000012
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\nRuntime: heap=332816 largest=331930 image=100604 ticks=167 load=165 owned-peak=0 remaining=0\r\nLoader ticks: read=1 validate=158 imports=2 relocations=4 prepare=0 events=18 (events included above)\r\nVerification ticks: mode=full header=0 record=0 payload=158 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > ",
+    "host_seconds": 0.5249792910000011
+  }
+]

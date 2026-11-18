@@ -1,11 +1,17 @@
 # Installing Clarice Core and standard utilities
 
-The core application contains the terminal, shell, builtins and runtime. Standard
-commands are separate CLX files. Nano remains optional. Use the complete offline
+The core application contains the terminal, shell, builtins, runtime and self-update
+capability. Standard utilities are separate CLX files. Nano remains optional. Use the complete offline
 distribution for the first installation; repository updates subsequently maintain
 the standard tools and update Core last.
 
 ## Private repository updates
+
+`clarice update` is built into Core. It does not require an installed
+`/bin/clarice`, external wget or separately downloaded updater. The native helper
+that replaces the running application is supplied automatically. Existing old
+updater files are preserved but do not override the builtin command; old repository
+entries for an external `clarice` command are ignored.
 
 Configure `/etc/clarice/update.conf` with one private HTTP index URL, for example
 `http://192.168.1.112:8083/index.txt`, then run:
@@ -62,11 +68,13 @@ then publishes `index.txt` only after all payloads exist. It rejects changing an
 already published package/version. Increment the build identity for changed source.
 No hand-maintained command manifest or separate installer is required.
 
-This development updater requires runtime **1.6** (the thin appinstall entry and
-native SetEOF export). Older Core installations need the complete offline bootstrap
-once; do not install the new updater into a 1.5 Core. Future ABI-breaking upgrades
-may likewise require a bootstrap: tools are validated against the running runtime
-before Core replacement, rather than bypassing compatibility checks.
+Pre-1.0 development builds do not have a supported legacy upgrade path. Replace
+the Clarice application directly if an old updater cannot read the repository.
+Current builds include their updater; no separate updater installation is needed.
+
+Future ABI-breaking upgrades may require a Core bootstrap: tools are validated
+against the running runtime before Core replacement. This change does not bypass
+those checks or introduce a general dependency resolver.
 
 ## Networking and optional applications
 
@@ -180,7 +188,8 @@ command produces an installation hint. Damaged commands fail on execution or
 `scripts/distribution-disk.sh` makes a clean native HFS application disk containing the native
 application, Install Clarice launcher, Utilities, installation instructions and
 third-party notices. The launcher is a separate build of the existing shell and
-native services, with no installer code or resource added to ordinary Core. It
+native services. This offline launcher remains optional; ordinary Core contains
+its own on-demand online updater. The disk
 contains no ROM or System software. It retains only the existing template’s
 Apple Driver43 device header/driver; provenance is recorded separately. Supply
 a compatible template path as the script’s first argument if necessary. The MacBinary core preserves both forks;

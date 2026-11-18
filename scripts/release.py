@@ -82,6 +82,7 @@ def check_core(data, build):
     if types+2+count*8 > rm+ml:
         raise ValueError('resource type table bounds')
     stamp = None
+    updater = None
     code = False
     for i in range(count):
         pos = types+2+i*8
@@ -101,10 +102,13 @@ def check_core(data, build):
                 raise ValueError('resource length bounds')
             if kind == b'CODE' and ident == 0:
                 code = True
+            if kind == b'CLXU' and ident == 128:
+                updater = resource[offset+4:offset+4+length]
             if kind == b'CLUP' and ident == 128:
                 stamp = resource[offset+4:offset+4+length]
     if not code or stamp != struct.pack('>4sI4H', b'CLU1', build, 0x600, 1, 1, 2):
         raise ValueError('Core build/compatibility stamp does not match release')
+    return updater
 
 def verify_commands(root, paths):
     # Reuse the actual production CLX loader and import table via the established
@@ -130,9 +134,11 @@ def seal(root):
     for p in paths:
         if not p.is_file() or p.is_symlink():
             raise ValueError(f'missing command build: {p.name}')
-    verify_commands(root, paths)
+    updater = root/'work/update-command/clarice.clx'
+    verify_commands(root, paths+[updater])
     core = root/'work/build/Clarice.bin'
-    check_core(core.read_bytes(), session['build'])
+    if check_core(core.read_bytes(), session['build']) != updater.read_bytes():
+        raise ValueError('Core bundled updater does not match validated build')
     records = [dict(name=name, image=image, bytes=(root/f'work/build/{image}.clx').stat().st_size,
                     sha256=digest(root/f'work/build/{image}.clx'),
                     crc32=f'{binascii.crc32((root/f"work/build/{image}.clx").read_bytes()):08x}')

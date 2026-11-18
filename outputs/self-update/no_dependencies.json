@@ -1,0 +1,38 @@
+[
+  {
+    "command": "mv /bin/wget /tmp/su-wget",
+    "status": 0,
+    "text": "mv /bin/wget /tmp/su-wget; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 2.256473125000001
+  },
+  {
+    "command": "mv /bin/clarice /tmp/su-restored-updater",
+    "status": 0,
+    "text": "mv /bin/clarice /tmp/su-restored-updater; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 2.8992917919999996
+  },
+  {
+    "command": "test ! -f /bin/wget",
+    "status": 0,
+    "text": "test ! -f /bin/wget; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 0.6437969580000029
+  },
+  {
+    "command": "test ! -f /bin/clarice",
+    "status": 0,
+    "text": "test ! -f /bin/clarice; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 0.621381791000001
+  },
+  {
+    "command": "test ! -f /etc/clarice/Updater-45bd7e9b5e4d",
+    "status": 0,
+    "text": "test ! -f /etc/clarice/Updater-45bd7e9b5e4d; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 0.7578817499999992
+  },
+  {
+    "command": "command -v clarice",
+    "status": 0,
+    "text": "command -v clarice; printf '\\nREMOTE_END_6:%d\\n' $?\r\nclarice\r\n\r\nREMOTE_END_6:0\r\n/ > ",
+    "host_seconds": 0.6658454169999999
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "command": "cat /tmp/su-cancel.log",
+    "status": 0,
+    "text": "cat /tmp/su-cancel.log; printf '\\nREMOTE_END_1:%d\\n' $?\r\nCANCEL=130\r\nRuntime: heap=333626 largest=330376 image=100604 ticks=167 load=164 owned-peak=0 remaining=0\r\nLoader ticks: read=0 validate=159 imports=2 relocations=3 prepare=0 events=18 (events included above)\r\nVerification ticks: mode=full header=0 record=0 payload=159 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 1.140103667
+  },
+  {
+    "command": "clarice --help",
+    "status": 0,
+    "text": "clarice --help; printf '\\nREMOTE_END_2:%d\\n' $?\r\nclarice update [-y] [--check] [--source http://IPv4:port/index.txt]\r\nUpdates standard tools, adds new tools, then updates and relaunches Core.\r\nSource: /etc/clarice/update.conf. Catalog: /etc/clarice/installed.catalog.\r\nInterrupted updates retain completed tools; repeat the command to resume.\r\nPrivate HTTP uses CRC-32 for corruption detection, not authentication.\r\nUnlisted files and preferences are preserved. Newer versions are not downgraded.\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 2.7166325419999993
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=332812 largest=330376 image=100604 ticks=167 load=165 owned-peak=0 remaining=0\r\nLoader ticks: read=1 validate=158 imports=3 relocations=3 prepare=0 events=21 (events included above)\r\nVerification ticks: mode=full header=0 record=0 payload=158 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 0.5931686670000005
+  },
+  {
+    "command": "test ! -f /etc/clarice/Updater-45bd7e9b5e4d",
+    "status": 0,
+    "text": "test ! -f /etc/clarice/Updater-45bd7e9b5e4d; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 0.743308791999997
+  }
+]

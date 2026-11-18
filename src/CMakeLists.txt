@@ -3,7 +3,7 @@ project(Clarice C ASM)
 if(CLARICE_OFFLINE_INSTALLER)
  set(INSTALLER_RESOURCE Installer.r)
 endif()
-add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c planes-unrolled.S glyph-planes.S kernels.S checksum.S App.r Icons.r ${INSTALLER_RESOURCE} TYPE APPL CREATOR CLRC)
+add_application(Clarice app.c hardware.c shell.c sizes.c reflow.c planes-unrolled.S glyph-planes.S kernels.S checksum.S App.r Icons.r SelfUpdate.r ${INSTALLER_RESOURCE} TYPE APPL CREATOR CLRC)
 # Retro68's Rez rule tracks App.r itself, but not its included build stamp.
 add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/App.r.rsrc.bin" APPEND
  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/update/version.h")
@@ -61,3 +61,7 @@ if(CLARICE_OFFLINE_INSTALLER)
  target_compile_definitions(Clarice PRIVATE CLARICE_OFFLINE_INSTALLER=1)
  target_compile_options(Clarice PRIVATE -Wno-unused-function -Wno-sign-compare)
 endif()
+
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SelfUpdate.r.rsrc.bin" APPEND
+ DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../work/update-command/clarice.clx"
+ "${CMAKE_CURRENT_SOURCE_DIR}/../work/update-command/SelfUpdateData.r")

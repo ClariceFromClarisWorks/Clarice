@@ -55,7 +55,7 @@ static unsigned long clx_hash(unsigned long hash,const unsigned char *p,unsigned
 static unsigned long module_header_ticks,module_record_ticks,module_payload_ticks,module_metadata_ticks,module_structure_ticks;
 static int module_fast,clx_fast_blocked;
 #include "clx-record.inc"
-static int module_load(const char *path,int argc,char **argv,int execute){
+static int module_load_source(const char *path,int argc,char **argv,int execute,unsigned char *embedded,long embedded_size){
  unsigned long started=TickCount(),phase=started;module_poll_ticks=0;
 #ifdef CLARICE_NANO_PERF
  if(execute)perf_allocs=perf_free_ticks=perf_new_ticks=perf_read_ticks=perf_reads=perf_stdio_ticks=perf_image_ticks=perf_meta_ticks=0;
@@ -68,12 +68,21 @@ static int module_load(const char *path,int argc,char **argv,int execute){
  int eligible=0,matched=0,fast=0;
  unsigned long record_time=0,payload_time=0,metadata_time=0,header_time=0,structure_time=0,metadata_hash=0;
  const char *reason="damaged or truncated CLX image";
- if(open_path(path,fsRdPerm,&ref)){ref=-1;reason="cannot open installed command";goto close;}
- int e=FSRead(ref,&length,header);if(e||length!=32||GetEOF(ref,&total))goto close;
- unsigned long version=clx_u32(header+4),header_size=32;
+ unsigned long version=0,header_size=32;int e=0;
+ if(embedded){
+  total=embedded_size;if(total<32)goto close;memcpy(header,embedded,32);
+ }else{
+  if(open_path(path,fsRdPerm,&ref)){ref=-1;reason="cannot open installed command";goto close;}
+  e=FSRead(ref,&length,header);if(e||length!=32||GetEOF(ref,&total))goto close;
+ }
+ version=clx_u32(header+4);
  if(memcmp(header,"CLX1",4))goto close;
  if(version!=1&&version!=2){reason="unsupported CLX format version";goto close;}
- if(version==2){length=16;e=FSRead(ref,&length,header+32);if(e||length!=16)goto close;header_size=48;}
+ if(version==2){
+  header_size=48;if(total<48)goto close;
+  if(embedded)memcpy(header+32,embedded+32,16);
+  else{length=16;e=FSRead(ref,&length,header+32);if(e||length!=16)goto close;}
+ }
  reading+=TickCount()-phase;phase=TickCount();
  unsigned long size=clx_u32(header+8),entry=clx_u32(header+12),nr=clx_u32(header+16),ni=clx_u32(header+20);
  if(clx_u32(header+28)||size<4||size>262144||entry>=size||(entry&1)||nr>8192||ni>128||total!=(long)(header_size+size+nr*12+ni*64))goto close;
@@ -83,7 +92,7 @@ static int module_load(const char *path,int argc,char **argv,int execute){
   if(clx_u32(header+40)&~CLX_CAPABILITIES){reason="required runtime capabilities unavailable";goto close;}
  }
  header_time=TickCount()-phase;validation+=header_time;phase=TickCount();
- if(!resolve(path,native)&&clx_record_path(native,receipt_path)&&clx_identity(ref,native,identity)){
+ if(!embedded&&!resolve(path,native)&&clx_record_path(native,receipt_path)&&clx_identity(ref,native,identity)){
   eligible=1;
   if(clx_receipt_read(receipt_path,receipt)&&!memcmp(receipt+8,identity,32)&&!memcmp(receipt+40,header,48)&&memchr(receipt+88,0,256)&&!strcmp((char*)receipt+88,native))matched=1;
  }
@@ -94,19 +103,21 @@ static int module_load(const char *path,int argc,char **argv,int execute){
 #ifdef CLARICE_NANO_PERF
  unsigned long alloc_started=TickCount();
 #endif
- file=(unsigned char*)NewPtr(size);
+ file=embedded?embedded+header_size:(unsigned char*)NewPtr(size);
 #ifdef CLARICE_NANO_PERF
  perf_image_ticks=TickCount()-alloc_started;alloc_started=TickCount();
 #endif
 if(!file){reason="insufficient application memory";goto close;}
- unsigned long extra=nr*12+ni*64;meta=(unsigned char*)NewPtr(extra?extra:1);
+ unsigned long extra=nr*12+ni*64;meta=embedded?file+size:(unsigned char*)NewPtr(extra?extra:1);
 #ifdef CLARICE_NANO_PERF
  perf_meta_ticks=TickCount()-alloc_started;
 #endif
 if(!meta){reason="insufficient relocation memory";goto close;}
  preparation+=TickCount()-phase;phase=TickCount();
- length=size;e=FSRead(ref,&length,file);if(e||length!=(long)size)goto close;
- length=extra;if(extra){e=FSRead(ref,&length,meta);if(e||length!=(long)extra)goto close;}
+ if(!embedded){
+  length=size;e=FSRead(ref,&length,file);if(e||length!=(long)size)goto close;
+  length=extra;if(extra){e=FSRead(ref,&length,meta);if(e||length!=(long)extra)goto close;}
+ }
  reading+=TickCount()-phase;phase=TickCount();
  if(!fast){
   unsigned long checksum=2166136261UL;for(int part=0;part<2;part++){unsigned char *bytes=part?meta:file;unsigned long count=part?extra:size;for(unsigned long i=0;i<count;){unsigned long n=count-i;if(n>4096)n=4096;checksum=clx_hash(checksum,bytes+i,n);i+=n;if(module_poll()){status=130;goto close;}}}
@@ -132,7 +143,7 @@ if(!meta){reason="insufficient relocation memory";goto close;}
  if(execute)for(unsigned long i=0;i<nr;i++){unsigned char *r=records+i*12;unsigned long at=clx_u32(r),kind=clx_u32(r+4),target=clx_u32(r+8);clx_put32(file+at,kind==1?(unsigned long)file+target:(unsigned long)imports[target]+clx_u32(file+at));}
  relocations+=TickCount()-phase;phase=TickCount();
  if(eligible){unsigned char current[32];if(!clx_identity(ref,native,current)||memcmp(identity,current,32)){reason="installed command changed during validation";goto close;}}
- DisposePtr((Ptr)meta);meta=0;e=FSClose(ref);ref=-1;if(e){reason="command close failed";goto close;}
+ if(!embedded){DisposePtr((Ptr)meta);e=FSClose(ref);ref=-1;if(e){reason="command close failed";goto close;}}meta=0;
  preparation+=TickCount()-phase;phase=TickCount();
  if(eligible&&!matched){memset(receipt,0,sizeof receipt);memcpy(receipt,"CLXV0001",8);memcpy(receipt+8,identity,32);memcpy(receipt+40,header,48);strcpy((char*)receipt+88,native);clx_put32(receipt+344,metadata_hash);clx_put32(receipt+348,clx_hash(2166136261UL,receipt,348));clx_receipt_write(receipt_path,receipt);}
  record_time+=TickCount()-phase;
@@ -159,8 +170,8 @@ if(!meta){reason="insufficient relocation memory";goto close;}
 #endif
 close:
  module_fast=fast;module_header_ticks=header_time;module_record_ticks=record_time;module_payload_ticks=payload_time;module_metadata_ticks=metadata_time;module_structure_ticks=structure_time;
- if(command_argv)DisposePtr((Ptr)command_argv);if(ref>=0)FSClose(ref);if(meta)DisposePtr((Ptr)meta);if(file)DisposePtr((Ptr)file);
- if(status==126&&!executed&&!resolve(path,native)){
+ if(command_argv)DisposePtr((Ptr)command_argv);if(ref>=0)FSClose(ref);if(meta&&!embedded)DisposePtr((Ptr)meta);if(file&&!embedded)DisposePtr((Ptr)file);
+ if(status==126&&!executed&&!embedded&&!resolve(path,native)){
   if(clx_receipt_forget(native)){clx_fast_blocked=1;errsay("command: cannot revoke verification record; fast launch disabled for this session\n");}
  }
  if(status==126&&!executed){errsay("command: ");errsay(path);errsay(": ");errsay(reason);errsay("\n");}
@@ -171,5 +182,6 @@ close:
  app_screen_close();app_activity_interactive(0);app_serial_input(0);module_ticks=TickCount()-started;}
  return status;
 }
+static int module_load(const char *path,int argc,char **argv,int execute){return module_load_source(path,argc,argv,execute,0,0);}
 static int module_run(const char *path,int argc,char **argv){return module_load(path,argc,argv,1);}
 #include "command-install.inc"

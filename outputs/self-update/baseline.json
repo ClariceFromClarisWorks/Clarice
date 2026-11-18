@@ -1,0 +1,32 @@
+[
+  {
+    "command": "command -v clarice",
+    "status": 0,
+    "text": "command -v clarice; printf '\\nREMOTE_END_1:%d\\n' $?\r\n/bin/clarice\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 0.7459739580000004
+  },
+  {
+    "command": "clarice --help",
+    "status": 0,
+    "text": "clarice --help; printf '\\nREMOTE_END_2:%d\\n' $?\r\nclarice update [-y] [--check] [--source http://IPv4:port/index.txt]\r\nUpdates standard tools, adds new tools, then updates and relaunches Core.\r\nSource: /etc/clarice/update.conf. Catalog: /etc/clarice/installed.catalog.\r\nInterrupted updates retain completed tools; repeat the command to resume.\r\nPrivate HTTP uses CRC-32 for corruption detection, not authentication.\r\nUnlisted files and preferences are preserved. Newer versions are not downgraded.\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 1.5101577499999994
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=333724 largest=333316 image=100540 ticks=73 load=63 owned-peak=0 remaining=0\r\nLoader ticks: read=35 validate=1 imports=2 relocations=3 prepare=10 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 0.5895995419999984
+  },
+  {
+    "command": "clarice --help",
+    "status": 0,
+    "text": "clarice --help; printf '\\nREMOTE_END_4:%d\\n' $?\r\nclarice update [-y] [--check] [--source http://IPv4:port/index.txt]\r\nUpdates standard tools, adds new tools, then updates and relaunches Core.\r\nSource: /etc/clarice/update.conf. Catalog: /etc/clarice/installed.catalog.\r\nInterrupted updates retain completed tools; repeat the command to resume.\r\nPrivate HTTP uses CRC-32 for corruption detection, not authentication.\r\nUnlisted files and preferences are preserved. Newer versions are not downgraded.\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 1.2705879160000002
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=333724 largest=333316 image=100540 ticks=59 load=57 owned-peak=0 remaining=0\r\nLoader ticks: read=36 validate=1 imports=3 relocations=3 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "host_seconds": 0.6411028749999979
+  }
+]
