@@ -1,0 +1,92 @@
+[
+  {
+    "test": "working directory",
+    "command": "cd '/mnt/FS Audit A/confidence-final'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cd '/mnt/FS Audit A/confidence-final'; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\nconfidence-final > ",
+    "seconds": 0.41588099999999995
+  },
+  {
+    "test": "retained partial fill",
+    "command": "ls -l '/mnt/FS Audit B/confidence-final/filler'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "ls -l '/mnt/FS Audit B/confidence-final/filler'; printf '\\nREMOTE_END_2:%d\\n' $?\r\n---   32769536          0 2026-11-18 15:02 /mnt/FS Audit B/confidence-final/filler\r\n\r\nREMOTE_END_2:0\r\nconfidence-final > ",
+    "seconds": 0.7286145840000001
+  },
+  {
+    "test": "fill destination volume",
+    "command": "dd if=moved of='/mnt/FS Audit B/confidence-final/filler' bs=1024 seek=65536 count=1",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "dd if=moved of='/mnt/FS Audit B/confidence-final/filler' bs=1024 seek=65536 count=1; printf '\\nREMOTE_END_3:%d\\n' $?\r\ndd: ftruncate: No space left on device\r\n\r\nREMOTE_END_3:1\r\nconfidence-final > ",
+    "seconds": 2.879130584
+  },
+  {
+    "test": "full disk copy preserves target",
+    "command": "cp large '/mnt/FS Audit B/confidence-final/full-target'",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "cp large '/mnt/FS Audit B/confidence-final/full-target'; printf '\\nREMOTE_END_4:%d\\n' $?\r\ncp: Mac OS error -34: Volume has no free allocation blocks\r\n\r\nREMOTE_END_4:1\r\nconfidence-final > ",
+    "seconds": 1.5205974169999994
+  },
+  {
+    "test": "full disk target retained",
+    "command": "cmp '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/confidence-final/full-target'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cmp '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/confidence-final/full-target'; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\nconfidence-final > ",
+    "seconds": 1.6912969579999997
+  },
+  {
+    "test": "full disk move preserves source",
+    "command": "mv large '/mnt/FS Audit B/confidence-final/full-target'",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "mv large '/mnt/FS Audit B/confidence-final/full-target'; printf '\\nREMOTE_END_6:%d\\n' $?\r\nmv: Mac OS error -34: Volume has no free allocation blocks\r\n\r\nREMOTE_END_6:1\r\nconfidence-final > ",
+    "seconds": 1.8896527499999998
+  },
+  {
+    "test": "source still present",
+    "command": "test -f large",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "test -f large; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\nconfidence-final > ",
+    "seconds": 0.6819519169999992
+  },
+  {
+    "test": "target still retained",
+    "command": "cmp '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/confidence-final/full-target'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cmp '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/confidence-final/full-target'; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\nconfidence-final > ",
+    "seconds": 1.1421388330000006
+  },
+  {
+    "test": "free space recovery",
+    "command": "rm '/mnt/FS Audit B/confidence-final/filler'; cp large '/mnt/FS Audit B/confidence-final/recovered'; ls -l '/mnt/FS Audit B/confidence-final/recovered'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "rm '/mnt/FS Audit B/confidence-final/filler'; cp large '/mnt/FS Audit B/confidence-final/recovered'; ls -l '/mnt/FS Audit B/confidence-final/recovered'; printf '\\nREMOTE_END_9:%d\\n' $?\r\n---    2097163          0 2026-11-18 15:17 /mnt/FS Audit B/confidence-final/recovered\r\n\r\nREMOTE_END_9:0\r\nconfidence-final > ",
+    "seconds": 16.986170040999998
+  },
+  {
+    "test": "final cleanup",
+    "command": "status runtime",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "status runtime; printf '\\nREMOTE_END_10:%d\\n' $?\r\nRuntime: heap=333832 largest=331450 image=8104 ticks=48 load=38 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=1 imports=1 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\nconfidence-final > ",
+    "seconds": 0.3227950839999991
+  }
+]

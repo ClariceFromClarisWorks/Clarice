@@ -1,0 +1,26 @@
+[
+  {
+    "operand": "tree/.",
+    "status": 1,
+    "error": "rm: \".\" and \"..\" may not be removed\n",
+    "sentinel": "KEEP"
+  },
+  {
+    "operand": "tree/child/..",
+    "status": 1,
+    "error": "rm: \".\" and \"..\" may not be removed\n",
+    "sentinel": "KEEP"
+  },
+  {
+    "operand": "tree/.///",
+    "status": 1,
+    "error": "rm: \".\" and \"..\" may not be removed\n",
+    "sentinel": "KEEP"
+  },
+  {
+    "operand": "",
+    "status": 1,
+    "error": "rm: : No such file or directory\n",
+    "sentinel": "KEEP"
+  }
+]

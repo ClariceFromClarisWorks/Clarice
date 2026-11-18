@@ -1,0 +1,1 @@
+PASS empty paths reject without catalog I/O; explicit dot still resolves

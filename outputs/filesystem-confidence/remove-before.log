@@ -1,0 +1,7 @@
+Assertion failed: (rc==paramErr), function main, file remove-operands.c, line 63.
+Traceback (most recent call last):
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Integration-Filesystem/tests/filesystem-confidence/remove-operands.py", line 15, in <module>
+    subprocess.run([str(w/'remove-operands')],check=True)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/williamprestwich/Documents/ChatGPT/Clarice-Integration-Filesystem/work/filesystem-confidence/remove-operands']' died with <Signals.SIGABRT: 6>.

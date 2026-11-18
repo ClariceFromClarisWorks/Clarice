@@ -50,7 +50,13 @@ static int mkdir_one(const char *path){char native[PATH_CAP],canonical[PATH_CAP]
 typedef struct RemoveFrame {struct RemoveFrame *parent;char native[PATH_CAP],path[PATH_CAP];} RemoveFrame;
 static int remove_one(const char *path,int depth,int onlydir){
  (void)depth;RemoveFrame *top=NULL;char pending[PATH_CAP],native[PATH_CAP],canonical[PATH_CAP],leaf[32],encoded[100];CInfoPBRec pb;int e=0;
- if(strlen(path)>=sizeof pending)return bdNamErr;strcpy(pending,path);
+ /* Reject dot operands before resolution erases their spelling or traversal
+    deletes contents. Ignore trailing separators, as Unix rm does. */
+ size_t end=strlen(path),start;if(end>=sizeof pending)return bdNamErr;
+ while(end&&path[end-1]=='/')end--;start=end;while(start&&path[start-1]!='/')start--;
+ if(end-start==1&&path[start]=='.')return paramErr;
+ if(end-start==2&&path[start]=='.'&&path[start+1]=='.')return paramErr;
+ strcpy(pending,path);
  for(;;){
   if(app_yield()){e=130;break;}
   e=checked(pending,native,canonical,0);if(!e)e=info(native,&pb);

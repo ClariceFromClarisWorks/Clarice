@@ -1,0 +1,20 @@
+[
+  {
+    "test": "working directory",
+    "command": "cd '/mnt/FS Audit A/confidence-final'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cd '/mnt/FS Audit A/confidence-final'; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\nconfidence-final > ",
+    "seconds": 0.24226950000000003
+  },
+  {
+    "test": "large seek creation",
+    "command": "dd if=moved of=large bs=1024 seek=2048 count=1",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "dd if=moved of=large bs=1024 seek=2048 count=1; printf '\\nREMOTE_END_2:%d\\n' $?\r\n0+1 records in\r\n0+1 records out\r\n\r\nREMOTE_END_2:0\r\nconfidence-final > ",
+    "seconds": 17.1945845
+  }
+]

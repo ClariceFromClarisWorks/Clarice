@@ -35,6 +35,7 @@ static void parent_path(char *s){char *p=strrchr(s,'/');if(p==s)s[1]=0;else if(p
 /* Resolve one component at a time: a link/.. applies to the target's parent.
    No recursion, fixed buffers, at most 16 traversals per operation. */
 static int resolve_ex(const char *s,char *native,char *canonical,int follow){char pending[PATH_CAP],done[PATH_CAP]="/",part[100],target[PATH_CAP];int links=0;
+ if(!*s)return bdNamErr; /* An empty operand is not the working directory. */
  if(!strncmp(s,"native:",7)){int e=unix_from_native(s+7,pending);if(e)return e;}
  else if(*s=='~'&&(s[1]=='/'||!s[1])){if(strlen(s)>=PATH_CAP)return bdNamErr;strcpy(pending,s+1);if(!*pending)strcpy(pending,"/");}
  else if(*s=='/'){if(strlen(s)>=PATH_CAP)return bdNamErr;strcpy(pending,s);}

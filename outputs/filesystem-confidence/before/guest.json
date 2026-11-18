@@ -1,0 +1,371 @@
+[
+  {
+    "test": "setup",
+    "command": "mkdir '/mnt/FS Audit A/confidence'; mkdir '/mnt/FS Audit B/confidence'; cd '/mnt/FS Audit A/confidence'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "mkdir '/mnt/FS Audit A/confidence'; mkdir '/mnt/FS Audit B/confidence'; cd '/mnt/FS Audit A/confidence'; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\nconfidence > ",
+    "seconds": 3.4038127499999997
+  },
+  {
+    "test": "merged runtime",
+    "command": "status runtime",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=333832 largest=332626 image=8056 ticks=35 load=27 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=0 imports=2 relocations=1 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\nconfidence > ",
+    "seconds": 0.8264899159999999
+  },
+  {
+    "test": "basic round trip",
+    "command": "mkdir -p 'work space/sub'; printf 'alpha\\nbeta\\n' > 'work space/sub/data'; cp 'work space/sub/data' copy; cmp 'work space/sub/data' copy; mv copy moved; test -f moved && test ! -e copy",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "mkdir -p 'work space/sub'; printf 'alpha\\nbeta\\n' > 'work space/sub/data'; cp 'work space/sub/data' copy; cmp 'work space/sub/data' copy; mv copy moved; test -f moved && test ! -e copy; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\nconfidence > ",
+    "seconds": 8.391608000000002
+  },
+  {
+    "test": "multiple source copy",
+    "command": "mkdir multi; cp moved \"work space/sub/data\" multi; cmp moved multi/moved && cmp moved multi/data",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "mkdir multi; cp moved \"work space/sub/data\" multi; cmp moved multi/moved && cmp moved multi/data; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\nconfidence > ",
+    "seconds": 6.845939999999999
+  },
+  {
+    "test": "same file reject",
+    "command": "cp moved ./moved",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "cp moved ./moved; printf '\\nREMOTE_END_5:%d\\n' $?\r\ncp: Mac OS error -50: Invalid parameter\r\n\r\nREMOTE_END_5:1\r\nconfidence > ",
+    "seconds": 1.9427878330000006
+  },
+  {
+    "test": "case alias reject",
+    "command": "cp moved MOVED",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "cp moved MOVED; printf '\\nREMOTE_END_6:%d\\n' $?\r\ncp: Mac OS error -50: Invalid parameter\r\n\r\nREMOTE_END_6:1\r\nconfidence > ",
+    "seconds": 2.1171850420000027
+  },
+  {
+    "test": "same file preserved",
+    "command": "cmp moved \"work space/sub/data\"",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cmp moved \"work space/sub/data\"; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\nconfidence > ",
+    "seconds": 1.783743083000001
+  },
+  {
+    "test": "self directory reject",
+    "command": "cp -R multi multi/sub",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "cp -R multi multi/sub; printf '\\nREMOTE_END_8:%d\\n' $?\r\ncp: Mac OS error -50: Invalid parameter\r\n\r\nREMOTE_END_8:1\r\nconfidence > ",
+    "seconds": 2.1309218749999985
+  },
+  {
+    "test": "self copy absent",
+    "command": "test ! -e multi/sub",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "test ! -e multi/sub; printf '\\nREMOTE_END_9:%d\\n' $?\r\n\r\nREMOTE_END_9:0\r\nconfidence > ",
+    "seconds": 0.7599926659999987
+  },
+  {
+    "test": "nonrecursive folder reject",
+    "command": "cp multi rejected",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "cp multi rejected; printf '\\nREMOTE_END_10:%d\\n' $?\r\ncp: Mac OS error -50: Invalid parameter\r\n\r\nREMOTE_END_10:1\r\nconfidence > ",
+    "seconds": 2.044294458000003
+  },
+  {
+    "test": "nonempty rmdir reject",
+    "command": "rmdir multi",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "rmdir multi; printf '\\nREMOTE_END_11:%d\\n' $?\r\nrmdir: Mac OS error -47: File or directory is busy or not empty\r\n\r\nREMOTE_END_11:1\r\nconfidence > ",
+    "seconds": 2.2807432910000003
+  },
+  {
+    "test": "recursive tree",
+    "command": "cp -R \"work space\" tree; cmp tree/sub/data moved; rm -R tree; test ! -e tree",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp -R \"work space\" tree; cmp tree/sub/data moved; rm -R tree; test ! -e tree; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\nconfidence > ",
+    "seconds": 7.7691659999999985
+  },
+  {
+    "test": "missing rm forced",
+    "command": "rm -f missing",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "rm -f missing; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r\nREMOTE_END_13:0\r\nconfidence > ",
+    "seconds": 2.751010833999999
+  },
+  {
+    "test": "missing rm error",
+    "command": "rm missing",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "rm missing; printf '\\nREMOTE_END_14:%d\\n' $?\r\nrm: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_14:1\r\nconfidence > ",
+    "seconds": 1.7637632500000038
+  },
+  {
+    "test": "dash operands",
+    "command": "touch -- -file; cp -- -file -copy; mv -- -copy -moved; rm -- -file -moved",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "touch -- -file; cp -- -file -copy; mv -- -copy -moved; rm -- -file -moved; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r\nREMOTE_END_15:0\r\nconfidence > ",
+    "seconds": 6.954552
+  },
+  {
+    "test": "long name reject",
+    "command": "touch 12345678901234567890123456789012",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "touch 12345678901234567890123456789012; printf '\\nREMOTE_END_16:%d\\n' $?\r\ntouch: Mac OS error -37: Invalid file or volume name\r\n\r\nREMOTE_END_16:1\r\nconfidence > ",
+    "seconds": 1.6612840829999982
+  },
+  {
+    "test": "max name",
+    "command": "touch 1234567890123456789012345678901; rm 1234567890123456789012345678901",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "touch 1234567890123456789012345678901; rm 1234567890123456789012345678901; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r\nREMOTE_END_17:0\r\nconfidence > ",
+    "seconds": 2.813447250000003
+  },
+  {
+    "test": "touch no create",
+    "command": "touch -c absent; test ! -e absent",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "touch -c absent; test ! -e absent; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\nconfidence > ",
+    "seconds": 1.9355465419999973
+  },
+  {
+    "test": "locked target setup",
+    "command": "printf OLD > lockedtarget; hfsattr --locked on lockedtarget",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "printf OLD > lockedtarget; hfsattr --locked on lockedtarget; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\r\nREMOTE_END_19:0\r\nconfidence > ",
+    "seconds": 2.635717917000001
+  },
+  {
+    "test": "locked target copy",
+    "command": "cp moved lockedtarget",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "cp moved lockedtarget; printf '\\nREMOTE_END_20:%d\\n' $?\r\ncp: Mac OS error -45: File is locked\r\n\r\nREMOTE_END_20:1\r\nconfidence > ",
+    "seconds": 2.1961026249999946
+  },
+  {
+    "test": "locked target retained",
+    "command": "test \"$(cat lockedtarget)\" = OLD",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "test \"$(cat lockedtarget)\" = OLD; printf '\\nREMOTE_END_21:%d\\n' $?\r\n\r\nREMOTE_END_21:0\r\nconfidence > ",
+    "seconds": 2.356142332999994
+  },
+  {
+    "test": "locked rm forced",
+    "command": "rm -f lockedtarget",
+    "expected": 1,
+    "status": 1,
+    "passed": true,
+    "text": "rm -f lockedtarget; printf '\\nREMOTE_END_22:%d\\n' $?\r\nrm: Mac OS error -45: File is locked\r\n\r\nREMOTE_END_22:1\r\nconfidence > ",
+    "seconds": 1.619340459
+  },
+  {
+    "test": "unlock",
+    "command": "hfsattr --locked off lockedtarget; rm lockedtarget",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "hfsattr --locked off lockedtarget; rm lockedtarget; printf '\\nREMOTE_END_23:%d\\n' $?\r\n\r\nREMOTE_END_23:0\r\nconfidence > ",
+    "seconds": 2.670145290999997
+  },
+  {
+    "test": "symlink seed",
+    "command": "ln -s moved link; ln -s absent dangling; ln -s \"work space\" dirlink",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "ln -s moved link; ln -s absent dangling; ln -s \"work space\" dirlink; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r\nREMOTE_END_24:0\r\nconfidence > ",
+    "seconds": 5.027962375000001
+  },
+  {
+    "test": "copy link",
+    "command": "cp link linkcopy; test \"$(readlink linkcopy)\" = moved",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp link linkcopy; test \"$(readlink linkcopy)\" = moved; printf '\\nREMOTE_END_25:%d\\n' $?\r\n\r\nREMOTE_END_25:0\r\nconfidence > ",
+    "seconds": 4.1154021659999955
+  },
+  {
+    "test": "copy dangling",
+    "command": "cp dangling danglingcopy; test \"$(readlink danglingcopy)\" = absent",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp dangling danglingcopy; test \"$(readlink danglingcopy)\" = absent; printf '\\nREMOTE_END_26:%d\\n' $?\r\n\r\nREMOTE_END_26:0\r\nconfidence > ",
+    "seconds": 3.831087041999993
+  },
+  {
+    "test": "remove directory link",
+    "command": "rm -R dirlink; test -f \"work space/sub/data\"",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "rm -R dirlink; test -f \"work space/sub/data\"; printf '\\nREMOTE_END_27:%d\\n' $?\r\n\r\nREMOTE_END_27:0\r\nconfidence > ",
+    "seconds": 1.6461328749999922
+  },
+  {
+    "test": "move link cross volume",
+    "command": "mv danglingcopy '/mnt/FS Audit B/confidence/dangling'; test \"$(readlink '/mnt/FS Audit B/confidence/dangling')\" = absent",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "mv danglingcopy '/mnt/FS Audit B/confidence/dangling'; test \"$(readlink '/mnt/FS Audit B/confidence/dangling')\" = absent; printf '\\nREMOTE_END_28:%d\\n' $?\r\n\r\nREMOTE_END_28:0\r\nconfidence > ",
+    "seconds": 3.8710246659999967
+  },
+  {
+    "test": "destination link replace",
+    "command": "printf KEEP > referent; ln -s referent destination; cp moved destination; test \"$(cat referent)\" = KEEP; cmp destination moved",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "printf KEEP > referent; ln -s referent destination; cp moved destination; test \"$(cat referent)\" = KEEP; cmp destination moved; printf '\\nREMOTE_END_29:%d\\n' $?\r\n\r\nREMOTE_END_29:0\r\nconfidence > ",
+    "seconds": 6.100216375000002
+  },
+  {
+    "test": "cross volume forks",
+    "command": "cp -p '/mnt/FS Audit A/fork-source' forks; mv forks '/mnt/FS Audit B/confidence/forks'; test ! -e forks; cmp '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/confidence/forks'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp -p '/mnt/FS Audit A/fork-source' forks; mv forks '/mnt/FS Audit B/confidence/forks'; test ! -e forks; cmp '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/confidence/forks'; printf '\\nREMOTE_END_30:%d\\n' $?\r\n\r\nREMOTE_END_30:0\r\nconfidence > ",
+    "seconds": 5.150681207999995
+  },
+  {
+    "test": "dot rm seed",
+    "command": "mkdir -p dotrm/child; printf KEEP > dotrm/child/sentinel",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "mkdir -p dotrm/child; printf KEEP > dotrm/child/sentinel; printf '\\nREMOTE_END_31:%d\\n' $?\r\n\r\nREMOTE_END_31:0\r\nconfidence > ",
+    "seconds": 2.419871999999998
+  },
+  {
+    "test": "dot rm must reject",
+    "command": "rm -R dotrm/.",
+    "expected": 1,
+    "status": 0,
+    "passed": false,
+    "text": "rm -R dotrm/.; printf '\\nREMOTE_END_32:%d\\n' $?\r\n\r\nREMOTE_END_32:0\r\nconfidence > ",
+    "seconds": 1.9213930409999875
+  },
+  {
+    "test": "dot rm data preserved",
+    "command": "test -f dotrm/child/sentinel",
+    "expected": 0,
+    "status": 1,
+    "passed": false,
+    "text": "test -f dotrm/child/sentinel; printf '\\nREMOTE_END_33:%d\\n' $?\r\n\r\nREMOTE_END_33:1\r\nconfidence > ",
+    "seconds": 0.7505843339999956
+  },
+  {
+    "test": "dotdot rm seed",
+    "command": "mkdir -p dotdot/child; printf KEEP > dotdot/sentinel",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "mkdir -p dotdot/child; printf KEEP > dotdot/sentinel; printf '\\nREMOTE_END_34:%d\\n' $?\r\n\r\nREMOTE_END_34:0\r\nconfidence > ",
+    "seconds": 2.264728875000003
+  },
+  {
+    "test": "dotdot rm must reject",
+    "command": "rm -R dotdot/child/..",
+    "expected": 1,
+    "status": 0,
+    "passed": false,
+    "text": "rm -R dotdot/child/..; printf '\\nREMOTE_END_35:%d\\n' $?\r\n\r\nREMOTE_END_35:0\r\nconfidence > ",
+    "seconds": 2.078365333000008
+  },
+  {
+    "test": "dotdot rm data preserved",
+    "command": "test -f dotdot/sentinel",
+    "expected": 0,
+    "status": 1,
+    "passed": false,
+    "text": "test -f dotdot/sentinel; printf '\\nREMOTE_END_36:%d\\n' $?\r\n\r\nREMOTE_END_36:1\r\nconfidence > ",
+    "seconds": 0.6404366249999924
+  },
+  {
+    "test": "repeat cleanup 0",
+    "command": "cp -R multi repeat; rm -R repeat; status runtime",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp -R multi repeat; rm -R repeat; status runtime; printf '\\nREMOTE_END_37:%d\\n' $?\r\nRuntime: heap=332788 largest=329702 image=8056 ticks=81 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=14 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_37:0\r\nconfidence > ",
+    "seconds": 5.539526166000002
+  },
+  {
+    "test": "repeat cleanup 1",
+    "command": "cp -R multi repeat; rm -R repeat; status runtime",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp -R multi repeat; rm -R repeat; status runtime; printf '\\nREMOTE_END_38:%d\\n' $?\r\nRuntime: heap=332788 largest=329702 image=8056 ticks=78 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=2 imports=2 relocations=1 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_38:0\r\nconfidence > ",
+    "seconds": 5.3490004159999955
+  },
+  {
+    "test": "repeat cleanup 2",
+    "command": "cp -R multi repeat; rm -R repeat; status runtime",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp -R multi repeat; rm -R repeat; status runtime; printf '\\nREMOTE_END_39:%d\\n' $?\r\nRuntime: heap=332788 largest=329702 image=8056 ticks=76 load=27 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=0 imports=2 relocations=1 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_39:0\r\nconfidence > ",
+    "seconds": 5.360355499999997
+  },
+  {
+    "test": "repeat cleanup 3",
+    "command": "cp -R multi repeat; rm -R repeat; status runtime",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp -R multi repeat; rm -R repeat; status runtime; printf '\\nREMOTE_END_40:%d\\n' $?\r\nRuntime: heap=332788 largest=329702 image=8056 ticks=77 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=2 imports=2 relocations=1 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_40:0\r\nconfidence > ",
+    "seconds": 5.6522975419999995
+  },
+  {
+    "test": "repeat cleanup 4",
+    "command": "cp -R multi repeat; rm -R repeat; status runtime",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp -R multi repeat; rm -R repeat; status runtime; printf '\\nREMOTE_END_41:%d\\n' $?\r\nRuntime: heap=332788 largest=329702 image=8056 ticks=76 load=28 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_41:0\r\nconfidence > ",
+    "seconds": 6.33136804099999
+  }
+]

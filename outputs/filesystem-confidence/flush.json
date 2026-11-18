@@ -1,0 +1,17 @@
+[
+  {
+    "command": "test -f '/mnt/FS Audit A/flush'",
+    "status": 0,
+    "text": "test -f '/mnt/FS Audit A/flush'; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "'/mnt/FS Audit A/flush'",
+    "status": 0,
+    "text": "'/mnt/FS Audit A/flush'; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "test -f '/mnt/FS Audit A/confidence-final/dotrm/child/sentinel'; test -f '/mnt/FS Audit A/confidence-final/empty/sentinel'",
+    "status": 0,
+    "text": "test -f '/mnt/FS Audit A/confidence-final/dotrm/child/sentinel'; test -f '/mnt/FS Audit A/confidence-final/empty/sentinel'; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

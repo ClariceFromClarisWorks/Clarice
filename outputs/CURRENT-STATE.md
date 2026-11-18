@@ -1,5 +1,33 @@
 # Clarice current state
 
+## Filesystem confidence follow-up — 18 November 2026
+
+Private candidate **2026111842**, runtime **1.10**. Two further safety defects
+are fixed in the development working tree: recursive rm/rmdir rejects final
+`.` / `..` operands before traversal (including trailing slashes), and the shared
+resolver rejects empty paths rather than treating them as cwd. Both unsafe
+behaviors were reproduced in the merged Snow build before correction.
+
+- Corrected Snow Plus/4 MiB/System 6.0.8: **71/71 workflow checks**, **15 completed
+  large-file/full-volume checks**, and **three interrupted-copy cycles** pass.
+  Actual full-volume cp/mv failures preserve destination/source and retry works
+  after freeing space. Explicit flush and offline exports verify both forks,
+  type/creator and 2 MiB local/cross-volume copy hashes; no temporary siblings.
+- **116 host copy-fault cases**, new negative-control operand regressions,
+  deep traversal/allocation/cancellation, resolver/volume/rename tests and focused
+  68000 compilation pass. Five cp/rm cycles hold heap332788/largest331450 bytes,
+  owned survivors0. File CLX +80 bytes; no new allocations or resident state.
+- Large `wc -c` remains slow; its 2 MiB scan was stopped, not accepted. The initial
+  volume-fill hit the harness timeout and was resumed to verified disk-full.
+  No physical validation of these two new fixes or power-loss guarantee claimed.
+
+[Report and reproduction](filesystem-confidence/REPORT.md). Existing unpublished
+nano/serial/Kermit/recovery work and concurrent physical-test diagnostics remain
+preserved. Filesystem safety changes are committed; unrelated work remains uncommitted.
+No push, release or physical deployment.
+Next: physical SE smoke testing of this safety-fix candidate.
+
+
 ## Filesystem audit fixes — 18 November 2026
 
 Private Core **2026111840**, runtime **1.8**, on separate
