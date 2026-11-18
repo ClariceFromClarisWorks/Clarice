@@ -1,5 +1,9 @@
 # Default file-operation progress — 18 November 2026
 
+Follow-up: the resource-fork validation gap below is **resolved** using a valid
+Rez-generated resource file and native System 6 Resource Manager reads.
+[Results and explanation](resource/REPORT.md). Production binaries are unchanged.
+
 User authorised development, testing and staging after agreeing default interactive
 progress for cp/mv/rm and reuse of Clarice's existing progress system. Isolated
 branch `codex/file-progress-20261118`, based on accepted ls commit 4cc7eb6. No Core,
@@ -109,11 +113,13 @@ resource bytes match. The imported source remains unchanged. The synthetic fork
 is arbitrary descending bytes, not a valid Resource Manager structure, so this
 run cannot establish preservation of valid resource files. This is recorded,
 not normalized into a passing full-fork claim: [fork evidence](fork-validation.json).
-A valid resource fixture is the next focused validation before release; investigate
-the native path if that also differs. No new data-safety implementation is included.
+The valid-resource follow-up now passes and establishes these differences as
+system-reserved bookkeeping, with all resource/application data preserved. No
+new data-safety implementation was needed.
 
 Source, focused tests and evidence are staged on the isolated branch. Candidate
 cp/mv/rm packages and SHA-256 manifest are in `work/file-progress/stage`, requiring
-runtime 1.10. No commit, merge, push, release, main-tree installation or hardware
-deployment. Recommend reviewing this staged change, resolving the resource-fixture
-acceptance gap, then checking stock SE and System 7/MultiFinder before release.
+runtime 1.10. The progress change was subsequently committed and integrated into the development
+branch as a9fe185 at the user's request. This resource-validation follow-up is
+staged separately. No push, release or hardware deployment. Stock SE and
+System 7/MultiFinder acceptance remain the next validation steps.

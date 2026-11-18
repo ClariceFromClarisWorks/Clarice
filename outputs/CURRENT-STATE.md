@@ -1,5 +1,16 @@
 # Clarice current state
 
+## Resource fork validation gap resolved — 18 November 2026
+
+Valid Rez-generated resource file passes 24 guest status checks and 12 native
+Resource Manager reads on Snow/Plus/System 6.0.8, using unchanged baseline and
+progress utility binaries. Create, replace, rename, cross-volume move and return
+copy preserve resource payloads/maps/names/attributes, application bytes, data
+forks and metadata. Differences are confined to documented system-reserved fork
+bytes 16–127; the old synthetic test incorrectly required these to remain equal.
+No production change or added runtime cost. Physical SE/System 7 acceptance
+remains separate. [Validation and reproducible tests](file-progress/resource/REPORT.md).
+
 ## Default file-operation progress — 18 November 2026
 
 Developed/tested/staged in `Clarice-File-Progress` on `codex/file-progress-20261118`.
@@ -10,7 +21,8 @@ regressions and native builds pass; Snow confirms completion/cancellation and ba
 Loaded utility +3404 bytes; repeated 320 KiB copy median 6.86 → 7.16 seconds with
 UI suppressed. No physical performance acceptance. Synthetic resource-fork
 comparison differs at bytes 48–125 in both baseline and candidate; valid-resource
-validation remains required. No commit/merge/deployment/release.
+validation is now complete; see the follow-up above. The progress change was
+subsequently committed and integrated as a9fe185; this validation follow-up is staged.
 Details and limits: [report](file-progress/REPORT.md).
 
 ## ls output buffering — 18 November 2026

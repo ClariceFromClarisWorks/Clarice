@@ -1,0 +1,1 @@
+PASS 24 guest statuses, 12 native Resource Manager reads, both baseline/candidate create/replace/rename/cross-volume move/return-copy; resource payloads, maps, application bytes, data forks and metadata preserved; only system-reserved bytes may differ; mutation checks passed

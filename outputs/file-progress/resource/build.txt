@@ -1,0 +1,2 @@
+Using multiversal interfaces
+work/file-progress/resource/rescheck: 1780 bytes, imports cli_resolve_info, strlen, memcpy, snprintf, say, memcmp

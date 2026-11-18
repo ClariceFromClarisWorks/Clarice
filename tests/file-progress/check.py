@@ -30,4 +30,4 @@ assert len(base)==len(moved)==len(source)
 assert diffs(base)==diffs(moved)==list(range(48,126))
 a['resource_validation']=issue
 (p/'fork-validation.json').write_text(json.dumps(a,indent=2)+'\n')
-print('PASS eight timed copies, statuses, data comparisons, rename, cross-volume move, recursive copy/remove, locks, quiet flag, invalid options; persisted data fork/type/creator/timestamps match; resource fork differs at bytes 48..125 in both baseline and candidate (acceptance gap)')
+print('PASS eight timed copies, statuses, data comparisons, rename, cross-volume move, recursive copy/remove, locks, quiet flag, invalid options; persisted data fork/type/creator/timestamps match; resource fork differs at bytes 48..125 in both baseline and candidate (system-reserved area; valid-file acceptance is in resource/check.py)')
