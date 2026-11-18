@@ -31,6 +31,7 @@ static char *sh_positions_copy(int n,char **v,char ***out){size_t bytes;if(n<1||
 static int sh_positions(int n,char **v){char **args;char *storage=sh_positions_copy(n,v,&args);if(!storage)return sh_fail("out of memory storing positional parameters");free(sh_owned_args);sh_owned_args=storage;sh_argv=args;sh_argc=n;return 0;}
 static int sh_pattern(const char *p,const char *s){while(*p){if(*p=='*'){while(*p=='*')p++;if(!*p)return 1;do{if(sh_pattern(p,s))return 1;}while(*s++);return 0;}if(*p=='?'){if(!*s)return 0;p++;s++;continue;}if(*p=='['){int yes=0,neg=0;unsigned char c=*s++;if(!c)return 0;p++;if(*p=='!'||*p=='^'){neg=1;p++;}while(*p&&*p!=']'){unsigned char lo=*p++,hi=lo;if(*p=='-'&&p[1]&&p[1]!=']'){p++;hi=*p++;}if(c>=lo&&c<=hi)yes=1;}if(*p!=']'||yes==neg)return 0;p++;continue;}if(*p=='\\'&&p[1])p++;if(*p++!=*s++)return 0;}return !*s;}
 struct sh_saved {
+struct sh_saved *saved_next;
 #if !defined(SH_HOST_TEST)||defined(SH_SESSION_HOST_TEST)
 int session_exit;
 #endif
@@ -39,6 +40,7 @@ struct sh_env *env;char *args;char **argv;int argc,env_defaults;char cwd[PATH_CA
 char unixdir[PATH_CAP];
 #endif
 struct sh_function *functions;};
+static struct sh_saved *sh_saved_frames;
 static struct sh_saved *sh_save(void){
 #ifndef SH_HOST_TEST
  if(!native_heap_room(0,65536L,1))return 0;
@@ -51,8 +53,9 @@ if(!native_heap_room(0,65536L,1)){env_free(s->env);free(s->args);free(s);return 
 #if !defined(SH_HOST_TEST)||defined(SH_SESSION_HOST_TEST)
 s->session_exit=session_exit_requested;
 #endif
-if(sh_functions_clone(sh_functions,&s->functions)){env_free(s->env);free(s->args);free(s);return 0;}return s;}
+if(sh_functions_clone(sh_functions,&s->functions)){env_free(s->env);free(s->args);free(s);return 0;}s->saved_next=sh_saved_frames;sh_saved_frames=s;return s;}
 static void sh_restore(struct sh_saved *s){
+sh_saved_frames=s->saved_next;
 #if !defined(SH_HOST_TEST)||defined(SH_SESSION_HOST_TEST)
 session_exit_requested=s->session_exit;
 #endif
@@ -303,7 +306,7 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  dispatch_kind_ticks=TickCount()-dispatch_start;
 #endif
- if(found<0)return 126;if(found){if(session_io){const char *base=strrchr(candidate,'/');base=base?base+1:candidate;if(!strcmp(base,"clarice")||!strcmp(base,"serial")||!strcmp(base,"telnet")||!strcmp(base,"kermit")){errsay("command currently requires local input ownership\n");return 2;}}shell_commands++;return kind==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
+ if(found<0)return 126;if(found){if(session_io&&!(n==2&&!strcmp(v[1],"--help"))){const char *base=strrchr(candidate,'/');base=base?base+1:candidate;if(!strcmp(base,"clarice")||!strcmp(base,"serial")||!strcmp(base,"telnet")||!strcmp(base,"kermit")||!strcmp(base,"nano")||!strcmp(base,"nano-profile")){errsay("command currently requires local input ownership\n");return 2;}}shell_commands++;return kind==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
  if(!strcmp(v[0],"chmod")){errsay("chmod: command not found; did you mean hfsattr?\n");return 127;}
  errsay("command not found: ");errsay(v[0]);errsay("\n");command_install_hint(v[0]);return 127;}
 #endif

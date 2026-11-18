@@ -42,7 +42,7 @@ static int attr(int argc,char **av){
 }
 static int mkdir_one(const char *path){char native[PATH_CAP],canonical[PATH_CAP],part[PATH_CAP];int e;
  if(!parents){e=checked(path,native,canonical,1);return e?e:cli_native_mkdir(native);}
- if(strlen(path)>=sizeof part)return bdNamErr;strcpy(part,path);size_t len=strlen(part);
+ if(!*path||strlen(path)>=sizeof part)return bdNamErr;strcpy(part,path);size_t len=strlen(part);
  for(size_t i=1;i<=len;i++)if(part[i]=='/'||!part[i]){char c=part[i];part[i]=0;CInfoPBRec pb;e=resolve(part,native);if(!e)e=info(native,&pb);
   if(e==fnfErr||e==dirNFErr){e=checked(part,native,canonical,1);if(!e)e=cli_native_mkdir(native);}else if(!e&&!isdir(&pb))e=dirNFErr;
   part[i]=c;if(e)return e;if(app_yield())return 130;}return 0;}
@@ -123,8 +123,23 @@ static int transfer(int argc,char **av,int start,int moving){
   char src[PATH_CAP],sc[PATH_CAP],leaf[PATH_CAP];int e=checked(av[i],src,sc,0);if(e){status=fail(av[0],e);continue;}
   strcpy(target,av[argc-1]);if(targetdir){const char *base=strrchr(sc,'/');strcpy(leaf,base?base+1:sc);e=join_path(av[argc-1],leaf,target);}if(!e)e=checked(target,native,dc,0);
   if(!e&&same_name(sc,dc))e=paramErr;
-  if(!e&&moving){CInfoPBRec dest;int absent=info(native,&dest)==fnfErr;if(absent){e=cli_native_rename(src,native);if(e==paramErr)e=cli_native_move(src,native);}else e=paramErr;
-   if(e){e=info(src,&pb);if(!e&&isdir(&pb)){errsay("mv: directory moves require the same parent or unchanged leaf name\n");e=paramErr;}else if(!e){int saved=preserve;preserve=1;e=copy_one(av[i],target,0);preserve=saved;if(!e)e=cli_native_delete(src);}}
+  if(!e&&moving){CInfoPBRec dest;int target_error=info(native,&dest);
+   e=info(src,&pb);
+   /* A known undeletable source must not commit a replacement first. */
+   if(!e&&(pb.hFileInfo.ioFlAttrib&1))e=fLckdErr;
+   if(!e&&target_error&&target_error!=fnfErr)e=target_error;
+   if(!e){
+    size_t volume_len=strchr(src,':')-src;
+    int cross_volume=(size_t)(strchr(native,':')-native)!=volume_len||strncasecmp(src,native,volume_len);
+    if(target_error==fnfErr&&!cross_volume){e=cli_native_rename(src,native);if(e==paramErr)e=cli_native_move(src,native);}
+    else e=paramErr;
+    /* Only an unsupported native move needs copy/delete. Preserve genuine
+       permission, lock, I/O and catalog errors without touching the target. */
+    if(e==paramErr){if(isdir(&pb)){errsay("mv: directory moves require the same parent or unchanged leaf name\n");}
+     else{int saved=preserve;preserve=1;e=copy_one(av[i],target,0);preserve=saved;
+      if(!e){e=cli_native_delete(src);if(e)errsay("mv: destination copied, but source could not be removed\n");}}
+    }
+   }
   }else if(!e)e=copy_one(av[i],target,0);
   if(e==130)return 130;if(e)status=fail(av[0],e);if(app_yield())return 130;
  }return status;

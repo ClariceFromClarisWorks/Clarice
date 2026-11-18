@@ -1,0 +1,4 @@
+[
+  "echo AC\bBC\b\r\nABC\r\nfix1840 > ",
+  "echo ABX\b\bX \b\bCX\b\r\nACX\r\nfix1840 > "
+]

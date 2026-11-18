@@ -1,5 +1,23 @@
 # Clarice current state
 
+## Filesystem audit fixes — 18 November 2026
+
+Private Core **2026111840**, runtime **1.8**, on separate
+`codex/filesystem-audit-fixes-20261118` from committed `7e3e036`.
+Locked-source mv now preserves destinations and genuine native errors; empty
+mkdir operands fail; directory rename/move keeps active and saved/session cwd
+paths usable, with native path-length preflight. Remote nano reports its local
+input requirement, remote Telnet help works, and remote cursor editing works.
+Tab completion and immediate reconnect remain explicit capability limits.
+
+Focused sanitizer/fault/shell regressions, 68000 compilation and isolated Snow
+checks are recorded in [fix report](filesystem-fixes/REPORT.md), with package
+sizes, memory observations and compatibility boundaries. No uncommitted nano or
+other worktree changes imported; no new runtime interface, push, merge, release,
+physical-SE or MultiFinder validation. Review integration with separate Telnet
+work before broader rollout.
+
+
 ## Password-protected supplementary Telnet — Snow validated
 
 Core **2026111810** (runtime 1.8), optional `telnetd` **2026111811**, deployed through

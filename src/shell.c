@@ -39,6 +39,7 @@ static void pstr(unsigned char *p,const char *s) {size_t n=strlen(s); if(n>255)n
 #include "streams.inc"
 static void say(const char *s){emit(s,(long)asm_length(s));}
 static const char *env_get(const char *key){struct sh_env *e=env_find(sh_env,key);if(e)return e->value;if(!strcmp(key,"HOME"))return "/";if(!strcmp(key,"PWD"))return unix_cwd;return "";}
+static int shell_relocate_cwd(const char *,const char *,int);
 #include "namespace.inc"
 /* GetCatInfo resolves a full pathname but ioVRefNum is an input, not a
    resolved-volume output. Bind it before callers reuse the directory ID. */

@@ -87,3 +87,25 @@ int shell_session_output(const char *data,long n){
  if(n>0&&session_io->write(session_io->context,1,data,n)!=n)output_error=1;
  return 1;
 }
+
+#ifndef SH_HOST_TEST
+/* Rebase only on successful native directory mutations, including suspended
+   subshell/local/remote contexts. No repeated path walk or resident cache. */
+static int relocate_cwd_pair(char *native,char *unixdir,const char *oldpath,const char *newpath,int commit){
+ size_t n=strlen(oldpath),m=strlen(newpath);char next[PATH_CAP],canonical[PATH_CAP];
+ if(strncasecmp(native,oldpath,n)|| (native[n]&&native[n]!=':'))return 0;
+ /* Native Pascal paths are limited to 255 bytes, even though the Unix
+    namespace buffer permits longer escaped spellings. */
+ if(m+strlen(native+n)>255)return bdNamErr;
+ memcpy(next,newpath,m);strcpy(next+m,native+n);
+ int e=unix_from_native(next,canonical);if(e)return e;
+ if(commit){strcpy(native,next);strcpy(unixdir,canonical);}return 0;
+}
+static int shell_relocate_cwd(const char *oldpath,const char *newpath,int commit){
+ int e=relocate_cwd_pair(shell_cwd,unix_cwd,oldpath,newpath,commit);if(e)return e;
+ for(struct sh_saved *s=sh_saved_frames;s;s=s->saved_next){e=relocate_cwd_pair(s->cwd,s->unixdir,oldpath,newpath,commit);if(e)return e;}
+ if(local_session){e=relocate_cwd_pair(local_session->shell.cwd,local_session->shell.unixdir,oldpath,newpath,commit);if(e)return e;}
+ if(remote_session){e=relocate_cwd_pair(remote_session->shell.cwd,remote_session->shell.unixdir,oldpath,newpath,commit);if(e)return e;}
+ return 0;
+}
+#endif

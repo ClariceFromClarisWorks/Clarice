@@ -42,6 +42,13 @@ int main(void){char *av[]={"telnetd","--no-password","--peer","10.0.0.1",0};
  assert(!clarice_main(4,av));assert(alive&&pending_open);pending_open->ioResult=0;pending_open=0;poll_service(0);assert(session&&engine);
  feed("\377\375\001");pump();unsigned before=wire_count;feed("x");pump();assert(wire_count>before);feed("\025");pump();
  feed("\377\376\001");pump();before=wire_count;feed("x");pump();assert(wire_count==before);feed("\025");
+ /* Cursor edits must change the submitted bytes, with state reset on CR. */
+ feed("\377\375\001");feed("echo AC\033[DB");assert(line_used==8&&line_cursor==7&&!memcmp(line,"echo ABC",8));
+ feed("\033[C\010");assert(line_used==7&&line_cursor==7&&!memcmp(line,"echo AB",7));
+ feed("\033[H\033[F\025");assert(!line_used&&!line_cursor);
+ feed("echo bad\033[D\003");assert(!line_used&&!line_cursor&&!escape);
+ feed("echo\tgood\033[D\033[C\025");assert(!line_used&&!line_cursor);
+ feed("\033[123456789~");assert(!line_used&&!escape);
  feed("echo good\r\n");assert(!execs);poll_service(1);assert(execs==1);
  char longline[1500];memset(longline,'x',sizeof longline-1);longline[sizeof longline-1]=0;feed(longline);feed("\r");poll_service(1);assert(execs==1&&!ready_used);
  feed("echo good\r\n");poll_service(1);assert(execs==2);
