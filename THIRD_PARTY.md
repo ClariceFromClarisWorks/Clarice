@@ -76,3 +76,12 @@ Source: https://github.com/rxi/microtar . A separate restricted release reader
 checks field bounds and approved member names before calling upstream parsing.
 No general archive extraction or compression support is added. Native product
 integration remains unfinished.
+
+- **BusyBox 1.37.0**, GPL-2.0: standard wc, tr and sort and required libbb
+  sources. Official archive SHA256
+  `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`.
+  `scripts/prepare-busybox-source.py` fetches verified upstream source;
+  adaptations remain in `src/ports/busybox-tools` and the separate preparer.
+  Copyright, licence and AUTHORS retained in `licenses/busybox`.
+- **newlib getopt**, Gregory Pietsch, public domain: original notice retained
+  in `src/vendor/newlib-getopt/getopt.c`; pinned URL/hash in SOURCE.json.

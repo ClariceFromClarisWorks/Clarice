@@ -1,5 +1,25 @@
 # Clarice current state
 
+## Approved BusyBox defaults — 18 November 2026
+
+- Private build **2026111882**, based on validated checkpoint1cb4844: standard
+  wc/tr/sort now package genuine BusyBox1.37.0. New wc-sbase/tr-sbase/sort-sbase
+  packages preserve previous behavior and disk spill. No automatic expiry;
+  about86KiB combined payload, loaded only when invoked. BusyBox vi stays optional.
+- Fresh full68000 build, production-loader checks for35 images, sealed50-command
+  kit and HTTP payload checks pass. Isolated Clarice update/relaunch from1823
+  succeeds; all50 installed version/size/CRC records match the sealed build.
+- 101 Telnet guest observations pass: standard names/help, streams/options/errors,
+  matched outputs, byte/Unicode differences, MacRoman preservation, safe rejection
+  of unsupported sort -o, locked destinations, spill fallback, cancellation and
+  allocation failure recovery. Timed commands return owned allocations to zero.
+- 8KiB median seconds sbase/BusyBox: wc-c2.45/1.63, tr6.61/1.20, sort2.56/2.75.
+  BusyBox sort still has no spill;256KiB fails status2 and frees its300684B peak.
+  Byte-oriented wc/tr changes remain explicit. No new Telnet defect observed.
+- Snow only; physical acceptance remains pending. No push or public release.
+  [Package integration report](busybox-replacements/README.md).
+
+
 ## Approved Telnet peer compatibility fix — 18 November
 
 Optional telnetd candidate **2026111843**,40824B (+40), uses native wildcard

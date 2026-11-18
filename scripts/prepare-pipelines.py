@@ -38,6 +38,9 @@ for name,help in help_text.items():
  help+='Invocation allocations are released on completion.\n'
  if name in ('wc','cut','tr','sort','uniq','tail'):help+='UTF-8 processing does not convert the terminal font from MacRoman.\n'
  help+='GNU-only long options are not implemented; --help is a Clarice addition.\n'
+ if name in ('wc','tr','sort'):
+  help=help.replace(name+' ',name+'-sbase ',1)
+  help+='Compatibility command: '+name+' now selects BusyBox; this retains sbase behavior.\n'
  help='\n'.join('\n'.join(textwrap.wrap(line,72,break_long_words=False,break_on_hyphens=False)) for line in help.splitlines())+'\n'
  s=s.replace(marker,marker+'\n\tif (argc == 2 && !strcmp(argv[1], "--help")) { puts('+json.dumps(help)+'); return 0; }')
  if name in ('printenv','mktemp'):

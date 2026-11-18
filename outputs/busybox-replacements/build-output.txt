@@ -1,0 +1,309 @@
+Using multiversal interfaces
+In file included from /src/src/commands/inspect.c:2:
+/src/src/commands/mac-files.h:27:12: warning: 'checked' defined but not used [-Wunused-function]
+   27 | static int checked(const char *path,char *native,char *canonical,int follow){int e=resolve_ex(path,native,canonical,follow);if(!e&&protected_path(canonical))e=paramErr;return e;}
+      |            ^~~~~~~
+In file included from /src/src/commands/misc.c:2:
+/src/src/commands/mac-files.h:27:12: warning: 'checked' defined but not used [-Wunused-function]
+   27 | static int checked(const char *path,char *native,char *canonical,int follow){int e=resolve_ex(path,native,canonical,follow);if(!e&&protected_path(canonical))e=paramErr;return e;}
+      |            ^~~~~~~
+/src/src/commands/mac-files.h:26:12: warning: 'join_path' defined but not used [-Wunused-function]
+   26 | static int join_path(const char *parent,const char *leaf,char *out){size_t n=strlen(parent),m=strlen(leaf);if(n+m+2>=PATH_CAP)return bdNamErr;strcpy(out,parent);if(n&&out[n-1]!='/')strcat(out,"/");strcat(out,leaf);return 0;}
+      |            ^~~~~~~~~
+/src/src/commands/mac-files.h:25:12: warning: 'isdir' defined but not used [-Wunused-function]
+   25 | static int isdir(const CInfoPBRec *pb){return !!(pb->hFileInfo.ioFlAttrib&16);}
+      |            ^~~~~
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/core.clx: 12604 bytes, imports strcmp, cli_read, emit, app_yield, output_error, FSCLOSE, open_path, error, FSREAD, say, term_present, app_page, is_link, memcpy, memset, strlen, format_size, snprintf, app_columns, resolve_ex, output_ref, script_depth, app_page_begin, info, resolve, encode_name, volume_name, strcpy, parent_path, strrchr, app_output_batch, errsay, strchr, same_name, __muldi3, __udivsi3, app_profile
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/serial.clx: 9552 bytes, imports strlen, cli_write, memset, strcmp, cli_isatty, OPENDRIVER, SERRESET, SERHSHAKE, SERSETBUF, app_activity_interactive, cli_ticks, app_serial_tty, memcpy, SERSTATUS, SERGETBUF, FSREAD, KILLIO, CLOSEDRIVER, app_yield, app_serial_key, snprintf
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/files.clx: 13348 bytes, imports strlen, strcpy, strcat, cli_native_open, cli_native_read, cli_native_write, cli_native_close, app_yield, strrchr, cli_ticks, snprintf, cli_native_create, cli_write, strcmp, resolve_ex, protected_path, info, same_name, strchr, strncasecmp, cli_free, memcpy, cli_native_set, cli_native_delete, cli_native_rename, errsay, cli_native_lock, cli_alloc, cli_native_mkdir, cli_native_nth, encode_name, say, error, resolve, cli_native_move, output_error, link_target, cli_mac_time
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/inspect.clx: 12892 bytes, imports strlen, cli_write, strcmp, resolve_ex, info, error, say, is_link, link_target, output_error, snprintf, cli_alloc, memset, cli_free, strcpy, memcpy, strrchr, encode_name, strcat, app_yield, format_size, strchr, __errno, strtol, strnlen
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/misc.clx: 6008 bytes, imports strlen, cli_write, strcmp, error, cli_read, open_path, cli_native_read, cli_native_close, snprintf, say, strtoul, strrchr, strchr, cli_isatty, app_pager_begin, emit, output_error, app_page, app_pager_end, app_yield, errsay
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/free.clx: 2736 bytes, imports strlen, cli_write, strcmp, cli_hardware, cli_memory, memcpy, snprintf
+Using multiversal interfaces
+         U __errno
+         U __mulsi3
+         U __udivsi3
+         U _ctype_
+         U app_yield
+         U bsearch
+         U cli_alloc
+         U cli_file_close
+         U cli_file_open
+         U cli_file_read
+         U cli_file_seek
+         U cli_file_size
+         U cli_file_write
+         U cli_free
+         U cli_isatty
+         U cli_pause_ticks
+         U cli_port_stats
+         U cli_read
+         U cli_remove
+         U cli_stream_size
+         U cli_temp_create
+         U cli_write
+         U fclose
+         U fflush
+         U fgetc
+         U fmemopen
+         U fprintf
+         U fputc
+         U fputs
+         U funopen
+         U fwrite
+         U iswalnum
+         U iswctype
+         U iswlower
+         U iswupper
+         U longjmp
+         U mbtowc
+         U memchr
+         U memcpy
+         U memmove
+         U memset
+         U qsort
+         U setjmp
+         U setvbuf
+         U strcat
+         U strchr
+         U strcmp
+         U strcpy
+         U strcspn
+         U strerror
+         U strlen
+         U strncmp
+         U strnlen
+         U strpbrk
+         U strrchr
+         U strstr
+         U strtol
+         U towlower
+         U towupper
+         U ungetc
+         U vfprintf
+         U vsnprintf
+         U wctype
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/grep.clx: 46044 bytes, imports cli_free, cli_alloc, __udivsi3, __errno, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, __mulsi3, memset, memcpy, strlen, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, cli_file_open, cli_file_close, fmemopen, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, strcpy, strcasecmp, strstr, strncmp, strncasecmp, _ctype_, mbtowc, wctype, iswlower, towupper, iswupper, towlower, qsort, strnlen, iswctype, iswalnum
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/sed.clx: 65760 bytes, imports cli_free, cli_alloc, __udivsi3, __errno, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, __mulsi3, memset, memcpy, strlen, fgetc, memchr, fputc, fprintf, strerror, vfprintf, vsnprintf, strcmp, fflush, cli_file_open, cli_file_close, fmemopen, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks, cli_temp_create, strcpy, strcat, ungetc, memmove, strtol, fwrite, strpbrk, strncmp, strcspn, _ctype_, bsearch, mbtowc, wctype, iswlower, towupper, iswupper, towlower, qsort, strnlen, iswctype, iswalnum
+Using multiversal interfaces
+   text	   data	    bss	    dec	    hex	filename
+ 131883	    733	   3920	 136536	  21558	work/build/awk.o
+         U __errno
+         U _ctype_
+         U app_yield
+         U atof
+         U atoi
+         U bsearch
+         U cli_alloc
+         U cli_environment
+         U cli_file_close
+         U cli_file_open
+         U cli_file_read
+         U cli_file_seek
+         U cli_file_size
+         U cli_file_write
+         U cli_free
+         U cli_isatty
+         U cli_path_kind
+         U cli_pause_ticks
+         U cli_port_stats
+         U cli_read
+         U cli_remove
+         U cli_stream_size
+         U cli_temp_create
+         U cli_unix_time
+         U cli_write
+         U fclose
+         U fflush
+         U fgetc
+         U fmemopen
+         U fprintf
+         U fputc
+         U fputs
+         U funopen
+         U fwrite
+         U getc
+         U isalnum
+         U isalpha
+         U iscntrl
+         U isdigit
+         U isgraph
+         U islower
+         U isprint
+         U ispunct
+         U isspace
+         U isupper
+         U isxdigit
+         U longjmp
+         U mbtowc
+         U memchr
+         U memcpy
+         U memset
+         U putc
+         U qsort
+         U setjmp
+         U setvbuf
+         U strchr
+         U strcmp
+         U strcpy
+         U strerror
+         U strlen
+         U strncasecmp
+         U strncmp
+         U strncpy
+         U strtod
+         U strtol
+         U tolower
+         U toupper
+         U towlower
+         U towupper
+         U ungetc
+         U vfprintf
+         U vsnprintf
+         U wctomb
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/awk.clx: 188956 bytes, imports cli_environment, strlen, strncmp, cli_path_kind, memset, cli_unix_time, strcmp, memcpy, bsearch, _ctype_, qsort, getc, ungetc, isalnum, isalpha, iscntrl, isdigit, isgraph, islower, isprint, ispunct, isspace, isupper, isxdigit, strchr, strtod, putc, fflush, strcpy, strncpy, strncasecmp, __errno, atoi, mbtowc, wctomb, setjmp, longjmp, strtol, atof, towupper, toupper, towlower, tolower, fwrite, fputs, cli_free, cli_alloc, app_yield, funopen, cli_isatty, setvbuf, fputc, vfprintf, vsnprintf, cli_file_close, cli_file_open, fclose, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+Using multiversal interfaces
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/wc.clx: 15576 bytes, imports strcmp, fgetc, __errno, strerror, bsearch, strncmp, strlen, fputc, fflush, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memset, fprintf, vfprintf, cli_file_close, cli_file_open, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/head.clx: 15620 bytes, imports fwrite, strcmp, __errno, strncmp, strlen, fputc, fflush, memcpy, strtoll, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memset, fgetc, memchr, fprintf, strerror, vfprintf, cli_file_close, cli_file_open, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/cut.clx: 18868 bytes, imports memcmp, fwrite, fputc, strcmp, strtoul, __errno, strncmp, strlen, fflush, _ctype_, memchr, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memset, memcpy, fgetc, fprintf, strerror, vfprintf, cli_file_close, cli_file_open, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/tr.clx: 32536 bytes, imports strcmp, fgetc, __errno, strerror, fputc, fwrite, bsearch, strncmp, strlen, fflush, _ctype_, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memcpy, fprintf, vfprintf, cli_file_close, fclose, setjmp, cli_remove, memset, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/uniq.clx: 16716 bytes, imports _ctype_, memcmp, memcpy, fwrite, strcmp, __errno, strncmp, strlen, fputc, fflush, strtoll, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memset, fgetc, memchr, fprintf, strerror, vfprintf, cli_file_close, cli_file_open, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/tee.clx: 13460 bytes, imports strcmp, __errno, strncmp, strlen, fputc, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memset, memcpy, fprintf, strerror, vfprintf, cli_file_open, cli_file_close, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, fflush, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/tail.clx: 17924 bytes, imports memmove, strcmp, strchr, memcpy, __errno, strncmp, strlen, fputc, strtoll, cli_free, cli_alloc, longjmp, fputs, app_yield, funopen, cli_isatty, setvbuf, fprintf, strerror, vfprintf, cli_file_open, memset, cli_file_close, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, fflush, cli_write, cli_file_write, cli_stream_size, cli_file_size, cli_file_seek, cli_pause_ticks
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/sort.clx: 40100 bytes, imports _ctype_, strtol, memcpy, fwrite, strtod, qsort, strcmp, bsearch, __errno, strncmp, strlen, fputc, fflush, memchr, memcmp, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memset, fgetc, fprintf, strerror, vfprintf, cli_file_close, cli_file_open, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek, cli_temp_create
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/basename.clx: 12100 bytes, imports strcmp, strlen, __errno, strncmp, fputc, fflush, strrchr, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, fprintf, strerror, vfprintf, cli_file_close, fclose, setjmp, cli_remove, memset, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/dirname.clx: 11948 bytes, imports strcmp, __errno, strncmp, strlen, fputc, fflush, strrchr, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, fprintf, strerror, vfprintf, cli_file_close, fclose, setjmp, cli_remove, memset, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/cmp.clx: 13564 bytes, imports strcmp, getc, __errno, strncmp, strlen, fputc, fflush, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memset, fprintf, strerror, vfprintf, cli_file_close, cli_file_open, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/cksum.clx: 14808 bytes, imports fputs, strcmp, __errno, strncmp, strlen, fputc, fflush, cli_free, cli_alloc, longjmp, strchr, app_yield, funopen, cli_isatty, setvbuf, memcpy, fprintf, strerror, vfprintf, cli_file_open, memset, cli_file_close, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/sleep.clx: 12688 bytes, imports strcmp, __errno, strncmp, strlen, fputc, memcpy, strtoll, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, fprintf, strerror, vfprintf, cli_file_close, fclose, setjmp, cli_remove, memset, cli_port_stats, cli_read, cli_file_read, fflush, cli_write, cli_file_write, cli_file_seek, cli_pause_ticks
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/printenv.clx: 13168 bytes, imports strcmp, __errno, strncmp, strlen, fputc, fflush, cli_environment, cli_free, cli_alloc, longjmp, fputs, strchr, app_yield, funopen, cli_isatty, setvbuf, memcpy, fprintf, strerror, vfprintf, cli_file_close, fclose, setjmp, cli_remove, memset, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/mktemp.clx: 18092 bytes, imports strcmp, __errno, strncmp, strlen, fputc, fflush, strrchr, cli_environment, fputs, cli_remove, cli_write, memcmp, cli_ticks, strcpy, app_yield, resolve_ex, protected_path, cli_native_mkdir, cli_free, cli_alloc, longjmp, strchr, funopen, cli_isatty, setvbuf, memcpy, fprintf, strerror, vfprintf, cli_file_open, memset, cli_file_close, fclose, setjmp, cli_port_stats, cli_read, cli_file_read, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/dd.clx: 18264 bytes, imports __errno, strtoul, strcmp, strchr, memmove, memset, _ctype_, strncmp, strlen, fputc, memcpy, strtoll, cli_free, cli_alloc, longjmp, fputs, app_yield, funopen, cli_isatty, setvbuf, fprintf, strerror, vfprintf, cli_file_open, cli_file_close, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, fflush, cli_write, cli_file_write, cli_file_seek, cli_file_resize
+Using multiversal interfaces
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/busybox-tools/bbwc.clx: 21108 bytes, imports memset, getc, strcmp, fputs, strlen, strncmp, strchr, __errno, memcpy, cli_environment, memcmp, fputc, strcpy, memmove, strerror, strtoul, fflush, cli_free, cli_alloc, longjmp, app_yield, funopen, cli_isatty, setvbuf, vfprintf, cli_file_close, cli_file_open, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/busybox-tools/bbtr.clx: 21464 bytes, imports memchr, memcpy, _ctype_, strcmp, fputs, strlen, strncmp, strchr, __errno, cli_environment, memcmp, fputc, memset, strcpy, memmove, strerror, strtoul, cli_free, cli_alloc, longjmp, app_yield, funopen, cli_isatty, setvbuf, vfprintf, cli_file_close, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, fflush, cli_write, cli_file_write, cli_file_seek
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/busybox-tools/bbsort.clx: 28836 bytes, imports _ctype_, strtoul, strlen, strchr, strcmp, strtod, atof, qsort, fputs, strncmp, __errno, memcpy, cli_environment, getc, memcmp, fputc, memset, strcpy, memmove, strerror, fflush, cli_free, cli_alloc, longjmp, app_yield, funopen, cli_isatty, setvbuf, vfprintf, cli_file_close, cli_file_open, fclose, setjmp, cli_remove, cli_port_stats, cli_read, cli_file_read, cli_write, cli_file_write, cli_file_seek
+Using multiversal interfaces
+/src/src/commands/kermit.c: In function 'message':
+/src/src/commands/kermit.c:18:2: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+   18 |  if(n<0)return;if(n>=(int)sizeof text)n=sizeof text-1;
+      |  ^~
+/src/src/commands/kermit.c:18:16: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+   18 |  if(n<0)return;if(n>=(int)sizeof text)n=sizeof text-1;
+      |                ^~
+In file included from /src/src/commands/kermit.c:37:
+/src/src/commands/progress.h: In function 'progress_percent':
+/src/src/commands/progress.h:9:2: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+    9 |  if(!total||n>=total)return 100;unsigned lo=0,hi=100;
+      |  ^~
+/src/src/commands/progress.h:9:33: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+    9 |  if(!total||n>=total)return 100;unsigned lo=0,hi=100;
+      |                                 ^~~~~~~~
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/build/kermit.clx: 25904 bytes, imports cli_native_write, cli_native_read, strcmp, cli_native_open, info, app_yield, app_serial_key, snprintf, cli_remote_wire, cli_ticks, memset, KILLIO, resolve_ex, protected_path, strcpy, strrchr, cli_native_create, app_columns, strlen, strcat, memcpy, app_progress, cli_native_close, cli_native_rename, cli_native_delete, vsnprintf, cli_write, cli_isatty, OPENDRIVER, SERRESET, SERHSHAKE, SERSETBUF, app_serial_input, SERSTATUS, SERGETBUF, FSREAD, CLOSEDRIVER
+Using multiversal interfaces
+In file included from /src/src/commands/wget.c:7:
+/src/src/commands/mac-files.h:26:12: warning: 'join_path' defined but not used [-Wunused-function]
+   26 | static int join_path(const char *parent,const char *leaf,char *out){size_t n=strlen(parent),m=strlen(leaf);if(n+m+2>=PATH_CAP)return bdNamErr;strcpy(out,parent);if(n&&out[n-1]!='/')strcat(out,"/");strcat(out,leaf);return 0;}
+      |            ^~~~~~~~~
+/src/src/commands/mac-files.h:25:12: warning: 'isdir' defined but not used [-Wunused-function]
+   25 | static int isdir(const CInfoPBRec *pb){return !!(pb->hFileInfo.ioFlAttrib&16);}
+      |            ^~~~~
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/network/ipconfig.clx: 1756 bytes, imports strcmp, say, errsay, error, snprintf, output_error, memset, OPENDRIVER
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/network/ping.clx: 3944 bytes, imports strcmp, say, errsay, app_yield, error, snprintf, output_error, strlen, memset, memcpy, OPENDRIVER
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/network/wget.clx: 23244 bytes, imports snprintf, strlen, strncasecmp, cli_ticks, app_columns, strcat, memcpy, app_progress, strcpy, app_yield, memset, strcmp, say, strncmp, strchr, resolve_ex, protected_path, info, cli_alloc, cli_free, memcmp, strrchr, cli_native_create, cli_native_open, cli_isatty, cli_native_write, cli_native_close, cli_native_rename, errsay, cli_native_delete, OPENDRIVER, memmove
+Using multiversal interfaces
+In file included from /src/src/commands/ftp.c:6:
+/src/src/commands/mac-files.h:26:12: warning: 'join_path' defined but not used [-Wunused-function]
+   26 | static int join_path(const char *parent,const char *leaf,char *out){size_t n=strlen(parent),m=strlen(leaf);if(n+m+2>=PATH_CAP)return bdNamErr;strcpy(out,parent);if(n&&out[n-1]!='/')strcat(out,"/");strcat(out,leaf);return 0;}
+      |            ^~~~~~~~~
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/ftp/ftp.clx: 19176 bytes, imports app_yield, snprintf, cli_ticks, strlen, memset, app_columns, strcat, memcpy, app_progress, strcpy, strcmp, say, cli_native_close, errsay, cli_read, resolve_ex, protected_path, info, cli_native_open, strchr, strrchr, cli_native_create, cli_isatty, cli_native_read, cli_native_write, cli_native_rename, cli_native_delete, OPENDRIVER
+Using multiversal interfaces
+In file included from /src/src/commands/terminal/vt100.h:6,
+                 from /src/src/commands/telnet.c:26:
+/src/src/commands/terminal/../../ports/terminal/screen.h:12:13: warning: 'screen_feed' defined but not used [-Wunused-function]
+   12 | static void screen_feed(CliScreen *s,const unsigned char *p,unsigned long n){
+      |             ^~~~~~~~~~~
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/telnet/telnet.clx: 25048 bytes, imports memset, strlen, memmove, cli_write, snprintf, cli_ticks, strchr, app_columns, app_screen_rows, strcmp, cli_isatty, cli_free, app_yield, app_serial_tty, app_activity_interactive, app_screen_close, cli_alloc, app_screen_open, app_screen_pending, cli_read, app_serial_key, memcpy, vsnprintf, OPENDRIVER
+Using multiversal interfaces
+-- The C compiler identification is GNU 16.1.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Retro68-build/toolchain/bin/m68k-apple-macos-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/update-helper
+[ 25%] Building C object CMakeFiles/ClariceUpdater.dir/helper.c.obj
+In file included from /src/src/update/helper.c:14:
+/src/src/update/verify.h: In function 'update_verify_structure':
+/src/src/update/verify.h:25:32: warning: comparison of integer expressions of different signedness: 'LONGINT' {aka 'long int'} and 'uint32_t' {aka 'long unsigned int'} [-Wsign-compare]
+   25 |  return cat.hFileInfo.ioFlLgLen!=p->data_size||cat.hFileInfo.ioFlRLgLen!=p->resource_size?paramErr:0;
+      |                                ^~
+/src/src/update/verify.h:25:72: warning: comparison of integer expressions of different signedness: 'LONGINT' {aka 'long int'} and 'uint32_t' {aka 'long unsigned int'} [-Wsign-compare]
+   25 |  return cat.hFileInfo.ioFlLgLen!=p->data_size||cat.hFileInfo.ioFlRLgLen!=p->resource_size?paramErr:0;
+      |                                                                        ^~
+[ 50%] Linking C executable ClariceUpdater.code.bin
+[ 50%] Built target ClariceUpdater
+[ 75%] Generating Helper.r.rsrc.bin
+[100%] Generating ClariceUpdater.bin, ClariceUpdater.APPL, ClariceUpdater.dsk, ClariceUpdater.ad, %ClariceUpdater.ad
+[100%] Built target ClariceUpdater_APPL
+Using multiversal interfaces
+In file included from /src/src/commands/clarice.c:13:
+/src/src/commands/../update/verify.h: In function 'update_verify_structure':
+/src/src/commands/../update/verify.h:25:32: warning: comparison of integer expressions of different signedness: 'LONGINT' {aka 'long int'} and 'uint32_t' {aka 'long unsigned int'} [-Wsign-compare]
+   25 |  return cat.hFileInfo.ioFlLgLen!=p->data_size||cat.hFileInfo.ioFlRLgLen!=p->resource_size?paramErr:0;
+      |                                ^~
+/src/src/commands/../update/verify.h:25:72: warning: comparison of integer expressions of different signedness: 'LONGINT' {aka 'long int'} and 'uint32_t' {aka 'long unsigned int'} [-Wsign-compare]
+   25 |  return cat.hFileInfo.ioFlLgLen!=p->data_size||cat.hFileInfo.ioFlRLgLen!=p->resource_size?paramErr:0;
+      |                                                                        ^~
+In file included from /src/src/commands/clarice.c:120:
+/src/src/commands/repository-client.inc: In function 'clarice_main':
+/src/src/commands/repository-client.inc:100:38: warning: comparison of integer expressions of different signedness: 'LONGINT' {aka 'long int'} and 'uint32_t' {aka 'long unsigned int'} [-Wsign-compare]
+  100 |    if(exists&&cat.hFileInfo.ioFlLgLen==r->size){uint32_t hash;
+      |                                      ^~
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/update-command/clarice.clx: 113312 bytes, imports info, cli_native_open, FSREAD, memcpy, memcmp, strlen, strrchr, snprintf, strcmp, memchr, memset, strchr, EQUALSTRING, FLUSHVOL, strcpy, app_yield, cli_temp_create, cli_remove, FSWRITE, FSCLOSE, open_path, GETEOF, HOPENRF, HOPEN, SETFPOS, cli_native_create, cli_native_set, cli_native_delete, error, resolve_ex, protected_path, SETEOF, strncmp, errsay, say, cli_alloc, cli_free, cli_isatty, term_present, cli_read, cli_appinstall, app_update_handoff, cli_native_rename, strncasecmp, cli_ticks, app_columns, strcat, app_progress, cli_native_write, cli_native_close, OPENDRIVER, memmove
+Using multiversal interfaces
+-- The C compiler identification is GNU 16.1.0
+-- The ASM compiler identification is GNU
+-- Found assembler: /Retro68-build/toolchain/bin/m68k-apple-macos-gcc
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Retro68-build/toolchain/bin/m68k-apple-macos-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Clarice
+[  9%] Building C object CMakeFiles/Clarice.dir/hardware.c.obj
+[  9%] Building C object CMakeFiles/Clarice.dir/app.c.obj
+[ 14%] Building C object CMakeFiles/Clarice.dir/shell.c.obj
+[ 19%] Building C object CMakeFiles/Clarice.dir/sizes.c.obj
+[ 23%] Building C object CMakeFiles/Clarice.dir/reflow.c.obj
+[ 28%] Building ASM object CMakeFiles/Clarice.dir/planes-unrolled.S.obj
+[ 33%] Building ASM object CMakeFiles/Clarice.dir/glyph-planes.S.obj
+[ 38%] Building ASM object CMakeFiles/Clarice.dir/kernels.S.obj
+[ 42%] Building ASM object CMakeFiles/Clarice.dir/checksum.S.obj
+[ 47%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/ast.c.obj
+[ 52%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/array.c.obj
+[ 57%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/buffer.c.obj
+[ 61%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/arithm.c.obj
+[ 66%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/parser.c.obj
+[ 71%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/program.c.obj
+[ 76%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/word.c.obj
+[ 80%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/arithm.c.obj
+[ 85%] Linking C executable Clarice.code.bin
+[ 85%] Built target Clarice
+[ 90%] Generating Icons.r.rsrc.bin
+[ 95%] Generating App.r.rsrc.bin
+[100%] Generating Clarice.bin, Clarice.APPL, Clarice.dsk, Clarice.ad, %Clarice.ad
+[100%] Built target Clarice_APPL
+Using multiversal interfaces
+Volume name is "Clarice"
+Volume was created on Wed Nov 18 06:33:23 2026
+Volume was last modified on Wed Nov 18 06:33:23 2026
+Volume has 524288 bytes free
+PASS: production loader validated 35 actual command images and imports (no execution)
+Staged core and 50 external commands in /Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/distribution/kit
+/Users/williamprestwich/Documents/ChatGPT/Clarice-Busybox-Replacements/work/distribution/Clarice-release.tar

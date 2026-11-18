@@ -1,0 +1,13 @@
+{
+  "old_core": 2026111823,
+  "new_core": 2026111882,
+  "standard_commands": 50,
+  "updater_used": true,
+  "automatic_core_relaunch": true,
+  "incomplete_marker_cleared": true,
+  "repeat_update": "all standard tools current; index only",
+  "guest_observations": 101,
+  "guest_closed": true,
+  "http_stopped": true,
+  "physical_hardware_used": false
+}

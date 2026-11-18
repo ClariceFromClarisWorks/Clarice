@@ -186,3 +186,23 @@ Apple Driver43 device header/driver; provenance is recorded separately. Supply
 a compatible template path as the script’s first argument if necessary. The MacBinary core preserves both forks;
 CLX utility files are ordinary data files. Copying the native app through a
 non-Macintosh filesystem requires its MacBinary container or an HFS image.
+
+## BusyBox command replacements
+
+Private build 2026111882 selects genuine BusyBox 1.37.0 for `wc`, `tr` and
+`sort`. The ordinary updater replaces their existing packages. The standard
+kit also installs `wc-sbase`, `tr-sbase` and `sort-sbase` as explicit compatibility
+commands; each remains independently packaged.
+
+`wc -m` now counts bytes, and `tr` translates bytes with ASCII character classes,
+not Unicode characters. These tools do not convert MacRoman to UTF-8. Use the
+sbase alternatives when their previous UTF-8 behavior is required. BusyBox tr
+also lacks `[:graph:]`, `[:print:]` and `[x*N]` repetition syntax.
+
+BusyBox sort holds input in available application RAM and releases it after
+success, cancellation or failure. Use `sort-sbase` for disk-spilling larger jobs
+or previous options such as `-o`, `-m` and `-C`. BusyBox sort rejects
+`-o/-M/-V/-m/-S/-T`; redirect output to a separate file. A failed or cancelled
+redirected command may leave partial output; never redirect over its input.
+
+BusyBox vi remains an optional experiment, not part of this replacement set.

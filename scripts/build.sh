@@ -30,6 +30,8 @@ python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/free.o" "$ROOT/work/bu
 "$ROOT/scripts/build-ports.sh"
 "$ROOT/scripts/build-awk.sh"
 "$ROOT/scripts/build-pipelines.sh"
+"$ROOT/scripts/build-busybox-tools.sh"
+for name in wc tr sort; do cp "$ROOT/work/busybox-tools/bb$name.clx" "$ROOT/work/build/bb$name.clx"; done
 "$ROOT/scripts/build-kermit.sh"
 sh "$ROOT/scripts/build-network.sh"
 sh "$ROOT/scripts/build-ftp.sh"
