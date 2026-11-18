@@ -1,0 +1,2 @@
+Using multiversal interfaces
+work/filesystem-confidence/files-fixed.clx: 13348 bytes, imports strlen, strcpy, strcat, cli_native_open, cli_native_read, cli_native_write, cli_native_close, app_yield, strrchr, cli_ticks, snprintf, cli_native_create, cli_write, strcmp, resolve_ex, protected_path, info, same_name, strchr, strncasecmp, cli_free, memcpy, cli_native_set, cli_native_delete, cli_native_rename, errsay, cli_native_lock, cli_alloc, cli_native_mkdir, cli_native_nth, encode_name, say, error, resolve, cli_native_move, output_error, link_target, cli_mac_time

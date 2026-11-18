@@ -1,0 +1,2 @@
+normal: 193 exact bindings, aliases, unknowns; at most 8 comparisons; ASan/UBSan passed
+profiling: 195 exact bindings, aliases, unknowns; at most 8 comparisons; ASan/UBSan passed

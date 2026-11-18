@@ -1,0 +1,103 @@
+{
+  "source_commit": "47eb033",
+  "source_worktree": "/Users/williamprestwich/Documents/ChatGPT/Clarice-Main",
+  "files": [
+    {
+      "path": "outputs/filesystem-fixes/REPORT.md",
+      "sha256": "cffb5f2d44189f8fe683fe0737b36d3374073ae481f4d1b15eaf048176faf773"
+    },
+    {
+      "path": "outputs/filesystem-fixes/cursor.json",
+      "sha256": "1c5dc289083d04e0a894eff964140dd71fbe326f9bc194cc86f098d47930fe20"
+    },
+    {
+      "path": "outputs/filesystem-fixes/first-run/cursor.json",
+      "sha256": "1c5dc289083d04e0a894eff964140dd71fbe326f9bc194cc86f098d47930fe20"
+    },
+    {
+      "path": "outputs/filesystem-fixes/first-run/guest.json",
+      "sha256": "19eeca5778e2f97f861a4938a43784204dedc290aa7ca1821f378d7edd426b2c"
+    },
+    {
+      "path": "outputs/filesystem-fixes/first-run/installed.json",
+      "sha256": "71ee76b1fc3222bc2d6295c2f9123e27d09b4ec42226860c661ae9321ef6a829"
+    },
+    {
+      "path": "outputs/filesystem-fixes/forks/comparison.json",
+      "sha256": "551d8e3da90d3df95d033180e9f1070ba79ac86d2e174209d3f521850ea683a9"
+    },
+    {
+      "path": "outputs/filesystem-fixes/guest.json",
+      "sha256": "b92b4e7b9e4fd6d57fc8c819b305e6b1e6ae5197a2d0efb743ed3102bd5f13bb"
+    },
+    {
+      "path": "outputs/filesystem-fixes/host-cancellation-results.json",
+      "sha256": "06d612b44c451837f2fdadbfdaecc1e8fd2dc8d483db16d3c3b2c1558d79704c"
+    },
+    {
+      "path": "outputs/filesystem-fixes/installed.json",
+      "sha256": "b85924d0c2fb0d3434cf252f11e4d0fd7b108ca14bf286d4762ebf37b60fc20d"
+    },
+    {
+      "path": "outputs/filesystem-fixes/shell-comparison.json",
+      "sha256": "43247cc0925b5f1ad1605f70345fa829fe534895b641504b76597ea9078982c1"
+    },
+    {
+      "path": "outputs/filesystem-fixes/sizes.json",
+      "sha256": "c89ccb7811ed5293e0aa85155dd50d235729001287dc8bcb3d6adf542cc91c1b"
+    },
+    {
+      "path": "src/commands/files.c",
+      "sha256": "785c505dec2f899ef6b941234e92cf4957144957088b81bc6cff3d6adb6f185c"
+    },
+    {
+      "path": "src/commands/remote/telnetd.c",
+      "sha256": "688acdc18e59b464404b7e3656571abc9c778d4ebfd086f8845631ba00157aa5"
+    },
+    {
+      "path": "src/port-files.inc",
+      "sha256": "0953d16da19335ef1f7e62742a29a628605653cb4a617d40eb211a1434094336"
+    },
+    {
+      "path": "src/session.inc",
+      "sha256": "f3885217f0e40acae7382b6eddf87511cf88fe1694af41714199c0fe3288e751"
+    },
+    {
+      "path": "src/sh.inc",
+      "sha256": "eb5360e5ff27493f7c824404ee96de258f738b84aca0a8845e3d492df575d17a"
+    },
+    {
+      "path": "src/shell.c",
+      "sha256": "8a0e13efb0a18109dd084beb0537eb32fae19d979dc91494f6930e55998c77b3"
+    },
+    {
+      "path": "src/update/version.h",
+      "sha256": "28aafa15fb0b40abe489438ce0dd57fb74d0afa347ca187ff27cec8ffa6c87bf"
+    },
+    {
+      "path": "tests/filesystem-fixes/compare-forks.py",
+      "sha256": "381219f7f62f98754f2ec211e07a1454695a3c958eb3214ddfc8d567264f7673"
+    },
+    {
+      "path": "tests/filesystem-fixes/host.py",
+      "sha256": "3ba11cda217e55457f897cd135b1f7a152220984d460bc87b30a2f603b096b13"
+    },
+    {
+      "path": "tests/filesystem-fixes/remote/check.py",
+      "sha256": "1a2da43fa11f45821c523a549250ca3611972a22ba4f0fda54d83088d845c2bc"
+    },
+    {
+      "path": "tests/filesystem-fixes/remote/client.py",
+      "sha256": "2b9f3663611d024a3ca16a4fa278935c8dee5ab3f2435c8ef28f59df9c490830"
+    },
+    {
+      "path": "tests/remote-sessions/service-host.c",
+      "sha256": "e0836670a4bb71e817feea9dbee8bae6d7da638d5cf064aadf6a87b5527c4378"
+    }
+  ],
+  "diagnostics": "Retained opt-in native TCP diagnostics; normal behavior matches combined source",
+  "normal_service_hashes_match_upstream_integration": {
+    "telnetd": true,
+    "seriald": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "destination": "/Users/williamprestwich/Documents/ChatGPT/Clarice-Main",
+  "branch": "codex/coherent-deployment",
+  "source": "/Users/williamprestwich/Documents/ChatGPT/Clarice-SE-Performance",
+  "recovery": "/Users/williamprestwich/Documents/ChatGPT/Clarice-Main/work/se-performance-merge-20261118-144658",
+  "existing_files_verified": 2620,
+  "existing_files_changed": [
+    "outputs/CURRENT-STATE.md",
+    "src/commands/remote/telnetd.c"
+  ],
+  "existing_index_preserved": true,
+  "mode": "Integrated into existing uncommitted development work; no unrelated work committed",
+  "raw_artifacts": "/Users/williamprestwich/Documents/ChatGPT/Clarice-SE-Performance/work/se-performance",
+  "validation": [
+    "remote session/auth/service/native serial ASan/UBSan suite passed",
+    "Python test-harness compilation passed",
+    "shell syntax passed",
+    "git diff --check passed"
+  ]
+}

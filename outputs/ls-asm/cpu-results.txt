@@ -1,0 +1,19 @@
+baseline PASS 75567 exact outputs, odd destination, guards, preserved registers and stack
+candidate PASS 75567 exact outputs, odd destination, guards, preserved registers and stack
+specialized PASS 75567 exact outputs, odd destination, guards, preserved registers and stack
+value baseline_instructions candidate_instructions specialized_instructions baseline_DIVU candidate_DIVU specialized_DIVU
+0 61 54 56 1 1 1
+1 61 54 56 1 1 1
+9 61 54 56 1 1 1
+10 73 57 60 2 2 2
+100 85 60 64 3 3 3
+1024 97 63 68 4 4 4
+8192 97 63 68 4 4 4
+65535 109 66 72 5 5 5
+65536 114 259 84 6 0 6
+99999 114 359 84 6 0 6
+100000 126 139 88 7 0 7
+1048576 143 280 104 9 0 9
+9999999 148 439 116 10 0 10
+2147483647 194 339 152 15 0 15
+4294967295 194 394 152 15 0 15

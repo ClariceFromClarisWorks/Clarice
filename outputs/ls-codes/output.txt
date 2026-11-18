@@ -1,0 +1,3 @@
+1000 files plus dots, detail 0 : writes 2004 -> 3 ; peak 4096
+1000 files plus dots, detail 1 : writes 1002 -> 16 ; peak 4096
+PASS: 576 before/after byte/status cases; allocation fallback, cancellation, catalog faults, widths, paging, detailed and plain output; failed writes are not retried; allocations freed

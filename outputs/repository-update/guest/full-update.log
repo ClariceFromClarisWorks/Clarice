@@ -1,0 +1,26 @@
+COMPLETE-UPDATE-BEGIN
+Checking repository...
+Downloaded 5.21 KB to /tmp/clarice-sort-382076-19
+clarice -> build 2026111802
+Clarice -> build 2026111802
+Checking repository...
+Downloaded 5.21 KB to /tmp/clarice-sort-384605-20
+clarice -> build 2026111802
+Clarice -> build 2026111802
+Installing clarice...
+Downloaded 110.66 KB to /tmp/clarice-sort-387303-21
+appinstall: retained recovery file: native:RCGuest:System Folder:Clarice Data:bin:.clx-clarice.old
+Installed build 2026111801; source build 2026111802 (build 2026111802).
+Downloading application package...
+Downloaded 264.75 KB to /tmp/clarice-sort-389496-22
+Verifying package...
+Staging application forks...
+Staging: 1016 ticks.
+Checking staged application...
+Staged verification: 496 ticks.
+Preparing independent updater...
+Verified build 2026111802.
+Only Clarice will close, install and relaunch.
+This may take a minute; do not reset or switch off the Mac.
+The previous application is retained for recovery.
+Closing Clarice now. Please wait for automatic relaunch.

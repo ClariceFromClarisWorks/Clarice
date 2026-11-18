@@ -13,6 +13,9 @@ stub=r'''
 #include <unistd.h>
 #include <errno.h>
 #define PATH_CAP 512
+static void file_progress_current(const char *s){(void)s;}
+static void file_progress_show(int done){(void)done;}
+static void file_progress_complete(void){}
 #define bdNamErr -37
 #define fnfErr -43
 #define dirNFErr -120

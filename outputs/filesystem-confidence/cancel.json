@@ -1,0 +1,35 @@
+[
+  {
+    "test": "interrupted copy 0",
+    "wire": "cp large cancel-target\r\n^C\r\nconfidence-final > ",
+    "status_check": 0,
+    "text": "test \"$?\" -eq 130; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\nconfidence-final > "
+  },
+  {
+    "test": "retained target and cleanup 0",
+    "status": 0,
+    "text": "cmp '/mnt/FS Audit A/fork-source' cancel-target && status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=333268 largest=331450 image=8508 ticks=67 load=44 owned-peak=4748 remaining=0\r\nLoader ticks: read=17 validate=1 imports=1 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=19 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\nconfidence-final > "
+  },
+  {
+    "test": "interrupted copy 1",
+    "wire": "cp large cancel-target\r\n^C\r\nconfidence-final > ",
+    "status_check": 0,
+    "text": "test \"$?\" -eq 130; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\nconfidence-final > "
+  },
+  {
+    "test": "retained target and cleanup 1",
+    "status": 0,
+    "text": "cmp '/mnt/FS Audit A/fork-source' cancel-target && status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=333268 largest=331450 image=8508 ticks=67 load=44 owned-peak=4748 remaining=0\r\nLoader ticks: read=16 validate=1 imports=2 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=19 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\nconfidence-final > "
+  },
+  {
+    "test": "interrupted copy 2",
+    "wire": "cp large cancel-target\r\n^C\r\nconfidence-final > ",
+    "status_check": 0,
+    "text": "test \"$?\" -eq 130; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r\nREMOTE_END_6:0\r\nconfidence-final > "
+  },
+  {
+    "test": "retained target and cleanup 2",
+    "status": 0,
+    "text": "cmp '/mnt/FS Audit A/fork-source' cancel-target && status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=333268 largest=331450 image=8508 ticks=68 load=45 owned-peak=4748 remaining=0\r\nLoader ticks: read=18 validate=0 imports=2 relocations=1 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=19 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\nconfidence-final > "
+  }
+]

@@ -132,3 +132,27 @@ static int appinstall_command(int argc,char **av){
  if(e){error("appinstall",e);return e==userCanceledErr?130:1;}
  say("appinstall: complete (existing files kept by install/setup)\n");return 0;
 }
+
+/* Repository retry uses the existing installer. Preserve previous versions and
+   interrupted candidates by catalog ID, rather than deleting or rolling back
+   tools which already installed successfully. No directory-wide transaction. */
+static int command_archive(const char *path){
+ CInfoPBRec c;int e=info(path,&c);if(e==fnfErr)return 0;if(e)return e;
+ if(c.hFileInfo.ioFlAttrib&16)return paramErr;
+ char to[PATH_CAP];strcpy(to,path);char *leaf=strrchr(to,':');if(!leaf)return bdNamErr;
+ snprintf(leaf+1,sizeof to-(leaf+1-to),".previous-%08lx",(unsigned long)c.hFileInfo.ioDirID);
+ if(strlen(to)>255)return bdNamErr;
+ if((e=command_absent(to)))return e;
+ e=cli_native_rename(path,to);return e?e:command_flush(to);
+}
+static int cli_appinstall(const char *source,const char *name,unsigned long version){
+ char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec c;(void)version;
+ int e=command_paths(name,dest,stage,backup);if(e)return e;
+ /* Validate before changing any installed or recovery name. */
+ int valid=module_load(source,0,0,0);if(valid)return valid==130?userCanceledErr:paramErr;
+ e=info(dest,&c);
+ if(e==fnfErr){int b=info(backup,&c);if(!b)e=command_restore(backup,dest);else if(b!=fnfErr)return b;else e=0;}
+ if(e)return e;
+ if((e=command_archive(stage))||(e=command_archive(backup)))return e;
+ return command_replace(name,source,1);
+}

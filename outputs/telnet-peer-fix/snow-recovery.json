@@ -1,0 +1,23 @@
+[
+  {
+    "sample": 0,
+    "mode": "allow",
+    "status": 0,
+    "text": "printf 'ALLOWED_PEER_OK\\n'; printf 'alpha\\nbeta\\n' | grep beta && status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nALLOWED_PEER_OK\r\nbeta\r\nRuntime: heap=332658 largest=331386 image=32708 ticks=174 load=165 owned-peak=10812 remaining=0\r\nLoader ticks: read=20 validate=80 imports=3 relocations=3 prepare=21 events=10 (events included above)\r\nVerification ticks: mode=full header=0 record=37 payload=63 metadata=17 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 18.046850291
+  },
+  {
+    "sample": 1,
+    "mode": "allow",
+    "status": 0,
+    "text": "printf 'ALLOWED_PEER_OK\\n'; printf 'alpha\\nbeta\\n' | grep beta && status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nALLOWED_PEER_OK\r\nbeta\r\nRuntime: heap=332658 largest=331386 image=32708 ticks=50 load=42 owned-peak=10812 remaining=0\r\nLoader ticks: read=19 validate=0 imports=3 relocations=5 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 14.953891875000004
+  },
+  {
+    "sample": 2,
+    "mode": "allow",
+    "status": 0,
+    "text": "printf 'ALLOWED_PEER_OK\\n'; printf 'alpha\\nbeta\\n' | grep beta && status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nALLOWED_PEER_OK\r\nbeta\r\nRuntime: heap=332658 largest=331386 image=32708 ticks=50 load=42 owned-peak=10812 remaining=0\r\nLoader ticks: read=19 validate=0 imports=3 relocations=4 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 16.079548250000002
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "values": [
+    [
+      366880,
+      364488
+    ],
+    [
+      366882,
+      364488
+    ],
+    [
+      366880,
+      364488
+    ]
+  ],
+  "text": "cat /tmp/remote-memory.txt; printf '\\nREMOTE_END_1:%d\\n' $?\r\nTelnet enabled for the specified peer. Unencrypted; use remote off to stop.\r\nRuntime: heap=366880 largest=364488 image=22032 ticks=36 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=2 imports=1 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=1 (structure included in relocations)\r\nTelnet enabled for the specified peer. Unencrypted; use remote off to stop.\r\nRuntime: heap=366882 largest=364488 image=22032 ticks=33 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=1 relocations=2 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\nTelnet enabled for the specified peer. Unencrypted; use remote off to stop.\r\nRuntime: heap=366880 largest=364488 image=22032 ticks=34 load=30 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=0 imports=1 relocations=2 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+}

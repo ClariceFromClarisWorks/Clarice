@@ -1,0 +1,2 @@
+PASS independent session exports, variables, functions, arguments, read/write, exit, parser/write failure, allocation exhaustion and cleanup
+PASS service: allocation failure, graceful logout drain, negotiated echo, idle dispatch, CRLF, overlong input rejection/recovery, interrupt, delayed abort retains buffers, reconnect and zero retained allocations

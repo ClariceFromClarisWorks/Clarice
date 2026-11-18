@@ -1,5 +1,466 @@
 # Clarice current state
 
+## Resource fork validation gap resolved — 18 November 2026
+
+Valid Rez-generated resource file passes 24 guest status checks and 12 native
+Resource Manager reads on Snow/Plus/System 6.0.8, using unchanged baseline and
+progress utility binaries. Create, replace, rename, cross-volume move and return
+copy preserve resource payloads/maps/names/attributes, application bytes, data
+forks and metadata. Differences are confined to documented system-reserved fork
+bytes 16–127; the old synthetic test incorrectly required these to remain equal.
+No production change or added runtime cost. Physical SE/System 7 acceptance
+remains separate. [Validation and reproducible tests](file-progress/resource/REPORT.md).
+
+## Long listing type and creator codes — 18 November 2026
+
+Normal ls -l/-la/-lah includes stored type/creator codes; --full retains extra
+Finder flags. Optional --legend implies -l and adds field explanations/aligned
+headings. No extra catalog queries or heap allocation; +10 output bytes per row.
+Native loaded utility +716 bytes, loader metadata +132 bytes, entry stack +4 bytes.
+4000 formatter cases, 576 output/status cases, catalog/options tests and 68000
+build pass. Snow: 24 timed commands pass; repeated medians, before/after:
+100-entry -lah redirected 2.21/2.26 s, 1000-entry -la 9.35/9.10 s (overlapping
+variation, no speedup claim), small terminal -lah 1.65/1.68 s. Physical SE still
+requires validation on the next build. [Details and evidence](ls-codes/REPORT.md).
+
+## Default file-operation progress — 18 November 2026
+
+Developed/tested/staged in `Clarice-File-Progress` on `codex/file-progress-20261118`.
+cp/mv/rm reuse the existing progress renderer, default on interactively after a
+short delay; `--no-progress` and script/stream suppression; no pre-scan or extra
+heap storage. Safe native mutation order remains unchanged. Host fault/UI/parser
+regressions and native builds pass; Snow confirms completion/cancellation and bars.
+Loaded utility +3404 bytes; repeated 320 KiB copy median 6.86 → 7.16 seconds with
+UI suppressed. No physical performance acceptance. Synthetic resource-fork
+comparison differs at bytes 48–125 in both baseline and candidate; valid-resource
+validation is now complete; see the follow-up above. The progress change was
+subsequently committed and integrated as a9fe185; this validation follow-up is staged.
+Details and limits: [report](file-progress/REPORT.md).
+
+## ls output buffering — 18 November 2026
+
+User-authorised follow-up in `Clarice-Ls-Asm`: direct plain-name formatting,
+one write per terminal line/row, optional4KiB native-file output buffer for plain
+and detailed listings. Existing native allocation admission/headroom; failure falls
+back to streaming. Per-entry cancellation remains; buffered prefixes flush on
+cancellation/errors, and all exits free storage. No idle cache or Core change.
+
+576 ASan/UBSan byte/status comparisons plus formatter/resolver/operand regressions
+and68000 builds pass.36 normal-speed Snow commands all succeed;16 output comparisons
+match.1000-file redirected repeated medians: plain11.16→6.46s (42.1% less),
+long10.95→8.83s (19.4%). Small terminal smoke shows little change; no terminal
+speed claim. Real redirected Ctrl+C returns130 with an exact653-line output prefix.
+Post-command heap stays within52B and largest block is stable after first sample.
+Direct allocation is not covered by the runtime owned counters; host ownership
+checks and native cleanup paths cover the4096B buffer. Image+316B, temporary loader
+metadata+116B, package+432B versus preceding catalog candidate.
+
+[Report and evidence](ls-output/REPORT.md). Physical SE and final-prompt timing
+remain pending. Only disposable packages/media tested; no push, merge or release.
+
+## ls catalog-request and formatter follow-up — 18 November 2026
+
+In isolated `codex/ls-asm-investigation-20261118`, reuse same-operation target/
+parent metadata and skip unused parent metadata for name-only listings. Keep C
+with the shorter inline-DIVU loop; no full assembly rewrite or new cache. Core
+utility package declares runtime1.10 for the existing metadata service.
+
+176 matched resolver/listing host cases, formatter/operand regressions and native
+68000 builds pass.48 normal-speed Snow invocations succeed with zero owned
+survivors;16 detailed-output comparisons and offline size/name checks pass.
+Terminal medians baseline→combined:100 files2.35→2.21s;1,000 files9.88→9.76s.
+Redirected1,000-file timings vary too much to advertise their larger median gain.
+Real Ctrl+C returns130 with cleanup. Image+60B, temporary import metadata+64B;
+normal package+140B including its declared-runtime header. Stack frames unchanged.
+
+Only disposable /tmp packages tested; no standard installation, push or release.
+Physical SE and submission-through-final-prompt acceptance remain pending. Next
+catalog opportunity: count repeated mounted-volume scans in deep path resolution.
+[Report, limits and evidence](ls-catalog/REPORT.md).
+
+
+## ls assembly investigation — 18 November 2026
+
+Isolated `codex/ls-asm-investigation-20261118` prototypes only; production unchanged.
+Existing ls already uses native streaming catalog enumeration and inline 68000
+DIVU. Hand assembly and a smaller C/inline-DIVU specialisation each pass 75,567
+functional CPU-emulation cases. At an 8 KiB fork size, executed instructions fall
+97 → 63 / 68 respectively; this is not elapsed-time or full-command acceptance.
+Isolated routines add 68 / 22 bytes, with no heap/cache allocation. Prefer a
+matched complete-ls benchmark of the C specialisation before any production
+rewrite. No new Snow/hardware run, deployment, push or release.
+[Investigation and reproducible evidence](ls-asm/REPORT.md).
+
+
+## Approved BusyBox defaults — 18 November 2026
+
+- Private build **2026111882**, based on validated checkpoint1cb4844: standard
+  wc/tr/sort now package genuine BusyBox1.37.0. New wc-sbase/tr-sbase/sort-sbase
+  packages preserve previous behavior and disk spill. No automatic expiry;
+  about86KiB combined payload, loaded only when invoked. BusyBox vi stays optional.
+- Fresh full68000 build, production-loader checks for35 images, sealed50-command
+  kit and HTTP payload checks pass. Isolated Clarice update/relaunch from1823
+  succeeds; all50 installed version/size/CRC records match the sealed build.
+- 101 Telnet guest observations pass: standard names/help, streams/options/errors,
+  matched outputs, byte/Unicode differences, MacRoman preservation, safe rejection
+  of unsupported sort -o, locked destinations, spill fallback, cancellation and
+  allocation failure recovery. Timed commands return owned allocations to zero.
+- 8KiB median seconds sbase/BusyBox: wc-c2.45/1.63, tr6.61/1.20, sort2.56/2.75.
+  BusyBox sort still has no spill;256KiB fails status2 and frees its300684B peak.
+  Byte-oriented wc/tr changes remain explicit. No new Telnet defect observed.
+- Snow only; physical acceptance remains pending. No push or public release.
+  [Package integration report](busybox-replacements/README.md).
+
+
+## Approved Telnet peer compatibility fix — 18 November
+
+Optional telnetd candidate **2026111843**,40824B (+40), uses native wildcard
+TCPPassiveOpen and checks the completed peer before negotiation, greeting,
+authentication, session creation or connected indicator. User approved the
+brief TCP-handshake exposure before rejection. No new allocation/import/Core
+work; serial binary unchanged. Existing development changes preserved.
+
+Host sanitizer suite passes, including twelve rejected-peer completions with no
+bytes/auth/session/indicator and correct rearm. 68000 compilation passes. Isolated
+Snow authenticated access and three disallowed-peer connections closed with zero
+bytes pass. Physical deployment/acceptance is pending: SEControl disconnected,
+USB serial absent; user asked to reconnect. The previous review gate is approved,
+not still awaiting permission. [Report and evidence](telnet-peer-fix/README.md).
+
+## Filesystem confidence follow-up — 18 November 2026
+
+Private candidate **2026111842**, runtime **1.10**. Two further safety defects
+are fixed in the development working tree: recursive rm/rmdir rejects final
+`.` / `..` operands before traversal (including trailing slashes), and the shared
+resolver rejects empty paths rather than treating them as cwd. Both unsafe
+behaviors were reproduced in the merged Snow build before correction.
+
+- Corrected Snow Plus/4 MiB/System 6.0.8: **71/71 workflow checks**, **15 completed
+  large-file/full-volume checks**, and **three interrupted-copy cycles** pass.
+  Actual full-volume cp/mv failures preserve destination/source and retry works
+  after freeing space. Explicit flush and offline exports verify both forks,
+  type/creator and 2 MiB local/cross-volume copy hashes; no temporary siblings.
+- **116 host copy-fault cases**, new negative-control operand regressions,
+  deep traversal/allocation/cancellation, resolver/volume/rename tests and focused
+  68000 compilation pass. Five cp/rm cycles hold heap332788/largest331450 bytes,
+  owned survivors0. File CLX +80 bytes; no new allocations or resident state.
+- Large `wc -c` remains slow; its 2 MiB scan was stopped, not accepted. The initial
+  volume-fill hit the harness timeout and was resumed to verified disk-full.
+  No physical validation of these two new fixes or power-loss guarantee claimed.
+
+[Report and reproduction](filesystem-confidence/REPORT.md). Existing unpublished
+nano/serial/Kermit/recovery work and concurrent physical-test diagnostics remain
+preserved. Filesystem safety changes are committed; unrelated work remains uncommitted.
+No push, release or physical deployment.
+Next: physical SE smoke testing of this safety-fix candidate.
+
+## Physical SE acceptance/performance — 18 November
+
+Testing was performed on `codex/se-performance-20261118`; its harness, hardware
+evidence and opt-in diagnostics are now integrated into `codex/coherent-deployment`.
+Existing development changes and filesystem reports are preserved. Real SE reports68000/4MB/System6.0.8.
+Normal private Core **2026111841** (runtime1.10) update/relaunch passed; normal
+nano **2026111827**. No push or published release. Normal1828 nano edit/save/search/reopen/cancel also passed.1841 locked-source,
+empty-mkdir, cwd relocation, remote diagnostics, serial cursor editing and saved
+nano reopen pass. Ordinary Telnet still refuses TCP on1841; services off at handback.
+
+- Physical serial auth/commands/Ctrl+C130, three interrupted-receive cleanups,
+  logout/reconnect and user cable unplug/replug plus explicit reset pass. Native
+  free/largest319552/317302B over three cycles. Authenticated login~23s.
+- Independent C-Kermit4352B exact binary round trip passes with2ms/byte host
+  pacing;52.858s includes login and both transfers. Container preservation only.
+- Ordinary Telnet listen refuses TCP despite pending native open. Exact allowed
+  peer + fixed sourceport23230 connects in1.037s; normal peer+port0 does not.
+  The wildcard-listen/immediate-peer-check change was subsequently approved;
+  see candidate1843 above. Normal Telnet hardware acceptance remains pending.
+- 20 diagnostic nano launches all exit0/remaining0; paired screenshots identical.
+  Buffered ordinary8KiB warm mean8.51s vs8.37s baseline, median7.98 vs8.32s.
+  File phase improves147→128–134ticks, but init spikes obscure total benefit.
+  Empty4.23–4.33s; three-second goal remains unmet even excluding command repaint.
+- Complete local64KiB wc18–20s versus copy3.2–4.46s; copies exact. Native reads
+  only57–65ticks. Upstream byte-only wc still decodes/classifies every rune:
+  focused future CPU-work candidate, no optimisation implemented. Full spooled
+  pipeline3.70–4.13s. No progressive tracked allocation retention.
+
+[Report, provenance, measurements and limitations](se-performance-20261118/README.md).
+[Telnet findings/review](se-performance-20261118/TELNET-ISSUES.md). Recommended next:
+resolve the Telnet peer-policy review and profile nano initialisation variability;
+retain full-operation acceptance and safe saves. Physical data above supersedes
+“Snow only” for these tested paths; System7/cold boot/endurance remain unmeasured.
+
+## Filesystem fixes integrated into development — 18 November 2026
+
+Filesystem/Telnet fix commit `47eb033` integrated into
+`codex/coherent-deployment`, preserving existing uncommitted nano, serial,
+Kermit and release-recovery work. Combined source version **2026111841**,
+runtime **1.10**. Remote Kermit remains enabled; cursor editing, cwd relocation
+and the remote nano input diagnostic coexist with the newer session wire API.
+The Telnet test helper now preserves the NUL BINARY option byte.
+
+See [integration report](filesystem-merge/REPORT.md) for verification and
+recovery details. The earlier fix-branch report below describes its isolated
+baseline; it does not supersede the newer development runtime or nano work.
+
+## Filesystem audit fixes — 18 November 2026
+
+Private Core **2026111840**, runtime **1.8**, on separate
+`codex/filesystem-audit-fixes-20261118` from committed `7e3e036`.
+Locked-source mv now preserves destinations and genuine native errors; empty
+mkdir operands fail; directory rename/move keeps active and saved/session cwd
+paths usable, with native path-length preflight. Remote nano reports its local
+input requirement, remote Telnet help works, and remote cursor editing works.
+Tab completion and immediate reconnect remain explicit capability limits.
+
+Focused sanitizer/fault/shell regressions, 68000 compilation and isolated Snow
+checks are recorded in [fix report](filesystem-fixes/REPORT.md), with package
+sizes, memory observations and compatibility boundaries. No uncommitted nano or
+other worktree changes imported; no new runtime interface, push, merge, release,
+physical-SE or MultiFinder validation. Review integration with separate Telnet
+work before broader rollout.
+
+## Nano buffered-input follow-up — Snow only, 18 November
+
+Core **2026111823**, runtime **1.10**; normal optional nano **2026111827**,
+diagnostic nano-profile **2026111826**, installed through `clarice update`.
+The existing metadata-resolution improvement below is preserved.
+
+- Retained a tiny Newlib-style buffered `getc` adapter; no extra allocations,
+  imports or renderer changes. Diagnostic nano +36 bytes; normal image 268900 B.
+- Matched three-run warm means: ordinary 8 KiB **430→403 guest ticks** (6.2%;
+  median 418→402), long-line 8 KiB **341→332** (2.4%). Ordinary file-open/buffer
+  phase **118→98**. Empty workloads have allocation noise, no attributable gain.
+- Both refresh batching and initial blank-screen deferral failed to produce
+  consistent improvement and were removed. Existing renderer retained.
+- Host buffered-I/O ASan/UBSan passes; Snow save/reopen/search, metadata, themes,
+  three cancellation/status-130 recoveries and terminal restoration pass. Editor
+  pixel comparison identical. Normal nano save and zero retained allocations pass.
+  Owned peaks unchanged; no progressive native heap decline.
+- Remaining loader ~100 ticks, short-file initial refresh ~80, file preparation
+  ~98–109. Three-second goal unmet. These are accelerated Snow 6.0.8 comparisons,
+  not physical results or new cold measurements. No SE access or push.
+- Installing nano with telnetd active once exhausted relocation memory; disabling
+  services and retrying succeeded, preserving recovery. No updater change.
+
+[Measurements and evidence](nano-profile6/README.md). Next: matched physical
+confirmation when the SE is available, then file construction/layout profiling.
+
+## Nano startup follow-up — Snow only, 18 November
+
+Diagnostic Core **2026111816**, runtime **1.10**, optional `nano-profile` repository
+revision **2026111818**. Updated through `clarice update`; no SE access or push.
+The serial/Kermit acceptance below is complete; this is the subsequent nano batch.
+
+- Retained a small Macintosh adapter improvement: `cli_resolve_info` returns the
+  catalog metadata already obtained during path resolution. Nano stat/realpath no
+  longer repeat that final HFS lookup. No persistent cache, allocation or weakened
+  symlink/volume/error checking; genuine nano 9.2 and ncurses 6.5 unchanged.
+- Same installed command name, three warm runs each, fixed-max Snow Plus/4 MiB/
+  System 6.0.8: empty buffer **227→225**, existing empty file **300→268**, ordinary
+  8 KiB **440→422**, two-long-line 8 KiB **353→344 guest ticks** (rounded means).
+  Empty-file baseline has unrelated timing variation; the attributable file-open
+  saving is consistently **10–13 ticks**, not the entire total difference.
+- No-file control unchanged within noise. Owned allocation peaks unchanged:
+  74,572 / 75,112 / 101,736 / 95,662 bytes respectively; every invocation remaining=0.
+  Normal Core package +256 bytes; diagnostic nano package −124, loaded image −52.
+  Native heap 364160–364174 before / 364174–364202 after; largest block
+  360464–360574 / 360450–360500. No progressive heap loss or new permanent allocation.
+- Host resolver/volume/rename ASan/UBSan tests and safe-save fault/interruption
+  regression pass. Guest relative/absolute paths, symlink traversal, two mounted
+  volumes, invalid-volume rejection, existing/new/cross-volume nano saves, reopen
+  and discard, type/creator preservation and terminal restoration pass.
+- Remaining costs: warm loader ~101–103 ticks; ncurses initialisation ~27; file
+  opening/buffer construction ~115–124; ordinary-file initial refresh ~81. The
+  subsequent drawing experiments above did not justify changing the renderer.
+  Three-second goal remains unmet.
+
+These are comparative accelerated-guest measurements, not physical-SE timings or
+new cold-boot acceptance. Nano profile command/Core instrumentation is diagnostic;
+normal build was compiled separately. [Report and raw data](nano-profile3/README.md).
+
+## Serial remote shell and session Kermit — Snow validation, 18 November
+
+Core **2026111812**, runtime **1.9**; optional `telnetd` **2026111814** and
+`seriald` **2026111814**, standard E-Kermit command **2026111812**. Installed through
+versioned repository manifests and `clarice update`; no SE access or push.
+
+- Separate Preferences controls enable native serial (modem/printer, 57600 8N1,
+  no flow control) and TCP. Both remain off after restart. One authenticated
+  supplementary shell is shared across transports; local commands remain serialized
+  with it while local editing/scrolling stay responsive. Connection shown in title.
+- Existing libtelnet and E-Kermit 1.8 retained. `kermit send FILE` / `kermit receive
+  NEWFILE` use the authenticated connection, with a demand-allocated 4 KiB binary
+  queue and no terminal interpretation of packets. Failed transfers disconnect
+  rather than allowing trailing protocol bytes to execute as shell commands.
+- Independent upstream C-Kermit 9.0.302 round trips pass over TCP and Snow's modem
+  PTY: **4,352 bytes identical**, including all byte values and a MacBinary container
+  holding both forks and Finder metadata. This preserves the container; automatic
+  Macintosh fork extraction is not implemented. Peer requires `SET BLOCK-CHECK FORCE-3`.
+- Three partial-receive cancellations, login/logout/reconnect, status 130, absent
+  partial target/temp files and zero tracked allocations pass. Native free heap /
+  largest block remains **293336 / 290326** on all three runs (both services enabled).
+  Host ASan/UBSan, async-buffer ownership/recovery, seven E-Kermit regressions,
+  15 local interaction observations and five TCP lifecycle checks pass.
+- Fixed demonstrated text regression: negotiated Telnet BINARY now preserves CRLF
+  for shell output while raw Kermit payloads remain unchanged. New host assertion
+  and repeat guest interaction/binary transfer pass. Final Telnet image 39,280 B;
+  serial image 28,936 B, loaded only while enabled. No disabled transport heap.
+
+Limits: unencrypted trusted connections; serial cable removal without carrier cannot
+be reliably detected. Logout/disable and transfer timeout/cancellation are supported.
+Local outbound serial/Kermit is conservatively blocked while seriald owns a port.
+Physical SE/System 7 acceptance pending. [Evidence](remote-sessions/serial-kermit/README.md).
+
+## Password-protected supplementary Telnet — Snow validated
+
+Core **2026111810** (runtime 1.8), optional `telnetd` **2026111811**, deployed through
+new repository manifests and `clarice update`, including automatic Core relaunch.
+No SE access or push. Service disabled after acceptance; no pending repository upgrades.
+
+- Preferences → **Telnet server…** controls the allowed IPv4 peer, port, masked
+  password and enable/disable. Also `telnetd --preferences`. Settings persist in
+  `/etc/clarice/telnet.conf` through existing fork-preserving safe replacement.
+  Blank password preserves its verifier. Server intentionally stays off after
+  Clarice restarts; `telnetd` starts it with the saved password settings.
+- Genuine libtelnet retained. Password checking uses Joseph Birr-Pixton's CC0
+  fastpbkdf2 with existing public-domain libutil SHA256, inside the optional module.
+  Salted verifier only; no plaintext password in settings, history or argv.
+  No shell before authentication; no password echo; overlong input rejected;
+  60-second login deadline and five-second failed-login cooldown. Explicit
+  `--no-password --peer` remains available for controlled tests.
+- Plus/4 MiB/System 6.0.8 Snow, fixed maximum acceleration (~15×): wrong/empty/
+  overlong passwords, password change, no pre-auth execution, cancellation and
+  reconnection pass. Preferences save/reopen/port change/Cancel/restart persistence
+  pass. Locked settings save preserves original bytes; malformed settings refuse
+  startup and recover after restoring the saved file. Local input/scrolling,
+  serialized commands, streams, interrupts and lifecycle regressions remain passing.
+- Host ASan/UBSan, upstream KDF known answer, allocation/cancellation/recovery tests,
+  31 shell comparisons + 3 cancellation cases, and 193/195 import checks pass.
+- Enabled image **27,928 B**, native driver storage unchanged **20,692 B**, plus
+  demand-owned session/protocol state. Three enable/stop cycles: heap
+  **365156 → 365154 → 365156**, largest block **363042** throughout; no progressive
+  loss. No disabled-service networking allocations. Core MacBinary +1,408 B versus
+  1804; package size is not a RAM/startup measurement. Final authenticated login
+  **1.42–1.47 s host elapsed at accelerated Snow speed**, not physical-SE timing.
+
+Telnet is **unencrypted**. The 1,000-round PBKDF2 setting is a legacy CPU compromise,
+not contemporary offline password hardening; use a unique strong password on a
+trusted network. HFS provides no credential-file access protection. Physical SE,
+MoofTCP and System 7 acceptance remain pending. Serial support was added in the subsequent acceptance above; GUI
+editor support remains unavailable remotely. [Evidence and usage](remote-sessions/README.md).
+
+## Resumable repository updater — Snow accepted, build 2026111802
+
+18 November: the simpler per-package updater now works end to end in disposable
+Plus/4 MiB/System 6.0.8 Snow at fixed maximum acceleration (~15×). SE untouched;
+no push, tag or release. Remote-session development is separate.
+
+- `clarice update [-y] [--check] [--source URL]` compares a private HTTP repository,
+  adds newly listed tools, preserves known newer versions, and installs tools
+  through existing appinstall before replacing/relaunching Core with its helper.
+- `/etc/clarice/installed.catalog` records each successful package; an
+  `update.incomplete` marker survives failure and clears only after tools complete
+  and, when required, the new Core relaunches. Retry retains successful tools.
+  Torn final catalog writes are repaired; malformed complete records fail clearly.
+- Source is `/etc/clarice/update.conf`. Publisher `scripts/repository.py` accepts
+  only a complete sealed build, publishes immutable CLX/MacBinary payloads before
+  the index, and rejects changed contents at an already published version.
+- Normal startup checks only the marker, without a utility scan or network access.
+  No persistent networking/cache allocation added. Runtime 1.6 exposes the existing
+  installer and native SetEOF; older installations need one offline bootstrap.
+
+Actual guest acceptance: initial installation, repeat/no-download runs, HTTP 404
+  after a successful tool upgrade, resumption skipping that tool, corrupt download
+  preservation, Command-period cancellation/status 130 and retry, incomplete-marker
+  warning after application relaunch, full 47-tool catalog adoption/update, Core
+  1801→1802 replacement and automatic relaunch. Native HFS readback matches all 47
+  expected tool lengths/CRCs. Previous Core and per-tool recovery files remain.
+  Existing awk, sort/wc pipeline and explicit executable checks pass.
+
+Host acceptance: actual catalog/index code under ASan/UBSan (torn records/header,
+  malformed/duplicate input, allocation failure/cancellation), 81 loader/installer
+  cases including repository retries, 482 native-replacement model scenarios,
+  helper recovery decisions, plan corruption, both-fork extraction failure paths,
+  confirmation and import-table tests. Clean sealed build validates 32 distinct
+  CLX images for 47 standard names. This is not physical hardware acceptance.
+
+Measured guest repeats: full repository/no-change update 556/553 ticks, loader
+  51/49 ticks; native free heap 358046 B and largest block 357008 B unchanged.
+  Catalog after complete adoption: 2154 B including disposable test entries.
+  Core MacBinary 271104 B; updater CLX 113312 B, loaded only for the command.
+  These accelerated guest ticks are comparative, not stock-SE wall-clock claims.
+
+Limitations: private HTTP CRC provides corruption detection, not authentication;
+  catalog is not continuous same-size corruption detection (use appinstall check).
+  HFS replacement is recoverable, not collection-atomic or power-loss-safe.
+  Recovery archives consume disk space. Future incompatible runtime changes may
+  need an offline bootstrap. Core interrupted-rename decisions have host coverage;
+  arbitrary resets/power cuts during HFS metadata writes are not guest acceptance.
+  Prior whole-collection experiment remains preserved locally but is not wired
+  into this updater or startup. Existing older reports below are historical.
+
+[Installation and source hosting](../INSTALL.md) ·
+[Guest and host evidence](repository-update/README.md)
+
+## Earlier supervised deployment — historical physical-SE baseline
+
+18 November: supervised complete utility deployment now passes on physical SE
+and Snow, both retaining the accepted diagnostic Core2026111713. All47 standard
+utilities transferred in one bundle, fully loader-checked before installation,
+replaced using existing appinstall, and read back against manifest lengths/CRCs.
+Physical preferences/profile comparison and command/pipeline smoke checks pass.
+Previous utilities retained; six older recovery files archived through Clarice.
+Optional nano/user files were not replaced. [Evidence and exact scope](coherent-deployment/current-se/README.md).
+The diagnostic Core differs from the normal Core in the generated bundle; this
+is a compatible supervised development deployment, not whole-manifest Core binary
+identity or acceptance of the future coordinated updater.
+
+Branch codex/coherent-deployment from main110f937; transaction approach approved.
+Host packaging checkpoint pushed; main110f937 also pushed at user request. No
+release or tag. Root causes remain skip-existing setup, Core-only HTTP updates,
+unbound utility manifests and reusable build outputs in the previous workflow.
+
+Implemented: fresh full-build directory (previous build retained), invalidated
+seal before rebuild, partial-command override disabled for full builds, source/
+build-bound generated manifest, production-loader validation of actual CLX files,
+Core MacBinary/resource/build checks, kit-content checks, and one plain USTAR
+bundle. 47 commands/32 distinct CLX images passed a clean normal build. Bundle
+1351680B; Core270464B; utilities1031308B. No decompressor on the SE.
+[Evidence](coherent-deployment/build-evidence.json),
+[host tests](coherent-deployment/host-tests.txt).
+
+New collection transaction model passes42 injected failures and42 interruptions;
+1564B native manifest passes every-byte corruption checks. Restricted upstream
+microtar wrapper passes complete real bundle plus24 malformed/truncated archive
+cases under ASan/UBSan. Original MIT source/licence retained. These are host
+checks, not native filesystem durability acceptance. Native file adapter compiles
+against pinned68000 headers but is not yet connected to production installation.
+
+18 November follow-up (SE off): added a bounded recovery-journal decoder and
+native exact-length/close-checked reader. Experimental journal v2 records ordered
+command names, preventing a changed inventory from reinterpreting saved identities.
+The never-deployed v1 format is rejected. Host ASan/UBSan tests pass every-byte
+corruption, every truncation, wrong paths/inventory and unchanged output on failure;
+the collection model still passes 42 failures and 42 interruptions. The codec
+passes in accelerated Snow Plus/System 6.0.8, status 0, tracked remaining 0.
+Native reader compiled against 68000 headers; actual HFS journal recovery is not
+accepted yet. Record: 3,628 bytes, no heap allocation in codec; no idle overhead.
+[Focused evidence](coherent-deployment/journal/README.md).
+
+Outstanding: native staging, completion-marker/recovery handling and startup gate; integrate
+bundle with offline installer, appinstall and HTTP updater; managed-file ownership
+and legacy conflicts; test actual native failure paths, cancellation/low memory,
+repeat upgrades and Snow. Existing updater/installer still have their old behaviour.
+Do not treat this bundle as a completed automatic updater or claim future
+release consistency is guaranteed. The supervised deployment above uses existing
+per-command recovery, not the unfinished collection transaction.
+No new startup memory, runtime checks or executable-format changes are active yet.
+
+Next authorised milestone is [Remote Sessions](../references/remote-sessions-2026-11-18.md),
+conditional on completing deployment consistency. Investigate/reuse first and
+present the technical proposal before remote-session production changes. SE is
+off; continue Snow only, no push/publish/tag/hardware deployment. Physical remote
+session acceptance remains required later and cannot be inferred from Snow.
+
 ## Recovery steering — separate development helper
 
 17November: shared Clarice tools/se-control now has a Snow-tested reconnect

@@ -1,0 +1,14 @@
+{
+  "work/build/Clarice.bin": {
+    "bytes": 279552,
+    "sha256": "48443ea185d055f792093fe279d0f81bfd1b927cbe45aa01493de8c0cdf86631"
+  },
+  "work/filesystem-confidence/files.clx": {
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9"
+  },
+  "work/remote-sessions/telnetd.clx": {
+    "bytes": 40784,
+    "sha256": "182f70563d73ef9c5865bed44a9f80862e99237b470cb3d8534765cbf5f8f3a1"
+  }
+}

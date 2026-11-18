@@ -1,4 +1,9 @@
 #include "sys6.h"
+#include "session.h"
+#include "service.h"
+#include "remote-settings.h"
+static const ClariceSessionIO *session_io;
+static int session_exit_requested;
 #include <Files.h>
 #include <Serial.h>
 #include <Devices.h>
@@ -29,11 +34,12 @@ static char root_path[PATH_CAP],unix_cwd[PATH_CAP]="/";
 #include "shell-env.inc"
 static unsigned long history_count;
 static int builtin_help(const char *);
-static const char *commands[]={"env","time","command","help","appinstall","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
+static const char *commands[]={"remote","env","time","command","help","appinstall","scrollbench","prefs","sh","test","printf","true","false","pwd","cd","echo","export","history","clear","status","selftest","checks","exit",0};
 static void pstr(unsigned char *p,const char *s) {size_t n=strlen(s); if(n>255)n=255;p[0]=(unsigned char)n;memcpy(p+1,s,n);}
 #include "streams.inc"
 static void say(const char *s){emit(s,(long)asm_length(s));}
 static const char *env_get(const char *key){struct sh_env *e=env_find(sh_env,key);if(e)return e->value;if(!strcmp(key,"HOME"))return "/";if(!strcmp(key,"PWD"))return unix_cwd;return "";}
+static int shell_relocate_cwd(const char *,const char *,int);
 #include "namespace.inc"
 /* GetCatInfo resolves a full pathname but ioVRefNum is an input, not a
    resolved-volume output. Bind it before callers reuse the directory ID. */
@@ -110,19 +116,22 @@ static int selftest(void){unsigned long t=TickCount(),n;int fail=0;char b[2048],
  {char text[128];snprintf(text,sizeof text,"selftest: %s; 10000 scans, %lu ticks\n",fail?"FAIL":"PASS",(unsigned long)(TickCount()-t));say(text);}return fail?1:0;}
 #include "port-files.inc"
 #include "safe-save.inc"
+#include "service.inc"
 #include "module.inc"
 #include "help.inc"
 static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  shell_commands++;
- if(!strcmp(av[0],"help"))status=help_command(argc,av);
+ if(session_io&&(!strcmp(av[0],"prefs")||!strcmp(av[0],"scrollbench")||!strcmp(av[0],"checks")||!strcmp(av[0],"selftest")||(!strcmp(av[0],"status")&&argc<2))){errsay("command requires the local graphical terminal\n");return 2;}
+ if(!strcmp(av[0],"remote")){if(argc==2&&!strcmp(av[1],"off"))status=shell_service_stop()?1:0;else if(argc==2&&!strcmp(av[1],"status")){say(service_image?"Telnet service enabled\n":"Telnet service disabled\n");say(serial_service_image?"Serial service enabled\n":"Serial service disabled\n");}else{say("remote status | off; start with telnetd --no-password --peer IPv4 [--port N]\n");status=argc==1?0:2;}}
+ else if(!strcmp(av[0],"help"))status=help_command(argc,av);
  else if(!strcmp(av[0],"appinstall"))status=appinstall_command(argc,av);
  else if(!strcmp(av[0],"pwd")){say(unix_cwd);say("\n");}
  else if(!strcmp(av[0],"echo")){for(i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");}
  else if(!strcmp(av[0],"cd")){char path[PATH_CAP];short v;long id;const char *to=argc>1?av[1]:"~";int e=directory(to,&v,&id);char canonical[PATH_CAP];if(!e)e=resolve_ex(to,path,canonical,1);if(e){error("cd",e);status=1;}else {strcpy(unix_cwd,canonical);strcpy(shell_cwd,path);size_t len=strlen(shell_cwd);if(shell_cwd[len-1]!=':'){shell_cwd[len]=':';shell_cwd[len+1]=0;}}}
 
- else if(!strcmp(av[0],"export")){if(argc==1){for(struct sh_env *e=sh_env;e;e=e->next){say(e->name);say("=");say(e->value);say("\n");}}for(i=1;i<argc;i++)if(env_set(av[i])){term_puts("export: invalid name/value or environment full\n");status=2;}}
+ else if(!strcmp(av[0],"export")){if(argc==1){for(struct sh_env *e=sh_env;e;e=e->next){say(e->name);say("=");say(e->value);say("\n");}}for(i=1;i<argc;i++)if(env_set(av[i])){errsay("export: invalid name/value or environment full\n");status=2;}}
  else if(!strcmp(av[0],"history")){if(argc>1&&!strcmp(av[1],"off"))history_enabled=0;else if(argc>1&&!strcmp(av[1],"on"))history_enabled=1;else if(argc>1&&!strcmp(av[1],"clear")){if(history_ref>=0&&!SetEOF(history_ref,0))history_count=0;else status=1;}else{char line[LINE_CAP];for(i=HISTORY_SLOTS;i>=1;i--)if(history_get(i,line)){say(line);say("\n");if(app_yield()){status=130;break;}}}}
- else if(!strcmp(av[0],"clear"))app_clear();
+ else if(!strcmp(av[0],"clear")){if(session_io)say("\033[2J\033[H");else app_clear();}
  else if(!strcmp(av[0],"status")&&argc==2&&!strcmp(av[1],"runtime")){char b[240];snprintf(b,sizeof b,"Runtime: heap=%ld largest=%ld image=%lu ticks=%lu load=%lu owned-peak=%lu remaining=%lu\n",FreeMem(),MaxBlock(),module_bytes,module_ticks,module_load_ticks,port_peak,port_remaining);say(b);snprintf(b,sizeof b,"Loader ticks: read=%lu validate=%lu imports=%lu relocations=%lu prepare=%lu events=%lu (events included above)\n",module_read_ticks,module_validate_ticks,module_import_ticks,module_reloc_ticks,module_prepare_ticks,module_poll_ticks);
 #ifdef CLARICE_NANO_PERF
  {char perf[600];app_nano_stats(perf,sizeof perf);say(perf);snprintf(perf,sizeof perf,"Native ticks: allocs=%lu FreeMem=%lu NewPtr=%lu reads=%lu read=%lu stdio=%lu image-alloc=%lu meta-alloc=%lu\n",perf_allocs,perf_free_ticks,perf_new_ticks,perf_reads,perf_read_ticks,perf_stdio_ticks,perf_image_ticks,perf_meta_ticks);say(perf);}
@@ -171,6 +180,7 @@ int shell_complete(char *line,int *cursor){static char previous[LINE_CAP];static
 void shell_dispatch_stats(unsigned long *out){out[0]=dispatch_path_ticks;out[1]=dispatch_kind_ticks;out[2]=module_load_ticks;out[3]=module_ticks;}
 #endif
 #include "sh.inc"
+#include "session.inc"
 
 static void complete_functions(const char *p,char *c,int *n,int show,int *shown){for(struct sh_function *f=sh_functions;f;f=f->next)if(!builtin_name(f->name))completion_item(f->name,p,c,n,show,shown);}
 

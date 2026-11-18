@@ -1,0 +1,11 @@
+{
+  "src/commands/files.c": "213af2d956494c9755a7faa1e0bbb0625b4aafc0b9def511c551202fe3e19e44",
+  "src/namespace.inc": "caf160d4522bc94dbe224f910bb1ff4c57a1ea20c974f75bf2633fad0ab9e21a",
+  "src/port-files.inc": "0953d16da19335ef1f7e62742a29a628605653cb4a617d40eb211a1434094336",
+  "src/session.inc": "f3885217f0e40acae7382b6eddf87511cf88fe1694af41714199c0fe3288e751",
+  "src/sh.inc": "eb5360e5ff27493f7c824404ee96de258f738b84aca0a8845e3d492df575d17a",
+  "src/shell.c": "8a0e13efb0a18109dd084beb0537eb32fae19d979dc91494f6930e55998c77b3",
+  "src/module.inc": "e6be8e15336b0da76e28825efb34aeeb69b98c33550d5ca4c612444ae234b4cb",
+  "src/commands/remote/telnetd.c": "688acdc18e59b464404b7e3656571abc9c778d4ebfd086f8845631ba00157aa5",
+  "src/update/version.h": "581ef180465d1a764892122111f301d8e8e4eb31edf74fee1b0b94182233b7d9"
+}

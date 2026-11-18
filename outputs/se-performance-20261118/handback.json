@@ -1,0 +1,15 @@
+{
+  "core": 2026111841,
+  "nano": 2026111827,
+  "profiling_core": false,
+  "remote_services": "Telnet and serial disabled, observed in final console capture/OCR",
+  "console": "local prompt restored; SEControl5969 available",
+  "unused_recovery_listener": "5970 stopped",
+  "private_http": "192.168.1.112:8086 retained for explicit-source iterations; original update.conf unchanged",
+  "final_screen_sha256": "64aa23ab6ca0cc0e6651632b3289b663526164f49e75a5a679c17dd577f45309",
+  "normal_nano_reopen_remaining": 0,
+  "normal_nano_post_exit_heap": 364586,
+  "normal_nano_post_exit_largest": 361290,
+  "limits": "Final counters transcribed from console/OCR; total invocation ticks include human/test waiting, not startup latency",
+  "open_issue": "Normal Telnet TCP refusal; peer-policy review pending"
+}

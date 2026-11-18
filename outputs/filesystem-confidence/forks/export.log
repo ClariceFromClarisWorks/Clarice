@@ -1,0 +1,32 @@
+Using multiversal interfaces
+/src/work/filesystem-confidence/guest/A.hda: contains 1 HFS partition
+Volume name is "FS Audit A"
+Volume was created on Wed Nov 18 01:21:13 2026
+Volume was last modified on Wed Nov 18 04:32:31 2026
+Volume has 28540928 bytes free
+f  TEXT/TEST        33        14 Jan  1  1904 cancel-target
+f  S6LK/S6UX         0        11 Nov 18  2026 dangling
+f  TEXT/S6UX         0        11 Nov 18  2026 destination
+d          2 items               Nov 18  2026 dotdot
+d          1 item                Nov 18  2026 dotrm
+d          1 item                Nov 18  2026 empty
+f  TEXT/TEST        33        14 Jan  1  1904 fork-overwrite
+f  TEXT/CLRC         0   2097163 Nov 18  2026 large
+f  TEXT/CLRC         0   2097163 Nov 18  2026 largecopy
+f  S6LK/S6UX         0        10 Nov 18  2026 link
+f  S6LK/S6UX         0        10 Nov 18  2026 linkcopy
+f  TEXT/S6UX         0        11 Nov 18  2026 moved
+d          2 items               Nov 18  2026 moved-many
+d          2 items               Nov 18  2026 multi
+d          1 item                Nov 18  2026 renamed
+d          1 item                Nov 18  2026 traversal
+d          1 item                Nov 18  2026 work space
+/src/work/filesystem-confidence/guest/B.hda: contains 1 HFS partition
+Volume name is "FS Audit B"
+Volume was created on Wed Nov 18 01:21:14 2026
+Volume was last modified on Wed Nov 18 04:32:32 2026
+Volume has 30819328 bytes free
+f  S6LK/S6UX         0        11 Nov 18  2026 dangling
+f  TEXT/TEST        33        14 Jan  1  1904 forks
+f  TEXT/TEST        33        14 Jan  1  1904 full-target
+f  TEXT/CLRC         0   2097163 Nov 18  2026 recovered

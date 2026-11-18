@@ -1,0 +1,22 @@
+[
+  {
+    "command": "test ! -e /tmp/fe18 && printf 'ORIGINAL\\n' > /tmp/fe18",
+    "status": 0,
+    "text": "test ! -e /tmp/fe18 && printf 'ORIGINAL\\n' > /tmp/fe18; printf '\\nSE_END_1:%d\\n' $?\r\n\r\nSE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr --type TEXT --creator ttxt /tmp/fe18",
+    "status": 0,
+    "text": "hfsattr --type TEXT --creator ttxt /tmp/fe18; printf '\\nSE_END_2:%d\\n' $?\r\n\r\nSE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "test ! -e /tmp/up18 && printf 'remote off\\nclarice update -y --source http://192.168.1.112:8086/repository/normal.txt > /tmp/up18log 2>&1\\n' > /tmp/up18",
+    "status": 0,
+    "text": "test ! -e /tmp/up18 && printf 'remote off\\nclarice update -y --source http://192.168.1.112:8086/repository/normal.txt > /tmp/up18log 2>&1\\n' > /tmp/up18; printf '\\nSE_END_3:%d\\n' $?\r\n\r\nSE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/up18; hfsattr /tmp/fe18",
+    "status": 0,
+    "text": "cat /tmp/up18; hfsattr /tmp/fe18; printf '\\nSE_END_4:%d\\n' $?\r\nremote off\r\nclarice update -y --source http://192.168.1.112:8086/repository/normal.txt > /tmp/up18log 2>&1\r\n/tmp/fe18: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nSE_END_4:0\r\n/ > "
+  }
+]

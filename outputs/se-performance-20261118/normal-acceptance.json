@@ -1,0 +1,32 @@
+[
+  {
+    "command": "cat /tmp/fs18 /tmp/fr18",
+    "status": 0,
+    "text": "cat /tmp/fs18 /tmp/fr18; printf '\\nSE_END_1:%d\\n' $?\r\n0\r\nRuntime: heap=364938 largest=362420 image=198904 ticks=3374 load=105 owned-peak=77160 remaining=0\r\nLoader ticks: read=37 validate=3 imports=4 relocations=22 prepare=22 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=17 payload=0 metadata=3 structure=13 (structure included in relocations)\r\n\r\nSE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/fc18 /tmp/fcr18",
+    "status": 0,
+    "text": "cat /tmp/fc18 /tmp/fcr18; printf '\\nSE_END_2:%d\\n' $?\r\n130\r\nRuntime: heap=365116 largest=362218 image=198904 ticks=423 load=131 owned-peak=75106 remaining=0\r\nLoader ticks: read=39 validate=3 imports=4 relocations=23 prepare=46 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=3 structure=14 (structure included in relocations)\r\n\r\nSE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/fe18",
+    "status": 0,
+    "text": "cat /tmp/fe18; printf '\\nSE_END_3:%d\\n' $?\r\nSE EDIT ORIGINAL\r\n\r\nSE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr /tmp/fe18",
+    "status": 0,
+    "text": "hfsattr /tmp/fe18; printf '\\nSE_END_4:%d\\n' $?\r\n/tmp/fe18: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nSE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/up18log",
+    "status": 0,
+    "text": "cat /tmp/up18log; printf '\\nSE_END_5:%d\\n' $?\r\nChecking repository...\r\nDownloaded 5.67 KB to /tmp/clarice-sort-286611-9\r\nClarice -> build 2026111828\r\nInstalled build 2026111823; source build 2026111828 (build 2026111828).\r\nDownloading application package...\r\nDownloaded 272.25 KB to /tmp/clarice-sort-287358-10\r\nVerifying package...\r\nStaging application forks...\r\nStaging: 1509 ticks.\r\nChecking staged application...\r\nStaged verification: 678 ticks.\r\nPreparing independent updater...\r\nVerified build 2026111828.\r\nOnly Clarice will close, install and relaunch.\r\nThis may take a minute; do not reset or switch off the Mac.\r\nThe previous application is retained for recovery.\r\nClosing Clarice now. Please wait for automatic relaunch.\r\n\r\nSE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "remote status",
+    "status": 0,
+    "text": "remote status; printf '\\nSE_END_6:%d\\n' $?\r\nTelnet service disabled\r\nSerial service enabled\r\n\r\nSE_END_6:0\r\n/ > "
+  }
+]

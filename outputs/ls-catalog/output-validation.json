@@ -1,0 +1,110 @@
+{
+  "long_bytes": 49091,
+  "long_rows": 1002,
+  "long_sha256": "a80bcc8992aa1067cabdf5e0ccaafbf04199f6f46d18c5c5ca8c639f4d6b0b10",
+  "name_rows": 102,
+  "name_sha256": "2988f8af3c727b79082d53bd7339eb0ae9e91d22e411db03b62a9bd474256dde",
+  "peak_values": [
+    0
+  ],
+  "heap_range": [
+    329628,
+    353954
+  ],
+  "largest_range": [
+    328304,
+    352678
+  ],
+  "first": [
+    {
+      "mode": "file",
+      "files": 100,
+      "run": 0,
+      "variant": "base",
+      "seconds": 2.46,
+      "status": 0,
+      "heap": 353954,
+      "largest": 352652,
+      "image": 8104,
+      "module_ticks": 127,
+      "load_ticks": 56,
+      "owned_peak": 0,
+      "remaining": 0
+    },
+    {
+      "mode": "file",
+      "files": 100,
+      "run": 0,
+      "variant": "frmt",
+      "seconds": 2.45,
+      "status": 0,
+      "heap": 353944,
+      "largest": 352618,
+      "image": 8124,
+      "module_ticks": 126,
+      "load_ticks": 52,
+      "owned_peak": 0,
+      "remaining": 0
+    },
+    {
+      "mode": "file",
+      "files": 100,
+      "run": 0,
+      "variant": "next",
+      "seconds": 2.41,
+      "status": 0,
+      "heap": 353954,
+      "largest": 352678,
+      "image": 8164,
+      "module_ticks": 123,
+      "load_ticks": 53,
+      "owned_peak": 0,
+      "remaining": 0
+    },
+    {
+      "mode": "file",
+      "files": 1000,
+      "run": 0,
+      "variant": "base",
+      "seconds": 10.61,
+      "status": 0,
+      "heap": 353912,
+      "largest": 352660,
+      "image": 8104,
+      "module_ticks": 616,
+      "load_ticks": 55,
+      "owned_peak": 0,
+      "remaining": 0
+    },
+    {
+      "mode": "file",
+      "files": 1000,
+      "run": 0,
+      "variant": "frmt",
+      "seconds": 9.7,
+      "status": 0,
+      "heap": 353918,
+      "largest": 352626,
+      "image": 8124,
+      "module_ticks": 562,
+      "load_ticks": 52,
+      "owned_peak": 0,
+      "remaining": 0
+    },
+    {
+      "mode": "file",
+      "files": 1000,
+      "run": 0,
+      "variant": "next",
+      "seconds": 10.0,
+      "status": 0,
+      "heap": 353912,
+      "largest": 352660,
+      "image": 8164,
+      "module_ticks": 579,
+      "load_ticks": 54,
+      "owned_peak": 0,
+      "remaining": 0
+    }
+  ]
+}

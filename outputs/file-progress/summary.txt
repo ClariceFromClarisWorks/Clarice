@@ -1,0 +1,3 @@
+before first 6.75 repeats [6.85, 6.86, 7.05] median 6.86
+after first 6.0 repeats [7.13, 7.35, 7.16] median 7.16
+PASS eight timed copies, statuses, data comparisons, rename, cross-volume move, recursive copy/remove, locks, quiet flag, invalid options; persisted data fork/type/creator/timestamps match; resource fork differs at bytes 48..125 in both baseline and candidate (system-reserved area; valid-file acceptance is in resource/check.py)

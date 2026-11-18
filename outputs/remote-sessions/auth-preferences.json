@@ -1,0 +1,12 @@
+{
+  "core": 2026111810,
+  "telnetd": 2026111811,
+  "port_2324_persisted_then_restored": true,
+  "settings_survived_core_update_restart": true,
+  "restart_disabled": true,
+  "masked_password": true,
+  "old_password_rejected": true,
+  "new_password_accepted": true,
+  "no_plaintext_in_config_or_history": true,
+  "apply_replaces_active_service_and_reauthenticates": true
+}

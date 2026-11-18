@@ -1,0 +1,1 @@
+PASS: ls/df 130 operands, no argv mutation, errors, cancellation, defaults, -- and invalid options

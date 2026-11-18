@@ -5,10 +5,13 @@
 #include <OSUtils.h>
 #include <string.h>
 #include <stdio.h>
+extern void *cli_alloc(unsigned long);
+extern void cli_free(void *);
 extern short output_ref,input_ref;
 extern int output_error,script_depth;
 extern void emit(const char *,long),say(const char *),errsay(const char *),error(const char *,int);
 extern int resolve_ex(const char *,char *,char *,int),resolve(const char *,char *);
+extern int cli_resolve_info(const char *,char *,char *,CInfoPBRec *);
 extern int info(const char *,CInfoPBRec *),is_link(const CInfoPBRec *);
 extern void parent_path(char *);
 extern int volume_name(int,char *),encode_name(const char *,char *,size_t),same_name(const char *,const char *);

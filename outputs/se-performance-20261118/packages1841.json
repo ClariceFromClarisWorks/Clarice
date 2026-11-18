@@ -1,0 +1,98 @@
+[
+  {
+    "kind": "core",
+    "name": "Clarice",
+    "build": 2026111841,
+    "bytes": 279552,
+    "sha256": "9fbb410f4894d0c053ecd83532fc3ec081fb9482d50707bd608e7cb1108972c5",
+    "crc32": "b68e96ad"
+  },
+  {
+    "kind": "tool",
+    "name": "cp",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "mv",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "touch",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "rmdir",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "mkdir",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "rm",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "ln",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "readlink",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "hfsattr",
+    "build": 2026111841,
+    "bytes": 13268,
+    "sha256": "1151d169c41d46f70dc71424761adc4cfed9f267cf133f22a5177c4e1b0002f9",
+    "crc32": "2010ffdc"
+  },
+  {
+    "kind": "tool",
+    "name": "telnetd",
+    "build": 2026111841,
+    "bytes": 40784,
+    "sha256": "182f70563d73ef9c5865bed44a9f80862e99237b470cb3d8534765cbf5f8f3a1",
+    "crc32": "645b9922"
+  },
+  {
+    "kind": "tool",
+    "name": "seriald",
+    "build": 2026111841,
+    "bytes": 30060,
+    "sha256": "2513f8f36eb2eb6329e5814f6f41bf217c82ccc4a08a3c740c18a42d3e27e39c",
+    "crc32": "17412906"
+  }
+]

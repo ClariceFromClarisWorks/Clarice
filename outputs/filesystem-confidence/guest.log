@@ -1,0 +1,72 @@
+PASS setup 0
+PASS merged runtime 0
+PASS basic round trip 0
+PASS multiple source copy 0
+PASS same file reject 1
+PASS case alias reject 1
+PASS same file preserved 0
+PASS self directory reject 1
+PASS self copy absent 0
+PASS nonrecursive folder reject 1
+PASS nonempty rmdir reject 1
+PASS recursive tree 0
+PASS missing rm forced 0
+PASS missing rm error 1
+PASS dash operands 0
+PASS long name reject 1
+PASS max name 0
+PASS touch no create 0
+PASS locked target setup 0
+PASS locked target copy 1
+PASS locked target retained 0
+PASS locked rm forced 1
+PASS unlock 0
+PASS symlink seed 0
+PASS copy link 0
+PASS copy dangling 0
+PASS remove directory link 0
+PASS move link cross volume 0
+PASS destination link replace 0
+PASS cross volume forks 0
+PASS dot rm seed 0
+PASS dot rm must reject 1
+PASS dot rm data preserved 0
+PASS dotdot rm seed 0
+PASS dotdot rm must reject 1
+PASS dotdot rm data preserved 0
+PASS dot trailing slash reject 1
+PASS dotdot trailing slash reject 1
+PASS dot trailing sentinels 0
+PASS empty operand seed 0
+PASS empty rm reject 1
+PASS empty rm retained 0
+PASS empty cp source 1
+PASS empty cp target 1
+PASS empty mv source 1
+PASS empty mv target 1
+PASS empty touch 1
+PASS empty mkdir 1
+PASS empty readlink 1
+PASS empty cat 1
+PASS empty nonmutating 0
+PASS symlink cycle seed 0
+PASS symlink cycle read 1
+PASS symlink cycle removal 0
+PASS file as parent 1
+PASS multi source usage 2
+PASS usage no mutation 0
+PASS forced empty rm 0
+PASS traversal names 0
+PASS multi move 0
+PASS locked source preserve copy 0
+PASS locked copied remove refuses 1
+PASS source unchanged 0
+PASS unlock source copies 0
+PASS overwrite fork source 0
+PASS cwd rename 0
+PASS repeat cleanup 0 0
+PASS repeat cleanup 1 0
+PASS repeat cleanup 2 0
+PASS repeat cleanup 3 0
+PASS repeat cleanup 4 0
+RESULT 71 / 71

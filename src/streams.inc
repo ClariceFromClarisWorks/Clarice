@@ -5,6 +5,9 @@ static long stream_write(short ref,const void *data,unsigned long count){
  if(vstream_code(ref)){long n=vstream_write(ref,count);if(n<0)output_error=1;return n;}
  if(ref==-2){output_error=1;return -1;}
  if(ref<0){
+#if !defined(SH_HOST_TEST) || defined(SH_SESSION_HOST_TEST)
+ if(session_io){long n=session_io->write(session_io->context,ref==-3?2:1,data,count);if(n<0||(unsigned long)n!=count)output_error=1;return n;}
+#endif
 #ifdef SH_HOST_TEST
  fwrite(data,1,count,ref==-3?stderr:stdout);
 #else
@@ -23,6 +26,9 @@ static long cli_read(int fd,void *data,unsigned long count){
  if(fd!=0||input_ref==-2)return -1;if(!count)return 0;
  if(vstream_code(input_ref))return vstream_read(input_ref,data,count);
  if(input_ref<0){
+#if !defined(SH_HOST_TEST) || defined(SH_SESSION_HOST_TEST)
+ if(session_io)return session_io->read(session_io->context,data,count);
+#endif
 #ifdef SH_HOST_TEST
  return fread(data,1,count,stdin);
 #else

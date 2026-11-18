@@ -15,4 +15,4 @@ m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -c src/port
 m68k-apple-macos-ld -r --gc-sections -u clarice_main work/nano/objects/*.o work/ncurses/build/lib/libncurses.a $(m68k-apple-macos-gcc -print-libgcc-file-name) -o work/nano/nano-linked.o
 m68k-apple-macos-nm -u work/nano/nano-linked.o
 '
-python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/nano/nano-linked.o" "$ROOT/work/nano/nano.clx"
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/nano/nano-linked.o" "$ROOT/work/nano/nano.clx" --runtime 1.10

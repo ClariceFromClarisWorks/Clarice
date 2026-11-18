@@ -1,0 +1,28 @@
+[
+  {
+    "test": "serial login, variables, Ctrl+C and status recovery",
+    "pass": true
+  },
+  {
+    "test": "three interrupted receives, no target/temp files, reconnect and cleanup",
+    "pass": true,
+    "heap_largest": [
+      [
+        319552,
+        317302
+      ],
+      [
+        319552,
+        317302
+      ],
+      [
+        319552,
+        317302
+      ]
+    ]
+  },
+  {
+    "test": "logout and reconnect",
+    "pass": true
+  }
+]

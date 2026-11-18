@@ -1,0 +1,66 @@
+{
+  "source": {
+    "data_bytes": 14,
+    "resource_bytes": 33,
+    "data_sha256": "5e845c09b411cbab4eca242a5d4da4a95bc87d2d5b7d4fcc51846fddb2f2d09d",
+    "resource_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+    "type_creator": "TEXTTEST",
+    "timestamps": "0000000000000000"
+  },
+  "overwrite": {
+    "data_bytes": 14,
+    "resource_bytes": 33,
+    "data_sha256": "5e845c09b411cbab4eca242a5d4da4a95bc87d2d5b7d4fcc51846fddb2f2d09d",
+    "resource_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+    "type_creator": "TEXTTEST",
+    "timestamps": "0000000000000000"
+  },
+  "moved": {
+    "data_bytes": 14,
+    "resource_bytes": 33,
+    "data_sha256": "5e845c09b411cbab4eca242a5d4da4a95bc87d2d5b7d4fcc51846fddb2f2d09d",
+    "resource_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+    "type_creator": "TEXTTEST",
+    "timestamps": "0000000000000000"
+  },
+  "full-target": {
+    "data_bytes": 14,
+    "resource_bytes": 33,
+    "data_sha256": "5e845c09b411cbab4eca242a5d4da4a95bc87d2d5b7d4fcc51846fddb2f2d09d",
+    "resource_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+    "type_creator": "TEXTTEST",
+    "timestamps": "0000000000000000"
+  },
+  "cancel-target": {
+    "data_bytes": 14,
+    "resource_bytes": 33,
+    "data_sha256": "5e845c09b411cbab4eca242a5d4da4a95bc87d2d5b7d4fcc51846fddb2f2d09d",
+    "resource_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+    "type_creator": "TEXTTEST",
+    "timestamps": "0000000000000000"
+  },
+  "large": {
+    "data_bytes": 2097163,
+    "resource_bytes": 0,
+    "data_sha256": "95e01a11932d8d1e038cc0054b9537d638f5ea1a1219b8c69ac6159e120dbc15",
+    "resource_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "type_creator": "TEXTCLRC",
+    "timestamps": "e7236d1be7236e6f"
+  },
+  "largecopy": {
+    "data_bytes": 2097163,
+    "resource_bytes": 0,
+    "data_sha256": "95e01a11932d8d1e038cc0054b9537d638f5ea1a1219b8c69ac6159e120dbc15",
+    "resource_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "type_creator": "TEXTCLRC",
+    "timestamps": "e7236e73e7236e8c"
+  },
+  "recovered": {
+    "data_bytes": 2097163,
+    "resource_bytes": 0,
+    "data_sha256": "95e01a11932d8d1e038cc0054b9537d638f5ea1a1219b8c69ac6159e120dbc15",
+    "resource_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "type_creator": "TEXTCLRC",
+    "timestamps": "e72371f1e723720a"
+  }
+}

@@ -1,0 +1,1 @@
+PASS same-operation metadata: paths, links, dot/dotdot, volumes/spaces, missing/error, no stale result; 3->2 catalog calls

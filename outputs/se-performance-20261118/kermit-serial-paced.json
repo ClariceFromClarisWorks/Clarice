@@ -1,0 +1,12 @@
+{
+  "transport": "serial",
+  "peer": "C-Kermit 9.0.302",
+  "bytes": 4352,
+  "sha256": "bdf27aabdc6322fc4b9f1b2d4ee8e75a0b75100085a84ec2886453c84bf90031",
+  "exact_roundtrip": true,
+  "host_seconds": 52.858323709000004,
+  "scope": "Physical SE; MacBinary preserved as a container, not extracted",
+  "host_to_se_pacing_ms": 2,
+  "physical_device": "/dev/cu.usbmodem1401",
+  "bridge": "private host PTY, bounded queues; C-Kermit unchanged"
+}

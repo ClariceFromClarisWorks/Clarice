@@ -1,0 +1,47 @@
+[
+  {
+    "test": "working directory",
+    "command": "cd '/mnt/FS Audit A/confidence-final'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cd '/mnt/FS Audit A/confidence-final'; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\nconfidence-final > ",
+    "seconds": 0.21516279199999994
+  },
+  {
+    "test": "large seek creation",
+    "command": "dd if=moved of=large bs=1024 seek=2048 count=1",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "dd if=moved of=large bs=1024 seek=2048 count=1; printf '\\nREMOTE_END_2:%d\\n' $?\r\n0+1 records in\r\n0+1 records out\r\n\r\nREMOTE_END_2:0\r\nconfidence-final > ",
+    "seconds": 0.595196
+  },
+  {
+    "test": "large size",
+    "command": "ls -l large",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "ls -l large; printf '\\nREMOTE_END_3:%d\\n' $?\r\n---    2097163          0 2026-11-18 14:56 large\r\n\r\nREMOTE_END_3:0\r\nconfidence-final > ",
+    "seconds": 0.527237709
+  },
+  {
+    "test": "large copy and compare",
+    "command": "cp large largecopy && ls -l largecopy",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp large largecopy && ls -l largecopy; printf '\\nREMOTE_END_4:%d\\n' $?\r\n---    2097163          0 2026-11-18 15:02 largecopy\r\n\r\nREMOTE_END_4:0\r\nconfidence-final > ",
+    "seconds": 8.52130375
+  },
+  {
+    "test": "disk full target seed",
+    "command": "cp -p '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/confidence-final/full-target'",
+    "expected": 0,
+    "status": 0,
+    "passed": true,
+    "text": "cp -p '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/confidence-final/full-target'; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\nconfidence-final > ",
+    "seconds": 0.6866329579999988
+  }
+]

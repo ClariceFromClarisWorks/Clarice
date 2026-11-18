@@ -1,0 +1,618 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333726 largest=331730 image=29936 ticks=50 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=15 validate=2 imports=1 relocations=4 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cat /etc/clarice/installed.catalog",
+    "status": 0,
+    "text": "cat /etc/clarice/installed.catalog; printf '\\nREMOTE_END_2:%d\\n' $?\r\nCLARICE-INSTALLED 1\r\ntool\trepotwo\t1\t12604\t96cdfa42\r\ntool\trepoone\t1\t12604\t96cdfa42\r\ncore\tClarice\t2026111801\t0\t00000000\r\ncore\tClarice\t2026111801\t0\t00000000\r\ntool\trepoone\t2\t2736\ta28f71ec\r\ntool\trepobad\t1\t2736\ta28f71ec\r\ncore\tClarice\t2026111801\t0\t00000000\r\ncore\tClarice\t2026111801\t0\t00000000\r\ncore\tClarice\t2026111801\t0\t00000000\r\ntool\treposlow\t1\t12604\t96cdfa42\r\ncore\tClarice\t2026111801\t0\t00000000\r\ntool\ttelnet\t2026111802\t25048\t4411fd17\r\ntool\tftp\t2026111802\t19176\t33c4a72b\r\ntool\tping\t2026111802\t3944\t2114b55c\r\ntool\tipconfig\t2026111802\t1756\t2ccd7316\r\ntool\tdd\t2026111802\t18264\t30911e06\r\ntool\tmktemp\t2026111802\t18092\tc8f5c164\r\ntool\tprintenv\t2026111802\t13168\t88482482\r\ntool\tsleep\t2026111802\t12688\t6a39b8f5\r\ntool\tfree\t2026111802\t2736\ta28f71ec\r\ntool\tcksum\t2026111802\t14808\tcd02b705\r\ntool\tcmp\t2026111802\t13564\t663dedfc\r\ntool\tclarice\t2026111802\t113312\tee4df520\r\ntool\twget\t2026111802\t23244\t42e1314b\r\ntool\tkermit\t2026111802\t25400\t81296b0a\r\ntool\tdirname\t2026111802\t11948\tee16b635\r\ntool\tbasename\t2026111802\t12100\tbb624aa1\r\ntool\tmore\t2026111802\t6008\tf94c8c88\r\ntool\tod\t2026111802\t6008\tf94c8c88\r\ntool\tfile\t2026111802\t12892\t285ea017\r\ntool\tdu\t2026111802\t12892\t285ea017\r\ntool\tfind\t2026111802\t12892\t285ea017\r\ntool\thfsattr\t2026111802\t12996\t78339b94\r\ntool\treadlink\t2026111802\t12996\t78339b94\r\ntool\tln\t2026111802\t12996\t78339b94\r\ntool\trm\t2026111802\t12996\t78339b94\r\ntool\tmkdir\t2026111802\t12996\t78339b94\r\ntool\trmdir\t2026111802\t12996\t78339b94\r\ntool\ttouch\t2026111802\t12996\t78339b94\r\ntool\tmv\t2026111802\t12996\t78339b94\r\ntool\tcp\t2026111802\t12996\t78339b94\r\ntool\tsort\t2026111802\t40016\tb1e7a171\r\ntool\ttail\t2026111802\t17924\t14bc1ce3\r\ntool\ttee\t2026111802\t13460\t09c78836\r\ntool\tuniq\t2026111802\t16716\t7ef83872\r\ntool\ttr\t2026111802\t32456\t9272383c\r\ntool\tcut\t2026111802\t18868\tdb9a8735\r\ntool\thead\t2026111802\t15620\tffff63a7\r\ntool\twc\t2026111802\t15496\t612d2ee0\r\ntool\tserial\t2026111802\t9552\tc43bf37e\r\ntool\tawk\t2026111802\t188956\t44b0e0d6\r\ntool\tsed\t2026111802\t65760\t6714d29c\r\ntool\tgrep\t2026111802\t46044\tba928b81\r\ntool\tbenchscan\t2026111802\t12604\t96cdfa42\r\ntool\tbenchls\t2026111802\t12604\t96cdfa42\r\ntool\tcat\t2026111802\t12604\t96cdfa42\r\ntool\tdf\t2026111802\t12604\t96cdfa42\r\ntool\tls\t2026111802\t12604\t96cdfa42\r\ncore\tClarice\t2026111802\t271104\t4011f148\r\ntool\trepoone\t4\t12604\t96cdfa42\r\ntool\treporestart\t1\t12604\t96cdfa42\r\ntool\ttelnet\t2026111804\t25048\t4411fd17\r\ntool\tftp\t2026111804\t19176\t33c4a72b\r\ntool\tping\t2026111804\t3944\t2114b55c\r\ntool\tipconfig\t2026111804\t1756\t2ccd7316\r\ntool\tdd\t2026111804\t18264\t30911e06\r\ntool\tmktemp\t2026111804\t18092\tc8f5c164\r\ntool\tprintenv\t2026111804\t13168\t88482482\r\ntool\tsleep\t2026111804\t12688\t6a39b8f5\r\ntool\tfree\t2026111804\t2736\ta28f71ec\r\ntool\tcksum\t2026111804\t14808\tcd02b705\r\ntool\tcmp\t2026111804\t13564\t663dedfc\r\ntool\tclarice\t2026111804\t113312\tee4df520\r\ntool\twget\t2026111804\t23244\t42e1314b\r\ntool\tkermit\t2026111804\t25400\t81296b0a\r\ntool\tdirname\t2026111804\t11948\tee16b635\r\ntool\tbasename\t2026111804\t12100\tbb624aa1\r\ntool\tmore\t2026111804\t6008\tf94c8c88\r\ntool\tod\t2026111804\t6008\tf94c8c88\r\ntool\tfile\t2026111804\t12892\t285ea017\r\ntool\tdu\t2026111804\t12892\t285ea017\r\ntool\tfind\t2026111804\t12892\t285ea017\r\ntool\thfsattr\t2026111804\t12996\t78339b94\r\ntool\treadlink\t2026111804\t12996\t78339b94\r\ntool\tln\t2026111804\t12996\t78339b94\r\ntool\trm\t2026111804\t12996\t78339b94\r\ntool\tmkdir\t2026111804\t12996\t78339b94\r\ntool\trmdir\t2026111804\t12996\t78339b94\r\ntool\ttouch\t2026111804\t12996\t78339b94\r\ntool\tmv\t2026111804\t12996\t78339b94\r\ntool\tcp\t2026111804\t12996\t78339b94\r\ntool\tsort\t2026111804\t40016\tb1e7a171\r\ntool\ttail\t2026111804\t17924\t14bc1ce3\r\ntool\ttee\t2026111804\t13460\t09c78836\r\ntool\tuniq\t2026111804\t16716\t7ef83872\r\ntool\ttr\t2026111804\t32456\t9272383c\r\ntool\tcut\t2026111804\t18868\tdb9a8735\r\ntool\thead\t2026111804\t15620\tffff63a7\r\ntool\twc\t2026111804\t15496\t612d2ee0\r\ntool\tserial\t2026111804\t9552\tc43bf37e\r\ntool\tawk\t2026111804\t188956\t44b0e0d6\r\ntool\tsed\t2026111804\t65760\t6714d29c\r\ntool\tgrep\t2026111804\t46044\tba928b81\r\ntool\tbenchscan\t2026111804\t12604\t96cdfa42\r\ntool\tbenchls\t2026111804\t12604\t96cdfa42\r\ntool\tcat\t2026111804\t12604\t96cdfa42\r\ntool\tdf\t2026111804\t12604\t96cdfa42\r\ntool\tls\t2026111804\t12604\t96cdfa42\r\ncore\tClarice\t2026111804\t275328\t3199e80b\r\ntool\ttelnetd\t2026111804\t23636\td5d23b09\r\ntool\ttelnetd\t2026111805\t27116\t8c50693b\r\ntool\ttelnetd\t2026111806\t27536\tb69f2147\r\ntool\ttelnetd\t2026111807\t28468\taa4a43dd\r\ntool\ttelnet\t2026111808\t25048\t4411fd17\r\ntool\tftp\t2026111808\t19176\t33c4a72b\r\ntool\tping\t2026111808\t3944\t2114b55c\r\ntool\tipconfig\t2026111808\t1756\t2ccd7316\r\ntool\tdd\t2026111808\t18264\t30911e06\r\ntool\tmktemp\t2026111808\t18092\tc8f5c164\r\ntool\tprintenv\t2026111808\t13168\t88482482\r\ntool\tsleep\t2026111808\t12688\t6a39b8f5\r\ntool\tfree\t2026111808\t2736\ta28f71ec\r\ntool\tcksum\t2026111808\t14808\tcd02b705\r\ntool\tcmp\t2026111808\t13564\t663dedfc\r\ntool\tclarice\t2026111808\t113312\tee4df520\r\ntool\twget\t2026111808\t23244\t42e1314b\r\ntool\tkermit\t2026111808\t25400\t81296b0a\r\ntool\tdirname\t2026111808\t11948\tee16b635\r\ntool\tbasename\t2026111808\t12100\tbb624aa1\r\ntool\tmore\t2026111808\t6008\tf94c8c88\r\ntool\tod\t2026111808\t6008\tf94c8c88\r\ntool\tfile\t2026111808\t12892\t285ea017\r\ntool\tdu\t2026111808\t12892\t285ea017\r\ntool\tfind\t2026111808\t12892\t285ea017\r\ntool\thfsattr\t2026111808\t12996\t78339b94\r\ntool\treadlink\t2026111808\t12996\t78339b94\r\ntool\tln\t2026111808\t12996\t78339b94\r\ntool\trm\t2026111808\t12996\t78339b94\r\ntool\tmkdir\t2026111808\t12996\t78339b94\r\ntool\trmdir\t2026111808\t12996\t78339b94\r\ntool\ttouch\t2026111808\t12996\t78339b94\r\ntool\tmv\t2026111808\t12996\t78339b94\r\ntool\tcp\t2026111808\t12996\t78339b94\r\ntool\tsort\t2026111808\t40016\tb1e7a171\r\ntool\ttail\t2026111808\t17924\t14bc1ce3\r\ntool\ttee\t2026111808\t13460\t09c78836\r\ntool\tuniq\t2026111808\t16716\t7ef83872\r\ntool\ttr\t2026111808\t32456\t9272383c\r\ntool\tcut\t2026111808\t18868\tdb9a8735\r\ntool\thead\t2026111808\t15620\tffff63a7\r\ntool\twc\t2026111808\t15496\t612d2ee0\r\ntool\tserial\t2026111808\t9552\tc43bf37e\r\ntool\tawk\t2026111808\t188956\t44b0e0d6\r\ntool\tsed\t2026111808\t65760\t6714d29c\r\ntool\tgrep\t2026111808\t46044\tba928b81\r\ntool\tbenchscan\t2026111808\t12604\t96cdfa42\r\ntool\tbenchls\t2026111808\t12604\t96cdfa42\r\ntool\tcat\t2026111808\t12604\t96cdfa42\r\ntool\tdf\t2026111808\t12604\t96cdfa42\r\ntool\tls\t2026111808\t12604\t96cdfa42\r\ncore\tClarice\t2026111808\t276736\t8d4027b0\r\ntool\ttelnetd\t2026111809\t36892\t40df24e0\r\ntool\ttelnet\t2026111810\t25048\t4411fd17\r\ntool\tftp\t2026111810\t19176\t33c4a72b\r\ntool\tping\t2026111810\t3944\t2114b55c\r\ntool\tipconfig\t2026111810\t1756\t2ccd7316\r\ntool\tdd\t2026111810\t18264\t30911e06\r\ntool\tmktemp\t2026111810\t18092\tc8f5c164\r\ntool\tprintenv\t2026111810\t13168\t88482482\r\ntool\tsleep\t2026111810\t12688\t6a39b8f5\r\ntool\tfree\t2026111810\t2736\ta28f71ec\r\ntool\tcksum\t2026111810\t14808\tcd02b705\r\ntool\tcmp\t2026111810\t13564\t663dedfc\r\ntool\tclarice\t2026111810\t113312\tee4df520\r\ntool\twget\t2026111810\t23244\t42e1314b\r\ntool\tkermit\t2026111810\t25400\t81296b0a\r\ntool\tdirname\t2026111810\t11948\tee16b635\r\ntool\tbasename\t2026111810\t12100\tbb624aa1\r\ntool\tmore\t2026111810\t6008\tf94c8c88\r\ntool\tod\t2026111810\t6008\tf94c8c88\r\ntool\tfile\t2026111810\t12892\t285ea017\r\ntool\tdu\t2026111810\t12892\t285ea017\r\ntool\tfind\t2026111810\t12892\t285ea017\r\ntool\thfsattr\t2026111810\t12996\t78339b94\r\ntool\treadlink\t2026111810\t12996\t78339b94\r\ntool\tln\t2026111810\t12996\t78339b94\r\ntool\trm\t2026111810\t12996\t78339b94\r\ntool\tmkdir\t2026111810\t12996\t78339b94\r\ntool\trmdir\t2026111810\t12996\t78339b94\r\ntool\ttouch\t2026111810\t12996\t78339b94\r\ntool\tmv\t2026111810\t12996\t78339b94\r\ntool\tcp\t2026111810\t12996\t78339b94\r\ntool\tsort\t2026111810\t40016\tb1e7a171\r\ntool\ttail\t2026111810\t17924\t14bc1ce3\r\ntool\ttee\t2026111810\t13460\t09c78836\r\ntool\tuniq\t2026111810\t16716\t7ef83872\r\ntool\ttr\t2026111810\t32456\t9272383c\r\ntool\tcut\t2026111810\t18868\tdb9a8735\r\ntool\thead\t2026111810\t15620\tffff63a7\r\ntool\twc\t2026111810\t15496\t612d2ee0\r\ntool\tserial\t2026111810\t9552\tc43bf37e\r\ntool\tawk\t2026111810\t188956\t44b0e0d6\r\ntool\tsed\t2026111810\t65760\t6714d29c\r\ntool\tgrep\t2026111810\t46044\tba928b81\r\ntool\tbenchscan\t2026111810\t12604\t96cdfa42\r\ntool\tbenchls\t2026111810\t12604\t96cdfa42\r\ntool\tcat\t2026111810\t12604\t96cdfa42\r\ntool\tdf\t2026111810\t12604\t96cdfa42\r\ntool\tls\t2026111810\t12604\t96cdfa42\r\ncore\tClarice\t2026111810\t276736\t5fd7ae9f\r\ntool\ttelnetd\t2026111811\t37248\t8015a529\r\ncore\tClarice\t2026111812\t278528\t2e6eea42\r\ntool\tseriald\t2026111813\t28936\t7e6af93d\r\ntool\ttelnetd\t2026111813\t39008\t7998e047\r\ntool\ttelnet\t2026111812\t25048\t4411fd17\r\ntool\tftp\t2026111812\t19176\t33c4a72b\r\ntool\tping\t2026111812\t3944\t2114b55c\r\ntool\tipconfig\t2026111812\t1756\t2ccd7316\r\ntool\tdd\t2026111812\t18264\t30911e06\r\ntool\tmktemp\t2026111812\t18092\tc8f5c164\r\ntool\tprintenv\t2026111812\t13168\t88482482\r\ntool\tsleep\t2026111812\t12688\t6a39b8f5\r\ntool\tfree\t2026111812\t2736\ta28f71ec\r\ntool\tcksum\t2026111812\t14808\tcd02b705\r\ntool\tcmp\t2026111812\t13564\t663dedfc\r\ntool\tclarice\t2026111812\t113312\tee4df520\r\ntool\twget\t2026111812\t23244\t42e1314b\r\ntool\tkermit\t2026111812\t25904\t1acbce9e\r\ntool\tdirname\t2026111812\t11948\tee16b635\r\ntool\tbasename\t2026111812\t12100\tbb624aa1\r\ntool\tmore\t2026111812\t6008\tf94c8c88\r\ntool\tod\t2026111812\t6008\tf94c8c88\r\ntool\tfile\t2026111812\t12892\t285ea017\r\ntool\tdu\t2026111812\t12892\t285ea017\r\ntool\tfind\t2026111812\t12892\t285ea017\r\ntool\thfsattr\t2026111812\t12996\t78339b94\r\ntool\treadlink\t2026111812\t12996\t78339b94\r\ntool\tln\t2026111812\t12996\t78339b94\r\ntool\trm\t2026111812\t12996\t78339b94\r\ntool\tmkdir\t2026111812\t12996\t78339b94\r\ntool\trmdir\t2026111812\t12996\t78339b94\r\ntool\ttouch\t2026111812\t12996\t78339b94\r\ntool\tmv\t2026111812\t12996\t78339b94\r\ntool\tcp\t2026111812\t12996\t78339b94\r\ntool\tsort\t2026111812\t40016\tb1e7a171\r\ntool\ttail\t2026111812\t17924\t14bc1ce3\r\ntool\ttee\t2026111812\t13460\t09c78836\r\ntool\tuniq\t2026111812\t16716\t7ef83872\r\ntool\ttr\t2026111812\t32456\t9272383c\r\ntool\tcut\t2026111812\t18868\tdb9a8735\r\ntool\thead\t2026111812\t15620\tffff63a7\r\ntool\twc\t2026111812\t15496\t612d2ee0\r\ntool\tserial\t2026111812\t9552\tc43bf37e\r\ntool\tawk\t2026111812\t188956\t44b0e0d6\r\ntool\tsed\t2026111812\t65760\t6714d29c\r\ntool\tgrep\t2026111812\t46044\tba928b81\r\ntool\tbenchscan\t2026111812\t12604\t96cdfa42\r\ntool\tbenchls\t2026111812\t12604\t96cdfa42\r\ntool\tcat\t2026111812\t12604\t96cdfa42\r\ntool\tdf\t2026111812\t12604\t96cdfa42\r\ntool\tls\t2026111812\t12604\t96cdfa42\r\ntool\tseriald\t2026111814\t28936\t7e6af93d\r\ntool\ttelnetd\t2026111814\t39280\t99b549ea\r\ntool\ttelnet\t2026111815\t25048\t4411fd17\r\ntool\tftp\t2026111815\t19176\t33c4a72b\r\ntool\tping\t2026111815\t3944\t2114b55c\r\ntool\tipconfig\t2026111815\t1756\t2ccd7316\r\ntool\tdd\t2026111815\t18264\t30911e06\r\ntool\tmktemp\t2026111815\t18092\tc8f5c164\r\ntool\tprintenv\t2026111815\t13168\t88482482\r\ntool\tsleep\t2026111815\t12688\t6a39b8f5\r\ntool\tfree\t2026111815\t2736\ta28f71ec\r\ntool\tcksum\t2026111815\t14808\tcd02b705\r\ntool\tcmp\t2026111815\t13564\t663dedfc\r\ntool\tclarice\t2026111815\t113312\tee4df520\r\ntool\twget\t2026111815\t23244\t42e1314b\r\ntool\tkermit\t2026111815\t25904\t1acbce9e\r\ntool\tdirname\t2026111815\t11948\tee16b635\r\ntool\tbasename\t2026111815\t12100\tbb624aa1\r\ntool\tmore\t2026111815\t6008\tf94c8c88\r\ntool\tod\t2026111815\t6008\tf94c8c88\r\ntool\tfile\t2026111815\t12892\t285ea017\r\ntool\tdu\t2026111815\t12892\t285ea017\r\ntool\tfind\t2026111815\t12892\t285ea017\r\ntool\thfsattr\t2026111815\t12996\t78339b94\r\ntool\treadlink\t2026111815\t12996\t78339b94\r\ntool\tln\t2026111815\t12996\t78339b94\r\ntool\trm\t2026111815\t12996\t78339b94\r\ntool\tmkdir\t2026111815\t12996\t78339b94\r\ntool\trmdir\t2026111815\t12996\t78339b94\r\ntool\ttouch\t2026111815\t12996\t78339b94\r\ntool\tmv\t2026111815\t12996\t78339b94\r\ntool\tcp\t2026111815\t12996\t78339b94\r\ntool\tsort\t2026111815\t40016\tb1e7a171\r\ntool\ttail\t2026111815\t17924\t14bc1ce3\r\ntool\ttee\t2026111815\t13460\t09c78836\r\ntool\tuniq\t2026111815\t16716\t7ef83872\r\ntool\ttr\t2026111815\t32456\t9272383c\r\ntool\tcut\t2026111815\t18868\tdb9a8735\r\ntool\thead\t2026111815\t15620\tffff63a7\r\ntool\twc\t2026111815\t15496\t612d2ee0\r\ntool\tserial\t2026111815\t9552\tc43bf37e\r\ntool\tawk\t2026111815\t188956\t44b0e0d6\r\ntool\tsed\t2026111815\t65760\t6714d29c\r\ntool\tgrep\t2026111815\t46044\tba928b81\r\ntool\tbenchscan\t2026111815\t12604\t96cdfa42\r\ntool\tbenchls\t2026111815\t12604\t96cdfa42\r\ntool\tcat\t2026111815\t12604\t96cdfa42\r\ntool\tdf\t2026111815\t12604\t96cdfa42\r\ntool\tls\t2026111815\t12604\t96cdfa42\r\ncore\tClarice\t2026111815\t280320\t9a530263\r\ntool\tnano-profile\t2026111815\t269508\ta76f8452\r\ntool\ttelnet\t2026111816\t25048\t4411fd17\r\ntool\tftp\t2026111816\t19176\t33c4a72b\r\ntool\tping\t2026111816\t3944\t2114b55c\r\ntool\tipconfig\t2026111816\t1756\t2ccd7316\r\ntool\tdd\t2026111816\t18264\t30911e06\r\ntool\tmktemp\t2026111816\t18092\tc8f5c164\r\ntool\tprintenv\t2026111816\t13168\t88482482\r\ntool\tsleep\t2026111816\t12688\t6a39b8f5\r\ntool\tfree\t2026111816\t2736\ta28f71ec\r\ntool\tcksum\t2026111816\t14808\tcd02b705\r\ntool\tcmp\t2026111816\t13564\t663dedfc\r\ntool\tclarice\t2026111816\t113312\tee4df520\r\ntool\twget\t2026111816\t23244\t42e1314b\r\ntool\tkermit\t2026111816\t25904\t1acbce9e\r\ntool\tdirname\t2026111816\t11948\tee16b635\r\ntool\tbasename\t2026111816\t12100\tbb624aa1\r\ntool\tmore\t2026111816\t6008\tf94c8c88\r\ntool\tod\t2026111816\t6008\tf94c8c88\r\ntool\tfile\t2026111816\t12892\t285ea017\r\ntool\tdu\t2026111816\t12892\t285ea017\r\ntool\tfind\t2026111816\t12892\t285ea017\r\ntool\thfsattr\t2026111816\t12996\t78339b94\r\ntool\treadlink\t2026111816\t12996\t78339b94\r\ntool\tln\t2026111816\t12996\t78339b94\r\ntool\trm\t2026111816\t12996\t78339b94\r\ntool\tmkdir\t2026111816\t12996\t78339b94\r\ntool\trmdir\t2026111816\t12996\t78339b94\r\ntool\ttouch\t2026111816\t12996\t78339b94\r\ntool\tmv\t2026111816\t12996\t78339b94\r\ntool\tcp\t2026111816\t12996\t78339b94\r\ntool\tsort\t2026111816\t40016\tb1e7a171\r\ntool\ttail\t2026111816\t17924\t14bc1ce3\r\ntool\ttee\t2026111816\t13460\t09c78836\r\ntool\tuniq\t2026111816\t16716\t7ef83872\r\ntool\ttr\t2026111816\t32456\t9272383c\r\ntool\tcut\t2026111816\t18868\tdb9a8735\r\ntool\thead\t2026111816\t15620\tffff63a7\r\ntool\twc\t2026111816\t15496\t612d2ee0\r\ntool\tserial\t2026111816\t9552\tc43bf37e\r\ntool\tawk\t2026111816\t188956\t44b0e0d6\r\ntool\tsed\t2026111816\t65760\t6714d29c\r\ntool\tgrep\t2026111816\t46044\tba928b81\r\ntool\tbenchscan\t2026111816\t12604\t96cdfa42\r\ntool\tbenchls\t2026111816\t12604\t96cdfa42\r\ntool\tcat\t2026111816\t12604\t96cdfa42\r\ntool\tdf\t2026111816\t12604\t96cdfa42\r\ntool\tls\t2026111816\t12604\t96cdfa42\r\ncore\tClarice\t2026111816\t280576\tdc5b4cbc\r\ntool\tnano-profile\t2026111816\t269384\td7ffc822\r\ntool\tnano\t2026111815\t269508\ta76f8452\r\ntool\tnano-profile\t2026111817\t269508\ta76f8452\r\ntool\tnano-profile\t2026111818\t269384\td7ffc822\r\ntool\ttelnet\t2026111819\t25048\t4411fd17\r\ntool\tftp\t2026111819\t19176\t33c4a72b\r\ntool\tping\t2026111819\t3944\t2114b55c\r\ntool\tipconfig\t2026111819\t1756\t2ccd7316\r\ntool\tdd\t2026111819\t18264\t30911e06\r\ntool\tmktemp\t2026111819\t18092\tc8f5c164\r\ntool\tprintenv\t2026111819\t13168\t88482482\r\ntool\tsleep\t2026111819\t12688\t6a39b8f5\r\ntool\tfree\t2026111819\t2736\ta28f71ec\r\ntool\tcksum\t2026111819\t14808\tcd02b705\r\ntool\tcmp\t2026111819\t13564\t663dedfc\r\ntool\tclarice\t2026111819\t113312\tee4df520\r\ntool\twget\t2026111819\t23244\t42e1314b\r\ntool\tkermit\t2026111819\t25904\t1acbce9e\r\ntool\tdirname\t2026111819\t11948\tee16b635\r\ntool\tbasename\t2026111819\t12100\tbb624aa1\r\ntool\tmore\t2026111819\t6008\tf94c8c88\r\ntool\tod\t2026111819\t6008\tf94c8c88\r\ntool\tfile\t2026111819\t12892\t285ea017\r\ntool\tdu\t2026111819\t12892\t285ea017\r\ntool\tfind\t2026111819\t12892\t285ea017\r\ntool\thfsattr\t2026111819\t12996\t78339b94\r\ntool\treadlink\t2026111819\t12996\t78339b94\r\ntool\tln\t2026111819\t12996\t78339b94\r\ntool\trm\t2026111819\t12996\t78339b94\r\ntool\tmkdir\t2026111819\t12996\t78339b94\r\ntool\trmdir\t2026111819\t12996\t78339b94\r\ntool\ttouch\t2026111819\t12996\t78339b94\r\ntool\tmv\t2026111819\t12996\t78339b94\r\ntool\tcp\t2026111819\t12996\t78339b94\r\ntool\tsort\t2026111819\t40016\tb1e7a171\r\ntool\ttail\t2026111819\t17924\t14bc1ce3\r\ntool\ttee\t2026111819\t13460\t09c78836\r\ntool\tuniq\t2026111819\t16716\t7ef83872\r\ntool\ttr\t2026111819\t32456\t9272383c\r\ntool\tcut\t2026111819\t18868\tdb9a8735\r\ntool\thead\t2026111819\t15620\tffff63a7\r\ntool\twc\t2026111819\t15496\t612d2ee0\r\ntool\tserial\t2026111819\t9552\tc43bf37e\r\ntool\tawk\t2026111819\t188956\t44b0e0d6\r\ntool\tsed\t2026111819\t65760\t6714d29c\r\ntool\tgrep\t2026111819\t46044\tba928b81\r\ntool\tbenchscan\t2026111819\t12604\t96cdfa42\r\ntool\tbenchls\t2026111819\t12604\t96cdfa42\r\ntool\tcat\t2026111819\t12604\t96cdfa42\r\ntool\tdf\t2026111819\t12604\t96cdfa42\r\ntool\tls\t2026111819\t12604\t96cdfa42\r\ncore\tClarice\t2026111819\t280704\tc4688916\r\ntool\tnano-profile\t2026111820\t269748\t9853d7b1\r\ntool\tnano-profile\t2026111822\t269384\td7ffc822\r\ntool\ttelnet\t2026111821\t25048\t4411fd17\r\ntool\tftp\t2026111821\t19176\t33c4a72b\r\ntool\tping\t2026111821\t3944\t2114b55c\r\ntool\tipconfig\t2026111821\t1756\t2ccd7316\r\ntool\tdd\t2026111821\t18264\t30911e06\r\ntool\tmktemp\t2026111821\t18092\tc8f5c164\r\ntool\tprintenv\t2026111821\t13168\t88482482\r\ntool\tsleep\t2026111821\t12688\t6a39b8f5\r\ntool\tfree\t2026111821\t2736\ta28f71ec\r\ntool\tcksum\t2026111821\t14808\tcd02b705\r\ntool\tcmp\t2026111821\t13564\t663dedfc\r\ntool\tclarice\t2026111821\t113312\tee4df520\r\ntool\twget\t2026111821\t23244\t42e1314b\r\ntool\tkermit\t2026111821\t25904\t1acbce9e\r\ntool\tdirname\t2026111821\t11948\tee16b635\r\ntool\tbasename\t2026111821\t12100\tbb624aa1\r\ntool\tmore\t2026111821\t6008\tf94c8c88\r\ntool\tod\t2026111821\t6008\tf94c8c88\r\ntool\tfile\t2026111821\t12892\t285ea017\r\ntool\tdu\t2026111821\t12892\t285ea017\r\ntool\tfind\t2026111821\t12892\t285ea017\r\ntool\thfsattr\t2026111821\t12996\t78339b94\r\ntool\treadlink\t2026111821\t12996\t78339b94\r\ntool\tln\t2026111821\t12996\t78339b94\r\ntool\trm\t2026111821\t12996\t78339b94\r\ntool\tmkdir\t2026111821\t12996\t78339b94\r\ntool\trmdir\t2026111821\t12996\t78339b94\r\ntool\ttouch\t2026111821\t12996\t78339b94\r\ntool\tmv\t2026111821\t12996\t78339b94\r\ntool\tcp\t2026111821\t12996\t78339b94\r\ntool\tsort\t2026111821\t40016\tb1e7a171\r\ntool\ttail\t2026111821\t17924\t14bc1ce3\r\ntool\ttee\t2026111821\t13460\t09c78836\r\ntool\tuniq\t2026111821\t16716\t7ef83872\r\ntool\ttr\t2026111821\t32456\t9272383c\r\ntool\tcut\t2026111821\t18868\tdb9a8735\r\ntool\thead\t2026111821\t15620\tffff63a7\r\ntool\twc\t2026111821\t15496\t612d2ee0\r\ntool\tserial\t2026111821\t9552\tc43bf37e\r\ntool\tawk\t2026111821\t188956\t44b0e0d6\r\ntool\tsed\t2026111821\t65760\t6714d29c\r\ntool\tgrep\t2026111821\t46044\tba928b81\r\ntool\tbenchscan\t2026111821\t12604\t96cdfa42\r\ntool\tbenchls\t2026111821\t12604\t96cdfa42\r\ntool\tcat\t2026111821\t12604\t96cdfa42\r\ntool\tdf\t2026111821\t12604\t96cdfa42\r\ntool\tls\t2026111821\t12604\t96cdfa42\r\ncore\tClarice\t2026111821\t280576\tbaac488d\r\ntool\tnano-profile\t2026111824\t269420\tba4de7f8\r\ntool\ttelnet\t2026111823\t25048\t4411fd17\r\ntool\tftp\t2026111823\t19176\t33c4a72b\r\ntool\tping\t2026111823\t3944\t2114b55c\r\ntool\tipconfig\t2026111823\t1756\t2ccd7316\r\ntool\tdd\t2026111823\t18264\t30911e06\r\ntool\tmktemp\t2026111823\t18092\tc8f5c164\r\ntool\tprintenv\t2026111823\t13168\t88482482\r\ntool\tsleep\t2026111823\t12688\t6a39b8f5\r\ntool\tfree\t2026111823\t2736\ta28f71ec\r\ntool\tcksum\t2026111823\t14808\tcd02b705\r\ntool\tcmp\t2026111823\t13564\t663dedfc\r\ntool\tclarice\t2026111823\t113312\tee4df520\r\ntool\twget\t2026111823\t23244\t42e1314b\r\ntool\tkermit\t2026111823\t25904\t1acbce9e\r\ntool\tdirname\t2026111823\t11948\tee16b635\r\ntool\tbasename\t2026111823\t12100\tbb624aa1\r\ntool\tmore\t2026111823\t6008\tf94c8c88\r\ntool\tod\t2026111823\t6008\tf94c8c88\r\ntool\tfile\t2026111823\t12892\t285ea017\r\ntool\tdu\t2026111823\t12892\t285ea017\r\ntool\tfind\t2026111823\t12892\t285ea017\r\ntool\thfsattr\t2026111823\t12996\t78339b94\r\ntool\treadlink\t2026111823\t12996\t78339b94\r\ntool\tln\t2026111823\t12996\t78339b94\r\ntool\trm\t2026111823\t12996\t78339b94\r\ntool\tmkdir\t2026111823\t12996\t78339b94\r\ntool\trmdir\t2026111823\t12996\t78339b94\r\ntool\ttouch\t2026111823\t12996\t78339b94\r\ntool\tmv\t2026111823\t12996\t78339b94\r\ntool\tcp\t2026111823\t12996\t78339b94\r\ntool\tsort\t2026111823\t40016\tb1e7a171\r\ntool\ttail\t2026111823\t17924\t14bc1ce3\r\ntool\ttee\t2026111823\t13460\t09c78836\r\ntool\tuniq\t2026111823\t16716\t7ef83872\r\ntool\ttr\t2026111823\t32456\t9272383c\r\ntool\tcut\t2026111823\t18868\tdb9a8735\r\ntool\thead\t2026111823\t15620\tffff63a7\r\ntool\twc\t2026111823\t15496\t612d2ee0\r\ntool\tserial\t2026111823\t9552\tc43bf37e\r\ntool\tawk\t2026111823\t188956\t44b0e0d6\r\ntool\tsed\t2026111823\t65760\t6714d29c\r\ntool\tgrep\t2026111823\t46044\tba928b81\r\ntool\tbenchscan\t2026111823\t12604\t96cdfa42\r\ntool\tbenchls\t2026111823\t12604\t96cdfa42\r\ntool\tcat\t2026111823\t12604\t96cdfa42\r\ntool\tdf\t2026111823\t12604\t96cdfa42\r\ntool\tls\t2026111823\t12604\t96cdfa42\r\ncore\tClarice\t2026111823\t280576\t30b90c78\r\ntool\tnano-profile\t2026111825\t269384\td7ffc822\r\ntool\tnano-profile\t2026111826\t269420\tba4de7f8\r\ntool\tnano\t2026111827\t268900\td9fe60af\r\ntool\txvi\t2026111841\t155908\t954ca38d\r\ntool\txvi\t2026111842\t155976\t997ad056\r\ntool\txvi\t2026111843\t156044\tbd8f9d4d\r\ntool\tvi\t2026111861\t256564\tb7781a2a\r\ntool\tvi\t2026111862\t256644\t2ff39706\r\ntool\tvi\t2026111864\t256780\tb76ea7b5\r\ntool\tbbvi\t2026111870\t56492\t9447d79b\r\ntool\tbbvi\t2026111871\t56704\t571e47d9\r\ntool\tbbdirname\t2026111881\t12644\t88bb7b48\r\ntool\tbbbasename\t2026111881\t19356\t81409644\r\ntool\tbbcksum\t2026111881\t21688\t99b87dcf\r\ntool\tbbtee\t2026111881\t21716\tbfc6714b\r\ntool\tbbuniq\t2026111881\t21800\tab14d46c\r\ntool\tbbtail\t2026111881\t24528\tda40e9cf\r\ntool\tbbhead\t2026111881\t20600\te84b11f6\r\ntool\tbbcut\t2026111881\t22984\t74ab9e1d\r\ntool\tbbcat\t2026111881\t20236\t97a83968\r\ntool\tbbgrep\t2026111881\t52568\tbb837238\r\ntool\tbbsed\t2026111881\t58428\t9dea07be\r\ntool\tbbsort\t2026111881\t28756\t9421e18d\r\ntool\tbbcmp\t2026111881\t21448\t135dc9b3\r\ntool\tbbtr\t2026111881\t21464\t409f41c3\r\ntool\tbbwc\t2026111881\t21124\te2a4ff21\r\ntool\ttelnet\t2026111882\t25048\t4411fd17\r\ntool\tftp\t2026111882\t19176\t33c4a72b\r\ntool\tping\t2026111882\t3944\t2114b55c\r\ntool\tipconfig\t2026111882\t1756\t2ccd7316\r\ntool\tdd\t2026111882\t18264\t30911e06\r\ntool\tmktemp\t2026111882\t18092\tc8f5c164\r\ntool\tprintenv\t2026111882\t13168\t88482482\r\ntool\tsleep\t2026111882\t12688\t6a39b8f5\r\ntool\tfree\t2026111882\t2736\ta28f71ec\r\ntool\tcksum\t2026111882\t14808\tcd02b705\r\ntool\tcmp\t2026111882\t13564\t663dedfc\r\ntool\tclarice\t2026111882\t113312\t09044410\r\ntool\twget\t2026111882\t23244\t42e1314b\r\ntool\tkermit\t2026111882\t25904\t1acbce9e\r\ntool\tdirname\t2026111882\t11948\tee16b635\r\ntool\tbasename\t2026111882\t12100\tbb624aa1\r\ntool\tmore\t2026111882\t6008\tf94c8c88\r\ntool\tod\t2026111882\t6008\tf94c8c88\r\ntool\tfile\t2026111882\t12892\t285ea017\r\ntool\tdu\t2026111882\t12892\t285ea017\r\ntool\tfind\t2026111882\t12892\t285ea017\r\ntool\thfsattr\t2026111882\t13348\tae0f2334\r\ntool\treadlink\t2026111882\t13348\tae0f2334\r\ntool\tln\t2026111882\t13348\tae0f2334\r\ntool\trm\t2026111882\t13348\tae0f2334\r\ntool\tmkdir\t2026111882\t13348\tae0f2334\r\ntool\trmdir\t2026111882\t13348\tae0f2334\r\ntool\ttouch\t2026111882\t13348\tae0f2334\r\ntool\tmv\t2026111882\t13348\tae0f2334\r\ntool\tcp\t2026111882\t13348\tae0f2334\r\ntool\tsort-sbase\t2026111882\t40100\t3c3d966a\r\ntool\tsort\t2026111882\t28836\tc840ec68\r\ntool\ttail\t2026111882\t17924\t14bc1ce3\r\ntool\ttee\t2026111882\t13460\t09c78836\r\ntool\tuniq\t2026111882\t16716\t7ef83872\r\ntool\ttr-sbase\t2026111882\t32536\t964457ca\r\ntool\ttr\t2026111882\t21464\tf00418a2\r\ntool\tcut\t2026111882\t18868\tdb9a8735\r\ntool\thead\t2026111882\t15620\tffff63a7\r\ntool\twc-sbase\t2026111882\t15576\t2694ca6c\r\ntool\twc\t2026111882\t21108\t8273c98e\r\ntool\tserial\t2026111882\t9552\tc43bf37e\r\ntool\tawk\t2026111882\t188956\t44b0e0d6\r\ntool\tsed\t2026111882\t65760\t6714d29c\r\ntool\tgrep\t2026111882\t46044\tba928b81\r\ntool\tbenchscan\t2026111882\t12604\t96cdfa42\r\ntool\tbenchls\t2026111882\t12604\t96cdfa42\r\ntool\tcat\t2026111882\t12604\t96cdfa42\r\ntool\tdf\t2026111882\t12604\t96cdfa42\r\ntool\tls\t2026111882\t12604\t96cdfa42\r\ncore\tClarice\t2026111882\t279552\tb70ced53\r\ntool\ttelnetd\t2026111882\t40824\t80705253\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "test ! -f /etc/clarice/update.incomplete",
+    "status": 0,
+    "text": "test ! -f /etc/clarice/update.incomplete; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "wc --version",
+    "status": 0,
+    "text": "wc --version; printf '\\nREMOTE_END_4:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice wc\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "appinstall check /bin/wc",
+    "status": 0,
+    "text": "appinstall check /bin/wc; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "wc --help",
+    "status": 0,
+    "text": "wc --help; printf '\\nREMOTE_END_6:%d\\n' $?\r\nUsage: wc [-lwmcL] [FILE ...]\r\nCount lines, words, characters, bytes and maximum display-line length.\r\nDefault: lines, words, bytes. -m equals -c in this byte/C-locale build.\r\nWord/line-width rules differ from sbase Unicode handling. 32-bit counters.\r\nFor the previous UTF-8 behavior use wc-sbase.\r\nData forks only; stdin may be selected with - where supported.\r\nStatus: 0 success, nonzero failure (see above), 130 cancellation.\r\nBusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "appinstall check /bin/wc-sbase",
+    "status": 0,
+    "text": "appinstall check /bin/wc-sbase; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "command": "wc-sbase --help",
+    "status": 0,
+    "text": "wc-sbase --help; printf '\\nREMOTE_END_8:%d\\n' $?\r\nwc-sbase [-l] [-w] [-c|-m] [file ...]\r\nCount lines, words, bytes (-c) or UTF-8 characters (-m). Default: lines\r\nwords bytes.\r\nInput defaults to stdin (or use -); output defaults to stdout.\r\nData forks only; resource forks and Finder metadata are not stream data.\r\n-- ends option parsing where options are supported.\r\nsbase port for Clarice. Status: 0 success; nonzero error; 130\r\ninterrupted.\r\nInvocation allocations are released on completion.\r\nUTF-8 processing does not convert the terminal font from MacRoman.\r\nGNU-only long options are not implemented; --help is a Clarice addition.\r\nCompatibility command: wc now selects BusyBox; this retains sbase\r\nbehavior.\r\n\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "command": "tr --version",
+    "status": 0,
+    "text": "tr --version; printf '\\nREMOTE_END_9:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice tr\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  },
+  {
+    "command": "appinstall check /bin/tr",
+    "status": 0,
+    "text": "appinstall check /bin/tr; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "command": "tr --help",
+    "status": 0,
+    "text": "tr --help; printf '\\nREMOTE_END_11:%d\\n' $?\r\nUsage: tr [-Ccds] STRING1 [STRING2]\r\nTranslate bytes, complement (-c/-C), delete (-d), squeeze (-s).\r\nReads stdin, writes stdout; ASCII classes and equivalence classes enabled.\r\nNo multibyte characters, [:graph:]/[:print:] or [x*N] repetition syntax.\r\nFor the previous UTF-8 behavior use tr-sbase.\r\nData forks only; stdin may be selected with - where supported.\r\nStatus: 0 success, nonzero failure (see above), 130 cancellation.\r\nBusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "command": "appinstall check /bin/tr-sbase",
+    "status": 0,
+    "text": "appinstall check /bin/tr-sbase; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\n/ > "
+  },
+  {
+    "command": "tr-sbase --help",
+    "status": 0,
+    "text": "tr-sbase --help; printf '\\nREMOTE_END_13:%d\\n' $?\r\ntr-sbase [-cCds] set1 [set2]\r\nTranslate UTF-8 characters, -d delete, -s squeeze repeats, -c/-C\r\ncomplement.\r\nSets accept ranges, escapes and character classes such as [:upper:].\r\nReads stdin and writes stdout; no file operands.\r\n-- ends option parsing where options are supported.\r\nsbase port for Clarice. Status: 0 success; nonzero error; 130\r\ninterrupted.\r\nInvocation allocations are released on completion.\r\nUTF-8 processing does not convert the terminal font from MacRoman.\r\nGNU-only long options are not implemented; --help is a Clarice addition.\r\nCompatibility command: tr now selects BusyBox; this retains sbase\r\nbehavior.\r\n\r\n\r\nREMOTE_END_13:0\r\n/ > "
+  },
+  {
+    "command": "sort --version",
+    "status": 0,
+    "text": "sort --version; printf '\\nREMOTE_END_14:%d\\n' $?\r\nBusyBox 1.37.0 / Clarice sort\r\n\r\nREMOTE_END_14:0\r\n/ > "
+  },
+  {
+    "command": "appinstall check /bin/sort",
+    "status": 0,
+    "text": "appinstall check /bin/sort; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r\nREMOTE_END_15:0\r\n/ > "
+  },
+  {
+    "command": "sort --help",
+    "status": 0,
+    "text": "sort --help; printf '\\nREMOTE_END_16:%d\\n' $?\r\nUsage: sort [-nghucszbrdfi] [-k KEY] [-t CHAR] [FILE ...]\r\nSort text; numeric/general/human numeric, unique, check, stable, reverse,\r\nNUL records, blanks/dictionary/case/unprintable filtering, field keys.\r\nAll input and keys must fit working RAM; no disk spill. C-locale ordering.\r\n-o/-M/-V/-m/-S/-T are explicitly unsupported. Redirect to a separate file.\r\nFor larger inputs, disk spill and the previous options use sort-sbase.\r\nAllocation failure returns nonzero and releases invocation working RAM.\r\nData forks only; stdin may be selected with - where supported.\r\nStatus: 0 success, nonzero failure (see above), 130 cancellation.\r\nBusyBox 1.37.0 / Clarice.\r\n\r\n\r\nREMOTE_END_16:0\r\n/ > "
+  },
+  {
+    "command": "appinstall check /bin/sort-sbase",
+    "status": 0,
+    "text": "appinstall check /bin/sort-sbase; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r\nREMOTE_END_17:0\r\n/ > "
+  },
+  {
+    "command": "sort-sbase --help",
+    "status": 0,
+    "text": "sort-sbase --help; printf '\\nREMOTE_END_18:%d\\n' $?\r\nsort-sbase [-Cbcdfimnru] [-o output] [-t delimiter] [-k key] [file ...]\r\nSort lines; -n numeric, -r reverse, -u unique, -f ignore case.\r\n-c/-C check order (C quiet); -k start[,end] selects fields; -b ignores\r\nblanks.\r\n-d dictionary, -i printable only; -m uses the general merge-sort path.\r\n16 KiB/128-line batches spill to private /tmp files; longer records use\r\nsingleton runs.\r\n16 merge levels; records grow with available memory.\r\nInput defaults to stdin (or use -); output defaults to stdout.\r\nData forks only; resource forks and Finder metadata are not stream data.\r\n-o selects output (may equal an input); -t sets one field separator.\r\nDefault keys compare the whole line; -C suppresses check diagnostics.\r\n-- ends option parsing where options are supported.\r\nsbase port for Clarice. Status: 0 success; nonzero error; 130\r\ninterrupted.\r\nInvocation allocations are released on completion.\r\nUTF-8 processing does not convert the terminal font from MacRoman.\r\nGNU-only long options are not implemented; --help is a Clarice addition.\r\nCompatibility command: sort now selects BusyBox; this retains sbase\r\nbehavior.\r\n\r\n\r\nREMOTE_END_18:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/br-ordinary.txt http://192.168.1.112:8098/ordinary.txt",
+    "status": 0,
+    "text": "wget -O /tmp/br-ordinary.txt http://192.168.1.112:8098/ordinary.txt; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\r[===========                                         ]  22% 1.82 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/br-ordinary.txt\r\n\r\nREMOTE_END_19:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/br-large.txt http://192.168.1.112:8098/large.txt",
+    "status": 0,
+    "text": "wget -O /tmp/br-large.txt http://192.168.1.112:8098/large.txt; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\r[=                                                  ]   2% 1.82 KiB / 64.00 KiB\u001b[K\r[==============                        ]  37% 23.82 KiB / 64.00 KiB 23.82 KiB/s\u001b[K\r[==========================            ]  71% 45.82 KiB / 64.00 KiB 22.91 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 32.00 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/br-large.txt\r\n\r\nREMOTE_END_20:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/br-binary.dat http://192.168.1.112:8098/binary.dat",
+    "status": 0,
+    "text": "wget -O /tmp/br-binary.dat http://192.168.1.112:8098/binary.dat; printf '\\nREMOTE_END_21:%d\\n' $?\r\n\r[=                                                  ]   2% 1.80 KiB / 64.00 KiB\u001b[K\r[==============                        ]  37% 23.80 KiB / 64.00 KiB 23.80 KiB/s\u001b[K\r[=========================             ]  68% 43.80 KiB / 64.00 KiB 21.90 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 32.00 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/br-binary.dat\r\n\r\nREMOTE_END_21:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/br-unicode.txt http://192.168.1.112:8098/unicode.txt",
+    "status": 0,
+    "text": "wget -O /tmp/br-unicode.txt http://192.168.1.112:8098/unicode.txt; printf '\\nREMOTE_END_22:%d\\n' $?\r\n\r[============================================================] 100% 28 B / 28 B\u001b[K\r[============================================================] 100% 28 B / 28 B\u001b[K\r\nDownloaded 28 B to /tmp/br-unicode.txt\r\n\r\nREMOTE_END_22:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/br-sort-pressure.txt http://192.168.1.112:8098/sort-pressure.txt",
+    "status": 0,
+    "text": "wget -O /tmp/br-sort-pressure.txt http://192.168.1.112:8098/sort-pressure.txt; printf '\\nREMOTE_END_23:%d\\n' $?\r\n\r[                                                  ]   0% 1.82 KiB / 256.00 KiB\u001b[K\r[===                                  ]  10% 25.82 KiB / 256.00 KiB 25.82 KiB/s\u001b[K\r[======                               ]  18% 47.82 KiB / 256.00 KiB 23.91 KiB/s\u001b[K\r[==========                           ]  28% 73.82 KiB / 256.00 KiB 24.60 KiB/s\u001b[K\r[=============                        ]  36% 93.82 KiB / 256.00 KiB 23.45 KiB/s\u001b[K\r[================                    ]  46% 117.82 KiB / 256.00 KiB 23.56 KiB/s\u001b[K\r[===================                 ]  55% 141.82 KiB / 256.00 KiB 23.64 KiB/s\u001b[K\r[=======================             ]  64% 165.82 KiB / 256.00 KiB 23.69 KiB/s\u001b[K\r[==========================          ]  73% 187.82 KiB / 256.00 KiB 23.48 KiB/s\u001b[K\r[=============================       ]  81% 209.82 KiB / 256.00 KiB 23.31 KiB/s\u001b[K\r[================================    ]  89% 229.82 KiB / 256.00 KiB 22.98 KiB/s\u001b[K\r[====================================] 100% 256.00 KiB / 256.00 KiB 23.27 KiB/s\u001b[K\r[====================================] 100% 256.00 KiB / 256.00 KiB 23.27 KiB/s\u001b[K\r\nDownloaded 256.00 KB to /tmp/br-sort-pressure.txt\r\n\r\nREMOTE_END_23:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/br-macroman.txt http://192.168.1.112:8098/macroman.txt",
+    "status": 0,
+    "text": "wget -O /tmp/br-macroman.txt http://192.168.1.112:8098/macroman.txt; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r[==============================================================] 100% 5 B / 5 B\u001b[K\r[==============================================================] 100% 5 B / 5 B\u001b[K\r\nDownloaded 5 B to /tmp/br-macroman.txt\r\n\r\nREMOTE_END_24:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/br-macroman-upper.txt http://192.168.1.112:8098/macroman-upper.txt",
+    "status": 0,
+    "text": "wget -O /tmp/br-macroman-upper.txt http://192.168.1.112:8098/macroman-upper.txt; printf '\\nREMOTE_END_25:%d\\n' $?\r\n\r[==============================================================] 100% 5 B / 5 B\u001b[K\r[==============================================================] 100% 5 B / 5 B\u001b[K\r\nDownloaded 5 B to /tmp/br-macroman-upper.txt\r\n\r\nREMOTE_END_25:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/br-binary-nonul.dat http://192.168.1.112:8098/binary-nonul.dat",
+    "status": 0,
+    "text": "wget -O /tmp/br-binary-nonul.dat http://192.168.1.112:8098/binary-nonul.dat; printf '\\nREMOTE_END_26:%d\\n' $?\r\n\r[=                                                  ]   2% 1.80 KiB / 63.75 KiB\u001b[K\r[============                          ]  34% 21.80 KiB / 63.75 KiB 21.80 KiB/s\u001b[K\r[========================              ]  65% 41.80 KiB / 63.75 KiB 20.90 KiB/s\u001b[K\r[======================================] 100% 63.75 KiB / 63.75 KiB 21.25 KiB/s\u001b[K\r\nDownloaded 63.75 KB to /tmp/br-binary-nonul.dat\r\n\r\nREMOTE_END_26:0\r\n/ > "
+  },
+  {
+    "command": "printf 'beta\\nalpha\\nalpha\\n' > /tmp/br-lines",
+    "status": 0,
+    "text": "printf 'beta\\nalpha\\nalpha\\n' > /tmp/br-lines; printf '\\nREMOTE_END_27:%d\\n' $?\r\n\r\nREMOTE_END_27:0\r\n/ > "
+  },
+  {
+    "command": "time wc-sbase -c < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time wc-sbase -c < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_28:%d\\n' $?\r\nreal 2.45 s\r\nRuntime: heap=331650 largest=331406 image=9880 ticks=136 load=37 owned-peak=1620 remaining=0\r\nLoader ticks: read=11 validate=3 imports=1 relocations=1 prepare=9 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_28:0\r\n/ > ",
+    "seconds": 2.45,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "wc",
+    "implementation": "sbase",
+    "run": 0
+  },
+  {
+    "command": "time wc -c < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time wc -c < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_29:%d\\n' $?\r\nreal 1.63 s\r\nRuntime: heap=331674 largest=331424 image=14016 ticks=89 load=32 owned-peak=5716 remaining=0\r\nLoader ticks: read=12 validate=2 imports=1 relocations=2 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_29:0\r\n/ > ",
+    "seconds": 1.63,
+    "peak": 5716,
+    "remaining": 0,
+    "applet": "wc",
+    "implementation": "busybox",
+    "run": 0
+  },
+  {
+    "command": "cat /tmp/br-old",
+    "status": 0,
+    "text": "cat /tmp/br-old; printf '\\nREMOTE_END_30:%d\\n' $?\r\n8192\r\n\r\nREMOTE_END_30:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/br-new",
+    "status": 0,
+    "text": "cat /tmp/br-new; printf '\\nREMOTE_END_31:%d\\n' $?\r\n8192\r\n\r\nREMOTE_END_31:0\r\n/ > "
+  },
+  {
+    "command": "time wc -c < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time wc -c < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_32:%d\\n' $?\r\nreal 1.63 s\r\nRuntime: heap=331670 largest=331394 image=14016 ticks=87 load=34 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_32:0\r\n/ > ",
+    "seconds": 1.63,
+    "peak": 5716,
+    "remaining": 0,
+    "applet": "wc",
+    "implementation": "busybox",
+    "run": 1
+  },
+  {
+    "command": "time wc-sbase -c < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time wc-sbase -c < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_33:%d\\n' $?\r\nreal 2.35 s\r\nRuntime: heap=331656 largest=331394 image=9880 ticks=131 load=32 owned-peak=1620 remaining=0\r\nLoader ticks: read=11 validate=3 imports=1 relocations=2 prepare=3 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_33:0\r\n/ > ",
+    "seconds": 2.35,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "wc",
+    "implementation": "sbase",
+    "run": 1
+  },
+  {
+    "command": "cat /tmp/br-old",
+    "status": 0,
+    "text": "cat /tmp/br-old; printf '\\nREMOTE_END_34:%d\\n' $?\r\n8192\r\n\r\nREMOTE_END_34:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/br-new",
+    "status": 0,
+    "text": "cat /tmp/br-new; printf '\\nREMOTE_END_35:%d\\n' $?\r\n8192\r\n\r\nREMOTE_END_35:0\r\n/ > "
+  },
+  {
+    "command": "time wc-sbase -c < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time wc-sbase -c < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_36:%d\\n' $?\r\nreal 2.50 s\r\nRuntime: heap=331658 largest=331394 image=9880 ticks=139 load=38 owned-peak=1620 remaining=0\r\nLoader ticks: read=11 validate=1 imports=1 relocations=1 prepare=12 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_36:0\r\n/ > ",
+    "seconds": 2.5,
+    "peak": 1620,
+    "remaining": 0,
+    "applet": "wc",
+    "implementation": "sbase",
+    "run": 2
+  },
+  {
+    "command": "time wc -c < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time wc -c < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_37:%d\\n' $?\r\nreal 1.78 s\r\nRuntime: heap=331668 largest=331390 image=14016 ticks=97 load=44 owned-peak=5716 remaining=0\r\nLoader ticks: read=13 validate=0 imports=2 relocations=1 prepare=16 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_37:0\r\n/ > ",
+    "seconds": 1.78,
+    "peak": 5716,
+    "remaining": 0,
+    "applet": "wc",
+    "implementation": "busybox",
+    "run": 2
+  },
+  {
+    "command": "cat /tmp/br-old",
+    "status": 0,
+    "text": "cat /tmp/br-old; printf '\\nREMOTE_END_38:%d\\n' $?\r\n8192\r\n\r\nREMOTE_END_38:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/br-new",
+    "status": 0,
+    "text": "cat /tmp/br-new; printf '\\nREMOTE_END_39:%d\\n' $?\r\n8192\r\n\r\nREMOTE_END_39:0\r\n/ > "
+  },
+  {
+    "command": "time tr-sbase a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time tr-sbase a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_40:%d\\n' $?\r\nreal 6.68 s\r\nRuntime: heap=331558 largest=331406 image=25380 ticks=390 load=39 owned-peak=3668 remaining=0\r\nLoader ticks: read=16 validate=0 imports=2 relocations=1 prepare=8 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_40:0\r\n/ > ",
+    "seconds": 6.68,
+    "peak": 3668,
+    "remaining": 0,
+    "applet": "tr",
+    "implementation": "sbase",
+    "run": 0
+  },
+  {
+    "command": "time tr a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time tr a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_41:%d\\n' $?\r\nreal 1.35 s\r\nRuntime: heap=331578 largest=331394 image=14576 ticks=71 load=29 owned-peak=6568 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=2 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_41:0\r\n/ > ",
+    "seconds": 1.35,
+    "peak": 6568,
+    "remaining": 0,
+    "applet": "tr",
+    "implementation": "busybox",
+    "run": 0
+  },
+  {
+    "command": "cmp /tmp/br-old /tmp/br-new",
+    "status": 0,
+    "text": "cmp /tmp/br-old /tmp/br-new; printf '\\nREMOTE_END_42:%d\\n' $?\r\n\r\nREMOTE_END_42:0\r\n/ > "
+  },
+  {
+    "command": "time tr a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time tr a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_43:%d\\n' $?\r\nreal 1.20 s\r\nRuntime: heap=331584 largest=331394 image=14576 ticks=62 load=33 owned-peak=6568 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_43:0\r\n/ > ",
+    "seconds": 1.2,
+    "peak": 6568,
+    "remaining": 0,
+    "applet": "tr",
+    "implementation": "busybox",
+    "run": 1
+  },
+  {
+    "command": "time tr-sbase a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time tr-sbase a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_44:%d\\n' $?\r\nreal 6.61 s\r\nRuntime: heap=331562 largest=331406 image=25380 ticks=387 load=41 owned-peak=3668 remaining=0\r\nLoader ticks: read=15 validate=2 imports=2 relocations=1 prepare=9 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_44:0\r\n/ > ",
+    "seconds": 6.61,
+    "peak": 3668,
+    "remaining": 0,
+    "applet": "tr",
+    "implementation": "sbase",
+    "run": 1
+  },
+  {
+    "command": "cmp /tmp/br-old /tmp/br-new",
+    "status": 0,
+    "text": "cmp /tmp/br-old /tmp/br-new; printf '\\nREMOTE_END_45:%d\\n' $?\r\n\r\nREMOTE_END_45:0\r\n/ > "
+  },
+  {
+    "command": "time tr-sbase a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time tr-sbase a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_46:%d\\n' $?\r\nreal 6.51 s\r\nRuntime: heap=331574 largest=331406 image=25380 ticks=381 load=36 owned-peak=3668 remaining=0\r\nLoader ticks: read=16 validate=2 imports=1 relocations=2 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_46:0\r\n/ > ",
+    "seconds": 6.51,
+    "peak": 3668,
+    "remaining": 0,
+    "applet": "tr",
+    "implementation": "sbase",
+    "run": 2
+  },
+  {
+    "command": "time tr a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time tr a-z A-Z < /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_47:%d\\n' $?\r\nreal 1.20 s\r\nRuntime: heap=331580 largest=331406 image=14576 ticks=62 load=32 owned-peak=6568 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=2 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_47:0\r\n/ > ",
+    "seconds": 1.2,
+    "peak": 6568,
+    "remaining": 0,
+    "applet": "tr",
+    "implementation": "busybox",
+    "run": 2
+  },
+  {
+    "command": "cmp /tmp/br-old /tmp/br-new",
+    "status": 0,
+    "text": "cmp /tmp/br-old /tmp/br-new; printf '\\nREMOTE_END_48:%d\\n' $?\r\n\r\nREMOTE_END_48:0\r\n/ > "
+  },
+  {
+    "command": "time sort-sbase /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time sort-sbase /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_49:%d\\n' $?\r\nreal 2.75 s\r\nRuntime: heap=331824 largest=331406 image=30444 ticks=155 load=43 owned-peak=22924 remaining=0\r\nLoader ticks: read=18 validate=1 imports=2 relocations=2 prepare=8 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_49:0\r\n/ > ",
+    "seconds": 2.75,
+    "peak": 22924,
+    "remaining": 0,
+    "applet": "sort",
+    "implementation": "sbase",
+    "run": 0
+  },
+  {
+    "command": "time sort /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time sort /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_50:%d\\n' $?\r\nreal 2.65 s\r\nRuntime: heap=331836 largest=331406 image=20048 ticks=148 load=32 owned-peak=23756 remaining=0\r\nLoader ticks: read=14 validate=0 imports=2 relocations=2 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_50:0\r\n/ > ",
+    "seconds": 2.65,
+    "peak": 23756,
+    "remaining": 0,
+    "applet": "sort",
+    "implementation": "busybox",
+    "run": 0
+  },
+  {
+    "command": "cmp /tmp/br-old /tmp/br-new",
+    "status": 0,
+    "text": "cmp /tmp/br-old /tmp/br-new; printf '\\nREMOTE_END_51:%d\\n' $?\r\n\r\nREMOTE_END_51:0\r\n/ > "
+  },
+  {
+    "command": "time sort /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time sort /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_52:%d\\n' $?\r\nreal 2.75 s\r\nRuntime: heap=331836 largest=331406 image=20048 ticks=155 load=38 owned-peak=23756 remaining=0\r\nLoader ticks: read=16 validate=2 imports=3 relocations=2 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_52:0\r\n/ > ",
+    "seconds": 2.75,
+    "peak": 23756,
+    "remaining": 0,
+    "applet": "sort",
+    "implementation": "busybox",
+    "run": 1
+  },
+  {
+    "command": "time sort-sbase /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time sort-sbase /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_53:%d\\n' $?\r\nreal 2.56 s\r\nRuntime: heap=331824 largest=331406 image=30444 ticks=144 load=41 owned-peak=22924 remaining=0\r\nLoader ticks: read=18 validate=4 imports=2 relocations=2 prepare=3 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=4 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_53:0\r\n/ > ",
+    "seconds": 2.56,
+    "peak": 22924,
+    "remaining": 0,
+    "applet": "sort",
+    "implementation": "sbase",
+    "run": 1
+  },
+  {
+    "command": "cmp /tmp/br-old /tmp/br-new",
+    "status": 0,
+    "text": "cmp /tmp/br-old /tmp/br-new; printf '\\nREMOTE_END_54:%d\\n' $?\r\n\r\nREMOTE_END_54:0\r\n/ > "
+  },
+  {
+    "command": "time sort-sbase /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time sort-sbase /tmp/br-ordinary.txt > /tmp/br-old; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_55:%d\\n' $?\r\nreal 2.56 s\r\nRuntime: heap=331824 largest=331406 image=30444 ticks=144 load=40 owned-peak=22924 remaining=0\r\nLoader ticks: read=18 validate=2 imports=2 relocations=3 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_55:0\r\n/ > ",
+    "seconds": 2.56,
+    "peak": 22924,
+    "remaining": 0,
+    "applet": "sort",
+    "implementation": "sbase",
+    "run": 2
+  },
+  {
+    "command": "time sort /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time sort /tmp/br-ordinary.txt > /tmp/br-new; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_56:%d\\n' $?\r\nreal 2.76 s\r\nRuntime: heap=331836 largest=331406 image=20048 ticks=156 load=39 owned-peak=23756 remaining=0\r\nLoader ticks: read=16 validate=3 imports=2 relocations=2 prepare=4 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_56:0\r\n/ > ",
+    "seconds": 2.76,
+    "peak": 23756,
+    "remaining": 0,
+    "applet": "sort",
+    "implementation": "busybox",
+    "run": 2
+  },
+  {
+    "command": "cmp /tmp/br-old /tmp/br-new",
+    "status": 0,
+    "text": "cmp /tmp/br-old /tmp/br-new; printf '\\nREMOTE_END_57:%d\\n' $?\r\n\r\nREMOTE_END_57:0\r\n/ > "
+  },
+  {
+    "command": "wc -lwmc /tmp/br-lines",
+    "status": 0,
+    "text": "wc -lwmc /tmp/br-lines; printf '\\nREMOTE_END_58:%d\\n' $?\r\n        3         3        17        17 /tmp/br-lines\r\n\r\nREMOTE_END_58:0\r\n/ > "
+  },
+  {
+    "command": "tr -s a < /tmp/br-lines",
+    "status": 0,
+    "text": "tr -s a < /tmp/br-lines; printf '\\nREMOTE_END_59:%d\\n' $?\r\nbeta\r\nalpha\r\nalpha\r\n\r\nREMOTE_END_59:0\r\n/ > "
+  },
+  {
+    "command": "sort -nu /tmp/br-lines",
+    "status": 0,
+    "text": "sort -nu /tmp/br-lines; printf '\\nREMOTE_END_60:%d\\n' $?\r\nalpha\r\n\r\nREMOTE_END_60:0\r\n/ > "
+  },
+  {
+    "command": "wc --invalid-option > /tmp/br-out 2> /tmp/br-err",
+    "status": 2,
+    "text": "wc --invalid-option > /tmp/br-out 2> /tmp/br-err; printf '\\nREMOTE_END_61:%d\\n' $?\r\n\r\nREMOTE_END_61:2\r\n/ > "
+  },
+  {
+    "command": "test ! -s /tmp/br-out",
+    "status": 0,
+    "text": "test ! -s /tmp/br-out; printf '\\nREMOTE_END_62:%d\\n' $?\r\n\r\nREMOTE_END_62:0\r\n/ > "
+  },
+  {
+    "command": "test -s /tmp/br-err",
+    "status": 0,
+    "text": "test -s /tmp/br-err; printf '\\nREMOTE_END_63:%d\\n' $?\r\n\r\nREMOTE_END_63:0\r\n/ > "
+  },
+  {
+    "command": "tr --invalid-option > /tmp/br-out 2> /tmp/br-err",
+    "status": 2,
+    "text": "tr --invalid-option > /tmp/br-out 2> /tmp/br-err; printf '\\nREMOTE_END_64:%d\\n' $?\r\n\r\nREMOTE_END_64:2\r\n/ > "
+  },
+  {
+    "command": "test ! -s /tmp/br-out",
+    "status": 0,
+    "text": "test ! -s /tmp/br-out; printf '\\nREMOTE_END_65:%d\\n' $?\r\n\r\nREMOTE_END_65:0\r\n/ > "
+  },
+  {
+    "command": "test -s /tmp/br-err",
+    "status": 0,
+    "text": "test -s /tmp/br-err; printf '\\nREMOTE_END_66:%d\\n' $?\r\n\r\nREMOTE_END_66:0\r\n/ > "
+  },
+  {
+    "command": "sort --invalid-option > /tmp/br-out 2> /tmp/br-err",
+    "status": 2,
+    "text": "sort --invalid-option > /tmp/br-out 2> /tmp/br-err; printf '\\nREMOTE_END_67:%d\\n' $?\r\n\r\nREMOTE_END_67:2\r\n/ > "
+  },
+  {
+    "command": "test ! -s /tmp/br-out",
+    "status": 0,
+    "text": "test ! -s /tmp/br-out; printf '\\nREMOTE_END_68:%d\\n' $?\r\n\r\nREMOTE_END_68:0\r\n/ > "
+  },
+  {
+    "command": "test -s /tmp/br-err",
+    "status": 0,
+    "text": "test -s /tmp/br-err; printf '\\nREMOTE_END_69:%d\\n' $?\r\n\r\nREMOTE_END_69:0\r\n/ > "
+  },
+  {
+    "command": "wc /tmp/br-missing",
+    "status": 1,
+    "text": "wc /tmp/br-missing; printf '\\nREMOTE_END_70:%d\\n' $?\r\nwc: /tmp/br-missing: No such file or directory\r\n\r\nREMOTE_END_70:1\r\n/ > "
+  },
+  {
+    "command": "sort /tmp/br-missing",
+    "status": 2,
+    "text": "sort /tmp/br-missing; printf '\\nREMOTE_END_71:%d\\n' $?\r\nsort: /tmp/br-missing: No such file or directory\r\n\r\nREMOTE_END_71:2\r\n/ > "
+  },
+  {
+    "command": "printf '' | wc -c",
+    "status": 0,
+    "text": "printf '' | wc -c; printf '\\nREMOTE_END_72:%d\\n' $?\r\n0\r\n\r\nREMOTE_END_72:0\r\n/ > "
+  },
+  {
+    "command": "printf '' | tr a-z A-Z",
+    "status": 0,
+    "text": "printf '' | tr a-z A-Z; printf '\\nREMOTE_END_73:%d\\n' $?\r\n\r\nREMOTE_END_73:0\r\n/ > "
+  },
+  {
+    "command": "printf '' | sort ",
+    "status": 0,
+    "text": "printf '' | sort ; printf '\\nREMOTE_END_74:%d\\n' $?\r\n\r\nREMOTE_END_74:0\r\n/ > "
+  },
+  {
+    "command": "printf 'a\\nb\\n' | tr a-z A-Z | wc -l",
+    "status": 0,
+    "text": "printf 'a\\nb\\n' | tr a-z A-Z | wc -l; printf '\\nREMOTE_END_75:%d\\n' $?\r\n2\r\n\r\nREMOTE_END_75:0\r\n/ > "
+  },
+  {
+    "command": "cp /tmp/br-lines /tmp/br-preserve",
+    "status": 0,
+    "text": "cp /tmp/br-lines /tmp/br-preserve; printf '\\nREMOTE_END_76:%d\\n' $?\r\n\r\nREMOTE_END_76:0\r\n/ > "
+  },
+  {
+    "command": "sort -o /tmp/br-lines /tmp/br-lines",
+    "status": 2,
+    "text": "sort -o /tmp/br-lines /tmp/br-lines; printf '\\nREMOTE_END_77:%d\\n' $?\r\nsort: unsupported option: -o/-M/-V/-m/-S/-T\r\n\r\nREMOTE_END_77:2\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/br-lines /tmp/br-preserve",
+    "status": 0,
+    "text": "cmp /tmp/br-lines /tmp/br-preserve; printf '\\nREMOTE_END_78:%d\\n' $?\r\n\r\nREMOTE_END_78:0\r\n/ > "
+  },
+  {
+    "command": "sort-sbase -o /tmp/br-fallback /tmp/br-lines",
+    "status": 0,
+    "text": "sort-sbase -o /tmp/br-fallback /tmp/br-lines; printf '\\nREMOTE_END_79:%d\\n' $?\r\n\r\nREMOTE_END_79:0\r\n/ > "
+  },
+  {
+    "command": "sort /tmp/br-lines > /tmp/br-out",
+    "status": 0,
+    "text": "sort /tmp/br-lines > /tmp/br-out; printf '\\nREMOTE_END_80:%d\\n' $?\r\n\r\nREMOTE_END_80:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/br-out /tmp/br-fallback",
+    "status": 0,
+    "text": "cmp /tmp/br-out /tmp/br-fallback; printf '\\nREMOTE_END_81:%d\\n' $?\r\n\r\nREMOTE_END_81:0\r\n/ > "
+  },
+  {
+    "command": "wc -m < /tmp/br-unicode.txt",
+    "status": 0,
+    "text": "wc -m < /tmp/br-unicode.txt; printf '\\nREMOTE_END_82:%d\\n' $?\r\n28\r\n\r\nREMOTE_END_82:0\r\n/ > "
+  },
+  {
+    "command": "wc-sbase -m < /tmp/br-unicode.txt",
+    "status": 0,
+    "text": "wc-sbase -m < /tmp/br-unicode.txt; printf '\\nREMOTE_END_83:%d\\n' $?\r\n20\r\n\r\nREMOTE_END_83:0\r\n/ > "
+  },
+  {
+    "command": "wc -m < /tmp/br-macroman.txt",
+    "status": 0,
+    "text": "wc -m < /tmp/br-macroman.txt; printf '\\nREMOTE_END_84:%d\\n' $?\r\n5\r\n\r\nREMOTE_END_84:0\r\n/ > "
+  },
+  {
+    "command": "tr a-z A-Z < /tmp/br-macroman.txt > /tmp/br-mac-out",
+    "status": 0,
+    "text": "tr a-z A-Z < /tmp/br-macroman.txt > /tmp/br-mac-out; printf '\\nREMOTE_END_85:%d\\n' $?\r\n\r\nREMOTE_END_85:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/br-mac-out /tmp/br-macroman-upper.txt",
+    "status": 0,
+    "text": "cmp /tmp/br-mac-out /tmp/br-macroman-upper.txt; printf '\\nREMOTE_END_86:%d\\n' $?\r\n\r\nREMOTE_END_86:0\r\n/ > "
+  },
+  {
+    "command": "tr -d '\\000' < /tmp/br-binary.dat > /tmp/br-out",
+    "status": 0,
+    "text": "tr -d '\\000' < /tmp/br-binary.dat > /tmp/br-out; printf '\\nREMOTE_END_87:%d\\n' $?\r\n\r\nREMOTE_END_87:0\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/br-out /tmp/br-binary-nonul.dat",
+    "status": 0,
+    "text": "cmp /tmp/br-out /tmp/br-binary-nonul.dat; printf '\\nREMOTE_END_88:%d\\n' $?\r\n\r\nREMOTE_END_88:0\r\n/ > "
+  },
+  {
+    "command": "cp /tmp/br-lines /tmp/br-locked",
+    "status": 0,
+    "text": "cp /tmp/br-lines /tmp/br-locked; printf '\\nREMOTE_END_89:%d\\n' $?\r\n\r\nREMOTE_END_89:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr --locked on /tmp/br-locked",
+    "status": 0,
+    "text": "hfsattr --locked on /tmp/br-locked; printf '\\nREMOTE_END_90:%d\\n' $?\r\n\r\nREMOTE_END_90:0\r\n/ > "
+  },
+  {
+    "command": "sort /tmp/br-ordinary.txt > /tmp/br-locked",
+    "status": 2,
+    "text": "sort /tmp/br-ordinary.txt > /tmp/br-locked; printf '\\nREMOTE_END_91:%d\\n' $?\r\nsh: output redirection failed\r\n\r\nREMOTE_END_91:2\r\n/ > "
+  },
+  {
+    "command": "cmp /tmp/br-locked /tmp/br-lines",
+    "status": 0,
+    "text": "cmp /tmp/br-locked /tmp/br-lines; printf '\\nREMOTE_END_92:%d\\n' $?\r\n\r\nREMOTE_END_92:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr --locked off /tmp/br-locked",
+    "status": 0,
+    "text": "hfsattr --locked off /tmp/br-locked; printf '\\nREMOTE_END_93:%d\\n' $?\r\n\r\nREMOTE_END_93:0\r\n/ > "
+  },
+  {
+    "command": "time sort-sbase /tmp/br-large.txt > /tmp/br-spill; result=$?; status runtime; test \"$result\" -eq 0",
+    "status": 0,
+    "text": "time sort-sbase /tmp/br-large.txt > /tmp/br-spill; result=$?; status runtime; test \"$result\" -eq 0; printf '\\nREMOTE_END_94:%d\\n' $?\r\nreal 49.68 s\r\nRuntime: heap=331810 largest=331406 image=30444 ticks=2967 load=47 owned-peak=25964 remaining=0\r\nLoader ticks: read=20 validate=2 imports=2 relocations=2 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_94:0\r\n/ > ",
+    "seconds": 49.68,
+    "peak": 25964,
+    "remaining": 0
+  },
+  {
+    "command": "sort -c /tmp/br-spill",
+    "status": 0,
+    "text": "sort -c /tmp/br-spill; printf '\\nREMOTE_END_95:%d\\n' $?\r\n\r\nREMOTE_END_95:0\r\n/ > "
+  },
+  {
+    "command": "wc -c < /tmp/br-spill",
+    "status": 0,
+    "text": "wc -c < /tmp/br-spill; printf '\\nREMOTE_END_96:%d\\n' $?\r\n65536\r\n\r\nREMOTE_END_96:0\r\n/ > "
+  },
+  {
+    "command": "printf 'CANCEL_STATUS=%s\\n' $?",
+    "status": 0,
+    "text": "/tmp/br-out\r\n^C\r\n/ > printf 'CANCEL_STATUS=%s\\n' $?; printf '\\nREMOTE_END_97:%d\\n' $?\r\nCANCEL_STATUS=130\r\n\r\nREMOTE_END_97:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_98:%d\\n' $?\r\nRuntime: heap=333706 largest=331406 image=20048 ticks=150 load=49 owned-peak=35852 remaining=0\r\nLoader ticks: read=19 validate=4 imports=1 relocations=2 prepare=4 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=19 payload=0 metadata=4 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_98:0\r\n/ > "
+  },
+  {
+    "command": "time sort /tmp/br-sort-pressure.txt > /tmp/br-out; result=$?; status runtime; printf \"SORT_STATUS=%s\\n\" \"$result\"",
+    "status": 0,
+    "text": "time sort /tmp/br-sort-pressure.txt > /tmp/br-out; result=$?; status runtime; printf \"SORT_STATUS=%s\\n\" \"$result\"; printf '\\nREMOTE_END_99:%d\\n' $?\r\nsort: out of memory\r\nreal 17.85 s\r\nRuntime: heap=356102 largest=355724 image=20048 ticks=1055 load=48 owned-peak=300684 remaining=0\r\nLoader ticks: read=20 validate=0 imports=2 relocations=2 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=19 payload=0 metadata=0 structure=1 (structure included in relocations)\r\nSORT_STATUS=2\r\n\r\nREMOTE_END_99:0\r\n/ > "
+  },
+  {
+    "command": "wc -c < /tmp/br-ordinary.txt",
+    "status": 0,
+    "text": "wc -c < /tmp/br-ordinary.txt; printf '\\nREMOTE_END_100:%d\\n' $?\r\n8192\r\n\r\nREMOTE_END_100:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_101:%d\\n' $?\r\nRuntime: heap=358020 largest=355724 image=14016 ticks=98 load=47 owned-peak=5716 remaining=0\r\nLoader ticks: read=18 validate=2 imports=2 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=19 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_101:0\r\n/ > "
+  }
+]

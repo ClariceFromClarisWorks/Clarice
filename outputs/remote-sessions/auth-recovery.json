@@ -1,0 +1,20 @@
+{
+  "malformed_config_refused": true,
+  "config_recovery_and_password": true,
+  "enable_stop_heap_largest": [
+    [
+      "365156",
+      "363042"
+    ],
+    [
+      "365154",
+      "363042"
+    ],
+    [
+      "365156",
+      "363042"
+    ]
+  ],
+  "preauth_cancellation_recovery": true,
+  "note": "First run reached memory assertion after both config tests passed. Two-byte reversible alignment variation matches previous baseline; remainder passed on resumption."
+}

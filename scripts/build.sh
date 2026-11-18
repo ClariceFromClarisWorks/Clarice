@@ -3,7 +3,9 @@ set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 IMAGE=ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae819583eecb0ddd1837da6943c
 mkdir -p "$ROOT/outputs/namespace"
-mkdir -p "$ROOT/work/build"
+python3 "$ROOT/scripts/release.py" begin
+# A full build cannot inherit a caller's partial utility selection.
+unset CLARICE_BUILD_COMMANDS
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
 for name in files inspect misc free; do
  m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -Wall -Wextra -Wno-multichar -Wno-misleading-indentation -c /src/src/commands/$name.c -o /src/work/build/$name-main.o
@@ -21,13 +23,16 @@ m68k-apple-macos-gcc -m68000 -Os -ffreestanding -fno-common -Wall -Wextra -Werro
 m68k-apple-macos-gcc -m68000 -Os -ffreestanding -fno-common -Wall -Wextra -Werror -c /src/src/commands/decimal.c -o /src/work/build/decimal.o
 m68k-apple-macos-ld -r /src/work/build/core-main.o /src/work/build/created.o /src/work/build/decimal.o -o /src/work/build/core.o
 '
-python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/core.o" "$ROOT/work/build/core.clx"
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/core.o" "$ROOT/work/build/core.clx" --runtime 1.10
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/serial.o" "$ROOT/work/build/serial.clx" --runtime 1.0
-for name in files inspect misc; do python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"; done
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/files.o" "$ROOT/work/build/files.clx" --runtime 1.10
+for name in inspect misc; do python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"; done
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/free.o" "$ROOT/work/build/free.clx" --runtime 1.4
 "$ROOT/scripts/build-ports.sh"
 "$ROOT/scripts/build-awk.sh"
 "$ROOT/scripts/build-pipelines.sh"
+"$ROOT/scripts/build-busybox-tools.sh"
+for name in wc tr sort; do cp "$ROOT/work/busybox-tools/bb$name.clx" "$ROOT/work/build/bb$name.clx"; done
 "$ROOT/scripts/build-kermit.sh"
 sh "$ROOT/scripts/build-network.sh"
 sh "$ROOT/scripts/build-ftp.sh"
@@ -49,4 +54,5 @@ humount
 cp "$ROOT/work/build/Clarice.bin" "$ROOT/work/build/Clarice.dsk" "$ROOT/outputs/namespace/"
 cat "$ROOT/outputs/namespace/build.log"
 
+python3 "$ROOT/scripts/release.py" seal
 python3 "$ROOT/scripts/package-utilities.py"

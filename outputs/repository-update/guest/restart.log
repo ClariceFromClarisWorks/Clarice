@@ -1,0 +1,13 @@
+RESTART-BEGIN
+Checking repository...
+Downloaded 163 B to /tmp/clarice-sort-533554-3
+repoone -> build 4
+reporestart -> build 1
+Installing repoone...
+Downloaded 12.31 KB to /tmp/clarice-sort-533701-4
+appinstall: retained recovery file: native:RCGuest:System Folder:Clarice Data:bin:.clx-repoone.old
+Installing reporestart...
+wget: HTTP 404 Not Found
+clarice update: Mac OS error -36: Input/output failure
+Completed packages are retained. Repeat clarice update -y to resume.
+RESTART-READY

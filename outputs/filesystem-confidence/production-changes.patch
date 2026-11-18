@@ -1,0 +1,34 @@
+--- a/src/commands/files.c
++++ b/src/commands/files.c
+@@ -50,7 +50,13 @@
+ typedef struct RemoveFrame {struct RemoveFrame *parent;char native[PATH_CAP],path[PATH_CAP];} RemoveFrame;
+ static int remove_one(const char *path,int depth,int onlydir){
+  (void)depth;RemoveFrame *top=NULL;char pending[PATH_CAP],native[PATH_CAP],canonical[PATH_CAP],leaf[32],encoded[100];CInfoPBRec pb;int e=0;
+- if(strlen(path)>=sizeof pending)return bdNamErr;strcpy(pending,path);
++ /* Reject dot operands before resolution erases their spelling or traversal
++    deletes contents. Ignore trailing separators, as Unix rm does. */
++ size_t end=strlen(path),start;if(end>=sizeof pending)return bdNamErr;
++ while(end&&path[end-1]=='/')end--;start=end;while(start&&path[start-1]!='/')start--;
++ if(end-start==1&&path[start]=='.')return paramErr;
++ if(end-start==2&&path[start]=='.'&&path[start+1]=='.')return paramErr;
++ strcpy(pending,path);
+  for(;;){
+   if(app_yield()){e=130;break;}
+   e=checked(pending,native,canonical,0);if(!e)e=info(native,&pb);
+--- a/src/namespace.inc
++++ b/src/namespace.inc
+@@ -35,6 +35,7 @@
+ /* Resolve one component at a time: a link/.. applies to the target's parent.
+    No recursion, fixed buffers, at most 16 traversals per operation. */
+ static int resolve_full(const char *s,char *native,char *canonical,int follow,CInfoPBRec *result){char pending[PATH_CAP],done[PATH_CAP]="/",part[100],target[PATH_CAP];int links=0,have_info=0;CInfoPBRec pb;
++ if(!*s)return bdNamErr; /* An empty operand is not the working directory. */
+  if(!strncmp(s,"native:",7)){int e=unix_from_native(s+7,pending);if(e)return e;}
+  else if(*s=='~'&&(s[1]=='/'||!s[1])){if(strlen(s)>=PATH_CAP)return bdNamErr;strcpy(pending,s+1);if(!*pending)strcpy(pending,"/");}
+  else if(*s=='/'){if(strlen(s)>=PATH_CAP)return bdNamErr;strcpy(pending,s);}
+--- a/src/update/version.h
++++ b/src/update/version.h
+@@ -1,3 +1,3 @@
+ /* Monotonic private development build identifier, not a published release. */
+-#define CLARICE_UPDATE_BUILD 2026111841
++#define CLARICE_UPDATE_BUILD 2026111842
+ #define CLARICE_UPDATE_FORMAT 1

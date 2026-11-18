@@ -1,0 +1,440 @@
+{
+  "base": "7e3e036",
+  "branch": "codex/se-performance-20261118",
+  "source_worktree": "/Users/williamprestwich/Documents/ChatGPT/Clarice-Main",
+  "source_diff_sha256": "5e88cf5fb3bb0483df6d18726d0cd5abacfef1fd2fe47a49d380d020e2f56725",
+  "packages": [
+    {
+      "kind": "core",
+      "name": "Clarice",
+      "version": 2026111823,
+      "bytes": 280576,
+      "crc32": "30b90c78",
+      "sha256": "038e2dde503ce6bfc5473a87efc09c067bd6ebd257a0643ddc0a9bfb6eaae529"
+    },
+    {
+      "kind": "tool",
+      "name": "ls",
+      "version": 2026111823,
+      "bytes": 12604,
+      "crc32": "96cdfa42",
+      "sha256": "589319bdb8fc9cfdbef41636b19c9d609ce08cb984ccf62fefc4d8d02cf24fa8"
+    },
+    {
+      "kind": "tool",
+      "name": "df",
+      "version": 2026111823,
+      "bytes": 12604,
+      "crc32": "96cdfa42",
+      "sha256": "589319bdb8fc9cfdbef41636b19c9d609ce08cb984ccf62fefc4d8d02cf24fa8"
+    },
+    {
+      "kind": "tool",
+      "name": "cat",
+      "version": 2026111823,
+      "bytes": 12604,
+      "crc32": "96cdfa42",
+      "sha256": "589319bdb8fc9cfdbef41636b19c9d609ce08cb984ccf62fefc4d8d02cf24fa8"
+    },
+    {
+      "kind": "tool",
+      "name": "benchls",
+      "version": 2026111823,
+      "bytes": 12604,
+      "crc32": "96cdfa42",
+      "sha256": "589319bdb8fc9cfdbef41636b19c9d609ce08cb984ccf62fefc4d8d02cf24fa8"
+    },
+    {
+      "kind": "tool",
+      "name": "benchscan",
+      "version": 2026111823,
+      "bytes": 12604,
+      "crc32": "96cdfa42",
+      "sha256": "589319bdb8fc9cfdbef41636b19c9d609ce08cb984ccf62fefc4d8d02cf24fa8"
+    },
+    {
+      "kind": "tool",
+      "name": "grep",
+      "version": 2026111823,
+      "bytes": 46044,
+      "crc32": "ba928b81",
+      "sha256": "f1e527f375296d6d0df82b732279aceaa88569db2049c7e684fb1de1612073a5"
+    },
+    {
+      "kind": "tool",
+      "name": "sed",
+      "version": 2026111823,
+      "bytes": 65760,
+      "crc32": "6714d29c",
+      "sha256": "237ca9c93a2071132e9de618c47b60251a8d6da513e1e1e3bd8cd9ebea200f9a"
+    },
+    {
+      "kind": "tool",
+      "name": "awk",
+      "version": 2026111823,
+      "bytes": 188956,
+      "crc32": "44b0e0d6",
+      "sha256": "61274d145ecae8a3626bc900e607d3fb95a1429bcd59e0fabc5f0cfd4eff820c"
+    },
+    {
+      "kind": "tool",
+      "name": "serial",
+      "version": 2026111823,
+      "bytes": 9552,
+      "crc32": "c43bf37e",
+      "sha256": "b3ea27657ffea909ec88354273753bf336b055a5415f553b63e3ed5c4ab17ea0"
+    },
+    {
+      "kind": "tool",
+      "name": "wc",
+      "version": 2026111823,
+      "bytes": 15496,
+      "crc32": "612d2ee0",
+      "sha256": "3041fea0d78354f3307876fab1a5608baa537393967857515855da28a80a399b"
+    },
+    {
+      "kind": "tool",
+      "name": "head",
+      "version": 2026111823,
+      "bytes": 15620,
+      "crc32": "ffff63a7",
+      "sha256": "cc3679352c7446160c93b3631aa1618df531dc8f1786c42726445ab819c02c77"
+    },
+    {
+      "kind": "tool",
+      "name": "cut",
+      "version": 2026111823,
+      "bytes": 18868,
+      "crc32": "db9a8735",
+      "sha256": "6782d20081d535a6ed51ef72507627efcc43875288e559e830c7d2ab7e9d475b"
+    },
+    {
+      "kind": "tool",
+      "name": "tr",
+      "version": 2026111823,
+      "bytes": 32456,
+      "crc32": "9272383c",
+      "sha256": "59cfacc2f65b98a784b7617b7608f8292fe16fa161e2f23ea34c76cb328d4701"
+    },
+    {
+      "kind": "tool",
+      "name": "uniq",
+      "version": 2026111823,
+      "bytes": 16716,
+      "crc32": "7ef83872",
+      "sha256": "ac42c9b82582dedfdf6b2f902bd625d52fed926f69edeac225b8a62e90e4aa66"
+    },
+    {
+      "kind": "tool",
+      "name": "tee",
+      "version": 2026111823,
+      "bytes": 13460,
+      "crc32": "09c78836",
+      "sha256": "9ec7e10a292ceacd9348a7d446371b7c800f308b461ff3f72cff8f95ef44e09d"
+    },
+    {
+      "kind": "tool",
+      "name": "tail",
+      "version": 2026111823,
+      "bytes": 17924,
+      "crc32": "14bc1ce3",
+      "sha256": "d95d4366148532ad4bf5d769592ab942ed52e19e4061228da111884a8cf2b2a3"
+    },
+    {
+      "kind": "tool",
+      "name": "sort",
+      "version": 2026111823,
+      "bytes": 40016,
+      "crc32": "b1e7a171",
+      "sha256": "1d2c440795a9bdbb3ffba4128b9c559bc3748489799bfa42bdb60e28d17dc0c8"
+    },
+    {
+      "kind": "tool",
+      "name": "cp",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "mv",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "touch",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "rmdir",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "mkdir",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "rm",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "ln",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "readlink",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "hfsattr",
+      "version": 2026111823,
+      "bytes": 12996,
+      "crc32": "78339b94",
+      "sha256": "9346534bfcf1ce0afb48bc4eb1c306fb335a1f323633a56fe59bf0c01afc63b0"
+    },
+    {
+      "kind": "tool",
+      "name": "find",
+      "version": 2026111823,
+      "bytes": 12892,
+      "crc32": "285ea017",
+      "sha256": "47f92caaad1b62357cafeb5225c7305233bcd0b83d4f8577f9fc6ab46be19a8f"
+    },
+    {
+      "kind": "tool",
+      "name": "du",
+      "version": 2026111823,
+      "bytes": 12892,
+      "crc32": "285ea017",
+      "sha256": "47f92caaad1b62357cafeb5225c7305233bcd0b83d4f8577f9fc6ab46be19a8f"
+    },
+    {
+      "kind": "tool",
+      "name": "file",
+      "version": 2026111823,
+      "bytes": 12892,
+      "crc32": "285ea017",
+      "sha256": "47f92caaad1b62357cafeb5225c7305233bcd0b83d4f8577f9fc6ab46be19a8f"
+    },
+    {
+      "kind": "tool",
+      "name": "od",
+      "version": 2026111823,
+      "bytes": 6008,
+      "crc32": "f94c8c88",
+      "sha256": "b12f28d8863f9611c09bee8d7e2c508e429e2328ca75ac409b0ce406a290761f"
+    },
+    {
+      "kind": "tool",
+      "name": "more",
+      "version": 2026111823,
+      "bytes": 6008,
+      "crc32": "f94c8c88",
+      "sha256": "b12f28d8863f9611c09bee8d7e2c508e429e2328ca75ac409b0ce406a290761f"
+    },
+    {
+      "kind": "tool",
+      "name": "basename",
+      "version": 2026111823,
+      "bytes": 12100,
+      "crc32": "bb624aa1",
+      "sha256": "f11123f8d1fe267df415f5a439e5580c458b05bd854a3c8afa01973588082711"
+    },
+    {
+      "kind": "tool",
+      "name": "dirname",
+      "version": 2026111823,
+      "bytes": 11948,
+      "crc32": "ee16b635",
+      "sha256": "35097a989e7de9ffa5448dcc33d909d0efb4de0660c770791ccd935285668ae8"
+    },
+    {
+      "kind": "tool",
+      "name": "kermit",
+      "version": 2026111823,
+      "bytes": 25904,
+      "crc32": "1acbce9e",
+      "sha256": "5ea18b407dba165ca32fab8fcb8f40728b6e27255256e586d8853366102db1a8"
+    },
+    {
+      "kind": "tool",
+      "name": "wget",
+      "version": 2026111823,
+      "bytes": 23244,
+      "crc32": "42e1314b",
+      "sha256": "ffc4f3f7db0a12db2241276baf68499efa4d2cc28e860277d9d83f4a662511f0"
+    },
+    {
+      "kind": "tool",
+      "name": "clarice",
+      "version": 2026111823,
+      "bytes": 113312,
+      "crc32": "ee4df520",
+      "sha256": "28d4c158e92c1a32b96bf39f7e955ad8f2c2a91266214c074d2377de747a4d20"
+    },
+    {
+      "kind": "tool",
+      "name": "cmp",
+      "version": 2026111823,
+      "bytes": 13564,
+      "crc32": "663dedfc",
+      "sha256": "2f3d6e32cf2d531cb55757e4650690a8318a6592a422ebb31583cd632ab59224"
+    },
+    {
+      "kind": "tool",
+      "name": "cksum",
+      "version": 2026111823,
+      "bytes": 14808,
+      "crc32": "cd02b705",
+      "sha256": "f49d1b529f928b6e17963beff12acb2a004a1b28326c70e3ce23fae55d20d0fc"
+    },
+    {
+      "kind": "tool",
+      "name": "free",
+      "version": 2026111823,
+      "bytes": 2736,
+      "crc32": "a28f71ec",
+      "sha256": "b0b2edaf739bcdec738da3abeaf1e7c63a1bd523ef0ab2c3046a42686213d0b1"
+    },
+    {
+      "kind": "tool",
+      "name": "sleep",
+      "version": 2026111823,
+      "bytes": 12688,
+      "crc32": "6a39b8f5",
+      "sha256": "ea5da7bac74ea90ea2450c91a620130291d548b07deb6ab9d588a062a2138166"
+    },
+    {
+      "kind": "tool",
+      "name": "printenv",
+      "version": 2026111823,
+      "bytes": 13168,
+      "crc32": "88482482",
+      "sha256": "e7a513f0b7c361b68b3cf285e87d487618fdaeb655004ce8d188bd4e9ee390cf"
+    },
+    {
+      "kind": "tool",
+      "name": "mktemp",
+      "version": 2026111823,
+      "bytes": 18092,
+      "crc32": "c8f5c164",
+      "sha256": "09d81ee6dc92bf0c0e2027b450fea95c784e6a34045d98ddf1dee6ea7e462c9a"
+    },
+    {
+      "kind": "tool",
+      "name": "dd",
+      "version": 2026111823,
+      "bytes": 18264,
+      "crc32": "30911e06",
+      "sha256": "5a7ac9750d37d1e5d1c5bae98143a48d935991556eb1a96ba7fe12f723fc0ff4"
+    },
+    {
+      "kind": "tool",
+      "name": "ipconfig",
+      "version": 2026111823,
+      "bytes": 1756,
+      "crc32": "2ccd7316",
+      "sha256": "802e966b5be54f3c2674d0bfbfa9db193d36d199868cd2f0c6503ae113f85c77"
+    },
+    {
+      "kind": "tool",
+      "name": "ping",
+      "version": 2026111823,
+      "bytes": 3944,
+      "crc32": "2114b55c",
+      "sha256": "8e1665ffc83f1feea02a82f64ad09484fd23139d1002069f63cb255557bc2b86"
+    },
+    {
+      "kind": "tool",
+      "name": "ftp",
+      "version": 2026111823,
+      "bytes": 19176,
+      "crc32": "33c4a72b",
+      "sha256": "3ce9fb360258e8d9616c34b4e7688dab5edccaba210a986fbffa6e47d3b302e8"
+    },
+    {
+      "kind": "tool",
+      "name": "telnet",
+      "version": 2026111823,
+      "bytes": 25048,
+      "crc32": "4411fd17",
+      "sha256": "c74df11d24dfb985804fd95468af84da8994f8786b32933df62796edd43ebbb5"
+    },
+    {
+      "kind": "tool",
+      "name": "telnetd",
+      "version": 2026111814,
+      "bytes": 39280,
+      "crc32": "99b549ea",
+      "sha256": "57c8feddefa48ea34e6ff5a5d9e532c060d6711711afda18a8c3e81ecca17b59"
+    },
+    {
+      "kind": "tool",
+      "name": "seriald",
+      "version": 2026111814,
+      "bytes": 28936,
+      "crc32": "7e6af93d",
+      "sha256": "8c02ba6cff23e545fdb959033a164e674e78fdd2576b235c081d265dd2d63b02"
+    },
+    {
+      "kind": "tool",
+      "name": "nano-profile",
+      "version": 2026111826,
+      "bytes": 269420,
+      "crc32": "ba4de7f8",
+      "sha256": "3a0e586fdb95a4ea104ada32362aab72e70645dbe93f7332a91d31a936e67a95"
+    },
+    {
+      "kind": "tool",
+      "name": "nano",
+      "version": 2026111827,
+      "bytes": 268900,
+      "crc32": "d9fe60af",
+      "sha256": "c2071fb2c8907cc21a6c4cbff61eed87569b74e5d161d857e476c637586b8af9"
+    }
+  ],
+  "hardware": {
+    "cpu": "68000 reported",
+    "ram": "4 MB reported",
+    "os": "System 6.0.8 reported by Core1823",
+    "control": "SEControl Fast port5969",
+    "serial": "/dev/cu.usbmodem1401"
+  },
+  "bootstrap": {
+    "before": 2026111550,
+    "after": 2026111823,
+    "staging_ticks": 1508,
+    "verification_ticks": 676,
+    "download_reported_kib_s": 13.7,
+    "relaunched": true,
+    "error28_observed": false
+  }
+}

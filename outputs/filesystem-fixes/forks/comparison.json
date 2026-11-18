@@ -1,0 +1,19 @@
+{
+  "source": {
+    "data_bytes": 14,
+    "resource_bytes": 33,
+    "data_sha256": "5e845c09b411cbab4eca242a5d4da4a95bc87d2d5b7d4fcc51846fddb2f2d09d",
+    "resource_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+    "type_creator": "TEXTTEST",
+    "timestamps": "0000000000000000"
+  },
+  "moved": {
+    "data_bytes": 14,
+    "resource_bytes": 33,
+    "data_sha256": "5e845c09b411cbab4eca242a5d4da4a95bc87d2d5b7d4fcc51846fddb2f2d09d",
+    "resource_sha256": "9a0910838a52e9d22de0ca64fcdbad0d78516525652d0f1df867ca0f420ad89f",
+    "type_creator": "TEXTTEST",
+    "timestamps": "0000000000000000"
+  },
+  "equal": true
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "command": "status version",
+    "status": 2,
+    "text": "status version; printf '\\nREMOTE_END_1:%d\\n' $?\r\nusage: status [-h]\r\n\r\nREMOTE_END_1:2\r\n/ > "
+  }
+]

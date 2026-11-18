@@ -1,0 +1,13 @@
+100 names before first 2.3 repeats [2.05, 2.16, 2.15] median 2.15
+100 names after first 1.63 repeats [1.56, 1.56, 1.75] median 1.56
+100 long before first 2.11 repeats [2.05, 2.03, 2.05] median 2.05
+100 long after first 1.95 repeats [1.86, 1.88, 1.86] median 1.86
+1000 names before first 10.76 repeats [11.16, 11.56, 10.76] median 11.16
+1000 names after first 6.46 repeats [6.46, 7.18, 6.46] median 6.46
+1000 long before first 9.5 repeats [11.35, 10.48, 10.95] median 10.95
+1000 long after first 8.2 repeats [9.4, 7.65, 8.83] median 8.83
+SCREEN names before 2.15
+SCREEN names after 2.16
+SCREEN long before 2.28
+SCREEN long after 2.18
+PASS: 36 successful guest commands; 16 exact comparisons; remaining0 every run (runtime counters exclude direct cli_alloc); flush0

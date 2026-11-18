@@ -1,0 +1,258 @@
+[
+  {
+    "test": "setup",
+    "command": "mkdir '/mnt/FS Audit A/fix1840'; cd '/mnt/FS Audit A/fix1840'; mkdir '/mnt/FS Audit B/fix1840'",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir '/mnt/FS Audit A/fix1840'; cd '/mnt/FS Audit A/fix1840'; mkdir '/mnt/FS Audit B/fix1840'; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\nfix1840 > ",
+    "host_seconds": 2.409296875
+  },
+  {
+    "test": "empty operand",
+    "command": "mkdir -p ''",
+    "status": 1,
+    "expected": 1,
+    "text": "mkdir -p ''; printf '\\nREMOTE_END_2:%d\\n' $?\r\nmkdir: Mac OS error -37: Invalid file or volume name\r\n\r\nREMOTE_END_2:1\r\nfix1840 > ",
+    "host_seconds": 1.042741875
+  },
+  {
+    "test": "parents and separators",
+    "command": "mkdir -p . nested//child/; test -d nested/child",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p . nested//child/; test -d nested/child; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\nfix1840 > ",
+    "host_seconds": 1.8267842499999998
+  },
+  {
+    "test": "locked seed",
+    "command": "printf NEW > locked; hfsattr --locked on locked; printf OLD > target",
+    "status": 0,
+    "expected": 0,
+    "text": "printf NEW > locked; hfsattr --locked on locked; printf OLD > target; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\nfix1840 > ",
+    "host_seconds": 2.360953459
+  },
+  {
+    "test": "locked overwrite",
+    "command": "mv locked target",
+    "status": 1,
+    "expected": 1,
+    "text": "mv locked target; printf '\\nREMOTE_END_5:%d\\n' $?\r\nmv: Mac OS error -45: File is locked\r\n\r\nREMOTE_END_5:1\r\nfix1840 > ",
+    "host_seconds": 1.8512410839999998
+  },
+  {
+    "test": "locked preserved",
+    "command": "test \"$(cat target)\" = OLD && test \"$(cat locked)\" = NEW",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$(cat target)\" = OLD && test \"$(cat locked)\" = NEW; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r\nREMOTE_END_6:0\r\nfix1840 > ",
+    "host_seconds": 2.9910806670000003
+  },
+  {
+    "test": "locked absent",
+    "command": "mv locked absent",
+    "status": 1,
+    "expected": 1,
+    "text": "mv locked absent; printf '\\nREMOTE_END_7:%d\\n' $?\r\nmv: Mac OS error -45: File is locked\r\n\r\nREMOTE_END_7:1\r\nfix1840 > ",
+    "host_seconds": 1.330251875
+  },
+  {
+    "test": "no duplicate",
+    "command": "test ! -e absent",
+    "status": 0,
+    "expected": 0,
+    "text": "test ! -e absent; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\nfix1840 > ",
+    "host_seconds": 0.5883565830000013
+  },
+  {
+    "test": "locked cross volume",
+    "command": "mv locked '/mnt/FS Audit B/fix1840/absent'",
+    "status": 1,
+    "expected": 1,
+    "text": "mv locked '/mnt/FS Audit B/fix1840/absent'; printf '\\nREMOTE_END_9:%d\\n' $?\r\nmv: Mac OS error -45: File is locked\r\n\r\nREMOTE_END_9:1\r\nfix1840 > ",
+    "host_seconds": 1.4300715419999985
+  },
+  {
+    "test": "no cross duplicate",
+    "command": "test ! -e '/mnt/FS Audit B/fix1840/absent'",
+    "status": 0,
+    "expected": 0,
+    "text": "test ! -e '/mnt/FS Audit B/fix1840/absent'; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r\nREMOTE_END_10:0\r\nfix1840 > ",
+    "host_seconds": 0.5705920830000011
+  },
+  {
+    "test": "normal overwrite",
+    "command": "hfsattr --locked off locked; mv locked target; test ! -e locked && test \"$(cat target)\" = NEW",
+    "status": 0,
+    "expected": 0,
+    "text": "hfsattr --locked off locked; mv locked target; test ! -e locked && test \"$(cat target)\" = NEW; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\r\nREMOTE_END_11:0\r\nfix1840 > ",
+    "host_seconds": 4.064701041999999
+  },
+  {
+    "test": "fork seed",
+    "command": "cp -p '/mnt/FS Audit A/fork-source' fork",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p '/mnt/FS Audit A/fork-source' fork; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\nfix1840 > ",
+    "host_seconds": 2.0989629579999978
+  },
+  {
+    "test": "cross same leaf",
+    "command": "mv fork '/mnt/FS Audit B/fix1840/fork'; test ! -e fork; cmp '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/fix1840/fork'",
+    "status": 0,
+    "expected": 0,
+    "text": "mv fork '/mnt/FS Audit B/fix1840/fork'; test ! -e fork; cmp '/mnt/FS Audit A/fork-source' '/mnt/FS Audit B/fix1840/fork'; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r\nREMOTE_END_13:0\r\nfix1840 > ",
+    "host_seconds": 3.0108943749999995
+  },
+  {
+    "test": "cwd seed",
+    "command": "mkdir cwd; cd cwd",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir cwd; cd cwd; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r\nREMOTE_END_14:0\r\ncwd > ",
+    "host_seconds": 1.375313000000002
+  },
+  {
+    "test": "cwd rename",
+    "command": "mv ../cwd ../renamed-cwd; pwd",
+    "status": 0,
+    "expected": 0,
+    "text": "mv ../cwd ../renamed-cwd; pwd; printf '\\nREMOTE_END_15:%d\\n' $?\r\n/mnt/FS Audit A/fix1840/renamed-cwd\r\n\r\nREMOTE_END_15:0\r\nrenamed-cwd > ",
+    "host_seconds": 1.501706917
+  },
+  {
+    "test": "cwd relative",
+    "command": "touch child; cd ..; test -f renamed-cwd/child",
+    "status": 0,
+    "expected": 0,
+    "text": "touch child; cd ..; test -f renamed-cwd/child; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r\nREMOTE_END_16:0\r\nfix1840 > ",
+    "host_seconds": 2.1043967499999994
+  },
+  {
+    "test": "ancestor seed",
+    "command": "mkdir -p parent/sub; cd parent/sub",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p parent/sub; cd parent/sub; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r\nREMOTE_END_17:0\r\nsub > ",
+    "host_seconds": 1.7999202079999996
+  },
+  {
+    "test": "ancestor subshell",
+    "command": "(mv ../../parent ../../changed); pwd",
+    "status": 0,
+    "expected": 0,
+    "text": "(mv ../../parent ../../changed); pwd; printf '\\nREMOTE_END_18:%d\\n' $?\r\n/mnt/FS Audit A/fix1840/changed/sub\r\n\r\nREMOTE_END_18:0\r\nsub > ",
+    "host_seconds": 1.656328875000007
+  },
+  {
+    "test": "ancestor usable",
+    "command": "touch child; cd ../..; test -f changed/sub/child",
+    "status": 0,
+    "expected": 0,
+    "text": "touch child; cd ../..; test -f changed/sub/child; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\r\nREMOTE_END_19:0\r\nfix1840 > ",
+    "host_seconds": 1.5482306250000022
+  },
+  {
+    "test": "same leaf directory move",
+    "command": "mkdir holder; cd changed/sub; mv ../../changed ../../holder; pwd",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir holder; cd changed/sub; mv ../../changed ../../holder; pwd; printf '\\nREMOTE_END_20:%d\\n' $?\r\n/mnt/FS Audit A/fix1840/holder/changed/sub\r\n\r\nREMOTE_END_20:0\r\nsub > ",
+    "host_seconds": 2.2248740409999996
+  },
+  {
+    "test": "directory move usable",
+    "command": "touch moved-child; cd ../../..; test -f holder/changed/sub/moved-child",
+    "status": 0,
+    "expected": 0,
+    "text": "touch moved-child; cd ../../..; test -f holder/changed/sub/moved-child; printf '\\nREMOTE_END_21:%d\\n' $?\r\n\r\nREMOTE_END_21:0\r\nfix1840 > ",
+    "host_seconds": 1.8709306249999997
+  },
+  {
+    "test": "local seed",
+    "command": "mkdir -p local/sub",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p local/sub; printf '\\nREMOTE_END_22:%d\\n' $?\r\n\r\nREMOTE_END_22:0\r\nfix1840 > ",
+    "host_seconds": 1.4068949170000025
+  },
+  {
+    "test": "remote renames local ancestor",
+    "command": "mv local local-renamed",
+    "status": 0,
+    "expected": 0,
+    "text": "mv local local-renamed; printf '\\nREMOTE_END_23:%d\\n' $?\r\n\r\nREMOTE_END_23:0\r\nfix1840 > ",
+    "host_seconds": 1.3811808750000054
+  },
+  {
+    "test": "local recovered",
+    "command": "test -f local-renamed/sub/local-child",
+    "status": 0,
+    "expected": 0,
+    "text": "test -f local-renamed/sub/local-child; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r\nREMOTE_END_24:0\r\nfix1840 > ",
+    "host_seconds": 0.7362072920000031
+  },
+  {
+    "test": "remote help",
+    "command": "telnet --help",
+    "status": 0,
+    "expected": 0,
+    "text": "telnet --help; printf '\\nREMOTE_END_25:%d\\n' $?\r\nusage: telnet [--dumb] HOST [PORT]\r\nNative TCP/DNS; monochrome VT100/ANSI screen, TERM=vt100, NAWS.\r\n--dumb retains line-oriented NVT. Ctrl+] then q exits locally;\r\nCtrl+] twice sends Ctrl+]. Cmd-period cancels; Ctrl+C sends Telnet IP.\r\nReturn sends CR LF; Backspace sends DEL; application arrows supported.\r\nlibtelnet protocol engine; ASCII text; inverse video, cursor/erase/scroll regions, insert/delete.\r\nDEC line graphics use ASCII approximations; no colour, UTF-8, double-size\r\nlines, alternate-screen history, bold/underline/blink or VT52.\r\nScreen size is fixed at connection: resize before connecting. No TLS,\r\nautologin, transfers or TCP urgent SYNCH. Data is unencrypted.\r\nBoth streams must be terminals. Native TCP/DNS may delay cancellation.\r\nNo idle timeout; incomplete Telnet controls time out after 30s.\r\nInput overflow/oversized controls stop explicitly.\r\nStatuses: 0 peer close/local escape, 1 error, 2 usage, 130 local cancel.\r\n\r\nREMOTE_END_25:0\r\nfix1840 > ",
+    "host_seconds": 1.9077869580000026
+  },
+  {
+    "test": "remote nano diagnostic",
+    "command": "nano /tmp/file",
+    "status": 2,
+    "expected": 2,
+    "text": "nano /tmp/file; printf '\\nREMOTE_END_26:%d\\n' $?\r\ncommand currently requires local input ownership\r\n\r\nREMOTE_END_26:2\r\nfix1840 > ",
+    "host_seconds": 0.613746833999997
+  },
+  {
+    "test": "remote nano path diagnostic",
+    "command": "/bin/nano /tmp/file",
+    "status": 2,
+    "expected": 2,
+    "text": "/bin/nano /tmp/file; printf '\\nREMOTE_END_27:%d\\n' $?\r\ncommand currently requires local input ownership\r\n\r\nREMOTE_END_27:2\r\nfix1840 > ",
+    "host_seconds": 0.5549992920000051
+  },
+  {
+    "test": "runtime",
+    "command": "status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_28:%d\\n' $?\r\nRuntime: heap=336528 largest=335428 image=18352 ticks=114 load=106 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=49 imports=1 relocations=1 prepare=8 events=9 (events included above)\r\nVerification ticks: mode=full header=0 record=33 payload=40 metadata=9 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_28:0\r\nfix1840 > ",
+    "host_seconds": 0.5177900409999978
+  },
+  {
+    "test": "repeat 0",
+    "command": "cp target repeat; cmp target repeat; rm repeat; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "cp target repeat; cmp target repeat; rm repeat; status runtime; printf '\\nREMOTE_END_29:%d\\n' $?\r\nRuntime: heap=335128 largest=334852 image=8056 ticks=84 load=72 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=26 imports=2 relocations=1 prepare=4 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=29 payload=18 metadata=8 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_29:0\r\nfix1840 > ",
+    "host_seconds": 3.491562250000001
+  },
+  {
+    "test": "repeat 1",
+    "command": "cp target repeat; cmp target repeat; rm repeat; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "cp target repeat; cmp target repeat; rm repeat; status runtime; printf '\\nREMOTE_END_30:%d\\n' $?\r\nRuntime: heap=335176 largest=334852 image=8056 ticks=39 load=28 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=1 imports=1 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_30:0\r\nfix1840 > ",
+    "host_seconds": 2.9262354589999973
+  },
+  {
+    "test": "repeat 2",
+    "command": "cp target repeat; cmp target repeat; rm repeat; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "cp target repeat; cmp target repeat; rm repeat; status runtime; printf '\\nREMOTE_END_31:%d\\n' $?\r\nRuntime: heap=335176 largest=334852 image=8056 ticks=39 load=28 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_31:0\r\nfix1840 > ",
+    "host_seconds": 2.865524792000002
+  },
+  {
+    "test": "repeat 3",
+    "command": "cp target repeat; cmp target repeat; rm repeat; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "cp target repeat; cmp target repeat; rm repeat; status runtime; printf '\\nREMOTE_END_32:%d\\n' $?\r\nRuntime: heap=335176 largest=334852 image=8056 ticks=39 load=28 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=1 imports=2 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_32:0\r\nfix1840 > ",
+    "host_seconds": 2.895418792000001
+  }
+]

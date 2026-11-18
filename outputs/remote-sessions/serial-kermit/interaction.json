@@ -1,0 +1,86 @@
+[
+  {
+    "test": "overflow",
+    "result": "printf BAD > /tmp/remote-must-not-exist xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nInput rejected: pending command capacity exceeded.\r\ntmp > "
+  },
+  {
+    "test": "multiline",
+    "result": "echo FIRST\r\necho SECOND\r\nFIRST\r\ntmp > SECOND\r\ntmp > "
+  },
+  {
+    "test": "local queued command / remote interrupt / independent cwd",
+    "result": "cat /tmp/local-remote-queue.txt; pwd; printf '\\nREMOTE_END_3:%d\\n' $?\r\nLOCAL_QUEUE_OK\r\n/tmp\r\n\r\nREMOTE_END_3:0\r\ntmp > "
+  },
+  {
+    "test": "remote stdin",
+    "result": "read a b; printf \"READ:%s/%s\\n\" \"$a\" \"$b\"\r\nhello remote\r\nREAD:hello/remote\r\ntmp > "
+  },
+  {
+    "test": "repeat heap",
+    "result": {
+      "heap": 291970,
+      "largest": 290326
+    }
+  },
+  {
+    "test": "repeat heap",
+    "result": {
+      "heap": 291970,
+      "largest": 290326
+    }
+  },
+  {
+    "test": "repeat heap",
+    "result": {
+      "heap": 291970,
+      "largest": 290326
+    }
+  },
+  {
+    "test": "repeat heap",
+    "result": {
+      "heap": 291970,
+      "largest": 290326
+    }
+  },
+  {
+    "test": "repeat heap",
+    "result": {
+      "heap": 291970,
+      "largest": 290326
+    }
+  },
+  {
+    "test": "repeat heap",
+    "result": {
+      "heap": 291970,
+      "largest": 290326
+    }
+  },
+  {
+    "test": "repeat heap",
+    "result": {
+      "heap": 291970,
+      "largest": 290326
+    }
+  },
+  {
+    "test": "repeat heap",
+    "result": {
+      "heap": 291970,
+      "largest": 290326
+    }
+  },
+  {
+    "test": "reconnect",
+    "result": "pwd; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\n/\r\nRuntime: heap=292470 largest=290326 image=32708 ticks=49 load=42 owned-peak=10812 remaining=0\r\nLoader ticks: read=18 validate=1 imports=3 relocations=4 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "reconnect",
+    "result": "pwd; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\n/\r\nRuntime: heap=292470 largest=290326 image=32708 ticks=49 load=42 owned-peak=10812 remaining=0\r\nLoader ticks: read=18 validate=1 imports=3 relocations=4 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "reconnect",
+    "result": "pwd; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\n/\r\nRuntime: heap=292470 largest=290326 image=32708 ticks=49 load=42 owned-peak=10812 remaining=0\r\nLoader ticks: read=18 validate=1 imports=3 relocations=4 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  }
+]

@@ -1,0 +1,10 @@
+FLG: kind (d directory, l link, - file), L locked, I invisible.
+DATA/RESOURCE: logical fork sizes; blank for directories.
+TYPE/CREA: Macintosh type/creator; '.' marks nonprintable bytes.
+CREATED: HFS creation date/time. NAME: encoded filename.
+Sizes are bytes; zero means an empty fork.
+FLAGS also has N name-locked, B bundle; HEX is raw Finder flags.
+FLAGS HEX        DATA   RESOURCE TYPE CREA CREATED          NAME
+----- 0000          7          0 SITx SITx 2026-11-18 12:35 archive
+----- 0000          7          0 CLX1 CLRC 2026-11-18 12:35 command
+d---- 0000                       ---- ---- 2026-11-18 12:35 folder/

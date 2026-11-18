@@ -1,9 +1,72 @@
 # Installing Clarice Core and standard utilities
 
 The core application contains the terminal, shell, builtins and runtime. Standard
-commands are separate CLX files. Nano is optional and is not in this collection.
-Use a complete distribution for first installation; a core-only update does not
-install, inspect or replace utilities.
+commands are separate CLX files. Nano remains optional. Use the complete offline
+distribution for the first installation; repository updates subsequently maintain
+the standard tools and update Core last.
+
+## Private repository updates
+
+Configure `/etc/clarice/update.conf` with one private HTTP index URL, for example
+`http://192.168.1.112:8083/index.txt`, then run:
+
+```
+clarice update --check
+clarice update
+clarice update -y
+```
+
+`--check` lists proposed changes without installing or updating local records.
+The normal command asks `[Y/n]`; `-y` accepts that proposal. `--source URL` overrides
+the configured source for this invocation. Newly listed standard tools are added,
+older installed versions are upgraded, and known newer versions are not downgraded.
+Repository-listed names are managed tools: on first adoption an existing different
+file is proposed for replacement. Unlisted commands, optional nano, preferences
+and user files are left alone.
+
+Each successful tool is recorded in `/etc/clarice/installed.catalog`, a small text
+catalog. `/etc/clarice/update.incomplete` means the update has not completed.
+After a timeout, cancellation or failure, fix the reported problem and repeat the
+same command/source. Completed tools remain installed and are skipped; the updater
+does not roll back the collection. A partial final catalog append is discarded on
+retry. Malformed complete records are reported, not silently accepted.
+
+Tools use the existing fully validating `appinstall` implementation. Downloads
+are length/CRC checked before installation. Core is a fork-preserving MacBinary
+package; its existing helper replaces it only after Clarice exits, retaining the
+previous application and automatically relaunching. The new Core records completion
+and clears the marker after relaunch. Ordinary startup checks only for this marker;
+it does not scan or hash `/bin`.
+
+Per-tool `.clx-NAME.old` retains the previous file, including both forks. On another
+repository replacement, older recovery files are preserved as `.previous-CATALOGID`.
+These archives consume disk space; review them before deleting older recovery copies.
+This is resumable HFS replacement, not an atomic collection or power-loss guarantee.
+A corrupt catalog, damaged filesystem or unrecoverable disk error can require manual
+repair. Explicit `appinstall check` remains the full executable diagnostic. The
+catalog is a version record, not continuous detection of same-size file corruption.
+Private HTTP CRC checks detect accidental corruption; they do not authenticate the
+server or packages. Public Internet/HTTPS updates remain outside this milestone.
+
+### Hosting the repository
+
+From a complete build made by `scripts/build.sh`:
+
+```
+python3 scripts/repository.py work/private-repository
+python3 scripts/dev-http.py --bind HOST_IP --peer CLIENT_IP --port 8083 --directory work/private-repository
+```
+
+The publisher verifies the build seal, emits content-named CLX/MacBinary files,
+then publishes `index.txt` only after all payloads exist. It rejects changing an
+already published package/version. Increment the build identity for changed source.
+No hand-maintained command manifest or separate installer is required.
+
+This development updater requires runtime **1.6** (the thin appinstall entry and
+native SetEOF export). Older Core installations need the complete offline bootstrap
+once; do not install the new updater into a 1.5 Core. Future ABI-breaking upgrades
+may likewise require a bootstrap: tools are validated against the running runtime
+before Core replacement, rather than bypassing compatibility checks.
 
 ## Networking and optional applications
 
@@ -73,8 +136,8 @@ The existing command remains available for another installation source:
 appinstall setup /mnt/Clarice/Utilities
 ```
 
-Quote paths containing spaces. A core-only update does not install or scan the
-utility collection. After installation, try `ls /bin`, `awk 'BEGIN {print "ready"}'`
+Quote paths containing spaces. This manual setup installs missing tools only;
+use `clarice update` for repository upgrades. After installation, try `ls /bin`, `awk 'BEGIN {print "ready"}'`
 and `help`. Ordinary startup never repeats installation.
 
 ## Individual installation, checking and repair
@@ -123,3 +186,23 @@ Apple Driver43 device header/driver; provenance is recorded separately. Supply
 a compatible template path as the script’s first argument if necessary. The MacBinary core preserves both forks;
 CLX utility files are ordinary data files. Copying the native app through a
 non-Macintosh filesystem requires its MacBinary container or an HFS image.
+
+## BusyBox command replacements
+
+Private build 2026111882 selects genuine BusyBox 1.37.0 for `wc`, `tr` and
+`sort`. The ordinary updater replaces their existing packages. The standard
+kit also installs `wc-sbase`, `tr-sbase` and `sort-sbase` as explicit compatibility
+commands; each remains independently packaged.
+
+`wc -m` now counts bytes, and `tr` translates bytes with ASCII character classes,
+not Unicode characters. These tools do not convert MacRoman to UTF-8. Use the
+sbase alternatives when their previous UTF-8 behavior is required. BusyBox tr
+also lacks `[:graph:]`, `[:print:]` and `[x*N]` repetition syntax.
+
+BusyBox sort holds input in available application RAM and releases it after
+success, cancellation or failure. Use `sort-sbase` for disk-spilling larger jobs
+or previous options such as `-o`, `-m` and `-C`. BusyBox sort rejects
+`-o/-M/-V/-m/-S/-T`; redirect output to a separate file. A failed or cancelled
+redirected command may leave partial output; never redirect over its input.
+
+BusyBox vi remains an optional experiment, not part of this replacement set.

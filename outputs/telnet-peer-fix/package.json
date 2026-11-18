@@ -1,0 +1,22 @@
+{
+  "module_build": 2026111843,
+  "runtime": "1.9",
+  "bytes": 40824,
+  "previous_bytes": 40784,
+  "delta_bytes": 40,
+  "sha256": "ded3bf7ecbb74b9764d2a5a77af695cb2ec9448a868883175679b98cf86f0dce",
+  "core_required": "runtime1.9 or newer; Core unchanged",
+  "serial_unchanged": true,
+  "approval": "User approved wildcard listen + immediate existing allowed-peer enforcement and requested rejection testing on 18 November 2026",
+  "source_commit": "f4de9f8 plus preserved development working tree",
+  "source_sha256": "4e98daa8a4055a4781dcf8842f70ae78e4c6a4b8ccdc349a210edc0ab0b5d6c2",
+  "physical_status": "SEControl disconnected and USB serial absent; no deployment yet",
+  "validation": {
+    "host_rejected_completions": 12,
+    "snow_initial_authenticated": 2,
+    "snow_rejected_zero_bytes": 3,
+    "snow_authenticated_recovery_with_pipeline": 3,
+    "hardware": "pending reconnect",
+    "guest_cleanup": "remote off; exit observed Finder; owned Snow quit requested"
+  }
+}

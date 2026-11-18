@@ -8,13 +8,14 @@
 #include "nano-compat.h"
 extern int resolve_ex(const char *,char *,char *,int);
 extern int info(const char *,CInfoPBRec *);
+extern int cli_resolve_info(const char *,char *,char *,CInfoPBRec *);
 extern unsigned long cli_ticks(void),cli_unix_time(void);
 extern int app_screen_open(void),nano_main(int,char **);
 extern int cli_remove(const char *),port_track_temp(const char *);
 static int mac_error(int e){errno=e==fnfErr||e==dirNFErr?ENOENT:e==fLckdErr||e==wPrErr||e==permErr?EACCES:e==bdNamErr?ENAMETOOLONG:EIO;return -1;}
-int port_nano_stat(const char *path,struct stat *st){char native[512];CInfoPBRec pb;int e=resolve_ex(path,native,0,1);if(!e)e=info(native,&pb);if(e)return mac_error(e);memset(st,0,sizeof *st);int dir=pb.hFileInfo.ioFlAttrib&16;st->st_mode=(dir?S_IFDIR:S_IFREG)|S_IRUSR|((pb.hFileInfo.ioFlAttrib&1)?0:S_IWUSR)|(dir?S_IXUSR:0);st->st_size=dir?0:pb.hFileInfo.ioFlLgLen;st->st_ino=dir?pb.dirInfo.ioDrDirID:pb.hFileInfo.ioDirID;st->st_dev=pb.hFileInfo.ioVRefNum;st->st_nlink=1;unsigned long t=dir?pb.dirInfo.ioDrMdDat:pb.hFileInfo.ioFlMdDat;st->st_mtime=t>=2082844800UL?t-2082844800UL:0;st->st_ctime=st->st_atime=st->st_mtime;return 0;}
+int port_nano_stat(const char *path,struct stat *st){char native[512];CInfoPBRec pb;int e=cli_resolve_info(path,native,0,&pb);if(e)return mac_error(e);memset(st,0,sizeof *st);int dir=pb.hFileInfo.ioFlAttrib&16;st->st_mode=(dir?S_IFDIR:S_IFREG)|S_IRUSR|((pb.hFileInfo.ioFlAttrib&1)?0:S_IWUSR)|(dir?S_IXUSR:0);st->st_size=dir?0:pb.hFileInfo.ioFlLgLen;st->st_ino=dir?pb.dirInfo.ioDrDirID:pb.hFileInfo.ioDirID;st->st_dev=pb.hFileInfo.ioVRefNum;st->st_nlink=1;unsigned long t=dir?pb.dirInfo.ioDrMdDat:pb.hFileInfo.ioFlMdDat;st->st_mtime=t>=2082844800UL?t-2082844800UL:0;st->st_ctime=st->st_atime=st->st_mtime;return 0;}
 int port_nano_access(const char *path,int mode){struct stat st;if(mode&~(R_OK|W_OK|X_OK)){errno=EINVAL;return -1;}if(port_nano_stat(path,&st))return -1;if(((mode&W_OK)&&!(st.st_mode&S_IWUSR))||((mode&X_OK)&&!S_ISDIR(st.st_mode))){errno=EACCES;return -1;}return 0;}
-char *port_nano_realpath(const char *path,char *out){char native[512],canonical[512];CInfoPBRec pb;int e=resolve_ex(path,native,canonical,1);if(!e)e=info(native,&pb);if(e){mac_error(e);return 0;}if(!out)return strdup(canonical);strcpy(out,canonical);return out;}
+char *port_nano_realpath(const char *path,char *out){char native[512],canonical[512];CInfoPBRec pb;int e=cli_resolve_info(path,native,canonical,&pb);if(e){mac_error(e);return 0;}if(!out)return strdup(canonical);strcpy(out,canonical);return out;}
 #undef initscr
 WINDOW *port_nano_initscr(void){
 #ifdef PORT_NANO_PERF

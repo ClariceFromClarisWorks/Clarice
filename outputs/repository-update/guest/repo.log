@@ -1,0 +1,26 @@
+REPOSITORY-BEGIN
+Checking repository...
+Downloaded 148 B to /tmp/clarice-sort-39625-1
+repotwo -> build 1
+repoone -> build 1
+Checking repository...
+Downloaded 148 B to /tmp/clarice-sort-39818-2
+repotwo -> build 1
+repoone -> build 1
+Installing repotwo...
+Downloaded 12.31 KB to /tmp/clarice-sort-39955-3
+Installing repoone...
+Downloaded 12.31 KB to /tmp/clarice-sort-40302-4
+All standard tools are current. Update complete.
+CLARICE-INSTALLED 1
+tool	repotwo	1	12604	96cdfa42
+tool	repoone	1	12604	96cdfa42
+core	Clarice	2026111801	0	00000000
+Checking repository...
+Downloaded 148 B to /tmp/clarice-sort-40920-5
+All standard tools are current. Update complete.
+REPOSITORY-REPEAT-PASS
+Runtime: heap=360610 largest=360442 image=100492 ticks=237 load=50 owned-peak=0 remaining=0
+Loader ticks: read=31 validate=0 imports=3 relocations=3 prepare=3 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=2 (structure included in relocations)
+REPOSITORY-END

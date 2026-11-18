@@ -27,6 +27,7 @@ extern unsigned long __udivsi3(unsigned long,unsigned long);
 extern unsigned long __umodsi3(unsigned long,unsigned long);
 /* A fixed sorted export table replaces a linear chain of string comparisons.
    No heap allocation or invocation cache; names and ABI bindings are unchanged. */
+static int cli_appinstall(const char *,const char *,unsigned long);
 static void *clx_import(const char *name){
  static const struct {const char *name;void *address;} exports[]={
 #define CLX_IMPORT(name,symbol) {name,(void*)(symbol)},
@@ -44,7 +45,7 @@ static void *clx_import(const char *name){
 /* Runtime 1.0: native 68000 CLX calling convention and explicit import table.
    This capability does not claim POSIX semantics or a public libc ABI. */
 #define CLX_RUNTIME_MAJOR 1
-#define CLX_RUNTIME_MINOR 5
+#define CLX_RUNTIME_MINOR 10
 #define CLX_CAPABILITIES 1UL
 /* Loading and explicit installation use the normal cancellable event path. */
 static unsigned long module_poll_ticks;
@@ -78,7 +79,7 @@ static int module_load(const char *path,int argc,char **argv,int execute){
  if(clx_u32(header+28)||size<4||size>262144||entry>=size||(entry&1)||nr>8192||ni>128||total!=(long)(header_size+size+nr*12+ni*64))goto close;
  if(version==2){
   if(clx_hash(2166136261UL,header,44)!=clx_u32(header+44))goto close;
-  if(clx_u32(header+32)!=CLX_RUNTIME_MAJOR||clx_u32(header+36)>CLX_RUNTIME_MINOR){reason="incompatible runtime requirement (host is 1.5)";goto close;}
+  if(clx_u32(header+32)!=CLX_RUNTIME_MAJOR||clx_u32(header+36)>CLX_RUNTIME_MINOR){reason="incompatible runtime requirement (host is 1.10)";goto close;}
   if(clx_u32(header+40)&~CLX_CAPABILITIES){reason="required runtime capabilities unavailable";goto close;}
  }
  header_time=TickCount()-phase;validation+=header_time;phase=TickCount();
@@ -149,7 +150,12 @@ if(!meta){reason="insufficient relocation memory";goto close;}
 #ifdef CLX_HOST_TEST
  status=clx_test_execute(file,size,argc,command_argv);
 #else
+ service_loading=!shell_session_active();service_registered=0;
  status=((int (*)(int,char**))(file+entry))(argc,command_argv)&255;
+ service_loading=0;
+ if(service_registered){/* Registration succeeds only after native setup completes. */
+  if(service_registered==2)serial_service_image=(Ptr)file;else service_image=(Ptr)file;file=0;service_registered=0;
+ }
 #endif
 close:
  module_fast=fast;module_header_ticks=header_time;module_record_ticks=record_time;module_payload_ticks=payload_time;module_metadata_ticks=metadata_time;module_structure_ticks=structure_time;

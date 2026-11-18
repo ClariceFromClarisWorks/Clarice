@@ -1,0 +1,11 @@
+PASS working directory 0
+PASS retained partial fill 0
+PASS fill destination volume 1
+PASS full disk copy preserves target 1
+PASS full disk target retained 0
+PASS full disk move preserves source 1
+PASS source still present 0
+PASS target still retained 0
+PASS free space recovery 0
+PASS final cleanup 0
+PASS 10 large-file and real-full-volume checks

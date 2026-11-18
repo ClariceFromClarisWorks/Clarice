@@ -1,0 +1,44 @@
+[
+  {
+    "name": "wc",
+    "image": "bbwc",
+    "sha256": "fedfa8d68b28ad3614898e73e1c17e499be2686f75b113e8947fc60142df97a3",
+    "package_bytes": 21108,
+    "image_bytes": 14016
+  },
+  {
+    "name": "wc-sbase",
+    "image": "wc",
+    "sha256": "89575c6e8a26d44cd33f170919aa5e57698fd9d30c5dae2b8bef205e28c2482f",
+    "package_bytes": 15576,
+    "image_bytes": 9880
+  },
+  {
+    "name": "tr",
+    "image": "bbtr",
+    "sha256": "464e89c1dd384048a7b838d70c1898722e04b61c5e9b714f207e8572c2b8591a",
+    "package_bytes": 21464,
+    "image_bytes": 14576
+  },
+  {
+    "name": "tr-sbase",
+    "image": "tr",
+    "sha256": "81aff5bf5e0036efcebf1b71a96d89c6e6b30031db705ff60afe94440ee0bf04",
+    "package_bytes": 32536,
+    "image_bytes": 25380
+  },
+  {
+    "name": "sort",
+    "image": "bbsort",
+    "sha256": "886c51bb2417fb60477436a19ce7891ef7ce5edbc95934287217dd5021a27b7a",
+    "package_bytes": 28836,
+    "image_bytes": 20048
+  },
+  {
+    "name": "sort-sbase",
+    "image": "sort",
+    "sha256": "0b4e872656563968e0a8d34a3a953dd59e4c63480641cefe7efa20e00463de17",
+    "package_bytes": 40100,
+    "image_bytes": 30444
+  }
+]

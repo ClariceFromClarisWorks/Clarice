@@ -1,0 +1,16 @@
+{
+  "before": {
+    "package": 13176,
+    "image": 8480,
+    "relocations": 174,
+    "imports": 40,
+    "metadata": 4648
+  },
+  "after": {
+    "package": 14024,
+    "image": 9196,
+    "relocations": 185,
+    "imports": 40,
+    "metadata": 4780
+  }
+}

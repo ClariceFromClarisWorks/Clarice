@@ -2,8 +2,13 @@
 """Stage the offline collection from the core's name/image list; no new format."""
 from pathlib import Path
 import re, shutil, hashlib, json
+import release
 root=Path(__file__).resolve().parents[1]
-out=root/'work/distribution/kit';out.mkdir(parents=True,exist_ok=True)
+sealed=release.verified(root)
+out=root/'work/distribution/kit'
+if out.exists():
+ shutil.rmtree(out)  # generated kit only; never an installed Macintosh tree
+out.mkdir(parents=True,exist_ok=True)
 utilities=out/'Utilities';utilities.mkdir(exist_ok=True)
 entries=re.findall(r'CLARICE_COMMAND\("([^"]+)", "([^"]+)"\)',(root/'src/standard-commands.inc').read_text())
 assert len(entries)==len({n for n,_ in entries})
@@ -31,3 +36,5 @@ for name,source in {
 }.items(): shutil.copyfile(root/source,out/'Licenses'/name)
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(f'Staged core and {len(entries)} external commands in {out}')
+
+print(release.bundle(root,out))

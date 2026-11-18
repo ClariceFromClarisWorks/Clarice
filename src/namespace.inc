@@ -34,21 +34,26 @@ static int link_target(const char *native,char *target){unsigned char p[256];cha
 static void parent_path(char *s){char *p=strrchr(s,'/');if(p==s)s[1]=0;else if(p)*p=0;}
 /* Resolve one component at a time: a link/.. applies to the target's parent.
    No recursion, fixed buffers, at most 16 traversals per operation. */
-static int resolve_ex(const char *s,char *native,char *canonical,int follow){char pending[PATH_CAP],done[PATH_CAP]="/",part[100],target[PATH_CAP];int links=0;
+static int resolve_full(const char *s,char *native,char *canonical,int follow,CInfoPBRec *result){char pending[PATH_CAP],done[PATH_CAP]="/",part[100],target[PATH_CAP];int links=0,have_info=0;CInfoPBRec pb;
+ if(!*s)return bdNamErr; /* An empty operand is not the working directory. */
  if(!strncmp(s,"native:",7)){int e=unix_from_native(s+7,pending);if(e)return e;}
  else if(*s=='~'&&(s[1]=='/'||!s[1])){if(strlen(s)>=PATH_CAP)return bdNamErr;strcpy(pending,s+1);if(!*pending)strcpy(pending,"/");}
  else if(*s=='/'){if(strlen(s)>=PATH_CAP)return bdNamErr;strcpy(pending,s);}
  else {if(strlen(unix_cwd)+strlen(s)+2>=PATH_CAP)return bdNamErr;strcpy(pending,unix_cwd);if(strcmp(pending,"/"))strcat(pending,"/");strcat(pending,s);}
  while(*pending){while(*pending=='/')memmove(pending,pending+1,strlen(pending));if(!*pending)break;char *slash=strchr(pending,'/');size_t n=slash?(size_t)(slash-pending):strlen(pending);if(n>=sizeof part)return bdNamErr;memcpy(part,pending,n);part[n]=0;memmove(pending,pending+n,strlen(pending+n)+1);
-  if(!strcmp(part,"."))continue;if(!strcmp(part,"..")){parent_path(done);continue;}
+  if(!strcmp(part,"."))continue;if(!strcmp(part,"..")){parent_path(done);have_info=0;continue;}
   size_t old=strlen(done);if(old+strlen(part)+2>=PATH_CAP)return bdNamErr;if(old>1)strcat(done,"/");strcat(done,part);
-  int e=native_path(done,native);if(e)return e;CInfoPBRec pb;e=info(native,&pb);
+  int e=native_path(done,native);if(e)return e;have_info=0;e=info(native,&pb);
   if(e){if(e==fnfErr&&!*pending)break;return e;}
-  if(is_link(&pb)&&(*pending||follow)){if(++links>16)return paramErr;e=link_target(native,target);if(e)return e;if(strlen(target)+strlen(pending)>=PATH_CAP)return bdNamErr;strcat(target,pending);strcpy(pending,target);done[old]=0;if(*target=='/')strcpy(done,"/");continue;}
+  have_info=1;
+  if(is_link(&pb)&&(*pending||follow)){have_info=0;if(++links>16)return paramErr;e=link_target(native,target);if(e)return e;if(strlen(target)+strlen(pending)>=PATH_CAP)return bdNamErr;strcat(target,pending);strcpy(pending,target);done[old]=0;if(*target=='/')strcpy(done,"/");continue;}
   if(*pending&&!(pb.hFileInfo.ioFlAttrib&16))return dirNFErr;
  }
- int e=native_path(done,native);if(!e&&canonical)strcpy(canonical,done);return e;
+ int e=native_path(done,native);if(!e&&result){if(have_info)*result=pb;else e=info(native,result);}if(!e&&canonical)strcpy(canonical,done);return e;
 }
+static int resolve_ex(const char *s,char *native,char *canonical,int follow){return resolve_full(s,native,canonical,follow,0);}
+/* Same-operation metadata only: no retained pathname/catalog cache. */
+static int cli_resolve_info(const char *s,char *native,char *canonical,CInfoPBRec *result){if(!result)return paramErr;return resolve_full(s,native,canonical,1,result);}
 static int resolve(const char *s,char *out){return resolve_ex(s,out,0,1);}
 static int protected_path(const char *canonical){if(!strcmp(canonical,"/")||!strcmp(canonical,"/mnt"))return 1;if(!strncmp(canonical,"/mnt/",5)&&!strchr(canonical+5,'/'))return 1;return 0;}
 static int create_dir(const unsigned char *name,long *id){HParamBlockRec pb;memset(&pb,0,sizeof pb);pb.fileParam.ioNamePtr=(unsigned char*)name;int e=PBDirCreateSync(&pb);if(!e)*id=pb.fileParam.ioDirID;return e;}
@@ -84,7 +89,7 @@ void shell_temp_path(char *out,const char *file){snprintf(out,PATH_CAP,"%.220stm
 static int migrate_private_file(char *out,const char *folder,const char *file,const char *legacy){
  char old[PATH_CAP],temp[PATH_CAP];unsigned char dest[256],src[256],tmp[256],base[256];CInfoPBRec pb;short in=-1,to=-1;long size=0;int e;
  if(strlen(root_path)+strlen(folder)+strlen(file)>255){out[0]=0;return bdNamErr;}strcpy(out,root_path);strcat(out,folder);strcat(out,file);
- e=info(out,&pb);if(!e)return 0;if(e!=fnfErr)return e;
+ e=info(out,&pb);if(!e)return 0;if(e!=fnfErr)return e;if(!legacy)return 0;
  snprintf(old,sizeof old,"%s%s",root_path,legacy);e=info(old,&pb);if(e==fnfErr)return 0;if(e)goto fail;if((pb.hFileInfo.ioFlAttrib&16)||pb.hFileInfo.ioFlRLgLen){e=paramErr;goto fail;}
  pstr(src,old);pstr(dest,out);strcpy(temp,root_path);strcat(temp,folder);strcat(temp,"migrate.tmp");pstr(tmp,temp);pstr(base,file);
  e=HOpen(0,0,src,fsRdPerm,&in);if(e)goto fail;e=GetEOF(in,&size);if(e||size>132000){e=paramErr;goto fail;}

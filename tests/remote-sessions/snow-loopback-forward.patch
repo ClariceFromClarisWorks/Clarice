@@ -1,0 +1,65 @@
+--- a/nat/src/lib.rs
++++ b/nat/src/lib.rs
+@@ -539,6 +539,8 @@
+ 
+ /// NAT engine instance for handling network address translation
+ pub struct NatEngine {
++    test_forward: Option<(std::net::TcpListener, IpEndpoint)>,
++    test_port: u16,
+     /// Virtual network device instance
+     device: VirtualDevice,
+ 
+@@ -622,7 +624,15 @@
+ 
+         let sockets = SocketSet::new(vec![]);
+ 
++        let test_forward = std::env::var("SNOW_TELNET_FORWARD").ok().map(|v| {
++            let (host_port, guest) = v.split_once(',').expect("forward: hostport,guestIP:port");
++            let endpoint: std::net::SocketAddrV4 = guest.parse().expect("guest IPv4 endpoint");
++            let listener = std::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, host_port.parse::<u16>().expect("host port"))).expect("loopback bind");
++            listener.set_nonblocking(true).expect("nonblocking listener");
++            (listener, IpEndpoint::new(IpAddress::Ipv4((*endpoint.ip()).into()), endpoint.port()))
++        });
+         Self {
++            test_forward, test_port: 40000,
+             device,
+             iface,
+             sockets,
+@@ -636,6 +646,29 @@
+             #[cfg(feature = "mactcp_helpers")]
+             gateway_subnet,
+         }
++    }
++
++    // Development-only loopback forwarding, opt-in by environment variable.
++    // Reuse existing smoltcp and NAT teardown/backpressure; no LAN listener.
++    fn accept_test_connection(&mut self) -> Result<()> {
++        use smoltcp::socket::tcp;
++        let Some((listener, guest)) = &self.test_forward else { return Ok(()); };
++        let guest = *guest;
++        let os_socket = match listener.accept() {
++            Ok((s, _)) => s,
++            Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => return Ok(()),
++            Err(e) => return Err(e.into()),
++        };
++        os_socket.set_nonblocking(true)?;
++        self.test_port = if self.test_port == 60000 { 40000 } else { self.test_port + 1 };
++        let local = IpEndpoint::new(self.gateway_ip, self.test_port);
++        let mut socket = tcp::Socket::new(tcp::SocketBuffer::new(vec![0; SMOLTCP_BUFFER_SIZE]), tcp::SocketBuffer::new(vec![0; SMOLTCP_BUFFER_SIZE]));
++        socket.connect(self.iface.context(), guest, local)?;
++        let handle = self.sockets.add(socket);
++        self.nat_table.insert(handle, NatEntry::Tcp(TcpEntry { os_socket,
++            remote_endpoint: local, local_endpoint: guest,
++            expires_at: Instant::now() + NAT_TIMEOUT_TCP_OPEN, local_fin_forwarded: false }));
++        Ok(())
+     }
+ 
+     /// Obtains a reference to the statistics of this engine instance
+@@ -649,6 +682,7 @@
+     /// If nothing happened during a pass, it blocks briefly waiting for packets on
+     /// the rx channel.
+     pub fn process(&mut self) -> Result<()> {
++        self.accept_test_connection()?;
+         let rx_packets_before = self.stats.rx_packets.load(Ordering::Relaxed);
+         let tx_packets_before = self.stats.tx_packets.load(Ordering::Relaxed);
+ 

@@ -1,0 +1,18 @@
+{
+  "before": {
+    "bytes": 269384,
+    "sha256": "bdc593b58ed2049bb4bdb51a0d18577d746c67d8ea2c917a3d008f9e9a38a25e"
+  },
+  "after": {
+    "bytes": 269420,
+    "sha256": "3a0e586fdb95a4ea104ada32362aab72e70645dbe93f7332a91d31a936e67a95"
+  },
+  "measurement": {
+    "core": 2026111823,
+    "command": "nano-profile",
+    "method": "same installed command, before then after; preserve original recovery files",
+    "first": "first invocation in variant session, not cold boot",
+    "remote_services": "disabled during measured invocations",
+    "secontrol": "active for input; no screenshot polling until readiness wait ends"
+  }
+}

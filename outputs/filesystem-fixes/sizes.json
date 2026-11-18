@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Core",
+    "baseline_bytes": 276992,
+    "fixed_bytes": 277504,
+    "delta_bytes": 512
+  },
+  {
+    "name": "files",
+    "baseline_bytes": 12996,
+    "fixed_bytes": 13268,
+    "delta_bytes": 272
+  },
+  {
+    "name": "telnetd",
+    "baseline_bytes": 37248,
+    "fixed_bytes": 38748,
+    "delta_bytes": 1500
+  }
+]

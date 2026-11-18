@@ -1,0 +1,14 @@
+$ sh tests/release/run-host.sh
+PASS: successful mixed fresh/upgrade collection; 42 injected errors and 42 interruptions; missing/unknown/recovery conflicts; no unrelated changes
+PASS: 47-command manifest, every-byte corruption, truncation and invalid names; 1564 bytes transient storage
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.045s
+
+OK
+
+$ python3 tests/release/archive.py
+PASS: complete single bundle; 24 truncation/corruption/unsafe-header/extra-member failures; ASan/UBSan clean
+
+$ /tmp/clarice-tar-test work/distribution/Clarice-release.tar
+PASS: native restricted tar reader verified all bundle members

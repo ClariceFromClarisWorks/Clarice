@@ -1,0 +1,3 @@
+PASS empty mkdir, locked source absent/overwrite, native I/O/lock/catalog failures, copy failure, normal overwrite and cross-volume move
+PASS cwd rename/ancestor/move, case/boundary, saved subshell and both sessions, encoded names and nonmutating overflow preflight
+PASS negative control: locked-source test detects the original overwrite defect

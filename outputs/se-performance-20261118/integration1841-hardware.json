@@ -1,0 +1,86 @@
+[
+  {
+    "command": "mkdir /tmp/sf1841",
+    "status": 0,
+    "text": "mkdir /tmp/sf1841; printf '\\nSE_END_1:%d\\n' $?\r\n\r\nSE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "printf 'NEW\\n' > /tmp/sf1841/source; printf 'OLD\\n' > /tmp/sf1841/dest",
+    "status": 0,
+    "text": "printf 'NEW\\n' > /tmp/sf1841/source; printf 'OLD\\n' > /tmp/sf1841/dest; printf '\\nSE_END_2:%d\\n' $?\r\n\r\nSE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr --locked on /tmp/sf1841/source",
+    "status": 0,
+    "text": "hfsattr --locked on /tmp/sf1841/source; printf '\\nSE_END_3:%d\\n' $?\r\n\r\nSE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "mv /tmp/sf1841/source /tmp/sf1841/dest",
+    "status": 1,
+    "text": "mv /tmp/sf1841/source /tmp/sf1841/dest; printf '\\nSE_END_4:%d\\n' $?\r\nmv: Mac OS error -45: File is locked\r\n\r\nSE_END_4:1\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/sf1841/source /tmp/sf1841/dest",
+    "status": 0,
+    "text": "cat /tmp/sf1841/source /tmp/sf1841/dest; printf '\\nSE_END_5:%d\\n' $?\r\nNEW\r\nOLD\r\n\r\nSE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr --locked off /tmp/sf1841/source",
+    "status": 0,
+    "text": "hfsattr --locked off /tmp/sf1841/source; printf '\\nSE_END_6:%d\\n' $?\r\n\r\nSE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "mkdir ''",
+    "status": 1,
+    "text": "mkdir ''; printf '\\nSE_END_7:%d\\n' $?\r\nmkdir: Mac OS error -50: Invalid parameter\r\n\r\nSE_END_7:1\r\n/ > "
+  },
+  {
+    "command": "mkdir -p /tmp/sf1841/a/b; cd /tmp/sf1841/a/b",
+    "status": 0,
+    "text": "mkdir -p /tmp/sf1841/a/b; cd /tmp/sf1841/a/b; printf '\\nSE_END_8:%d\\n' $?\r\n\r\nSE_END_8:0\r\nb > "
+  },
+  {
+    "command": "mv /tmp/sf1841/a /tmp/sf1841/c; pwd",
+    "status": 0,
+    "text": "mv /tmp/sf1841/a /tmp/sf1841/c; pwd; printf '\\nSE_END_9:%d\\n' $?\r\n/tmp/sf1841/c/b\r\n\r\nSE_END_9:0\r\nb > "
+  },
+  {
+    "command": "cd /",
+    "status": 0,
+    "text": "cd /; printf '\\nSE_END_10:%d\\n' $?\r\n\r\nSE_END_10:0\r\n/ > "
+  },
+  {
+    "command": "nano /tmp/fe18",
+    "status": 2,
+    "text": "nano /tmp/fe18; printf '\\nSE_END_11:%d\\n' $?\r\ncommand currently requires local input ownership\r\n\r\nSE_END_11:2\r\n/ > "
+  },
+  {
+    "command": "telnetd --help",
+    "status": 0,
+    "text": "telnetd --help; printf '\\nSE_END_12:%d\\n' $?\r\ntelnetd [--preferences] | --no-password --peer IPv4 [--port N]\r\nOne supplementary plain-text shell; trusted peer required.\r\nBare telnetd requires saved password settings. remote off stops it.\r\nPassword settings: Preferences > Telnet server, or telnetd --preferences.\r\n1023-byte lines, 4 KiB pending input, arrows/Home/End, last-command Up/Down; overflow rejected.\r\nTab is whitespace, not completion. Immediate reconnect may require retry.\r\nSettings: /etc/clarice/telnet.conf (salted verifier, never plaintext).\r\nPasswords: 1-127 ASCII bytes; 60-second login timeout, 5-second failure cooldown.\r\nGUI-only commands/editors remain local. Status: 0 success, 1 failure, 2 usage, 130 cancelled.\r\n\r\nSE_END_12:0\r\n/ > "
+  },
+  {
+    "test": "serial cursor insertion",
+    "text": "printf 'AC'\b\bBC'\b\b\r\nABC/ > "
+  },
+  {
+    "command": "cat /tmp/fe18",
+    "status": 0,
+    "text": "cat /tmp/fe18; printf '\\nSE_END_13:%d\\n' $?\r\nSE EDIT ORIGINAL\r\n\r\nSE_END_13:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr /tmp/fe18",
+    "status": 0,
+    "text": "hfsattr /tmp/fe18; printf '\\nSE_END_14:%d\\n' $?\r\n/tmp/fe18: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nSE_END_14:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/up18log",
+    "status": 0,
+    "text": "cat /tmp/up18log; printf '\\nSE_END_15:%d\\n' $?\r\nChecking repository...\r\nDownloaded 5.67 KB to /tmp/clarice-sort-315567-1\r\nseriald -> build 2026111841\r\ntelnetd -> build 2026111841\r\nhfsattr -> build 2026111841\r\nreadlink -> build 2026111841\r\nln -> build 2026111841\r\nrm -> build 2026111841\r\nmkdir -> build 2026111841\r\nrmdir -> build 2026111841\r\ntouch -> build 2026111841\r\nmv -> build 2026111841\r\ncp -> build 2026111841\r\nClarice -> build 2026111841\r\nInstalling seriald...\r\nDownloaded 29.36 KB to /tmp/clarice-sort-316258-2\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-seriald.old\r\nInstalling telnetd...\r\nDownloaded 39.83 KB to /tmp/clarice-sort-317075-3\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-telnetd.old\r\nInstalling hfsattr...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-317915-4\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-hfsattr.old\r\nInstalling readlink...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-318443-5\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-readlink.old\r\nInstalling ln...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-319008-6\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-ln.old\r\nInstalling rm...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-319665-7\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-rm.old\r\nInstalling mkdir...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-320195-8\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-mkdir.old\r\nInstalling rmdir...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-320765-9\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-rmdir.old\r\nInstalling touch...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-321307-10\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-touch.old\r\nInstalling mv...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-321944-11\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-mv.old\r\nInstalling cp...\r\nDownloaded 12.96 KB to /tmp/clarice-sort-322474-12\r\nappinstall: retained recovery file: native:Macintosh HD:System 6.0.8:Clarice Data:bin:.clx-cp.old\r\nInstalled build 2026111828; source build 2026111841 (build 2026111841).\r\nDownloading application package...\r\nDownloaded 273.00 KB to /tmp/clarice-sort-323082-13\r\nVerifying package...\r\nStaging application forks...\r\nStaging: 1409 ticks.\r\nChecking staged application...\r\nStaged verification: 646 ticks.\r\nPreparing independent updater...\r\nVerified build 2026111841.\r\nOnly Clarice will close, install and relaunch.\r\nThis may take a minute; do not reset or switch off the Mac.\r\nThe previous application is retained for recovery.\r\nClosing Clarice now. Please wait for automatic relaunch.\r\n\r\nSE_END_15:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nSE_END_16:%d\\n' $?\r\nRuntime: heap=342318 largest=341948 image=8104 ticks=114 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=3 imports=2 relocations=1 prepare=3 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=3 structure=0 (structure included in relocations)\r\n\r\nSE_END_16:0\r\n/ > "
+  }
+]

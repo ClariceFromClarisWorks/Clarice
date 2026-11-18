@@ -1,0 +1,4 @@
+{
+  "output": "printf LOGOUT_LAST; exit\r\nLOGOUT_LAST",
+  "passed": true
+}

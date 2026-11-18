@@ -1,0 +1,1 @@
+PASS delayed display, once/second updates, byte completion capped before commit, final success/error, 1..132 columns, both-fork 32-bit totals, sanitized names, item counts, script/redirection/device/explicit suppression

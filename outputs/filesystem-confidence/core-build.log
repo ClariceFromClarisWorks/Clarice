@@ -1,0 +1,9 @@
+Using multiversal interfaces
+Consolidate compiler generated dependencies of target Clarice
+[  4%] Building C object CMakeFiles/Clarice.dir/app.c.obj
+[  9%] Building C object CMakeFiles/Clarice.dir/shell.c.obj
+[ 14%] Linking C executable Clarice.code.bin
+[ 85%] Built target Clarice
+[ 90%] Generating App.r.rsrc.bin
+[ 95%] Generating Clarice.bin, Clarice.APPL, Clarice.dsk, Clarice.ad, %Clarice.ad
+[100%] Built target Clarice_APPL

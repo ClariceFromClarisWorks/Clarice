@@ -45,11 +45,18 @@ int main(void){
  if(!e){long size;e=GetEOF(ref,&size);if(!e&&size!=UPDATE_PLAN_SIZE)e=paramErr;if(!e){long n=sizeof encoded;e=FSRead(ref,&n,encoded);if(!e&&n!=sizeof encoded)e=ioErr;}int x=FSClose(ref);if(!e)e=x;}
  if(!e)e=update_plan_decode(encoded,&plan);trace(e?"plan failed":"plan read");
  if(e){explain("No valid confirmed update plan. Run clarice update from Clarice. Nothing was replaced.");return 1;}
- /* The only supported operation is replacement of the exact reviewed target.
-    A missing target is an interrupted transaction, never a fresh installation. */
- if(probe(0,0)!=1){explain("Original application changed or is missing. Update stopped; staged and previous files were retained for recovery.");return 1;}
- trace("commit begin");UpdateOps ops={0,probe,verify,closed,move,flush};UpdateResult r=update_commit(&ops);
- trace(r.error?"commit failed":"commit complete");if(r.error){char text[240];snprintf(text,sizeof text,"Update stopped (Mac OS %d, rollback %d). No recovery file was deleted. See the retained update plan for recovery paths; do not overwrite them.",r.error,r.rollback_error);explain(text);return 1;}
+ /* Resume only the exact confirmed native-file replacement. Completed tool
+    installations are unrelated and are never rolled back here. */
+ CInfoPBRec target,backup;int te=update_info(plan.target,&target),be=update_info(plan.backup,&backup);
+ int previous=!be&&(uint32_t)backup.hFileInfo.ioDirID==plan.original_id&&backup.hFileInfo.ioFlMdDat==plan.original_modified;
+ int committed=0;
+ if(!te&&previous&&!update_verify_candidate(plan.target,&plan))committed=1;
+ if(te==fnfErr&&previous){e=closed(0,2);if(!e)e=update_rename(plan.backup,plan.target);if(!e)e=update_flush(plan.target);if(e){explain("Could not restore the previous application; recovery files retained.");return 1;}}
+ if(!committed){
+  if(probe(0,0)!=1){explain("Original application changed or is missing. Recovery files retained.");return 1;}
+  trace("commit begin");UpdateOps ops={0,probe,verify,closed,move,flush};UpdateResult r=update_commit(&ops);
+  if(r.error){char text[240];snprintf(text,sizeof text,"Update stopped (Mac OS %d, recovery %d). Previous and staged files retained. Reopen Clarice and run clarice update -y to resume.",r.error,r.rollback_error);explain(text);return 1;}
+ }
  /* Remove only the validated plan we consumed. Previous application is retained.
     Helper remains available for subsequent updates, outside the application. */
  unsigned char pn[256];update_pstr(pn,path);e=HDelete(0,0,pn);if(!e)e=update_flush(path);

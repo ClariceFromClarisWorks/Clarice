@@ -1,0 +1,12 @@
+{
+  "build": 2026111828,
+  "diagnostics": false,
+  "bytes": 278784,
+  "sha256": "40daba4e1aab21e2232619b53b23c7e4fd33e8dc0aebf1a25fb14c9a116cae4b",
+  "crc32": "8d164254",
+  "scope": "private normal Core only; unchanged independent utility packages reused; not a sealed full release",
+  "source_branch": "codex/se-performance-20261118",
+  "source_note": "preserved Clarice-Main working changes plus private build stamp; no nano profiling definition",
+  "build_log": "work/se-performance/normal-core-build.log",
+  "physical_relaunch": "Observed Core2026111828 greeting and Clarice update complete via captured screen/OCR; log collection pending"
+}

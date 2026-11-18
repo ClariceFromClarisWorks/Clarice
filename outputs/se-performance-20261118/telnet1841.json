@@ -1,0 +1,15 @@
+{
+  "build": 2026111841,
+  "source": [
+    "192.168.1.112",
+    63547
+  ],
+  "destination": [
+    "192.168.1.252",
+    2323
+  ],
+  "connected": false,
+  "errno": 61,
+  "error": "[Errno 61] Connection refused",
+  "host_seconds": 0.344142666
+}

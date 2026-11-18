@@ -1,0 +1,1 @@
+PASS: width 1..200, current/total IEC sizes, unknown/zero totals, overflow-safe percentages, failure/final rows, throttle, redirected suppression

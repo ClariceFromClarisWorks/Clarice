@@ -1,0 +1,22 @@
+[
+  {
+    "test": "second client rejected",
+    "received": ""
+  },
+  {
+    "test": "ETX cancellation",
+    "passed": true
+  },
+  {
+    "test": "local cancel independent",
+    "passed": true
+  },
+  {
+    "test": "disconnect during output and reconnect",
+    "passed": true
+  },
+  {
+    "test": "subshell exit and logout",
+    "passed": true
+  }
+]

@@ -1,0 +1,1 @@
+PASS: 4000 cached/cold long listings match independent printf oracle; mixed dates, directories, virtual entries, flags, full 32-bit sizes, human/full modes, dot names and newline boundaries; exact-key invalidation and zero timestamp

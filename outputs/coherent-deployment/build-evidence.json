@@ -1,0 +1,12 @@
+{
+  "build": 2026111713,
+  "identity": "2b8d4b5597bb4a6055b45c859d7e2019f544b3ef1e74d779b98ccacced1db6a9",
+  "core_bytes": 270464,
+  "utilities_bytes": 1031308,
+  "commands": 47,
+  "distinct_images": 32,
+  "bundle_bytes": 1351680,
+  "native_installer_integrated": false,
+  "snow_tested": false,
+  "physical_tested": false
+}

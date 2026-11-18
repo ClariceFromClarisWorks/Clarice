@@ -10,51 +10,66 @@ static int ls_yield(int paged){unsigned long t=TickCount();int rc=paged?app_page
 #define ls_emit emit
 #define ls_yield(paged) ((paged)?app_page():app_yield())
 #endif
-/* Streaming, row-major output. One row of storage, never a directory-sized
+/* Streaming, row-major output. One terminal row plus an optional file-output buffer, never a directory-sized
    array or preliminary metadata pass. Catalog order is retained. */
-typedef struct {int detail,human,paged,multi,used,presented;char row[132],created[17];unsigned long created_seconds;int created_valid;} Listing;
-static int list_flush(Listing *l){if(l->used){emit(l->row,l->used);say("\n");l->used=0;if(!l->presented){term_present();l->presented=1;}}if(output_error)return 1;return (l->paged?app_page():app_yield())?130:0;}
+typedef struct {int detail,human,paged,multi,used,presented;char row[133],created[17];unsigned long created_seconds;int created_valid;char *buffer;unsigned buffered;} Listing;
+#define LIST_BUFFER_SIZE 4096
+static void list_drain(Listing *l){if(l->buffered){if(!output_error)ls_emit(l->buffer,l->buffered);l->buffered=0;}}
+static void list_write(Listing *l,const char *s,unsigned n){
+ if(!l->buffer){ls_emit(s,n);return;}
+ if(n>LIST_BUFFER_SIZE-l->buffered)list_drain(l);
+ if(output_error)return;
+ if(n>LIST_BUFFER_SIZE){ls_emit(s,n);return;}
+ memcpy(l->buffer+l->buffered,s,n);l->buffered+=n;
+}
+static int list_flush(Listing *l){if(l->used){l->row[l->used++]='\n';list_write(l,l->row,l->used);l->used=0;if(!l->presented){term_present();l->presented=1;}}if(output_error)return 1;return (l->paged?app_page():app_yield())?130:0;}
 static int list_item(Listing *l,const char *name,const CInfoPBRec *pb){
  if(l->detail<0)return app_yield()?130:0;
  LS_START;
  int dir=!pb||(pb->hFileInfo.ioFlAttrib&16),e;
  if(l->detail){char meta[PATH_CAP+128],data[32],resource[32],kind[6],type[10];unsigned int flags=pb?pb->hFileInfo.ioFlFndrInfo.fdFlags:0;int j;
   kind[0]=dir?'d':is_link(pb)?'l':'-';kind[1]=pb&&(pb->hFileInfo.ioFlAttrib&1)?'L':'-';kind[2]=flags&0x4000?'I':'-';kind[3]=flags&0x1000?'N':'-';kind[4]=flags&0x2000?'B':'-';kind[5]=0;
-  if(l->detail==2)for(j=0;j<8;j++){unsigned char c=dir?'-':((unsigned char*)&pb->hFileInfo.ioFlFndrInfo)[j];type[j+(j>=4)]=(c>=32&&c<127)?c:'.';}type[4]=' ';type[9]=0;
+  for(j=0;j<8;j++){unsigned char c=dir?'-':((unsigned char*)&pb->hFileInfo.ioFlFndrInfo)[j];type[j+(j>=4)]=(c>=32&&c<127)?c:'.';}type[4]=' ';type[9]=0;
   /* Avoid general printf parsing for every catalog entry. */
   int k=0,n;static const char hex[]= "0123456789ABCDEF";k=l->detail==2?5:3;memcpy(meta,kind,k);meta[k++]=' ';
   if(l->detail==2){for(j=12;j>=0;j-=4)meta[k++]=pb?hex[(flags>>j)&15]:'-';meta[k++]=' ';}
   if(!pb||dir){memset(meta+k,' ',22);k+=22;}
   else if(!l->human){format_decimal_field(meta+k,(unsigned long)pb->hFileInfo.ioFlLgLen);k+=10;meta[k++]=' ';format_decimal_field(meta+k,(unsigned long)pb->hFileInfo.ioFlRLgLen);k+=10;meta[k++]=' ';}
   else{format_size(data,(unsigned long)pb->hFileInfo.ioFlLgLen,1);format_size(resource,(unsigned long)pb->hFileInfo.ioFlRLgLen,1);const char *sizes[2]={data,resource};for(j=0;j<2;j++){n=strlen(sizes[j]);if(n<10){memset(meta+k,' ',10-n);k+=10-n;}memcpy(meta+k,sizes[j],n);k+=n;meta[k++]=' ';}}
-  if(l->detail==2){memcpy(meta+k,type,9);k+=9;meta[k++]=' ';}if(pb){unsigned long seconds=dir?(unsigned long)pb->dirInfo.ioDrCrDat:(unsigned long)pb->hFileInfo.ioFlCrDat;
+  memcpy(meta+k,type,9);k+=9;meta[k++]=' ';if(pb){unsigned long seconds=dir?(unsigned long)pb->dirInfo.ioDrCrDat:(unsigned long)pb->hFileInfo.ioFlCrDat;
    /* One invocation-local value, exact timestamp key; no directory cache. */
-   if(!l->created_valid||l->created_seconds!=seconds){format_created(l->created,seconds);l->created_seconds=seconds;l->created_valid=1;}memcpy(meta+k,l->created,16);}else memset(meta+k,' ',16);k+=16;meta[k++]=' ';n=strlen(name);memcpy(meta+k,name,n);k+=n;if(dir&&strcmp(name,".")&&strcmp(name,".."))meta[k++]='/';meta[k++]='\n';LS_PHASE(2);ls_emit(meta,k);return output_error?1:ls_yield(l->paged)?130:0;
+   if(!l->created_valid||l->created_seconds!=seconds){format_created(l->created,seconds);l->created_seconds=seconds;l->created_valid=1;}memcpy(meta+k,l->created,16);}else memset(meta+k,' ',16);k+=16;meta[k++]=' ';n=strlen(name);memcpy(meta+k,name,n);k+=n;if(dir&&strcmp(name,".")&&strcmp(name,".."))meta[k++]='/';meta[k++]='\n';LS_PHASE(2);list_write(l,meta,k);return output_error?1:ls_yield(l->paged)?130:0;
  }
- char shown[104];snprintf(shown,sizeof shown,"%s%s",name,dir&&strcmp(name,".")&&strcmp(name,"..")?"/":"");int len=strlen(shown),width=app_columns();
- if(!l->multi){say(shown);say("\n");return output_error?1:(l->paged?app_page():app_yield())?130:0;}
+ /* Names arrive encoded; append the directory marker without printf or a
+    second length scan. Preserve the historical 103-byte operand display bound. */
+ char shown[104];int len=0,width=app_columns();
+ while(name[len]&&len<103){shown[len]=name[len];len++;}
+ if(dir&&strcmp(name,".")&&strcmp(name,"..")&&len<103)shown[len++]='/';
+ if(!l->multi){shown[len++]='\n';list_write(l,shown,len);return output_error?1:ls_yield(l->paged)?130:0;}
  /* Fixed 16-cell stops keep streaming rows aligned without collecting names. */
  int at=l->used?((l->used+2+15)/16)*16:0;
  if(l->used&&at+len>width){if((e=list_flush(l)))return e;at=0;}
- if(len>width){say(shown);say("\n");return output_error?1:(l->paged?app_page():app_yield())?130:0;}
+ if(len>width){shown[len++]='\n';list_write(l,shown,len);return output_error?1:ls_yield(l->paged)?130:0;}
  memset(l->row+l->used,' ',at-l->used);memcpy(l->row+at,shown,len);l->used=at+len;
  if(l->used==width)return list_flush(l);return app_yield()?130:0;
 }
 static unsigned long list_ticks,list_first,list_entries;
-static int list_impl(const char *s,int detail,int all,int paged,int human,int one){
+static int list_walk(const char *s,int detail,int all,Listing *l){
 #ifdef CLARICE_LIST_DIAGNOSTICS
  memset(ls_phase,0,sizeof ls_phase);
 #endif
- LS_START;unsigned long started=TickCount();char np[PATH_CAP],up[PATH_CAP];CInfoPBRec current;int e=resolve_ex(s,np,up,1),i;
- Listing l;memset(&l,0,sizeof l);l.detail=detail;l.human=human;l.paged=paged;l.multi=!one&&output_ref<0&&!script_depth;
+ LS_START;unsigned long started=TickCount();char np[PATH_CAP],up[PATH_CAP];CInfoPBRec current;int e=cli_resolve_info(s,np,up,&current),i;
+ /* /mnt is virtual even when its backing folder is absent. Only this missing
+    metadata case needs the creation-capable resolver; never use stale output. */
+ if(e==fnfErr){int missing=e;if(!resolve_ex(s,np,up,1)&&!strcmp(up,"/mnt"))e=0;else e=missing;}
  list_first=list_entries=0;app_page_begin();if(e){error("ls",e);return 1;}
- int mounts=!strcmp(up,"/mnt");if(!mounts){e=info(np,&current);if(e){error("ls",e);return 1;}
-  if(!(current.hFileInfo.ioFlAttrib&16)){e=list_item(&l,s,&current);return e?e:list_flush(&l);}
+ int mounts=!strcmp(up,"/mnt");if(!mounts){
+  if(!(current.hFileInfo.ioFlAttrib&16)){e=list_item(l,s,&current);return e?e:list_flush(l);}
  }
- if(all&&detail>=0){if((e=list_item(&l,".",mounts?0:&current)))return e;
+ if(all&&detail>=0){if((e=list_item(l,".",mounts?0:&current)))return e;
   CInfoPBRec parent;char path[PATH_CAP],native[PATH_CAP];strcpy(path,up);parent_path(path);const CInfoPBRec *p=0;
-  if(strcmp(path,"/mnt")&&!resolve(path,native)&&!info(native,&parent))p=&parent;
-  if((e=list_item(&l,"..",p)))return e;
+  if(detail>0&&strcmp(path,"/mnt")&&!cli_resolve_info(path,native,0,&parent))p=&parent;
+  if((e=list_item(l,"..",p)))return e;
  }
  LS_PHASE(0);
  short v=mounts?0:current.dirInfo.ioVRefNum;long id=mounts?0:current.dirInfo.ioDrDirID;
@@ -70,13 +85,24 @@ static int list_impl(const char *s,int detail,int all,int paged,int human,int on
    /* HFS names are at most 31 bytes; reject malformed results before use. */
    if(name[0]>31){error("ls",bdNamErr);return 1;}name[name[0]+1]=0;if(encode_name((char*)name+1,shown,sizeof shown))return 1;
   }
-  LS_PHASE(1);list_entries++;if((e=list_item(&l,shown,entry)))return e;
-  if(list_entries==1){if(!l.multi||detail){term_present();list_first=TickCount()-started;}}
+  LS_PHASE(1);list_entries++;if((e=list_item(l,shown,entry)))return e;
+  if(list_entries==1){if(!l->multi||detail){term_present();list_first=TickCount()-started;}}
 #ifdef CLARICE_LIST_DIAGNOSTICS
   ls_stamp=TickCount();
 #endif
  }
- e=list_flush(&l);list_ticks=TickCount()-started;return e;
+ e=list_flush(l);list_ticks=TickCount()-started;return e;
+}
+static int list_impl(const char *s,int detail,int all,int paged,int human,int one){
+ Listing l;memset(&l,0,sizeof l);l.detail=detail;l.human=human;l.paged=paged;l.multi=!one&&output_ref<0&&!script_depth;
+ /* Buffer only native file output, not terminal/session/device streams. Failure
+    to obtain this optional working memory retains direct streaming. */
+ if(output_ref>=0&&detail>=0)l.buffer=cli_alloc(LIST_BUFFER_SIZE);
+ int e=list_walk(s,detail,all,&l);
+ /* Preserve already produced output on catalog errors and cancellation. Never
+    retry a failed write; stream_write has already handled short writes. */
+ list_drain(&l);if(l.buffer)cli_free(l.buffer);
+ return e==130?130:output_error?1:e;
 }
 /* Batch bulk paints, but keep event polling at two ticks and page/first-entry
    presentation immediate. Restore the ordinary cadence on every exit. */
@@ -92,15 +118,16 @@ static const char *listing_operand(int argc,char **av,int *index,int *options){
 }
 static int ls_command(int argc,char **av){
  if(argc==2&&!strcmp(av[1],"--help")){say(
- "usage: ls [-lah1P] [--full] [--] [path ...]\n"
- "-l columns: kind+LI  data-bytes  resource-bytes  created  name\n"
+ "usage: ls [-lah1P] [--full] [--legend] [--] [path ...]\n"
+ "-l columns: kind+LI  data-bytes  resource-bytes  type  creator  created  name\n"
  "Created: YYYY-MM-DD HH:MM, from the HFS catalog.\n"
  "Kind: d directory, l Clarice link, - ordinary file.\n"
  "L: locked; I: Finder-invisible; -: flag clear.\n"
  "Fork sizes are logical bytes; -h uses KiB/MiB; zero is empty.\n"
  "Directories have blank fork sizes: these are not applicable.\n"
  "Virtual entries leave unavailable sizes/dates blank.\n"
- "--full adds N/B flag bits, raw Finder hex, type and creator.\n"
+ "--full adds N/B flag bits and raw Finder hex.\n"
+ "--legend adds column explanations and headings; implies -l.\n"
  "N: name-locked bit; B: bundle bit (OS-dependent meaning).\n"
  "Type/creator: stored codes; '.' replaces nonprintable bytes.\n"
  "Stored ???? is literal metadata, not our placeholder.\n"
@@ -109,9 +136,19 @@ static int ls_command(int argc,char **av){
  "Explicit path operands are shown even when hidden.\n"
  "-1 one entry per line; -P accepted for compatibility; catalog order.\n"
  "No invented owners, groups or Unix access permissions.\n");return output_error?1:0;}
-int detail=0,all=0,paged=1,human=0,one=0,options=1,n=0,i;int operand=1,operand_options=1;
- for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--] [path ...]\n");return 2;}}}else n++;}
- int result=0;for(i=0;i<(n?n:1);i++){const char *path=n?listing_operand(argc,av,&operand,&operand_options):".";if(n>1){if(i)say("\n");say(path);say(":\n");}int e=list(path,detail,all,paged&&output_ref<0&&!script_depth,human,one);if(e==130)return e;if(e)result=e;if(output_error)return 1;}return result;
+int detail=0,all=0,paged=1,human=0,one=0,legend=0,options=1,n=0,i;int operand=1,operand_options=1;
+ for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--legend")){legend=1;continue;}if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--legend] [--] [path ...]\n");return 2;}}}else n++;}
+ if(legend){if(!detail)detail=1;
+  say("FLG: kind (d directory, l link, - file), L locked, I invisible.\n"
+      "DATA/RESOURCE: logical fork sizes; blank for directories.\n"
+      "TYPE/CREA: Macintosh type/creator; '.' marks nonprintable bytes.\n"
+      "CREATED: HFS creation date/time. NAME: encoded filename.\n");
+  if(human)say("Sizes use KiB/MiB; zero means an empty fork.\n");
+  else say("Sizes are bytes; zero means an empty fork.\n");
+  if(detail==2)say("FLAGS also has N name-locked, B bundle; HEX is raw Finder flags.\n");
+  if(output_error)return 1;
+ }
+ int result=0;for(i=0;i<(n?n:1);i++){const char *path=n?listing_operand(argc,av,&operand,&operand_options):".";if(n>1){if(i)say("\n");say(path);say(":\n");}if(legend){say(detail==2?"FLAGS HEX  ":"FLG ");say("      DATA   RESOURCE TYPE CREA CREATED          NAME\n");if(output_error)return 1;}int e=list(path,detail,all,paged&&output_ref<0&&!script_depth,human,one);if(e==130)return e;if(e)result=e;if(output_error)return 1;}return result;
 }
 static int df_row(HParamBlockRec *pb,int human){
  char size[32],used[32],free_space[32],line[224],raw[32],mount[100];unsigned long blocks=(unsigned short)pb->volumeParam.ioVNmAlBlks,free_blocks=(unsigned short)pb->volumeParam.ioVFrBlk,block_size=(unsigned long)pb->volumeParam.ioVAlBlkSiz;

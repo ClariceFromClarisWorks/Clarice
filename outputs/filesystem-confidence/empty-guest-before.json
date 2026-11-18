@@ -1,0 +1,17 @@
+[
+  {
+    "command": "mkdir '/mnt/FS Audit A/confidence/empty'; cd '/mnt/FS Audit A/confidence/empty'; printf KEEP > sentinel",
+    "status": 0,
+    "text": "mkdir '/mnt/FS Audit A/confidence/empty'; cd '/mnt/FS Audit A/confidence/empty'; printf KEEP > sentinel; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\nempty > "
+  },
+  {
+    "command": "rm -R ''",
+    "status": 0,
+    "text": "rm -R ''; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\nempty > "
+  },
+  {
+    "command": "cd '/mnt/FS Audit A/confidence'; test -f empty/sentinel",
+    "status": 1,
+    "text": "cd '/mnt/FS Audit A/confidence'; test -f empty/sentinel; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:1\r\nconfidence > "
+  }
+]

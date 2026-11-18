@@ -1,0 +1,13 @@
+PASS working directory 0
+PASS large seek creation 0
+PASS large size 0
+PASS large copy and compare 0
+PASS disk full target seed 0
+Traceback (most recent call last):
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Integration-Filesystem/tests/filesystem-confidence/stress.py", line 14, in <module>
+    check('fill destination volume',"dd if=moved of='/mnt/FS Audit B/confidence-final/filler' bs=1024 seek=65536 count=1",1)
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Integration-Filesystem/tests/filesystem-confidence/stress.py", line 7, in check
+    t=time.monotonic();rc,text=c.command(cmd,300);ok=rc==expected and (contains is None or contains in text);rows.append(dict(test=label,command=cmd,expected=expected,status=rc,passed=ok,text=text,seconds=time.monotonic()-t));(out/'stress.json').write_text(json.dumps(rows,indent=2)+'\n');print(('PASS' if ok else 'FAIL'),label,rc,flush=True);assert ok,(label,text)
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Integration-Filesystem/tests/filesystem-fixes/remote/client.py", line 30, in command
+    raise TimeoutError(repr(data))
+TimeoutError: b"dd if=moved of='/mnt/FS Audit B/confidence-final/filler' bs=1024 seek=65536 count=1; printf '\\nREMOTE_END_6:%d\\n' $?\r\n"

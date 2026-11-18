@@ -1,0 +1,41 @@
+/var/folders/zs/c3gp941161362z20kncsv92r0000gn/T/tmp_bl12_cg/before.c:25:64: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+   25 | static void format_size(char *s,unsigned long n,int h){(void)h;sprintf(s,"%lu",n);}
+      |                                                                ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_stdio.h:278:1: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __deprecated_msg("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
+  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/var/folders/zs/c3gp941161362z20kncsv92r0000gn/T/tmp_bl12_cg/before.c:44:148: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+   44 | static int PBGetCatInfoSync(CInfoPBRec *p){calls++;int i=p->hFileInfo.ioFDirIndex;if(fault&&i==17)return -36;if(i>entries)return fnfErr;char n[32];sprintf(n,"file%04d",i);p->hFileInfo.ioNamePtr[0]=8;memcpy(p->hFileInfo.ioNamePtr+1,n,8);p->hFileInfo.ioFlAttrib=i%7==0?16:0;p->hFileInfo.ioFlFndrInfo.fdFlags=0;p->hFileInfo.ioFlLgLen=i;p->hFileInfo.ioFlRLgLen=0;p->hFileInfo.ioFlCrDat=0;return 0;}
+      |                                                                                                                                                    ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_stdio.h:278:1: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __deprecated_msg("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
+  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+2 warnings generated.
+/var/folders/zs/c3gp941161362z20kncsv92r0000gn/T/tmp_bl12_cg/after.c:25:64: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+   25 | static void format_size(char *s,unsigned long n,int h){(void)h;sprintf(s,"%lu",n);}
+      |                                                                ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_stdio.h:278:1: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __deprecated_msg("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
+  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/var/folders/zs/c3gp941161362z20kncsv92r0000gn/T/tmp_bl12_cg/after.c:44:148: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+   44 | static int PBGetCatInfoSync(CInfoPBRec *p){calls++;int i=p->hFileInfo.ioFDirIndex;if(fault&&i==17)return -36;if(i>entries)return fnfErr;char n[32];sprintf(n,"file%04d",i);p->hFileInfo.ioNamePtr[0]=8;memcpy(p->hFileInfo.ioNamePtr+1,n,8);p->hFileInfo.ioFlAttrib=i%7==0?16:0;p->hFileInfo.ioFlFndrInfo.fdFlags=0;p->hFileInfo.ioFlLgLen=i;p->hFileInfo.ioFlRLgLen=0;p->hFileInfo.ioFlCrDat=0;return 0;}
+      |                                                                                                                                                    ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_stdio.h:278:1: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __deprecated_msg("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
+  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+2 warnings generated.
+1000 files plus dots, detail 0 : writes 2004 -> 3 ; peak 4096
+1000 files plus dots, detail 1 : writes 1002 -> 13 ; peak 4096
+PASS: 576 before/after byte/status cases; allocation fallback, cancellation, catalog faults, widths, paging, detailed and plain output; failed writes are not retried; allocations freed

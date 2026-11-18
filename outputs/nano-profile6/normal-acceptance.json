@@ -1,0 +1,17 @@
+[
+  {
+    "command": "cat /tmp/nfast-save",
+    "status": 0,
+    "text": "cat /tmp/nfast-save; printf '\\nREMOTE_END_1:%d\\n' $?\r\nNORMAL EDIT ORIGINAL\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr /tmp/nfast-save",
+    "status": 0,
+    "text": "hfsattr /tmp/nfast-save; printf '\\nREMOTE_END_2:%d\\n' $?\r\n/tmp/nfast-save: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/nb-normal",
+    "status": 0,
+    "text": "cat /tmp/nb-normal; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=364236 largest=360406 image=198904 ticks=4156 load=100 owned-peak=77160 remaining=0\r\nNano ticks: 9479938 0 0 0 0 0 0 0 9480240 0 0 0 0; input batches=10 sum=81 max=48; initial-heap=365082\r\nEditor startup: draws=10 rows=56 text=5 copy=2 total=30 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=16 bytes=483 feed-ticks=4\r\nNative ticks: allocs=127 FreeMem=0 NewPtr=59 reads=2 read=1 stdio=0 image-alloc=1 meta-alloc=0\r\nLoader ticks: read=62 validate=2 imports=3 relocations=21 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

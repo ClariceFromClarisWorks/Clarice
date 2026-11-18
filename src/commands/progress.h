@@ -24,11 +24,24 @@ static void progress_size(char out[24],unsigned long n){
  if(whole==1024&&shift<30){whole=1;shift+=10;}
  snprintf(out,24,"%u.%02u %s",whole,fraction,shift==10?"KiB":shift==20?"MiB":"GiB");
 }
+static void progress_paint(const char *info,unsigned pc,int known,int done,unsigned long seconds,int width){
+ char line[132];
+ int spare=width-(int)strlen(info),at=0;
+ if(spare>=6){int bar=spare-3;line[at++]='[';unsigned filled=known?(pc*(unsigned)bar)/100:0;
+  for(int i=0;i<bar;i++)line[at++]=known?(i<(int)filled?'=':' '):(i==(int)(seconds%bar)?'>':' ');
+  line[at++]=']';line[at++]=' ';}
+ unsigned n=strlen(info);if(n>(unsigned)(width-at))n=width-at;memcpy(line+at,info,n);line[at+n]=0;
+ progress_row(line,done!=0);progress_shown=1;
+}
 static void progress_update(unsigned long bytes,unsigned long total,int known,int done){
  unsigned long now=progress_clock(),seconds=(now-progress_started)/60;
  if(!progress_enabled||(!done&&now-progress_last<60))return;
  progress_last=now;int width=progress_columns()-1;if(width<1)width=1;if(width>130)width=130;
- char amount[24],size[24],speed[24],info[96],line[132];unsigned pc=known?progress_percent(bytes,total):0;
+ char amount[24],size[24],info[96];unsigned pc=known?progress_percent(bytes,total):0;
+
+#ifdef PROGRESS_PENDING_COMMIT
+ if(done<=0&&pc==100)pc=99;
+#endif
  progress_size(amount,bytes);progress_size(size,total);
  if(known)snprintf(info,sizeof info,"%3u%% %s / %s",pc,amount,size);
  else snprintf(info,sizeof info,"%s / ?",amount);
@@ -36,12 +49,16 @@ static void progress_update(unsigned long bytes,unsigned long total,int known,in
     optional fields, never wrap a progress row into the scrollback. */
  if((int)strlen(info)>width){if(known)snprintf(info,sizeof info,"%u%% %s",pc,amount);else snprintf(info,sizeof info,"%s",amount);}
  if((int)strlen(info)>width){if(known)snprintf(info,sizeof info,"%u%%",pc);else strcpy(info,"...");}
- if(seconds){progress_size(speed,bytes/seconds);if(strlen(info)+strlen(speed)+4<=(unsigned)width){strcat(info," ");strcat(info,speed);strcat(info,"/s");}}
+#ifndef PROGRESS_NO_RATE
+ if(seconds){char speed[24];progress_size(speed,bytes/seconds);if(strlen(info)+strlen(speed)+4<=(unsigned)width){strcat(info," ");strcat(info,speed);strcat(info,"/s");}}
+#endif
  if(done<0&&strlen(info)+2<=(unsigned)width)strcat(info," !");
- int spare=width-(int)strlen(info),at=0;
- if(spare>=6){int bar=spare-3;line[at++]='[';unsigned filled=known?(pc*(unsigned)bar)/100:0;
-  for(int i=0;i<bar;i++)line[at++]=known?(i<(int)filled?'=':' '):(i==(int)(seconds%bar)?'>':' ');
-  line[at++]=']';line[at++]=' ';}
- unsigned n=strlen(info);if(n>(unsigned)(width-at))n=width-at;memcpy(line+at,info,n);line[at+n]=0;
- progress_row(line,done!=0);progress_shown=1;
+ progress_paint(info,pc,known,done,seconds,width);
+}
+/* Unknown totals: use the same moving bar and width bounds for item counts. */
+static inline void progress_message(const char *info,int done){
+ unsigned long now=progress_clock();
+ if(!progress_enabled||(!done&&now-progress_last<60))return;
+ progress_last=now;int width=progress_columns()-1;if(width<1)width=1;if(width>130)width=130;
+ progress_paint(info,done>0?100:0,done>0,done,(now-progress_started)/60,width);
 }

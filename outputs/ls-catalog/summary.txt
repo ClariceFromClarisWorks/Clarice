@@ -1,0 +1,15 @@
+{'mode': 'file', 'files': 100, 'variant': 'base', 'samples': [2.43, 2.4, 2.4], 'median': 2.4}
+{'mode': 'file', 'files': 100, 'variant': 'frmt', 'samples': [2.78, 2.31, 2.33], 'median': 2.33}
+{'mode': 'file', 'files': 100, 'variant': 'next', 'samples': [2.28, 2.3, 2.36], 'median': 2.3}
+{'mode': 'file', 'files': 1000, 'variant': 'base', 'samples': [11.7, 11.51, 10.21], 'median': 11.51}
+{'mode': 'file', 'files': 1000, 'variant': 'frmt', 'samples': [11.1, 11.46, 9.7], 'median': 11.1}
+{'mode': 'file', 'files': 1000, 'variant': 'next', 'samples': [10.16, 11.6, 9.6], 'median': 10.16}
+{'mode': 'screen', 'files': 100, 'variant': 'base', 'samples': [2.35, 2.33, 2.35], 'median': 2.35}
+{'mode': 'screen', 'files': 100, 'variant': 'frmt', 'samples': [2.4, 2.33, 2.28], 'median': 2.33}
+{'mode': 'screen', 'files': 100, 'variant': 'next', 'samples': [2.21, 2.23, 2.21], 'median': 2.21}
+{'mode': 'screen', 'files': 1000, 'variant': 'base', 'samples': [9.43, 9.88, 9.93], 'median': 9.88}
+{'mode': 'screen', 'files': 1000, 'variant': 'frmt', 'samples': [9.66, 9.56, 9.68], 'median': 9.66}
+{'mode': 'screen', 'files': 1000, 'variant': 'next', 'samples': [9.41, 9.86, 9.76], 'median': 9.76}
+{'mode': 'names', 'files': 100, 'variant': 'base', 'samples': [2.06, 2.31, 2.3], 'median': 2.3}
+{'mode': 'names', 'files': 100, 'variant': 'next', 'samples': [2.21, 2.21, 2.21], 'median': 2.21}
+PASS 48 timed successful invocations; zero tracked survivors; 16 long-output comparisons

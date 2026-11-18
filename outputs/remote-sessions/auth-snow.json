@@ -1,0 +1,32 @@
+[
+  {
+    "test": "wrong",
+    "rejected": true,
+    "no_echo_or_shell": true
+  },
+  {
+    "test": "empty",
+    "rejected": true,
+    "no_echo_or_shell": true
+  },
+  {
+    "test": "overflow",
+    "rejected": true,
+    "no_echo_or_shell": true
+  },
+  {
+    "test": "correct password/reconnect",
+    "host_seconds": 1.4215085000000016,
+    "runtime": "pwd; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\n/\r\nRuntime: heap=337492 largest=335956 image=8104 ticks=43 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=0 imports=2 relocations=1 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "correct password/reconnect",
+    "host_seconds": 1.4270158749999986,
+    "runtime": "pwd; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\n/\r\nRuntime: heap=337504 largest=335956 image=8104 ticks=43 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=0 imports=2 relocations=1 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "correct password/reconnect",
+    "host_seconds": 1.4715975000000014,
+    "runtime": "pwd; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\n/\r\nRuntime: heap=337504 largest=335956 image=8104 ticks=43 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=0 imports=2 relocations=1 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  }
+]

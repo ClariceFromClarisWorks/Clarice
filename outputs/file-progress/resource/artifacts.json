@@ -1,0 +1,18 @@
+{
+  "valid.bin": {
+    "bytes": 75008,
+    "sha256": "17a319bccfb5c062ac56e045c9bdf7d3f3838fb453ceea054768614aabd9f9be"
+  },
+  "rescheck": {
+    "bytes": 1780,
+    "sha256": "ee8a97cd92af2a557e5e2b14a3990162d1eaf1900e1b060e726bb85d2ed3724f"
+  },
+  "before": {
+    "bytes": 13364,
+    "sha256": "f824aec245c5ff115c9bef92b05fc4cb75da07ace1f1d812d34ea2759f48070d"
+  },
+  "after": {
+    "bytes": 18916,
+    "sha256": "e60e7a12a176ea89139b6aaa947bf192a54d921620ba40507ccdb16203f1bf42"
+  }
+}

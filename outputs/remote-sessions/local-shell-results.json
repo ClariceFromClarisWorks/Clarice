@@ -1,0 +1,281 @@
+[
+  {
+    "source": "cat <<EOF\none\nEOF\necho after; cat <<EOF\ntwo\nEOF\necho end\n",
+    "pass": true,
+    "actual": "one\nafter\ntwo\nend\n",
+    "expected": "one\nafter\ntwo\nend\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=world; cat <<EOF\nhello $x\nEOF\n",
+    "pass": true,
+    "actual": "hello world\n",
+    "expected": "hello world\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=world; cat <<'EOF'\nhello $x\nEOF\n",
+    "pass": true,
+    "actual": "hello $x\n",
+    "expected": "hello $x\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "set -- a b; shift; echo \"$1\"",
+    "pass": true,
+    "actual": "b\n",
+    "expected": "b\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "false && echo no || echo yes",
+    "pass": true,
+    "actual": "yes\n",
+    "expected": "yes\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "true || echo no && echo yes",
+    "pass": true,
+    "actual": "yes\n",
+    "expected": "yes\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "echo $((-2+3)) $((1 ? 7 : 0))",
+    "pass": true,
+    "actual": "1 7\n",
+    "expected": "1 7\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "set -- a 'b c'; echo \"$#\"; printf '<%s>\\n' \"$@\"",
+    "pass": true,
+    "actual": "2\n<a>\n<b c>\n",
+    "expected": "2\n<a>\n<b c>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "echo 'a b' \"\" x\\ y",
+    "pass": true,
+    "actual": "a b  x y\n",
+    "expected": "a b  x y\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=world; echo hello \"$x\"",
+    "pass": true,
+    "actual": "hello world\n",
+    "expected": "hello world\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "false; echo $?; true && echo yes; false || echo fallback",
+    "pass": true,
+    "actual": "1\nyes\nfallback\n",
+    "expected": "1\nyes\nfallback\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "if false; then echo no; elif true; then echo yes; else echo no; fi",
+    "pass": true,
+    "actual": "yes\n",
+    "expected": "yes\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "for x in a 'b c' d; do echo \"$x\"; done",
+    "pass": true,
+    "actual": "a\nb c\nd\n",
+    "expected": "a\nb c\nd\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "i=0; while test \"$i\" -lt 3; do echo \"$i\"; i=$((i+1)); done",
+    "pass": true,
+    "actual": "0\n1\n2\n",
+    "expected": "0\n1\n2\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "i=0; until test \"$i\" -eq 3; do i=$((i+1)); done; echo \"$i\"",
+    "pass": true,
+    "actual": "3\n",
+    "expected": "3\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "for x in a b c; do if test \"$x\" = b; then continue; fi; echo \"$x\"; done",
+    "pass": true,
+    "actual": "a\nc\n",
+    "expected": "a\nc\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "for x in a b c; do echo \"$x\"; break; done",
+    "pass": true,
+    "actual": "a\n",
+    "expected": "a\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "f() { echo \"$1\"; return 7; }; f 'a b'; echo $?",
+    "pass": true,
+    "actual": "a b\n7\n",
+    "expected": "a b\n7\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "case abc in a*) echo matched;; *) echo no;; esac",
+    "pass": true,
+    "actual": "matched\n",
+    "expected": "matched\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=old; (x=new; echo \"$x\"); echo \"$x\"",
+    "pass": true,
+    "actual": "new\nold\n",
+    "expected": "new\nold\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=$(echo hello; echo world); echo \"$x\"",
+    "pass": true,
+    "actual": "hello\nworld\n",
+    "expected": "hello\nworld\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "echo first | cat | cat",
+    "pass": true,
+    "actual": "first\n",
+    "expected": "first\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "printf '%s:%d\\n' hello 4 world 5",
+    "pass": true,
+    "actual": "hello:4\nworld:5\n",
+    "expected": "hello:4\nworld:5\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "echo ${x:-default}; echo ${x:=saved}; echo \"$x\"",
+    "pass": true,
+    "actual": "default\nsaved\nsaved\n",
+    "expected": "default\nsaved\nsaved\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x=abcabc; echo ${x#a*} ${x##a*} ${x%c*} ${x%%c*}",
+    "pass": true,
+    "actual": "bcabc abcab ab\n",
+    "expected": "bcabc abcab ab\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "echo $((2+3*4)) $((0 && 1/1)) $((1 ? 7 : 1/1))",
+    "pass": true,
+    "actual": "14 0 7\n",
+    "expected": "14 0 7\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "f() { for x; do echo \"$x\"; done; }; f a 'b c'",
+    "pass": true,
+    "actual": "a\nb c\n",
+    "expected": "a\nb c\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x='a b'; printf '<%s>\\n' $x; printf '<%s>\\n' \"$x\"",
+    "pass": true,
+    "actual": "<a>\n<b>\n<a b>\n",
+    "expected": "<a>\n<b>\n<a b>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "f() { printf '<%s>\\n' \"$@\"; }; f 'a b' '' c",
+    "pass": true,
+    "actual": "<a b>\n<>\n<c>\n",
+    "expected": "<a b>\n<>\n<c>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "# comment\necho okay # trailing comment\n",
+    "pass": true,
+    "actual": "okay\n",
+    "expected": "okay\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "echo file > work/sh-test.txt; cat < work/sh-test.txt; echo append >> work/sh-test.txt; cat work/sh-test.txt",
+    "pass": true,
+    "actual": "file\nfile\nappend\n",
+    "expected": "file\nfile\nappend\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  }
+]

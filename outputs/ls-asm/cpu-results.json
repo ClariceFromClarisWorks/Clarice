@@ -1,0 +1,200 @@
+{
+  "baseline": {
+    "tested": 75567,
+    "linked_bytes": 108,
+    "samples": {
+      "0": {
+        "instructions": 61,
+        "divu": 1
+      },
+      "1": {
+        "instructions": 61,
+        "divu": 1
+      },
+      "9": {
+        "instructions": 61,
+        "divu": 1
+      },
+      "10": {
+        "instructions": 73,
+        "divu": 2
+      },
+      "100": {
+        "instructions": 85,
+        "divu": 3
+      },
+      "1024": {
+        "instructions": 97,
+        "divu": 4
+      },
+      "8192": {
+        "instructions": 97,
+        "divu": 4
+      },
+      "65535": {
+        "instructions": 109,
+        "divu": 5
+      },
+      "65536": {
+        "instructions": 114,
+        "divu": 6
+      },
+      "99999": {
+        "instructions": 114,
+        "divu": 6
+      },
+      "100000": {
+        "instructions": 126,
+        "divu": 7
+      },
+      "1048576": {
+        "instructions": 143,
+        "divu": 9
+      },
+      "9999999": {
+        "instructions": 148,
+        "divu": 10
+      },
+      "2147483647": {
+        "instructions": 194,
+        "divu": 15
+      },
+      "4294967295": {
+        "instructions": 194,
+        "divu": 15
+      }
+    }
+  },
+  "candidate": {
+    "tested": 75567,
+    "linked_bytes": 176,
+    "samples": {
+      "0": {
+        "instructions": 54,
+        "divu": 1
+      },
+      "1": {
+        "instructions": 54,
+        "divu": 1
+      },
+      "9": {
+        "instructions": 54,
+        "divu": 1
+      },
+      "10": {
+        "instructions": 57,
+        "divu": 2
+      },
+      "100": {
+        "instructions": 60,
+        "divu": 3
+      },
+      "1024": {
+        "instructions": 63,
+        "divu": 4
+      },
+      "8192": {
+        "instructions": 63,
+        "divu": 4
+      },
+      "65535": {
+        "instructions": 66,
+        "divu": 5
+      },
+      "65536": {
+        "instructions": 259,
+        "divu": 0
+      },
+      "99999": {
+        "instructions": 359,
+        "divu": 0
+      },
+      "100000": {
+        "instructions": 139,
+        "divu": 0
+      },
+      "1048576": {
+        "instructions": 280,
+        "divu": 0
+      },
+      "9999999": {
+        "instructions": 439,
+        "divu": 0
+      },
+      "2147483647": {
+        "instructions": 339,
+        "divu": 0
+      },
+      "4294967295": {
+        "instructions": 394,
+        "divu": 0
+      }
+    }
+  },
+  "specialized": {
+    "tested": 75567,
+    "linked_bytes": 130,
+    "samples": {
+      "0": {
+        "instructions": 56,
+        "divu": 1
+      },
+      "1": {
+        "instructions": 56,
+        "divu": 1
+      },
+      "9": {
+        "instructions": 56,
+        "divu": 1
+      },
+      "10": {
+        "instructions": 60,
+        "divu": 2
+      },
+      "100": {
+        "instructions": 64,
+        "divu": 3
+      },
+      "1024": {
+        "instructions": 68,
+        "divu": 4
+      },
+      "8192": {
+        "instructions": 68,
+        "divu": 4
+      },
+      "65535": {
+        "instructions": 72,
+        "divu": 5
+      },
+      "65536": {
+        "instructions": 84,
+        "divu": 6
+      },
+      "99999": {
+        "instructions": 84,
+        "divu": 6
+      },
+      "100000": {
+        "instructions": 88,
+        "divu": 7
+      },
+      "1048576": {
+        "instructions": 104,
+        "divu": 9
+      },
+      "9999999": {
+        "instructions": 116,
+        "divu": 10
+      },
+      "2147483647": {
+        "instructions": 152,
+        "divu": 15
+      },
+      "4294967295": {
+        "instructions": 152,
+        "divu": 15
+      }
+    }
+  }
+}

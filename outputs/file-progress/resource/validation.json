@@ -1,0 +1,262 @@
+{
+  "before": {
+    "data_sha256": "cb78468116b19ab7bed1b7579064fa07f5e661acbc3f6a6237867aef1e8f64cb",
+    "resource_sha256": "5d2125c4e90720acb5edec0716d33102cdb1933944a6fe96db15e8428cbf60cd",
+    "resource_differing_offsets": [
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      114,
+      115,
+      116,
+      117,
+      120,
+      121,
+      123,
+      124,
+      125
+    ],
+    "all_non_system_bytes_equal": true,
+    "resources": [
+      {
+        "type": "BLOB",
+        "id": 129,
+        "name": "Boundary payload",
+        "attributes": 0,
+        "length": 65792,
+        "sha256": "120c518a83325c66464701a6ee080302f332bc768ea3f60473b209f1bfb091df"
+      },
+      {
+        "type": "STR ",
+        "id": 128,
+        "name": "Greeting",
+        "attributes": 0,
+        "length": 33,
+        "sha256": "5ecf0cc9209ff6cc1adb5e18f3177d6c06abe240c06dbf5e5f8aed52ddad065e"
+      },
+      {
+        "type": "TEST",
+        "id": -123,
+        "name": "Binary sentinel",
+        "attributes": 32,
+        "length": 7,
+        "sha256": "1df694db3e44b4b4f0d61f2e2191b19a96ee3e02e90ac41524d92fd30dd1c65d"
+      }
+    ]
+  },
+  "after": {
+    "data_sha256": "cb78468116b19ab7bed1b7579064fa07f5e661acbc3f6a6237867aef1e8f64cb",
+    "resource_sha256": "62b057e5f8fcba205acd1078cf0d6dda5fcd139623f2a7ddecf65dc4b24c10b9",
+    "resource_differing_offsets": [
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      114,
+      115,
+      116,
+      117,
+      120,
+      121,
+      123,
+      124,
+      125
+    ],
+    "all_non_system_bytes_equal": true,
+    "resources": [
+      {
+        "type": "BLOB",
+        "id": 129,
+        "name": "Boundary payload",
+        "attributes": 0,
+        "length": 65792,
+        "sha256": "120c518a83325c66464701a6ee080302f332bc768ea3f60473b209f1bfb091df"
+      },
+      {
+        "type": "STR ",
+        "id": 128,
+        "name": "Greeting",
+        "attributes": 0,
+        "length": 33,
+        "sha256": "5ecf0cc9209ff6cc1adb5e18f3177d6c06abe240c06dbf5e5f8aed52ddad065e"
+      },
+      {
+        "type": "TEST",
+        "id": -123,
+        "name": "Binary sentinel",
+        "attributes": 32,
+        "length": 7,
+        "sha256": "1df694db3e44b4b4f0d61f2e2191b19a96ee3e02e90ac41524d92fd30dd1c65d"
+      }
+    ]
+  },
+  "back-before": {
+    "data_sha256": "cb78468116b19ab7bed1b7579064fa07f5e661acbc3f6a6237867aef1e8f64cb",
+    "resource_sha256": "72eb2ae8fb5f0a6f20eb865ccef5741ab469acf3a2e23a15158b0c5f0ab46378",
+    "resource_differing_offsets": [
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      114,
+      115,
+      116,
+      117,
+      120,
+      121,
+      123,
+      124,
+      125
+    ],
+    "all_non_system_bytes_equal": true,
+    "resources": [
+      {
+        "type": "BLOB",
+        "id": 129,
+        "name": "Boundary payload",
+        "attributes": 0,
+        "length": 65792,
+        "sha256": "120c518a83325c66464701a6ee080302f332bc768ea3f60473b209f1bfb091df"
+      },
+      {
+        "type": "STR ",
+        "id": 128,
+        "name": "Greeting",
+        "attributes": 0,
+        "length": 33,
+        "sha256": "5ecf0cc9209ff6cc1adb5e18f3177d6c06abe240c06dbf5e5f8aed52ddad065e"
+      },
+      {
+        "type": "TEST",
+        "id": -123,
+        "name": "Binary sentinel",
+        "attributes": 32,
+        "length": 7,
+        "sha256": "1df694db3e44b4b4f0d61f2e2191b19a96ee3e02e90ac41524d92fd30dd1c65d"
+      }
+    ]
+  },
+  "back-after": {
+    "data_sha256": "cb78468116b19ab7bed1b7579064fa07f5e661acbc3f6a6237867aef1e8f64cb",
+    "resource_sha256": "f5ba60e2383ba012fcaa67e0df7efd0585214c55225df4732592b79a4297b48e",
+    "resource_differing_offsets": [
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      114,
+      115,
+      116,
+      117,
+      120,
+      121,
+      123,
+      124,
+      125
+    ],
+    "all_non_system_bytes_equal": true,
+    "resources": [
+      {
+        "type": "BLOB",
+        "id": 129,
+        "name": "Boundary payload",
+        "attributes": 0,
+        "length": 65792,
+        "sha256": "120c518a83325c66464701a6ee080302f332bc768ea3f60473b209f1bfb091df"
+      },
+      {
+        "type": "STR ",
+        "id": 128,
+        "name": "Greeting",
+        "attributes": 0,
+        "length": 33,
+        "sha256": "5ecf0cc9209ff6cc1adb5e18f3177d6c06abe240c06dbf5e5f8aed52ddad065e"
+      },
+      {
+        "type": "TEST",
+        "id": -123,
+        "name": "Binary sentinel",
+        "attributes": 32,
+        "length": 7,
+        "sha256": "1df694db3e44b4b4f0d61f2e2191b19a96ee3e02e90ac41524d92fd30dd1c65d"
+      }
+    ]
+  }
+}

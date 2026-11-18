@@ -1,6 +1,8 @@
 /* Native HFS open-file guard for a future application updater.
  * Uses documented File Manager queries; errors fail closed. Not a lock or
  * proof of power-loss safety. Caller must recheck immediately before commit. */
+#ifndef CLARICE_UPDATE_OPEN_GUARD_H
+#define CLARICE_UPDATE_OPEN_GUARD_H
 #include <Files.h>
 #include <Errors.h>
 #include <string.h>
@@ -23,3 +25,4 @@ static int update_open_guard(const char *native,int *busy){
  }
  return paramErr;
 }
+#endif
