@@ -1,0 +1,26 @@
+[
+  {
+    "command": "cat /tmp/su-repeat.log",
+    "status": 0,
+    "text": "cat /tmp/su-repeat.log; printf '\\nREMOTE_END_1:%d\\n' $?\r\nChecking repository...\r\nDownloaded 5.45 KB to /tmp/clarice-sort-130019-1\r\nAll standard tools are current. Update complete.\r\nreal 15.48 s\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "host_seconds": 1.0082665000000013
+  },
+  {
+    "command": "test ! -f /bin/clarice",
+    "status": 0,
+    "text": "test ! -f /bin/clarice; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "host_seconds": 0.5297213330000012
+  },
+  {
+    "command": "test ! -f /etc/clarice/update.incomplete",
+    "status": 0,
+    "text": "test ! -f /etc/clarice/update.incomplete; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > ",
+    "host_seconds": 0.7192867920000001
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nRuntime: heap=332798 largest=330354 image=8480 ticks=46 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=1 imports=2 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > ",
+    "host_seconds": 0.5369664170000021
+  }
+]

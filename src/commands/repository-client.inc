@@ -90,6 +90,8 @@ int clarice_main(int argc,char **argv){
  e=update_application_path(own);uint32_t current=0;unsigned system=0;if(!e)e=update_stamp(own,&current,&system);if(e)goto done;
  say("Checking repository...\n");e=download(source,index,0);if(e)goto done;e=repo_read_index(index,&items);if(!e)e=repo_catalog(items,0);if(e)goto done;
  for(RepoItem *i=items;i;i=i->next){RepoRecord *r=&i->wanted;
+  /* Old catalogs may still advertise an external updater. Core owns it now. */
+  if(!r->core&&!strcmp(r->name,"clarice"))continue;
   if(r->core){core=i;i->needed=r->version>current;}else{
    char path[PATH_CAP],native[PATH_CAP],canonical[PATH_CAP];CInfoPBRec cat;snprintf(path,sizeof path,"/bin/%s",r->name);e=checked(path,native,canonical,0);if(e)goto done;e=info(native,&cat);
    if(e&&e!=fnfErr)goto done;int exists=!e;e=0;
@@ -107,7 +109,7 @@ int clarice_main(int argc,char **argv){
  if(check)goto done;
  if(changes&&!yes){int answer=repo_confirm();if(answer<0){e=userCanceledErr;goto done;}if(!answer)goto done;}
  e=repo_marker("CLARICE-UPDATE-INCOMPLETE 1\n");if(e)goto done;
- for(RepoItem *i=items;i;i=i->next){if(i->wanted.core)continue;RepoRecord *r=&i->wanted;
+ for(RepoItem *i=items;i;i=i->next){if(i->wanted.core||!strcmp(i->wanted.name,"clarice"))continue;RepoRecord *r=&i->wanted;
   if(i->known&&i->installed.version>r->version)continue;
   if(i->needed){char url[768],native[PATH_CAP],canonical[PATH_CAP];e=repo_url(source,r->file,url,sizeof url);if(e)goto done;say("Installing ");say(r->name);say("...\n");e=download(url,payload,r->size);if(e)goto done;
    e=checked(payload,native,canonical,0);uint32_t crc;if(!e)e=update_hash_fork(native,0,&crc,r->size);if(!e&&crc!=r->crc)e=paramErr;if(e)goto done;

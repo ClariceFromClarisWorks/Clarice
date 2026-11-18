@@ -6,6 +6,17 @@ The [revised brief](../references/engineering-direction-2026-11-10.md) is author
 Use [current state](CURRENT-STATE.md) for evidence, [capabilities](PORTABILITY.md)
 for API gaps and [roadmap](ROADMAP.md) for order. Task 1 authorises no implementation.
 
+## Built-in self-update candidate — 18 November 2026
+
+On `codex/self-update-20261118`, `clarice` dispatches as a builtin. The existing
+repository updater is packaged in Core's demand-loaded `CLXU` resource, validated
+and relocated by the shared CLX loader, then released. This removes dependence
+on an installed external updater without making networking/update code resident.
+The native replacement helper remains embedded and is prepared automatically;
+independent tools remain separately versioned. Startup completion also uses the
+builtin. See [current evidence and boundaries](self-update/README.md); this does
+not incorporate other branches' pending recovery or mounted-source work.
+
 ## Identity and baseline
 
 Clarice is a native Macintosh command-line environment: shell, base userland,

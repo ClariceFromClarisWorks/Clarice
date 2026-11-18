@@ -1,5 +1,20 @@
 # Clarice current state
 
+## Built-in self-update — 18 November 2026
+
+- Separate `codex/self-update-20261118` candidate bundles the updater with Core
+  as a demand-loaded native resource. `clarice` is a builtin; no installed
+  `/bin/clarice` or wget is needed. Native replacement helper is supplied
+  automatically; existing recovery/verification remains intact.
+- Old repository updater entries are ignored, independent utilities remain
+  independently packaged, and startup completion uses the builtin.
+- Host loader/resource/repository/recovery tests pass. Isolated Snow migration
+  1882→1901→1902 and automatic completion pass, including the full repository
+  with external updater/downloader absent before the final handoff.
+  PB180/System 7.1 hardware update/relaunch and builtin repeat checks also pass;
+  stock-SE acceptance remains separate. No merge, push or public release.
+- [Design, measured costs, evidence and migration boundaries](self-update/README.md).
+
 ## Resource fork validation gap resolved — 18 November 2026
 
 Valid Rez-generated resource file passes 24 guest status checks and 12 native

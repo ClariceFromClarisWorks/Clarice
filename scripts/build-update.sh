@@ -25,3 +25,5 @@ m68k-apple-macos-ld -r --gc-sections -u clarice_main /src/work/update-command/cl
 '
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/update-command/command.o" "$ROOT/work/update-command/clarice.clx" --runtime 1.6
 cp "$ROOT/work/update-command/clarice.clx" "$ROOT/work/build/clarice.clx"
+
+python3 "$ROOT/scripts/self-update-resource.py"

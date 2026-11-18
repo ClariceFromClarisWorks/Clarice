@@ -105,6 +105,24 @@ int main(int argc,char **argv){
   printf("PASS: production loader validated %d actual command images and imports (no execution)\n",argc-2);return 0;
  }
  bundle_len=make_image(bundle,1,1);updated_len=make_image(updated,2,2);
+ /* Core-owned updater image: same full validation, no file/receipt dependency.
+    Caller owns the locked resource and releases it after return. */
+ {unsigned char embedded[4096];reset();memcpy(embedded,bundle,bundle_len);
+  assert(module_load_source("built-in clarice",0,NULL,1,embedded,bundle_len)==0);
+  assert(executions==1&&!allocs);
+  reset();memcpy(embedded,bundle,bundle_len);embedded[bundle_len-1]^=1;
+  assert(module_load_source("built-in clarice",0,NULL,1,embedded,bundle_len)==126);
+  assert(!executions&&!allocs);
+  reset();assert(module_load_source("built-in clarice",0,NULL,1,embedded,31)==126);
+  assert(!executions&&!allocs);
+  reset();memcpy(embedded,bundle,bundle_len);cancel_at=1;
+  assert(module_load_source("built-in clarice",0,NULL,1,embedded,bundle_len)==130);
+  assert(!executions&&!allocs);
+  reset();memcpy(embedded,bundle,bundle_len);alloc_calls=0;fail_alloc_at=1;
+  assert(module_load_source("built-in clarice",0,NULL,1,embedded,bundle_len)==126);
+  assert(!executions&&!allocs);fail_alloc_at=0;
+ }
+
  reset();setup();char first[]="awk",program[]="BEGIN {}";char *args[]={first,program,NULL};
  for(int run=0;run<3;run++){execute_status=run==0?0:run==1?2:130;assert(module_run(dest,2,args)==execute_status);assert(args[0]==first&&args[1]==program&&!args[2]);assert(!allocs);}execute_status=0;
  alloc_calls=0;fail_alloc_at=3;int prior=executions;assert(module_run(dest,2,args)==126);assert(executions==prior&&!allocs);assert(strstr(diagnostics,"argument memory"));fail_alloc_at=0;

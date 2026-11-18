@@ -1,0 +1,42 @@
+Using multiversal interfaces
+-- The C compiler identification is GNU 16.1.0
+-- The ASM compiler identification is GNU
+-- Found assembler: /Retro68-build/toolchain/bin/m68k-apple-macos-gcc
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Retro68-build/toolchain/bin/m68k-apple-macos-gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /src/work/build
+Scanning dependencies of target Clarice
+[  9%] Building C object CMakeFiles/Clarice.dir/app.c.obj
+[  9%] Building C object CMakeFiles/Clarice.dir/hardware.c.obj
+[ 13%] Building C object CMakeFiles/Clarice.dir/shell.c.obj
+[ 18%] Building C object CMakeFiles/Clarice.dir/sizes.c.obj
+[ 22%] Building C object CMakeFiles/Clarice.dir/reflow.c.obj
+[ 27%] Building ASM object CMakeFiles/Clarice.dir/planes-unrolled.S.obj
+[ 31%] Building ASM object CMakeFiles/Clarice.dir/glyph-planes.S.obj
+[ 36%] Building ASM object CMakeFiles/Clarice.dir/kernels.S.obj
+[ 40%] Building ASM object CMakeFiles/Clarice.dir/checksum.S.obj
+[ 45%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/ast.c.obj
+[ 50%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/array.c.obj
+[ 54%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/buffer.c.obj
+[ 59%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/arithm.c.obj
+[ 63%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/parser.c.obj
+[ 68%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/program.c.obj
+[ 72%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/word.c.obj
+[ 77%] Building C object CMakeFiles/Clarice.dir/vendor/mrsh/parser/arithm.c.obj
+[ 81%] Linking C executable Clarice.code.bin
+[ 81%] Built target Clarice
+[ 86%] Generating SelfUpdate.r.rsrc.bin
+[ 90%] Generating App.r.rsrc.bin
+[ 95%] Generating Icons.r.rsrc.bin
+[100%] Generating Clarice.bin, Clarice.APPL, Clarice.dsk, Clarice.ad, %Clarice.ad
+[100%] Built target Clarice_APPL
+Using multiversal interfaces
+Volume name is "Clarice"
+Volume was created on Wed Nov 18 12:18:08 2026
+Volume was last modified on Wed Nov 18 12:18:08 2026
+Volume has 409600 bytes free

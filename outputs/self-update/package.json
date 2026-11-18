@@ -1,0 +1,10 @@
+{
+  "build": 2026111902,
+  "application_bytes": 394112,
+  "application_sha256": "09f86c0429bf72e8e6ecf07259ca3840fe2f67d21fe04d8db3babf3656dd4793",
+  "updater_bytes": 113568,
+  "updater_image_bytes": 100604,
+  "external_commands": 49,
+  "legacy_manifest_bytes": 146,
+  "repository_index_bytes": 5579
+}
