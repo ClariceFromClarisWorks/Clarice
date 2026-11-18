@@ -1,0 +1,22 @@
+[
+  {
+    "command": "cmp /tmp/n16 /tmp/n16copy",
+    "status": 0,
+    "text": "cmp /tmp/n16 /tmp/n16copy; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr /tmp/n16",
+    "status": 0,
+    "text": "hfsattr /tmp/n16; printf '\\nREMOTE_END_2:%d\\n' $?\r\n/tmp/n16: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-normal",
+    "status": 0,
+    "text": "cat /tmp/ng-normal; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=364214 largest=360298 image=198996 ticks=2043 load=100 owned-peak=120416 remaining=0\r\nNano ticks: 372929 0 0 0 0 0 0 0 373274 0 0 0 0; input batches=3 sum=61 max=48; initial-heap=365078\r\nEditor startup: draws=10 rows=56 text=5 copy=3 total=31 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=17 bytes=566 feed-ticks=5\r\nNative ticks: allocs=141 FreeMem=0 NewPtr=34 reads=33 read=14 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=62 validate=1 imports=4 relocations=20 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=12 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "echo NORMAL-NANO-RECOVERED",
+    "status": 0,
+    "text": "echo NORMAL-NANO-RECOVERED; printf '\\nREMOTE_END_4:%d\\n' $?\r\nNORMAL-NANO-RECOVERED\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  }
+]

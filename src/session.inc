@@ -3,6 +3,7 @@
 typedef struct {
  struct sh_saved shell;
  ClariceSessionIO io;
+ ClariceSessionWire wire;
  int closed,status,flow,flow_status,depth,source_depth,loop,functions_active;
  int substatus,script_depth,output_error,history_enabled;
  unsigned long substitutions,commands,history_count;
@@ -86,4 +87,10 @@ int shell_session_output(const char *data,long n){
  if(!session_io)return 0;
  if(n>0&&session_io->write(session_io->context,1,data,n)!=n)output_error=1;
  return 1;
+}
+
+int cli_session_set_wire(void *opaque,ClariceSessionWire wire){if(opaque!=remote_session||local_session)return -1;remote_session->wire=wire;return 0;}
+long cli_remote_wire(int op,void *data,unsigned long size){
+ if(!session_io||!remote_session||!remote_session->wire)return op==0?0:-1;
+ return remote_session->wire(op,data,size);
 }

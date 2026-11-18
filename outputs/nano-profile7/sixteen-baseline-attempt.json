@@ -1,0 +1,17 @@
+[
+  {
+    "command": "cat /tmp/ng-sixteen-before0",
+    "status": 1,
+    "text": "cat /tmp/ng-sixteen-before0; printf '\\nREMOTE_END_1:%d\\n' $?\r\ncat: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_1:1\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-sixteen-before1",
+    "status": 0,
+    "text": "cat /tmp/ng-sixteen-before1; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=364172 largest=360518 image=199176 ticks=607 load=101 owned-peak=116066 remaining=0\r\nNano ticks: 314328 314445 314446 314447 314518 314599 314894 314919 0 314638 314873 0 0; input batches=0 sum=0 max=0; initial-heap=365084\r\nEditor startup: draws=8 rows=56 text=4 copy=6 total=33 ticks\r\nCurses startup: refreshes=1 refresh-ticks=7 writes=22 bytes=603 feed-ticks=5\r\nNative ticks: allocs=264 FreeMem=4 NewPtr=212 reads=33 read=8 stdio=0 image-alloc=0 meta-alloc=1\r\nLoader ticks: read=62 validate=2 imports=3 relocations=21 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-sixteen-before2",
+    "status": 0,
+    "text": "cat /tmp/ng-sixteen-before2; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=364174 largest=360518 image=199176 ticks=664 load=101 owned-peak=116066 remaining=0\r\nNano ticks: 315560 315677 315678 315679 315708 315738 315984 316010 316018 315775 315963 0 0; input batches=1 sum=8 max=8; initial-heap=365074\r\nEditor startup: draws=8 rows=56 text=10 copy=2 total=32 ticks\r\nCurses startup: refreshes=1 refresh-ticks=6 writes=17 bytes=566 feed-ticks=4\r\nNative ticks: allocs=264 FreeMem=3 NewPtr=76 reads=33 read=9 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=62 validate=1 imports=4 relocations=20 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

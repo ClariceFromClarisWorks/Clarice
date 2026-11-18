@@ -16,8 +16,8 @@ class Client:
    self.greeting+=answer
   if b'Clarice remote shell' not in self.greeting:raise RuntimeError(repr(self.greeting))
  def option(self,sock,cmd,opt):
-  if cmd==telnetlib.WILL:sock.sendall(telnetlib.IAC+(telnetlib.DO if opt in (telnetlib.ECHO,telnetlib.SGA) else telnetlib.DONT)+opt)
-  elif cmd==telnetlib.DO:sock.sendall(telnetlib.IAC+(telnetlib.WILL if opt==telnetlib.SGA else telnetlib.WONT)+opt)
+  if cmd==telnetlib.WILL:sock.sendall(telnetlib.IAC+(telnetlib.DO if opt in (telnetlib.ECHO,telnetlib.SGA,telnetlib.BINARY) else telnetlib.DONT)+opt)
+  elif cmd==telnetlib.DO:sock.sendall(telnetlib.IAC+(telnetlib.WILL if opt in (telnetlib.SGA,telnetlib.BINARY) else telnetlib.WONT)+opt)
  def command(self,source,timeout=30):
   self.seq+=1;tag=f'REMOTE_END_{self.seq}'
   self.t.write((source+"; printf '\\n"+tag+":%d\\n' $?\r\n").encode())

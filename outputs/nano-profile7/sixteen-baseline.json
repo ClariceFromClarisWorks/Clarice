@@ -1,0 +1,17 @@
+[
+  {
+    "command": "cat /tmp/ng-sixteen-before0",
+    "status": 0,
+    "text": "cat /tmp/ng-sixteen-before0; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=364174 largest=360298 image=199176 ticks=1893 load=101 owned-peak=116066 remaining=0\r\nNano ticks: 342750 342866 342867 342868 342894 342925 343168 343195 343203 342962 343147 0 0; input batches=1 sum=8 max=8; initial-heap=365078\r\nEditor startup: draws=9 rows=56 text=6 copy=3 total=31 ticks\r\nCurses startup: refreshes=1 refresh-ticks=6 writes=17 bytes=566 feed-ticks=5\r\nNative ticks: allocs=264 FreeMem=5 NewPtr=63 reads=33 read=9 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=1 imports=4 relocations=20 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-sixteen-before1",
+    "status": 0,
+    "text": "cat /tmp/ng-sixteen-before1; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=364176 largest=360298 image=199176 ticks=1932 load=101 owned-peak=116066 remaining=0\r\nNano ticks: 345368 345484 345485 345486 345513 345543 345787 345814 345823 345580 345767 0 0; input batches=1 sum=8 max=8; initial-heap=365078\r\nEditor startup: draws=9 rows=56 text=5 copy=2 total=31 ticks\r\nCurses startup: refreshes=1 refresh-ticks=6 writes=17 bytes=566 feed-ticks=2\r\nNative ticks: allocs=264 FreeMem=3 NewPtr=78 reads=33 read=12 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=62 validate=2 imports=3 relocations=20 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-sixteen-before2",
+    "status": 0,
+    "text": "cat /tmp/ng-sixteen-before2; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=364176 largest=360298 image=199176 ticks=1841 load=101 owned-peak=116066 remaining=0\r\nNano ticks: 347853 347969 347970 347971 347998 348029 348273 348300 348308 348065 348252 0 0; input batches=1 sum=8 max=8; initial-heap=365068\r\nEditor startup: draws=10 rows=56 text=5 copy=5 total=30 ticks\r\nCurses startup: refreshes=1 refresh-ticks=6 writes=17 bytes=566 feed-ticks=6\r\nNative ticks: allocs=264 FreeMem=2 NewPtr=63 reads=33 read=8 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=2 imports=3 relocations=21 prepare=2 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

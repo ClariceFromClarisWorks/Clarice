@@ -1,0 +1,42 @@
+[
+  {
+    "command": "cat /tmp/nverify/file",
+    "status": 0,
+    "text": "cat /tmp/nverify/file; printf '\\nREMOTE_END_1:%d\\n' $?\r\nEDIT BOOT\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/nverify/new",
+    "status": 0,
+    "text": "cat /tmp/nverify/new; printf '\\nREMOTE_END_2:%d\\n' $?\r\nNEW\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cat /mnt/GlyphFull/nverify/file",
+    "status": 0,
+    "text": "cat /mnt/GlyphFull/nverify/file; printf '\\nREMOTE_END_3:%d\\n' $?\r\nOTHEREDIT OTHER\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr /tmp/nverify/file",
+    "status": 0,
+    "text": "hfsattr /tmp/nverify/file; printf '\\nREMOTE_END_4:%d\\n' $?\r\n/tmp/nverify/file: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "ls -la /tmp/nverify",
+    "status": 0,
+    "text": "ls -la /tmp/nverify; printf '\\nREMOTE_END_5:%d\\n' $?\r\nd--                       2026-11-19 14:09 .\r\nd--                       2026-11-17 12:40 ..\r\n---         10          0 2026-11-19 14:09 file\r\nl--         27          0 2026-11-19 14:14 link\r\n---          4          0 2026-11-19 14:17 new\r\n---        720          0 2026-11-19 14:16 saveexisting\r\n---        707          0 2026-11-19 14:18 savenew\r\n---        720          0 2026-11-19 14:20 saveother\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/nverify/saveexisting",
+    "status": 0,
+    "text": "cat /tmp/nverify/saveexisting; printf '\\nREMOTE_END_6:%d\\n' $?\r\nRuntime: heap=364188 largest=360450 image=199152 ticks=4452 load=103 owned-peak=77160 remaining=0\r\nNano ticks: 7495550 7495669 7495670 7495671 7495699 7495729 7495808 7495833 7495838 7495797 7495798 7499020 7499109; input batches=8 sum=95 max=69; initial-heap=365078\r\nEditor startup: draws=10 rows=56 text=5 copy=1 total=29 ticks\r\nCurses startup: refreshes=1 refresh-ticks=4 writes=16 bytes=474 feed-ticks=5\r\nNative ticks: allocs=127 FreeMem=1 NewPtr=25 reads=2 read=1 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=2 imports=3 relocations=20 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/nverify/savenew",
+    "status": 0,
+    "text": "cat /tmp/nverify/savenew; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=364206 largest=360450 image=199152 ticks=4324 load=102 owned-peak=77160 remaining=0\r\nNano ticks: 7502389 7502506 7502507 7502508 7502535 7502565 7502628 7502663 7502668 0 0 7505750 7505823; input batches=6 sum=99 max=80; initial-heap=365088\r\nEditor startup: draws=8 rows=55 text=4 copy=5 total=29 ticks\r\nCurses startup: refreshes=1 refresh-ticks=4 writes=12 bytes=424 feed-ticks=2\r\nNative ticks: allocs=128 FreeMem=0 NewPtr=31 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=1 imports=4 relocations=20 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=12 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/nverify/saveother",
+    "status": 0,
+    "text": "cat /tmp/nverify/saveother; printf '\\nREMOTE_END_8:%d\\n' $?\r\nRuntime: heap=364202 largest=360344 image=199152 ticks=4568 load=103 owned-peak=77160 remaining=0\r\nNano ticks: 7509335 7509454 7509455 7509457 7509497 7509537 7509602 7509626 7509634 7509582 7509583 7512916 7512967; input batches=13 sum=82 max=38; initial-heap=365088\r\nEditor startup: draws=8 rows=56 text=4 copy=4 total=31 ticks\r\nCurses startup: refreshes=1 refresh-ticks=7 writes=16 bytes=475 feed-ticks=4\r\nNative ticks: allocs=127 FreeMem=6 NewPtr=34 reads=2 read=1 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=1 imports=4 relocations=20 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  }
+]

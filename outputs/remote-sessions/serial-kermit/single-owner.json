@@ -1,0 +1,4 @@
+{
+  "test": "TCP owner excludes serial shell; serial authenticates after TCP close",
+  "pass": true
+}

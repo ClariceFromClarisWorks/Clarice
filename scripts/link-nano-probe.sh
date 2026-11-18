@@ -3,6 +3,7 @@ set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 python3 "$ROOT/scripts/patch-nano-save.py"
 python3 "$ROOT/scripts/patch-nano-perf.py"
+python3 "$ROOT/scripts/patch-nano-growth.py"
 IMAGE=ghcr.io/autc04/retro68@sha256:dd923969100f408943f73c9618b3c7628686aae819583eecb0ddd1837da6943c
 docker run --rm --pull never --platform linux/amd64 --network none -v "$ROOT:/src" "$IMAGE" sh -ec '
 cd /src
@@ -15,4 +16,4 @@ m68k-apple-macos-gcc -m68000 -Os -ffunction-sections -fdata-sections -c src/port
 m68k-apple-macos-ld -r --gc-sections -u clarice_main work/nano/objects/*.o work/ncurses/build/lib/libncurses.a $(m68k-apple-macos-gcc -print-libgcc-file-name) -o work/nano/nano-linked.o
 m68k-apple-macos-nm -u work/nano/nano-linked.o
 '
-python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/nano/nano-linked.o" "$ROOT/work/nano/nano.clx"
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/nano/nano-linked.o" "$ROOT/work/nano/nano.clx" --runtime 1.10

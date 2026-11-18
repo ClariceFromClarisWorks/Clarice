@@ -1,0 +1,42 @@
+[
+  {
+    "command": "cmp /tmp/n16 /tmp/n16copy",
+    "status": 0,
+    "text": "cmp /tmp/n16 /tmp/n16copy; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "hfsattr /tmp/n16",
+    "status": 0,
+    "text": "hfsattr /tmp/n16; printf '\\nREMOTE_END_2:%d\\n' $?\r\n/tmp/n16: type='TEXT' creator='ttxt' flags=0000 locked=off invisible=off\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-save",
+    "status": 0,
+    "text": "cat /tmp/ng-save; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=364230 largest=360506 image=199260 ticks=1757 load=101 owned-peak=120416 remaining=0\r\nNano ticks: 300911 301027 301028 301029 301057 301088 301223 301251 301259 301124 301205 302342 302433; input batches=3 sum=58 max=46; initial-heap=365080\r\nEditor startup: draws=9 rows=56 text=6 copy=4 total=30 ticks\r\nCurses startup: refreshes=1 refresh-ticks=6 writes=17 bytes=566 feed-ticks=3\r\nNative ticks: allocs=141 FreeMem=1 NewPtr=38 reads=33 read=9 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=2 imports=3 relocations=20 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-exhaustion /tmp/ng-exhaustion-memory",
+    "status": 0,
+    "text": "cat /tmp/ng-exhaustion /tmp/ng-exhaustion-memory; printf '\\nREMOTE_END_4:%d\\n' $?\r\n1\r\nRuntime: heap=364184 largest=360536 image=199260 ticks=623 load=114 owned-peak=144730 remaining=0\r\nNano ticks: 303145 303274 303275 303276 303304 303335 0 0 0 303383 0 0 0; input batches=0 sum=0 max=0; initial-heap=365080\r\nEditor startup: draws=5 rows=52 text=2 copy=4 total=24 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=7 bytes=84 feed-ticks=3\r\nNative ticks: allocs=199 FreeMem=25 NewPtr=248 reads=69 read=19 stdio=0 image-alloc=10 meta-alloc=4\r\nLoader ticks: read=61 validate=2 imports=3 relocations=21 prepare=16 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=10 payload=0 metadata=1 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-cancel /tmp/ng-cancel-memory",
+    "status": 0,
+    "text": "cat /tmp/ng-cancel /tmp/ng-cancel-memory; printf '\\nREMOTE_END_5:%d\\n' $?\r\n130\r\nRuntime: heap=364184 largest=360536 image=199260 ticks=174 load=120 owned-peak=59954 remaining=0\r\nNano ticks: 304978 305117 305118 305119 305147 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=365076\r\nEditor startup: draws=1 rows=25 text=0 copy=2 total=12 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=108 FreeMem=0 NewPtr=27 reads=0 read=0 stdio=0 image-alloc=11 meta-alloc=3\r\nLoader ticks: read=65 validate=0 imports=3 relocations=21 prepare=18 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=0 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-sixteen-after0",
+    "status": 0,
+    "text": "cat /tmp/ng-sixteen-after0; printf '\\nREMOTE_END_6:%d\\n' $?\r\nRuntime: heap=364188 largest=360506 image=199260 ticks=1787 load=111 owned-peak=120416 remaining=0\r\nNano ticks: 295029 295156 295156 295158 295186 295217 295353 295381 295389 295253 295335 0 0; input batches=1 sum=8 max=8; initial-heap=365074\r\nEditor startup: draws=10 rows=56 text=5 copy=5 total=32 ticks\r\nCurses startup: refreshes=1 refresh-ticks=6 writes=17 bytes=566 feed-ticks=3\r\nNative ticks: allocs=140 FreeMem=0 NewPtr=36 reads=33 read=7 stdio=0 image-alloc=7 meta-alloc=3\r\nLoader ticks: read=63 validate=2 imports=3 relocations=21 prepare=12 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-sixteen-after1",
+    "status": 0,
+    "text": "cat /tmp/ng-sixteen-after1; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=364188 largest=360506 image=199260 ticks=1145 load=101 owned-peak=120416 remaining=0\r\nNano ticks: 297377 297493 297494 297495 297522 297553 297688 297715 297725 297589 297670 0 0; input batches=1 sum=8 max=8; initial-heap=365080\r\nEditor startup: draws=9 rows=56 text=6 copy=4 total=31 ticks\r\nCurses startup: refreshes=1 refresh-ticks=7 writes=17 bytes=566 feed-ticks=7\r\nNative ticks: allocs=140 FreeMem=1 NewPtr=35 reads=33 read=9 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=62 validate=2 imports=3 relocations=20 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/ng-sixteen-after2",
+    "status": 0,
+    "text": "cat /tmp/ng-sixteen-after2; printf '\\nREMOTE_END_8:%d\\n' $?\r\nRuntime: heap=364188 largest=360506 image=199260 ticks=1234 load=101 owned-peak=120416 remaining=0\r\nNano ticks: 299138 299254 299254 299255 299284 299314 299450 299476 299486 299351 299431 0 0; input batches=1 sum=8 max=8; initial-heap=365080\r\nEditor startup: draws=9 rows=56 text=5 copy=6 total=33 ticks\r\nCurses startup: refreshes=1 refresh-ticks=7 writes=17 bytes=566 feed-ticks=3\r\nNative ticks: allocs=140 FreeMem=1 NewPtr=31 reads=33 read=10 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=63 validate=1 imports=4 relocations=20 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  }
+]

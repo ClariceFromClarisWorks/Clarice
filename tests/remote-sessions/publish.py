@@ -3,18 +3,18 @@ Uses the normal index/payload format and clarice update, not another installer.
 """
 from pathlib import Path
 import argparse,hashlib,binascii,struct
-p=argparse.ArgumentParser();p.add_argument('repository',type=Path);p.add_argument('image',type=Path);p.add_argument('version',type=int);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('repository',type=Path);p.add_argument('image',type=Path);p.add_argument('version',type=int);p.add_argument('--name',choices=['telnetd','seriald'],default='telnetd');a=p.parse_args()
 data=a.image.read_bytes()
 assert data[:4]==b'CLX1' and struct.unpack_from('>I',data,4)[0]==2
-assert struct.unpack_from('>II',data,32)==(1,8)
-name='telnetd';digest=hashlib.sha256(data).hexdigest();filename=f'{name}-{digest}.clx'
+assert struct.unpack_from('>II',data,32)==(1,9)
+name=a.name;digest=hashlib.sha256(data).hexdigest();filename=f'{name}-{digest}.clx'
 line=f'tool\t{name}\t{a.version}\t{len(data)}\t{binascii.crc32(data):08x}\t{filename}'
 index=a.repository/'index.txt';rows=index.read_text().splitlines()
 assert rows[0]=='CLARICE-REPOSITORY 1'
 for row in rows[1:]:
  fields=row.split('\t')
  if fields[:2]==['tool',name] and fields[2]==str(a.version) and row!=line:raise ValueError('published version changed')
-rows=[row for row in rows if not row.startswith('tool\ttelnetd\t')]
+rows=[row for row in rows if not row.startswith('tool\t'+name+'\t')]
 target=a.repository/filename
 if target.exists():assert target.read_bytes()==data
 else:

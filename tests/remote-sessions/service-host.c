@@ -17,13 +17,14 @@ case TCPRcv:{unsigned n=p->csParam.receive.rcvBuffLen;if(n>in_count)n=in_count;m
 default:break;}return 0;}
 short PBControlAsync(ParmBlkPtr p0){TCPiopb *p=p0;p->ioResult=1;if(p->csCode==TCPPassiveOpen)pending_open=p;else if(p->csCode==TCPClose){p->ioResult=0;}else if(p->csCode==TCPSend){assert(!pending_send);pending_send=p;if(!hang_send){memcpy(wire+wire_count,driver->send,driver->wds.length);wire_count+=driver->wds.length;p->ioResult=0;pending_send=0;}}return 0;}
 long cli_write(int fd,const void *p,unsigned long n){(void)fd;(void)p;return n;}
-int cli_service_register(const ClariceService *p){assert(p->poll==poll_service&&p->stop==stop);return 0;}
+int cli_service_register_slot(int slot,const ClariceService *p){assert(slot==0);assert(p->poll==poll_service&&p->stop==stop);return 0;}
 void *cli_session_open(const ClariceSessionIO *p){assert(p->read&&p->write&&p->cancelled);return (void*)1;}
 int cli_session_close(void *p){assert(p==(void*)1);return 0;}
 void cli_session_prompt(void *p,char *out,unsigned long cap){(void)p;snprintf(out,cap,"/ > ");}
 int cli_session_run(void *p,const char *cmd){assert(p==(void*)1);assert(!strcmp(cmd,"echo good"));execs++;return 0;}
 int app_yield(void){pump();return cancel_auth;}
-static void feed(const char *p){in_count=strlen(p);assert(in_count<sizeof incoming);memcpy(incoming,p,in_count);while(in_count)pump();}
+static void feed_bytes(const char *p,unsigned n){in_count=n;assert(in_count<sizeof incoming);memcpy(incoming,p,in_count);while(in_count)pump();}
+static void feed(const char *p){feed_bytes(p,(unsigned)strlen(p));}
 /* Configuration native boundary: independently exercised in Snow. */
 static char config_fixture[256];
 int cli_file_open(const char *p,const char *m){(void)p;(void)m;return config_fixture[0]?1:-1;}
@@ -34,9 +35,12 @@ void *cli_replace_begin(const char *p,char *q,unsigned long n){(void)p;(void)q;(
 int cli_replace_commit(void *p){(void)p;return -1;}
 void cli_replace_abort(void *p){(void)p;}
 unsigned long cli_mac_time(void){return 1;}
-int cli_service_stop(void){return stop();}
-int cli_service_enabled(void){return driver!=0;}
+int cli_service_stop_slot(int slot){assert(slot==0);return stop();}
+int cli_service_enabled_slot(int slot){assert(slot==0);return driver!=0;}
 int app_remote_settings(ClariceRemoteSettings *p){(void)p;return 0;}
+void app_remote_indicator(int slot,int on){(void)slot;(void)on;}
+int app_serial_remote_settings(ClariceRemoteSettings *p){(void)p;return 0;}
+int cli_session_set_wire(void *s,ClariceSessionWire w){assert(s==(void*)1&&w==session_wire);return 0;}
 int main(void){char *av[]={"telnetd","--no-password","--peer","10.0.0.1",0};
  fail_memory=1;assert(clarice_main(4,av)==1&&!allocations&&!alive);fail_memory=0;
  assert(!clarice_main(4,av));assert(alive&&pending_open);pending_open->ioResult=0;pending_open=0;poll_service(0);assert(session&&engine);
@@ -46,6 +50,10 @@ int main(void){char *av[]={"telnetd","--no-password","--peer","10.0.0.1",0};
  char longline[1500];memset(longline,'x',sizeof longline-1);longline[sizeof longline-1]=0;feed(longline);feed("\r");poll_service(1);assert(execs==1&&!ready_used);
  feed("echo good\r\n");poll_service(1);assert(execs==2);
  feed("echo good\r\necho good\r\n");poll_service(1);poll_service(1);assert(execs==4);
+ /* Eight-bit negotiation must not turn ordinary shell LF into stair-step text. */
+ feed_bytes("\377\375\000",3);pump();assert(clarice_telnet_enabled(engine,TELNET_TELOPT_BINARY,1));
+ before=used;terminal_text("a\nb",3);assert(used==before+4&&!memcmp(output+before,"a\r\nb",4));
+ before=used;telnet_send(engine,"a\nb",3);assert(used==before+3&&!memcmp(output+before,"a\nb",3));
  /* Logout must drain both the queue and pending native write before close. */
  text("LOGOUT_LAST");closing=1;pump();pump();pump();assert(failed);poll_service(0);assert(pending_open);pending_open->ioResult=0;pending_open=0;poll_service(0);
  feed("bad\003");assert(!line_used&&!ready_used&&!interrupted);

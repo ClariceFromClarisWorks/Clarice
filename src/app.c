@@ -675,9 +675,9 @@ static pascal Boolean remote_password_filter(DialogPtr d,EventRecord *ev,short *
   char stars[128];memset(stars,'*',n);stars[n]=0;dialog_text(d,7,stars);SelectDialogItemText(d,7,n,n);*item=0;return 1;
  }return 0;
 }
-int app_remote_settings(ClariceRemoteSettings *settings){
+static int remote_settings_dialog(ClariceRemoteSettings *settings,int resource){
  if(shell_session_active())return -1;
- DialogPtr d=GetNewDialog(142,0,(WindowPtr)-1);if(!d)return -1;
+ DialogPtr d=GetNewDialog(resource,0,(WindowPtr)-1);if(!d)return -1;
  char b[256];short item=0;settings->password[0]=0;remote_password=settings->password;
  dialog_text(d,4,settings->peer);snprintf(b,sizeof b,"%u",settings->port);dialog_text(d,6,b);
  SetControlValue(dialog_control(d,8),settings->enabled);SelectDialogItemText(d,4,0,32767);
@@ -689,6 +689,13 @@ int app_remote_settings(ClariceRemoteSettings *settings){
   if(item==2){memset(settings->password,0,sizeof settings->password);break;}
  }
  remote_password=0;DisposeDialog(d);SetPort(win);dirty=force_draw=1;return item==1?1:0;
+}
+int app_remote_settings(ClariceRemoteSettings *s){return remote_settings_dialog(s,142);}
+int app_serial_remote_settings(ClariceRemoteSettings *s){return remote_settings_dialog(s,143);}
+void app_remote_indicator(int transport,int connected){
+ static unsigned state;unsigned bit=transport==1?2:1,next=connected?state|bit:state&~bit;
+ if(next==state)return;state=next;unsigned char name[64];
+ pstr(name,state==3?"Clarice [Telnet + Serial]":state==2?"Clarice [Serial]":state==1?"Clarice [Telnet]":"Clarice");SetWTitle(win,name);
 }
 static MenuHandle pref_popup_menus[3];
 static int pref_popup_choices[3];
@@ -709,7 +716,7 @@ static void preferences_window(void){
  SetControlValue(dialog_control(d,10),inverse);SetControlValue(dialog_control(d,13),filled);popup_title(d,12,lines,cap);popup_title(d,15,controls,ctrl);
  SelectDialogItemText(d,7,0,32767);
  while(item!=2){ModalDialog(0,&item);
-  if(item==16){shell_run("/bin/telnetd --preferences");SetPort(d);}
+  if(item==16||item==17){shell_run(item==16?"/bin/telnetd --preferences":"/bin/seriald --preferences");SetPort(d);}
   if(item==10||item==13){ControlHandle c=dialog_control(d,item);SetControlValue(c,!GetControlValue(c));}
   if(item==5){chosen=dialog_popup(d,5,fonts,chosen);popup_title(d,5,fonts,chosen);}
   if(item==12){cap=dialog_popup(d,12,lines,cap);popup_title(d,12,lines,cap);}

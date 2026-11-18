@@ -9,6 +9,11 @@ typedef struct {
  long (*write)(void *,int,const void *,unsigned long);
  int (*cancelled)(void *);
 } ClariceSessionIO;
+/* Binary protocol ownership: query=0, begin=1, read=2, write=3, end=4.
+   Existing session ABI stays unchanged; optional callback is registered separately. */
+typedef long (*ClariceSessionWire)(int,void *,unsigned long);
+int cli_session_set_wire(void *,ClariceSessionWire);
+long cli_remote_wire(int,void *,unsigned long);
 void *cli_session_open(const ClariceSessionIO *);
 /* Result: low byte command status; bit 8 requests logout. 125 rejects reentry. */
 int cli_session_run(void *,const char *);

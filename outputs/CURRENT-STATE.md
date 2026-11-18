@@ -1,5 +1,128 @@
 # Clarice current state
 
+## Nano long-line startup — isolated branch, Snow only, 18 November
+
+Worktree **Clarice-Nano**, branch **codex/nano-startup-20261118**. Earlier working
+source was copied without changing the original checkout. Dedicated Snow disks,
+HTTP repository and loopback Telnet port; other agents' instances and the SE left
+untouched. No push or release.
+
+- Retained a small nano 9.2 read-buffer growth adaptation: gnulib-style 1.5x growth
+  instead of repeated +120-byte moving reallocations, with original-size fallback
+  under pressure and overflow checks. Initial allocation unchanged; no Core,
+  renderer, ncurses, save-path or permanent-memory change.
+- Three-run matched warm Snow means: 8 KiB short lines **401→401 ticks**;
+  two long lines **323→311** (3.9%); 16 KiB single line with NUL **454→352** (22.5%).
+  The 16 KiB read loop falls **186→81 ticks**. Guest ticks at maximum acceleration;
+  not physical performance or cold-start acceptance.
+- Short-file owned peak unchanged, 8 KiB long-line peak −190 B; 16 KiB peak
+  **116066→120416 B** (+4350 transient bytes). Every measured command remaining=0.
+  Normal executable **269016 B** (+116); diagnostic +108 B. Three-second goal unmet.
+- Actual growth-block ASan/UBSan checks pass: moving copies, exact fallback,
+  failed allocations preserve contents, 32-bit overflow and 64 KiB binary lines.
+  Guest exact embedded-NUL save, TEXT/ttxt metadata, cancellation 130, native
+  partition exhaustion 1 and subsequent recovery pass. Both versions fail the
+  64 KiB single-line fixture in this partition; it is excluded from timing means.
+- Normal optional nano **2026111853** and diagnostic **2026111855** installed through
+  the isolated `clarice update` repository on diagnostic Core **2026111823**.
+  Normal-build final smoke results are in the linked report.
+
+[Matched data, limitations and tests](nano-profile7/README.md). Next useful work:
+physical comparison when available, then remaining setup/file-construction costs;
+no new loading architecture or partition policy was introduced.
+
+## Nano buffered-input follow-up — Snow only, 18 November
+
+Core **2026111823**, runtime **1.10**; normal optional nano **2026111827**,
+diagnostic nano-profile **2026111826**, installed through `clarice update`.
+The existing metadata-resolution improvement below is preserved.
+
+- Retained a tiny Newlib-style buffered `getc` adapter; no extra allocations,
+  imports or renderer changes. Diagnostic nano +36 bytes; normal image 268900 B.
+- Matched three-run warm means: ordinary 8 KiB **430→403 guest ticks** (6.2%;
+  median 418→402), long-line 8 KiB **341→332** (2.4%). Ordinary file-open/buffer
+  phase **118→98**. Empty workloads have allocation noise, no attributable gain.
+- Both refresh batching and initial blank-screen deferral failed to produce
+  consistent improvement and were removed. Existing renderer retained.
+- Host buffered-I/O ASan/UBSan passes; Snow save/reopen/search, metadata, themes,
+  three cancellation/status-130 recoveries and terminal restoration pass. Editor
+  pixel comparison identical. Normal nano save and zero retained allocations pass.
+  Owned peaks unchanged; no progressive native heap decline.
+- Remaining loader ~100 ticks, short-file initial refresh ~80, file preparation
+  ~98–109. Three-second goal unmet. These are accelerated Snow 6.0.8 comparisons,
+  not physical results or new cold measurements. No SE access or push.
+- Installing nano with telnetd active once exhausted relocation memory; disabling
+  services and retrying succeeded, preserving recovery. No updater change.
+
+[Measurements and evidence](nano-profile6/README.md). Next: matched physical
+confirmation when the SE is available, then file construction/layout profiling.
+
+## Nano startup follow-up — Snow only, 18 November
+
+Diagnostic Core **2026111816**, runtime **1.10**, optional `nano-profile` repository
+revision **2026111818**. Updated through `clarice update`; no SE access or push.
+The serial/Kermit acceptance below is complete; this is the subsequent nano batch.
+
+- Retained a small Macintosh adapter improvement: `cli_resolve_info` returns the
+  catalog metadata already obtained during path resolution. Nano stat/realpath no
+  longer repeat that final HFS lookup. No persistent cache, allocation or weakened
+  symlink/volume/error checking; genuine nano 9.2 and ncurses 6.5 unchanged.
+- Same installed command name, three warm runs each, fixed-max Snow Plus/4 MiB/
+  System 6.0.8: empty buffer **227→225**, existing empty file **300→268**, ordinary
+  8 KiB **440→422**, two-long-line 8 KiB **353→344 guest ticks** (rounded means).
+  Empty-file baseline has unrelated timing variation; the attributable file-open
+  saving is consistently **10–13 ticks**, not the entire total difference.
+- No-file control unchanged within noise. Owned allocation peaks unchanged:
+  74,572 / 75,112 / 101,736 / 95,662 bytes respectively; every invocation remaining=0.
+  Normal Core package +256 bytes; diagnostic nano package −124, loaded image −52.
+  Native heap 364160–364174 before / 364174–364202 after; largest block
+  360464–360574 / 360450–360500. No progressive heap loss or new permanent allocation.
+- Host resolver/volume/rename ASan/UBSan tests and safe-save fault/interruption
+  regression pass. Guest relative/absolute paths, symlink traversal, two mounted
+  volumes, invalid-volume rejection, existing/new/cross-volume nano saves, reopen
+  and discard, type/creator preservation and terminal restoration pass.
+- Remaining costs: warm loader ~101–103 ticks; ncurses initialisation ~27; file
+  opening/buffer construction ~115–124; ordinary-file initial refresh ~81. The
+  subsequent drawing experiments above did not justify changing the renderer.
+  Three-second goal remains unmet.
+
+These are comparative accelerated-guest measurements, not physical-SE timings or
+new cold-boot acceptance. Nano profile command/Core instrumentation is diagnostic;
+normal build was compiled separately. [Report and raw data](nano-profile3/README.md).
+
+## Serial remote shell and session Kermit — Snow validation, 18 November
+
+Core **2026111812**, runtime **1.9**; optional `telnetd` **2026111814** and
+`seriald` **2026111814**, standard E-Kermit command **2026111812**. Installed through
+versioned repository manifests and `clarice update`; no SE access or push.
+
+- Separate Preferences controls enable native serial (modem/printer, 57600 8N1,
+  no flow control) and TCP. Both remain off after restart. One authenticated
+  supplementary shell is shared across transports; local commands remain serialized
+  with it while local editing/scrolling stay responsive. Connection shown in title.
+- Existing libtelnet and E-Kermit 1.8 retained. `kermit send FILE` / `kermit receive
+  NEWFILE` use the authenticated connection, with a demand-allocated 4 KiB binary
+  queue and no terminal interpretation of packets. Failed transfers disconnect
+  rather than allowing trailing protocol bytes to execute as shell commands.
+- Independent upstream C-Kermit 9.0.302 round trips pass over TCP and Snow's modem
+  PTY: **4,352 bytes identical**, including all byte values and a MacBinary container
+  holding both forks and Finder metadata. This preserves the container; automatic
+  Macintosh fork extraction is not implemented. Peer requires `SET BLOCK-CHECK FORCE-3`.
+- Three partial-receive cancellations, login/logout/reconnect, status 130, absent
+  partial target/temp files and zero tracked allocations pass. Native free heap /
+  largest block remains **293336 / 290326** on all three runs (both services enabled).
+  Host ASan/UBSan, async-buffer ownership/recovery, seven E-Kermit regressions,
+  15 local interaction observations and five TCP lifecycle checks pass.
+- Fixed demonstrated text regression: negotiated Telnet BINARY now preserves CRLF
+  for shell output while raw Kermit payloads remain unchanged. New host assertion
+  and repeat guest interaction/binary transfer pass. Final Telnet image 39,280 B;
+  serial image 28,936 B, loaded only while enabled. No disabled transport heap.
+
+Limits: unencrypted trusted connections; serial cable removal without carrier cannot
+be reliably detected. Logout/disable and transfer timeout/cancellation are supported.
+Local outbound serial/Kermit is conservatively blocked while seriald owns a port.
+Physical SE/System 7 acceptance pending. [Evidence](remote-sessions/serial-kermit/README.md).
+
 ## Password-protected supplementary Telnet — Snow validated
 
 Core **2026111810** (runtime 1.8), optional `telnetd` **2026111811**, deployed through
@@ -35,8 +158,8 @@ No SE access or push. Service disabled after acceptance; no pending repository u
 Telnet is **unencrypted**. The 1,000-round PBKDF2 setting is a legacy CPU compromise,
 not contemporary offline password hardening; use a unique strong password on a
 trusted network. HFS provides no credential-file access protection. Physical SE,
-MoofTCP and System 7 acceptance remain pending. No serial remote sessions or GUI
-editor support added. [Evidence and usage](remote-sessions/README.md).
+MoofTCP and System 7 acceptance remain pending. Serial support was added in the subsequent acceptance above; GUI
+editor support remains unavailable remotely. [Evidence and usage](remote-sessions/README.md).
 
 ## Resumable repository updater — Snow accepted, build 2026111802
 

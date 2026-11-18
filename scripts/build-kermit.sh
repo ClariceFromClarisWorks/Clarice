@@ -10,4 +10,4 @@ m68k-apple-macos-gcc $flags -Wall -Wextra -Wno-multichar -Wno-unused-function -c
 libgcc=$(m68k-apple-macos-gcc -print-libgcc-file-name)
 m68k-apple-macos-ld -r /src/work/build/kermit-main.o /src/work/build/kermit-engine.o "$libgcc" -o /src/work/build/kermit.o
 '
-python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/kermit.o" "$ROOT/work/build/kermit.clx" --runtime 1.1
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/kermit.o" "$ROOT/work/build/kermit.clx" --runtime 1.9

@@ -1,7 +1,8 @@
+import os
 from client import Client
 import socket,time,json,subprocess,sys
 from pathlib import Path
-pid=sys.argv[1];out=Path('outputs/remote-sessions');rows=[]
+pid=sys.argv[1];out=Path(os.environ.get('CLARICE_REMOTE_OUTPUT', 'outputs/remote-sessions'));rows=[]
 c=Client()
 try:
  # A second TCP connection must not acquire another shell or run commands.
