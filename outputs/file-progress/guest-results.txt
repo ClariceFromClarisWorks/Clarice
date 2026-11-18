@@ -1,0 +1,80 @@
+copy:0:before
+real 6.75 s
+status:0
+Runtime: heap=357346 largest=355860 image=8136 ticks=391 load=68 owned-peak=0 remaining=0
+Loader ticks: read=12 validate=20 imports=2 relocations=1 prepare=26 events=4 (events included above)
+Verification ticks: mode=full header=0 record=7 payload=20 metadata=0 structure=0 (structure included in relocations)
+copy:0:after
+real 6.00 s
+status:0
+Runtime: heap=357360 largest=355878 image=11540 ticks=341 load=61 owned-peak=0 remaining=0
+Loader ticks: read=20 validate=23 imports=2 relocations=1 prepare=6 events=0 (events included above)
+Verification ticks: mode=full header=0 record=9 payload=23 metadata=0 structure=1 (structure included in relocations)
+compare:0
+copy:1:before
+real 6.85 s
+status:0
+Runtime: heap=357350 largest=355842 image=8136 ticks=390 load=59 owned-peak=0 remaining=0
+Loader ticks: read=20 validate=19 imports=2 relocations=1 prepare=7 events=4 (events included above)
+Verification ticks: mode=full header=0 record=10 payload=19 metadata=0 structure=0 (structure included in relocations)
+copy:1:after
+real 7.13 s
+status:0
+Runtime: heap=357352 largest=355842 image=11540 ticks=406 load=72 owned-peak=0 remaining=0
+Loader ticks: read=21 validate=25 imports=2 relocations=2 prepare=11 events=1 (events included above)
+Verification ticks: mode=full header=1 record=11 payload=24 metadata=0 structure=1 (structure included in relocations)
+compare:0
+copy:2:before
+real 6.86 s
+status:0
+Runtime: heap=357366 largest=355824 image=8136 ticks=390 load=58 owned-peak=0 remaining=0
+Loader ticks: read=20 validate=19 imports=2 relocations=1 prepare=5 events=3 (events included above)
+Verification ticks: mode=full header=0 record=11 payload=19 metadata=0 structure=1 (structure included in relocations)
+copy:2:after
+real 7.35 s
+status:0
+Runtime: heap=357364 largest=355824 image=11540 ticks=418 load=75 owned-peak=0 remaining=0
+Loader ticks: read=24 validate=25 imports=2 relocations=1 prepare=11 events=6 (events included above)
+Verification ticks: mode=full header=0 record=12 payload=25 metadata=0 structure=1 (structure included in relocations)
+compare:0
+copy:3:before
+real 7.05 s
+status:0
+Runtime: heap=357364 largest=355824 image=8136 ticks=400 load=56 owned-peak=0 remaining=0
+Loader ticks: read=21 validate=17 imports=2 relocations=1 prepare=3 events=0 (events included above)
+Verification ticks: mode=full header=1 record=12 payload=16 metadata=0 structure=1 (structure included in relocations)
+copy:3:after
+real 7.16 s
+status:0
+Runtime: heap=357364 largest=355824 image=11540 ticks=406 load=65 owned-peak=0 remaining=0
+Loader ticks: read=23 validate=23 imports=2 relocations=2 prepare=3 events=0 (events included above)
+Verification ticks: mode=full header=0 record=12 payload=23 metadata=0 structure=1 (structure included in relocations)
+compare:0
+rename:0
+cross-move:0
+moved-data:0
+tree-copy:0
+tree-remove:0
+tree-absent:0
+cp: Mac OS error -45: File is locked
+locked-copy:1
+rm: Mac OS error -45: File is locked
+locked-remove:1
+unlock-remove:0
+quiet-copy:0
+cp [-Rp] [--no-progress] [--] source ... destination
+Copy data and resource forks and Finder type/creator. -R copies folders
+using available traversal memory.
+-p also preserves file creation/modification dates and locked state.
+Symlinks are copied as links. Directory metadata preservation is not
+implemented.
+Existing files are replaced only after both forks have copied
+successfully.
+Progress defaults on for interactive terminal streams after a short delay.
+--no-progress disables it; scripts/stdout redirection suppress it automatically.
+Copy bars describe the current file, including both forks; counts include
+completed files and folders. Unknown totals use an activity bar, no pre-scan.
+rm deletes directly, not to Trash; cancellation cannot undo deletions.
+Status: 0 success, 1 file error, 2 usage, 130 interrupted.
+invalid:2
+quiet-remove:0

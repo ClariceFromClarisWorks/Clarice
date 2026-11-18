@@ -12,7 +12,7 @@ pre=r'''
 #define PATH_CAP 512
 enum{bdNamErr=-37,dupFNErr=-48,fnfErr=-43,paramErr=-50,fLckdErr=-45,eofErr=-39,ioErr=-36};
 typedef struct {unsigned long fdType,fdCreator;unsigned short fdFlags;} Finder;
-typedef struct {struct{int ioFlAttrib,ioDirID;Finder ioFlFndrInfo;unsigned long ioFlCrDat,ioFlMdDat;}hFileInfo;}CInfoPBRec;
+typedef struct {struct{int ioFlAttrib,ioDirID;Finder ioFlFndrInfo;unsigned long ioFlCrDat,ioFlMdDat,ioFlLgLen,ioFlRLgLen;}hFileInfo;}CInfoPBRec;
 static int preserve=1;static unsigned long sequence;
 typedef struct {char name[512];unsigned char data[2][9000];long len[2];CInfoPBRec meta;int used;} File;
 static File fs[8];static struct{int file,fork;long pos;int open;}refs[32];
@@ -20,7 +20,7 @@ static int count,fail_at,short_at,cancel_at,polls;static char diagnostic[2048];
 static int boundary(void){return ++count==fail_at?ioErr:0;}
 static int find(const char*p){for(int i=0;i<8;i++)if(fs[i].used&&!strcmp(fs[i].name,p))return i;return -1;}
 static int isdir(CInfoPBRec*p){return !!(p->hFileInfo.ioFlAttrib&16);}
-static unsigned long cli_ticks(void){return 123;}
+static unsigned long cli_ticks(void){return (unsigned long)count*10;}
 static int app_yield(void){return ++polls==cancel_at;}
 static void errsay(const char*p){strcat(diagnostic,p);}
 static int info(const char*p,CInfoPBRec*b){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;*b=fs[i].meta;return 0;}
@@ -36,16 +36,23 @@ static int cli_native_lock(const char*p,int on){int e=boundary();if(e)return e;i
 '''
 test=r'''
 static File original,old;
-static void reset(int exists){memset(fs,0,sizeof fs);memset(refs,0,sizeof refs);count=fail_at=short_at=cancel_at=polls=0;sequence=0;*diagnostic=0;fs[0]=original;if(exists)fs[1]=old;}
+static void reset(int exists){memset(fs,0,sizeof fs);memset(refs,0,sizeof refs);count=fail_at=short_at=cancel_at=polls=0;sequence=0;*diagnostic=0;file_progress_command="cp";file_progress_count=0;progress_begin();fs[0]=original;if(exists)fs[1]=old;}
 static int equal(File*a,File*b){return a->len[0]==b->len[0]&&a->len[1]==b->len[1]&&!memcmp(a->data[0],b->data[0],a->len[0])&&!memcmp(a->data[1],b->data[1],a->len[1]);}
-static void verify(int rc,int exists){assert(equal(&fs[0],&original)&&!strcmp(fs[0].name,"A:src"));for(int j=0;j<32;j++)assert(!refs[j].open);int d=find("A:dst");if(d>=0)assert(equal(&fs[d],&original)|| (exists&&equal(&fs[d],&old)));else assert(rc);if(!rc){assert(d>=0&&equal(&fs[d],&original));assert(fs[d].meta.hFileInfo.ioFlFndrInfo.fdType==original.meta.hFileInfo.ioFlFndrInfo.fdType);assert(fs[d].meta.hFileInfo.ioFlMdDat==original.meta.hFileInfo.ioFlMdDat);}if(exists){int preserved=0;for(int i=1;i<8;i++)if(fs[i].used&&(equal(&fs[i],&old)||equal(&fs[i],&original)))preserved=1;assert(preserved);}}
-int main(void){strcpy(original.name,"A:src");original.used=1;original.meta.hFileInfo.ioDirID=1;original.meta.hFileInfo.ioFlAttrib=1;original.meta.hFileInfo.ioFlFndrInfo.fdType=0x54455854;original.meta.hFileInfo.ioFlMdDat=1234;original.len[0]=8301;original.len[1]=4353;for(int f=0;f<2;f++)for(int i=0;i<original.len[f];i++)original.data[f][i]=(i*37+f)%256;old=original;strcpy(old.name,"A:dst");old.meta.hFileInfo.ioDirID=2;old.meta.hFileInfo.ioFlAttrib=0;memset(old.data,0xEE,sizeof old.data);int cases=0;
+static void verify(int rc,int exists){assert(equal(&fs[0],&original)&&!strcmp(fs[0].name,"A:src"));for(int j=0;j<32;j++)assert(!refs[j].open);int d=find("A:dst");if(d>=0)assert(equal(&fs[d],&original)|| (exists&&equal(&fs[d],&old)));else assert(rc);if(!rc){assert(file_progress_count==1&&file_progress_bytes==12654&&file_progress_total==12654);assert(d>=0&&equal(&fs[d],&original));assert(fs[d].meta.hFileInfo.ioFlFndrInfo.fdType==original.meta.hFileInfo.ioFlFndrInfo.fdType);assert(fs[d].meta.hFileInfo.ioFlMdDat==original.meta.hFileInfo.ioFlMdDat);}if(exists){int preserved=0;for(int i=1;i<8;i++)if(fs[i].used&&(equal(&fs[i],&old)||equal(&fs[i],&original)))preserved=1;assert(preserved);}}
+int main(void){strcpy(original.name,"A:src");original.used=1;original.meta.hFileInfo.ioDirID=1;original.meta.hFileInfo.ioFlAttrib=1;original.meta.hFileInfo.ioFlFndrInfo.fdType=0x54455854;original.meta.hFileInfo.ioFlMdDat=1234;original.len[0]=8301;original.len[1]=4353;original.meta.hFileInfo.ioFlLgLen=8301;original.meta.hFileInfo.ioFlRLgLen=4353;for(int f=0;f<2;f++)for(int i=0;i<original.len[f];i++)original.data[f][i]=(i*37+f)%256;old=original;strcpy(old.name,"A:dst");old.meta.hFileInfo.ioDirID=2;old.meta.hFileInfo.ioFlAttrib=0;memset(old.data,0xEE,sizeof old.data);int cases=0;
  for(int exists=0;exists<2;exists++){reset(exists);assert(!copy_file("A:src","A:dst",&original.meta));int boundaries=count,yields=polls;verify(0,exists);cases++;
  for(int n=1;n<=boundaries;n++){reset(exists);fail_at=n;int rc=copy_file("A:src","A:dst",&original.meta);assert(rc);verify(rc,exists);cases++;}
  for(int n=1;n<=boundaries;n++){reset(exists);short_at=n;int rc=copy_file("A:src","A:dst",&original.meta);verify(rc,exists);cases++;}
  for(int n=1;n<=yields;n++){reset(exists);cancel_at=n;int rc=copy_file("A:src","A:dst",&original.meta);assert(rc==130);verify(rc,exists);assert(exists?equal(&fs[find("A:dst")],&old):find("A:dst")==-1);cases++;}
  }printf("PASS %d fork-copy/replacement cases: each native boundary, short writes, cancellation, source integrity, complete destination/recovery and closed refs\n",cases);}
 '''
-(w/'copy-faults.c').write_text(pre+code+test)
+ui=r'''
+short input_ref=-1,output_ref=-1,error_ref=-3;int script_depth;
+int cli_isatty(int fd){(void)fd;return error_ref<0&&error_ref!=-2;}
+static void app_progress(const char *s,int finish){assert(!strstr(s,"100%"));assert(!finish);}
+static int app_columns(void){return 80;}
+'''
+helper='#include "'+str(r/'src/commands/file-progress.h')+'"\n'
+(w/'copy-faults.c').write_text(pre+ui+helper+code+test)
 subprocess.run(['cc','-g','-O1','-fsanitize=address,undefined',str(w/'copy-faults.c'),'-o',str(w/'copy-faults')],check=True)
 subprocess.run([str(w/'copy-faults')],check=True)

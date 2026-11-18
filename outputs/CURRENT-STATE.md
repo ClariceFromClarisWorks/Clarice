@@ -1,5 +1,18 @@
 # Clarice current state
 
+## Default file-operation progress — 18 November 2026
+
+Developed/tested/staged in `Clarice-File-Progress` on `codex/file-progress-20261118`.
+cp/mv/rm reuse the existing progress renderer, default on interactively after a
+short delay; `--no-progress` and script/stream suppression; no pre-scan or extra
+heap storage. Safe native mutation order remains unchanged. Host fault/UI/parser
+regressions and native builds pass; Snow confirms completion/cancellation and bars.
+Loaded utility +3404 bytes; repeated 320 KiB copy median 6.86 → 7.16 seconds with
+UI suppressed. No physical performance acceptance. Synthetic resource-fork
+comparison differs at bytes 48–125 in both baseline and candidate; valid-resource
+validation remains required. No commit/merge/deployment/release.
+Details and limits: [report](file-progress/REPORT.md).
+
 ## ls output buffering — 18 November 2026
 
 User-authorised follow-up in `Clarice-Ls-Asm`: direct plain-name formatting,

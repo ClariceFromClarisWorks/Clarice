@@ -1,0 +1,1 @@
+PASS rm dot/dotdot operands rejected before traversal, slash suffixes, sentinels retained, normal removal unaffected

@@ -25,7 +25,8 @@ m68k-apple-macos-ld -r /src/work/build/core-main.o /src/work/build/created.o /sr
 '
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/core.o" "$ROOT/work/build/core.clx" --runtime 1.10
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/serial.o" "$ROOT/work/build/serial.clx" --runtime 1.0
-for name in files inspect misc; do python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"; done
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/files.o" "$ROOT/work/build/files.clx" --runtime 1.10
+for name in inspect misc; do python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/$name.o" "$ROOT/work/build/$name.clx"; done
 python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/build/free.o" "$ROOT/work/build/free.clx" --runtime 1.4
 "$ROOT/scripts/build-ports.sh"
 "$ROOT/scripts/build-awk.sh"

@@ -17,6 +17,9 @@ pre=r'''
 #include <string.h>
 #include <strings.h>
 #define PATH_CAP 512
+static void file_progress_current(const char *s){(void)s;}
+static void file_progress_show(int done){(void)done;}
+static void file_progress_complete(void){}
 enum {bdNamErr=-37,fnfErr=-43,dirNFErr=-120,paramErr=-50,fLckdErr=-45};
 typedef struct {struct {int ioFlAttrib;} hFileInfo;} CInfoPBRec;
 static int parents=1,preserve,locked,source_dir,target_exists,copy_calls,delete_calls,rename_error,move_error,copy_error,target_error,source_exists,mkdir_calls;

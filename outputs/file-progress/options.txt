@@ -1,0 +1,1 @@
+PASS actual cp/mv/rm option parsing, default and quiet progress, -- operands, invalid option status/stderr, help/stdout, scripts and redirected output, no option leak to touch
