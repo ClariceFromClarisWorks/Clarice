@@ -1,0 +1,1 @@
+PASS: begin/open/write/short-write/close/commit failures, retry, empty save

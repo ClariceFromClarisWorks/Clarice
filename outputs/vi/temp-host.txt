@@ -1,0 +1,1 @@
+PASS: HFS-style EOF bound, gap extension, distinct block readback, zero gap, metadata/resize/seek failures

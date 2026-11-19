@@ -1,0 +1,265 @@
+[
+  {
+    "case": 0,
+    "keys": "b'ljhk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 1,
+    "keys": "b'20j'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 2,
+    "keys": "b'20k'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 3,
+    "keys": "b'\\x1b[B\\x1b[B\\x1b[B\\x1b[B\\x1b[B'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 4,
+    "keys": "b'\\x1b[A\\x1b[A\\x1b[A\\x1b[A\\x1b[A'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 5,
+    "keys": "b'15l'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 6,
+    "keys": "b'10h'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 7,
+    "keys": "b'G'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 8,
+    "keys": "b'gg'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 9,
+    "keys": "b':set tabstop=4\\r'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 10,
+    "keys": "b':set tabstop=8\\r'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 12,
+    "keys": "b'\\x1b'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 13,
+    "keys": "b'jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 14,
+    "keys": "b'u'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 15,
+    "keys": "b'jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 16,
+    "keys": "b'yy'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 17,
+    "keys": "b'p'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 18,
+    "keys": "b'jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 19,
+    "keys": "b'dd'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 20,
+    "keys": "b'jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 21,
+    "keys": "b'u'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 22,
+    "keys": "b'2w'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 23,
+    "keys": "b'b'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 25,
+    "keys": "b'\\x1b'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 26,
+    "keys": "b'jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 27,
+    "keys": "b'3x'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 28,
+    "keys": "b'.'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 29,
+    "keys": "b'u'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 30,
+    "keys": "b'jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 31,
+    "keys": "b'/0005\\r'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 32,
+    "keys": "b'n'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 33,
+    "keys": "b'N'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 34,
+    "keys": "b'\\x06'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 35,
+    "keys": "b'\\x02'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 36,
+    "keys": "b'G'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 37,
+    "keys": "b'0'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 39,
+    "keys": "b'\\x1b'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 40,
+    "keys": "b'60h'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 41,
+    "keys": "b'60l'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 42,
+    "keys": "b'gg'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 43,
+    "keys": "b':%s/abc/XYZ/g\\r'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 44,
+    "keys": "b'jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 46,
+    "keys": "b'\\x1b'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 47,
+    "keys": "b'jkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjkjk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 48,
+    "keys": "b'xjk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 49,
+    "keys": "b'ujk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 50,
+    "keys": "b'rZjk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 51,
+    "keys": "b'.jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 52,
+    "keys": "b'\"ayy'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 53,
+    "keys": "b'\"apjk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 54,
+    "keys": "b':set tabstop=3\\r'",
+    "document_and_cursor_match": true
+  },
+  {
+    "case": 55,
+    "keys": "b'jk'",
+    "document_and_cursor_match": true
+  },
+  {
+    "metrics": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=328956 largest=327546 image=36640 ticks=77151 load=52 owned-peak=62228 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=252 rows=368 text=245 copy=9 total=379 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=254 bytes=14666 feed-ticks=167\r\nEditor response: fast=1 draws=123 rows=123 cells=10081 paint=126 feed=74 bytes=5602 responses=123 latency=642 max=22 event-delay=29 events=123 read-to-output=304 flushes=123\r\nNative ticks: allocs=72 FreeMem=1 NewPtr=23 reads=1 read=2 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=25 validate=0 imports=3 relocations=4 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=0 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  }
+]

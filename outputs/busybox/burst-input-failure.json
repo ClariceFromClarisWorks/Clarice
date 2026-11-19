@@ -1,0 +1,22 @@
+[
+  {
+    "command": "bbvi --version",
+    "status": 0,
+    "text": "bbvi --version; printf '\\nREMOTE_END_1:%d\\n' $?\r\nbbvi: BusyBox 1.37.0 vi; experimental Clarice port\r\nUsage: bbvi [-R] [-c command] [file ...]\r\nKeys: i insert; Escape normal; :w save; :q quit; :q! discard.\r\nLiteral search/substitution, undo, repeat, marks and named buffers.\r\n80x24 Telnet BINARY; byte text; safe HFS saves preserve metadata.\r\nNo regex, full ex mode, shell/filter, job control or automatic .exrc.\r\nEXINIT and -c supported. Unsaved edits lost on disconnect/cancel.\r\nStatus: 0 quit/help; 1 failure; 2 usage; 130 cancellation.\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "bbvi --help",
+    "status": 0,
+    "text": "bbvi --help; printf '\\nREMOTE_END_2:%d\\n' $?\r\nbbvi: BusyBox 1.37.0 vi; experimental Clarice port\r\nUsage: bbvi [-R] [-c command] [file ...]\r\nKeys: i insert; Escape normal; :w save; :q quit; :q! discard.\r\nLiteral search/substitution, undo, repeat, marks and named buffers.\r\n80x24 Telnet BINARY; byte text; safe HFS saves preserve metadata.\r\nNo regex, full ex mode, shell/filter, job control or automatic .exrc.\r\nEXINIT and -c supported. Unsaved edits lost on disconnect/cancel.\r\nStatus: 0 quit/help; 1 failure; 2 usage; 130 cancellation.\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "bbvi --bad-option",
+    "status": 2,
+    "text": "bbvi --bad-option; printf '\\nREMOTE_END_3:%d\\n' $?\r\nbbvi: unsupported option: --bad-option\r\n\r\nREMOTE_END_3:2\r\n/ > "
+  },
+  {
+    "command": "printf 'alpha beta\\nsecond line\\n' > /tmp/bbvi-edit",
+    "status": 0,
+    "text": "printf 'alpha beta\\nsecond line\\n' > /tmp/bbvi-edit; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "command": "cat and wc -c /tmp/vi-8k",
+  "exact_128_numbered_lines": true,
+  "text": "wc -c /tmp/vi-8k; printf '\\nREMOTE_END_3:%d\\n' $?\r\n8192 /tmp/vi-8k\r\n\r\nREMOTE_END_3:0\r\n/ > "
+}

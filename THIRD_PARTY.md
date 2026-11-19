@@ -85,3 +85,40 @@ integration remains unfinished.
   Copyright, licence and AUTHORS retained in `licenses/busybox`.
 - **newlib getopt**, Gregory Pietsch, public domain: original notice retained
   in `src/vendor/newlib-getopt/getopt.c`; pinned URL/hash in SOURCE.json.
+
+
+## Optional experimental xvi
+
+The separate xvi investigation uses Chris and John Downey's STEVIE-derived xvi,
+original work by Tim Thompson and Tony Andrews, later maintained by Martin Guy.
+Pinned upstream: https://github.com/martinwguy/xvi commit
+`109d2f39849ec81cc36001dbc341aaa45ff7e8ce` (source version string 2.50).
+This is the portable editor with Atari ST/TOS support, not an X Windows frontend.
+See [copying permission](licenses/xvi/COPYING), [preparation](scripts/prepare-xvi.py)
+and [investigation](outputs/xvi/README.md). Original source/notices remain intact;
+Clarice-specific adaptations are separately located in `src/ports/xvi` and are
+provided under those copying terms. Distribute corresponding source with any
+compiled xvi package; this investigation does not publish a binary release.
+
+## Original Berkeley/Heirloom ex/vi — comparison prototype
+
+`https://github.com/n-t-roff/heirloom-ex-vi`, pinned
+`3f1e9786d249d18012600ae21175eb3521579402`, with bundled BSD termcap and
+Heirloom libcommon traditional `regexp.h` pinned by `scripts/prepare-vi.py`.
+Bill Joy, Mark Horton, the Regents of the University of California, Gunnar
+Ritter and Caldera authorship retained. Terms: `licenses/vi/LICENSE` and
+`licenses/vi/regexp-NOTICE`; all upstream notices remain in fetched source.
+This product includes software developed by the University of California,
+Berkeley and its contributors. This product includes software developed or
+owned by Caldera International, Inc.
+Separable adaptations: `src/ports/vi`; test status and limitations:
+`outputs/vi/README.md`. Not a production-complete port.
+
+- **BusyBox vi 1.37.0** (experimental optional `bbvi`): Sterling Huxley and
+  BusyBox contributors; GPL notices and AUTHORS in `licenses/busybox/` and
+  retained source headers. Official archive SHA-256
+  `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`.
+  `scripts/prepare-busybox-vi.py` stages genuine editor and selected libbb sources;
+  `src/ports/busybox/` contains separate configuration, patch and Macintosh
+  boundaries. This is not a port of the whole BusyBox suite. See
+  `outputs/busybox/README.md` for enabled features, tests and limitations.

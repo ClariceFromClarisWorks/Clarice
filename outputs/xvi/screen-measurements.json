@@ -1,0 +1,56 @@
+[
+  {
+    "command": "xvi",
+    "run": 1,
+    "host_submit_to_full_screen_seconds": 1.8919429590000014,
+    "host_key_response_seconds": 0.07800941599999689,
+    "host_complete_open_key_quit_seconds": 2.219937667,
+    "bytes": 1288,
+    "metrics": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333600 largest=331260 image=99300 ticks=165 load=77 owned-peak=23728 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=21 FreeMem=0 NewPtr=2 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=43 validate=1 imports=2 relocations=17 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=10 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "xvi",
+    "run": 2,
+    "host_submit_to_full_screen_seconds": 1.8658350000000006,
+    "host_key_response_seconds": 0.09553633300000186,
+    "host_complete_open_key_quit_seconds": 2.1772094170000003,
+    "bytes": 1288,
+    "metrics": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=333600 largest=331260 image=99300 ticks=160 load=79 owned-peak=23728 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=21 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=43 validate=2 imports=3 relocations=16 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=10 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "xvi",
+    "run": 3,
+    "host_submit_to_full_screen_seconds": 2.084092292000001,
+    "host_key_response_seconds": 0.12937958299999863,
+    "host_complete_open_key_quit_seconds": 2.4577312919999983,
+    "bytes": 1288,
+    "metrics": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=333600 largest=331260 image=99300 ticks=171 load=78 owned-peak=23728 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=21 FreeMem=0 NewPtr=3 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=43 validate=1 imports=3 relocations=16 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=10 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "xvi /tmp/xvi-8k",
+    "run": 1,
+    "host_submit_to_full_screen_seconds": 9.080265207999997,
+    "host_key_response_seconds": 0.1644694169999994,
+    "host_complete_open_key_quit_seconds": 9.685452082999998,
+    "bytes": 13543,
+    "metrics": "status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nRuntime: heap=333600 largest=331260 image=99300 ticks=780 load=77 owned-peak=45996 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=39 FreeMem=0 NewPtr=4 reads=4 read=2 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=43 validate=0 imports=3 relocations=17 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=10 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "xvi /tmp/xvi-8k",
+    "run": 2,
+    "host_submit_to_full_screen_seconds": 9.055724665999996,
+    "host_key_response_seconds": 0.12751941700000202,
+    "host_complete_open_key_quit_seconds": 9.639153291,
+    "bytes": 13543,
+    "metrics": "status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=333600 largest=331260 image=99300 ticks=783 load=78 owned-peak=45996 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=39 FreeMem=1 NewPtr=9 reads=4 read=3 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=43 validate=2 imports=2 relocations=17 prepare=2 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=11 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "xvi /tmp/xvi-8k",
+    "run": 3,
+    "host_submit_to_full_screen_seconds": 8.951573042,
+    "host_key_response_seconds": 0.13826470800000124,
+    "host_complete_open_key_quit_seconds": 9.631404541999999,
+    "bytes": 13543,
+    "metrics": "status runtime; printf '\\nREMOTE_END_6:%d\\n' $?\r\nRuntime: heap=333600 largest=331260 image=99300 ticks=787 load=77 owned-peak=45996 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=39 FreeMem=0 NewPtr=6 reads=4 read=3 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=43 validate=1 imports=2 relocations=17 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=10 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  }
+]

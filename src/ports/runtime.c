@@ -147,6 +147,10 @@ int clarice_main(int argc,char **argv){
   }
  }
  cleaning=1;
+#ifdef PORT_BEFORE_CLEANUP
+ extern void PORT_BEFORE_CLEANUP(int);
+ PORT_BEFORE_CLEANUP(exit_status);
+#endif
 #ifdef CLARICE_MKTEMP_RUNTIME
  extern int port_mktemp_cleanup(void);
  if(port_mktemp_cleanup())write_failed=1;

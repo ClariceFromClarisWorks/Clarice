@@ -232,4 +232,19 @@ or previous options such as `-o`, `-m` and `-C`. BusyBox sort rejects
 `-o/-M/-V/-m/-S/-T`; redirect output to a separate file. A failed or cancelled
 redirected command may leave partial output; never redirect over its input.
 
-BusyBox vi remains an optional experiment, not part of this replacement set.
+BusyBox vi remains independently installable, not part of the standard utility set.
+
+## Optional BusyBox vi
+
+The upstream BusyBox1.37.0 editor is an independent CLX runtime1.9 application,
+not part of Core. Build with `scripts/build-busybox-vi.sh`; install
+`work/busybox/vi.clx` through the existing repository as `vi`, or use
+`appinstall install /mnt/DISK/vi.clx vi` for an absent command. Replacing an
+existing vi is an explicit update/replacement and retains its recovery copy.
+See [installation and tested limitations](outputs/busybox-completion/README.md).
+
+Use `vi FILE`, `i`, Escape (or Ctrl-[), `:wq`; `:q!` deliberately discards edits. Abnormal
+invocation exit attempts to preserve unsaved text in `/etc/clarice/vi-*.recover`.
+Inspect `.part` files as incomplete. Recovery needs writable disk space and is
+not protection from OS crashes or power failure. Normal saves continue to use
+Clarice's fork-preserving safe replacement.

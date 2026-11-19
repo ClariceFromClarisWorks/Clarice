@@ -1,0 +1,1 @@
+PASS: append refusal, begin/open/write/close/commit failures, success, unrelated read close

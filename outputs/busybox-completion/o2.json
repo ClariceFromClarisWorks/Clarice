@@ -1,0 +1,74 @@
+[
+  {
+    "editor": "bbvi",
+    "command": "bbvi",
+    "run": 1,
+    "host_submit_to_full_screen_seconds": 1.1176240419999992,
+    "host_submit_to_key_response_seconds": 1.2683992919999998,
+    "host_key_response_seconds": 0.15077525000000058,
+    "host_complete_open_key_quit_seconds": 1.6712941249999993,
+    "startup_bytes": 272,
+    "total_bytes": 462,
+    "metrics": "status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nRuntime: heap=333550 largest=332138 image=55248 ticks=124 load=56 owned-peak=21266 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=9 FreeMem=0 NewPtr=3 reads=0 read=0 stdio=0 image-alloc=1 meta-alloc=0\r\nLoader ticks: read=26 validate=3 imports=4 relocations=7 prepare=4 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=3 structure=4 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "editor": "bbvi",
+    "command": "bbvi /tmp/vi-8k",
+    "run": 1,
+    "host_submit_to_full_screen_seconds": 1.6143399999999986,
+    "host_submit_to_key_response_seconds": 1.8600529999999988,
+    "host_key_response_seconds": 0.2457130000000003,
+    "host_complete_open_key_quit_seconds": 2.4977542909999997,
+    "startup_bytes": 1719,
+    "total_bytes": 1981,
+    "metrics": "status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=333558 largest=332138 image=55248 ticks=193 load=53 owned-peak=23314 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=10 FreeMem=0 NewPtr=3 reads=1 read=2 stdio=0 image-alloc=0 meta-alloc=1\r\nLoader ticks: read=26 validate=1 imports=3 relocations=9 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=6 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "editor": "bbvi",
+    "command": "bbvi",
+    "run": 2,
+    "host_submit_to_full_screen_seconds": 1.1149302080000005,
+    "host_submit_to_key_response_seconds": 1.241621458000001,
+    "host_key_response_seconds": 0.12669125000000037,
+    "host_complete_open_key_quit_seconds": 1.6303378330000005,
+    "startup_bytes": 272,
+    "total_bytes": 462,
+    "metrics": "status runtime; printf '\\nREMOTE_END_6:%d\\n' $?\r\nRuntime: heap=333548 largest=332138 image=55248 ticks=118 load=54 owned-peak=21266 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=9 FreeMem=0 NewPtr=2 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=26 validate=1 imports=3 relocations=9 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=1 structure=6 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "editor": "bbvi",
+    "command": "bbvi /tmp/vi-8k",
+    "run": 2,
+    "host_submit_to_full_screen_seconds": 1.6532632920000019,
+    "host_submit_to_key_response_seconds": 1.9169231670000002,
+    "host_key_response_seconds": 0.2636598749999983,
+    "host_complete_open_key_quit_seconds": 2.6321439170000005,
+    "startup_bytes": 1719,
+    "total_bytes": 1981,
+    "metrics": "status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=333552 largest=332138 image=55248 ticks=193 load=54 owned-peak=23314 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=10 FreeMem=0 NewPtr=1 reads=1 read=2 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=27 validate=2 imports=3 relocations=8 prepare=2 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=5 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "editor": "bbvi",
+    "command": "bbvi",
+    "run": 3,
+    "host_submit_to_full_screen_seconds": 1.1484061659999973,
+    "host_submit_to_key_response_seconds": 1.2988655829999978,
+    "host_key_response_seconds": 0.15045941700000043,
+    "host_complete_open_key_quit_seconds": 1.8258074579999999,
+    "startup_bytes": 272,
+    "total_bytes": 462,
+    "metrics": "status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\nRuntime: heap=333562 largest=332138 image=55248 ticks=124 load=55 owned-peak=21266 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=9 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=26 validate=3 imports=3 relocations=8 prepare=2 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=3 structure=5 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "editor": "bbvi",
+    "command": "bbvi /tmp/vi-8k",
+    "run": 3,
+    "host_submit_to_full_screen_seconds": 1.639478209,
+    "host_submit_to_key_response_seconds": 1.9133566250000023,
+    "host_key_response_seconds": 0.2738784160000023,
+    "host_complete_open_key_quit_seconds": 2.6419991670000016,
+    "startup_bytes": 1719,
+    "total_bytes": 1981,
+    "metrics": "status runtime; printf '\\nREMOTE_END_9:%d\\n' $?\r\nRuntime: heap=333550 largest=332138 image=55248 ticks=198 load=52 owned-peak=23314 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=10 FreeMem=0 NewPtr=1 reads=1 read=2 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=26 validate=1 imports=3 relocations=9 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=6 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  }
+]

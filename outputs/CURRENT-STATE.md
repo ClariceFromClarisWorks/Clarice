@@ -25,6 +25,40 @@ non-mutating movement. No renderer replacement, downgrade or new bitmap/cache.
 
 [Audit, timings, source path, regressions and hardware procedure](editor-response/REPORT.md).
 
+## BusyBox vi completion — build 2026111905, Snow only
+
+Branch `codex/busybox-vi-completion-20261118`. Optional upstream BusyBox1.37.0
+now installs as `vi` through the existing repository/updater; `bbvi` remains a
+comparison alias in the private fixture. Core/standard utilities unchanged.
+
+- Preserves unsaved edits on orderly disconnect/cancellation/failure before runtime
+  cleanup, including pending undo-queue text. Exclusive `.part` creation in
+  `/etc/clarice`, checked writes/close, native rename to `.recover`. Original never
+  overwritten. Best-effort writable-disk recovery, not crash/power-loss journalling.
+- Growth failure preserves old pointers/length; deterministic ASan/UBSan failure,
+  overflow and recovery-I/O tests pass. Existing shared safe-save27 failure/
+  interruption cases, metadata/forks and repeated saves pass.
+- Final `vi` passes43 Snow editor/save/error observations and exact8KiB save.
+  Local-window two-line edit/Ctrl-[/save/readback and terminal restoration pass;
+  host Escape injection did not reach the Snow Plus guest (no Core mapping change).
+  Disconnect/cancel recovery exact-content comparison, reconnect and subsequent
+  editing pass. Three512KiB OOM opens recover with native heap357916/largest355660
+  unchanged and remaining0. No physical-SE/System7 acceptance claimed.
+- Retained -Os/LTO: package51244 B/image36176 B/953 relocations. Recovery-only
+  ordinary -Os was57992 B; -O2 was81696 B and rejected. Matched Snow loader
+  ~54–56→42–46 ticks; median screen-ready1.138→0.972s empty,1.701→1.451s8KiB.
+  Host timings include Telnet; original pre-recovery timings remain similar.
+  Working peak21266/23314 B unchanged, no permanent Core allocation. Clean
+  rebuild byte-identical. First8KiB insertion still~0.25s; no physical speed claim.
+- Literal search/limited ex, byte text, RAM-resident buffer/undo, remote80x24;
+  no shell filters/job control/automatic.exrc. Nano/other editors remain available.
+
+[Build, installation, evidence and limits](busybox-completion/README.md).
+Earlier comparison prototypes remain source-only; they are not packaged.
+
+
+
+
 ## Built-in mounted updater — build2026111940, 19 November
 
 Isolated `codex/builtin-mounted-update-20261119` integrates accepted native-resource

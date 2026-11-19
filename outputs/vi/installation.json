@@ -1,0 +1,17 @@
+[
+  {
+    "command": "mkdir -p /var/tmp",
+    "status": 0,
+    "text": "mkdir -p /var/tmp; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "ls /var/tmp",
+    "status": 0,
+    "text": "ls /var/tmp; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "appinstall check /bin/vi",
+    "status": 0,
+    "text": "appinstall check /bin/vi; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

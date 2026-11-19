@@ -1,0 +1,47 @@
+[
+  {
+    "command": "xvi --help",
+    "status": 0,
+    "text": "xvi --help; printf '\\nREMOTE_END_1:%d\\n' $?\r\nxvi: STEVIE-derived portable vi, upstream 109d2f39849e (2.50 version string)\r\nUsage: xvi [-R] [-s setting] [-c command] [-t tag] [+command] [file ...]\r\nvi keys: i insert, Escape normal, :w save, :q quit, :q! discard.\r\nClarice investigation build: local screen or 80x24 ANSI Telnet BINARY.\r\nSafe HFS replacement retains resource forks and Finder metadata.\r\nUnsupported: shell/filter commands, :cd, append writes, wildcard completion.\r\nByte-oriented text; Unix LF default. No OS crash recovery guarantee.\r\nStatus: 0 normal quit/help; 1 failure; 2 usage; 130 cancellation.\r\nSource and copying terms: licenses/xvi/COPYING; scripts/prepare-xvi.py.\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "xvi --version",
+    "status": 0,
+    "text": "xvi --version; printf '\\nREMOTE_END_2:%d\\n' $?\r\nxvi: STEVIE-derived portable vi, upstream 109d2f39849e (2.50 version string)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "xvi --bad-option",
+    "status": 2,
+    "text": "xvi --bad-option; printf '\\nREMOTE_END_3:%d\\n' $?\r\nxvi: unknown option: --bad-option\r\n\r\nREMOTE_END_3:2\r\n/ > "
+  },
+  {
+    "command": "appinstall check /bin/xvi",
+    "status": 0,
+    "text": "appinstall check /bin/xvi; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=333600 largest=331502 image=99300 ticks=80 load=78 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=43 validate=2 imports=3 relocations=16 prepare=3 events=28 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=209 metadata=0 structure=11 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "command": "xvi /tmp/xvi-new.txt",
+    "host_seconds_to_quiet_screen": 3.266163166000002,
+    "transcript": "xvi /tmp/xvi-new.txt\r\nKermit ready; start the peer transfer now.\r\n\u001b[?25h\u001b[0m\u001b[0m\u001b[2J\u001b[H\u001b[0m\u001b[7m\u001b[24;1H\"\u001b[24;2H/\u001b[24;3Ht\u001b[24;4Hm\u001b[24;5Hp\u001b[24;6H/\u001b[24;7Hx\u001b[24;8Hv\u001b[24;9Hi\u001b[24;10H-\u001b[24;11Hn\u001b[24;12He\u001b[24;13Hw\u001b[24;14H.\u001b[24;15Ht\u001b[24;16Hx\u001b[24;17Ht\u001b[24;18H\"\u001b[24;19H \u001b[24;20H \u001b[24;21H \u001b[24;22H \u001b[24;23H \u001b[24;24H \u001b[24;25H \u001b[24;26H \u001b[24;27H \u001b[24;28H \u001b[24;29H \u001b[24;30H \u001b[24;31H \u001b[24;32H \u001b[24;33H \u001b[24;34H \u001b[24;35H \u001b[24;36H \u001b[24;37H \u001b[24;38H \u001b[24;39H \u001b[24;40H \u001b[24;41H \u001b[24;42H \u001b[24;43H \u001b[24;44H \u001b[24;45H \u001b[24;46H \u001b[24;47H \u001b[24;48H \u001b[24;49H \u001b[24;50H \u001b[24;51H \u001b[24;52H \u001b[24;53H \u001b[24;54H \u001b[24;55H \u001b[24;56H \u001b[24;57H \u001b[24;58H \u001b[24;59H \u001b[24;60H \u001b[24;61H \u001b[24;62H \u001b[24;63H \u001b[24;64H \u001b[24;65H \u001b[24;66H \u001b[24;67H \u001b[24;68H \u001b[24;69H \u001b[24;70H \u001b[24;71H \u001b[24;72H \u001b[24;73H \u001b[24;74H \u001b[24;75H \u001b[24;76H \u001b[24;77H \u001b[24;78H \u001b[24;79H \u001b[0m\u001b[0m\u001b[7m\u001b[24;20H[\u001b[7m\u001b[24;21HN\u001b[7m\u001b[24;22He\u001b[7m\u001b[24;23Hw\u001b[7m\u001b[24;25Hf\u001b[7m\u001b[24;26Hi\u001b[7m\u001b[24;27Hl\u001b[7m\u001b[24;28He\u001b[7m\u001b[24;29H]\u001b[0m\u001b[0m\u001b[0m\u001b[2;1H~\u001b[0m\u001b[0m\u001b[3;1H~\u001b[0m\u001b[0m\u001b[4;1H~\u001b[0m\u001b[0m\u001b[5;1H~\u001b[0m\u001b[0m\u001b[6;1H~\u001b[0m\u001b[0m\u001b[7;1H~\u001b[0m\u001b[0m\u001b[8;1H~\u001b[0m\u001b[0m\u001b[9;1H~\u001b[0m\u001b[0m\u001b[10;1H~\u001b[0m\u001b[0m\u001b[11;1H~\u001b[0m\u001b[0m\u001b[12;1H~\u001b[0m\u001b[0m\u001b[13;1H~\u001b[0m\u001b[0m\u001b[14;1H~\u001b[0m\u001b[0m\u001b[15;1H~\u001b[0m\u001b[0m\u001b[16;1H~\u001b[0m\u001b[0m\u001b[17;1H~\u001b[0m\u001b[0m\u001b[18;1H~\u001b[0m\u001b[0m\u001b[19;1H~\u001b[0m\u001b[0m\u001b[20;1H~\u001b[0m\u001b[0m\u001b[21;1H~\u001b[0m\u001b[0m\u001b[22;1H~\u001b[0m\u001b[0m\u001b[23;1H~\u001b[0m\u001b[0m\u001b[1;1H\u001b[1;1H\u001b[0m\u001b[0m\u001b[1;1HH\u001b[0m\u001b[1;2H\u001b[0m\u001b[0m\u001b[1;2He\u001b[0m\u001b[1;3H\u001b[0m\u001b[0m\u001b[1;3Hl\u001b[0m\u001b[1;4H\u001b[0m\u001b[0m\u001b[1;4Hl\u001b[0m\u001b[1;5H\u001b[0m\u001b[0m\u001b[1;5Ho\u001b[0m\u001b[1;6H\u001b[0m\u001b[0m\u001b[0m\u001b[1;7H\u001b[0m\u001b[0m\u001b[1;7Hf\u001b[0m\u001b[1;8H\u001b[0m\u001b[0m\u001b[1;8Hr\u001b[0m\u001b[1;9H\u001b[0m\u001b[0m\u001b[1;9Ho\u001b[0m\u001b[1;10H\u001b[0m\u001b[0m\u001b[1;10Hm\u001b[0m\u001b[1;11H\u001b[0m\u001b[7m\u001b[0m\u001b[1;12H\u001b[0m\u001b[0m\u001b[1;12Hx\u001b[0m\u001b[1;13H\u001b[0m\u001b[0m\u001b[1;13Hv\u001b[0m\u001b[1;14H\u001b[0m\u001b[0m\u001b[1;14Hi\u001b[0m\u001b[1;15H\u001b[0m\u001b[1;14H\u001b[0m\u001b[7m\u001b[24;1H:\u001b[0m\u001b[24;2H\u001b[K\u001b[24;2H\u001b[0m\u001b[0m\u001b[24;2Hw\u001b[0m\u001b[24;3H\u001b[0m\u001b[0m\u001b[24;3Hq\u001b[0m\u001b[24;4H\u001b[0m\u001b[7m\u001b[24;1H\"\u001b[7m\u001b[24;2H/\u001b[7m\u001b[24;3Ht\u001b[7m\u001b[24;4Hm\u001b[24;5Hp\u001b[24;6H/\u001b[24;7Hx\u001b[24;8Hv\u001b[24;9Hi\u001b[24;10H-\u001b[24;11Hn\u001b[24;12He\u001b[24;13Hw\u001b[24;14H.\u001b[24;15Ht\u001b[24;16Hx\u001b[24;17Ht\u001b[24;18H\"\u001b[24;19H \u001b[24;20H \u001b[24;21H \u001b[24;22H \u001b[24;23H \u001b[24;24H \u001b[24;25H \u001b[24;26H \u001b[24;27H \u001b[24;28H \u001b[24;29H \u001b[24;30H \u001b[24;31H \u001b[24;32H \u001b[24;33H \u001b[24;34H \u001b[24;35H \u001b[24;36H \u001b[24;37H \u001b[24;38H \u001b[24;39H \u001b[24;40H \u001b[24;41H \u001b[24;42H \u001b[24;43H \u001b[24;44H \u001b[24;45H \u001b[24;46H \u001b[24;47H \u001b[24;48H \u001b[24;49H \u001b[24;50H \u001b[24;51H \u001b[24;52H \u001b[24;53H \u001b[24;54H \u001b[24;55H \u001b[24;56H \u001b[24;57H \u001b[24;58H \u001b[24;59H \u001b[24;60H \u001b[24;61H \u001b[24;62H \u001b[24;63H \u001b[24;64H \u001b[24;65H \u001b[24;66H \u001b[24;67H \u001b[24;68H \u001b[24;69H \u001b[24;70H \u001b[24;71H \u001b[24;72H \u001b[24;73H \u001b[24;74H \u001b[24;75H \u001b[24;76H \u001b[24;77H \u001b[24;78H \u001b[24;79H \u001b[0m\u001b[0m\u001b[7m\u001b[24;20H1\u001b[7m\u001b[24;21H/\u001b[7m\u001b[24;22H1\u001b[7m\u001b[24;23H5\u001b[0m\u001b[24;1H\u001b[K/ > "
+  },
+  {
+    "command": "echo $?",
+    "status": 0,
+    "text": "echo $?; printf '\\nREMOTE_END_6:%d\\n' $?\r\n0\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/xvi-new.txt",
+    "status": 0,
+    "text": "cat /tmp/xvi-new.txt; printf '\\nREMOTE_END_7:%d\\n' $?\r\nHello from xvi\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\nRuntime: heap=333596 largest=331502 image=8104 ticks=41 load=31 owned-peak=0 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=0 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=11 validate=3 imports=2 relocations=1 prepare=2 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=3 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  }
+]

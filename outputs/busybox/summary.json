@@ -1,0 +1,350 @@
+[
+  {
+    "editor": "bbvi",
+    "input": "empty",
+    "ready_seconds": [
+      1.1613,
+      1.3656,
+      1.2026
+    ],
+    "responsive_seconds": [
+      1.3338,
+      1.523,
+      1.3459
+    ],
+    "whole_seconds": [
+      1.8162,
+      1.9286,
+      1.7607
+    ],
+    "key_seconds": [
+      0.1725,
+      0.1574,
+      0.1432
+    ],
+    "startup_bytes": [
+      272,
+      272,
+      272
+    ],
+    "runtime": [
+      {
+        "heap": 333598,
+        "largest": 331366,
+        "image": 36912,
+        "ticks": 113,
+        "load": 46,
+        "owned-peak": 21266,
+        "remaining": 0
+      },
+      {
+        "heap": 333574,
+        "largest": 332292,
+        "image": 36912,
+        "ticks": 111,
+        "load": 49,
+        "owned-peak": 21266,
+        "remaining": 0
+      },
+      {
+        "heap": 333562,
+        "largest": 332292,
+        "image": 36912,
+        "ticks": 110,
+        "load": 49,
+        "owned-peak": 21266,
+        "remaining": 0
+      }
+    ]
+  },
+  {
+    "editor": "bbvi",
+    "input": "8KiB",
+    "ready_seconds": [
+      1.8837,
+      2.1562,
+      1.8583
+    ],
+    "responsive_seconds": [
+      2.2153,
+      2.4232,
+      2.1376
+    ],
+    "whole_seconds": [
+      3.0262,
+      3.2006,
+      2.9916
+    ],
+    "key_seconds": [
+      0.3316,
+      0.267,
+      0.2794
+    ],
+    "startup_bytes": [
+      1719,
+      1719,
+      1719
+    ],
+    "runtime": [
+      {
+        "heap": 333598,
+        "largest": 331210,
+        "image": 36912,
+        "ticks": 192,
+        "load": 49,
+        "owned-peak": 23314,
+        "remaining": 0
+      },
+      {
+        "heap": 333544,
+        "largest": 332292,
+        "image": 36912,
+        "ticks": 199,
+        "load": 49,
+        "owned-peak": 23314,
+        "remaining": 0
+      },
+      {
+        "heap": 333574,
+        "largest": 331272,
+        "image": 36912,
+        "ticks": 201,
+        "load": 50,
+        "owned-peak": 23314,
+        "remaining": 0
+      }
+    ]
+  },
+  {
+    "editor": "vi",
+    "input": "empty",
+    "ready_seconds": [
+      3.4967,
+      2.8545,
+      2.3139
+    ],
+    "responsive_seconds": [
+      3.7812,
+      2.9671,
+      2.3792
+    ],
+    "whole_seconds": [
+      4.3879,
+      3.6031,
+      2.8399
+    ],
+    "key_seconds": [
+      0.2845,
+      0.1126,
+      0.0653
+    ],
+    "startup_bytes": [
+      139,
+      139,
+      139
+    ],
+    "runtime": [
+      {
+        "heap": 333598,
+        "largest": 332488,
+        "image": 167504,
+        "ticks": 228,
+        "load": 117,
+        "owned-peak": 36292,
+        "remaining": 0
+      },
+      {
+        "heap": 333546,
+        "largest": 332292,
+        "image": 167504,
+        "ticks": 220,
+        "load": 131,
+        "owned-peak": 36292,
+        "remaining": 0
+      },
+      {
+        "heap": 333562,
+        "largest": 332292,
+        "image": 167504,
+        "ticks": 195,
+        "load": 113,
+        "owned-peak": 36292,
+        "remaining": 0
+      }
+    ]
+  },
+  {
+    "editor": "vi",
+    "input": "8KiB",
+    "ready_seconds": [
+      6.9737,
+      6.2483,
+      5.4861
+    ],
+    "responsive_seconds": [
+      7.0481,
+      6.3163,
+      5.5475
+    ],
+    "whole_seconds": [
+      7.6951,
+      6.8494,
+      6.0871
+    ],
+    "key_seconds": [
+      0.0744,
+      0.068,
+      0.0614
+    ],
+    "startup_bytes": [
+      1671,
+      1671,
+      1671
+    ],
+    "runtime": [
+      {
+        "heap": 333580,
+        "largest": 332292,
+        "image": 167504,
+        "ticks": 508,
+        "load": 136,
+        "owned-peak": 36292,
+        "remaining": 0
+      },
+      {
+        "heap": 333518,
+        "largest": 332292,
+        "image": 167504,
+        "ticks": 450,
+        "load": 112,
+        "owned-peak": 36292,
+        "remaining": 0
+      },
+      {
+        "heap": 333552,
+        "largest": 332292,
+        "image": 167504,
+        "ticks": 446,
+        "load": 113,
+        "owned-peak": 36292,
+        "remaining": 0
+      }
+    ]
+  },
+  {
+    "editor": "xvi",
+    "input": "empty",
+    "ready_seconds": [
+      2.698,
+      2.8141,
+      2.4292
+    ],
+    "responsive_seconds": [
+      2.8491,
+      2.9787,
+      2.5475
+    ],
+    "whole_seconds": [
+      3.3296,
+      3.533,
+      2.9928
+    ],
+    "key_seconds": [
+      0.1511,
+      0.1645,
+      0.1182
+    ],
+    "startup_bytes": [
+      1138,
+      1138,
+      1138
+    ],
+    "runtime": [
+      {
+        "heap": 333598,
+        "largest": 331210,
+        "image": 99436,
+        "ticks": 181,
+        "load": 80,
+        "owned-peak": 23728,
+        "remaining": 0
+      },
+      {
+        "heap": 333574,
+        "largest": 331272,
+        "image": 99436,
+        "ticks": 195,
+        "load": 92,
+        "owned-peak": 23728,
+        "remaining": 0
+      },
+      {
+        "heap": 333574,
+        "largest": 331272,
+        "image": 99436,
+        "ticks": 204,
+        "load": 88,
+        "owned-peak": 23728,
+        "remaining": 0
+      }
+    ]
+  },
+  {
+    "editor": "xvi",
+    "input": "8KiB",
+    "ready_seconds": [
+      12.7034,
+      10.8977,
+      11.9097
+    ],
+    "responsive_seconds": [
+      12.8487,
+      11.0954,
+      12.109
+    ],
+    "whole_seconds": [
+      13.6032,
+      12.4095,
+      12.8098
+    ],
+    "key_seconds": [
+      0.1452,
+      0.1977,
+      0.1993
+    ],
+    "startup_bytes": [
+      13380,
+      13380,
+      13380
+    ],
+    "runtime": [
+      {
+        "heap": 333584,
+        "largest": 331492,
+        "image": 99436,
+        "ticks": 839,
+        "load": 88,
+        "owned-peak": 45996,
+        "remaining": 0
+      },
+      {
+        "heap": 333544,
+        "largest": 331510,
+        "image": 99436,
+        "ticks": 829,
+        "load": 87,
+        "owned-peak": 45996,
+        "remaining": 0
+      },
+      {
+        "heap": 333574,
+        "largest": 331426,
+        "image": 99436,
+        "ticks": 836,
+        "load": 89,
+        "owned-peak": 45996,
+        "remaining": 0
+      }
+    ]
+  }
+]

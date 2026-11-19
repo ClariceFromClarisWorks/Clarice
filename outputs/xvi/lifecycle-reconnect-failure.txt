@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Xvi/tests/xvi/lifecycle.py", line 31, in <module>
+    c=connect();cmd('status runtime');cmd('echo TELNET-RECOVERED')
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Xvi/tests/xvi/lifecycle.py", line 6, in connect
+    def connect():return XviClient(port=23239,password=password)
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Xvi/tests/remote-sessions/client.py", line 10, in __init__
+    self.greeting=self.t.read_until(b'Password: ' if password else b' > ',20)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/telnetlib.py", line 329, in read_until
+    return self.read_very_lazy()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/telnetlib.py", line 405, in read_very_lazy
+    raise EOFError('telnet connection closed')
+EOFError: telnet connection closed

@@ -1,0 +1,27 @@
+[
+  {
+    "command": "vi --help",
+    "status": 0,
+    "text": "vi --help; printf '\\nREMOTE_END_1:%d\\n' $?\r\nvi: original Berkeley ex/vi 3.7, Heirloom upstream; experimental Clarice port\r\nUsage: vi [-R] [-c command] [+line] [file ...]\r\nvi keys: i insert; Escape normal; :w save; :q quit; :q! discard.\r\n80x24 ANSI Telnet BINARY; byte-oriented text; safe HFS replacement.\r\nUnsupported: processes, shell/filter, cd, append writes, auto exrc, recovery.\r\nExperimental: unsaved edits can be lost on disconnect or cancellation.\r\nStatus 0 quit/help, 1 failure, 2 adapter usage, 130 cancellation.\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=333594 largest=331704 image=167216 ticks=115 load=109 owned-peak=1620 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=3 FreeMem=0 NewPtr=1 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=64 validate=2 imports=2 relocations=27 prepare=2 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=17 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "vi /tmp/vi-new",
+    "host_seconds_to_quiet_screen": 4.233997583999997,
+    "transcript": "vi /tmp/vi-new\r\nKermit ready; start the peer transfer now.\r\n\u001b[24;1H\u001b[?25h\"/tmp/vi-new\" [New file] \u001b[H\u001b[2J\n~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\n\b~\u001b[1;1H\u001b[24;1H\"/tmp/vi-new\" [New file] \u001b[1;1HHello from original vi\b\u001b[24;1H\u001b[K:wq\r\"/tmp/vi-new\" [New file] 1 line, 23 characters \r\n/ > "
+  },
+  {
+    "command": "cat /tmp/vi-new",
+    "status": 0,
+    "text": "cat /tmp/vi-new; printf '\\nREMOTE_END_3:%d\\n' $?\r\nHello from original vi\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nRuntime: heap=333594 largest=331704 image=8104 ticks=43 load=32 owned-peak=0 remaining=0\r\nNano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0\r\nEditor startup: draws=0 rows=0 text=0 copy=0 total=0 ticks\r\nCurses startup: refreshes=0 refresh-ticks=0 writes=0 bytes=0 feed-ticks=0\r\nNative ticks: allocs=0 FreeMem=0 NewPtr=0 reads=0 read=0 stdio=0 image-alloc=0 meta-alloc=0\r\nLoader ticks: read=11 validate=2 imports=3 relocations=0 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  }
+]

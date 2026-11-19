@@ -1,0 +1,251 @@
+--- a/editors/vi.c
++++ b/editors/vi.c
+@@ -391,6 +391,7 @@
+ 	char *edit_file__cur_line;
+ #endif
+ 	int refresh__old_offset;
++	smallint refresh__clean;
+ 	int format_edit_status__tot;
+ 
+ 	// a few references only
+@@ -515,6 +516,7 @@
+ 
+ #define edit_file__cur_line     (G.edit_file__cur_line)
+ #define refresh__old_offset     (G.refresh__old_offset)
++#define refresh__clean          (G.refresh__clean)
+ #define format_edit_status__tot (G.format_edit_status__tot)
+ 
+ #define YDreg          (G.YDreg         )
+@@ -813,6 +815,7 @@
+ //----- Erase the Screen[] memory ------------------------------
+ static void screen_erase(void)
+ {
++	refresh__clean = FALSE;
+ 	memset(screen, ' ', screensize);	// clear new screen
+ }
+ 
+@@ -992,9 +995,13 @@
+ //
+ static void refresh(int full_screen)
+ {
++#ifdef CLARICE_VI_PROFILE
++ unsigned long prof_tick=cli_ticks();
++#endif
+ #define old_offset refresh__old_offset
+ 
+ 	int li, changed;
++	char *previous_top = screenbegin;
+ 	char *tp, *sp;		// pointer into text[] and screen[]
+ 
+ 	if (ENABLE_FEATURE_VI_WIN_RESIZE IF_FEATURE_VI_ASK_TERMINAL(&& !G.get_rowcol_error) ) {
+@@ -1011,6 +1018,15 @@
+ #endif
+ 	}
+ 	sync_cursor(dot, &crow, &ccol);	// where cursor will be (on "dot")
++#ifdef CLARICE_VI_PROFILE
++ bb_profile[0]+=cli_ticks()-prof_tick;prof_tick=cli_ticks();
++#endif
++	/* A clean screen plus a non-mutating motion needs only cursor/status
++	 * output when the viewport and horizontal offset remain unchanged.
++	 * Unknown commands invalidate conservatively, including queued edits. */
++	if (!full_screen && refresh__clean && previous_top == screenbegin
++	 && offset == old_offset)
++		goto cursor_only;
+ 	tp = screenbegin;	// index into text[] of top line
+ 
+ 	// compare text[] to screen[] and mark screen[] lines that need updating
+@@ -1070,15 +1086,20 @@
+ 			memcpy(sp+cs, out_buf+cs, ce-cs+1);
+ 			place_cursor(li, cs);
+ 			// write line out to terminal
+-			fwrite(&sp[cs], ce - cs + 1, 1, stdout);
+-		}
+-	}
+-
++			bb_out(&sp[cs], ce - cs + 1);
++		}
++	}
++
++	refresh__clean = TRUE;
++ cursor_only:
+ 	place_cursor(crow, ccol);
+ 
+ 	if (!keep_index)
+ 		cindex = ccol + offset;
+ 
++	#ifdef CLARICE_VI_PROFILE
++ bb_profile[1]+=cli_ticks()-prof_tick;
++#endif
+ 	old_offset = offset;
+ #undef old_offset
+ }
+@@ -1323,6 +1344,9 @@
+ 
+ static void show_status_line(void)
+ {
++#ifdef CLARICE_VI_PROFILE
++ unsigned long prof_tick=cli_ticks();
++#endif
+ 	int cnt = 0, cksum = 0;
+ 
+ 	// either we already have an error or status message, or we
+@@ -1346,6 +1370,9 @@
+ 		place_cursor(crow, ccol);  // put cursor back in correct place
+ 	}
+ 	fflush_all();
++#ifdef CLARICE_VI_PROFILE
++ bb_profile[2]+=cli_ticks()-prof_tick;
++#endif
+ }
+ 
+ //----- format the status buffer, the bottom line of screen ------
+@@ -1499,11 +1526,14 @@
+ 
+ 	if (size <= 0)
+ 		return bias;
+-	end += size;		// adjust the new END
+-	if (end >= (text + text_size)) {
++	/* Keep the old buffer valid if allocation fails or polling cancels. */
++	if (size > INT_MAX - (end - text) - 10240)
++		bb_simple_error_msg_and_die("text buffer too large");
++	if (end - text + size >= text_size) {
+ 		char *new_text;
+-		text_size += end - (text + text_size) + 10240;
+-		new_text = xrealloc(text, text_size);
++		int new_size = end - text + size + 10240;
++		new_text = xrealloc(text, new_size);
++		text_size = new_size;
+ 		bias = (new_text - text);
+ 		screenbegin += bias;
+ 		dot         += bias;
+@@ -1519,6 +1549,7 @@
+ #endif
+ 		text = new_text;
+ 	}
++	end += size;
+ 	memmove(p + size, p, end - size - p);
+ 	memset(p, ' ', size);	// clear new hole
+ 	return bias;
+@@ -2030,7 +2061,7 @@
+ 	 && ((access(fn, W_OK) < 0) ||
+ 		// root will always have access()
+ 		// so we check fileperms too
+-		!(statbuf.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH))
++		0 /* HFS lock is checked by access(), not Unix permission bits */
+ 	    )
+ 	) {
+ 		SET_READONLY_FILE(readonly_mode);
+@@ -2310,6 +2341,7 @@
+ 
+ 	// allocate/reallocate text buffer
+ 	free(text);
++	text = end = NULL;
+ 	text_size = 10240;
+ 	screenbegin = dot = end = text = xzalloc(text_size);
+ 
+@@ -2363,23 +2395,8 @@
+ 		status_line_bold("No current filename");
+ 		return -2;
+ 	}
+-	// By popular request we do not open file with O_TRUNC,
+-	// but instead ftruncate() it _after_ successful write.
+-	// Might reduce amount of data lost on power fail etc.
+-	fd = open(fn, (O_WRONLY | O_CREAT), 0666);
+-	if (fd < 0)
+-		return -1;
+ 	cnt = last - first + 1;
+-	charcnt = full_write(fd, first, cnt);
+-	ftruncate(fd, charcnt);
+-	if (charcnt == cnt) {
+-		// good write
+-		//modified_count = FALSE;
+-	} else {
+-		charcnt = 0;
+-	}
+-	close(fd);
+-	return charcnt;
++	return bb_save_file(fn, first, cnt);
+ }
+ 
+ #if ENABLE_FEATURE_VI_SEARCH
+@@ -3046,7 +3063,7 @@
+ 			r = end_line(dot);
+ 		}
+ 		go_bottom_and_clear_to_eol();
+-		puts("\r");
++		write1("\r\n");
+ 		for (; q <= r; q++) {
+ 			int c_is_no_print;
+ 
+@@ -4911,7 +4928,21 @@
+ 			start_new_cmd_q(c);
+ 		}
+ #endif
++		/* Keep upstream refresh for every possible text/options change.  A
++		 * dirty command in a queued batch stays dirty across later motions. */
++		int motion = cmd_mode == 0 && (c == 'h' || c == 'j' || c == 'k'
++		 || c == 'l' || c == ' ' || (c >= '0' && c <= '9')
++		 || c == KEYCODE_LEFT || c == KEYCODE_RIGHT
++		 || c == KEYCODE_UP || c == KEYCODE_DOWN);
++		if (!motion) refresh__clean = FALSE;
++#ifdef CLARICE_VI_PROFILE
++		unsigned long command_tick = cli_ticks(); bb_profile[4]++;
++#endif
+ 		do_cmd(c);		// execute the user command
++#ifdef CLARICE_VI_PROFILE
++		bb_profile[3] += cli_ticks() - command_tick;
++#endif
++		if (!motion) refresh__clean = FALSE;
+ 
+ 		// poll to see if there is input already waiting. if we are
+ 		// not able to display output fast enough to keep up, skip
+@@ -4979,7 +5010,7 @@
+ 
+ 	// 0: all of our options are disabled by default in vim
+ 	//vi_setops = 0;
+-	opts = getopt32(argv, VI_OPTSTR IF_FEATURE_VI_COLON(, &initial_cmds));
++	opts = bb_vi_options(argc, argv, &initial_cmds);
+ 
+ #if ENABLE_FEATURE_VI_CRASHME
+ 	if (opts & OPT_C)
+@@ -5007,26 +5038,8 @@
+ 
+ 		if (exinit) {
+ 			cmds = xstrdup(exinit);
+-		} else {
+-			const char *home = getenv("HOME");
+-
+-			if (home && *home) {
+-				char *exrc = concat_path_file(home, ".exrc");
+-				struct stat st;
+-
+-				// .exrc must belong to and only be writable by user
+-				if (stat(exrc, &st) == 0) {
+-					if ((st.st_mode & (S_IWGRP|S_IWOTH)) == 0
+-					 && st.st_uid == getuid()
+-					) {
+-						cmds = xmalloc_open_read_close(exrc, NULL);
+-					} else {
+-						status_line_bold(".exrc: permission denied");
+-					}
+-				}
+-				free(exrc);
+-			}
+-		}
++		}
++
+ 
+ 		if (cmds) {
+ 			init_text_buffer(NULL);
+@@ -5051,3 +5064,11 @@
+ 
+ 	return 0;
+ }
++
++/* Called before invocation allocations are released, with polling disabled.
++ * Does not emulate signals or overwrite the user's original file. */
++void bb_vi_recover(int status)
++{
++ if (status && ptr_to_globals && text && end && (modified_count || undo_queue_state != UNDO_EMPTY) && end >= text)
++  bb_preserve(current_filename, text, end - text);
++}
