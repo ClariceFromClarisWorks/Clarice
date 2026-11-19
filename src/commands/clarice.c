@@ -21,7 +21,13 @@ static int io_read(short ref,void *p,long n){long want=n;int e=FSRead(ref,&n,p);
 static int io_write(short ref,const void *p,long n){long want=n;int e=FSWrite(ref,&n,p);return e?e:n==want?0:ioErr;}
 static int absent(const char *path){CInfoPBRec p;int e=info(path,&p);return e==fnfErr?0:e?e:dupFNErr;}
 static int read_text(const char *path,char *out,unsigned cap){short ref=-1;int e=open_path(path,fsRdPerm,&ref);if(e)return e;long size;e=GetEOF(ref,&size);if(!e&&(size<0||size>=(long)cap))e=paramErr;if(!e){e=io_read(ref,out,size);out[size]=0;if(memchr(out,0,size))e=paramErr;}int x=FSClose(ref);return e?e:x;}
-static int download(const char *url,char path[PATH_CAP],unsigned long maximum){if(cli_temp_create(path,PATH_CAP))return ioErr;if(cli_remove(path))return ioErr;int r=wget_fetch(url,path,maximum);return r==130?userCanceledErr:r?ioErr:0;}
+#include "../update/source.h"
+static int download(const char *url,char path[PATH_CAP],unsigned long maximum){
+ if(cli_temp_create(path,PATH_CAP))return ioErr;
+ if(url[0]=='/')return update_copy_source(url,path,maximum);
+ if(cli_remove(path))return ioErr;int r=wget_fetch(url,path,maximum);
+ return r==130?userCanceledErr:r?ioErr:0;
+}
 typedef struct {short in,out;const unsigned char *memory;uint32_t length,offset;const char *dest;UpdateCRC32 hash,package_crc;uint32_t hashes[2],fork_offset,resource_size;int fork;} Extract;
 static int ex_read(void *c,void *p,unsigned n){Extract *s=c;if(n>s->length-s->offset)return eofErr;int e=0;if(s->memory)memcpy(p,s->memory+s->offset,n);else e=io_read(s->in,p,n);if(!e){s->offset+=n;update_crc32_bytes(&s->package_crc,p,n);if(s->out>=0){if(s->fork&&!s->fork_offset&&(n<16||update_resource_layout(p,s->resource_size)))return paramErr;update_fork_crc_bytes(&s->hash,s->fork,s->fork_offset,p,n);s->fork_offset+=n;}}return e;}
 /* Consume the header and alignment padding as well as both forks, so the
@@ -52,14 +58,11 @@ static int core_update(int argc,char **argv){
  int check=0,assume_yes=0,e=0,staged=0,planned=0,handed=0;short in=-1;
  char source[768]="",manifest_file[PATH_CAP]="",package_file[PATH_CAP]="",text[1024],own[256],helper[PATH_CAP],plan_path[PATH_CAP],canonical[PATH_CAP];
  UpdateManifest m;UpdatePlan plan;memset(&plan,0,sizeof plan);
- if(argc==2&&!strcmp(argv[1],"--help")){say("usage: clarice update [-y] [--check] [--source\nhttp://IPv4:port/update.txt]\nUses /etc/clarice/update.conf (one source URL). Private HTTP only.\nChecks for a newer 68000-compatible application, verifies both forks,\nasks before replacing, retains the previous version and relaunches\nClarice automatically.\n-y accepts without prompting; verification and recovery are unchanged.\n--check downloads only the source index and makes no application\nchanges.\n");return 0;}
+ if(argc==2&&!strcmp(argv[1],"--help")){say("usage: clarice update [-y] [--check] [--source\nhttp://IPv4:port/update.txt]\nUses /etc/clarice/update.conf (one source path or URL). HTTP or absolute mounted-file path.\nChecks for a newer 68000-compatible application, verifies both forks,\nasks before replacing, retains the previous version and relaunches\nClarice automatically.\n-y accepts without prompting; verification and recovery are unchanged.\n--check downloads only the source index and makes no application\nchanges.\n");return 0;}
  if(argc<2||strcmp(argv[1],"update")){errsay("usage: clarice update [-y] [--check] [--source URL]\n");return 2;}
  for(int i=2;i<argc;i++){if(!strcmp(argv[i],"-y"))assume_yes=1;else if(!strcmp(argv[i],"--check")&&!check)check=1;else if(!strcmp(argv[i],"--source")&&i+1<argc&&!source[0]){if(strlen(argv[++i])>=sizeof source)return 2;strcpy(source,argv[i]);}else return 2;}
  if(!source[0]){e=read_text("/etc/clarice/update.conf",source,sizeof source);if(e){errsay("Configure /etc/clarice/update.conf with the private update URL, or use --source URL.\n");goto done;}size_t n=strlen(source);while(n&&(source[n-1]=='\n'||source[n-1]=='\r'))source[--n]=0;}
- if(strncmp(source,"http://",7)||strchr(source,'\n')||strchr(source,'\r')||!strrchr(source,'/')){e=paramErr;goto done;}
- char host[32];const char *slash=strchr(source+7,'/');size_t hostlen=slash?(size_t)(slash-source-7):0;
- if(!hostlen||hostlen>=sizeof host){e=paramErr;goto done;}memcpy(host,source+7,hostlen);host[hostlen]=0;char *port=strchr(host,':');if(port)*port=0;
- unsigned long ip=NetParseIP(host);if(!((ip>>24)==10||(ip>>16)==0xc0a8||(ip>>20)==0xac1||(ip>>24)==127)){errsay("Update source must be a numeric private-network HTTP address.\n");e=paramErr;goto done;}
+ if(!update_source_valid(source)){errsay("Use an absolute mounted-file path or numeric private-network HTTP index URL.\n");e=paramErr;goto done;}
  e=update_application_path(own);if(e)goto done;uint32_t current=0;unsigned system=0;e=update_stamp(own,&current,&system);if(e){errsay("Running application has no supported update identity. Install an update-capable bootstrap build first.\n");goto done;}
  m=repository_core;
  SysEnvRec env;e=SysEnvirons(1,&env);if(e)goto done;if(m.system>(unsigned short)env.systemVersion){errsay("Update requires a newer Macintosh system.\n");e=paramErr;goto done;}

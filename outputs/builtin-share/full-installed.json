@@ -1,0 +1,12 @@
+[
+  {
+    "command": "cat /tmp/share-full.log",
+    "status": 0,
+    "text": "cat /tmp/share-full.log; printf '\\nREMOTE_END_1:%d\\n' $?\r\nChecking repository...\r\nvi -> build 2026111905\r\nftp -> build 2026111940\r\nwget -> build 2026111940\r\nkermit -> build 2026111940\r\nhfsattr -> build 2026111940\r\nreadlink -> build 2026111940\r\nln -> build 2026111940\r\nrm -> build 2026111940\r\nmkdir -> build 2026111940\r\nrmdir -> build 2026111940\r\ntouch -> build 2026111940\r\nmv -> build 2026111940\r\ncp -> build 2026111940\r\nsort-sbase -> build 2026111940\r\nsort -> build 2026111940\r\ntr-sbase -> build 2026111940\r\ntr -> build 2026111940\r\nwc-sbase -> build 2026111940\r\nwc -> build 2026111940\r\nbenchscan -> build 2026111940\r\nbenchls -> build 2026111940\r\ncat -> build 2026111940\r\ndf -> build 2026111940\r\nls -> build 2026111940\r\nInstalling vi...\r\nInstalling ftp...\r\nInstalling wget...\r\nInstalling kermit...\r\nInstalling hfsattr...\r\nInstalling readlink...\r\nInstalling ln...\r\nInstalling rm...\r\nInstalling mkdir...\r\nInstalling rmdir...\r\nInstalling touch...\r\nInstalling mv...\r\nInstalling cp...\r\nInstalling sort-sbase...\r\nInstalling sort...\r\nInstalling tr-sbase...\r\nInstalling tr...\r\nInstalling wc-sbase...\r\nInstalling wc...\r\nInstalling benchscan...\r\nInstalling benchls...\r\nInstalling cat...\r\nInstalling df...\r\nInstalling ls...\r\nAll standard tools are current. Update complete.\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/resume-cases.sh http://192.168.1.112:8104/resume-cases.sh",
+    "status": 0,
+    "text": "wget -O /tmp/resume-cases.sh http://192.168.1.112:8104/resume-cases.sh; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r[==========================================================] 100% 737 B / 737 B\u001b[K\r[==========================================================] 100% 737 B / 737 B\u001b[K\r\nDownloaded 737 B to /tmp/resume-cases.sh\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  }
+]

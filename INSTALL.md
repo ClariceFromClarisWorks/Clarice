@@ -1,3 +1,21 @@
+## Mounted update repositories (development build 2026111940)
+
+The updater is bundled with Core. Its help must list `PATH_OR_HTTP_URL`.
+An older HTTP-only built-in updater cannot gain share support by installing an
+external `/bin/clarice`; first upgrade Core through a private HTTP source.
+With the share mounted through Chooser, `/etc/clarice/update.conf` can contain:
+
+```text
+/mnt/Macintosh Exchange/Clarice/index.txt
+```
+
+Then run `clarice update --check` or `clarice update -y`. A one-time override is
+`clarice update -y --source "/mnt/Macintosh Exchange/Clarice/index.txt"`.
+Mounting and authentication remain Macintosh OS responsibilities. Packages are
+copied into owned temporary files, validated and installed through the existing
+recovery mechanism. Interrupted updates retain completed packages; repeat the
+command to resume. Do not delete recovery copies to force an update.
+
 # Installing Clarice Core and standard utilities
 
 The core application contains the terminal, shell, builtins, runtime and self-update

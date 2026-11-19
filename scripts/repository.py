@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a private HTTP repository from an existing verified complete build."""
+"""Prepare a private HTTP or mounted-volume repository from an existing verified complete build."""
 import argparse
 import hashlib
 from pathlib import Path
@@ -21,7 +21,9 @@ def publish(root, destination):
         if len(data) != record['bytes'] or digest != record['sha256']:
             raise ValueError(f'build changed while publishing: {name}')
         suffix = 'bin' if kind == 'core' else 'clx'
-        filename = f'{name}-{digest}.{suffix}'
+        # Classic AFP/HFS clients require leaves no longer than 31 bytes.
+        # Full SHA-256 still validates inputs; existing-name collisions fail below.
+        filename = f'{digest[:24]}.{suffix}'
         target = destination/filename
         if target.exists():
             if target.read_bytes() != data:

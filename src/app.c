@@ -546,8 +546,17 @@ static int native_scroll_check(int cached){
 #include "../tests/terminal/catalog-guest.inc"
 #include "../tests/terminal/listing-render-guest.inc"
 #endif
+#ifdef CLARICE_NANO_PERF
+#include "../tests/terminal/editor-probe.inc"
+#endif
 /* Executed inside the 68000 guest, not host timing or inferred performance. */
 int app_scroll_bench(int quick){
+#ifdef CLARICE_NANO_PERF
+ if(quick==90||quick==91){editor_fast=quick==91;return 0;}
+ if(quick==92){char b[300];editor_stats(b,sizeof b);term_puts(b);return 0;}
+ if(quick==93)return editor_probe();
+#endif
+
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  if(quick==20)return arrows_probe();
  if(quick==19)return live_output_probe();
@@ -907,6 +916,10 @@ static void selection_begin(int anchor){
 static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible+1)y=visible+1-1;return y*columns+x;}
 static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;SetRect(&bounds,180,100,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-40);size=GrowWindow(win,ev->where,&bounds);if(size){filled=0;SizeWindow(win,(short)size,(short)(size>>16),1);layout();save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+1)*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
  case keyDown:case autoKey:{
+#ifdef CLARICE_NANO_PERF
+ if(editor_screen){if(!ep_started){editor_metrics_reset();ep_started=1;}ep_events++;ep_event_delay+=TickCount()-ev->when;if(!ep_pending)ep_pending=ev->when;}
+#endif
+
 #ifdef CLARICE_INPUT_DIAGNOSTICS
  unsigned long age=TickCount()-ev->when;probe_events++;probe_age+=age;if(age>probe_age_max)probe_age_max=age;
 #endif

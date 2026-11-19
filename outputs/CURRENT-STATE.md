@@ -1,5 +1,46 @@
 # Clarice current state
 
+## Editor responsiveness — experimental Core 2026111942, Snow only
+
+Isolated `codex/vi-response-audit-20261119`; companion optional-vi work is on
+`codex/vi-refresh-audit-20261119`. Core distinguishes cursor-only dirtiness and
+uses native cell inversion; vi skips unchanged viewport formatting for proven
+non-mutating movement. No renderer replacement, downgrade or new bitmap/cache.
+
+- Real local-window event → presentation: vertical **232–233 → 83–85 ms**,
+  horizontal **180 → 52 ms**. Core-only vertical was182–183ms. Active processing
+  and touched cells were measured separately; no exclusive-CPU or physical claim.
+  User-requested SE ×1.2 estimates:100–102ms vertical /62ms horizontal. The
+  instantaneous/one-tick target remains unmet; page scrolling is still expensive.
+- 440 Snow pixel comparisons and52 vi incremental/full-redraw comparisons pass;
+  focused sanitized parser/render/selection/paste tests pass. Normal Core+vi
+  exact20j/20-arrow positioning,120-key burst, save/readback, Ctrl-C ownership,
+  Command-period130 and subsequent shell command pass. Native heap/largest block
+  after final checks333468/331266 B; repeated vi tracked survivors0.
+- Added12B Core state,2B invocation state; Core package+256B, viCLX+148B.
+  No new permanent heap allocation. Diagnostic code is absent from normal builds.
+- Known limits: unchanged old input-layout test has a scrollback assertion
+  failure; disposable updater handoff failed before editor testing. Both are
+  documented without claiming fixes. No SE/PB/share deployment, push or release.
+
+[Audit, timings, source path, regressions and hardware procedure](editor-response/REPORT.md).
+
+## Built-in mounted updater — build2026111940, 19 November
+
+Isolated `codex/builtin-mounted-update-20261119` integrates accepted native-resource
+updater with mounted-file transport. Existing helper/recovery, HTTP and optional
+vi1905 preserved; no permanent memory/runtime ABI changes. Core394496 bytes
+packaged (+384 vs1902). Full seal covers49 standard utilities.
+
+Host fault/recovery suites pass. Isolated Snow Plus/4MiB/reported6.0.8: HTTP
+1823→1940 and automatic relaunch pass; full mounted-path utilities+vi installation,
+missing package marker/resume, CRC rejection, retained completed package,
+update.conf mounted-path check/repeat and exact final catalogue match pass.
+All reference packages verified. Macintosh Exchange published with prior index
+and every previous file preserved. Physical PB180/System7.1 HTTP1902→1940 automatic relaunch and completion passed; final AFP check is pending (control connection unavailable).
+no SE acceptance or general error28 fix is claimed.
+[Evidence](builtin-share/README.md).
+
 ## Built-in self-update — 18 November 2026
 
 - Separate `codex/self-update-20261118` candidate bundles the updater with Core
