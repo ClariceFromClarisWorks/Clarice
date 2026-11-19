@@ -23,6 +23,9 @@ extern int bb_optind;
 #define STRERROR_ERRNO , strerror(errno)
 void *memrchr(const void *,int,size_t);
 char *skip_whitespace(const char *),*skip_non_whitespace(const char *);
+#ifdef CLARICE_VI_PROFILE
+extern unsigned long cli_ticks(void),bb_profile[5];
+#endif
 #define BB_VER "1.37.0"
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof((x)[0]))
 typedef signed char smallint;

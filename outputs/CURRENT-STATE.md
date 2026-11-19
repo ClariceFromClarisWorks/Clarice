@@ -1,5 +1,25 @@
 # Clarice current state
 
+## vi response experiment — 19 November, Snow only
+
+Isolated `codex/vi-refresh-audit-20261119` preserves the accepted1905 port,
+safe saves/recovery and upstream1.37.0. Conservative clean-screen invalidation
+lets known non-mutating motions skip unchanged viewport formatting. Normal CLX
+51392B (+148), invocation peak23396B (+2), no idle allocation or functionality
+removed. Optional profiling is compiled out normally.
+
+Companion Core cursor-only drawing is on `codex/vi-response-audit-20261119`.
+Together, matched local Snow vertical event-to-presentation232–233→83–85ms;
+horizontal180→52ms. vi-format stage752→61ticks in the diagnostic case. These are
+guest ticks, not15× host-time or physical acceptance. One-tick goal remains unmet;
+status/output and full viewport redraw dominate the remaining costs.
+
+52 real-guest incremental/forced-redraw comparisons pass, including queued edits,
+undo, settings, long lines, scrolling and motion. Actual growth failure, save and
+recovery host tests pass. Companion normal Core1942+normalvi passes exact20j/20
+arrows,120-key burst/save, Ctrl-C and Command-period130 recovery with remaining0.
+No share/hardware deployment, push or release. [Evidence](vi-response/README.md).
+
 ## BusyBox vi completion — build 2026111905, Snow only
 
 Branch `codex/busybox-vi-completion-20261118`. Optional upstream BusyBox1.37.0
