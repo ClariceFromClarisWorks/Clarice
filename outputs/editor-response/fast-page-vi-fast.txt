@@ -1,0 +1,16 @@
+status runtime; printf '\nREMOTE_END_1:%d\n' $?
+Runtime: heap=328956 largest=327546 image=36640 ticks=4221 load=39 owned-peak=23396 remaining=0
+Nano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0
+Editor startup: draws=836 rows=3559 text=3534 copy=237 total=5051 ticks
+Curses startup: refreshes=0 refresh-ticks=0 writes=843 bytes=204686 feed-ticks=1585
+Editor response: fast=1 draws=43 rows=504 cells=40340 paint=786 feed=246 bytes=32719 responses=22 latency=1002 max=51 event-delay=7 events=23 read-to-output=213 flushes=23
+Native ticks: allocs=11 FreeMem=0 NewPtr=0 reads=1 read=1 stdio=0 image-alloc=0 meta-alloc=0
+Loader ticks: read=18 validate=2 imports=3 relocations=3 prepare=3 events=2 (events included above)
+Verification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=2 (structure included in relocations)
+
+REMOTE_END_1:0
+/ > cat /tmp/vi-prof.txt; printf '\nREMOTE_END_2:%d\n' $?
+vi profile: sync=23 format=371 status=687 cmd=76 commands=21
+
+REMOTE_END_2:0
+/ >

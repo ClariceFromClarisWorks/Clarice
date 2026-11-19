@@ -1,0 +1,14 @@
+{
+  "Core-normal": {
+    "bytes": 394752,
+    "sha256": "80b5f035f5cfc982b9c2480066762f3a58068ac15cbd5bdb2b5957df5696d28c"
+  },
+  "Core-diagnostic": {
+    "bytes": 399104,
+    "sha256": "b3c1faf2bbad7e17ff0f3720af111bde6d343e53b912f87924394d81bb56c42b"
+  },
+  "vi-normal": {
+    "bytes": 51392,
+    "sha256": "e85d23e7e7c1b7b6bf6927ee0c79be3ebd613638a87442ae49696130febe10c7"
+  }
+}

@@ -28,7 +28,7 @@ static void screen_feed(CliScreen *s,const unsigned char *p,unsigned long n){
  else if(c>=32&&c!=127){if(s->cells[s->row][s->col]!=c||s->attrs[s->row][s->col]!=s->reverse)s->dirty[s->row]=1;s->cells[s->row][s->col]=c;s->attrs[s->row][s->col]=s->reverse;if(s->col<s->cols-1)s->col++;}
  if(s->row<0)s->row=0;if(s->row>=s->rows)s->row=s->rows-1;if(s->col<0)s->col=0;if(s->col>=s->cols)s->col=s->cols-1;/* Parser parameters and attribute changes do not change existing pixels.
     Only changed cells, erasures and visible cursor transitions need repaint. */
- if(oldcursor!=s->cursor||((oldcursor||s->cursor)&&(old!=s->row||oldcol!=s->col))){s->dirty[old]=1;s->dirty[s->row]=1;}
+ if(oldcursor!=s->cursor||((oldcursor||s->cursor)&&(old!=s->row||oldcol!=s->col))){s->dirty[old]|=2;s->dirty[s->row]|=2;}
  }
 }
 #endif

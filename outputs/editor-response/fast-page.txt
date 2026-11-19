@@ -1,0 +1,12 @@
+status runtime; printf '\nREMOTE_END_1:%d\n' $?
+Runtime: heap=328956 largest=328508 image=36176 ticks=4132 load=36 owned-peak=23394 remaining=0
+Nano ticks: 0 0 0 0 0 0 0 0 0 0 0 0 0; input batches=0 sum=0 max=0; initial-heap=0
+Editor startup: draws=2229 rows=12788 text=12694 copy=937 total=18295 ticks
+Curses startup: refreshes=0 refresh-ticks=0 writes=2401 bytes=668831 feed-ticks=5083
+Editor response: fast=1 draws=42 rows=503 cells=40260 paint=786 feed=247 bytes=32719 responses=22 latency=976 max=51 event-delay=10 events=23 read-to-output=216 flushes=23
+Native ticks: allocs=11 FreeMem=0 NewPtr=1 reads=1 read=2 stdio=0 image-alloc=0 meta-alloc=0
+Loader ticks: read=18 validate=0 imports=2 relocations=4 prepare=2 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=3 (structure included in relocations)
+
+REMOTE_END_1:0
+/ >

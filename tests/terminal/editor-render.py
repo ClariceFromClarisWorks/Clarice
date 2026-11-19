@@ -15,6 +15,7 @@ static unsigned char reference[512*1280];
 static CliScreen model,*editor_screen=&model;
 static int font_id,font_size,inverse,mono,force_draw,dirty,line_h,cell_w,font_ascent,background,cx,cy,copies;
 static unsigned long last_paint;
+static int editor_fast=1,editor_cursor_row,editor_cursor_col,editor_cursor_visible;
 #define TEXT_LEFT 3
 #define TEXT_TOP 2
 #define whiteColor 0
@@ -40,7 +41,7 @@ int main(void){uint32_t seed=1;for(int n=0;n<300;n++){
  screen_init(&model,1+n%39,(n%7?480:508)/cell_w<132?(n%7?480:508)/cell_w:132);model.cursor=n%3!=0;model.row=n%model.rows;model.col=n%model.cols;
  for(int y=0;y<model.rows;y++){model.dirty[y]=(n%5==0)||(y%3!=0);for(int x=0;x<model.cols;x++){seed=seed*1664525+1013904223;model.cells[y][x]=(n%11==0||x>model.cols-(n%model.cols))?32:32+(seed>>24)%95;model.attrs[y][x]=(seed>>16)%2;}}
  CliScreen saved=model;force_draw=n%4==0;memset(window.portBits.pixels,0x55,sizeof reference);draw_reference();memcpy(reference,window.portBits.pixels,sizeof reference);
- memset(prompt_port.portBits.pixels,0xa5,sizeof prompt_port.portBits.pixels);model=saved;force_draw=n%4==0;memset(window.portBits.pixels,0x55,sizeof reference);draw_editor();assert(!memcmp(reference,window.portBits.pixels,sizeof reference));
+ memset(prompt_port.portBits.pixels,0xa5,sizeof prompt_port.portBits.pixels);model=saved;editor_cursor_row=model.row;editor_cursor_col=model.col;editor_cursor_visible=model.cursor&&!background;force_draw=n%4==0;memset(window.portBits.pixels,0x55,sizeof reference);draw_editor();assert(!memcmp(reference,window.portBits.pixels,sizeof reference));
  }
  line_h=11;cell_w=6;mono=1;screen_init(&model,25,80);force_draw=1;copies=0;draw_editor();assert(copies==5);
  puts("PASS: 300 complete production-renderer comparisons, mixed dirty rows, font metrics, attributes, cursor, colours and clipping; full screen copies 25 -> 5; staging bounds checked");

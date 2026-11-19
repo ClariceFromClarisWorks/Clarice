@@ -138,11 +138,14 @@ static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  else if(!strcmp(av[0],"clear")){if(session_io)say("\033[2J\033[H");else app_clear();}
  else if(!strcmp(av[0],"status")&&argc==2&&!strcmp(av[1],"runtime")){char b[240];snprintf(b,sizeof b,"Runtime: heap=%ld largest=%ld image=%lu ticks=%lu load=%lu owned-peak=%lu remaining=%lu\n",FreeMem(),MaxBlock(),module_bytes,module_ticks,module_load_ticks,port_peak,port_remaining);say(b);snprintf(b,sizeof b,"Loader ticks: read=%lu validate=%lu imports=%lu relocations=%lu prepare=%lu events=%lu (events included above)\n",module_read_ticks,module_validate_ticks,module_import_ticks,module_reloc_ticks,module_prepare_ticks,module_poll_ticks);
 #ifdef CLARICE_NANO_PERF
- {char perf[600];app_nano_stats(perf,sizeof perf);say(perf);snprintf(perf,sizeof perf,"Native ticks: allocs=%lu FreeMem=%lu NewPtr=%lu reads=%lu read=%lu stdio=%lu image-alloc=%lu meta-alloc=%lu\n",perf_allocs,perf_free_ticks,perf_new_ticks,perf_reads,perf_read_ticks,perf_stdio_ticks,perf_image_ticks,perf_meta_ticks);say(perf);}
+ {char perf[900];app_nano_stats(perf,sizeof perf);say(perf);snprintf(perf,sizeof perf,"Native ticks: allocs=%lu FreeMem=%lu NewPtr=%lu reads=%lu read=%lu stdio=%lu image-alloc=%lu meta-alloc=%lu\n",perf_allocs,perf_free_ticks,perf_new_ticks,perf_reads,perf_read_ticks,perf_stdio_ticks,perf_image_ticks,perf_meta_ticks);say(perf);}
 #endif
 say(b);snprintf(b,sizeof b,"Verification ticks: mode=%s header=%lu record=%lu payload=%lu metadata=%lu structure=%lu (structure included in relocations)\n",module_fast?"fast":"full",module_header_ticks,module_record_ticks,module_payload_ticks,module_metadata_ticks,module_structure_ticks);say(b);}
  else if(!strcmp(av[0],"status")){if(argc>2||(argc==2&&strcmp(av[1],"-h"))){say("usage: status [-h]\n");status=2;}else app_metrics(argc==2);}
  else if(!strcmp(av[0],"scrollbench"))status=app_scroll_bench(
+#ifdef CLARICE_NANO_PERF
+ argc>1&&!strcmp(av[1],"editor-old")?90:argc>1&&!strcmp(av[1],"editor-fast")?91:argc>1&&!strcmp(av[1],"editorstats")?92:argc>1&&!strcmp(av[1],"editorprobe")?93:
+#endif
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  argc>1&&!strcmp(av[1],"arrows")?20:argc>1&&!strcmp(av[1],"live")?19:argc>1&&!strcmp(av[1],"memory")?18:argc>1&&!strcmp(av[1],"stagepixels")?17:argc>1&&!strcmp(av[1],"directpixels")?16:argc>1&&!strcmp(av[1],"direct")?15:argc>1&&!strcmp(av[1],"alignpixels")?14:argc>1&&!strcmp(av[1],"alignment")?13:argc>1&&!strcmp(av[1],"present")?12:argc>1&&!strcmp(av[1],"clearing")?11:argc>1&&!strcmp(av[1],"glyphpixels")?10:argc>1&&!strcmp(av[1],"jumps")?9:argc>1&&!strcmp(av[1],"frames")?8:argc>1&&!strcmp(av[1],"listing")?7:argc>1&&!strcmp(av[1],"catalog")?6:argc>1&&!strcmp(av[1],"dispatch")?5:argc>1&&!strcmp(av[1],"profile")?4:
 #endif
