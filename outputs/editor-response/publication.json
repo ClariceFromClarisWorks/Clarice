@@ -1,0 +1,13 @@
+{
+  "build": 2026111943,
+  "source_commit": "a503540",
+  "entries": 51,
+  "standard_utilities": 49,
+  "optional_vi": 2026111943,
+  "index_sha256": "db3115c31584bf2073a9d044fcf9fb4d4c2a5992cbc62944b3643c8c614829b7",
+  "previous_files_preserved": 55,
+  "previous_index": "index-before-1943.txt",
+  "afp": "Macintosh Exchange/Clarice/index.txt",
+  "http": "http://192.168.1.112:8089/full/index.txt",
+  "http_unique_payloads_verified": 36
+}

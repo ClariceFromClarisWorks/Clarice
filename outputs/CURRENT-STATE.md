@@ -1,9 +1,9 @@
 # Clarice current state
 
-## Editor responsiveness — experimental Core 2026111942, Snow only
+## Editor responsiveness — integrated build 2026111943, Snow only
 
-Isolated `codex/vi-response-audit-20261119`; companion optional-vi work is on
-`codex/vi-refresh-audit-20261119`. Core distinguishes cursor-only dirtiness and
+Merged `codex/vi-response-audit-20261119` and companion optional-vi branch
+`codex/vi-refresh-audit-20261119` into main. Core distinguishes cursor-only dirtiness and
 uses native cell inversion; vi skips unchanged viewport formatting for proven
 non-mutating movement. No renderer replacement, downgrade or new bitmap/cache.
 
@@ -21,9 +21,20 @@ non-mutating movement. No renderer replacement, downgrade or new bitmap/cache.
   No new permanent heap allocation. Diagnostic code is absent from normal builds.
 - Known limits: unchanged old input-layout test has a scrollback assertion
   failure; disposable updater handoff failed before editor testing. Both are
-  documented without claiming fixes. No SE/PB/share deployment, push or release.
+  documented without claiming fixes. No new SE/PB acceptance or public release.
 
 [Audit, timings, source path, regressions and hardware procedure](editor-response/REPORT.md).
+
+Normal integrated1943 full build is sealed: Core,49 standard utilities and
+optional vi1943. Existing main's newer ls code is preserved. Snow HTTP update
+1942→1943 automatically relaunched; all51 installed catalogue versions/lengths/
+CRCs match and the incomplete marker cleared. Exact movement/burst/save/cancel
+checks pass again with installed `/bin/vi`; heap/largest333468/331266 B remains
+stable. Renderer, safe-save, growth, repository and recovery host tests pass.
+HTTP and Macintosh Exchange now serve the identical verified index; previous
+index and55 existing files retained. Corresponding source is included. No physical
+machines were operated. [Publication evidence and URLs](editor-response/publication.json).
+
 
 ## BusyBox vi completion — build 2026111905, Snow only
 

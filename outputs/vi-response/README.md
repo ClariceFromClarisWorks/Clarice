@@ -29,6 +29,7 @@ exact-file/cancel/recovery evidence. Combined response:232–233→83–85ms ver
 180→52ms horizontal in Snow. Measured vi-formatting752→61ticks. The requested
 SE×1.2 estimates are not hardware results; one-tick response remains unmet.
 
-Existing primary vi and all physical/shared packages remain untouched. No push,
-release or normal repository publication. The experiment is installed only as
-`vi-fast` (profile) and `vi-final` (normal) in the isolated Snow fixture.
+After acceptance, the normal port was merged into main and published as optional
+vi2026111943 alongside Core1943 and all49 standard utilities. Integrated Snow
+update/relaunch and local editor checks pass; previous packages remain available.
+No physical tests or public release. See outputs/editor-response/REPORT.md.

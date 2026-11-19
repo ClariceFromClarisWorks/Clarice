@@ -2,7 +2,8 @@
 
 Snow-only, Plus/68000/4 MiB, reported System 6.0.8. Fixed maximum FFWD;
 measurements below use cycle-driven **guest ticks**, not the accelerated host
-wall clock. No physical-SE/PowerBook tests, share publication or release changes.
+wall clock. No physical-SE/PowerBook tests or public release changes.
+Subsequent authorised integration/publication is recorded below.
 See [method](METHOD.md) and machine-readable [results](summary.json).
 
 ## Retained changes
@@ -24,7 +25,8 @@ See [method](METHOD.md) and machine-readable [results](summary.json).
 Core changes are in `codex/vi-response-audit-20261119`; vi changes are separately
 isolated in `codex/vi-refresh-audit-20261119`, based on accepted vi checkpoint
 3a34f50. Existing `/bin/vi` remains the recovery baseline in this fixture;
-`vi-final` is the normal experimental port. No production distribution was updated.
+`vi-final` was the normal experimental port during comparison. The accepted
+normal port is now installed as `vi` in build1943 (see integration below).
 
 ## Three distinct measurements
 
@@ -140,3 +142,39 @@ vi, Command-period cancellation, safe save/reopen and stable free/largest heap.
 Measure guest event-to-draw and active-path counters separately; capture video
 for brief blanking that screenshots cannot resolve. Do not treat FFWD host
 elapsed time or the 1.2 estimate as hardware evidence.
+
+
+## Authorised main integration and private publication
+
+Source merge a503540 produces normal build2026111943, with the accepted mounted
+updater and main's newer ls implementation preserved. Full supported build/seal
+passes for49 standard commands; optional vi1943 is byte-identical to the tested
+normal vi. Core394752 B; vi51392 B. No profiler in the distributed build.
+
+Snow ran the complete HTTP update1942→1943 through `clarice update -y`, exited,
+replaced and automatically relaunched, displaying completion. All51 final
+catalogue entries match version/length/CRC; incomplete marker absent. Installed
+vi validates, sort/grep and ls smoke checks pass. Exact20j/20-arrow positioning,
+120-key movement burst, saves, Ctrl-C ownership, Command-period130 and shell
+recovery pass on the integrated normal build. Native free/largest heap remains
+333468/331266 B across the final checks. See integrated-acceptance.json and
+integrated-catalog.json. The host catalogue assertion initially expected the
+repository's sixth filename field; the installed catalogue correctly has five.
+Only the test assertion required correction.
+
+Integrated host tests pass:300 production render cases,100k cursor/content
+comparisons,20k inverse cases, control mappings, actual vi growth failure,
+recovery/save injection, repository/build consistency and native updater recovery.
+The pre-existing input-layout assertion remains a documented limitation.
+This successful update does not resolve or disprove intermittent error28.
+
+Matching complete files are available at:
+- HTTP: http://192.168.1.112:8089/full/index.txt
+- Mounted AFP: /mnt/Macintosh Exchange/Clarice/index.txt
+
+The existing8083 listener belongs to an older isolated test fixture and is left
+untouched.8089 reuses the existing trusted-peer development server for the
+MacBook, SE and PB addresses. The new index was activated after payload readback;
+all previous55 files and index-before-1943.txt are preserved. Source-1943.tar.gz
+contains matching source and BusyBox upstream source. No device deployment,
+public release, release tag or release-candidate branch change.
