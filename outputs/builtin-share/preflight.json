@@ -1,0 +1,22 @@
+[
+  {
+    "command": "printf retained > /tmp/share-user.txt",
+    "status": 0,
+    "text": "printf retained > /tmp/share-user.txt; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "test -f /etc/clarice/update.incomplete; echo marker:$?",
+    "status": 0,
+    "text": "test -f /etc/clarice/update.incomplete; echo marker:$?; printf '\\nREMOTE_END_2:%d\\n' $?\r\nmarker:1\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "ls /mnt/GlyphFull",
+    "status": 0,
+    "text": "ls /mnt/GlyphFull; printf '\\nREMOTE_END_3:%d\\n' $?\r\nClarice         nano            Share Repo/\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "cat /etc/clarice/update.conf",
+    "status": 0,
+    "text": "cat /etc/clarice/update.conf; printf '\\nREMOTE_END_4:%d\\n' $?\r\nhttp://192.168.1.112:8083/full/index.txt\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  }
+]

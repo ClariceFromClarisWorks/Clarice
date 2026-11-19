@@ -1,5 +1,21 @@
 # Clarice current state
 
+## Built-in mounted updater — build2026111940, 19 November
+
+Isolated `codex/builtin-mounted-update-20261119` integrates accepted native-resource
+updater with mounted-file transport. Existing helper/recovery, HTTP and optional
+vi1905 preserved; no permanent memory/runtime ABI changes. Core394496 bytes
+packaged (+384 vs1902). Full seal covers49 standard utilities.
+
+Host fault/recovery suites pass. Isolated Snow Plus/4MiB/reported6.0.8: HTTP
+1823→1940 and automatic relaunch pass; full mounted-path utilities+vi installation,
+missing package marker/resume, CRC rejection, retained completed package,
+update.conf mounted-path check/repeat and exact final catalogue match pass.
+All reference packages verified. Macintosh Exchange published with prior index
+and every previous file preserved. Physical PB180/System7.1 HTTP1902→1940 automatic relaunch and completion passed; final AFP check is pending (control connection unavailable).
+no SE acceptance or general error28 fix is claimed.
+[Evidence](builtin-share/README.md).
+
 ## Built-in self-update — 18 November 2026
 
 - Separate `codex/self-update-20261118` candidate bundles the updater with Core

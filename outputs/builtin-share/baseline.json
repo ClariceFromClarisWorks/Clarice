@@ -1,0 +1,22 @@
+[
+  {
+    "command": "ls /mnt",
+    "status": 0,
+    "output": "ls /mnt; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRCGuest/        GlyphFull/\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "ls /etc/clarice",
+    "status": 0,
+    "output": "ls /etc/clarice; printf '\\nREMOTE_END_2:%d\\n' $?\r\ncancel-resume.log               cancel.log      clarice.conf    clarice.conf.bak\r\nclarice.history                 clx-awk.ok      clx-basename.ok\r\nclx-benchls.ok  clx-benchscan.ok                clx-cat.ok      clx-cksum.ok\r\nclx-clarice.ok  clx-cmp.ok      clx-cp.ok       clx-cut.ok      clx-dd.ok\r\nclx-df.ok       clx-dirname.ok  clx-du.ok       clx-file.ok     clx-find.ok\r\nclx-flush-wc.ok                 clx-free.ok     clx-ftp.ok      clx-grep.ok\r\nclx-head.ok     clx-hfsattr.ok  clx-ipconfig.ok                 clx-kermit.ok\r\nclx-ln.ok       clx-ls.ok       clx-mkdir.ok    clx-mktemp.ok   clx-more.ok\r\nclx-mv.ok       clx-nano-profile.ok             clx-nano.ok     clx-od.ok\r\nclx-ping.ok     clx-printenv.ok                 clx-readlink.ok\r\nclx-repobad.ok  clx-repoone.ok  clx-reporestart.ok              clx-reposlow.ok\r\nclx-repotwo.ok  clx-rm.ok       clx-rmdir.ok    clx-sed.ok      clx-serial.ok\r\nclx-seriald.ok  clx-sleep.ok    clx-sort.ok     clx-tail.ok     clx-tee.ok\r\nclx-telnet.ok   clx-telnetd.ok  clx-touch.ok    clx-tr.ok       clx-uniq.ok\r\nclx-wc.ok       clx-wget.ok     corrupt.log     default.log\r\ndeployment1713.log              final.log       full-update.log\r\ninstalled.catalog               partial.log     profile         repo-user.txt\r\nrepo.log        restart.log     restarted.log   resume.log      update.conf\r\nUpdater-6679fb59e82f            Updater-b584ca8ef775\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "command -v clarice",
+    "status": 0,
+    "output": "command -v clarice; printf '\\nREMOTE_END_3:%d\\n' $?\r\n/bin/clarice\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "mkdir \"/mnt/GlyphFull/Share Repo\"",
+    "status": 0,
+    "output": "mkdir \"/mnt/GlyphFull/Share Repo\"; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  }
+]
