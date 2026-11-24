@@ -16,6 +16,39 @@ host-only setting does not alter the sealed d14852d product archive. No push, pu
 release or hardware deployment. Q1-001 is completed below; Q1-002 is completed below.
 [Evidence and limitations](distribution-1946/REPORT.md).
 
+## Q1-004 — width-aware help
+
+Build **2026111951**, product **8a4de27** on local main. Help for 49 standard
+utilities, optional BusyBox vi and 34 builtin topics uses the active terminal
+grid. Deliberate sections and hanging indents keep usage, options and examples
+readable. Output uses existing streams, scrollback and `more`. The formatter
+uses a 264-byte stack buffer, no heap allocations, and the existing CLX imports.
+
+Host sanitizer checks covered 40, 50, 66, 80 and 130 columns, long words,
+indentation, failed writes and cancellation. Snow Plus/4 MB/System 6.0.8 verified
+50 installed commands, 34 builtin topics, five direct builtin help paths and the
+index at 40, 66 and 80 columns. Text and stream/status checks passed throughout.
+At 40 columns, `help | more` restored the prompt after Q (0) and Command-period
+(130).
+
+At 66 columns in accelerated Snow, the median Return-to-first-visible-output
+time for `ftp --help` was 0.552 to 0.474 seconds (three warm samples). Redirected
+full-command medians for five warm runs were 0.48 to 0.51 s (ls), 1.45 to 1.45 s
+(awk) and 0.75 to 0.75 s (vi). Single first runs with full CLX verification took
+1.20 to 1.46 s, 7.01 to 8.01 s and 2.31 to 3.03 s respectively. Most of the
+difference was in the loader's preparation/event phase. Owned peak bytes were
+0, 5,716 and 1,620 for ls, awk and vi on both builds, with zero remaining after
+each run. Repeated help/FTP loops stabilised heap and largest block. Core
+MacBinary +1,920 bytes, unique standard images +26,424 bytes total, vi +872
+bytes. Core BSS shrank by 8 bytes. Physical SE timing remains unmeasured.
+
+Canonical HTTP and Macintosh Exchange AFP both serve build 1951. Readback
+verified all 51 manifest entries against 36 distinct payloads, the offline
+archive and HDA, source and seal. The HDA also passed member and fork checks
+for the Core, installer, recovery helper and all standard tools. Build 1950
+index and payloads remain available and verified. No physical deployment or
+GitHub push. [Publication verification](help-q1/verification.json).
+
 ## Q1-005 — terminal geometry and Preferences
 
 Build **2026111950**, local main; focused Snow acceptance (Plus/4MB,
