@@ -1,6 +1,6 @@
 # Q1-001: native ICMP ping
 
-24 November 2026. Build2026111947; local main. No physical deployment.
+24 November 2026. Build2026111947; product commit ab119e6 on local main. No physical deployment.
 
 The user clarified that the old output contained ticks, not an empty RTT.
 Source inspection and Snow baseline confirm genuine asynchronous native ICMP;
@@ -52,5 +52,6 @@ no public abort used here: cancellation safely drains an outstanding callback
 completes still cannot safely unload callback code. No networking redesign.
 
 Publication uses the existing sealed build and immutable-payload/index-last
-HTTP/AFP mechanism; see verification.json once publication is complete. Previous
+HTTP/AFP mechanism; all51 records/36 unique payloads match sealed hashes through HTTP and AFP
+readback (verification.json). Source, offline kit and provenance also published. Previous
 payloads and recovery indices remain. No Git push or public release.

@@ -26,6 +26,8 @@ Host sanitizer tests and Plus/4 MB/System 6.0.8 Snow tests pass: replies, loss,
 DNS, continuous mode, Ctrl+C130, recovery and repeated cleanup. Packet capture
 matches37 real request/reply pairs. Physical Macs and Open Transport remain
 untested. User clarified the reported empty field was actually raw tick output.
+Product commit ab119e6; complete1947 distribution published to the same HTTP/AFP
+sources above. All51 records/36 payloads verified; previous files retained.
 No physical installation or Q1-002 work. Publication verification recorded in
 [focused evidence](ping-q1/REPORT.md).
 
