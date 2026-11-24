@@ -27,6 +27,7 @@ extern unsigned long __udivsi3(unsigned long,unsigned long);
 extern unsigned long __umodsi3(unsigned long,unsigned long);
 /* A fixed sorted export table replaces a linear chain of string comparisons.
    No heap allocation or invocation cache; names and ABI bindings are unchanged. */
+static int cli_appcheck(const char *);
 static int cli_appinstall(const char *,const char *,unsigned long);
 static void *clx_import(const char *name){
  static const struct {const char *name;void *address;} exports[]={
@@ -45,7 +46,7 @@ static void *clx_import(const char *name){
 /* Runtime 1.0: native 68000 CLX calling convention and explicit import table.
    This capability does not claim POSIX semantics or a public libc ABI. */
 #define CLX_RUNTIME_MAJOR 1
-#define CLX_RUNTIME_MINOR 10
+#define CLX_RUNTIME_MINOR 11
 #define CLX_CAPABILITIES 1UL
 /* Loading and explicit installation use the normal cancellable event path. */
 static unsigned long module_poll_ticks;

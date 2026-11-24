@@ -10,23 +10,24 @@ static void command_install_hint(const char *name){
   errsay("Install missing standard tools with appinstall setup DIRECTORY.\nSee help appinstall.\n");break;
  }
 }
-static int command_paths(const char *name,char *dest,char *stage,char *backup){
+static int command_paths_for(const char *name,char *dest,char *stage,char *backup,int managed){
  size_t n=strlen(name);if(!n||n>20)return bdNamErr;
  for(size_t i=0;i<n;i++)if(!((name[i]>='a'&&name[i]<='z')||(name[i]>='A'&&name[i]<='Z')||(name[i]>='0'&&name[i]<='9')||name[i]=='_'||name[i]=='-'))return bdNamErr;
- if(strlen(root_path)+n+16>=PATH_CAP||strlen(root_path)+n+16>255)return bdNamErr;
+ if(strlen(root_path)+n+17>=PATH_CAP||strlen(root_path)+n+17>255)return bdNamErr;
  strcpy(dest,root_path);strcat(dest,"bin:");strcat(dest,name);
- strcpy(stage,root_path);strcat(stage,"bin:.clx-");strcat(stage,name);strcat(stage,".new");
- strcpy(backup,root_path);strcat(backup,"bin:.clx-");strcat(backup,name);strcat(backup,".old");return 0;
+ strcpy(stage,root_path);strcat(stage,managed?"bin:.repo-":"bin:.clx-");strcat(stage,name);strcat(stage,".new");
+ strcpy(backup,root_path);strcat(backup,managed?"bin:.repo-":"bin:.clx-");strcat(backup,name);strcat(backup,".old");return 0;
 }
+static int command_paths(const char *n,char *d,char *s,char *b){return command_paths_for(n,d,s,b,0);}
 static int command_absent(const char *path){CInfoPBRec pb;int e=info(path,&pb);return e==fnfErr?0:e?e:dupFNErr;}
 static int command_flush(const char *path){short vol;int e=cli_native_volume(path,&vol);return e?e:FlushVol(0,vol);}
 static int command_check_native(const char *path){char full[PATH_CAP+8];snprintf(full,sizeof full,"native:%s",path);return module_load(full,0,0,0);}
 static void command_recovery(const char *path){errsay("appinstall: retained recovery file: native:");errsay(path);errsay("\n");}
 static int command_restore(const char *backup,const char *dest){int e=cli_native_rename(backup,dest);if(!e)e=command_flush(dest);if(e)command_recovery(backup);return e;}
 /* Streaming file source; no bundled resource is held during validation. */
-static int command_replace(const char *name,const char *source,int replace){
+static int command_replace_mode(const char *name,const char *source,int replace,int managed){
  char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec pb;short in=-1,out=-1;
- int e=command_paths(name,dest,stage,backup),exists=0,owned=0;if(e)return e;
+ int e=command_paths_for(name,dest,stage,backup,managed),exists=0,owned=0;if(e)return e;
  e=info(dest,&pb);if(!e){if(!replace)return 0;if(pb.hFileInfo.ioFlAttrib&16)return paramErr;exists=1;}else if(e!=fnfErr)return e;
  if((e=command_absent(stage))||(e=command_absent(backup))){
   errsay("appinstall: unfinished update or retained previous version; inspect .clx-*.new/.old before replacing\n");return e;
@@ -67,6 +68,7 @@ done:
  if(owned){int cleanup=HDelete(0,0,pn);if(cleanup)command_recovery(stage);}
  return e;
 }
+static int command_replace(const char *n,const char *s,int r){return command_replace_mode(n,s,r,0);}
 static int command_recover(const char *name){
  char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec pb;int e=command_paths(name,dest,stage,backup);if(e)return e;
  e=info(backup,&pb);if(e)return e;if(pb.hFileInfo.ioFlAttrib&16)return paramErr;
@@ -133,26 +135,24 @@ static int appinstall_command(int argc,char **av){
  say("appinstall: complete (existing files kept by install/setup)\n");return 0;
 }
 
-/* Repository retry uses the existing installer. Preserve previous versions and
-   interrupted candidates by catalog ID, rather than deleting or rolling back
-   tools which already installed successfully. No directory-wide transaction. */
-static int command_archive(const char *path){
- CInfoPBRec c;int e=info(path,&c);if(e==fnfErr)return 0;if(e)return e;
- if(c.hFileInfo.ioFlAttrib&16)return paramErr;
- char to[PATH_CAP];strcpy(to,path);char *leaf=strrchr(to,':');if(!leaf)return bdNamErr;
- snprintf(leaf+1,sizeof to-(leaf+1-to),".previous-%08lx",(unsigned long)c.hFileInfo.ioDirID);
- if(strlen(to)>255)return bdNamErr;
- if((e=command_absent(to)))return e;
- e=cli_native_rename(path,to);return e?e:command_flush(to);
+/* Repository files use a distinct bounded slot; historical/manual appinstall
+   backups are never renamed or pruned by managed updates. */
+static int cli_appcheck(const char *source){int e=module_load(source,0,0,0);return e==130?userCanceledErr:e?paramErr:0;}
+static int command_same_image(const char *source,const char *native){
+ char path[PATH_CAP+8];snprintf(path,sizeof path,"native:%s",native);short a=-1,b=-1;int e=open_path(source,fsRdPerm,&a);if(e)return e;e=open_path(path,fsRdPerm,&b);
+ long an=0,bn=0;if(!e)e=GetEOF(a,&an);if(!e)e=GetEOF(b,&bn);if(!e&&an!=bn)e=paramErr;
+ unsigned char x[512],y[512];while(!e&&an){long n=an>(long)sizeof x?(long)sizeof x:an,want=n;e=FSRead(a,&n,x);if(!e&&n!=want)e=ioErr;n=want;if(!e)e=FSRead(b,&n,y);if(!e&&(n!=want||memcmp(x,y,n)))e=paramErr;an-=want;if(!e&&module_poll())e=userCanceledErr;}
+ if(b>=0){int z=FSClose(b);if(!e)e=z;}int z=FSClose(a);return e?e:z;
 }
 static int cli_appinstall(const char *source,const char *name,unsigned long version){
  char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec c;(void)version;
- int e=command_paths(name,dest,stage,backup);if(e)return e;
- /* Validate before changing any installed or recovery name. */
- int valid=module_load(source,0,0,0);if(valid)return valid==130?userCanceledErr:paramErr;
- e=info(dest,&c);
- if(e==fnfErr){int b=info(backup,&c);if(!b)e=command_restore(backup,dest);else if(b!=fnfErr)return b;else e=0;}
- if(e)return e;
- if((e=command_archive(stage))||(e=command_archive(backup)))return e;
- return command_replace(name,source,1);
+ int e=command_paths_for(name,dest,stage,backup,1);if(e)return e;
+ e=cli_appcheck(source);if(e)return e;
+ e=info(dest,&c);if(e==fnfErr){int b=info(backup,&c);if(!b)e=command_restore(backup,dest);else if(b!=fnfErr)return b;else e=0;}if(e)return e;
+ /* A completed rename followed by a failed catalog append is resumable.
+    The exact old backup stays until the whole release has completed. */
+ int old=info(backup,&c);if(old&&old!=fnfErr)return old;
+ if(!old&&!command_same_image(source,dest))return cli_appcheck(source);
+ e=info(stage,&c);if(!e){if(c.hFileInfo.ioFlRLgLen)return dupFNErr;e=command_same_image(source,stage);if(e)return e;e=cli_native_delete(stage);if(e)return e;}else if(e!=fnfErr)return e;
+ return command_replace_mode(name,source,1,1);
 }

@@ -55,6 +55,7 @@
  CLX_IMPORT("bsearch", bsearch)
  CLX_IMPORT("btowc", btowc)
  CLX_IMPORT("cli_alloc", cli_alloc)
+ CLX_IMPORT("cli_appcheck", cli_appcheck)
  CLX_IMPORT("cli_appinstall", cli_appinstall)
  CLX_IMPORT("cli_environment", cli_environment)
  CLX_IMPORT("cli_file_close", cli_file_close)

@@ -13,8 +13,40 @@ checked against sealed hashes. Offline/source/licence/provenance archives provid
 Historical payloads retained; old test endpoints not retired without consumer checks.
 HTTP client IP restriction removed as requested; LAN bind retained. This subsequent
 host-only setting does not alter the sealed d14852d product archive. No push, public
-release or hardware deployment. Q1-001 is completed below; Q1-002 has not started.
+release or hardware deployment. Q1-001 is completed below; Q1-002 investigation is recorded below.
 [Evidence and limitations](distribution-1946/REPORT.md).
+
+## Q1-002 — root installation and managed recovery
+
+Build **2026111948**, Snow acceptance complete; internal publication pending. Core defaults to the
+startup-volume root; Clarice Data remains in the System Folder. Existing native
+UpdateOps/plans now maintain one coherent previous Core/tools/catalog snapshot
+with an independent **Recover Clarice** helper. Manual and legacy backups stay put.
+
+Focused ASan/UBSan tests pass: preparation336 and first-snapshot268 returned-error
+and interruption boundaries, rotation167 and restore215; disk-full, allocation
+failure, cancellation, damaged snapshots and fork/metadata preservation. Existing
+repository/installer/loader regressions pass. Snow Plus/4MB/System6.0.8 passes fresh
+49-tool installation, migration, cancellation/retry, relaunch, repeated up-to-date
+operation and independent Finder recovery after deleting the disposable installed
+Core and ls. A subsequent1947→1948 upgrade rotates back to one verified snapshot,
+with no pending/retiring directory or transaction plan left. Recovery launches1947,
+restores49 tools/catalog and preserves user
+files and manual backups. Finder's mutable icon position/cache/initialised bit and
+application resource-fork reserved scratch are excluded from integrity comparison;
+meaningful metadata and fork contents remain checked and saved metadata restored.
+
+Normal startup samples1947→1948:188→189 guest ticks, launch free heap381.20→380.73KiB
+(different source volumes; indicative, not a matched physical benchmark). Core CODE
++476B, static BSS+4B; package395008→424960B, predominantly on-demand updater/helper.
+No new persistent heap buffer or startup snapshot scan. Runtime heap365162→364682B,
+largest362220→361192B in these samples; neither is a repeated-run leak measurement. Recovery snapshot about
+1.49MiB; rotation temporarily retains its predecessor. Runtime survivors0.
+
+Recovery is resumable, not atomic or power-loss safe. Unknown/damaged recovery
+files fail closed; a damaged catalog or incomplete legacy update can require
+manual repair. No physical deployment, GitHub push, release or Q1-003 work.
+Focused evidence: `outputs/install-q1`; disposable images remain under `work`.
 
 ## Q1-001 — ICMP ping, 24 November 2026
 

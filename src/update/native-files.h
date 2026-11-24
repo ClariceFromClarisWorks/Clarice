@@ -24,6 +24,6 @@ static inline int update_rename(const char *a,const char *b){
  const char *x=strrchr(a,':'),*y=strrchr(b,':');if(!x||!y||x-a!=y-b||memcmp(a,b,x-a)||!x[1]||!y[1]||strlen(y+1)>31)return bdNamErr;
  CInfoPBRec p;int e=update_info(b,&p);if(e!=fnfErr)return e?e:dupFNErr;
  e=update_info(a,&p);if(e)return e;short v;e=update_volume(a,&v);if(e)return e;
- unsigned char old[256],next[256];update_pstr(old,x+1);update_pstr(next,y+1);return HRename(v,p.hFileInfo.ioFlParID,old,next);
+ unsigned char old[256],next[256];update_pstr(old,x+1);update_pstr(next,y+1);return HRename(v,(p.hFileInfo.ioFlAttrib&16)?p.dirInfo.ioDrParID:p.hFileInfo.ioFlParID,old,next);
 }
 #endif

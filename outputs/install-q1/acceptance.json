@@ -1,0 +1,18 @@
+{
+  "build": 2026111948,
+  "guest": "Snow Plus/4MiB/System6.0.8, accelerated",
+  "fresh_and_migration": true,
+  "cancel_retry": true,
+  "independent_missing_core_and_ls_recovery": true,
+  "repeated_snapshot_rotation": true,
+  "single_snapshot_after_completion": true,
+  "live_and_saved_tools_verified": 49,
+  "legacy_and_user_preserved": true,
+  "startup_ticks_1947": 188,
+  "startup_ticks_1948": 189,
+  "startup_comparison_limit": "Different source volumes; indicative guest elapsed time, not physical performance",
+  "runtime1948": "Runtime: heap=364682 largest=361192 image=0 ticks=0 load=0 owned-peak=0 remaining=0\nLoader ticks: read=0 validate=0 imports=0 relocations=0 prepare=0 events=0 (events included above)\nVerification ticks: mode=full header=0 record=0 payload=0 metadata=0 structure=0 (structure included in relocations)\n",
+  "snapshot_members": 52,
+  "snapshot_fork_bytes": 1531260,
+  "physical_testing": false
+}

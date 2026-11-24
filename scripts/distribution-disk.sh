@@ -12,6 +12,8 @@ hformat -l Clarice /src/work/distribution/Clarice.hda
 hmount /src/work/distribution/Clarice.hda
 hcopy -m /src/work/distribution/kit/Clarice.bin :Clarice
 hcopy -m /src/work/install-ux/build/Clarice.bin ":Install Clarice"
+hcopy -m /src/work/update-helper/ClariceUpdater.bin ":Recover Clarice"
+hcopy -r /src/work/distribution/kit/Release :Release
 hmkdir :Utilities
 for f in /src/work/distribution/kit/Utilities/*; do hcopy -r "$f" ":Utilities:$(basename "$f")"; done
 hcopy -r "/src/work/distribution/kit/Read Me.txt" ":Read Me"

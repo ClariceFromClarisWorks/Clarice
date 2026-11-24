@@ -1,0 +1,47 @@
+{
+  "1947": {
+    "package": 395008,
+    "data": 0,
+    "resource": 394807,
+    "resources": {
+      "ALRT": 28,
+      "BNDL": 28,
+      "CLRC": 8,
+      "CLUP": 16,
+      "CLXU": 113984,
+      "CODE": 278274,
+      "DITL": 1324,
+      "DLOG": 106,
+      "FREF": 7,
+      "ICN#": 256,
+      "SIZE": 10,
+      "ics#": 64
+    }
+  },
+  "1948-candidate": {
+    "package": 425216,
+    "data": 0,
+    "resource": 425031,
+    "resources": {
+      "ALRT": 28,
+      "BNDL": 28,
+      "CLRC": 8,
+      "CLUP": 16,
+      "CLXU": 143732,
+      "CODE": 278750,
+      "DITL": 1324,
+      "DLOG": 106,
+      "FREF": 7,
+      "ICN#": 256,
+      "SIZE": 10,
+      "ics#": 64
+    }
+  },
+  "1948-final": {
+    "package": 424960,
+    "data": 0,
+    "resource": 424779,
+    "updater_clx": 143480,
+    "helper_package": 75904
+  }
+}

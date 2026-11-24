@@ -53,6 +53,7 @@ static int repo_marker(const char *text){
  CInfoPBRec c;e=info(native,&c);if(e==fnfErr)e=cli_native_create(native,'TEXT','CLRC');if(e)return e;
  short ref;e=cli_native_open(native,0,1,&ref);if(e)return e;e=SetEOF(ref,0);if(!e)e=io_write(ref,text,strlen(text));int x=FSClose(ref);if(!e)e=x;return e?e:update_flush(native);
 }
+#include "repository-recovery.inc"
 static int repo_finish(void){
  char text[768],own[256];int e=read_text(REPO_MARKER,text,sizeof text);if(e==fnfErr)return 0;if(e)return e;
  if(strncmp(text,"CLARICE-UPDATE-READY 1\n",23)){errsay("An update is incomplete. Run clarice update -y to resume.\n");return 0;}
@@ -67,9 +68,9 @@ static int repo_finish(void){
  short ref;e=cli_native_open(planpath,0,0,&ref);
  if(!e){UpdatePlan p;unsigned char bytes[UPDATE_PLAN_SIZE];long length;e=GetEOF(ref,&length);if(!e&&length!=sizeof bytes)e=paramErr;if(!e)e=io_read(ref,bytes,sizeof bytes);int x=FSClose(ref);if(!e)e=x;if(!e)e=update_plan_decode(bytes,&p);
   if(!e&&(p.build!=build||strcmp(p.target,own)))e=paramErr;
-  CInfoPBRec previous;if(!e)e=info(p.backup,&previous);if(!e&&((uint32_t)previous.hFileInfo.ioDirID!=p.original_id||previous.hFileInfo.ioFlMdDat!=p.original_modified))e=paramErr;
-  if(!e)e=update_verify_candidate(own,&p);if(!e)e=cli_native_delete(planpath);if(!e)e=update_flush(planpath);
- }else if(e==fnfErr)e=0;if(e)return e;
+  CInfoPBRec previous;if(!e){int old=info(p.backup,&previous);if(old==fnfErr){RecoverySnapshot snapshot;RecoveryRotation rotation;old=repo_recovery_load(&snapshot,&rotation);if(!old){old=recovery_verify(rotation.path[0],&snapshot);recovery_dispose(&snapshot);}}else if(!old&&((uint32_t)previous.hFileInfo.ioDirID!=p.original_id||previous.hFileInfo.ioFlMdDat!=p.original_modified))old=paramErr;e=old;}
+  if(!e)e=update_verify_candidate(own,&p);if(!e)e=repo_recovery_cleanup(&p,own);if(!e)e=cli_native_delete(planpath);if(!e)e=update_flush(planpath);
+ }else if(e==fnfErr)e=repo_recovery_cleanup(0,own);if(e)return e;
  e=repo_catalog(0,&core);if(!e)e=repo_marker(0);if(!e)say("Clarice update complete.\n");return e;
 }
 static int repo_url(const char *source,const char *file,char *url,unsigned cap){size_t n=strrchr(source,'/')-source+1;if(n+strlen(file)>=cap)return bdNamErr;memcpy(url,source,n);strcpy(url+n,file);return 0;}
@@ -86,11 +87,12 @@ int clarice_main(int argc,char **argv){
  if(!source[0]){e=read_text("/etc/clarice/update.conf",source,sizeof source);if(e)goto done;size_t n=strlen(source);while(n&&(source[n-1]=='\n'||source[n-1]=='\r'))source[--n]=0;}
  if(!update_source_valid(source)){e=paramErr;errsay("Use an absolute mounted-file path or numeric private-network HTTP index URL.\n");goto done;}
  e=update_application_path(own);uint32_t current=0;unsigned system=0;if(!e)e=update_stamp(own,&current,&system);if(e)goto done;
- say("Checking repository...\n");e=download(source,index,0);if(e)goto done;e=repo_read_index(index,&items);if(!e)e=repo_catalog(items,0);if(e)goto done;
+ say("Checking repository...\n");e=download(source,index,0);if(e)goto done;e=repo_read_index(index,&items);if(!e)e=repo_catalog(items,0);if(!e)e=repo_catalog_members(&items);if(e)goto done;
+ {char root[256];e=resolve("/",root);if(!e)e=recovery_install_path(root,repository_target);if(e)goto done;repository_migrate=strcmp(repository_target,own)!=0;}
  for(RepoItem *i=items;i;i=i->next){RepoRecord *r=&i->wanted;
   /* Old catalogs may still advertise an external updater. Core owns it now. */
   if(!r->core&&!strcmp(r->name,"clarice"))continue;
-  if(r->core){core=i;i->needed=r->version>current;}else{
+  if(r->core){core=i;i->needed=r->version>current||repository_migrate;}else{
    char path[PATH_CAP],native[PATH_CAP],canonical[PATH_CAP];CInfoPBRec cat;snprintf(path,sizeof path,"/bin/%s",r->name);e=checked(path,native,canonical,0);if(e)goto done;e=info(native,&cat);
    if(e&&e!=fnfErr)goto done;int exists=!e;e=0;
    if(exists&&(cat.hFileInfo.ioFlAttrib&16)){e=paramErr;goto done;}
@@ -106,7 +108,9 @@ int clarice_main(int argc,char **argv){
  }
  if(check)goto done;
  if(changes&&!yes){int answer=repo_confirm();if(answer<0){e=userCanceledErr;goto done;}if(!answer)goto done;}
+ if(changes){e=repo_recovery_prepare(items,own,current);if(e)goto done;}
  e=repo_marker("CLARICE-UPDATE-INCOMPLETE 1\n");if(e)goto done;
+ if(repository_migrate){e=repo_recovery_root(own,repository_target);if(e)goto done;}
  for(RepoItem *i=items;i;i=i->next){if(i->wanted.core||!strcmp(i->wanted.name,"clarice"))continue;RepoRecord *r=&i->wanted;
   if(i->known&&i->installed.version>r->version)continue;
   if(i->needed){char url[768],native[PATH_CAP],canonical[PATH_CAP];e=repo_url(source,r->file,url,sizeof url);if(e)goto done;say("Installing ");say(r->name);say("...\n");e=download(url,payload,r->size);if(e)goto done;
@@ -117,10 +121,10 @@ int clarice_main(int argc,char **argv){
  }
  if(core&&core->needed){
   char row[256];e=repo_line(&core->wanted,row,sizeof row);if(e)goto done;
-  snprintf(text,sizeof text,"CLARICE-UPDATE-READY 1\n%s%s\n",row,own);e=repo_marker(text);if(e)goto done;
+  snprintf(text,sizeof text,"CLARICE-UPDATE-READY 1\n%s%s\n",row,repository_target);e=repo_marker(text);if(e)goto done;
   memset(&repository_core,0,sizeof repository_core);repository_core.build=core->wanted.version;repository_core.bytes=core->wanted.size;repository_core.system=0x600;snprintf(repository_core.version,sizeof repository_core.version,"build %lu",(unsigned long)core->wanted.version);snprintf(repository_core.crc,sizeof repository_core.crc,"%08lx",(unsigned long)core->wanted.crc);repository_package=core->wanted.file;
   char *args[]={"clarice","update","-y","--source",source};e=core_update(5,args);if(e)e=e==130?userCanceledErr:ioErr;
- }else{RepoRecord r;memset(&r,0,sizeof r);r.core=1;strcpy(r.name,"Clarice");r.version=current;e=core&&core->known&&core->installed.version==current?0:repo_catalog(0,&r);if(!e)e=repo_marker(0);if(!e)say("All standard tools are current. Update complete.\n");}
+ }else{RepoRecord r;memset(&r,0,sizeof r);r.core=1;strcpy(r.name,"Clarice");r.version=current;e=core&&core->known&&core->installed.version==current?0:repo_catalog(0,&r);if(!e)e=repo_recovery_cleanup(0,own);if(!e)e=repo_marker(0);if(!e)say("All standard tools are current. Update complete.\n");}
 done:
  if(payload[0])cli_remove(payload);if(index[0])cli_remove(index);while(items){RepoItem *next=items->next;cli_free(items);items=next;}
  if(e){error("clarice update",e);errsay("Completed packages are retained. Repeat clarice update -y to resume.\n");}return e==userCanceledErr?130:e?1:0;

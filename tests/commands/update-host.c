@@ -21,7 +21,7 @@
 #define fsWrPerm 2
 typedef char *Ptr;
 typedef char **Handle;
-typedef struct {struct {int ioFlAttrib,ioFlFndrInfo,ioFlXFndrInfo,ioDirID;} hFileInfo;} CInfoPBRec;
+typedef struct {struct {int ioFlAttrib,ioFlFndrInfo,ioFlXFndrInfo,ioDirID,ioFlRLgLen;} hFileInfo;} CInfoPBRec;
 static char root_path[PATH_CAP]="Disk:Clarice Data:";
 static unsigned long port_peak,port_remaining,module_bytes,module_load_ticks,module_ticks;
 static unsigned long ticks;
@@ -57,7 +57,7 @@ static int generation;
 static int writes,fail_write,short_write,closes,fail_close,renames,fail_rename,fail_rename_again,flushes,fail_flush,crash_flush;
 static jmp_buf crash;
 static int find(const char *p){for(int i=0;i<MAXFILES;i++)if(*files[i].name&&!strcmp(p,files[i].name))return i;return -1;}
-static int info(const char *p,CInfoPBRec *pb){int i=find(p);if(i<0)return fnfErr;pb->hFileInfo.ioFlAttrib=files[i].dir?16:0;pb->hFileInfo.ioFlFndrInfo=files[i].finder;pb->hFileInfo.ioFlXFndrInfo=0;pb->hFileInfo.ioDirID=files[i].identity;return 0;}
+static int info(const char *p,CInfoPBRec *pb){int i=find(p);if(i<0)return fnfErr;pb->hFileInfo.ioFlAttrib=files[i].dir?16:0;pb->hFileInfo.ioFlFndrInfo=files[i].finder;pb->hFileInfo.ioFlXFndrInfo=0;pb->hFileInfo.ioDirID=files[i].identity;pb->hFileInfo.ioFlRLgLen=files[i].resource_fork;return 0;}
 static int cli_native_set(const char *p,CInfoPBRec *pb){int i=find(p);if(i<0)return fnfErr;files[i].finder=pb->hFileInfo.ioFlFndrInfo;return 0;}
 static int HCreate(int v,int d,const unsigned char *p,unsigned long creator,unsigned long type){(void)v;(void)d;(void)creator;(void)type;const char *s=unpascal(p);if(find(s)>=0)return dupFNErr;for(int i=0;i<MAXFILES;i++)if(!*files[i].name){memset(&files[i],0,sizeof files[i]);strcpy(files[i].name,s);files[i].identity=++generation;files[i].modified=1;files[i].finder=11;return 0;}return ioErr;}
 static int HOpen(int v,int d,const unsigned char *p,int perm,short *ref){(void)v;(void)d;(void)perm;int i=find(unpascal(p));if(i<0)return fnfErr;files[i].pos=0;files[i].open++;*ref=i+1;return 0;}
@@ -72,6 +72,7 @@ static int cli_native_volume(const char *p,short *v){(void)p;*v=1;return 0;}
 static int FlushVol(void *p,short v){(void)p;(void)v;flushes++;if(flushes==crash_flush)longjmp(crash,1);return flushes==fail_flush?ioErr:0;}
 static int cli_native_rename(const char *a,const char *b){renames++;if(renames==fail_rename||renames==fail_rename_again)return ioErr;int i=find(a);if(i<0)return fnfErr;if(find(b)>=0)return dupFNErr;strcpy(files[i].name,b);return 0;}
 static unsigned char bundle[256];static long bundle_len;static char *bundle_ptr=(char*)bundle;
+static int cli_native_delete(const char *p){unsigned char n[256];pstr(n,p);return HDelete(0,0,n);}
 static Handle Get1Resource(unsigned long type,short id){(void)type;(void)id;return &bundle_ptr;}
 static long GetHandleSize(Handle h){(void)h;return bundle_len;}
 static void HLock(Handle h){(void)h;}
@@ -225,14 +226,14 @@ int main(int argc,char **argv){
  i=put(dest,bundle,bundle_len);assert(!appinstall_command(4,repair));same_old(i,old);
  reset();collection_fixture();char *install[]={"appinstall","install","native:Kit:grep","grep"};
  assert(!appinstall_command(4,install));before=writes;assert(!appinstall_command(4,install)&&writes==before);
- /* Repository retries preserve per-tool recovery files, including a crash
-    between saving the old name and installing the candidate. */
- reset();i=setup();assert(!cli_appinstall(source,"grep",2));same_old(i,old);
- int previous=find(old);char archived[256];snprintf(archived,sizeof archived,"Disk:Clarice Data:bin:.previous-%08lx",(unsigned long)files[previous].identity);
- assert(!cli_appinstall(source,"grep",3));same_old(previous,archived);assert(find(old)>=0);
- reset();i=setup();assert(!cli_native_rename(dest,old));put(stage,updated,updated_len);
- assert(!cli_appinstall(source,"grep",2));same_old(i,old);assert(find(dest)>=0);
- reset();i=setup();files[find(source)].data[0]=0;assert(cli_appinstall(source,"grep",2));same_old(i,dest);assert(find(old)<0);
- reset();i=setup();cancel_at=1;assert(cli_appinstall(source,"grep",2));same_old(i,dest);cancel_at=0;assert(!cli_appinstall(source,"grep",2));same_old(i,old);
+ /* Repository slots are separate from user-managed appinstall backups.
+    Retry of an installed identical image must not rotate another generation. */
+ const char *managed_old="Disk:Clarice Data:bin:.repo-grep.old",*managed_stage="Disk:Clarice Data:bin:.repo-grep.new";
+ reset();i=setup();put(old,(const unsigned char*)"manual backup",13);assert(!cli_appinstall(source,"grep",2));same_old(i,managed_old);assert(find(old)>=0);
+ int previous=find(managed_old);before=writes;assert(!cli_appinstall(source,"grep",3));same_old(previous,managed_old);assert(writes==before);
+ reset();i=setup();assert(!cli_native_rename(dest,managed_old));int staged=put(managed_stage,updated,updated_len);files[staged].resource_fork=0;
+ assert(!cli_appinstall(source,"grep",2));same_old(i,managed_old);assert(find(dest)>=0);
+ reset();i=setup();files[find(source)].data[0]=0;assert(cli_appinstall(source,"grep",2));same_old(i,dest);assert(find(managed_old)<0);
+ reset();i=setup();cancel_at=1;assert(cli_appinstall(source,"grep",2));same_old(i,dest);cancel_at=0;assert(!cli_appinstall(source,"grep",2));same_old(i,managed_old);
  reset();printf("PASS: %d loader/installer scenarios; no leaked allocations or descriptors\n",cases-1);return 0;
 }

@@ -59,6 +59,7 @@ endif()
 # Offline installation launcher only; the ordinary core gets no installer code.
 if(CLARICE_OFFLINE_INSTALLER)
  target_compile_definitions(Clarice PRIVATE CLARICE_OFFLINE_INSTALLER=1)
+ target_include_directories(Clarice PRIVATE ../work/update-command)
  target_compile_options(Clarice PRIVATE -Wno-unused-function -Wno-sign-compare)
 endif()
 

@@ -113,9 +113,13 @@ previous application and automatically relaunching. The new Core records complet
 and clears the marker after relaunch. Ordinary startup checks only for this marker;
 it does not scan or hash `/bin`.
 
-Per-tool `.clx-NAME.old` retains the previous file, including both forks. On another
-repository replacement, older recovery files are preserved as `.previous-CATALOGID`.
-These archives consume disk space; review them before deleting older recovery copies.
+Build 2026111948 keeps one managed previous installation in
+`/etc/clarice/Recovery Previous`: Core, catalog, managed utilities and an independent
+**Recover Clarice** application. The older snapshot remains until its replacement
+has been copied and verified. Extra space is temporarily needed during rotation.
+Repository `.repo-NAME.old` files are transaction slots, removed only after a
+verified snapshot and successful completion. Manual `appinstall` `.clx-*` backups,
+legacy `.previous-*` archives and historical application copies are not pruned.
 This is resumable HFS replacement, not an atomic collection or power-loss guarantee.
 A corrupt catalog, damaged filesystem or unrecoverable disk error can require manual
 repair. Explicit `appinstall check` remains the full executable diagnostic. The
@@ -171,8 +175,9 @@ disabled-by-default service, not a permanently resident Core component.
 3. Wait for the file names and checking messages. Clarice opens automatically
    when installation finishes. Allow several minutes; do not reset the Mac.
 
-The installer puts **Clarice** in the active **System Folder**, beside
-**Clarice Data**. To open it later, double-click System Folder → Clarice.
+The Q1-002 candidate installs **Clarice** at the **startup-volume root**.
+**Clarice Data** stays in its existing System Folder location. Open the root-level
+Clarice application afterwards.
 You can eject the distribution disk afterwards; keep it for repair.
 
 No network, command-line knowledge, archive extractor or preinstalled utility
@@ -185,14 +190,22 @@ user files are preserved. The installer does not run your startup profile;
 normal Clarice runs it when launched after installation.
 
 For an upgrade, quit installed Clarice first and run Install Clarice again.
-An older **System Folder:Clarice** becomes **Clarice Previous**, retaining both
-forks and Finder metadata. The new Core retains its Finder information and
-creation date. An equal/newer Core is kept rather than replaced. Earlier copies
-elsewhere on your disk are left alone; use System Folder:Clarice afterwards.
+The managed previous snapshot preserves both forks, Finder metadata and creation
+dates. Migration retains the original application until the root-level replacement
+has relaunched and completion has been verified. Preferences and user files stay
+in place. An unrelated root-level application or mismatched catalog stops migration;
+it is not overwritten or silently adopted. Equal/newer Core builds are not downgraded.
 
-If **Clarice Previous** or **Clarice Installing** already exists, the installer
-refuses another Core replacement. Inspect/move those recovery files first; never
-discard your only working copy. This is not an automatic cleanup or downgrade.
+To roll back if Core cannot launch, quit Clarice and open **System Folder →
+Clarice Data → etc → clarice → Recovery Previous → Recover Clarice** in Finder.
+Confirm Restore. This restores the managed files and catalog, then launches the
+root-level Core. It does not require a working Clarice application or networking.
+Do not rename the recovery directory or remove its inventory. Damaged snapshots
+are rejected; keep offline installation media as a separate repair source.
+
+Older Core versions execute their older updater when installing this candidate.
+That bootstrap handoff retains its legacy recovery files. The new recovery policy
+applies to subsequent updates initiated by the new Core, or its offline installer.
 
 ### Cancel and resume
 

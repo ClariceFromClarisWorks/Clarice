@@ -9,8 +9,10 @@ cmake --build /src/work/update-helper -j2
 '
 python3 - "$ROOT" <<'PY'
 from pathlib import Path
-import sys,hashlib
+import sys,hashlib,struct,binascii
 root=Path(sys.argv[1]);b=(root/'work/update-helper/ClariceUpdater.bin').read_bytes()
+d,r=struct.unpack_from('>II',b,83);offset=128+((d+127)//128)*128;resource=b[offset:offset+r]
+(root/'work/update-command/update-helper-stamp.h').write_text('static const unsigned long offline_helper_data='+str(d)+'UL,offline_helper_resource='+str(r)+'UL,offline_helper_data_crc='+str(binascii.crc32(b[128:128+d]))+'UL,offline_helper_resource_crc='+str(binascii.crc32(resource[:16]+resource[128:]))+'UL;\nstatic const char offline_helper_leaf[]=\"Updater-'+hashlib.sha256(b).hexdigest()[:12]+'\";\n')
 p=root/'work/update-command/update-helper-image.h'
 p.write_text('static const unsigned char update_helper_image[]={\n'+''.join(','.join(str(x) for x in b[i:i+24])+',\n' for i in range(0,len(b),24))+'};\nstatic const char update_helper_leaf[]=\"Updater-'+hashlib.sha256(b).hexdigest()[:12]+'\";\n')
 PY
@@ -23,7 +25,7 @@ m68k-apple-macos-gcc $FLAGS -c /src/src/commands/network/native.c -o /src/work/u
 m68k-apple-macos-gcc $FLAGS -DNDEBUG -c /src/src/commands/vendor/picohttpparser/picohttpparser.c -o /src/work/update-command/picohttpparser.o
 m68k-apple-macos-ld -r --gc-sections -u clarice_main /src/work/update-command/clarice.o /src/work/update-command/wget.o /src/work/update-command/nettcp.o /src/work/update-command/native.o /src/work/update-command/picohttpparser.o $(m68k-apple-macos-gcc -print-libgcc-file-name) -o /src/work/update-command/command.o
 '
-python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/update-command/command.o" "$ROOT/work/update-command/clarice.clx" --runtime 1.6
+python3 "$ROOT/scripts/pack-command.py" "$ROOT/work/update-command/command.o" "$ROOT/work/update-command/clarice.clx" --runtime 1.11
 cp "$ROOT/work/update-command/clarice.clx" "$ROOT/work/build/clarice.clx"
 
 python3 "$ROOT/scripts/self-update-resource.py"

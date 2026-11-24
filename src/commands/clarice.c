@@ -12,6 +12,12 @@ static void verification_failure(const char *phase,uint32_t want,uint32_t have){
 #define UPDATE_VERIFY_POLL() (app_yield()?userCanceledErr:0)
 #include "../update/verify.h"
 #include "update-helper-image.h"
+#define RECOVERY_COMMAND 1
+#define RECOVERY_ALLOC(n) cli_alloc(n)
+#define RECOVERY_FREE(p) cli_free(p)
+#define RECOVERY_POLL() (app_yield()?userCanceledErr:0)
+#include "../update/recovery-native.h"
+#include "../update/open-guard.h"
 extern int open_path(const char *,short,short *);
 extern unsigned long NetParseIP(const char *);
 extern int wget_fetch(const char *,const char *,unsigned long);
@@ -52,6 +58,8 @@ static int install_helper(const char *path){
  if(!e){for(int fork=0;fork<2;fork++){uint32_t hash;e=update_hash_fork(path,fork,&hash,fork?p.resource_size:p.data_size);if(e||hash!=s.hashes[fork]){if(!e)e=paramErr;break;}}}
  if(e){int x=cli_native_delete(path);if(x)error("retained incomplete updater helper",x);}return e;
 }
+static char repository_target[256];
+static int repository_migrate;
 static UpdateManifest repository_core;
 static const char *repository_package;
 static int core_update(int argc,char **argv){
@@ -63,11 +71,11 @@ static int core_update(int argc,char **argv){
  for(int i=2;i<argc;i++){if(!strcmp(argv[i],"-y"))assume_yes=1;else if(!strcmp(argv[i],"--check")&&!check)check=1;else if(!strcmp(argv[i],"--source")&&i+1<argc&&!source[0]){if(strlen(argv[++i])>=sizeof source)return 2;strcpy(source,argv[i]);}else return 2;}
  if(!source[0]){e=read_text("/etc/clarice/update.conf",source,sizeof source);if(e){errsay("Configure /etc/clarice/update.conf with the private update URL, or use --source URL.\n");goto done;}size_t n=strlen(source);while(n&&(source[n-1]=='\n'||source[n-1]=='\r'))source[--n]=0;}
  if(!update_source_valid(source)){errsay("Use an absolute mounted-file path or numeric private-network HTTP index URL.\n");e=paramErr;goto done;}
- e=update_application_path(own);if(e)goto done;uint32_t current=0;unsigned system=0;e=update_stamp(own,&current,&system);if(e){errsay("Running application has no supported update identity. Install an update-capable bootstrap build first.\n");goto done;}
+ e=update_application_path(own);if(e)goto done;if(repository_target[0])strcpy(own,repository_target);uint32_t current=0;unsigned system=0;e=update_stamp(own,&current,&system);if(e){errsay("Running application has no supported update identity. Install an update-capable bootstrap build first.\n");goto done;}
  m=repository_core;
  SysEnvRec env;e=SysEnvirons(1,&env);if(e)goto done;if(m.system>(unsigned short)env.systemVersion){errsay("Update requires a newer Macintosh system.\n");e=paramErr;goto done;}
  snprintf(text,sizeof text,"Installed build %lu; source %s (build %lu).\n",(unsigned long)current,m.version,(unsigned long)m.build);say(text);
- if(m.build<=current){say("No newer compatible update; no downgrade performed.\n");goto done;}if(check)goto done;
+ if(m.build<current||(m.build==current&&!repository_migrate)){say("No newer compatible update; no downgrade performed.\n");goto done;}if(check)goto done;
  if(!assume_yes&&(!cli_isatty(0)||!cli_isatty(1))){errsay("Updates require an interactive terminal for confirmation, or -y.\n");e=paramErr;goto done;}
  snprintf(text,sizeof text,"/etc/clarice/%s",update_helper_leaf);e=checked(text,helper,canonical,0);if(e)goto done;e=checked("/etc/clarice/" UPDATE_PLAN_NAME,plan_path,canonical,0);if(e)goto done;e=absent(plan_path);if(e==dupFNErr){
   unsigned char saved[UPDATE_PLAN_SIZE];short ref;e=cli_native_open(plan_path,0,0,&ref);
