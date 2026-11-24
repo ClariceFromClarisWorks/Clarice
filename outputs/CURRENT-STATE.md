@@ -16,6 +16,49 @@ host-only setting does not alter the sealed d14852d product archive. No push, pu
 release or hardware deployment. Q1-001 is completed below; Q1-002 is completed below.
 [Evidence and limitations](distribution-1946/REPORT.md).
 
+## Q1-005 — terminal geometry and Preferences
+
+Build **2026111950**, local main; focused Snow acceptance (Plus/4MB,
+System6.0.8 fixture; SysEnvirons retains its known0607 report). Actual native
+content bounds and font-cell metrics define the grid. Preferences now displays
+both columns and rows, including the formerly omitted last row. Manual growth
+and native size changes synchronise the grid; OK applies dimensions, Cancel
+preserves them, and existing pixel preferences persist. First-launch420×264
+content gives Monaco9 **66×24**, leaving right-hand Finder disk icons visible.
+Native structure borders/menu/screen bounds clamp requests. Allocation failure
+restores the previous window/grid before changing history. No settings migration.
+
+Host:8,505 geometry/font/bounds cases with ASan/UBSan, allocation-failure rollback,
+input/reflow/viewport and preferences regressions;300 complete renderer pixel
+comparisons and20,000 inverse comparisons pass. Snow: grow→59×20, Cancel/OK,
+60×18 relaunch, min26×9/max80×27,204-character wrapped input, themes, historical
+view retention, selection, vi save/exit and terminal restoration pass. Selection
+is cleared when grid dimensions change, avoiding stale cell coordinates.
+Ctrl+C and Command-period both return130 after a tight resize loop; vi owned
+allocations return to0. Native heap/largest block stabilise after repeated resizes.
+[Focused evidence and reproducible workload](geometry-q1/acceptance.json).
+
+A demonstrated event-starvation bug was fixed: presentation no longer advances
+the event-poll timestamp without polling. A completed CLI repaint validates its
+native update region; dimension-only changes reuse existing font glyphs.
+Matched maximum-acceleration Snow elapsed seconds per10 CLI resize/save changes:
+1949 **13.58/14.13/13.26**,1950 **20.46/16.08/15.58** (means13.66→17.37).
+This is a correctness/responsiveness tradeoff, not a speed improvement: the old
+loop skipped events. Includes HFS saves, reflow, drawing and event service; not
+isolated CPU cost or a physical-SE prediction. No new persistent heap/bitmap;
+native text+836,data−16,BSS+12 bytes (total+832); Core MacBinary+1,024 bytes.
+All49 utilities remain byte-identical; sealed normal CODE matches the tested build.
+
+Limits: full-screen editors retain their existing resize lock;512×336 compositor,
+130-column/38-row bounds remain. Saved sizes are preserved within screen/rendering
+bounds. Physical Macs and named third-party window extensions remain untested;
+standard native SizeWindow/update-event synchronisation is covered by host tests.
+The older native-glyph extraction harness no longer compiles against the existing
+include layout; it is not counted as a passing test. Renderer tests above pass.
+Native reference: [Inside Macintosh window update regions](https://dev.os9.ca/techpubs/mac/Toolbox/Toolbox-206.html).
+Publication verification pending; previous1949 recovery material retained.
+No physical deployment, GitHub push, main-branch merge, release or tag changes.
+
 ## Q1-003 — HFS attribute command rename
 
 Build **2026111949**, validated on accelerated Snow Plus/4MB/System6.0.8.

@@ -1,0 +1,2 @@
+partial-output: partial/ > xy
+PASS partial output, canonical read, exact-width caret, wrapped input, scrollback, long editing, newlines, ring origin and background cursor

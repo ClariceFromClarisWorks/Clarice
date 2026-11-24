@@ -18,21 +18,23 @@ resource 'DITL' (140) {{
  {36, 132, 58, 338}, UserItem { enabled };
  {70, 16, 88, 120}, StaticText { disabled, "Size (6-24):" };
  {70, 132, 88, 174}, EditText { enabled, "9" };
- {70, 190, 88, 275}, StaticText { disabled, "Columns:" };
- {70, 290, 88, 338}, EditText { enabled, "80" };
- {98, 16, 116, 338}, CheckBox { enabled, "White text on black" };
+ {98, 16, 116, 120}, StaticText { disabled, "Columns:" };
+ {98, 132, 116, 174}, EditText { enabled, "66" };
+ {70, 190, 88, 338}, CheckBox { enabled, "Light on dark" };
  {128, 16, 146, 125}, StaticText { disabled, "Scrollback:" };
  {126, 132, 148, 338}, UserItem { enabled };
  {212, 16, 230, 338}, CheckBox { enabled, "Fill screen (keep menu bar)" };
  {186, 16, 204, 125}, StaticText { disabled, "Control key:" };
  {184, 132, 206, 338}, UserItem { enabled };
  {154, 16, 176, 172}, Button { enabled, "Telnet server..." };
- {154, 180, 176, 338}, Button { enabled, "Serial server..." }
+ {154, 180, 176, 338}, Button { enabled, "Serial server..." };
+ {98, 190, 116, 275}, StaticText { disabled, "Rows:" };
+ {98, 290, 116, 338}, EditText { enabled, "24" }
 }};
 resource 'ALRT' (141) {{100, 65, 220, 445}, 141, {OK, visible, sound1, OK, visible, sound1, OK, visible, sound1, OK, visible, sound1}, 0};
 resource 'DITL' (141) {{
  {78, 278, 100, 358}, Button {enabled, "OK"};
- {14, 70, 65, 360}, StaticText {disabled, "Use size 6-24 and columns 20-130 that fit the screen and selected font."}
+ {14, 70, 65, 360}, StaticText {disabled, "Use size 6-24 and positive columns/rows. Dimensions are clamped to the screen and selected font."}
 }};
 
 resource 'ALRT' (151) { {80,60,210,452},151,{OK,visible,silent,OK,visible,silent,OK,visible,silent,OK,visible,silent},0 };

@@ -103,6 +103,7 @@ static long page_start;
 static char prefs_path[PATH_CAP];
 static Rect normal_bounds;
 static int filled;
+static short layout_width,layout_height;
 static void save_preferences(void);
 static void font_layout(void);
 static void scroll_action(ControlHandle control,short part);
@@ -208,7 +209,35 @@ void app_metrics(int human){char b[256],free_size[32],launch_size[32];
  (void)human;display_size(free_size,(unsigned long)FreeMem());display_size(launch_size,(unsigned long)initial_free);
  snprintf(b,sizeof b,"CPU code %d; System API %04x\nFree app heap: %s; launch: %s\nLaunch-to-ready %lu ticks; commands %lu\nHistory: disk ring 128 entries; 1 KB retrieval\nKB = 1024 bytes\n",system_info.processor,(unsigned short)system_info.systemVersion,free_size,launch_size,start_tick,shell_commands);term_puts(b);
 }
-static void layout(void){activity_hide();Rect r=win->portRect;int previous_columns=columns,previous_visible=visible,was_scrolled=scrollback!=0;long anchor=viewport_live_first()-scrollback;if(anchor<oldest_line)anchor=oldest_line;
+/* Native structure/content bounds, including the current WDEF's borders.
+   Keep the existing compositor's finite row/bitmap capacity explicit. */
+static void geometry_limits(int *width,int *height){
+ SetPort(win);Point o={0,0};LocalToGlobal(&o);Rect f=(*((WindowPeek)win)->strucRgn)->rgnBBox;
+ int borders=f.right-f.left-win->portRect.right,head=f.bottom-f.top-win->portRect.bottom;
+ *width=qd.screenBits.bounds.right-qd.screenBits.bounds.left-4-borders;
+ *height=qd.screenBits.bounds.bottom-qd.screenBits.bounds.top-menu_bar_height()-4-head;
+ if(*width>512)*width=512;if(*height>HEIGHT)*height=HEIGHT;
+}
+static void fit_window(int width,int height){
+ int maxw,maxh;geometry_limits(&maxw,&maxh);
+ if(width<180)width=180;if(height<100)height=100;
+ if(width>maxw)width=maxw;if(height>maxh)height=maxh;
+ if(width!=win->portRect.right||height!=win->portRect.bottom)SizeWindow(win,width,height,1);
+ Point o={0,0};SetPort(win);LocalToGlobal(&o);Rect f=(*((WindowPeek)win)->strucRgn)->rgnBBox;
+ int dx=0,dy=0;Rect screen=qd.screenBits.bounds;
+ if(f.right>screen.right-2)dx=screen.right-2-f.right;
+ if(f.left+dx<screen.left+2)dx=screen.left+2-f.left;
+ if(f.bottom>screen.bottom-2)dy=screen.bottom-2-f.bottom;
+ if(f.top+dy<screen.top+menu_bar_height()+2)dy=screen.top+menu_bar_height()+2-f.top;
+ if(dx||dy)MoveWindow(win,o.h+dx,o.v+dy,1);
+}
+static void grid_window(int cols,int rows,int cw,int lh){
+ int maxw,maxh;geometry_limits(&maxw,&maxh);
+ if(cols>COLS-2)cols=COLS-2;if(rows>38)rows=38;
+ long w=(long)cols*cw+TEXT_LEFT+16,h=(long)rows*lh+TEXT_TOP;
+ fit_window(w>maxw?maxw:(int)w,h>maxh?maxh:(int)h);
+}
+static int layout(void){activity_hide();Rect r=win->portRect;int previous_columns=columns,previous_visible=visible,was_scrolled=scrollback!=0;long anchor=viewport_live_first()-scrollback;if(anchor<oldest_line)anchor=oldest_line;
  /* Continuation rows of the editable command are virtual: reflow only owns
     committed history. Anchor these by input byte position, not a history index. */
  int input_anchor=-1;
@@ -218,15 +247,23 @@ static void layout(void){activity_hide();Rect r=win->portRect;int previous_colum
  }
  columns=(r.right-TEXT_LEFT-16)/cell_w;if(columns>COLS-2)columns=COLS-2;if(columns<1)columns=1;
  /* Use every complete row, from the content top through the bottom prompt. */
- visible=(r.bottom-TEXT_TOP)/line_h-1;if(visible<1)visible=1;if(visible>37)visible=37;
+ visible=(r.bottom-TEXT_TOP)/line_h-1;if(visible<0)visible=0;if(visible>37)visible=37;
  if(previous_columns!=columns){TerminalReflow *next=(TerminalReflow*)NewPtr(sizeof *next);if(next){terminal_reflow(next,text,wrapped,oldest_line,current_line,anchor,columns,retained);memcpy(text,next->lines,sizeof text);memcpy(wrapped,next->wraps,sizeof wrapped);current_line=next->end;oldest_line=next->oldest;out_col=next->column;anchor=next->anchor;DisposePtr((Ptr)next);page_start=current_line;
    if(input_anchor>=0){char prefix[132];int row,col;input_position((int)strlen(text[current_line%ROWS])+prompt_prefix(prefix),input_anchor,&row,&col);anchor=current_line+row;}
-  }else columns=previous_columns;}
+  }else {columns=previous_columns;visible=previous_visible;
+   if(layout_width&&layout_height)SizeWindow(win,layout_width,layout_height,1);
+   SysBeep(1);return 0;}}
  if(was_scrolled){scrollback=viewport_live_first()-anchor;if(scrollback<0)scrollback=0;}
  if(previous_columns!=columns||previous_visible!=visible)select_start=select_end=-1;
- force_draw=dirty=1;if(scrollback>scroll_limit())scrollback=scroll_limit();if(history_bar){MoveControl(history_bar,r.right-15,0);SizeControl(history_bar,16,r.bottom-14);}}
+ force_draw=dirty=1;if(scrollback>scroll_limit())scrollback=scroll_limit();if(history_bar){MoveControl(history_bar,r.right-15,0);SizeControl(history_bar,16,r.bottom-14);}layout_width=r.right;layout_height=r.bottom;return 1;}
 
-static void font_layout(void){native_glyph_valid=0;FontInfo f;int c;SetPort(win);TextFont(font_id);TextSize(font_size);TextFace(0);GetFontInfo(&f);font_ascent=f.ascent;line_h=f.ascent+f.descent+f.leading;if(line_h<1)line_h=12;cell_w=CharWidth('M');mono=1;for(c=32;c<127;c++){int w=CharWidth(c);if(w!=cell_w)mono=0;}if(!mono)cell_w=f.widMax;if(cell_w<1)cell_w=6;layout();build_font_cache();}
+static void font_layout(void){short oldid=win->txFont,oldsize=win->txSize,oldw=cell_w,oldh=line_h,olda=font_ascent;int oldmono=mono;native_glyph_valid=0;FontInfo f;int c;SetPort(win);TextFont(font_id);TextSize(font_size);TextFace(0);GetFontInfo(&f);font_ascent=f.ascent;line_h=f.ascent+f.descent+f.leading;if(line_h<1)line_h=12;cell_w=CharWidth('M');mono=1;for(c=32;c<127;c++){int w=CharWidth(c);if(w!=cell_w)mono=0;}if(!mono)cell_w=f.widMax;if(cell_w<1)cell_w=6;if(!layout()){font_id=oldid;font_size=oldsize;cell_w=oldw;line_h=oldh;font_ascent=olda;mono=oldmono;TextFont(oldid);TextSize(oldsize);}build_font_cache();}
+static void sync_window_geometry(void){
+ if(win->portRect.right==layout_width&&win->portRect.bottom==layout_height)return;
+ if(editor_screen){SizeWindow(win,layout_width,layout_height,1);return;}
+ filled=0;fit_window(win->portRect.right,win->portRect.bottom);layout();
+ InvalRect(&win->portRect);save_preferences();
+}
 /* Repeated metadata rows can be cheaper to patch in place than to scroll and
    repaint exposed lines. Estimate changed spans, including per-row overhead. */
 #ifdef CLARICE_DRAW_DIAGNOSTICS
@@ -638,15 +675,7 @@ static void load_preferences(void){
   p.width=d[40]*256+d[41];p.height=d[42]*256+d[43];if(n==52){p.x=(short)((d[48]<<8)|d[49]);p.y=(short)((d[50]<<8)|d[51]);}legacy=1;
  }else if(!prefs_parse(&p,data,n))return;
  short id;pstr(name,p.font);if(installed_font(name,&id))font_id=id;font_size=p.size;inverse=p.inverse;retained=p.retained;control_mode=p.control;
- int maxw=qd.screenBits.bounds.right-8,maxh=qd.screenBits.bounds.bottom-44;
- if(p.width<180)p.width=180;if(p.width>maxw)p.width=maxw;if(p.height<100)p.height=100;if(p.height>maxh)p.height=maxh;
- SizeWindow(win,p.width,p.height,1);MoveWindow(win,p.x,p.y,1);
- {Rect frame=(*((WindowPeek)win)->strucRgn)->rgnBBox;Point origin={0,0};int dx=0,dy=0;SetPort(win);LocalToGlobal(&origin);
- if(frame.right>qd.screenBits.bounds.right-2)dx=qd.screenBits.bounds.right-2-frame.right;
- if(frame.left+dx<qd.screenBits.bounds.left+2)dx=qd.screenBits.bounds.left+2-frame.left;
- if(frame.bottom>qd.screenBits.bounds.bottom-2)dy=qd.screenBits.bounds.bottom-2-frame.bottom;
- if(frame.top+dy<qd.screenBits.bounds.top+menu_bar_height()+2)dy=qd.screenBits.bounds.top+menu_bar_height()+2-frame.top;
- if(dx||dy)MoveWindow(win,origin.h+dx,origin.v+dy,1);}
+ MoveWindow(win,p.x,p.y,1);fit_window(p.width,p.height);
  if(p.fill)fill_window();if(legacy)save_preferences();
 }
 /* Write/flush a new file before replacing the old one. Keep the previous
@@ -670,7 +699,7 @@ int app_pager_begin(void){if(shell_session_remote_io())return 0;int old=page_mod
 int app_pager_end(int old){if(shell_session_remote_io())return 0;int quit=cancelled&&!interrupted&&!done;if(quit)cancelled=0;page_mode=old;app_activity_interactive(0);return quit;}
 void app_page_begin(void){if(shell_session_remote_io())return;page_start=current_line;}
 int app_page(void){if(shell_session_active())return app_yield();EventRecord ev;long limit=visible-1;if(!page_mode||test_ref>=0)return app_yield();if(limit<1)limit=1;if(current_line-page_start<limit)return app_yield();paging=1;page_action=0;dirty=1;draw();while(!page_action&&!cancelled&&!done){if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);if(dirty)draw();}paging=0;if(page_action==2)page_start=current_line-limit+1;else page_start=current_line;dirty=1;return cancelled||done;}
-static void fill_window(void){if(!filled){Point origin={0,0};SetPort(win);LocalToGlobal(&origin);normal_bounds=win->portRect;OffsetRect(&normal_bounds,origin.h,origin.v);MoveWindow(win,4,40,1);SizeWindow(win,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-44,1);filled=1;}else{MoveWindow(win,normal_bounds.left,normal_bounds.top,1);SizeWindow(win,normal_bounds.right-normal_bounds.left,normal_bounds.bottom-normal_bounds.top,1);filled=0;}layout();}
+static void fill_window(void){if(!filled){Point origin={0,0};SetPort(win);LocalToGlobal(&origin);normal_bounds=win->portRect;OffsetRect(&normal_bounds,origin.h,origin.v);MoveWindow(win,4,40,1);fit_window(32767,32767);filled=1;}else{MoveWindow(win,normal_bounds.left,normal_bounds.top,1);fit_window(normal_bounds.right-normal_bounds.left,normal_bounds.bottom-normal_bounds.top);filled=0;}layout();}
 static void dialog_text(DialogPtr d,short item,const char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);pstr(p,s);SetDialogItemText(h,p);}
 static void dialog_read(DialogPtr d,short item,char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);GetDialogItemText(h,p);memcpy(s,p+1,p[0]);s[p[0]]=0;}
 static ControlHandle dialog_control(DialogPtr d,short item){short type;Handle h;Rect r;GetDialogItem(d,item,&type,&h,&r);return (ControlHandle)h;}
@@ -720,11 +749,11 @@ static pascal void draw_pref_popup(DialogPtr d,short item){
 static int dialog_popup(DialogPtr d,int item,MenuHandle m,int selected){short type;Handle h;Rect r;GrafPtr old;GetPort(&old);SetPort(d);GetDialogItem(d,item,&type,&h,&r);Point pt={r.top,r.left};LocalToGlobal(&pt);CalcMenuSize(m);HiliteMenu(0);long choice=PopUpMenuSelect(m,pt.v,pt.h,selected);SetPort(old);int result=(short)choice;return result?result:selected;}
 static void popup_title(DialogPtr d,int item,MenuHandle m,int selected){short type;Handle h;Rect r;int k=popup_slot(item);pref_popup_menus[k]=m;pref_popup_choices[k]=selected;GetDialogItem(d,item,&type,&h,&r);SetDialogItem(d,item,userItem,(Handle)draw_pref_popup,&r);draw_pref_popup(d,item);}
 static void preferences_window(void){
- hide_caret();DialogPtr d=GetNewDialog(140,0,(WindowPtr)-1);if(!d){SysBeep(1);return;}
+ sync_window_geometry();hide_caret();DialogPtr d=GetNewDialog(140,0,(WindowPtr)-1);if(!d){SysBeep(1);return;}
  MenuHandle fonts=GetMenuHandle(132),lines=GetMenuHandle(134),controls=GetMenuHandle(136);
  unsigned char name[256],other[256];char b[256];short item=0;int chosen=1,cap=retained==32?1:retained==64?2:3,ctrl=control_mode+1;
  GetFontName(font_id,name);for(int i=1;i<=CountMItems(fonts);i++){GetMenuItemText(fonts,i,other);if(other[0]==name[0]&&!memcmp(other+1,name+1,name[0]))chosen=i;}
- popup_title(d,5,fonts,chosen);snprintf(b,sizeof b,"%d",font_size);dialog_text(d,7,b);snprintf(b,sizeof b,"%d",columns);dialog_text(d,9,b);
+ popup_title(d,5,fonts,chosen);snprintf(b,sizeof b,"%d",font_size);dialog_text(d,7,b);snprintf(b,sizeof b,"%d",columns);dialog_text(d,9,b);snprintf(b,sizeof b,"%d",visible+1);dialog_text(d,19,b);
  SetControlValue(dialog_control(d,10),inverse);SetControlValue(dialog_control(d,13),filled);popup_title(d,12,lines,cap);popup_title(d,15,controls,ctrl);
  SelectDialogItemText(d,7,0,32767);
  while(item!=2){ModalDialog(0,&item);
@@ -733,19 +762,16 @@ static void preferences_window(void){
   if(item==5){chosen=dialog_popup(d,5,fonts,chosen);popup_title(d,5,fonts,chosen);}
   if(item==12){cap=dialog_popup(d,12,lines,cap);popup_title(d,12,lines,cap);}
   if(item==15){ctrl=dialog_popup(d,15,controls,ctrl);popup_title(d,15,controls,ctrl);}
-  if(item==1){char size[256],cols[256];short id;dialog_read(d,7,size);dialog_read(d,9,cols);GetMenuItemText(fonts,chosen,name);
-   int n=preference_number(size),count=preference_number(cols);if(!installed_font(name,&id)||n<6||n>24||count<20||count>130){StopAlert(141,0);continue;}
+  if(item==1){char size[256],cols[256],rows[256];short id;dialog_read(d,7,size);dialog_read(d,9,cols);dialog_read(d,19,rows);GetMenuItemText(fonts,chosen,name);
+   int n=preference_number(size),count=preference_number(cols),rowcount=preference_number(rows);if(!installed_font(name,&id)||n<6||n>24||count<1||rowcount<1){StopAlert(141,0);continue;}
    int want_fill=GetControlValue(dialog_control(d,13)),dark=GetControlValue(dialog_control(d,10));
-   /* Preserve pixel geometry unless columns were explicitly edited; changing
-      fonts is allowed even when the former column count no longer fits. */
-   int change_columns=count!=columns;SetPort(win);TextFont(id);TextSize(n);FontInfo f;GetFontInfo(&f);int width=CharWidth('M'),fixed=1;
+   int change_grid=count!=columns||rowcount!=visible+1;SetPort(win);TextFont(id);TextSize(n);FontInfo f;GetFontInfo(&f);int width=CharWidth('M'),fixed=1;
    for(int c=32;c<127;c++)if(CharWidth(c)!=width)fixed=0;if(!fixed)width=f.widMax;if(width<1)width=6;
-   int pixels=count*width+TEXT_LEFT+16;TextFont(font_id);TextSize(font_size);
-   if(change_columns&&(pixels<180||pixels>qd.screenBits.bounds.right-8)){SetPort(d);StopAlert(141,0);continue;}
-   DisposeDialog(d);SetPort(win);if(filled&&(!want_fill||change_columns))fill_window();
-   if(change_columns)SizeWindow(win,pixels,win->portRect.bottom,1);
+   int height=f.ascent+f.descent+f.leading;if(height<1)height=12;TextFont(font_id);TextSize(font_size);
+   DisposeDialog(d);SetPort(win);if(filled&&(!want_fill||change_grid))fill_window();
+   if(change_grid){grid_window(count,rowcount,width,height);want_fill=0;}
    font_id=id;font_size=n;retained=cap==1?32:cap==2?64:128;inverse=dark;control_mode=ctrl-1;
-   if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;scrollback=0;
+   if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;
    if(want_fill&&!filled)fill_window();font_layout();
    /* Closing a dialog invalidates only its former rectangle. Font/theme changes
       affect the entire terminal, including text outside that update region. */
@@ -755,7 +781,7 @@ static void preferences_window(void){
  DisposeDialog(d);SetPort(win);dirty=force_draw=1;
 }
 
-int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char name[256];GetFontName(font_id,name);if(name[0]>31)name[0]=31;name[name[0]+1]=0;snprintf(b,sizeof b,"Font %.31s, %d point; %d columns x %d rows\nColours %s\n",name+1,font_size,columns,visible,inverse?"white on black":"black on white");term_puts(b);snprintf(b,sizeof b,"Scrollback %d lines; rendering automatic\nControl key: %s (physical Control always works)\n",retained,control_name(control_mode));term_puts(b);return 0;}
+int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char name[256];GetFontName(font_id,name);if(name[0]>31)name[0]=31;name[name[0]+1]=0;snprintf(b,sizeof b,"Font %.31s, %d point; %d columns x %d rows\nColours %s\n",name+1,font_size,columns,visible+1,inverse?"white on black":"black on white");term_puts(b);snprintf(b,sizeof b,"Scrollback %d lines; rendering automatic\nControl key: %s (physical Control always works)\n",retained,control_name(control_mode));term_puts(b);return 0;}
 
  if(!strcmp(argv[1],"window")){preferences_window();return 0;}
  if(!strcmp(argv[1],"fonts")){MenuHandle m=GetMenuHandle(132);short i;for(i=1;i<=CountMItems(m);i++){unsigned char name[256];GetMenuItemText(m,i,name);term_write((char*)name+1,name[0]);term_puts("\n");}return 0;}
@@ -772,9 +798,13 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
 #else
  else if(!strcmp(argv[1],"cache")||!strcmp(argv[1],"renderer")){term_puts("Rendering is selected automatically.\n");return 2;}
 #endif
- else if(argc==3&&!strcmp(argv[1],"columns")){int n=preference_number(argv[2]),width=n*cell_w+TEXT_LEFT+16;if(n<20||n>130||width>qd.screenBits.bounds.right-8){term_puts("Requested columns do not fit this screen/font.\n");return 2;}if(filled)fill_window();SizeWindow(win,width,win->portRect.bottom,1);}
- else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | columns N | fill]\n");return 2;}
- font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();term_present();return 0;}
+ else if(argc==3&&(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))){int n=preference_number(argv[2]);if(n<1)return 2;if(filled)fill_window();grid_window(!strcmp(argv[1],"columns")?n:columns,!strcmp(argv[1],"rows")?n:visible+1,cell_w,line_h);}
+ else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | columns N | rows N | fill]\n");return 2;}
+ /* Grid-only changes reuse the existing font glyphs, as manual resizing does. */
+ if(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))layout();else font_layout();
+ SetPort(win);InvalRect(&win->portRect);save_preferences();term_present();
+ /* The forced visible repaint is complete; do not paint it again on updateEvt. */
+ ValidRect(&win->portRect);return 0;}
 int app_yield(void){shell_service_poll(0);EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return (shell_session_active()?shell_session_cancelled():cancelled)||done;int ui=shell_session_ui_begin();unsigned long t=TickCount();for(int i=0;i<16&&!cancelled&&!done;i++){if(!WaitNextEvent(everyEvent,&ev,0,0))break;handle(&ev);}event_ticks+=TickCount()-t;if(dirty&&TickCount()-last_paint>=output_paint_ticks){
 #ifdef CLARICE_DRAW_DIAGNOSTICS
 if(output_paint_ticks==listing_paint_interval&&out_col)listing_partial_frames++;
@@ -790,7 +820,8 @@ long app_terminal_read(void *data,unsigned long count){
  unsigned long n=tty_count-tty_offset;if(n>count)n=count;memcpy(data,tty_buffer+tty_offset,n);tty_offset+=n;return n;
 }
 int cli_pause_ticks(unsigned long ticks){EventRecord ev;unsigned long start=TickCount();while(TickCount()-start<ticks){if(app_yield())return 1;int ui=shell_session_ui_begin();if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,1,0))handle(&ev);shell_session_ui_end(ui);}return 0;}
-void term_present(void){int ui=shell_session_ui_begin();if(dirty)draw();shell_session_ui_end(ui);last_yield=TickCount();}
+/* Presentation does not service events: only app_yield advances last_yield. */
+void term_present(void){int ui=shell_session_ui_begin();if(dirty)draw();shell_session_ui_end(ui);}
 /* Fixed queue, replayed only by the outer event loop: no recursive execute. */
 static unsigned char ahead_keys[LINE_CAP];
 static unsigned short ahead_mods[LINE_CAP];
@@ -917,7 +948,7 @@ static void selection_begin(int anchor){
  select_start=select_end=anchor;
 }
 static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible+1)y=visible+1-1;return y*columns+x;}
-static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;SetRect(&bounds,180,100,qd.screenBits.bounds.right-8,qd.screenBits.bounds.bottom-40);size=GrowWindow(win,ev->where,&bounds);if(size){filled=0;SizeWindow(win,(short)size,(short)(size>>16),1);layout();save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+1)*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
+static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;int maxw,maxh;geometry_limits(&maxw,&maxh);SetRect(&bounds,180,100,maxw,maxh);size=GrowWindow(win,ev->where,&bounds);if(size){filled=0;fit_window((short)size,(short)(size>>16));layout();InvalRect(&win->portRect);save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+1)*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
  case keyDown:case autoKey:{
 #ifdef CLARICE_NANO_PERF
  if(editor_screen){if(!ep_started){editor_metrics_reset();ep_started=1;}ep_events++;ep_event_delay+=TickCount()-ev->when;if(!ep_pending)ep_pending=ev->when;}
@@ -946,8 +977,8 @@ if(base)c=base;}
  }
 
  key(c,mods);break;}
- case updateEvt:if((WindowPtr)ev->message==win){hide_caret();SetPort(win);BeginUpdate(win);force_draw=dirty=1;draw();EndUpdate(win);}break;
- case activateEvt:if((WindowPtr)ev->message==win){background=!(ev->modifiers&activeFlag);if(editor_screen)editor_screen->dirty[editor_screen->row]=1;dirty=1;}break;
+ case updateEvt:if((WindowPtr)ev->message==win){hide_caret();SetPort(win);sync_window_geometry();BeginUpdate(win);force_draw=dirty=1;draw();EndUpdate(win);}break;
+ case activateEvt:if((WindowPtr)ev->message==win){sync_window_geometry();background=!(ev->modifiers&activeFlag);if(editor_screen)editor_screen->dirty[editor_screen->row]=1;dirty=1;}break;
  case osEvt:if((ev->message>>24)==1){background=!(ev->message&1);dirty=force_draw=1;}break;
  default:break;}}
 #ifdef CLARICE_INPUT_DIAGNOSTICS
@@ -984,7 +1015,7 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  m=NewMenu(134,(const unsigned char*)"\pScrollback");AppendMenu(m,(const unsigned char*)"\p32 lines;64 lines;128 lines");InsertMenu(m,-1);
  m=NewMenu(136,(const unsigned char*)"\pControl key");AppendMenu(m,(const unsigned char*)"\pControl only;Option;Command");InsertMenu(m,-1);
  m=NewMenu(133,(const unsigned char*)"\pView");AppendMenu(m,(const unsigned char*)"\pReverse colours;Fill screen / restore;(-;9 point;12 point;14 point");InsertMenu(m,0);DrawMenuBar();
- SetRect(&r,8,48,512,326);win=NewWindow(&win_record,&r,(const unsigned char*)"\pClarice",1,documentProc,(WindowPtr)-1,1,0);if(!win)return 1;SetPort(win);
+ SetRect(&r,8,48,428,312);win=NewWindow(&win_record,&r,(const unsigned char*)"\pClarice",1,documentProc,(WindowPtr)-1,1,0);if(!win)return 1;SetPort(win);
  {Rect frame=(*((WindowPeek)win)->strucRgn)->rgnBBox;MoveWindow(win,r.left+qd.screenBits.bounds.left+2-frame.left,r.top+qd.screenBits.bounds.top+menu_bar_height()+2-frame.top,1);}
  scroll_region=NewRgn();saved_clip=NewRgn();transfer_region=NewRgn();visible_region=NewRgn();
  OpenPort(&frame_port);frame_port.portBits.baseAddr=(Ptr)frame_pixels;frame_port.portBits.rowBytes=STRIDE;SetRect(&frame_port.portBits.bounds,0,0,512,HEIGHT);frame_port.portRect=frame_port.portBits.bounds;ClipRect(&frame_port.portRect);frame_ready=1;OpenPort(&prompt_port);prompt_port.portBits.baseAddr=(Ptr)prompt_pixels;prompt_port.portBits.rowBytes=STRIDE;SetRect(&prompt_port.portBits.bounds,0,0,512,64);prompt_port.portRect=prompt_port.portBits.bounds;ClipRect(&prompt_port.portRect);SetPort(win);

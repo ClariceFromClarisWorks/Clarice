@@ -1,0 +1,6 @@
+Build 2026111950
+Seal 1d2e59d6819e2959857e442388bffae9eeabad007a22e7140ce7a505f86739ec
+Snow-tested and sealed CODE payload SHA256 975dc973865dd9dd407a1b4f07a32f5a23dd22e6dae5ae1709d44fb6ae8e405c
+Core MacBinary 425728 -> 426752 bytes
+All49 standard utility images byte-identical to1949.
+Native text233656 / data35604 / BSS41444 bytes; total310704 (+832 vs1949).

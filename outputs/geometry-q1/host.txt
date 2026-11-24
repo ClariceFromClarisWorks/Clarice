@@ -1,0 +1,1 @@
+PASS production geometry: 8,505 metric/bounds combinations, actual rows, long-input caret/state, reflow, allocation failure rollback/retry and zero retained allocations

@@ -1,0 +1,42 @@
+{
+  "build": 2026111950,
+  "platform": "Snow Plus, 4 MB, System 6.0.8 fixture; SysEnvirons reports 0607",
+  "physical": false,
+  "geometry_cases": 8505,
+  "renderer_pixel_cases": 300,
+  "inverse_pixel_cases": 20000,
+  "resize_seconds_per_10": {
+    "before": [
+      13.58,
+      14.13,
+      13.26
+    ],
+    "after": [
+      20.46,
+      16.08,
+      15.58
+    ]
+  },
+  "timing": "60-Hz guest elapsed, fixed maximum acceleration; includes event polling, redraw, reflow and HFS preference saves; not isolated CPU or physical timing",
+  "snow_passed": [
+    "manual grow -> Preferences actual 59x20",
+    "Cancel preserves 59x20",
+    "OK resizes 60x18",
+    "relaunch preserves 60x18",
+    "Monaco9 clamped min26x9 max80x27",
+    "first launch66x24 leaves Finder right icons",
+    "204-character unfinished input survives wrapping resize",
+    "vi save/exit, editor grow lock, terminal restoration",
+    "both themes",
+    "scrollback anchor survives Preferences resize",
+    "selection drag; stale selection cleared on grid change",
+    "Ctrl+C and Command-period130; subsequent command recovery",
+    "native heap stabilises after repeated resizes; vi allocations remaining0"
+  ],
+  "limitations": [
+    "physical SE and named window-management extensions untested",
+    "active full-screen editor geometry remains locked",
+    "existing 512x336 compositor /130-column /38-row maxima remain",
+    "repeat CLI resize now polls events; timed loop is slower than old input-starving path"
+  ]
+}

@@ -1,0 +1,2 @@
+PASS: 160 glyph-path presentation/fallback comparisons (host glyph stub; real glyph pixels require guest probe)
+PASS: 300 complete production-renderer comparisons, mixed dirty rows, font metrics, attributes, cursor, colours and clipping; full screen copies 25 -> 5; staging bounds checked

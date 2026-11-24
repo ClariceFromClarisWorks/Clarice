@@ -1,0 +1,2 @@
+ctrl=130
+period=130

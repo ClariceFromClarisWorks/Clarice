@@ -1,0 +1,18 @@
+Installed RAM             4096 KiB
+Application heap extent   695 KiB
+Free heap                 351 KiB
+Largest free block        350 KiB
+Free after purging        375 KiB
+Largest after purging     374 KiB
+Installed RAM             4096 KiB
+Application heap extent   695 KiB
+Free heap                 331 KiB
+Largest free block        329 KiB
+Free after purging        376 KiB
+Largest after purging     374 KiB
+Installed RAM             4096 KiB
+Application heap extent   695 KiB
+Free heap                 331 KiB
+Largest free block        329 KiB
+Free after purging        376 KiB
+Largest after purging     374 KiB
