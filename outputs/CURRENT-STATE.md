@@ -4,9 +4,9 @@
 
 Latest normal build **2026111955**, product **397c2af** on local main. Sealed Core
 +49 standard utilities; optional vi remains byte-identical1951. Host/Snow acceptance
-and all51 entries/36 payloads verified over HTTP, including offline/source archives.
-AFP publication remains pending: Macintosh Exchange unmounted; automatic reconnect
-failed. Prior1954 artefacts/recovery retained. [Verification](word-navigation/verification.json).
+and all51 entries/36 payloads verified identical over HTTP and AFP, including
+offline/source archives. Prior1954 artefacts/recovery retained.
+[Verification](word-navigation/verification.json).
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP mirror:
 `Macintosh Exchange/Clarice/index.txt`. No physical deployment or GitHub push.
 

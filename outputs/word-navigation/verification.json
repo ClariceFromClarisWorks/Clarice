@@ -4,8 +4,7 @@
   "seal_identity": "d8ba5190d809442f72c8b1f6e003a1e6d49f75ad2b3aaa0343181cebfdcffbf6",
   "index_sha256": "709e04eff5201636e58d0fff53160281e6069c2989e3519b094d3c17ae29f2ef",
   "http": "http://192.168.1.112:8089/full/index.txt",
-  "afp": null,
-  "afp_status": "pending: share unmounted",
+  "afp": "Macintosh Exchange/Clarice/index.txt",
   "entries": 51,
   "unique_payloads": 36,
   "checks": [
