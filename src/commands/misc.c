@@ -1,5 +1,6 @@
 /* Streaming byte inspection and native pager; no retained input-sized buffers. */
 #include "mac-files.h"
+#include "../help-output.h"
 extern long cli_read(int,void *,unsigned long);
 extern int cli_isatty(int),open_path(const char *,short,short *);
 extern int app_pager_begin(void),app_pager_end(int);
@@ -9,9 +10,33 @@ static void close_input(void){if(opened&&ref>=0)cli_native_close(ref);opened=0;}
 static int number(const char *s,unsigned long *out){char *end;if(!*s||*s=='-')return 0;*out=strtoul(s,&end,0);return !*end;}
 static void address(unsigned long n,char mode){char b[32];if(mode=='n')return;snprintf(b,sizeof b,mode=='x'?"%07lx":mode=='d'?"%07lu":"%07lo",n);say(b);}
 static void od_line(unsigned char *buf,int n,unsigned long at,char addr,char type,int width){char b[32];address(at,addr);for(int i=0;i<n;i+=width){unsigned v=buf[i];if(width==2)v=(v<<8)|(i+1<n?buf[i+1]:0);if(type=='c'){unsigned char c=v;const char *escape=c==0?"\\0":c=='\n'?"\\n":c=='\r'?"\\r":c=='\t'?"\\t":c=='\b'?"\\b":c=='\f'?"\\f":NULL;if(escape)snprintf(b,sizeof b," %3s",escape);else if(c>=32&&c<127)snprintf(b,sizeof b," %3c",c);else snprintf(b,sizeof b," %03o",c);}else if(type=='d'){int signed_v=width==1?(signed char)v:(short)v;snprintf(b,sizeof b,width==1?" %4d":" %6d",signed_v);}else snprintf(b,sizeof b,type=='x'?(width==1?" %02x":" %04x"):type=='u'?(width==1?" %3u":" %5u"):(width==1?" %03o":" %06o"),v);say(b);}say("\n");}
-static void usage_text(int fd,const char *s){cli_write(fd,s,strlen(s));}
-static void usage(const char *name,int fd){if(!strcmp(name,"more"))usage_text(fd,"more [--] [file ...]\nDisplay text one screen at a time. Space: screen; Return: line; Q:\nfinish.\nCtrl+C interrupts. Redirected output streams without paging.\nUses bounded terminal scrollback; search/backward file navigation is not\nimplemented.\n");else usage_text(fd,"od [-A d|o|x|n] [-t o1|o2|x1|x2|u1|u2|d1|d2|c] [-j bytes] [-N bytes]\n[-vbcx] [--] [file ...]\nDump data-fork bytes; default octal 16-bit words in 68000 big-endian\norder.\n-b octal bytes; -c characters; -x hex words; -v accepted (all rows are\nshown).\nMultiple files form one byte stream. No floating-point or 32/64-bit\nformats yet.\n");usage_text(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");}
-int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];int pager=!strcmp(name,"more"),i=1;unsigned long skip=0,limit=~0UL;char addr='o',type='o';int width=2;if(argc==2&&!strcmp(av[1],"--help")){usage(name,1);return 0;}
+static int usage(const char *name,int fd){
+ const char *text;
+ if(!strcmp(name,"more"))text=
+  "Usage:\n"
+  "  more [--] [file ...]\n"
+  "Page through text using the terminal's bounded scrollback. Redirection streams without paging.\n"
+  "Keys: Space for a screen, Return for a line, Q to finish and Ctrl+C to interrupt.\n"
+  "No search or backward file navigation.\n"
+  "Example:\n"
+  "  ls --help | more\n";
+ else text=
+  "Usage:\n"
+  "  od [-A d|o|x|n] [-t o1|o2|x1|x2|u1|u2|d1|d2|c] [-j BYTES] [-N BYTES] [-vbcx] [--] [file ...]\n"
+  "Dump data-fork bytes. Default: octal 16-bit words in 68000 big-endian order. Multiple files form one stream.\n"
+  "Options:\n"
+  "  -A MODE\tAddress radix: decimal, octal, hex or none.\n"
+  "  -t TYPE\tOutput type and size. See the usage line.\n"
+  "  -j BYTES\tSkip input bytes.\n"
+  "  -N BYTES\tLimit input bytes.\n"
+  "  -b, -c, -x\tOctal bytes, characters or hex words.\n"
+  "  -v\tAccepted; all rows are shown.\n"
+  "No floating-point or 32/64-bit formats.\n";
+ int rc=help_output(fd,text);
+ if(rc)return rc;
+ return help_output(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
+}
+int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];int pager=!strcmp(name,"more"),i=1;unsigned long skip=0,limit=~0UL;char addr='o',type='o';int width=2;if(argc==2&&!strcmp(av[1],"--help"))return usage(name,1);
  for(;i<argc&&av[i][0]=='-'&&av[i][1];i++){const char *s=av[i];if(!strcmp(s,"--")){i++;break;}if(pager){usage(name,2);return 2;}if(!strcmp(s,"-v"))continue;if(!strcmp(s,"-b")){type='o';width=1;continue;}if(!strcmp(s,"-c")){type='c';width=1;continue;}if(!strcmp(s,"-x")){type='x';width=2;continue;}if(i+1>=argc){usage(name,2);return 2;}const char *value=av[++i];if(!strcmp(s,"-A")){if(strlen(value)!=1||!strchr("doxn",*value)){usage(name,2);return 2;}addr=*value;}else if(!strcmp(s,"-j")){if(!number(value,&skip)){usage(name,2);return 2;}}else if(!strcmp(s,"-N")){if(!number(value,&limit)){usage(name,2);return 2;}}else if(!strcmp(s,"-t")){if(!strcmp(value,"c")){type='c';width=1;}else if(strlen(value)==2&&strchr("oxud",value[0])&&strchr("12",value[1])){type=value[0];width=value[1]-'0';}else{usage(name,2);return 2;}}else{usage(name,2);return 2;}}
  char *standard[]={"-"};argv_in=i==argc?standard:av+i;argc_in=i==argc?1:argc-i;index_arg=0;int status=0;
  if(pager){int paging_enabled=cli_isatty(1);int saved=paging_enabled?app_pager_begin():0;unsigned char buf[256];long n;while((n=read_input(buf,sizeof buf))>0){if(!paging_enabled){emit((char*)buf,n);if(output_error)status=1;}else for(long j=0;j<n;j++){emit((char*)buf+j,1);if(paging_enabled&&app_page()){status=130;break;}if(output_error){status=1;break;}}if(status||app_yield()){if(!status)status=130;break;}}close_input();if(paging_enabled&&app_pager_end(saved)&&status==130)status=0;}

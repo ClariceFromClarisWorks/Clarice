@@ -10,6 +10,7 @@
 #include "../ports/ekermit/upstream/cdefs.h"
 #include "../ports/ekermit/upstream/kermit.h"
 #include "../ports/ekermit/files.h"
+#include "../help-output.h"
 static void message(int fd,const char *format,...){
 #ifndef KERMIT_HOST
  if(remote_wire)return; /* Never mix diagnostics with protocol bytes. */
@@ -67,16 +68,19 @@ static int read_packet(struct k_data *k,UCHAR *p,int cap){unsigned long start=ti
  }return 0;
 }
 static const char help[]=
- "usage: kermit [-b 57600] [-d /dev/tty.modem|/dev/tty.printer] send FILE\n"
- "       kermit [-b 57600] [-d DEVICE] receive NEWFILE\n"
- "Binary data-fork transfer using E-Kermit 1.8; CRC-16, short packets, one\nfile.\n"
- "Default modem, 57600 baud, 8N1, no flow control. Existing destinations\nrefused.\n"
- "From a remote shell, uses that session; wait for Kermit ready.\nTelnet requires binary negotiation. Locally, exit serial first.\n"
- "Ctrl+C or Command-period cancels. Reconnect serial afterward for text.\n"
- "Complete Macintosh files require a MacBinary container; no automatic\nfork conversion.\n"
- "Frank da Cruz / Columbia University; revised 3-clause BSD licence.\n"
+  "Usage:\n"
+  "  kermit [options] send FILE\n"
+  "  kermit [options] receive NEWFILE\n"
+  "Transfer one binary data fork using E-Kermit 1.8, CRC-16 and short packets. Use MacBinary for complete Macintosh files.\n"
+  "Options:\n"
+  "  -d DEVICE\t/dev/tty.modem (default) or /dev/tty.printer.\n"
+  "  -b 57600\t57600 baud, 8N1, no flow control.\n"
+  "Receive refuses existing files. Exit serial before a local transfer.\n"
+  "Remote transfers use the current session. Wait for Kermit ready. Telnet requires binary negotiation.\n"
+  "Ctrl+C or Command-period cancels. Reconnect serial for text afterward.\n"
+  "E-Kermit: Frank da Cruz / Columbia University, 3-clause BSD.\n"
 #ifdef KERMIT_HOST
- "Host only: --pace-ms 0..20 delays each transmitted byte (including\nACKs).\nUse --pace-ms 2 for the tested physical SE/USB cable without flow\ncontrol.\n"
+  "  --pace-ms 0..20\tDelay each transmitted byte, including ACKs. Use 2 for the tested physical SE/USB cable without flow control.\n"
 #endif
  ;
 #ifdef KERMIT_HOST
@@ -85,7 +89,7 @@ int main(int argc,char **argv){
 int clarice_main(int argc,char **argv){
 #endif
  const char *device="/dev/tty.modem",*path=0;int i=1,status=X_ERROR,result=1,e,timeouts=0;unsigned long began=ticks();UCHAR *names[2]={(UCHAR *)"data.bin",0};
- if(argc==2&&!strcmp(argv[1],"--help")){message(1,"%s",help);return 0;}
+ if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1,help);
  while(i<argc&&argv[i][0]=='-'){if(i+1==argc)goto usage;
   #ifdef KERMIT_HOST
   if(!strcmp(argv[i],"--pace-ms")){char *end;long ms=strtol(argv[++i],&end,10);if(*end||ms<0||ms>20)goto usage;host_pace_ns=(unsigned long)ms*1000000;}
@@ -125,5 +129,11 @@ end:
  e=transport_close();if(e){message(2,"kermit: serial cleanup failed (%d)\n",e);result=1;}
  message(2,"kermit: %s%s\n",result==0?"transfer complete":result==130?"cancelled":"transfer failed",completed&&result?" (complete file may already be present)":"");
  return result;
-usage:message(2,"%s",help);return 2;
+usage:
+#ifdef KERMIT_HOST
+ help_output(2,help);
+#else
+ if(!remote_wire)help_output(2,help);
+#endif
+ return 2;
 }

@@ -128,7 +128,7 @@ static int run_args(int argc,char **av){int i,status=0;if(!argc)return 0;
  if(!strcmp(av[0],"remote")){if(argc==2&&!strcmp(av[1],"off"))status=shell_service_stop()?1:0;else if(argc==2&&!strcmp(av[1],"status")){say(service_image?"Telnet service enabled\n":"Telnet service disabled\n");say(serial_service_image?"Serial service enabled\n":"Serial service disabled\n");}else{say("remote status | off; start with telnetd --no-password --peer IPv4 [--port N]\n");status=argc==1?0:2;}}
  else if(!strcmp(av[0],"help"))status=help_command(argc,av);
  else if(!strcmp(av[0],"clarice"))status=self_update_command(argc,av);
- else if(!strcmp(av[0],"appinstall"))status=appinstall_command(argc,av);
+ else if(!strcmp(av[0],"appinstall"))status=argc==2&&!strcmp(av[1],"--help")?builtin_help("appinstall"):appinstall_command(argc,av);
  else if(!strcmp(av[0],"pwd")){say(unix_cwd);say("\n");}
  else if(!strcmp(av[0],"echo")){for(i=1;i<argc;i++){if(i>1)say(" ");say(av[i]);}say("\n");}
  else if(!strcmp(av[0],"cd")){char path[PATH_CAP];short v;long id;const char *to=argc>1?av[1]:"~";int e=directory(to,&v,&id);char canonical[PATH_CAP];if(!e)e=resolve_ex(to,path,canonical,1);if(e){error("cd",e);status=1;}else {strcpy(unix_cwd,canonical);strcpy(shell_cwd,path);size_t len=strlen(shell_cwd);if(shell_cwd[len-1]!=':'){shell_cwd[len]=':';shell_cwd[len+1]=0;}}}

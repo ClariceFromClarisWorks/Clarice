@@ -46,7 +46,7 @@ p=w/'tail.c';s=p.read_text();start=s.index('\tif (FOLLOW) while (1) {');end=s.in
 # Exact help describes this selected configuration, not all BusyBox features.
 import json
 helps=json.loads((r/'src/ports/busybox-tools/help.json').read_text())
-(w/'help.h').write_text('\n'.join('#define HELP_'+k+' '+json.dumps('Usage: '+k+' '+v+'\nData forks only; stdin may be selected with - where supported.\nStatus: 0 success, nonzero failure (see above), 130 cancellation.\nBusyBox 1.37.0 / Clarice.\n') for k,v in helps.items())+'\n')
+(w/'help.h').write_text('\n'.join('#define HELP_'+k+' '+json.dumps('Usage:\n  '+k+' '+v+'\nData forks only; stdin may be selected with - where supported.\nStatus: 0 success, nonzero failure (see above), 130 cancellation.\nBusyBox 1.37.0 / Clarice.\n') for k,v in helps.items())+'\n')
 # Never turn an input error into a successful partial result.
 p=w/'uniq.c';s=p.read_text().replace('die_if_ferror(stdin, input_filename);','die_if_ferror(input, input_filename ? input_filename : "stdin");');p.write_text(s)
 

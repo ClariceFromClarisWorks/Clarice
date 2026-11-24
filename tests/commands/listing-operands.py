@@ -7,6 +7,7 @@ stub=r'''
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include "help-output.h"
 #define PATH_CAP 256
 #define MAX_ARGS 32
 #define nsvErr -35
@@ -40,5 +41,5 @@ int main(void){char *av[132];av[0]="ls";av[1]="-h";for(int i=2;i<132;i++)av[i]="
 '''
 with tempfile.TemporaryDirectory() as d:
  p=Path(d);(p/'test.c').write_text(stub+src+main)
- subprocess.run(['cc','-std=c99','-fsanitize=address,undefined',str(p/'test.c'),'-o',str(p/'test')],check=True)
+ subprocess.run(['cc','-Isrc','-std=c99','-fsanitize=address,undefined',str(p/'test.c'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test')],check=True)

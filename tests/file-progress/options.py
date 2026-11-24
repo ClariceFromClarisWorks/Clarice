@@ -1,6 +1,6 @@
 from pathlib import Path
 import subprocess,tempfile
-s=Path('src/commands/files.c').read_text();s=s[s.index('static void usage_text'):]
+s=Path('src/commands/files.c').read_text();s=s[s.index('static int usage('):]
 pre=r'''
 #include <stdio.h>
 #include <string.h>
@@ -34,7 +34,10 @@ static int cli_native_set(const char*s,CInfoPBRec*p){(void)s;(void)p;return 0;}
 static void say(const char*s){(void)s;}
 static int fail(const char*s,int e){(void)s;return e?1:0;}
 static int app_yield(void){return 0;}
-static long cli_write(int fd,const char*s,unsigned long n){last_fd=fd;strncat(help,s,n);return n;}
+static long cli_write(int fd,const void*s,unsigned long n){last_fd=fd;strncat(help,s,n);return n;}
+#include "help-output.h"
+static int capture_help(int fd,const char *text){return help_format(80,fd,text,cli_write,app_yield);}
+#define help_output capture_help
 '''
 main=r'''
 static void reset(void){calls=rows=recursive=preserve=force=parents=nocreate=0;help[0]=0;script_depth=0;input_ref=output_ref=-1;error_ref=-3;}
@@ -46,11 +49,11 @@ int main(void){
   reset();output_ref=4;assert(!clarice_main(3,normal)&&!progress_was_enabled);
   char *bad[]={name,"--bogus","source","target"};reset();assert(clarice_main(4,bad)==2&&!calls&&last_fd==2);
   char *dash[]={name,"--","--no-progress","target"};reset();assert(!clarice_main(4,dash)&&progress_was_enabled);
-  char *h[]={name,"--help"};reset();assert(!clarice_main(2,h)&&!calls&&last_fd==1&&strstr(help,"--no-progress")&&strstr(help,"scripts/stdout redirection"));
+  char *h[]={name,"--help"};reset();assert(!clarice_main(2,h)&&!calls&&last_fd==1&&strstr(help,"--no-progress")&&strstr(help,"redirection"));
  }
  char *bad[]={"touch","--no-progress","x"};reset();assert(clarice_main(3,bad)==2&&!calls);
  puts("PASS actual cp/mv/rm option parsing, default and quiet progress, -- operands, invalid option status/stderr, help/stdout, scripts and redirected output, no option leak to touch");
 }
 '''
 with tempfile.TemporaryDirectory() as d:
- p=Path(d);(p/'test.c').write_text(pre+s+main);subprocess.run(['cc','-fsanitize=address,undefined',str(p/'test.c'),'-o',str(p/'test')],check=True);subprocess.run([str(p/'test')],check=True)
+ p=Path(d);(p/'test.c').write_text(pre+s+main);subprocess.run(['cc','-Isrc','-fsanitize=address,undefined',str(p/'test.c'),'-o',str(p/'test')],check=True);subprocess.run([str(p/'test')],check=True)

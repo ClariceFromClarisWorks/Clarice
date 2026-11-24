@@ -47,12 +47,13 @@ text=text.replace('\t\tperror(NULL);', '\t\terrno = saved_errno;\n\t\tperror(NUL
 (root/'work/build/ports/eprintf.c').write_text(text)
 
 # Explicit long help without changing the preserved upstream source files.
-import json, textwrap
+import json
 helps={
- 'grep':'grep [-EFHchilnqsvwx] [-e pattern] [-f patterns] [pattern] [file ...]\nBRE by default; -E extended, -F fixed text, -i ignore case, -v invert.\n-n line numbers, -c count, -l matching filenames, -q quiet, -s suppress errors.\n-w words, -x whole lines, -H/-h filename prefixes.\nRepeat -e/-f to add patterns; last -E/-F and last -H/-h win.\nThe last of -c/-l/-n/-q selects the output mode.\nInput defaults to stdin; - is stdin; -- ends options. Data forks only.\nExample: grep -n -e error -e warning logfile\nStatus: 0 match, 1 no match, 2 error, 130 interrupted. No recursive -r or GNU option parity.\n',
- 'sed':'sed [-nE] [-e script] [-f scriptfile] [script] [file ...]\n-n quiet; -E/-r extended regular expressions.\nRepeat -e/-f to combine scripts; otherwise first operand is the script.\nInput defaults to stdin; - is stdin; -- ends options. Data forks only.\nCommands: a b c d D g G h H i l n N p P q r s t w x y = : { }.\nAddresses: line numbers, $, /BRE/ and two-address ranges; ! negates.\ns supports g, p, w file and occurrence counts. Quote scripts in the shell.\nExample: sed -n 1,10p file\nNo GNU -i in-place editing. See the retained sed manual for full grammar.\nStatus: 0 success, nonzero error, 130 interrupted.\n'}
+ 'grep':'grep [-EFHchilnqsvwx] [-e PATTERN] [-f FILE] [pattern] [file ...]\nSearch data-fork text. With no files, or with -, read stdin.\nOptions:\n  -E, -F\tExtended regular expressions or fixed text. Default: basic regular expressions.\n  -i, -v\tIgnore case or invert the match.\n  -n, -c, -l, -q\tShow line numbers, count matches, list filenames or suppress output. Last mode wins.\n  -w, -x\tMatch whole words or whole lines.\n  -H, -h\tAlways or never show filename prefixes. Last wins.\n  -s\tSuppress file errors.\n  -e PATTERN, -f FILE\tAdd patterns; repeat as needed.\nUse -- to end options. Recursive -r and GNU-only options are unsupported.\nExample: grep -n -e error -e warning logfile\nStatus: 0 match, 1 no match, 2 error, 130 interrupted.\n',
+ 'sed':'sed [-nE] [-e SCRIPT] [-f FILE] [script] [file ...]\nEdit text from data forks or stdin. Without -e/-f, the first operand is the script.\nOptions:\n  -n\tSuppress automatic output.\n  -E, -r\tUse extended regular expressions.\n  -e SCRIPT, -f FILE\tAdd a script or script file. Repeat to combine scripts.\nCommands: a b c d D g G h H i l n N p P q r s t w x y = : { }.\nAddresses: line numbers, $, /BRE/ and ranges. Use ! to negate.\nSubstitution flags: g, p, w file and occurrence counts. Quote scripts.\nUse -- to end options. No GNU -i; see the sed manual for grammar.\nExample: sed -n 1,10p file\nStatus: 0 success, nonzero error, 130 interrupted.\n'}
 for name,help in helps.items():
  p=root/'work/build/ports'/f'{name}.c';s=p.read_text();marker='main(int argc, char *argv[])\n{';assert marker in s
- help='\n'.join('\n'.join(textwrap.wrap(line,72,break_long_words=False,break_on_hyphens=False)) for line in help.splitlines())+'\n'
- s=s.replace(marker,marker+'\n if(argc==2&&!strcmp(argv[1],"--help")){puts('+json.dumps(help+'sbase port: text records grow with available application memory.\n')+');return 0;}')
- p.write_text(s)
+ usage,body=help.split('\n',1)
+ help='Usage:\n  '+usage+'\n'+body.replace('Example: ', 'Example:\n  ')
+ s=s.replace(marker,marker+'\n if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1, '+json.dumps(help)+');')
+ p.write_text('#include "../../../src/help-output.h"\n'+s)

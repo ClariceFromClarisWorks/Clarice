@@ -13,6 +13,7 @@ extern int cli_isatty(int);
 #define progress_row app_progress
 #define progress_columns app_columns
 #include "progress.h"
+#include "../help-output.h"
 static NetConn control,data;
 static unsigned char cb[512],buffer[2048];
 static unsigned at,have;
@@ -61,7 +62,20 @@ int clarice_main(int argc,char **argv){
  memset(&control,0,sizeof control);memset(&data,0,sizeof data);at=have=cancelled=mac_error=0;progress_enabled=0;failure="invalid arguments";
  const char *user="anonymous",*host,*remote,*local;char password[512]="clarice@";unsigned short port=21;int from_stdin=0,put=0,owned=0,started=0,result=1,i=1;
  short file=-1;char native[PATH_CAP],canonical[PATH_CAP],stage[PATH_CAP],msg[160];unsigned long ip=0,total=0,done=0;int known=0;CInfoPBRec pb;
- if(argc==2&&!strcmp(argv[1],"--help")){say("usage: ftp [-u USER] [-P PORT] [--password-stdin] get HOST REMOTE NEW_LOCAL\n       ftp [-u USER] [-P PORT] [--password-stdin] put HOST LOCAL REMOTE\nBatch binary FTP; system DNS, EPSV/PASV passive mode. Anonymous by default.\n--password-stdin reads one line (max 511 bytes); do not type secrets into history.\nDownloads refuse existing files; temporary data is committed after server success.\nPUT uses STOR: it can overwrite remote files; failed uploads may remain partial.\nCtrl+C cancels. No TLS, active mode, resume, recursive or interactive commands.\nData forks only: use MacBinary to preserve complete Macintosh files.\n30-second idle reply/data timeout; native calls/callback drain may delay cancel.\nStatuses: 0 success, 1 failure, 2 usage, 130 cancelled.\n");return 0;}
+ if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1,
+  "Usage:\n"
+  "  ftp [options] get HOST REMOTE NEW_LOCAL\n"
+  "  ftp [options] put HOST LOCAL REMOTE\n"
+  "Transfer data forks over batch binary FTP. Use MacBinary for complete Macintosh files.\n"
+  "Options:\n"
+  "  -u USER\tLog in as USER. Default: anonymous.\n"
+  "  -P PORT\tConnect to PORT. Default: 21.\n"
+  "  --password-stdin\tRead one password line (up to 511 bytes). Keep secrets out of shell history.\n"
+  "Downloads refuse existing files and commit after server success.\n"
+  "Uploads can overwrite remote files. Failed uploads may leave partial files.\n"
+  "Uses system DNS and passive EPSV/PASV. No TLS, active mode, resume, recursion or interactive commands.\n"
+  "Idle timeout: 30 seconds. DNS and pending callbacks can delay Ctrl+C.\n"
+  "Status: 0 success, 1 failure, 2 usage, 130 cancelled.\n");
  while(i<argc&&argv[i][0]=='-'){
   if(!strcmp(argv[i],"--password-stdin"))from_stdin=1;
   else if(!strcmp(argv[i],"-u")&&i+1<argc)user=argv[++i];

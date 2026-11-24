@@ -1,13 +1,24 @@
 /* Native Memory Manager snapshot, no retained allocation. */
 #include "../hardware.h"
 #include "../memory-info.h"
+#include "../help-output.h"
 #include <stdio.h>
 #include <string.h>
 extern long cli_write(int,const void *,unsigned long);
 static int output(int fd,const char *s){return cli_write(fd,s,strlen(s))<0;}
 int clarice_main(int argc,char **argv){unsigned long divisor=1024;const char *unit="KiB";
- if(argc==2&&!strcmp(argv[1],"--help"))return output(1,
- "free [-b|-k|-m|-h] [--]\nReport installed RAM and Clarice's current application heap.\nDefault -k: KiB; -b: bytes; -m: MiB; -h: human readable. Last wins.\nFree and largest blocks are not machine-wide free physical RAM.\nAfter-purge values include reclaimable purgeable handles; no purge is\nrequested. Heap extent excludes the application stack/code outside it;\nSystem 6 partition-wide capacity is not claimed. Values include this\ncommand's temporary image. No Linux swap/buffers/process statistics.\nExample: free -b\nStatus: 0 success, 1 query/output error, 2 invalid option. See status.\n");
+ if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1,
+  "Usage:\n"
+  "  free [-b|-k|-m|-h] [--]\n"
+  "Report installed RAM and Clarice's application heap.\n"
+  "Options:\n"
+  "  -b\tBytes.\n"
+  "  -k\tKiB (default).\n"
+  "  -m\tMiB.\n"
+  "  -h\tReadable units.\n"
+  "The last option wins. Heap values include this command's image. After-purge values include reclaimable handles without requesting a purge.\n"
+  "Heap extent excludes stack/code outside the heap. No partition-wide capacity, machine-wide free RAM, swap or process statistics.\n"
+  "Status: 0 success, 1 query/output error, 2 invalid option. See status.\n");
  for(int i=1;i<argc;i++){
  if(!strcmp(argv[i],"--")){if(i+1!=argc)goto usage;break;}
  if(!strcmp(argv[i],"-b")){divisor=1;unit="bytes";}

@@ -7,6 +7,7 @@
 #include <Errors.h>
 #endif
 #include <string.h>
+#include "../help-output.h"
 #include <stdio.h>
 extern unsigned long cli_ticks(void);
 extern int cli_isatty(int);
@@ -24,9 +25,18 @@ int clarice_main(int argc,char **argv){
  char bytes[256],tx[64];ParamBlockRec write_pb;const char *reason="driver I/O";
  static const char reply[]="CLARICE-PONG";
  memset(&write_pb,0,sizeof write_pb);
- if(argc==2&&!strcmp(argv[1],"--help")){
-  output(usage);output("Default 57600 baud, 8N1, no hardware/software flow control; remote echo.\nCtrl+] then q exits locally; Ctrl+] twice sends Ctrl+]. Ctrl+C\ninterrupts remote; Cmd-period cancels locally.\n--test sends CLARICE-PING and waits 15 seconds for CLARICE-PONG.\nmodem/printer aliases and legacy positional baud are accepted.\nText only: no VT100, Telnet, SSH or file transfer. No carrier detection:\nan unplugged three-wire cable may remain silent; exit locally and\nreconnect.\nPrinter port must be free of AppleTalk/other applications.\n");return 0;
- }
+ if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1,
+  "Usage:\n"
+  "  serial [-b BAUD] DEVICE [--test]\n"
+  "Connect to /dev/tty.modem or /dev/tty.printer using a text terminal with remote echo.\n"
+  "Options:\n"
+  "  -b BAUD\t4800, 9600, 19200, 38400 or 57600 (default). Also accepts positional baud.\n"
+  "  --test\tSend CLARICE-PING and wait 15 seconds for CLARICE-PONG.\n"
+  "Aliases: modem and printer. Uses 8N1 with no flow control. Free the printer port from AppleTalk first.\n"
+  "Ctrl+] then q exits; Ctrl+] twice sends Ctrl+]. Ctrl+C interrupts the remote end; Command-period cancels locally.\n"
+  "No carrier detection, screen emulation or file transfer. A disconnected three-wire cable may remain silent.\n"
+  "Example:\n"
+  "  serial /dev/tty.modem\n");
  for(int i=1;i<argc;i++){
   const char *arg=argv[i];
   if(!strcmp(arg,"--test")){probe=1;continue;}

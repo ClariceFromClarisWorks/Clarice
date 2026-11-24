@@ -1,5 +1,6 @@
 /* Native HFS traversal and inspection, with demand-allocated traversal and no link following. */
 #include "mac-files.h"
+#include "../help-output.h"
 #include <errno.h>
 static char **predicates;static int predicate_count;static int maxdepth=2147483647,all,summarize,human,unit=512,brief;
 static int match(const char *p,const char *s){extern int clarice_fnmatch(const char *,const char *,int);return clarice_fnmatch(p,s,0)==0;}
@@ -70,9 +71,43 @@ static void code4(unsigned long x,char *p){for(int i=0;i<4;i++){unsigned char c=
 static int describe(const char *path){char native[PATH_CAP],canonical[PATH_CAP],target[PATH_CAP],type[5],creator[5],buf[160];CInfoPBRec pb;int e=resolve_ex(path,native,canonical,0);if(!e)e=info(native,&pb);if(e){error(path,e);return 1;}if(!brief){say(path);say(": ");}
  if(isdir(&pb))say("HFS directory\n");else if(is_link(&pb)){e=link_target(native,target);if(e)return 1;say("Clarice symbolic link to ");say(target);say("\n");}else{code4(pb.hFileInfo.ioFlFndrInfo.fdType,type);code4(pb.hFileInfo.ioFlFndrInfo.fdCreator,creator);snprintf(buf,sizeof buf,"HFS file, type '%s', creator '%s', data %lu bytes, resource %lu bytes\n",type,creator,(unsigned long)pb.hFileInfo.ioFlLgLen,(unsigned long)pb.hFileInfo.ioFlRLgLen);say(buf);}return output_error?1:0;
 }
-static void usage_text(int fd,const char *s){cli_write(fd,s,strlen(s));}
-static void usage(const char *name,int fd){if(!strcmp(name,"find"))usage_text(fd,"find [path ...] [-name pattern] [-path pattern] [-type f|d|l] [-maxdepth\nN] [-print]\nWalk HFS directories without following symbolic links. Default path: .\n-name matches encoded basenames; -path matches the printed pathname.\nPatterns: *, ?, brackets/ranges, ! negation, ASCII character classes\nand backslash escapes; quote patterns. Native names are bytes, not UTF-8.\nPredicates combine with AND; -o, -exec and other expressions unsupported.\nTraversal grows with available memory; -maxdepth explicitly limits it.\n");else if(!strcmp(name,"du"))usage_text(fd,"du [-ashk] [--] [path ...]\nAllocated data+resource fork space; default units 512 bytes, -k 1024, -h\nreadable.\n-a includes files, -s gives argument totals. Links are not followed.\nHFS catalog/directory overhead is not assigned to individual folders.\nTraversal grows with available memory and native path capacity.\n");else usage_text(fd,"file [-b] [--] file ...\nDescribe HFS kind, symbolic target, type/creator and both fork sizes.\n-b omits the name. This is native metadata inspection, not libmagic\ncontent detection.\n");usage_text(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");}
-int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help")){usage(name,1);return 0;}int i=1,status=0;
+static int usage(const char *name,int fd){
+ const char *text;
+ if(!strcmp(name,"find"))text=
+  "Usage:\n"
+  "  find [path ...] [-name PATTERN] [-path PATTERN] [-type f|d|l] [-maxdepth N] [-print]\n"
+  "Walk HFS directories. Starts at the current directory by default and skips symbolic-link targets.\n"
+  "Predicates (all must match):\n"
+  "  -name PATTERN\tMatch an encoded basename.\n"
+  "  -path PATTERN\tMatch the printed pathname.\n"
+  "  -type f|d|l\tMatch a nondirectory, directory or link.\n"
+  "  -maxdepth N\tLimit descent. Traversal uses available memory.\n"
+  "  -print\tPrint matches (default).\n"
+  "Quote patterns. Supports *, ?, brackets/ranges, ! negation, ASCII classes and backslash escapes. Native names are bytes.\n"
+  "No -o, -exec or other expressions.\n"
+  "Example:\n"
+  "  find . -name '*.txt'\n";
+ else if(!strcmp(name,"du"))text=
+  "Usage:\n"
+  "  du [-ashk] [--] [path ...]\n"
+  "Report allocated space in both forks. Links are not followed.\n"
+  "Options:\n"
+  "  -a\tInclude files.\n"
+  "  -s\tShow only argument totals; cannot combine with -a.\n"
+  "  -h\tUse readable units.\n"
+  "  -k\tUse 1024-byte units. Default: 512-byte units.\n"
+  "HFS catalog and directory overhead are excluded. Traversal is limited by available memory and native path capacity.\n";
+ else text=
+  "Usage:\n"
+  "  file [-b] [--] file ...\n"
+  "Show HFS kind, symbolic target, type/creator and both fork sizes. Uses metadata, without libmagic content detection.\n"
+  "Options:\n"
+  "  -b\tOmit filenames.\n";
+ int rc=help_output(fd,text);
+ if(rc)return rc;
+ return help_output(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
+}
+int clarice_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help"))return usage(name,1);int i=1,status=0;
  if(!strcmp(name,"find")){
   int first=1;while(i<argc&&av[i][0]!='-')i++;
   int roots=i-first;predicates=av+i;predicate_count=argc-i;

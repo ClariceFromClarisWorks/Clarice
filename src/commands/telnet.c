@@ -25,6 +25,7 @@ extern unsigned long cli_ticks(void);
 #define NAWS 31
 #include "terminal/vt100.h"
 #include "network/telnet-engine.h"
+#include "../help-output.h"
 extern void *cli_alloc(unsigned long);
 extern void cli_free(void *);
 extern long cli_read(int,void *,unsigned long);
@@ -125,7 +126,20 @@ static const char usage[]="usage: telnet [--dumb] HOST [PORT]\n";
 int clarice_main(int argc,char **argv){
  unsigned long ip=0,port=23;int result=1,tty=0;memset(&conn,0,sizeof conn);engine=0;protocol_failed=0;
  dn=tn=0;cr=escaped=mac_error=0;vt=0;dumb=key_state=0;lastrow=lastcol=lastcursor=-1;paint_tick=0;paint_bytes=0;reason="connection failed";
- if(argc==2&&!strcmp(argv[1],"--help")){message(usage);message("Native TCP/DNS; monochrome VT100/ANSI screen, TERM=vt100, NAWS.\n--dumb retains line-oriented NVT. Ctrl+] then q exits locally;\nCtrl+] twice sends Ctrl+]. Cmd-period cancels; Ctrl+C sends Telnet IP.\nReturn sends CR LF; Backspace sends DEL; application arrows supported.\nlibtelnet protocol engine; ASCII text; inverse video, cursor/erase/scroll regions, insert/delete.\nDEC line graphics use ASCII approximations; no colour, UTF-8, double-size\nlines, alternate-screen history, bold/underline/blink or VT52.\nScreen size is fixed at connection: resize before connecting. No TLS,\nautologin, transfers or TCP urgent SYNCH. Data is unencrypted.\nBoth streams must be terminals. Native TCP/DNS may delay cancellation.\nNo idle timeout; incomplete Telnet controls time out after 30s.\nInput overflow/oversized controls stop explicitly.\nStatuses: 0 peer close/local escape, 1 error, 2 usage, 130 local cancel.\n");return 0;}
+ if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1,
+  "Usage:\n"
+  "  telnet [--dumb] HOST [PORT]\n"
+  "Use a monochrome VT100/ANSI terminal over unencrypted TCP. Default port: 23. Both streams must be terminals.\n"
+  "Options:\n"
+  "  --dumb\tUse the line-oriented NVT instead of a full-screen terminal.\n"
+  "Ctrl+] then q exits; Ctrl+] twice sends Ctrl+]. Command-period cancels locally. Ctrl+C sends Telnet IP.\n"
+  "Return sends CR LF; Backspace sends DEL. Application arrows are supported.\n"
+  "Uses libtelnet and TERM=vt100 with NAWS. Resize before connecting; size is fixed for the session.\n"
+  "Supports inverse, cursor movement, erase, scroll regions, insert/delete and ASCII line graphics.\n"
+  "No colour, UTF-8, double-size rows, alternate-screen history, bold, underline, blink or VT52.\n"
+  "No TLS, autologin, transfers or urgent SYNCH. DNS/TCP may delay cancellation.\n"
+  "No idle timeout. Incomplete controls time out after 30 seconds. Overflow ends the session.\n"
+  "Status: 0 peer close/local escape, 1 error, 2 usage, 130 cancelled.\n");
  if(argc>1&&!strcmp(argv[1],"--dumb")){dumb=1;argc--;argv++;}
  if(argc<2||argc>3||argv[1][0]=='-')goto usage;
  if(argc==3){port=0;if(!*argv[2])goto usage;for(const char *p=argv[2];*p;p++){if(*p<'0'||*p>'9'||port>6553)goto usage;port=port*10+*p-'0';}if(!port||port>65535)goto usage;}

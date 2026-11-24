@@ -36,7 +36,7 @@ try:
  check('remote renames local ancestor','mv local local-renamed')
  local('pwd; touch local-child')
  check('local recovered','test -f local-renamed/sub/local-child')
- check('remote help','telnet --help',contains='usage:')
+ check('remote help','telnet --help',contains='Usage:')
  check('remote nano diagnostic','nano /tmp/file',2,contains='local input ownership')
  check('remote nano path diagnostic','/bin/nano /tmp/file',2,contains='local input ownership')
  deep="/mnt/FS Audit A/fix1840/bound/a/"+'/'.join(['abcdefghijklmnopqrst']*10)

@@ -1,6 +1,7 @@
 /* Private-source single-command updater. Networking and verification are loaded
  * only for this invocation; independent helper performs the post-exit commit. */
 #include "mac-files.h"
+#include "../help-output.h"
 #include <OSUtils.h>
 #include <stdint.h>
 #include "../update/identity.h"
@@ -66,7 +67,7 @@ static int core_update(int argc,char **argv){
  int check=0,assume_yes=0,e=0,staged=0,planned=0,handed=0;short in=-1;
  char source[768]="",manifest_file[PATH_CAP]="",package_file[PATH_CAP]="",text[1024],own[256],helper[PATH_CAP],plan_path[PATH_CAP],canonical[PATH_CAP];
  UpdateManifest m;UpdatePlan plan;memset(&plan,0,sizeof plan);
- if(argc==2&&!strcmp(argv[1],"--help")){say("usage: clarice update [-y] [--check] [--source\nhttp://IPv4:port/update.txt]\nUses /etc/clarice/update.conf (one source path or URL). HTTP or absolute mounted-file path.\nChecks for a newer 68000-compatible application, verifies both forks,\nasks before replacing, retains the previous version and relaunches\nClarice automatically.\n-y accepts without prompting; verification and recovery are unchanged.\n--check downloads only the source index and makes no application\nchanges.\n");return 0;}
+
  if(argc<2||strcmp(argv[1],"update")){errsay("usage: clarice update [-y] [--check] [--source URL]\n");return 2;}
  for(int i=2;i<argc;i++){if(!strcmp(argv[i],"-y"))assume_yes=1;else if(!strcmp(argv[i],"--check")&&!check)check=1;else if(!strcmp(argv[i],"--source")&&i+1<argc&&!source[0]){if(strlen(argv[++i])>=sizeof source)return 2;strcpy(source,argv[i]);}else return 2;}
  if(!source[0]){e=read_text("/etc/clarice/update.conf",source,sizeof source);if(e){errsay("Configure /etc/clarice/update.conf with the private update URL, or use --source URL.\n");goto done;}size_t n=strlen(source);while(n&&(source[n-1]=='\n'||source[n-1]=='\r'))source[--n]=0;}

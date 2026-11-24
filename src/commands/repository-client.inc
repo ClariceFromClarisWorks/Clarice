@@ -81,7 +81,16 @@ static int repo_confirm(void){
 int clarice_main(int argc,char **argv){
  int check=0,yes=0,e=0,changes=0;char source[768]="",index[PATH_CAP]="",payload[PATH_CAP]="",text[1024],own[256];RepoItem *items=0,*core=0;
  if(argc==3&&!strcmp(argv[1],"update")&&!strcmp(argv[2],"--finish")){e=repo_finish();if(e)error("update completion",e);return e?1:0;}
- if(argc==2&&!strcmp(argv[1],"--help")){say("clarice update [-y] [--check] [--source PATH_OR_HTTP_URL]\nUpdates standard tools, adds new tools, then updates and relaunches Core.\nSource: /etc/clarice/update.conf (HTTP URL or absolute mounted-file path). Catalog: /etc/clarice/installed.catalog.\nInterrupted updates retain completed tools; repeat the command to resume.\nPrivate HTTP uses CRC-32 for corruption detection, not authentication.\nUnlisted files and preferences are preserved. Newer versions are not downgraded.\n");return 0;}
+ if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1,
+  "Usage:\n"
+  "  clarice update [-y] [--check] [--source PATH_OR_HTTP_URL]\n"
+  "Update standard tools and Core, then relaunch. Keeps newer tools, unlisted files and preferences.\n"
+  "Options:\n"
+  "  -y\tAccept without prompting.\n"
+  "  --check\tCheck versions without installing.\n"
+  "  --source PATH_OR_HTTP_URL\tOverride /etc/clarice/update.conf with an HTTP URL or absolute mounted-file path.\n"
+  "Completed tools survive interruption. Rerun to resume. The installed catalog is /etc/clarice/installed.catalog.\n"
+  "Private HTTP uses CRC-32 for corruption detection; it provides no authentication.\n");
  if(argc<2||strcmp(argv[1],"update"))return 2;
  for(int i=2;i<argc;i++){if(!strcmp(argv[i],"-y"))yes=1;else if(!strcmp(argv[i],"--check"))check=1;else if(!strcmp(argv[i],"--source")&&i+1<argc&&strlen(argv[i+1])<sizeof source)strcpy(source,argv[++i]);else return 2;}
  if(!source[0]){e=read_text("/etc/clarice/update.conf",source,sizeof source);if(e)goto done;size_t n=strlen(source);while(n&&(source[n-1]=='\n'||source[n-1]=='\r'))source[--n]=0;}

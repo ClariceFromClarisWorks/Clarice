@@ -117,25 +117,27 @@ static const char *listing_operand(int argc,char **av,int *index,int *options){
  }return NULL;
 }
 static int ls_command(int argc,char **av){
- if(argc==2&&!strcmp(av[1],"--help")){say(
- "usage: ls [-lah1P] [--full] [--legend] [--] [path ...]\n"
- "-l columns: kind+LI  data-bytes  resource-bytes  type  creator  created  name\n"
- "Created: YYYY-MM-DD HH:MM, from the HFS catalog.\n"
- "Kind: d directory, l Clarice link, - ordinary file.\n"
- "L: locked; I: Finder-invisible; -: flag clear.\n"
- "Fork sizes are logical bytes; -h uses KiB/MiB; zero is empty.\n"
- "Directories have blank fork sizes: these are not applicable.\n"
- "Virtual entries leave unavailable sizes/dates blank.\n"
- "--full adds N/B flag bits and raw Finder hex.\n"
- "--legend adds column explanations and headings; implies -l.\n"
- "N: name-locked bit; B: bundle bit (OS-dependent meaning).\n"
- "Type/creator: stored codes; '.' replaces nonprintable bytes.\n"
- "Stored ???? is literal metadata, not our placeholder.\n"
- "Directory type/creator use ---- ---- (not applicable).\n"
- "-a includes Finder-invisible entries, dot names, . and ..\n"
- "Explicit path operands are shown even when hidden.\n"
- "-1 one entry per line; -P accepted for compatibility; catalog order.\n"
- "No invented owners, groups or Unix access permissions.\n");return output_error?1:0;}
+ if(argc==2&&!strcmp(av[1],"--help"))return help_output(1,
+  "Usage:\n"
+  "  ls [-lah1P] [--full] [--legend] [--] [path ...]\n"
+  "List HFS entries in catalog order.\n"
+  "Options:\n"
+  "  -l\tShow kind and flags, both fork sizes, type and creator, creation date, and name.\n"
+  "  -a\tInclude Finder-invisible entries, dot names, and the dot and dot-dot entries. Explicit operands are shown even when hidden.\n"
+  "  -h\tUse KiB/MiB for fork sizes; zero indicates an empty fork.\n"
+  "  -1\tShow one entry per line.\n"
+  "  -P\tDisable listing paging if enabled.\n"
+  "  --full\tAdd N/B flags and raw Finder hex.\n"
+  "  --legend\tAdd headings and explanations. Implies -l.\n"
+  "Long listing:\n"
+  "  Kind: d directory, l Clarice link, - ordinary file.\n"
+  "  Flags: L locked, I invisible, N name-locked, B bundle (OS-dependent), - clear.\n"
+  "  Fork lengths are logical bytes. Directory and unavailable virtual sizes are blank.\n"
+  "  Creation date comes from HFS, YYYY-MM-DD HH:MM, when available.\n"
+  "  Type and creator are stored codes. A dot represents a nonprintable byte. Stored ???? is literal. Directories show ---- ----.\n"
+  "HFS has no Unix owners, groups or access permissions.\n"
+  "Example:\n"
+  "  ls --legend /mnt\n");
 int detail=0,all=0,paged=1,human=0,one=0,legend=0,options=1,n=0,i;int operand=1,operand_options=1;
  for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--legend")){legend=1;continue;}if(options&&!strcmp(av[i],"--full")){detail=2;continue;}if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&av[i][0]=='-'&&av[i][1]){const char *f=av[i]+1;while(*f){switch(*f++){case 'l':if(!detail)detail=1;break;case 'a':all=1;break;case 'h':human=1;break;case '1':one=1;break;case 'P':paged=0;break;default:errsay("usage: ls [-lah1P] [--full] [--legend] [--] [path ...]\n");return 2;}}}else n++;}
  if(legend){if(!detail)detail=1;

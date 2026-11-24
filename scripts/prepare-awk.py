@@ -10,11 +10,14 @@ for p in (root/'src/vendor/awk').iterdir():
  if p.name=='b.c':
   s=s.replace('state + 10;', 'state + 3;').replace('calloc(NCHARS, sizeof(gtte))', 'calloc(8, sizeof(gtte))').replace('allocated = NCHARS;', 'allocated = 8;')
  if p.name=='main.c':
-  help="awk [-F separator] [-v name=value] [-f programfile] [program] [file ...]\nOne True Awk: process records using patterns, actions, arrays/functions.\n-F sets FS; -v assigns before BEGIN; repeat -f to combine program files.\nWithout -f, first operand is the program. Files default to stdin; - is\nstdin. name=value file operands assign variables at that input position.\n-- ends options; --csv reads CSV records (do not also set FS).\n-safe disables file output and unsafe features; -d[N] enables debugging.\n-version/--version prints the upstream version. No GNU option parity.\nExported variables appear in ENVIRON; private shell variables do not.\nRecords, fields and arrays grow with application memory; call depth 64.\nNo system(), command pipes or child processes. File I/O uses data forks.\nExample: awk -F: '{print $1}' file\nStatus: exit expression (default 0), nonzero error, 130 interrupted.\n"
+  help="awk [-F SEP] [-v NAME=VALUE] [-f FILE] [program] [file ...]\nProcess records with One True Awk. Without -f, the first operand is the program. Input defaults to stdin; - also means stdin.\nOptions:\n  -F SEP\tSet the field separator FS.\n  -v NAME=VALUE\tAssign before BEGIN.\n  -f FILE\tRead a program file. Repeat to combine files.\n  --csv\tRead CSV records; do not set FS.\n  -safe\tDisable file output and unsafe features.\n  -d[N]\tEnable debugging.\n  -version, --version\tPrint the upstream version.\nUse -- to end options. NAME=VALUE file operands assign at that input position. ENVIRON contains exported variables.\nRecords, fields and arrays grow with memory. Call depth is 64. File I/O uses data forks.\nNo system(), command pipelines, child processes or GNU option parity.\nExample: awk -F: '{print $1}' file\nStatus: exit expression (default 0), nonzero error, 130 interrupted.\n"
   import json
   s=s.replace('WARNING("unknown option %s ignored", argv[1]);', 'FATAL("unknown option %s; use --help", argv[1]);')
   s=s.replace('if (strcmp(argv[1], "-safe") == 0)\n\t\t\t\tsafe = true;', 'if (strcmp(argv[1], "-safe") == 0)\n\t\t\t\tsafe = true;\n\t\t\telse FATAL("unknown option %s; use --help", argv[1]);')
-  s=s.replace('int main(int argc, char *argv[])\n{','int main(int argc, char *argv[])\n{\n if(argc==2&&!strcmp(argv[1],"--help")){puts('+json.dumps(help)+');return 0;}')
+  usage,body=help.split('\n',1)
+  help='Usage:\n  '+usage+'\n'+body.replace('Example: ', 'Example:\n  ')
+  s='#include "../../../src/help-output.h"\n'+s
+  s=s.replace('int main(int argc, char *argv[])\n{','int main(int argc, char *argv[])\n{\n if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1, '+json.dumps(help)+');')
   s=s.replace('setlocale(LC_CTYPE, "");','/* The port uses the C locale. */').replace('setlocale(LC_NUMERIC, "C");','').replace('awk_mb_cur_max = MB_CUR_MAX;','awk_mb_cur_max = 1;')
   s=s.replace('(void)signal(SIGFPE, fpecatch);','/* Software floating point: math errors use errno. */')
  if p.name=='run.c':

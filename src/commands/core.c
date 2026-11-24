@@ -1,5 +1,6 @@
 /* Clarice core utilities: independently loaded 68000 command implementation. */
 #include "../sys6.h"
+#include "../help-output.h"
 #include <Files.h>
 #include <Errors.h>
 #include <OSUtils.h>
@@ -31,9 +32,27 @@ int clarice_main(int argc,char **av){
 char phase_report[3][200];
 #endif
 int i,status=0;const char *name=strrchr(av[0],'/');name=name?name+1:av[0];
- if(argc==2&&!strcmp(av[1],"--help")&&!strcmp(name,"cat")){say("cat [-u] [--] [file ...]\nCopy data forks to stdout; - reads stdin. -u is accepted (output is\nunbuffered).\nResource forks are preserved by cp, not included in cat output.\nStatus: 0 success, 1 file error, 2 usage, 130 interrupted.\n");return 0;}
- if(argc==2&&!strcmp(av[1],"--help")&&!strcmp(name,"df")){say("df [-h|-k] [--] [path ...]\nShow mounted HFS volume space; default KiB, -h readable sizes.\nNo path lists every mounted HFS volume. No Unix inode/ownership\nstatistics.\nStatus: 0 success, 1 file error, 2 usage, 130 interrupted.\n");return 0;}
- if(argc==2&&!strcmp(av[1],"--help")&&(!strcmp(name,"benchls")||!strcmp(name,"benchscan"))){say("benchls [directory] | benchscan [directory]\nRun three listing or catalog-only timing passes; emulator ticks are not\nreal-hardware benchmarks.\n");return 0;}
+ if(argc==2&&!strcmp(av[1],"--help")&&!strcmp(name,"cat"))return help_output(1,
+  "Usage:\n"
+  "  cat [-u] [--] [file ...]\n"
+  "Copy data forks to stdout. Read stdin with - or with no files.\n"
+  "Options:\n"
+  "  -u\tAccepted for compatibility; output is already unbuffered.\n"
+  "Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
+ if(argc==2&&!strcmp(av[1],"--help")&&!strcmp(name,"df"))return help_output(1,
+  "Usage:\n"
+  "  df [-h|-k] [--] [path ...]\n"
+  "Show free and used space on mounted HFS volumes. With no paths, list every mounted volume.\n"
+  "Options:\n"
+  "  -h\tUse readable size units.\n"
+  "  -k\tUse KiB (default).\n"
+  "No Unix inode or ownership statistics.\n"
+  "Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
+ if(argc==2&&!strcmp(av[1],"--help")&&(!strcmp(name,"benchls")||!strcmp(name,"benchscan")))return help_output(1,
+  "Usage:\n"
+  "  benchls [directory]\n"
+  "  benchscan [directory]\n"
+  "Run three listing or catalog-only timing passes. Emulator ticks do not predict real-hardware performance.\n");
  if(!strcmp(name,"ls"))return ls_command(argc,av);
  if(!strcmp(name,"df"))return df_command(argc,av);
  if(!strcmp(name,"cat")){int files=0,options=1;for(i=1;i<argc;i++){if(options&&!strcmp(av[i],"--")){options=0;continue;}if(options&&!strcmp(av[i],"-u"))continue;if(options&&av[i][0]=='-'&&av[i][1]){errsay("usage: cat [-u] [--] [file ...]\n");return 2;}files++;int e=cat_file(av[i]);if(e==130)return e;if(e)status=e;}return files?status:cat_file("-");}

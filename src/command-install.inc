@@ -107,19 +107,6 @@ static int command_setup(const char *directory){
  return 0;
 }
 static int appinstall_command(int argc,char **av){
- if(argc==2&&!strcmp(av[1],"--help")){say(
-  "appinstall setup DIRECTORY | install FILE NAME | check FILE\n"
-  "           replace FILE NAME | repair NAME DIRECTORY | recover NAME\n"
-  "setup installs the standard collection; install installs one command.\n"
-  "Both leave every existing command unchanged, even if damaged.\n"
-  "NAME: /bin leaf, 1..20 letters, digits, _ or -.\n"
-  "check fully verifies without execution. replace/repair explicitly replace.\n"
-  "repair reads DIRECTORY/NAME. recover restores .clx-NAME.old.\n"
-  "Previous files retain both forks; Finder metadata is preserved.\n"
-  "The replacement is data-only; old resource forks stay in the backup.\n"
-  "Existing .old/.new files block replacement: inspect and move them first.\n"
-  "CLX_VERIFY=strict fully verifies launches; installed uses receipts.\n"
-  "Status: 0 success; 1 install error; 2 usage; 126 bad CLX; 130 cancel.\n");return 0;}
  if(argc==3&&!strcmp(av[1],"check"))return module_load(av[2],0,0,0);
  int e=paramErr;
  if(argc==4&&(!strcmp(av[1],"replace")||!strcmp(av[1],"install")))e=command_replace(av[3],av[2],!strcmp(av[1],"replace"));

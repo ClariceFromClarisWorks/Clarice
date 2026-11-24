@@ -1,3 +1,4 @@
+#include "../../help-output.h"
 #include <Files.h>
 #include <Errors.h>
 #include "libbb.h"
@@ -42,9 +43,21 @@ int bb_access(const char *s,int mode){char path[512];CInfoPBRec pb;int e=resolve
 #include "save.inc"
 #include "recover.inc"
 
-void bb_show_usage(void){puts("vi: BusyBox 1.37.0 vi; Clarice port\nUsage: vi [-R] [-c command] [file ...]\nKeys: i insert; Escape normal; :w save; :q quit; :q! discard.\nLiteral search/substitution, undo, repeat, marks and named buffers.\n80x24 Telnet BINARY; byte text; safe HFS saves preserve metadata.\nNo regex, full ex mode, shell/filter, job control or automatic .exrc.\nEXINIT and -c supported. On failure/disconnect, recover unsaved text from /etc/clarice/vi-*.recover.\nIncomplete attempts use .part; recovery needs writable disk space.\nStatus: 0 quit/help; 1 failure; 2 usage; 130 cancellation.");}
+static int vi_help(void){return help_output(1,
+ "Usage:\n"
+ "  vi [-R] [-c command] [file ...]\n"
+ "Edit byte-oriented text with BusyBox 1.37.0 vi. Safe HFS saves preserve metadata.\n"
+ "Options:\n"
+ "  -R\tRead-only mode.\n"
+ "  -c COMMAND\tRun a startup command. EXINIT is also supported.\n"
+ "Keys: i insert, Escape normal, :w save, :q quit, :q! discard.\n"
+ "Supports literal search and substitution, undo, repeat, marks and named buffers.\n"
+ "Remote editing uses 80x24 Telnet BINARY. No regex, full ex, shell/filter, job control or automatic .exrc.\n"
+ "After failure or disconnect, check /etc/clarice/vi-*.recover for unsaved text. Recovery needs free disk space; .part files may be incomplete.\n"
+ "Status: 0 quit/help, 1 failure, 2 usage, 130 cancelled.\n");}
+void bb_show_usage(void){(void)vi_help();}
 int bb_vi_options(int argc,char **argv,llist_t **cmds){int flags=0;optind=1;while(optind<argc&&argv[optind][0]=='-'){char *s=argv[optind++];if(!strcmp(s,"--"))break;if(!strcmp(s,"-R"))flags|=8;else if(!strcmp(s,"-c")&&optind<argc)llist_add_to_end(cmds,xstrdup(argv[optind++]));else {fprintf(stderr,"vi: unsupported option: %s\n",s);port_exit(2);}}return flags;}
-int upstream_main(int argc,char **argv){if(argc==2&&(!strcmp(argv[1],"--help")||!strcmp(argv[1],"--version")||!strcmp(argv[1],"-h")||!strcmp(argv[1],"-H"))){bb_show_usage();return 0;}for(int i=1;i<argc&&argv[i][0]=='-';i++){if(!strcmp(argv[i],"--"))break;if(!strcmp(argv[i],"-R"))continue;if(!strcmp(argv[i],"-c")&&i+1<argc){i++;continue;}fprintf(stderr,"vi: unsupported option: %s\n",argv[i]);return 2;}if(!cli_isatty(0)||!cli_isatty(1)){fputs("vi: terminal required\n",stderr);return 2;}remote=cli_remote_wire(0,0,0)>0;if(remote){if(cli_remote_wire(1,0,0)){fputs("vi: Telnet BINARY required\n",stderr);return 1;}}else if(app_screen_open())return 1;opened=1;int rc=vi_main(argc,argv);fflush_all();
+int upstream_main(int argc,char **argv){if(argc==2&&(!strcmp(argv[1],"--help")||!strcmp(argv[1],"--version")||!strcmp(argv[1],"-h")||!strcmp(argv[1],"-H")))return vi_help();for(int i=1;i<argc&&argv[i][0]=='-';i++){if(!strcmp(argv[i],"--"))break;if(!strcmp(argv[i],"-R"))continue;if(!strcmp(argv[i],"-c")&&i+1<argc){i++;continue;}fprintf(stderr,"vi: unsupported option: %s\n",argv[i]);return 2;}if(!cli_isatty(0)||!cli_isatty(1)){fputs("vi: terminal required\n",stderr);return 2;}remote=cli_remote_wire(0,0,0)>0;if(remote){if(cli_remote_wire(1,0,0)){fputs("vi: Telnet BINARY required\n",stderr);return 1;}}else if(app_screen_open())return 1;opened=1;int rc=vi_main(argc,argv);fflush_all();
 #ifdef CLARICE_VI_PROFILE
 fprintf(stderr,"vi profile: sync=%lu format=%lu status=%lu cmd=%lu commands=%lu\n",bb_profile[0],bb_profile[1],bb_profile[2],bb_profile[3],bb_profile[4]);
 #endif

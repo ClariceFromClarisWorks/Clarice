@@ -14,6 +14,7 @@ extern int cli_isatty(int);
 #define progress_row app_progress
 #define progress_columns app_columns
 #include "progress.h"
+#include "../help-output.h"
 #include "../display-size.h"
 static NetConn net;
 static unsigned char buffer[2048];
@@ -46,9 +47,16 @@ int clarice_main(int argc,char **argv){
  char native[PATH_CAP],canonical[PATH_CAP],stage[PATH_CAP];
  unsigned short port=80;unsigned long size=0,written=0;short file=-1;
  int owned=0,e=0,result=1,have_length=0,chunked=0;const char *why="invalid arguments";CInfoPBRec pb;
- if(argc==2&&!strcmp(argv[1],"--help")){
-  say("usage: wget -O NEW_FILE http://HOST[:port]/path\nStreams HTTP GET to a same-volume temporary file, closes, then renames.\nExisting destinations are refused. Incomplete files are removed; cleanup\nfailures report the temporary path. Ctrl+C cancels. Pending DNS callbacks must finish before cleanup;\nDNS cancellation can take longer. 30-second input timeout.\nHTTP 200 with Content-Length or chunked encoding; headers up to 8 KiB.\nNo redirects, close-delimited bodies, credentials, TLS or resume. Hostnames use the installed DNR. Data fork only; use MacBinary for Mac\napps.\nThis is Clarice's small downloader, not GNU wget.\n");return 0;
- }
+ if(argc==2&&!strcmp(argv[1],"--help"))return help_output(1,
+  "Usage:\n"
+  "  wget -O NEW_FILE http://HOST[:port]/path\n"
+  "Download HTTP to a temporary file on the same volume, then rename it to NEW_FILE. Existing files are refused.\n"
+  "HTTP 200 with Content-Length or chunked encoding; headers up to 8 KiB. Idle timeout: 30 seconds.\n"
+  "Uses system DNS. No redirects, close-delimited bodies, credentials, TLS or resume.\n"
+  "Ctrl+C cancels after pending DNS work. Incomplete files are removed; cleanup errors report the temporary path.\n"
+  "Data forks only. Use MacBinary to preserve complete Macintosh files.\n"
+  "Example:\n"
+  "  wget -O /tmp/index http://192.168.1.1/index.txt\n");
  for(int i=1;i<argc;i++){
   if(!strcmp(argv[i],"-O")&&i+1<argc&&!output)output=argv[++i];
   else if(!url&&argv[i][0]!='-')url=argv[i];else goto done;

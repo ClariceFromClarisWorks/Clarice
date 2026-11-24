@@ -1,5 +1,6 @@
 /* Clarice HFS file utilities. Algorithms reside in this loadable command image. */
 #include "mac-files.h"
+#include "../help-output.h"
 #include "file-progress.h"
 static int recursive,preserve,force,parents,nocreate;
 static unsigned long sequence;
@@ -166,21 +167,82 @@ static int transfer(int argc,char **av,int start,int moving){
  }return status;
 }
 static int symlink_command(int argc,char **av){char native[PATH_CAP],canonical[PATH_CAP];if(argc!=4||strcmp(av[1],"-s")||!*av[2]||strlen(av[2])>=PATH_CAP)return 2;int e=checked(av[3],native,canonical,0);if(e)return fail("ln",e);e=cli_native_create(native,'S6LK','S6UX');if(e)return fail("ln",e);short ref;e=cli_native_open(native,0,1,&ref);if(!e){long n=5;e=cli_native_write(ref,"S6L1\n",&n);if(!e&&n!=5)e=ioErr;if(!e){n=strlen(av[2]);e=cli_native_write(ref,av[2],&n);if(!e&&n!=(long)strlen(av[2]))e=ioErr;}int c=cli_native_close(ref);if(!e)e=c;}if(e)cli_native_delete(native);return e?fail("ln",e):0;}
-static void usage_text(int fd,const char *s){cli_write(fd,s,strlen(s));}
-static void usage(const char *name,int fd){
- if(!strcmp(name,"hfsattrib"))usage_text(fd,"hfsattrib [--type CODE] [--creator CODE] [--locked on|off] [--invisible\non|off] [--] file ...\nhfsattrib file TYPE:CREA sets both codes (example: thing.sit SIT!:SITx).\nNo options displays metadata. Codes are case-sensitive, exactly four bytes;\n.... displays unset bytes. Use -- before literal colon-containing filenames.\nDirectories support visibility only. No Unix permissions are invented.\n");
- else if(!strcmp(name,"cp"))usage_text(fd,"cp [-Rp] [--no-progress] [--] source ... destination\nCopy data and resource forks and Finder type/creator. -R copies folders\nusing available traversal memory.\n-p also preserves file creation/modification dates and locked state.\nSymlinks are copied as links. Directory metadata preservation is not\nimplemented.\nExisting files are replaced only after both forks have copied\nsuccessfully.\n");
- else if(!strcmp(name,"mv"))usage_text(fd,"mv [--no-progress] [--] source ... destination\nRename/move on HFS; regular files can cross volumes using\nfork-preserving copy.\nDirectory moves require the same parent or an unchanged leaf name.\n");
- else if(!strcmp(name,"touch"))usage_text(fd,"touch [-c] [--] file ...\nUpdate modification time, or create an empty file with unset\ntype/creator.\n-c does not create missing files. HFS has no access-time field; -a/-t\nare unsupported.\n");
- else if(!strcmp(name,"mkdir"))usage_text(fd,"mkdir [-p] [--] directory ...\n-p creates missing parents and accepts existing directories.\n");
- else if(!strcmp(name,"rm"))usage_text(fd,"rm [-frR] [--no-progress] [--] file ...\n-r/-R removes folders recursively using available traversal memory; -f\nignores absent files.\nLinks themselves are removed. Finder locks are respected even with -f.\n");
- else if(!strcmp(name,"rmdir"))usage_text(fd,"rmdir [--] directory ...\nRemove empty directories only.\n");
- else if(!strcmp(name,"ln"))usage_text(fd,"ln -s target link\nCreate a bounded Clarice symbolic link. Hard links and -f are\nunsupported.\n");
- else usage_text(fd,"readlink [--] link ...\nPrint stored symbolic-link targets without resolving them.\n");
- if(!strcmp(name,"cp")||!strcmp(name,"mv")||!strcmp(name,"rm"))usage_text(fd,"Progress defaults on for interactive terminal streams after a short delay.\n--no-progress disables it; scripts/stdout redirection suppress it automatically.\nCopy bars describe the current file, including both forks; counts include\ncompleted files and folders. Unknown totals use an activity bar, no pre-scan.\nrm deletes directly, not to Trash; cancellation cannot undo deletions.\n");
- usage_text(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
+static int usage(const char *name,int fd){
+ const char *text;
+ if(!strcmp(name,"hfsattrib"))text=
+  "Usage:\n"
+  "  hfsattrib [options] [--] file ...\n"
+  "  hfsattrib file TYPE:CREA\n"
+  "Inspect or change HFS metadata. With no options, display it.\n"
+  "Options:\n"
+  "  --type CODE\tSet the four-byte file type.\n"
+  "  --creator CODE\tSet the four-byte creator.\n"
+  "  --locked on|off\tSet the Finder lock.\n"
+  "  --invisible on|off\tSet Finder visibility.\n"
+  "Codes are case-sensitive. A display of .... denotes unset bytes. Directories support visibility only.\n"
+  "Use -- before operands when a literal colon in the last filename could be read as shorthand.\n"
+  "Example:\n"
+  "  hfsattrib thing.sit SIT!:SITx\n";
+ else if(!strcmp(name,"cp"))text=
+  "Usage:\n"
+  "  cp [-Rp] [--no-progress] [--] source ... destination\n"
+  "Copy both forks and Finder type/creator. Copy symbolic links as links.\n"
+  "Options:\n"
+  "  -R, -r\tCopy folders recursively using available memory.\n"
+  "  -p\tPreserve file creation and modification dates and locked state.\n"
+  "  --no-progress\tSuppress progress.\n"
+  "Directory metadata preservation is unavailable. Existing files are replaced after both forks copy successfully.\n";
+ else if(!strcmp(name,"mv"))text=
+  "Usage:\n"
+  "  mv [--no-progress] [--] source ... destination\n"
+  "Rename or move HFS items. Regular files can cross volumes with both forks preserved.\n"
+  "Directory moves require the same parent or an unchanged leaf name.\n"
+  "Options:\n"
+  "  --no-progress\tSuppress progress.\n";
+ else if(!strcmp(name,"touch"))text=
+  "Usage:\n"
+  "  touch [-c] [--] file ...\n"
+  "Update modification time or create an empty file with unset type/creator.\n"
+  "Options:\n"
+  "  -c\tSkip absent files.\n"
+  "HFS has no access-time field. -a and -t are unsupported.\n";
+ else if(!strcmp(name,"mkdir"))text=
+  "Usage:\n"
+  "  mkdir [-p] [--] directory ...\n"
+  "Create directories.\n"
+  "Options:\n"
+  "  -p\tCreate missing parents and accept existing directories.\n";
+ else if(!strcmp(name,"rm"))text=
+  "Usage:\n"
+  "  rm [-frR] [--no-progress] [--] file ...\n"
+  "Delete directly, bypassing Trash. Links themselves are removed. Cancellation cannot undo deletions.\n"
+  "Options:\n"
+  "  -r, -R\tRemove folders recursively using available memory.\n"
+  "  -f\tIgnore absent files. Finder locks still apply.\n"
+  "  --no-progress\tSuppress progress.\n";
+ else if(!strcmp(name,"rmdir"))text=
+  "Usage:\n"
+  "  rmdir [--] directory ...\n"
+  "Remove empty directories.\n";
+ else if(!strcmp(name,"ln"))text=
+  "Usage:\n"
+  "  ln -s target link\n"
+  "Create a bounded Clarice symbolic link. Hard links and -f are unsupported.\n";
+ else text=
+  "Usage:\n"
+  "  readlink [--] link ...\n"
+  "Print stored symbolic-link targets without resolving them.\n";
+ int rc=help_output(fd,text);
+ if(rc)return rc;
+ if(!strcmp(name,"cp")||!strcmp(name,"mv")||!strcmp(name,"rm")){
+  rc=help_output(fd,
+   "Progress is shown after a short delay in interactive use. Scripts and stdout redirection suppress it.\n"
+   "Copy bars track both forks of the current file. Counts include completed files and folders. Unknown totals use an activity bar without a prescan.\n");
+  if(rc)return rc;
+ }
+ return help_output(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
 }
-static int files_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help")){usage(name,1);return 0;}
+static int files_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help"))return usage(name,1);
  if(!strcmp(name,"hfsattrib")){int rc=attr(argc,av);if(rc==2)usage(name,2);return rc;}
  if(!strcmp(name,"ln")){int rc=symlink_command(argc,av);if(rc==2)usage(name,2);return rc;}
  int i=1;for(;i<argc&&av[i][0]=='-'&&av[i][1];i++){if(!strcmp(av[i],"--")){i++;break;}if(!strcmp(av[i],"--no-progress")&&(!strcmp(name,"cp")||!strcmp(name,"mv")||!strcmp(name,"rm"))){progress_enabled=0;continue;}for(int j=1;av[i][j];j++){char c=av[i][j];if((!strcmp(name,"cp")||!strcmp(name,"rm"))&&(c=='R'||c=='r'))recursive=1;else if(!strcmp(name,"cp")&&c=='p')preserve=1;else if(!strcmp(name,"rm")&&c=='f')force=1;else if(!strcmp(name,"mkdir")&&c=='p')parents=1;else if(!strcmp(name,"touch")&&c=='c')nocreate=1;else{usage(name,2);return 2;}}}

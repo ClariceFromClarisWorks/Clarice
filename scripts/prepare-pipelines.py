@@ -1,12 +1,12 @@
 """Pristine sbase sources plus Clarice help and cooperative cancellation hooks."""
 from pathlib import Path
-import json, textwrap
+import json
 root=Path(__file__).resolve().parents[1]
 out=root/'work/build/pipelines';out.mkdir(parents=True,exist_ok=True)
 help_text={
- 'dd':'dd [if=file] [of=file] [bs=N|ibs=N obs=N] [count=N] [skip=N] [seek=N]\nCopy binary data forks; stdin/stdout by default (- also means a stream).\nBlocks default to 512 bytes. bs overrides ibs/obs. count counts input\nblocks; skip uses input blocks; seek uses output blocks and needs of=.\nSizes accept positive decimal, k (1024), b (512) and x products.\nOffsets must fit HFS signed 32-bit file positions. count=0 copies none.\nconv=notrunc preserves the existing tail; sync pads short input blocks;\nswab swaps byte pairs; lcase/ucase convert ASCII case. Comma combinations.\nconv=noerror is unsupported: read errors fail rather than looping.\nPartial output remains on error/cancellation. No raw devices, resource\nforks, Finder-metadata copying, authentication or safe editor replacement.\nExample: dd if=/dev/zero of=/tmp/zeros bs=1024 count=8\nRecord counts go to stderr. Status: 0 success, nonzero error, 130 cancel.\n',
+ 'dd':'dd [if=file] [of=file] [bs=N|ibs=N obs=N] [count=N] [skip=N] [seek=N]\nCopy binary data forks. Default input/output are stdin/stdout; - also means a stream.\nOperands:\n  bs, ibs, obs\tBlock sizes. Default: 512 bytes. bs overrides ibs/obs.\n  count=N\tCopy N input blocks. Zero copies none.\n  skip=N\tSkip N input blocks.\n  seek=N\tSkip N output blocks. Requires of=.\n  conv=LIST\tCombine conversions with commas.\nSizes accept decimal, k (1024), b (512) and x products. Offsets must fit signed 32-bit HFS positions.\nConversions: notrunc keeps the existing tail, sync pads short blocks, swab swaps pairs, lcase/ucase change ASCII case.\nRead errors fail; noerror is unsupported. Errors and cancellation can leave partial output. No raw devices, resource forks or Finder metadata.\nExample: dd if=/dev/zero of=/tmp/zeros bs=1024 count=8\nRecord counts go to stderr. Status: 0 success, nonzero error, 130 cancelled.\n',
 
- 'mktemp':'mktemp [-dqt] [-p directory] [--] [template]\nCreate an empty HFS data-fork file exclusively; -d creates a directory.\nDefault: /tmp/tmp.XXXXXXXXXX; last six X characters are replaced.\n-p or -t selects temporary-directory mode; exported TMPDIR takes\nprecedence over -p, otherwise /tmp. -q suppresses creation errors.\n-t rejects directory separators in template unless -p is also used.\nWithout directory mode, an explicit template is relative to cwd.\nPrint the created path. Unsafe -u name-only mode is not supported.\nNames are collision-checked, not cryptographically unpredictable.\nNo Unix ownership/permission protections on System 6. Caller owns the created file or directory.\nExample: mktemp /tmp/report.XXXXXX\n',
+ 'mktemp':'mktemp [-dqt] [-p DIRECTORY] [--] [template]\nCreate an empty file exclusively and print its path. Default template: /tmp/tmp.XXXXXXXXXX. Replaces the last six X characters.\nOptions:\n  -d\tCreate a directory.\n  -q\tSuppress creation errors.\n  -p DIRECTORY\tUse temporary-directory mode. Exported TMPDIR overrides DIRECTORY.\n  -t\tUse temporary-directory mode. Default directory: /tmp. Template may contain separators only with -p.\nWithout directory mode, explicit templates are relative to the current directory.\nNo name-only -u or Unix ownership/permission protection. Names are collision-checked and predictable.\nExample: mktemp /tmp/report.XXXXXX\n',
 
  'sleep':'sleep [--] seconds\nWait cooperatively for a nonnegative whole number of seconds.\nMacintosh ticks (60 per second) measure the wait; Ctrl+C cancels.\nNo fractional, suffixed or multiple duration operands.\nExample: sleep 2\nNo data input or normal output.\n',
  'printenv':'printenv [--] [name ...]\nPrint exported environment values, one per line; all NAME=value\nentries with no operands. Private shell variables are not visible.\nMissing names produce no output and status 1; output failure is 2.\nClarice supplies HOME/PWD defaults; names and values grow with memory.\nExample: printenv PATH TERM\nNo variable assignment, command execution or NUL-delimited option.\n',
@@ -17,7 +17,7 @@ help_text={
  'dirname':'dirname path\nPrint the parent directory portion.\n',
  'tee':'tee [-a] [file ...]\nCopy stdin to stdout and files; -a appends. -i (Unix signal masking) unsupported.\n',
  'tail':'tail [-f] [-n count|-c count] [file ...]\nLast 10 lines by default; +count starts at that line/byte.\n-f follows one file descriptor and yields until Ctrl+C; truncation restarts it.\n-m UTF-8 counting is deferred because the pinned upstream implementation has bugs.\nRetained tails use available application memory; this is not a disk-backed tail.\n',
- 'sort':'sort [-Cbcdfimnru] [-o output] [-t delimiter] [-k key] [file ...]\nSort lines; -n numeric, -r reverse, -u unique, -f ignore case.\n-c/-C check order (C quiet); -k start[,end] selects fields; -b ignores blanks.\n-d dictionary, -i printable only; -m uses the general merge-sort path.\n16 KiB/128-line batches spill to private /tmp files; longer records use singleton runs.\n16 merge levels; records grow with available memory.\n',
+ 'sort':'sort [-Cbcdfimnru] [-o FILE] [-t CHAR] [-k KEY] [file ...]\nSort text, spilling large inputs to private /tmp files. Default key: the whole line.\nOptions:\n  -n, -r, -u\tNumeric, reverse or unique output.\n  -c, -C\tCheck order; -C suppresses diagnostics.\n  -k KEY\tSelect a field range, start[,end].\n  -t CHAR\tSet one field separator.\n  -o FILE\tWrite to a file, which may also be an input.\n  -b, -d, -f, -i\tIgnore blanks, use dictionary order, ignore case or use printable characters only.\n  -m\tUse the general merge-sort path.\nUses 16 KiB/128-line batches and 16 merge levels. Long records use singleton runs; maximum record size depends on memory.\n',
  'wc':'wc [-l] [-w] [-c|-m] [file ...]\nCount lines, words, bytes (-c) or UTF-8 characters (-m). Default: lines words bytes.\n',
  'head':'head [-count|-n count] [file ...]\nPrint the first count lines (default 10). Multiple files get headers.\n',
  'cut':'cut -b list [-n] [file ...]\ncut -c list [file ...]\ncut -f list [-d delimiter] [-s] [file ...]\nSelect byte, UTF-8 character or field ranges (1,3-5,8-). Default delimiter: tab.\n-n avoids splitting UTF-8 bytes; -s omits lines without the field delimiter.\n',
@@ -28,21 +28,21 @@ for name,help in help_text.items():
  s=(root/f'src/vendor/sbase/{name}.c').read_text()
  marker='main(int argc, char *argv[])\n{'
  assert marker in s
- if name not in ('basename','dirname','tr','tee','cmp','sleep','printenv','mktemp'):
+ if name in ('wc','cut','sort','head','tail'):
   help+='Input defaults to stdin (or use -); output defaults to stdout.\nData forks only; resource forks and Finder metadata are not stream data.\n'
- if name=='sort':help+='-o selects output (may equal an input); -t sets one field separator.\nDefault keys compare the whole line; -C suppresses check diagnostics.\n'
  if name=='tee':help+='Reads stdin; each file operand receives a copy as well as stdout.\n'
  if name=='tr':help+='Reads stdin and writes stdout; no file operands.\n'
- if name!='dd':help+='-- ends option parsing where options are supported.\n'
- help+=('sbase port for Clarice.\n' if name=='cmp' else 'sbase port for Clarice. Status: 0 success; nonzero error; 130 interrupted.\n')
- help+='Invocation allocations are released on completion.\n'
+ if name not in ('cmp','dd','printenv'):help+='Status: 0 success, nonzero error, 130 interrupted.\n'
  if name in ('wc','cut','tr','sort','uniq','tail'):help+='UTF-8 processing does not convert the terminal font from MacRoman.\n'
- help+='GNU-only long options are not implemented; --help is a Clarice addition.\n'
  if name in ('wc','tr','sort'):
   help=help.replace(name+' ',name+'-sbase ',1)
-  help+='Compatibility command: '+name+' now selects BusyBox; this retains sbase behavior.\n'
- help='\n'.join('\n'.join(textwrap.wrap(line,72,break_long_words=False,break_on_hyphens=False)) for line in help.splitlines())+'\n'
- s=s.replace(marker,marker+'\n\tif (argc == 2 && !strcmp(argv[1], "--help")) { puts('+json.dumps(help)+'); return 0; }')
+  help+='sbase implementation. The default '+name+' command uses BusyBox.\n'
+ usage,body=help.split('\n',1)
+ if name=='cut':
+  other,third,body=body.split('\n',2)
+  usage+='\n  '+other+'\n  '+third
+ help='Usage:\n  '+usage+'\n'+body.replace('Example: ', 'Example:\n  ')
+ s=s.replace(marker,marker+'\n\tif (argc == 2 && !strcmp(argv[1], "--help")) return help_output(1, '+json.dumps(help)+');')
  if name in ('printenv','mktemp'):
   s='extern char **port_environ; extern char *port_getenv(const char*); extern void port_awk_init(void);\n#define environ port_environ\n#define getenv port_getenv\n'+s
   at=s.index('\n\tchar *var;' if name=='printenv' else '\n\tint dflag',s.index(marker));s=s[:at]+'\n port_awk_init();'+s[at:]
@@ -92,4 +92,4 @@ for name,help in help_text.items():
  if name in ('basename','dirname'):
   s='char *port_path_basename(char *); char *port_path_dirname(char *);\n'+s
   s=s.replace('p = basename(argv[0]);','p = port_path_basename(argv[0]);').replace('puts(dirname(argv[0]));','puts(port_path_dirname(argv[0]));')
- (out/f'{name}.c').write_text(s)
+ (out/f'{name}.c').write_text('#include "../../../src/help-output.h"\n'+s)
