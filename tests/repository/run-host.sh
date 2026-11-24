@@ -8,6 +8,7 @@ cc -Wno-unused-function -fsanitize=address,undefined tests/repository/records.c 
 python3 tests/repository/catalog.py
 python3 tests/repository/publish.py
 python3 tests/repository/mirror.py
+python3 tests/repository/http-server.py
 python3 tests/repository/helper-recovery.py
 cc -Wno-multichar -fsanitize=address,undefined tests/commands/update-host.c -o "$test_tmp/install"
 "$test_tmp/install"

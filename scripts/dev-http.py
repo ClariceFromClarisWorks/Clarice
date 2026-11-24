@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only HTTP development server for explicitly allowed Macintosh peers.
+"""Read-only HTTP development server for the trusted local network.
 Serve only an explicit staging directory; HTTP is unauthenticated and unencrypted.
 """
 import argparse
@@ -9,7 +9,7 @@ from pathlib import Path
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.client_address[0] not in self.server.peer:
+        if self.server.peer and self.client_address[0] not in self.server.peer:
             self.send_error(403, 'Unexpected peer')
             return
         root = Path(self.directory).resolve()
@@ -25,7 +25,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--bind', required=True, help='MacBook trusted-LAN IPv4 address')
-    p.add_argument('--peer', required=True, action='append', help='Allowed Macintosh IPv4 address; repeat for multiple peers')
+    p.add_argument('--peer', action='append', help='Optional client allowlist; omit to allow changing LAN addresses')
     p.add_argument('--port', type=int, default=8080)
     p.add_argument('--directory', type=Path, required=True)
     a = p.parse_args()

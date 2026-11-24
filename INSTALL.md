@@ -19,8 +19,9 @@ CLX payloads installed by appinstall. Recovery copies and unrelated files remain
 The 68000 build targets SE, SE/30 and PowerBook 180 with supported System 6/7
 configurations and enough free application memory. Compatibility is not fresh
 hardware acceptance. No TCP/IP stack is required for mounted-share updates.
-HTTP access is limited to configured trusted peers; add a new machine's verified
-IP to the host server's `--peer` list before using it. Do not expose it publicly.
+The internal HTTP listener has no client IP restriction, so changing Macintosh
+addresses are supported. It remains bound to the MacBook's LAN address. Optional
+`--peer` restrictions are available but are not enabled for this distribution.
 
 Maintainer workflow (one source, no independent AFP builds):
 
@@ -128,7 +129,7 @@ From a complete build made by `scripts/build.sh`:
 
 ```
 python3 scripts/repository.py work/private-repository
-python3 scripts/dev-http.py --bind HOST_IP --peer CLIENT_IP --port 8083 --directory work/private-repository
+python3 scripts/dev-http.py --bind HOST_IP --port 8089 --directory work/private-repository
 ```
 
 The publisher verifies the build seal, emits content-named CLX/MacBinary files,
