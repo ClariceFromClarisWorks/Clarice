@@ -99,3 +99,15 @@ offline installer once, keeping existing files, to bootstrap this failure. Do no
 delete nano-profile or the interrupted snapshot. Physical-SE acceptance remains
 pending explicit authorisation. Flag allocation/verification paths for the later
 independent code review; this task introduces no further recovery architecture.
+
+## Publication
+
+Product commit **7318341**, integrated local main, build **2026111952**. Published
+immutable artifacts before the active index through the existing publisher. All51
+entries/36 unique payloads match the seal, HTTP and AFP byte-for-byte; offline
+HDA/archive, source, seal and previous1951 index/payloads verified. Optional vi
+retains1951 because unchanged; standard utilities retain their accepted contents.
+HTTP: `http://192.168.1.112:8089/full/index.txt`.
+AFP: `Macintosh Exchange/Clarice/index.txt`.
+Offline bootstrap: `Clarice-1952.hda` alongside that index.
+No physical installation, GitHub push, tag or public release.

@@ -35,9 +35,11 @@ Host fault-injection and Snow final offline bootstrap, constrained update/cancel
 both-fork metadata readback and independent rollback/relaunch pass. Core package
 +2,176 bytes; BSS unchanged, no new persistent buffers/startup work. Corrected offline
 installer is the bootstrap for an old updater blocked before it can install itself.
-Physical SE remains untouched and requires separate acceptance. See the concise
-[report and evidence](recovery-memory/REPORT.md). Publication verification follows
-acceptance; no GitHub push or public release.
+Physical SE remains untouched and requires separate acceptance. Product commit
+**7318341** is integrated in local main. Canonical HTTP and Macintosh Exchange AFP
+serve1952: all51 entries/36 payloads, sealed source and offline packages verified;
+1951 index and payloads retained. See [report](recovery-memory/REPORT.md) and
+[publication evidence](recovery-memory/publication.json). No GitHub push or public release.
 
 ## Q1-004 — width-aware help
 
