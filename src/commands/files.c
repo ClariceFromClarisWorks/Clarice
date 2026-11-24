@@ -18,6 +18,15 @@ static int attr(int argc,char **av){
   else if(!strcmp(av[i],"--invisible")){invisible=onoff(av[++i]);if(invisible<0)return 2;}
   else return 2;
  }
+ /* The two-operand shorthand is parsed completely before any native writes.
+    -- keeps literal filenames containing colons available in inspection mode. */
+ if(argc-i==2&&strchr(av[i+1],':')&&!(i>1&&!strcmp(av[i-1],"--"))){
+  if(i!=1)return 2;
+  if(strlen(av[2])!=9||av[2][4]!=':')return 2;
+  char t[5];memcpy(t,av[2],4);t[4]=0;
+  if(!code(t,&type)||!code(av[2]+5,&creator))return 2;
+  has_type=has_creator=1;argc=2;
+ }
  if(i==argc)return 2;int status=0;
  for(;i<argc;i++){
   char native[PATH_CAP],canonical[PATH_CAP],a[5],b[5],text[160];CInfoPBRec pb;
@@ -38,7 +47,7 @@ static int attr(int argc,char **av){
    if(isdir(&pb))snprintf(text,sizeof text,"directory flags=%04x invisible=%s\n",pb.dirInfo.ioDrUsrWds.frFlags,pb.dirInfo.ioDrUsrWds.frFlags&0x4000?"on":"off");
    else{four(pb.hFileInfo.ioFlFndrInfo.fdType,a);four(pb.hFileInfo.ioFlFndrInfo.fdCreator,b);snprintf(text,sizeof text,"type='%s' creator='%s' flags=%04x locked=%s invisible=%s\n",a,b,pb.hFileInfo.ioFlFndrInfo.fdFlags,pb.hFileInfo.ioFlAttrib&1?"on":"off",pb.hFileInfo.ioFlFndrInfo.fdFlags&0x4000?"on":"off");}say(text);
   }
-  if(e)status=fail("hfsattr",e);if(app_yield())return 130;
+  if(e)status=fail("hfsattrib",e);if(app_yield())return 130;
  }return status;
 }
 static int mkdir_one(const char *path){char native[PATH_CAP],canonical[PATH_CAP],part[PATH_CAP];int e;
@@ -159,7 +168,7 @@ static int transfer(int argc,char **av,int start,int moving){
 static int symlink_command(int argc,char **av){char native[PATH_CAP],canonical[PATH_CAP];if(argc!=4||strcmp(av[1],"-s")||!*av[2]||strlen(av[2])>=PATH_CAP)return 2;int e=checked(av[3],native,canonical,0);if(e)return fail("ln",e);e=cli_native_create(native,'S6LK','S6UX');if(e)return fail("ln",e);short ref;e=cli_native_open(native,0,1,&ref);if(!e){long n=5;e=cli_native_write(ref,"S6L1\n",&n);if(!e&&n!=5)e=ioErr;if(!e){n=strlen(av[2]);e=cli_native_write(ref,av[2],&n);if(!e&&n!=(long)strlen(av[2]))e=ioErr;}int c=cli_native_close(ref);if(!e)e=c;}if(e)cli_native_delete(native);return e?fail("ln",e):0;}
 static void usage_text(int fd,const char *s){cli_write(fd,s,strlen(s));}
 static void usage(const char *name,int fd){
- if(!strcmp(name,"hfsattr"))usage_text(fd,"hfsattr [--type CODE] [--creator CODE] [--locked on|off] [--invisible\non|off] [--] file ...\nNo options displays metadata. Codes are exactly four bytes; ....\ndisplays unset bytes.\nDirectories support visibility only. No Unix permissions are invented.\n");
+ if(!strcmp(name,"hfsattrib"))usage_text(fd,"hfsattrib [--type CODE] [--creator CODE] [--locked on|off] [--invisible\non|off] [--] file ...\nhfsattrib file TYPE:CREA sets both codes (example: thing.sit SIT!:SITx).\nNo options displays metadata. Codes are case-sensitive, exactly four bytes;\n.... displays unset bytes. Use -- before literal colon-containing filenames.\nDirectories support visibility only. No Unix permissions are invented.\n");
  else if(!strcmp(name,"cp"))usage_text(fd,"cp [-Rp] [--no-progress] [--] source ... destination\nCopy data and resource forks and Finder type/creator. -R copies folders\nusing available traversal memory.\n-p also preserves file creation/modification dates and locked state.\nSymlinks are copied as links. Directory metadata preservation is not\nimplemented.\nExisting files are replaced only after both forks have copied\nsuccessfully.\n");
  else if(!strcmp(name,"mv"))usage_text(fd,"mv [--no-progress] [--] source ... destination\nRename/move on HFS; regular files can cross volumes using\nfork-preserving copy.\nDirectory moves require the same parent or an unchanged leaf name.\n");
  else if(!strcmp(name,"touch"))usage_text(fd,"touch [-c] [--] file ...\nUpdate modification time, or create an empty file with unset\ntype/creator.\n-c does not create missing files. HFS has no access-time field; -a/-t\nare unsupported.\n");
@@ -172,7 +181,7 @@ static void usage(const char *name,int fd){
  usage_text(fd,"Status: 0 success, 1 file error, 2 usage, 130 interrupted.\n");
 }
 static int files_main(int argc,char **av){const char *name=strrchr(av[0],'/');name=name?name+1:av[0];if(argc==2&&!strcmp(av[1],"--help")){usage(name,1);return 0;}
- if(!strcmp(name,"hfsattr")){int rc=attr(argc,av);if(rc==2)usage(name,2);return rc;}
+ if(!strcmp(name,"hfsattrib")){int rc=attr(argc,av);if(rc==2)usage(name,2);return rc;}
  if(!strcmp(name,"ln")){int rc=symlink_command(argc,av);if(rc==2)usage(name,2);return rc;}
  int i=1;for(;i<argc&&av[i][0]=='-'&&av[i][1];i++){if(!strcmp(av[i],"--")){i++;break;}if(!strcmp(av[i],"--no-progress")&&(!strcmp(name,"cp")||!strcmp(name,"mv")||!strcmp(name,"rm"))){progress_enabled=0;continue;}for(int j=1;av[i][j];j++){char c=av[i][j];if((!strcmp(name,"cp")||!strcmp(name,"rm"))&&(c=='R'||c=='r'))recursive=1;else if(!strcmp(name,"cp")&&c=='p')preserve=1;else if(!strcmp(name,"rm")&&c=='f')force=1;else if(!strcmp(name,"mkdir")&&c=='p')parents=1;else if(!strcmp(name,"touch")&&c=='c')nocreate=1;else{usage(name,2);return 2;}}}
  if(!strcmp(name,"cp")||!strcmp(name,"mv")){int rc=transfer(argc,av,i,!strcmp(name,"mv"));if(rc==2)usage(name,2);return rc;}

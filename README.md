@@ -32,7 +32,7 @@ The four planned utility groups are implemented as loadable `/bin` programs, wit
 | Area | Implemented | Next work |
 | --- | --- | --- |
 | Terminal | Wrapped editing, solid buffered cursor, bounded typeahead/history/scrollback, native Preferences with installed-font dropdown, saved geometry and themes | Further speed and font/geometry coverage |
-| Native files | HFS, `/mnt`, symlinks, PATH/profile, fork-preserving file operations and `hfsattr` | Broader filesystem/error coverage and optimisation |
+| Native files | HFS, `/mnt`, symlinks, PATH/profile, fork-preserving file operations and `hfsattrib` | Broader filesystem/error coverage and optimisation |
 | Source ports | sbase grep/sed and everyday pipeline tools; One True Awk | Compatibility and large-input performance |
 | Streams and shell | stdin/stdout/stderr, redirection, exit statuses, finite sequential spool pipelines, bounded sh subset | Broader POSIX runtime coverage; concurrent pipes are not implemented |
 | Editor | No working editor in this release | Faithful upstream nano port, starting with tiny configuration |
@@ -55,7 +55,7 @@ The project reuses SkiFree’s pinned toolchain; it does not require a SkiFree c
 
 Launch Clarice from Finder to install its data folders automatically, then use the shell. The application can remain outside the System Folder. Move/resize its normal document window. MultiFinder's upper-right application icon switches between Finder and Clarice while commands run.
 
-External programs under `/bin`: `ls df cat grep sed awk wc head tail cut tr sort uniq tee cp mv touch mkdir rmdir rm ln readlink hfsattr find du file od basename dirname more`. Each provides `--help` with supported options and limits. `benchls` and `benchscan` are additional diagnostics. Shell-state commands such as `cd`, `export`, `history` and `prefs` remain builtins; use `help <builtin>`. `-h` means human-readable sizes for `ls`, `df` and `du`, not generic help.
+External programs under `/bin`: `ls df cat grep sed awk wc head tail cut tr sort uniq tee cp mv touch mkdir rmdir rm ln readlink hfsattrib find du file od basename dirname more`. Each provides `--help` with supported options and limits. `benchls` and `benchscan` are additional diagnostics. Shell-state commands such as `cd`, `export`, `history` and `prefs` remain builtins; use `help <builtin>`. `-h` means human-readable sizes for `ls`, `df` and `du`, not generic help.
 
 The scripting adapter implements a tested subset of POSIX sh: lists, `&&`/`||`, quoting and variable expansion, `if`, `for`, `while`/`until`, `case`, functions/return, positional parameters, `set --`, shift, command substitution, arithmetic, here-documents, input/output redirection and finite pipelines. Run `sh path/file.sh` or `./file.sh`; no executable permission bit is required. **This is not yet a complete POSIX sh implementation.** See the detailed limits below. Bash/zsh remain later targets.
 
@@ -260,8 +260,8 @@ rename and same-name directory moves; file fallback copies both forks across
 volumes. Arbitrary directory rename-and-move/cross-volume moves are unsupported.
 `touch` leaves new type/creator unset and preserves existing metadata; `-c`
 is supported, but Unix access times and timestamp-setting options are not.
-`hfsattr` edits four-byte type/creator, Locked and Invisible; `chmod` is absent
-and offers an hfsattr hint when unresolved through PATH. These are different
+`hfsattrib` edits four-byte type/creator, Locked and Invisible; `chmod` is absent
+and offers an hfsattrib hint when unresolved through PATH. These are different
 metadata models, not interchangeable permission commands.
 
 `find` supports name/type/maxdepth/print predicates combined with AND; no exec,

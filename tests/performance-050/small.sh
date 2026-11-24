@@ -2,7 +2,7 @@ mkdir /tmp/perf-small
 touch /tmp/perf-small/a
 ln -s /tmp/perf-small/a /tmp/perf-small/link
 readlink /tmp/perf-small/link > /dev/null
-hfsattr /tmp/perf-small/a > /dev/null
+hfsattrib /tmp/perf-small/a > /dev/null
 basename /tmp/perf-small/a > /dev/null
 dirname /tmp/perf-small/a > /dev/null
 free > /dev/null

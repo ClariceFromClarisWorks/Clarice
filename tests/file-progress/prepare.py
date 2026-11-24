@@ -16,7 +16,7 @@ prefix=':System Folder:Clarice Data:'
 cmd=['hmount /src/work/file-progress/system.hda']
 for v in ['before','after']:
  cmd += [f'hmkdir "{prefix}tmp:fp-{v}"']
- for name in ['cp','mv','rm','hfsattr']:
+ for name in ['cp','mv','rm','hfsattrib']:
   cmd += [f'hcopy -r /src/work/file-progress/{v}/files "{prefix}tmp:fp-{v}:{name}"']
 for name in ['fp-source','fp-large']:cmd += [f'hcopy -m /src/work/file-progress/{name}.bin "{prefix}tmp:{name}"']
 (work/'small.txt').write_text('small file\n')

@@ -16,6 +16,31 @@ host-only setting does not alter the sealed d14852d product archive. No push, pu
 release or hardware deployment. Q1-001 is completed below; Q1-002 is completed below.
 [Evidence and limitations](distribution-1946/REPORT.md).
 
+## Q1-003 — HFS attribute command rename
+
+Build **2026111949**, validated on accelerated Snow Plus/4MB/System6.0.8.
+`hfsattrib` replaces `hfsattr` in the49-command standard collection; no alias.
+`hfsattrib FILE TYPE:CREA` sets both exact, case-sensitive four-byte codes.
+Existing inspection and individual flags remain. Invalid shorthand is rejected
+before metadata writes. Upgrade completion retires only a snapshot-verified old
+managed executable; its previous-release copy remains recoverable. The offline
+installer recognises the exact uncatalogued1948 image. Unknown/manual legacy
+copies remain with a warning; changed managed copies block deletion. Historical
+catalog rows remain for recovery, excluded from current repository membership.
+
+Host ASan/UBSan attribute, native-recovery, filesystem and repository/loader
+regressions pass. Snow repository1948→1949 and offline1948→1949 both relaunch,
+resolve the new command, remove the managed old name (127), preserve its exact
+previous snapshot image and leave legacy backups. Shorthand/options/case/error
+checks pass; Ctrl+C130 and subsequent invocation recover. Both fixture forks,
+Finder flags/position and creation/modification dates compare exactly. Two
+10-run loops stabilise at337142 free /336974 largest bytes, owned peak/remaining0
+(first loop adds30 bytes of shell loop-variable capacity). No new persistent
+allocation or startup scan. Shared files image18916→19316B (+400B), Core MacBinary
+424960→425728B (+768B); native text unchanged, static data+8/BSS−8B, total unchanged.
+[Focused evidence](hfsattrib-q1/). Physical testing not performed.
+Publication verification pending; prior1948 distribution preserved.
+
 ## Q1-002 — root installation and managed recovery
 
 Build **2026111948**, product commit **8260fa9**, accepted in Snow and published

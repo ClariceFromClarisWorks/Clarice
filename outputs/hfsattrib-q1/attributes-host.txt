@@ -1,0 +1,1 @@
+PASS production hfsattrib inspection/options/shorthand, exact case, malformed input, metadata preservation, native failure and cancellation

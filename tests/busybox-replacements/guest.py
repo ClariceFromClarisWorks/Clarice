@@ -42,9 +42,9 @@ try:
  cmd("tr a-z A-Z < /tmp/br-macroman.txt > /tmp/br-mac-out")
  cmd('cmp /tmp/br-mac-out /tmp/br-macroman-upper.txt')
  cmd("tr -d '\\000' < /tmp/br-binary.dat > /tmp/br-out");cmd('cmp /tmp/br-out /tmp/br-binary-nonul.dat')
- cmd('cp /tmp/br-lines /tmp/br-locked');cmd('hfsattr --locked on /tmp/br-locked')
+ cmd('cp /tmp/br-lines /tmp/br-locked');cmd('hfsattrib --locked on /tmp/br-locked')
  assert cmd('sort /tmp/br-ordinary.txt > /tmp/br-locked',None)['status']!=0
- cmd('cmp /tmp/br-locked /tmp/br-lines');cmd('hfsattr --locked off /tmp/br-locked')
+ cmd('cmp /tmp/br-locked /tmp/br-lines');cmd('hfsattrib --locked off /tmp/br-locked')
  timed('sort-sbase /tmp/br-large.txt > /tmp/br-spill');cmd('sort -c /tmp/br-spill');assert body(cmd('wc -c < /tmp/br-spill'))=='65536'
  c.t.write(b'sort /tmp/br-sort-pressure.txt > /tmp/br-out\r\n');time.sleep(2);c.t.write(b'\x03');t=c.t.read_until(b' > ',30);assert t.endswith(b' > ')
  assert 'CANCEL_STATUS=130\r\n' in cmd("printf 'CANCEL_STATUS=%s\\n' $?")['text'];assert 'remaining=0' in cmd('status runtime')['text']

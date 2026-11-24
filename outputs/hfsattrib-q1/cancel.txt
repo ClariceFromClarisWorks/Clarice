@@ -1,0 +1,5 @@
+cancel=130
+/tmp/attrib: type='SIT!' creator='SITx' flags=2010 locked=off invisible=off
+Runtime: heap=361854 largest=359268 image=11892 ticks=29 load=24 owned-peak=0 remaining=0
+Loader ticks: read=11 validate=0 imports=2 relocations=1 prepare=2 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=8 payload=0 metadata=0 structure=1 (structure included in relocations)

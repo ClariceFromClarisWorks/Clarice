@@ -1,7 +1,7 @@
 mkdir native-check
 echo MKDIR:$?
 printf 'payload\n' > native-check/file
-hfsattr --type TEXT --creator TEST native-check/file
+hfsattrib --type TEXT --creator TEST native-check/file
 echo ATTR:$?
 file native-check/file
 ls -a native-check
@@ -11,9 +11,9 @@ echo LS_INVALID:$?
 df -h /mnt/Audit > /mnt/Audit/df-current.out
 echo DF:$?
 du -sk native-check
-hfsattr --locked on native-check/file
+hfsattrib --locked on native-check/file
 rm native-check/file
 echo LOCKED:$?
-hfsattr --locked off native-check/file
+hfsattrib --locked off native-check/file
 rm -r native-check
 echo REMOVE:$?

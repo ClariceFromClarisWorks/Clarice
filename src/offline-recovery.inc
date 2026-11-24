@@ -17,7 +17,7 @@ static int offline_recovery(const char *origin,const char *media,uint32_t build)
  RecoverySnapshot s;memset(&s,0,sizeof s);strcpy(s.header.root,root_path);strcpy(s.header.origin,origin);s.header.build=build;
  e=info(origin,&cat);if(e)return e;s.header.origin_id=cat.hFileInfo.ioDirID;s.header.origin_modified=cat.hFileInfo.ioFlMdDat;
  /* Catalog names are deduplicated while reading; grow only if necessary. */
- unsigned cap=RELEASE_COUNT+4;s.files=(RecoveryFile*)NewPtr(cap*sizeof *s.files);if(!s.files)return memFullErr;memset(s.files,0,cap*sizeof *s.files);s.header.count=3;
+ unsigned cap=RELEASE_COUNT+5;s.files=(RecoveryFile*)NewPtr(cap*sizeof *s.files);if(!s.files)return memFullErr;memset(s.files,0,cap*sizeof *s.files);s.header.count=3;
  strcpy(s.files[0].name,"@core");strcpy(s.files[1].name,"@helper");strcpy(s.files[2].name,"@catalog");
  char catalog[256];strcpy(catalog,root_path);strcat(catalog,"etc:clarice:installed.catalog");short ref=-1;e=update_open(catalog,0,0,&ref);
  char buffer[512],line[256];unsigned used=0;int first=1,core=0;
@@ -26,6 +26,7 @@ static int offline_recovery(const char *origin,const char *media,uint32_t build)
    if(buffer[j]!='\n'){if(!buffer[j]||used+1>=sizeof line){e=paramErr;break;}line[used++]=buffer[j];continue;}
    line[used]=0;used=0;if(first){first=0;if(strcmp(line,"CLARICE-INSTALLED 1"))e=paramErr;continue;}
    RepoRecord record;e=repo_record(line,&record,1);if(e)break;if(record.core){core=record.version==build?1:-1;continue;}
+   if(!strcmp(record.name,"hfsattr")){char old[256];strcpy(old,root_path);strcat(old,"bin:hfsattr");CInfoPBRec present;int found=info(old,&present);if(found==fnfErr)continue;if(found){e=found;break;}}
    unsigned i=3;for(;i<s.header.count;i++)if(!strcmp(s.files[i].name,record.name))break;
    if(i==cap){unsigned next=cap*2;if(next<cap||next>0x7fffffffUL/sizeof *s.files){e=memFullErr;break;}RecoveryFile *p=(RecoveryFile*)NewPtr(next*sizeof *p);if(!p){e=memFullErr;break;}memcpy(p,s.files,cap*sizeof *p);memset(p+cap,0,(next-cap)*sizeof *p);DisposePtr((Ptr)s.files);s.files=p;cap=next;}
    if(i==s.header.count)s.header.count++;strcpy(s.files[i].name,record.name);s.files[i].data=record.size;s.files[i].data_crc=record.crc;
@@ -44,6 +45,15 @@ static int offline_recovery(const char *origin,const char *media,uint32_t build)
   unsigned i=3;for(;i<s.header.count;i++)if(!strcmp(s.files[i].name,release_names[k]))break;if(i<s.header.count)continue;
   if(i==cap){unsigned next=cap*2;if(next<cap||next>0x7fffffffUL/sizeof *s.files){e=memFullErr;break;}RecoveryFile *p=(RecoveryFile*)NewPtr(next*sizeof *p);if(!p){e=memFullErr;break;}memcpy(p,s.files,cap*sizeof *p);memset(p+cap,0,(next-cap)*sizeof *p);DisposePtr((Ptr)s.files);s.files=p;cap=next;}
   strcpy(s.files[i].name,release_names[k]);s.files[i].data=update_be32(manifest+56+k*32+24);s.files[i].data_crc=update_be32(manifest+56+k*32+28);s.header.count++;
+ }
+ /* The1948 offline kit did not catalog its install-if-absent tools.
+    Recognise that exact bundled image only; unknown older/manual copies stay. */
+ if(!e){unsigned i=3;for(;i<s.header.count;i++)if(!strcmp(s.files[i].name,"hfsattr"))break;
+  if(i==s.header.count){char old[256];strcpy(old,root_path);strcat(old,"bin:hfsattr");CInfoPBRec c;int found=info(old,&c);
+   if(!found&&c.hFileInfo.ioFlLgLen==18916&&!c.hFileInfo.ioFlRLgLen&&c.hFileInfo.ioFlFndrInfo.fdType=='CLX1'&&c.hFileInfo.ioFlFndrInfo.fdCreator=='CLRC'){
+    uint32_t crc;int verified=update_hash_fork(old,0,&crc,18916);if(!verified&&crc==0xe4a1c5edUL){if(i>=cap)e=memFullErr;else{strcpy(s.files[i].name,"hfsattr");s.files[i].data=18916;s.files[i].data_crc=crc;s.header.count++;}}
+   }
+  }
  }
  if(!e)e=recovery_prepare(&rotation,&s,helper,command_check_native);
  recovery_dispose(&s);if(e)errsay("Installer: cannot verify a coherent previous catalog. Existing files kept.\n");return e;

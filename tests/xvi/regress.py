@@ -19,14 +19,14 @@ try:
  cmd('cat /tmp/xvi-edit.txt',contains='alpha BETA\r\ngamma delta')
  edit('xvi /tmp/xvi-edit.txt',b':%s/delta/DELTA/\r:wq\r')
  cmd('cat /tmp/xvi-edit.txt',contains='gamma DELTA')
- cmd('hfsattr --type TEXT --creator XVI1 /tmp/xvi-edit.txt')
- before=cmd('hfsattr /tmp/xvi-edit.txt')
+ cmd('hfsattrib --type TEXT --creator XVI1 /tmp/xvi-edit.txt')
+ before=cmd('hfsattrib /tmp/xvi-edit.txt')
  edit('xvi /tmp/xvi-edit.txt',b'A retained\x1b:wq\r')
- after=cmd('hfsattr /tmp/xvi-edit.txt');assert 'XVI1' in after and 'TEXT' in after
- cmd('hfsattr --locked on /tmp/xvi-edit.txt')
+ after=cmd('hfsattrib /tmp/xvi-edit.txt');assert 'XVI1' in after and 'TEXT' in after
+ cmd('hfsattrib --locked on /tmp/xvi-edit.txt')
  edit('xvi /tmp/xvi-edit.txt',b'A LOST\x1b:w!\r:q!\r')
  cmd('cat /tmp/xvi-edit.txt',contains='retained');assert 'LOST' not in rows[-1]['text']
- cmd('hfsattr --locked off /tmp/xvi-edit.txt')
+ cmd('hfsattrib --locked off /tmp/xvi-edit.txt')
  edit('xvi -R /tmp/xvi-edit.txt',b'A LOST\x1b:w\r:q!\r')
  cmd('cat /tmp/xvi-edit.txt');assert 'LOST' not in rows[-1]['text']
  cmd('xvi --help > /tmp/xvi-help');cmd('cat /tmp/xvi-help',contains='Usage: xvi')

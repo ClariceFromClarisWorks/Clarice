@@ -312,3 +312,19 @@ invocation exit attempts to preserve unsaved text in `/etc/clarice/vi-*.recover`
 Inspect `.part` files as incomplete. Recovery needs writable disk space and is
 not protection from OS crashes or power failure. Normal saves continue to use
 Clarice's fork-preserving safe replacement.
+
+## HFS attribute command rename (build 2026111949)
+
+Use `hfsattrib FILE` to inspect metadata, or
+`hfsattrib ./thing.sit SIT!:SITx` to set its four-byte, case-sensitive type and
+creator together. Existing `--type`, `--creator`, `--locked` and `--invisible`
+options remain available. Malformed shorthand is rejected before any writes.
+
+The standard collection now contains `hfsattrib`, without an `hfsattr` alias.
+Successful upgrade completion removes the old executable only when its identity,
+forks and metadata still match the managed previous-release snapshot. The offline
+installer also recognises the exact1948 bundled image, whose tools were not
+individually catalogued. Unknown/manual legacy copies are preserved and reported;
+modified managed copies block cleanup rather than being deleted. The previous
+snapshot retains the old command for rollback. Historical catalog rows are
+retained but no longer treated as current repository members.

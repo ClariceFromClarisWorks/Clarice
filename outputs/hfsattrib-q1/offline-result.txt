@@ -1,0 +1,6 @@
+/bin/hfsattrib
+old=127
+/bin/hfsattrib: type='CLX1' creator='CLRC' flags=0000 locked=off invisible=off
+Runtime: heap=360648 largest=360440 image=11892 ticks=30 load=25 owned-peak=0 remaining=0
+Loader ticks: read=9 validate=0 imports=2 relocations=2 prepare=4 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=8 payload=0 metadata=0 structure=1 (structure included in relocations)

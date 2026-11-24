@@ -1,0 +1,56 @@
+HFSATTRIB-BEGIN
+/bin/hfsattrib
+old-status=127
+hfsattrib [--type CODE] [--creator CODE] [--locked on|off] [--invisible
+on|off] [--] file ...
+hfsattrib file TYPE:CREA sets both codes (example: thing.sit SIT!:SITx).
+No options displays metadata. Codes are case-sensitive, exactly four bytes;
+.... displays unset bytes. Use -- before literal colon-containing filenames.
+Directories support visibility only. No Unix permissions are invented.
+Status: 0 success, 1 file error, 2 usage, 130 interrupted.
+/tmp/attrib: type='TEXT' creator='TEST' flags=2010 locked=off invisible=off
+shorthand=0
+/tmp/attrib: type='SIT!' creator='SITx' flags=2010 locked=off invisible=off
+/tmp/attrib: type='sit!' creator='sitX' flags=2010 locked=off invisible=off
+hfsattrib [--type CODE] [--creator CODE] [--locked on|off] [--invisible
+on|off] [--] file ...
+hfsattrib file TYPE:CREA sets both codes (example: thing.sit SIT!:SITx).
+No options displays metadata. Codes are case-sensitive, exactly four bytes;
+.... displays unset bytes. Use -- before literal colon-containing filenames.
+Directories support visibility only. No Unix permissions are invented.
+Status: 0 success, 1 file error, 2 usage, 130 interrupted.
+invalid=2
+/tmp/attrib: type='sit!' creator='sitX' flags=2010 locked=off invisible=off
+hfsattrib [--type CODE] [--creator CODE] [--locked on|off] [--invisible
+on|off] [--] file ...
+hfsattrib file TYPE:CREA sets both codes (example: thing.sit SIT!:SITx).
+No options displays metadata. Codes are case-sensitive, exactly four bytes;
+.... displays unset bytes. Use -- before literal colon-containing filenames.
+Directories support visibility only. No Unix permissions are invented.
+Status: 0 success, 1 file error, 2 usage, 130 interrupted.
+invalid-option=2
+hfsattrib [--type CODE] [--creator CODE] [--locked on|off] [--invisible
+on|off] [--] file ...
+hfsattrib file TYPE:CREA sets both codes (example: thing.sit SIT!:SITx).
+No options displays metadata. Codes are case-sensitive, exactly four bytes;
+.... displays unset bytes. Use -- before literal colon-containing filenames.
+Directories support visibility only. No Unix permissions are invented.
+Status: 0 success, 1 file error, 2 usage, 130 interrupted.
+invalid-mixed=2
+/tmp/attrib: type='TEXT' creator='TEST' flags=6010 locked=off invisible=on
+/tmp/attrib: type='TEXT' creator='TEST' flags=2010 locked=on invisible=off
+/tmp: directory flags=0100 invisible=off
+/tmp/attrib: type='TEXT' creator='TEST' flags=2010 locked=off invisible=off
+hfsattrib: Mac OS error -50: Invalid parameter
+directory-status=1
+Runtime: heap=337172 largest=337004 image=11892 ticks=31 load=25 owned-peak=0 remaining=0
+Loader ticks: read=11 validate=0 imports=2 relocations=2 prepare=3 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=7 payload=0 metadata=0 structure=1 (structure included in relocations)
+Runtime: heap=337142 largest=336974 image=11892 ticks=31 load=25 owned-peak=0 remaining=0
+Loader ticks: read=9 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=8 payload=0 metadata=1 structure=1 (structure included in relocations)
+Runtime: heap=337142 largest=336974 image=11892 ticks=32 load=26 owned-peak=0 remaining=0
+Loader ticks: read=9 validate=2 imports=2 relocations=1 prepare=5 events=2 (events included above)
+Verification ticks: mode=fast header=0 record=7 payload=0 metadata=2 structure=1 (structure included in relocations)
+/tmp/attrib: type='SIT!' creator='SITx' flags=2010 locked=off invisible=off
+HFSATTRIB-END

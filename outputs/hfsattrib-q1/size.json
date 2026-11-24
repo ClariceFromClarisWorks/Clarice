@@ -1,0 +1,20 @@
+{
+  "build": 2026111949,
+  "core_macbinary_before": 424960,
+  "core_macbinary_after": 425728,
+  "files_clx_before": 18916,
+  "files_clx_after": 19316,
+  "core_native_before": {
+    "text": 232820,
+    "data": 35612,
+    "bss": 41440
+  },
+  "core_native_after": {
+    "text": 232820,
+    "data": 35620,
+    "bss": 41432
+  },
+  "persistent_heap_added": 0,
+  "startup_scan_added": false,
+  "physical_tests": false
+}

@@ -11,6 +11,9 @@ static int repo_catalog_members(RepoItem **items){
  RepoReader r;memset(&r,0,sizeof r);int e=open_path(REPO_CATALOG,fsRdPerm,&r.ref);if(e==fnfErr)return 0;if(e)return e;
  char line[256];int n=repo_next(&r,line,sizeof line);if(n!=1||strcmp(line,"CLARICE-INSTALLED 1"))e=paramErr;
  while(!e&&(n=repo_next(&r,line,sizeof line))==1){RepoRecord rec;e=repo_record(line,&rec,1);if(e)break;
+  /* Historical catalog rows remain for rollback, but the retired command is
+     not a current repository member after the rename. */
+  if(!rec.core&&!strcmp(rec.name,"hfsattr"))continue;
   RepoItem *item=repo_find(*items,&rec);if(!item){item=cli_alloc(sizeof *item);if(!item){e=memFullErr;break;}memset(item,0,sizeof *item);item->wanted=rec;item->next=*items;*items=item;}
   item->known=1;item->installed=rec;
  }
@@ -54,7 +57,10 @@ static int repo_recovery_root(const char *own,char target[256]){
    Legacy .clx/.previous/.cu archives and unrelated historical builds stay put. */
 static int repo_recovery_cleanup(const UpdatePlan *plan,const char *running){
  RecoverySnapshot s;RecoveryRotation r;int e=repo_recovery_load(&s,&r);if(e==fnfErr)return 0;if(e)return e;
- e=recovery_verify(r.path[0],&s);if(!e)e=recovery_clean_tools(&s);if(e){recovery_dispose(&s);return e;}
+ e=recovery_verify(r.path[0],&s);if(!e)e=recovery_retire_tool(&s,"hfsattr","hfsattrib",repo_recovery_validate);if(!e)e=recovery_clean_tools(&s);if(e){recovery_dispose(&s);return e;}
+ /* An unrecognised legacy copy is not owned by this migration. */
+ {char old[256];strcpy(old,s.header.root);strcat(old,"bin:hfsattr");CInfoPBRec c;
+  if(!info(old,&c))errsay("Unmanaged /bin/hfsattr preserved; inspect it before removing manually.\n");}
  for(uint32_t i=0;!e&&i<s.header.count;i++){
   RecoveryFile *f=&s.files[i];char path[256];CInfoPBRec c;
 

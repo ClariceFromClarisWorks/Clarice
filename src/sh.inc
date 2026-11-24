@@ -312,7 +312,7 @@ static int sh_dispatch(struct sh_args *a){int i,n=a->n;char **v=a->v;if(!n)retur
  if(!session_io&&serial_service_image&&(!strcmp(owner_base,"serial")||!strcmp(owner_base,"kermit"))){errsay("serial remote service owns the port; disable it before local serial/Kermit use\n");return 2;}
 #endif
  if(session_io&&!(n==2&&!strcmp(v[1],"--help"))){const char *base=strrchr(candidate,'/');base=base?base+1:candidate;if(!strcmp(base,"clarice")||!strcmp(base,"serial")||!strcmp(base,"telnet")||!strcmp(base,"nano")||!strcmp(base,"nano-profile")){errsay("command currently requires local input ownership\n");return 2;}}shell_commands++;return kind==2?module_run(candidate,n,v):sh_file(candidate,n,v,0);}
- if(!strcmp(v[0],"chmod")){errsay("chmod: command not found; did you mean hfsattr?\n");return 127;}
+ if(!strcmp(v[0],"chmod")){errsay("chmod: command not found; did you mean hfsattrib?\n");return 127;}
  errsay("command not found: ");errsay(v[0]);errsay("\n");command_install_hint(v[0]);return 127;}
 #endif
 

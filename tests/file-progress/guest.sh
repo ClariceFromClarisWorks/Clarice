@@ -23,12 +23,12 @@ echo tree-remove:$? >> /tmp/fp-results
 test ! -e /tmp/fp-tree
 echo tree-absent:$? >> /tmp/fp-results
 printf KEEP > /tmp/fp-locked
-hfsattr --locked on /tmp/fp-locked
+hfsattrib --locked on /tmp/fp-locked
 cp /tmp/fp-source /tmp/fp-locked 2>> /tmp/fp-results
 echo locked-copy:$? >> /tmp/fp-results
 rm -f /tmp/fp-locked 2>> /tmp/fp-results
 echo locked-remove:$? >> /tmp/fp-results
-hfsattr --locked off /tmp/fp-locked
+hfsattrib --locked off /tmp/fp-locked
 rm /tmp/fp-locked
 echo unlock-remove:$? >> /tmp/fp-results
 cp --no-progress -p /tmp/fp-source /tmp/fp-quiet

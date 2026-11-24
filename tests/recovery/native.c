@@ -72,6 +72,7 @@ static void process_reset(void){for(int i=0;i<128;i++)if(live[i]){free(live[i]);
 static void closed_all(void){for(int i=0;i<32;i++)assert(!refs[i].used);assert(!allocs);
  const char *kept[]={"Disk:Notes","Disk:System:Clarice Data:etc:clarice:clarice.conf","Disk:System:Clarice Data:bin:.clx-ls.old"};for(int n=0;n<3;n++){int i=find(kept[n]);assert(i>=0);assert(!strcmp((char*)fs[i].fork[0],"user-owned"));assert(!memcmp(fs[i].fork[1],"resource!",9));}}
 
+static int validate_tool(const char *p){return find(p)<0?fnfErr:0;}
 int main(void){
  file("Disk:Notes","user-owned");file("Disk:System:Clarice Data:etc:clarice:clarice.conf","user-owned");file("Disk:System:Clarice Data:bin:.clx-ls.old","user-owned");
  file("Disk:Clarice","old core");file("Disk:Helper","helper");file("Disk:System:Clarice Data:etc:clarice:installed.catalog","CLARICE-INSTALLED 1\n");file("Disk:System:Clarice Data:bin:ls","old tool");
@@ -138,6 +139,18 @@ int main(void){
   RecoverySnapshot s;assert(!recovery_inventory(current,&s,0));assert(!recovery_verify(current,&s));recovery_dispose(&s);
   int retry=recovery_restore(current,launch);if(retry){crash_failures++;fprintf(stderr,"restore interruption retry blocked boundary=%d error=%d\n",fault,retry);}closed_all();
  }
+ /* Removal after a command rename is bound to the coherent snapshot and
+    requires a usable replacement. Retry after deletion is harmless. */
+ reset();assert(!recovery_restore(current,launch));RecoverySnapshot renamed;assert(!recovery_inventory(current,&renamed,0));
+ int old=find("Disk:System:Clarice Data:bin:ls");
+ /* Restore changed catalog identity; cleanup must refuse that changed file. */
+ assert(recovery_retire_tool(&renamed,"ls","listing",validate_tool)==paramErr);
+ for(unsigned i=0;i<renamed.header.count;i++)if(!strcmp(renamed.files[i].name,"ls"))renamed.files[i].source_id=fs[old].info.hFileInfo.ioDirID;
+ assert(recovery_retire_tool(&renamed,"ls","listing",validate_tool)==fnfErr);assert(find("Disk:System:Clarice Data:bin:ls")>=0);
+ file("Disk:System:Clarice Data:bin:listing","new tool");
+ fs[old].fork[0][0]^=1;assert(recovery_retire_tool(&renamed,"ls","listing",validate_tool)==paramErr);fs[old].fork[0][0]^=1;
+ assert(!recovery_retire_tool(&renamed,"ls","listing",validate_tool));assert(find("Disk:System:Clarice Data:bin:ls")<0);assert(!recovery_retire_tool(&renamed,"ls","listing",validate_tool));assert(!recovery_verify(current,&renamed));recovery_dispose(&renamed);closed_all();
+ puts("PASS renamed-command cleanup: missing replacement, changed identity/content, retry and retained snapshot");
  assert(!crash_failures);
  printf("Interrupted restore: %d of %d boundaries require intervention; immutable snapshot intact\n",crash_failures,restore_steps);
  printf("PASS production native rotation %d failure boundaries; restore %d failure boundaries; both forks and snapshot survive\n",total,restore_steps);

@@ -8,6 +8,7 @@
 #include "fork-crc.h"
 #include "transaction.h"
 #include "stamp.h"
+#include "open-guard.h"
 #ifndef RECOVERY_ALLOC
 #define RECOVERY_ALLOC(n) NewPtr(n)
 #define RECOVERY_FREE(p) DisposePtr((Ptr)(p))
@@ -139,6 +140,21 @@ static int recovery_clean_tools(const RecoverySnapshot *s){
   CInfoPBRec c;int e=update_info(path,&c);if(e==fnfErr)continue;if(e)return e;
   if((uint32_t)c.hFileInfo.ioDirID!=f->source_id)return paramErr;e=recovery_check_file(path,f,0);if(e)return e;e=recovery_delete(path);if(e)return e;
  }return update_flush(s->header.root);
+}
+/* Explicit command rename only, during successful update completion. The
+ * verified whole-release snapshot remains the recovery owner. Never infer
+ * ownership from a filename alone, or remove a modified/user-replaced tool. */
+static int recovery_retire_tool(const RecoverySnapshot *s,const char *oldname,const char *newname,int (*validate)(const char *)){
+ const RecoveryFile *f=0;for(uint32_t i=0;i<s->header.count;i++)if(!strcmp(s->files[i].name,oldname)){f=&s->files[i];break;}
+ if(!f||!f->id||!f->source_id)return 0;
+ char oldpath[256],newpath[256];if(strlen(s->header.root)+strlen(oldname)+5>256||strlen(s->header.root)+strlen(newname)+5>256)return bdNamErr;
+ strcpy(oldpath,s->header.root);strcat(oldpath,"bin:");strcat(oldpath,oldname);
+ strcpy(newpath,s->header.root);strcat(newpath,"bin:");strcat(newpath,newname);
+ CInfoPBRec c;int e=update_info(oldpath,&c);if(e==fnfErr)return 0;if(e)return e;
+ if((uint32_t)c.hFileInfo.ioDirID!=f->source_id)return paramErr;
+ e=recovery_check_file(oldpath,f,0);if(!e&&validate)e=validate(newpath);if(e)return e;
+ int busy=1;e=update_open_guard(oldpath,&busy);if(!e&&busy)e=fBsyErr;
+ if(!e)e=recovery_delete(oldpath);return e?e:update_flush(oldpath);
 }
 /* Used only after another complete snapshot has been validated. Unlisted files
  * prevent directory deletion; listed files must still have their recorded IDs.

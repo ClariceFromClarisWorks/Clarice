@@ -1,0 +1,6 @@
+PASS recovery inventory codecs, startup-volume location, path/record rejection
+PASS snapshot preparation: 336 returned-error and 336 interruption boundaries
+PASS first snapshot: 268 error and interruption boundaries
+PASS renamed-command cleanup: missing replacement, changed identity/content, retry and retained snapshot
+Interrupted restore: 0 of 215 boundaries require intervention; immutable snapshot intact
+PASS production native rotation 167 failure boundaries; restore 215 failure boundaries; both forks and snapshot survive

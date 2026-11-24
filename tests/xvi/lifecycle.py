@@ -11,9 +11,9 @@ def edit(s,k):
  r=c.edit(s,k);rows.append(r);save();cmd('status runtime');return r
 try:
  cmd('cp -p /mnt/GlyphFull/Clarice /tmp/xvi-forks')
- cmd('hfsattr /mnt/GlyphFull/Clarice /tmp/xvi-forks')
+ cmd('hfsattrib /mnt/GlyphFull/Clarice /tmp/xvi-forks')
  edit('xvi /tmp/xvi-forks',b'iFork preservation\x1b:wq\r')
- cmd('hfsattr /mnt/GlyphFull/Clarice /tmp/xvi-forks')
+ cmd('hfsattrib /mnt/GlyphFull/Clarice /tmp/xvi-forks')
  cmd('cat /tmp/xvi-forks')
  edit('xvi /tmp/xvi-arrows',b'ione\rtwo\x1b\x1b[A0iX\x1b:wq\r')
  text=cmd('cat /tmp/xvi-arrows');assert 'Xone\r\ntwo' in text
