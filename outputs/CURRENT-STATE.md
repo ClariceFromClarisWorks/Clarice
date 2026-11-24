@@ -13,12 +13,15 @@ checked against sealed hashes. Offline/source/licence/provenance archives provid
 Historical payloads retained; old test endpoints not retired without consumer checks.
 HTTP client IP restriction removed as requested; LAN bind retained. This subsequent
 host-only setting does not alter the sealed d14852d product archive. No push, public
-release or hardware deployment. Q1-001 is completed below; Q1-002 investigation is recorded below.
+release or hardware deployment. Q1-001 is completed below; Q1-002 is completed below.
 [Evidence and limitations](distribution-1946/REPORT.md).
 
 ## Q1-002 — root installation and managed recovery
 
-Build **2026111948**, Snow acceptance complete; internal publication pending. Core defaults to the
+Build **2026111948**, product commit **8260fa9**, accepted in Snow and published
+to canonical HTTP/AFP. All51 entries/36 payloads match the sealed build (optional
+vi1943 unchanged); offline HDA/archive, source and provenance verified by HTTP
+download and AFP readback. Previous1947 remains available. Core defaults to the
 startup-volume root; Clarice Data remains in the System Folder. Existing native
 UpdateOps/plans now maintain one coherent previous Core/tools/catalog snapshot
 with an independent **Recover Clarice** helper. Manual and legacy backups stay put.
