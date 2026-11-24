@@ -1,0 +1,5 @@
+cat /tmp/editor-pixels.txt; printf '\nREMOTE_END_1:%d\n' $?
+Editor probe 240 movements: old=985 fast=117 ticks; rows=480/0 cells=38400/480; 568 pixel comparisons failures=0
+
+REMOTE_END_1:0
+/ > 

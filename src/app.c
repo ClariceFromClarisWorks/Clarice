@@ -122,6 +122,8 @@ static void input_fail(const char *reason);
 #include "activity.inc"
 static int claim_pending_screen(void);
 #include "nano-perf.inc"
+static int native_glyph_row(const char *,int,int);
+static void glyph_planes_end(void);
 #include "editor-screen.inc"
 /* Prompt is made only from cached shell state, with room left for input. */
 static int prompt_prefix(char *out){if(tty_reading){out[0]=0;return 0;}if(continuing){strcpy(out,"> ");return 2;}char full[132];shell_prompt(full,sizeof full);int n=strlen(full),limit=columns/2;if(limit<2)limit=2;if(n>limit){memcpy(out,full+n-limit,limit);out[0]='~';out[limit]=0;return limit;}strcpy(out,full);return n;}
@@ -501,7 +503,7 @@ static void draw_cached(void){
 static unsigned long paint_ticks,event_ticks;
 void app_profile(unsigned long *paint,unsigned long *events){*paint=paint_ticks;*events=event_ticks;}
 #include "direct-view.inc"
-static void draw(void){if(!win)return;if(editor_screen){native_glyph_valid=0;draw_editor();return;}activity_hide();unsigned long start=TickCount();int full=force_draw;hide_caret();unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(render_mode&&frame_pixels)draw_cached();else draw_native_direct();if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}DRAW_STAMP(bar_start);sync_history_bar(full);
+static void draw(void){if(!win)return;if(editor_screen){draw_editor();return;}activity_hide();unsigned long start=TickCount();int full=force_draw;hide_caret();unsigned short before[342];if(bar_testing)bar_snapshot(before,0);if(render_mode&&frame_pixels)draw_cached();else draw_native_direct();if(bar_testing){bar_checks++;if(bar_snapshot(before,1))bar_failures++;}DRAW_STAMP(bar_start);sync_history_bar(full);
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  draw_bar_ticks+=TickCount()-bar_start;draw_frames++;
 #endif
@@ -555,6 +557,7 @@ int app_scroll_bench(int quick){
  if(quick==90||quick==91){editor_fast=quick==91;return 0;}
  if(quick==92){char b[300];editor_stats(b,sizeof b);term_puts(b);return 0;}
  if(quick==93)return editor_probe();
+ if(quick==94||quick==95){editor_fast=1;editor_glyphs=quick==95;return 0;}
 #endif
 
 #ifdef CLARICE_DRAW_DIAGNOSTICS

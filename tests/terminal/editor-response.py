@@ -26,4 +26,4 @@ c=Client(port=23250,password='');status,out=c.command('status runtime');
 if app!='vi':
  status,prof=c.command('cat /tmp/vi-prof.txt');out+=prof
 c.close();print(out)
-Path('outputs/editor-response/'+mode+'-'+case+label+'.txt').write_text(out)
+(Path(os.environ.get('EDITOR_RESPONSE_DIR','outputs/editor-response'))/(mode+'-'+case+label+'.txt')).write_text(out)

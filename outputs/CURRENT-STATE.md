@@ -1,5 +1,33 @@
 # Clarice current state
 
+## Editor glyph reuse — isolated experiment, resumed 24 November
+
+Branch `codex/editor-damage-20261119`, based on accepted main ae7bffd.
+Published build1943, HTTP/AFP packages and physical machines remain unchanged.
+Normal Core1945 compiled and passed exact20j/20-arrow positioning,120-key
+burst input, saves/readback, Ctrl-C ownership, Command-period130 and recovery. No new renderer, bitmap allocation or editor feature change.
+
+- Reuse the existing Monaco9 ASCII compositor in the editor's existing4096-byte
+  strip:704-byte output row plus glyph storage. Generic fonts/high bytes retain
+  native DrawText. QuickDraw clipping and cursor-only inversion remain.
+- Matched Snow scroll painting3432→2043–2055 ticks; event→presentation554→450–452ms.
+  Page painting789→453 ticks; response752→594ms. Same output bytes/cell counts.
+  Vertical cursor84ms and horizontal52–55ms essentially unchanged. Guest ticks
+  are elapsed active-path measurements, not exclusive CPU. No physical claims.
+- 568 actual guest pixel comparisons against forced DrawText pass, including
+  dense ASCII, partial groups, high-byte fallback, clipping and both themes. Host460 compositor/presentation
+  comparisons,100k cursor cases,20k inverse cases and control mapping tests pass.
+- Rejected4KiB row-shadow experiment: fewer cells, negligible overall gain and
+  slight horizontal regression. Patch/evidence retained separately, removed
+  from production source. Detailed status profiling remains diagnostic-only.
+- Remaining: nano-specific smoke check, complete distribution publication and
+  physical acceptance. Existing updater handoff -50/-36 prevented
+  diagnostic deployment; only stopped disposable Snow disks were populated.
+  The legacy native-glyphs host harness lacks current cache-header stubs; it did
+  not pass. Actual guest pixels are the current glyph integration evidence.
+
+[Measurements](editor-glyphs/summary.json). Prior accepted baseline follows.
+
 ## Editor responsiveness — integrated build 2026111943, Snow only
 
 Merged `codex/vi-response-audit-20261119` and companion optional-vi branch

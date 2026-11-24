@@ -5,7 +5,7 @@ static CliScreen *editor_screen;
 /* Last cursor actually presented, not intermediate parser positions. */
 static int editor_cursor_row,editor_cursor_col,editor_cursor_visible;
 #ifdef CLARICE_NANO_PERF
-static int editor_fast=1;
+static int editor_fast=1,editor_glyphs=1;
 static unsigned long ep_draws,ep_rows,ep_cells,ep_draw_ticks,ep_feed_ticks,ep_bytes;
 static unsigned long ep_keys,ep_latency,ep_max,ep_pending,ep_event_delay,ep_events;
 static int ep_started,ep_output;
@@ -14,6 +14,7 @@ static void editor_metrics_reset(void){ep_draws=ep_rows=ep_cells=ep_draw_ticks=e
 static void editor_stats(char *b,unsigned long n){snprintf(b,n,"Editor response: fast=%d draws=%lu rows=%lu cells=%lu paint=%lu feed=%lu bytes=%lu responses=%lu latency=%lu max=%lu event-delay=%lu events=%lu read-to-output=%lu flushes=%lu\n",editor_fast,ep_draws,ep_rows,ep_cells,ep_draw_ticks,ep_feed_ticks,ep_bytes,ep_keys,ep_latency,ep_max,ep_event_delay,ep_events,ep_compute,ep_flushes);}
 #else
 #define editor_fast 1
+#define editor_glyphs 1
 #endif
 
 int app_screen_active(void){return editor_screen!=0;}
@@ -56,6 +57,14 @@ static void draw_editor(void){
  if(measuring)nano_draws++;
 #endif
  CliScreen *s=editor_screen;
+ /* Reuse the shell's native Monaco cells in the same 4096-byte bitmap.
+    One output row occupies bytes 0..703; glyphs remain above it. The generic
+    strip path owns the whole bitmap and must invalidate those glyphs. */
+ int glyphs=editor_fast&&editor_glyphs&&mono&&font_id==4&&font_size==9
+  &&cell_w==6&&line_h==11&&font_ascent==9&&s->cols<=85;
+ if(glyphs)for(int row=0;row<s->rows&&glyphs;row++)if(force_draw||(s->dirty[row]&1))
+  for(int x=0;x<s->cols;x++){unsigned c=s->cells[row][x];if(c&&(c<32||c>126)){glyphs=0;break;}}
+ if(!glyphs)native_glyph_valid=0;
 #ifdef CLARICE_NANO_PERF
  unsigned long ep_start=TickCount();ep_draws++;
 #endif
@@ -79,7 +88,7 @@ static void draw_editor(void){
  SetPort(&prompt_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);
  /* Reuse the existing 64-pixel-high staging bitmap for adjacent dirty rows.
     Copy only completed strips; clipping stays with native QuickDraw. */
- int capacity=line_h>0&&line_h<=64?64/line_h:1;
+ int capacity=!glyphs&&line_h>0&&line_h<=64?64/line_h:1;
  /* Match source and framebuffer word phase directly, within the same strip.
     Other displays retain the existing QuickDraw path. */
  int origin=0,width=s->cols*cell_w;
@@ -91,14 +100,14 @@ static void draw_editor(void){
   if(!force_draw&&!s->dirty[base]){base++;continue;}
   int end=base+1;while(end<s->rows&&end-base<capacity&&(force_draw||s->dirty[end]))end++;
   for(int row=base;row<end;row++){Rect r;char line[SCREEN_COLS];int top=(row-base)*line_h;
-   SetRect(&r,origin,top,origin+width,top+line_h);EraseRect(&r);
+   SetRect(&r,origin,top,origin+width,top+line_h);if(!glyphs)EraseRect(&r);
    for(int x=0;x<s->cols;x++)line[x]=s->cells[row][x]?s->cells[row][x]:' ';
    int length=s->cols;while(length>0&&line[length-1]==' ')length--;
    MoveTo(origin,top+font_ascent);
 #ifdef CLARICE_NANO_PERF
    phase=TickCount();if(measuring)nano_rows++;
 #endif
-   if(mono){if(length)DrawText(line,0,length);}else for(int x=0;x<length;x++){MoveTo(origin+x*cell_w,top+font_ascent);DrawChar(line[x]);}
+   if(glyphs)native_glyph_row(line,s->cols,origin);else if(mono){if(length)DrawText(line,0,length);}else for(int x=0;x<length;x++){MoveTo(origin+x*cell_w,top+font_ascent);DrawChar(line[x]);}
 #ifdef CLARICE_NANO_PERF
    if(measuring)nano_text_ticks+=TickCount()-phase;
 #endif
@@ -125,6 +134,7 @@ static void draw_editor(void){
 #endif
   SetPort(&prompt_port);base=end;
  }
+ glyph_planes_end();
  editor_cursor_row=s->row;editor_cursor_col=s->col;editor_cursor_visible=s->cursor&&!background;
 #ifdef CLARICE_NANO_PERF
  ep_draw_ticks+=TickCount()-ep_start;
