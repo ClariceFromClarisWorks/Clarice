@@ -106,7 +106,7 @@ static Rect normal_bounds;
 static int filled;
 static short layout_width,layout_height;
 static void save_preferences(void);
-static void font_layout(void);
+static int font_layout(void);
 static void scroll_action(ControlHandle control,short part);
 static RgnHandle scroll_region, saved_clip;
 static long drawn_first=-1;
@@ -258,11 +258,11 @@ static int layout(void){activity_hide();Rect r=win->portRect;int previous_column
  if(previous_columns!=columns||previous_visible!=visible)select_start=select_end=-1;
  force_draw=dirty=1;if(scrollback>scroll_limit())scrollback=scroll_limit();if(history_bar){MoveControl(history_bar,r.right-15,0);SizeControl(history_bar,16,r.bottom-14);}layout_width=r.right;layout_height=r.bottom;return 1;}
 
-static void font_layout(void){short oldid=win->txFont,oldsize=win->txSize,oldw=cell_w,oldh=line_h,olda=font_ascent;int oldmono=mono;native_glyph_valid=0;FontInfo f;int c;SetPort(win);TextFont(font_id);TextSize(font_size);TextFace(0);GetFontInfo(&f);font_ascent=f.ascent;line_h=f.ascent+f.descent+f.leading;if(line_h<1)line_h=12;cell_w=CharWidth('M');mono=1;for(c=32;c<127;c++){int w=CharWidth(c);if(w!=cell_w)mono=0;}if(!mono)cell_w=f.widMax;if(cell_w<1)cell_w=6;if(!layout()){font_id=oldid;font_size=oldsize;cell_w=oldw;line_h=oldh;font_ascent=olda;mono=oldmono;TextFont(oldid);TextSize(oldsize);}build_font_cache();}
+static int font_layout(void){short oldid=win->txFont,oldsize=win->txSize,oldw=cell_w,oldh=line_h,olda=font_ascent;int oldmono=mono;native_glyph_valid=0;FontInfo f;int c;SetPort(win);TextFont(font_id);TextSize(font_size);TextFace(0);GetFontInfo(&f);font_ascent=f.ascent;line_h=f.ascent+f.descent+f.leading;if(line_h<1)line_h=12;cell_w=CharWidth('M');mono=1;for(c=32;c<127;c++){int w=CharWidth(c);if(w!=cell_w)mono=0;}if(!mono)cell_w=f.widMax;if(cell_w<1)cell_w=6;int accepted=layout();if(!accepted){font_id=oldid;font_size=oldsize;cell_w=oldw;line_h=oldh;font_ascent=olda;mono=oldmono;TextFont(oldid);TextSize(oldsize);}build_font_cache();return accepted;}
 static void sync_window_geometry(void){
  if(win->portRect.right==layout_width&&win->portRect.bottom==layout_height)return;
  if(editor_screen){SizeWindow(win,layout_width,layout_height,1);return;}
- filled=0;fit_window(win->portRect.right,win->portRect.bottom);layout();
+ fit_window(win->portRect.right,win->portRect.bottom);if(!layout())return;filled=0;
  InvalRect(&win->portRect);save_preferences();
 }
 /* Repeated metadata rows can be cheaper to patch in place than to scroll and
@@ -653,7 +653,7 @@ static int installed_font(const unsigned char *name,short *id){
 }
 static int preference_number(const char *s){int n=0;if(!*s)return -1;for(;*s;s++){if(*s<'0'||*s>'9'||n>1000)return -1;n=n*10+*s-'0';}return n;}
 #include "preferences-format.h"
-static void fill_window(void);
+static int fill_window(void);
 static void save_preferences(void);
 static void prefs_snapshot(struct ClaricePrefs *p){
  unsigned char font[256];Point origin={0,0};GetFontName(font_id,font);memcpy(p->font,font+1,font[0]);p->font[font[0]]=0;
@@ -700,7 +700,8 @@ int app_pager_begin(void){if(shell_session_remote_io())return 0;int old=page_mod
 int app_pager_end(int old){if(shell_session_remote_io())return 0;int quit=cancelled&&!interrupted&&!done;if(quit)cancelled=0;page_mode=old;app_activity_interactive(0);return quit;}
 void app_page_begin(void){if(shell_session_remote_io())return;page_start=current_line;}
 int app_page(void){if(shell_session_active())return app_yield();EventRecord ev;long limit=visible-1;if(!page_mode||test_ref>=0)return app_yield();if(limit<1)limit=1;if(current_line-page_start<limit)return app_yield();paging=1;page_action=0;dirty=1;draw();while(!page_action&&!cancelled&&!done){if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);if(dirty)draw();}paging=0;if(page_action==2)page_start=current_line-limit+1;else page_start=current_line;dirty=1;return cancelled||done;}
-static void fill_window(void){if(!filled){Point origin={0,0};SetPort(win);LocalToGlobal(&origin);normal_bounds=win->portRect;OffsetRect(&normal_bounds,origin.h,origin.v);MoveWindow(win,4,40,1);fit_window(32767,32767);filled=1;}else{MoveWindow(win,normal_bounds.left,normal_bounds.top,1);fit_window(normal_bounds.right-normal_bounds.left,normal_bounds.bottom-normal_bounds.top);filled=0;}layout();}
+static void set_fill_window(void){if(!filled){Point origin={0,0};SetPort(win);LocalToGlobal(&origin);normal_bounds=win->portRect;OffsetRect(&normal_bounds,origin.h,origin.v);MoveWindow(win,4,40,1);fit_window(32767,32767);filled=1;}else{MoveWindow(win,normal_bounds.left,normal_bounds.top,1);fit_window(normal_bounds.right-normal_bounds.left,normal_bounds.bottom-normal_bounds.top);filled=0;}}
+static int fill_window(void){Point previous={0,0};SetPort(win);LocalToGlobal(&previous);int was_filled=filled;Rect saved=normal_bounds;set_fill_window();if(!layout()){filled=was_filled;normal_bounds=saved;MoveWindow(win,previous.h,previous.v,1);return 0;}return 1;}
 static void dialog_text(DialogPtr d,short item,const char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);pstr(p,s);SetDialogItemText(h,p);}
 static void dialog_read(DialogPtr d,short item,char *s){short type;Handle h;Rect r;unsigned char p[256];GetDialogItem(d,item,&type,&h,&r);GetDialogItemText(h,p);memcpy(s,p+1,p[0]);s[p[0]]=0;}
 static ControlHandle dialog_control(DialogPtr d,short item){short type;Handle h;Rect r;GetDialogItem(d,item,&type,&h,&r);return (ControlHandle)h;}
@@ -769,11 +770,14 @@ static void preferences_window(void){
    int change_grid=count!=columns||rowcount!=visible+1;SetPort(win);TextFont(id);TextSize(n);FontInfo f;GetFontInfo(&f);int width=CharWidth('M'),fixed=1;
    for(int c=32;c<127;c++)if(CharWidth(c)!=width)fixed=0;if(!fixed)width=f.widMax;if(width<1)width=6;
    int height=f.ascent+f.descent+f.leading;if(height<1)height=12;TextFont(font_id);TextSize(font_size);
-   DisposeDialog(d);SetPort(win);if(filled&&(!want_fill||change_grid))fill_window();
+   DisposeDialog(d);SetPort(win);Point previous={0,0};LocalToGlobal(&previous);int was_filled=filled;Rect saved=normal_bounds;
+   if(filled&&!want_fill&&!change_grid)set_fill_window();
    if(change_grid){grid_window(count,rowcount,width,height);want_fill=0;}
-   font_id=id;font_size=n;retained=cap==1?32:cap==2?64:128;inverse=dark;control_mode=ctrl-1;
+   font_id=id;font_size=n;
+   if(want_fill&&!filled)set_fill_window();
+   if(!font_layout()){filled=was_filled;normal_bounds=saved;MoveWindow(win,previous.h,previous.v,1);return;}if(change_grid)filled=0;
+   retained=cap==1?32:cap==2?64:128;inverse=dark;control_mode=ctrl-1;
    if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;
-   if(want_fill&&!filled)fill_window();font_layout();
    /* Closing a dialog invalidates only its former rectangle. Font/theme changes
       affect the entire terminal, including text outside that update region. */
    InvalRect(&win->portRect);save_preferences();return;
@@ -786,7 +790,8 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
 
  if(!strcmp(argv[1],"window")){preferences_window();return 0;}
  if(!strcmp(argv[1],"fonts")){MenuHandle m=GetMenuHandle(132);short i;for(i=1;i<=CountMItems(m);i++){unsigned char name[256];GetMenuItemText(m,i,name);term_write((char*)name+1,name[0]);term_puts("\n");}return 0;}
- if(!strcmp(argv[1],"fill"))fill_window();
+ Point previous={0,0};SetPort(win);LocalToGlobal(&previous);
+ if(!strcmp(argv[1],"fill")){if(!fill_window())return 1;}
  else if(argc==3&&!strcmp(argv[1],"font")){unsigned char name[256];short id;pstr(name,argv[2]);if(!installed_font(name,&id)){term_puts("Font is not installed. Use prefs fonts.\n");return 2;}font_id=id;}
  else if(argc==3&&!strcmp(argv[1],"size")){int size=preference_number(argv[2]);if(size<6||size>24)return 2;font_size=size;}
  else if(argc==3&&!strcmp(argv[1],"colours")){if(!strcmp(argv[2],"dark"))inverse=1;else if(!strcmp(argv[2],"light"))inverse=0;else return 2;}
@@ -799,10 +804,10 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
 #else
  else if(!strcmp(argv[1],"cache")||!strcmp(argv[1],"renderer")){term_puts("Rendering is selected automatically.\n");return 2;}
 #endif
- else if(argc==3&&(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))){int n=preference_number(argv[2]);if(n<1)return 2;if(filled)fill_window();grid_window(!strcmp(argv[1],"columns")?n:columns,!strcmp(argv[1],"rows")?n:visible+1,cell_w,line_h);}
+ else if(argc==3&&(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))){int n=preference_number(argv[2]);if(n<1)return 2;grid_window(!strcmp(argv[1],"columns")?n:columns,!strcmp(argv[1],"rows")?n:visible+1,cell_w,line_h);}
  else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | columns N | rows N | fill]\n");return 2;}
  /* Grid-only changes reuse the existing font glyphs, as manual resizing does. */
- if(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))layout();else font_layout();
+ if(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows")){if(!layout()){MoveWindow(win,previous.h,previous.v,1);return 1;}filled=0;}else if(!font_layout())return 1;
  SetPort(win);InvalRect(&win->portRect);save_preferences();term_present();
  /* The forced visible repaint is complete; do not paint it again on updateEvt. */
  ValidRect(&win->portRect);return 0;}
@@ -992,7 +997,7 @@ static void selection_begin(int anchor){
  select_start=select_end=anchor;
 }
 static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible+1)y=visible+1-1;return y*columns+x;}
-static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;int maxw,maxh;geometry_limits(&maxw,&maxh);SetRect(&bounds,180,100,maxw,maxh);size=GrowWindow(win,ev->where,&bounds);if(size){filled=0;fit_window((short)size,(short)(size>>16));layout();InvalRect(&win->portRect);save_preferences();}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+1)*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
+static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;int maxw,maxh;geometry_limits(&maxw,&maxh);SetRect(&bounds,180,100,maxw,maxh);size=GrowWindow(win,ev->where,&bounds);if(size){fit_window((short)size,(short)(size>>16));if(layout()){filled=0;InvalRect(&win->portRect);save_preferences();}}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+1)*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
  case keyDown:case autoKey:{
 #ifdef CLARICE_NANO_PERF
  if(editor_screen){if(!ep_started){editor_metrics_reset();ep_started=1;}ep_events++;ep_event_delay+=TickCount()-ev->when;if(!ep_pending)ep_pending=ev->when;}

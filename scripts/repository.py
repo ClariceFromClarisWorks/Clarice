@@ -54,7 +54,11 @@ def publish(root, destination):
 def verified_repository(directory):
     """Read an existing publication once; verify bytes before any activation."""
     index = (directory/'index.txt').read_bytes()
-    rows = index.decode('ascii').splitlines()
+    if not index.endswith(b'\n') or b'\r' in index or b'\x00' in index:
+        raise ValueError('repository requires LF-terminated lines')
+    rows = index.decode('ascii').split('\n')[:-1]
+    if any(len(row) >= 256 for row in rows):
+        raise ValueError('repository line exceeds guest reader capacity')
     if not rows or rows[0] != 'CLARICE-REPOSITORY 1':
         raise ValueError('invalid repository header')
     records, names = [], set()

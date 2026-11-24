@@ -44,8 +44,9 @@ static void update_pstr(unsigned char *p,const char *s){p[0]=strlen(s);memcpy(p+
 static int update_info(const char *p,CInfoPBRec *c){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;*c=fs[i].info;return 0;}
 static int cli_native_create(const char *p,unsigned long type,unsigned long creator){int e=boundary();if(e)return e;if(find(p)>=0)return dupFNErr;for(int i=0;i<100;i++)if(!fs[i].path[0]){memset(&fs[i],0,sizeof fs[i]);strcpy(fs[i].path,p);fs[i].info.hFileInfo.ioDirID=++identity;fs[i].info.hFileInfo.ioFlFndrInfo.fdType=type;fs[i].info.hFileInfo.ioFlFndrInfo.fdCreator=creator;fs[i].info.hFileInfo.ioFlCrDat=fs[i].info.hFileInfo.ioFlMdDat=77;return 0;}return memFullErr;}
 static int cli_native_mkdir(const char *p){int e=cli_native_create(p,0,0);if(!e)fs[find(p)].info.hFileInfo.ioFlAttrib=16;return e;}
-static int cli_native_delete(const char *p){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;if(fs[i].open)return fBsyErr;size_t n=strlen(p);for(int j=0;j<100;j++)if(!strncmp(fs[j].path,p,n)&&fs[j].path[n]==':')return fBsyErr;fs[i].path[0]=0;return 0;}
-static int cli_native_set(const char *p,CInfoPBRec *c){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;uint32_t id=fs[i].info.hFileInfo.ioDirID,d=fs[i].info.hFileInfo.ioFlLgLen,r=fs[i].info.hFileInfo.ioFlRLgLen;fs[i].info=*c;fs[i].info.hFileInfo.ioDirID=id;fs[i].info.hFileInfo.ioFlLgLen=d;fs[i].info.hFileInfo.ioFlRLgLen=r;return 0;}
+static int cli_native_lock(const char *p,int locked){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;fs[i].info.hFileInfo.ioFlAttrib=(fs[i].info.hFileInfo.ioFlAttrib&~1)|!!locked;return 0;}
+static int cli_native_delete(const char *p){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;if(fs[i].open)return fBsyErr;if(fs[i].info.hFileInfo.ioFlAttrib&1)return permErr;size_t n=strlen(p);for(int j=0;j<100;j++)if(!strncmp(fs[j].path,p,n)&&fs[j].path[n]==':')return fBsyErr;fs[i].path[0]=0;return 0;}
+static int cli_native_set(const char *p,CInfoPBRec *c){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;uint32_t id=fs[i].info.hFileInfo.ioDirID,d=fs[i].info.hFileInfo.ioFlLgLen,r=fs[i].info.hFileInfo.ioFlRLgLen;int attr=fs[i].info.hFileInfo.ioFlAttrib;fs[i].info=*c;fs[i].info.hFileInfo.ioFlAttrib=attr;fs[i].info.hFileInfo.ioDirID=id;fs[i].info.hFileInfo.ioFlLgLen=d;fs[i].info.hFileInfo.ioFlRLgLen=r;return 0;}
 static int cli_native_rename(const char *a,const char *b){const char *x=strrchr(a,':'),*y=strrchr(b,':');if(!x||!y||x-a!=y-b||memcmp(a,b,x-a))return paramErr;int e=boundary();if(e)return e;int i=find(a);if(i<0)return fnfErr;if(find(b)>=0)return dupFNErr;size_t n=strlen(a);for(int j=0;j<100;j++)if(!strcmp(fs[j].path,a)||(!strncmp(fs[j].path,a,n)&&fs[j].path[n]==':')){char path[256];snprintf(path,sizeof path,"%s%s",b,fs[j].path+n);strcpy(fs[j].path,path);}return 0;}
 static int update_rename(const char *a,const char *b){return cli_native_rename(a,b);}
 static int update_flush(const char *p){(void)p;return boundary();}
@@ -76,6 +77,8 @@ static void closed_all(void){for(int i=0;i<32;i++)assert(!refs[i].used);assert(!
 
 static int validate_tool(const char *p){return find(p)<0?fnfErr:0;}
 int main(void){
+ {const char *names[]={"core","catalog","inventory"};for(int i=0;i<3;i++){RecoveryFile f={0};strcpy(f.name,names[i]);RecoverySnapshot snap={0};snap.header.count=1;snap.files=&f;RecoveryRotation rotation={0};int before=boundaries;assert(recovery_prepare(&rotation,&snap,"",0)==paramErr&&boundaries==before);unsigned char encoded[RECOVERY_ENTRY];assert(!recovery_file_encode(&f,encoded));}}
+ puts("PASS reserved HFS snapshot names rejected before I/O; legacy codecs unchanged");
  file("Disk:Notes","user-owned");file("Disk:System:Clarice Data:etc:clarice:clarice.conf","user-owned");file("Disk:System:Clarice Data:bin:.clx-ls.old","user-owned");
  file("Disk:Clarice","old core");file("Disk:Helper","helper");file("Disk:System:Clarice Data:etc:clarice:installed.catalog","CLARICE-INSTALLED 1\n");file("Disk:System:Clarice Data:bin:ls","old tool");
  /* Catalogued optional diagnostics are opaque backup members, not executed.
@@ -159,6 +162,27 @@ int main(void){
   assert(!prepare_snapshot(&rotation));closed_all();
  }
  printf("PASS first snapshot: %d error and interruption boundaries\n",first_steps);
+
+ reset();fs[find("Disk:System:Clarice Data:bin:ls")].info.hFileInfo.ioFlAttrib|=1;memcpy(baseline,fs,sizeof fs);
+ boundaries=0;assert(!prepare_snapshot(&rotation));int locked_steps=boundaries;closed_all();
+ for(int crash=0;crash<2;crash++)for(int fault=1;fault<=locked_steps;fault++){
+  reset();if(crash){crash_at=fault;if(!setjmp(reset_point))(void)prepare_snapshot(&rotation);process_reset();}else{fail_at=fault;(void)prepare_snapshot(&rotation);fail_at=0;closed_all();}
+  assert(!prepare_snapshot(&rotation));assert(fs[find("Disk:System:Clarice Data:bin:ls")].info.hFileInfo.ioFlAttrib&1);
+  assert(fs[find("Disk:System:Clarice Data:etc:clarice:Recovery Previous:ls")].info.hFileInfo.ioFlAttrib&1);closed_all();
+ }
+ reset();assert(!prepare_snapshot(&rotation));assert(!cli_native_lock("Disk:System:Clarice Data:bin:ls",0));
+ fs[find("Disk:System:Clarice Data:bin:ls")].fork[0][0]^=1;
+ struct File *before_locked_restore=malloc(sizeof baseline);assert(before_locked_restore);memcpy(before_locked_restore,baseline,sizeof baseline);memcpy(baseline,fs,sizeof fs);
+ char lock_launch[256];boundaries=0;assert(!recovery_restore(rotation.path[0],lock_launch));int locked_restore_steps=boundaries;
+ for(int crash=0;crash<2;crash++)for(int fault=1;fault<=locked_restore_steps;fault++){
+  reset();if(crash){crash_at=fault;if(!setjmp(reset_point))(void)recovery_restore(rotation.path[0],lock_launch);process_reset();}else{fail_at=fault;(void)recovery_restore(rotation.path[0],lock_launch);fail_at=0;closed_all();}
+  assert(!recovery_restore(rotation.path[0],lock_launch));assert(fs[find("Disk:System:Clarice Data:bin:ls")].info.hFileInfo.ioFlAttrib&1);closed_all();
+ }
+ memcpy(baseline,before_locked_restore,sizeof baseline);free(before_locked_restore);
+ printf("PASS locked restore %d errors + resets, lock restored after retry\n",locked_restore_steps);assert(fs[find("Disk:System:Clarice Data:bin:ls")].info.hFileInfo.ioFlAttrib&1);closed_all();
+ assert(!prepare_snapshot(&rotation));closed_all(); /* prune the retired locked snapshot */
+ printf("PASS locked source preserved, snapshot/restore lock and rotation: %d errors + resets\n",locked_steps);
+ reset();fs[find("Disk:System:Clarice Data:bin:ls")].info.hFileInfo.ioFlAttrib&=~1;memcpy(baseline,fs,sizeof fs);
  reset();assert(!prepare_snapshot(&rotation));memcpy(baseline,fs,sizeof fs);
  reset();char current[256];strcpy(current,rotation.path[0]);int core=find("Disk:Clarice"),tool=find("Disk:System:Clarice Data:bin:ls");memcpy(fs[core].fork[0],"bad core",8);memcpy(fs[tool].fork[0],"bad tool",8);memcpy(baseline,fs,sizeof fs);
  char launch[256];boundaries=0;assert(!recovery_restore(current,launch));assert(!strcmp(launch,"Disk:Clarice"));assert(!memcmp(fs[find(launch)].fork[0],"old core",8));assert(!memcmp(fs[find("Disk:System:Clarice Data:bin:ls")].fork[0],"old tool",8));int restore_steps=boundaries;closed_all();

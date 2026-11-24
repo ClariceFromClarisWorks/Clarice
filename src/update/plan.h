@@ -15,7 +15,7 @@ typedef struct {char target[256],stage[256],backup[256];uint32_t build,original_
 static void update_put32(unsigned char *p,uint32_t n){p[0]=n>>24;p[1]=n>>16;p[2]=n>>8;p[3]=n;}
 static int update_plan_path(const char *p){size_t n=strlen(p);const char *leaf=strrchr(p,':');if(!n||n>255||!leaf||leaf==p||!leaf[1]||strlen(leaf+1)>31||p[0]==':')return 0;for(size_t i=0;i<n;i++)if((unsigned char)p[i]<32)return 0;return 1;}
 static int update_plan_valid(const UpdatePlan *p){
- if(p->kind>2||(!p->kind&&p->stage_id)||!update_plan_path(p->target)||!update_plan_path(p->stage)||!update_plan_path(p->backup)||!p->build||!p->original_id||p->data_size>16777216UL||(!p->resource_size&&!p->kind)||p->resource_size>16777216UL)return 0;
+ if(p->kind>2||(!p->kind&&p->stage_id)||!update_plan_path(p->target)||!update_plan_path(p->stage)||!update_plan_path(p->backup)||!p->build||!p->original_id||p->data_size>(p->kind?0x7fffffffUL:16777216UL)||(!p->resource_size&&!p->kind)||p->resource_size>(p->kind?0x7fffffffUL:16777216UL))return 0;
  const char *a=strrchr(p->target,':'),*b=strrchr(p->stage,':'),*c=strrchr(p->backup,':');size_t n=a-p->target;
  if((size_t)(b-p->stage)!=n||(size_t)(c-p->backup)!=n||memcmp(p->target,p->stage,n)||memcmp(p->target,p->backup,n))return 0;
  /* Fixed derived stage and backup leaves, never caller-chosen destinations. */

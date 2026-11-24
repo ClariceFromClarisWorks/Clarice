@@ -104,7 +104,7 @@ int clarice_main(int argc,char **argv){
  for(RepoItem *i=items;i;i=i->next){RepoRecord *r=&i->wanted;
   /* Old catalogs may still advertise an external updater. Core owns it now. */
   if(!r->core&&!strcmp(r->name,"clarice"))continue;
-  if(r->core){core=i;i->needed=r->version>current||repository_migrate;}else{
+  if(r->core){core=i;if(repository_migrate&&r->version<current){errsay("Repository Core is older than the installed application; migration not started.\n");e=paramErr;goto done;}i->needed=r->version>current||repository_migrate;}else{
    char path[PATH_CAP],native[PATH_CAP],canonical[PATH_CAP];CInfoPBRec cat;snprintf(path,sizeof path,"/bin/%s",r->name);e=checked(path,native,canonical,0);if(e)goto done;e=info(native,&cat);
    if(e&&e!=fnfErr)goto done;int exists=!e;e=0;
    if(exists&&(cat.hFileInfo.ioFlAttrib&16)){e=paramErr;goto done;}
@@ -119,6 +119,16 @@ int clarice_main(int argc,char **argv){
   if(i->needed){snprintf(text,sizeof text,"%s -> build %lu\n",r->name,(unsigned long)r->version);say(text);changes++;}
  }
  if(check)goto done;
+ /* Adoption can update catalog rows without changing installed files. Do not
+    create a transaction or revisit an old snapshot for an ordinary no-op. */
+ if(!changes){char native[PATH_CAP],canonical[PATH_CAP];CInfoPBRec c;e=checked(REPO_MARKER,native,canonical,0);if(!e)e=info(native,&c);
+  if(e==fnfErr){e=0;for(RepoItem *i=items;i&&!e;i=i->next){RepoRecord *r=&i->wanted;if(r->core||!strcmp(r->name,"clarice")||(i->known&&i->installed.version>r->version))continue;
+    if(!i->known||i->installed.version!=r->version||i->installed.size!=r->size||i->installed.crc!=r->crc)e=repo_catalog(0,r);
+   }
+   if(!e&&(!core||!core->known||core->installed.version!=current)){RepoRecord r;memset(&r,0,sizeof r);r.core=1;strcpy(r.name,"Clarice");r.version=current;e=repo_catalog(0,&r);}
+   if(!e)say("All standard tools are current.\n");goto done;
+  }if(e)goto done;
+ }
  if(changes&&!yes){int answer=repo_confirm();if(answer<0){e=userCanceledErr;goto done;}if(!answer)goto done;}
  uint32_t index_size,index_crc;{char native[PATH_CAP],canonical[PATH_CAP];CInfoPBRec c;
   e=checked(index,native,canonical,0);if(!e)e=info(native,&c);if(e)goto done;index_size=c.hFileInfo.ioFlLgLen;

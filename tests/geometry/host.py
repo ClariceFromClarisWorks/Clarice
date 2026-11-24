@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess,tempfile
 s=Path('src/app.c').read_text()
 viewport=s[s.index('static void input_position'):s.index('static void pstr',s.index('static void input_position'))]
-layout=s[s.index('/* Native structure/content bounds'):s.index('static void font_layout(void){')]
+layout=s[s.index('/* Native structure/content bounds'):s.index('static int font_layout(void){')]
 pre=r'''
 #include <assert.h>
 #include <stdio.h>
@@ -66,6 +66,7 @@ int main(void){
  fail_alloc=0;grid_window(60,20,6,11);assert(layout()&&columns==60&&visible+1==20&&!allocations);
  int oldsizes=sizes,oldalloc=allocations;sync_window_geometry();assert(sizes==oldsizes&&allocations==oldalloc&&!saves);
  SizeWindow(win,300,155,1);sync_window_geometry();assert(columns==46&&visible+1==14&&saves==1&&invalidations==1);
+ fail_alloc=1;int previous_saves=saves;SizeWindow(win,410,200,1);sync_window_geometry();assert(saves==previous_saves&&columns==46&&win->portRect.right==300&&!allocations);fail_alloc=0;
  editor_screen=win;SizeWindow(win,400,200,1);sync_window_geometry();assert(win->portRect.right==300&&win->portRect.bottom==155&&columns==46&&visible+1==14&&saves==1);editor_screen=0;
  dirty=1;term_present();assert(clock_tick==30&&last_yield==1);
  puts("PASS production geometry: 8,505 metric/bounds combinations, actual rows, long-input caret/state, reflow, allocation failure rollback/retry and zero retained allocations");

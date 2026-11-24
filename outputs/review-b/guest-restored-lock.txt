@@ -1,0 +1,1 @@
+/bin/nano-profile: type='CLX1' creator='CLRC' flags=0500 locked=on invisible=off

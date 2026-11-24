@@ -25,8 +25,10 @@ static int recovery_join(const char *dir,const char *leaf,char out[256]){
 #define recovery_delete cli_native_delete
 #define recovery_set cli_native_set
 #define recovery_rename cli_native_rename
+#define recovery_lock cli_native_lock
 #else
 #define recovery_rename update_rename
+static int recovery_lock(const char *path,int locked){short v;int e=update_volume(path,&v);unsigned char p[256];if(e)return e;update_pstr(p,path);HParamBlockRec pb;memset(&pb,0,sizeof pb);pb.fileParam.ioVRefNum=v;pb.fileParam.ioNamePtr=p;return locked?PBHSetFLockSync(&pb):PBHRstFLockSync(&pb);}
 static int recovery_create(const char *path,unsigned long type,unsigned long creator){short v;int e=update_volume(path,&v);unsigned char p[256];if(e)return e;update_pstr(p,path);return HCreate(v,0,p,creator,type);}
 static int recovery_delete(const char *path){short v;int e=update_volume(path,&v);unsigned char p[256];if(e)return e;update_pstr(p,path);return HDelete(v,0,p);}
 static int recovery_set(const char *path,CInfoPBRec *c){short v;int e=update_volume(path,&v);unsigned char p[256];if(e)return e;update_pstr(p,path);c->hFileInfo.ioNamePtr=p;c->hFileInfo.ioVRefNum=v;c->hFileInfo.ioDirID=0;c->hFileInfo.ioFDirIndex=0;return PBSetCatInfoSync(c);}
@@ -70,7 +72,7 @@ static int recovery_check_file(const char *path,const RecoveryFile *f,int identi
 /* Destination must be absent. Close both forks and copy all Finder metadata
  * before publishing this file in a completed recovery inventory. */
 static int recovery_copy(const char *source,const char *dest,const char *name,RecoveryFile *f){
- CInfoPBRec c;int e=update_info(source,&c);if(e)return e;if(c.hFileInfo.ioFlAttrib&17)return permErr;
+ CInfoPBRec c;int e=update_info(source,&c);if(e)return e;if(c.hFileInfo.ioFlAttrib&16)return permErr;
  e=recovery_stat(source,name,f);if(!e)e=recovery_select_policy(source,f);if(e)return e;f->source_id=f->id;
  e=recovery_create(dest,c.hFileInfo.ioFlFndrInfo.fdType,c.hFileInfo.ioFlFndrInfo.fdCreator);if(e)return e;
  int app=recovery_normalized(f);
@@ -90,7 +92,9 @@ static int recovery_prefix(const char *source,const char *dest,int fork,uint32_t
 }
 static int recovery_resume_copy(const char *source,const char *dest,const RecoveryFile *f){
  CInfoPBRec c,original;int e=update_info(dest,&c);if(e==fnfErr){RecoveryFile copy;return recovery_copy(source,dest,f->name,&copy);}if(e)return e;
- if(c.hFileInfo.ioFlAttrib&17)return permErr;e=update_info(source,&original);if(e)return e;
+ if(c.hFileInfo.ioFlAttrib&16)return permErr;
+ if(c.hFileInfo.ioFlAttrib&1)return recovery_check_file(dest,f,0);
+ e=update_info(source,&original);if(e)return e;
  if(c.hFileInfo.ioFlFndrInfo.fdType!=original.hFileInfo.ioFlFndrInfo.fdType||c.hFileInfo.ioFlFndrInfo.fdCreator!=original.hFileInfo.ioFlFndrInfo.fdCreator)return paramErr;
  int app=recovery_normalized(f);
  e=recovery_prefix(source,dest,0,f->data,app);if(!e)e=recovery_prefix(source,dest,1,f->resource,app);if(e)return e;
@@ -175,6 +179,7 @@ static int recovery_prune(const char *dir,uint32_t expected_id){
  if(e==fnfErr){/* Only an empty, identity-bound directory can be removed. */e=recovery_delete(dir);return e?e:update_flush(dir);}if(e)return e;
  for(uint32_t i=0;!e&&i<s.header.count;i++){if(!s.files[i].id)continue;char path[256];CInfoPBRec c;e=recovery_member(dir,s.files[i].name,path);if(!e)e=update_info(path,&c);if(e==fnfErr){e=0;continue;}
   if(!e&&(uint32_t)c.hFileInfo.ioDirID!=s.files[i].id)e=paramErr;
+  if(!e&&(c.hFileInfo.ioFlAttrib&1))e=recovery_lock(path,0);
   if(!e)e=recovery_delete(path);
  }
  recovery_dispose(&s);if(e)return e;
@@ -244,6 +249,9 @@ static int recovery_refresh_helper(RecoveryRotation *rotation,const char *dest,c
 /* Caller supplies one live installation's inventory, never a selection of old
    backup files. All entries are copied before the generation becomes current. */
 static int recovery_prepare(RecoveryRotation *rotation,RecoverySnapshot *s,const char *helper,int (*validate)(const char *)){
+ /* Tool names are lowercase ASCII. These native leaves collide on HFS;
+    reject before any snapshot writes, without changing legacy decoding. */
+ for(uint32_t i=0;i<s->header.count;i++)if(!strcmp(s->files[i].name,"core")||!strcmp(s->files[i].name,"catalog")||!strcmp(s->files[i].name,"inventory"))return paramErr;
  s->header.format=2;int e=recovery_rotation_probe(rotation,1);if(e<0)return e;int exists=e;
  if(exists){RecoverySnapshot pending;e=recovery_inventory(rotation->path[1],&pending,0);
   if(!e){if(strcmp(pending.header.root,s->header.root)||strcmp(pending.header.origin,s->header.origin)||pending.header.build!=s->header.build||pending.header.origin_id!=s->header.origin_id||pending.header.origin_modified!=s->header.origin_modified)e=paramErr;
@@ -287,6 +295,8 @@ static int recovery_prepare(RecoveryRotation *rotation,RecoverySnapshot *s,const
     if(!e)f->id=existing.hFileInfo.ioDirID;
    }
   }
+  /* Carry the lock on the native snapshot copy; never unlock the source. */
+  if(!e&&(c.hFileInfo.ioFlAttrib&1))e=recovery_lock(dest,1);
  }
  if(!e)e=recovery_inventory(rotation->path[1],s,1);
  if(!e)e=recovery_verify(rotation->path[1],s);

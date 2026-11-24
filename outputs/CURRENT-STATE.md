@@ -2,13 +2,15 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111956**, product **f64c9d0** on local main.
-Sealed Core +49 standard utilities; optional vi remains byte-identical1951.
-Host and Snow Plus/4MB/System6.0.8 acceptance complete. All51 entries/36 payloads
-and offline/source archives verified identical through HTTP and AFP. Prior1955
-distribution/recovery retained. [Verification](review-a/verification.json).
-Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP mirror:
-`Macintosh Exchange/Clarice/index.txt`. No physical deployment or GitHub push.
+Latest candidate **2026111957**, integrated source pending local commit/publication.
+Batch B's seven P2 findings confirmed and fixed. Host fault/retry/legacy tests and
+Snow Plus/4MB/System6.0.8 upgrade, no-op, geometry and independent locked-file
+rollback pass. No physical acceptance or GitHub push. No new permanent allocation;
+Core package+1,536bytes, main CODE+340bytes, BSS unchanged.
+[Concise evidence and limitations](review-b/REPORT.md).
+Canonical HTTP remains `http://192.168.1.112:8089/full/index.txt`; AFP:
+`Macintosh Exchange/Clarice/index.txt`. Prior1956 recovery/distribution retained.
+Stop after Batch B; no Batch C work.
 
 ## Review remediation Batch A
 

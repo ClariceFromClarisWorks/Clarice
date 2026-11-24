@@ -1,0 +1,6 @@
+REPRO P2-4 accepted >16MiB member cannot restore; P2-5 Core/core HFS collision
+REPRO P2-1 older Core marked needed during root migration
+REPRO P2-3 read-only source incorrectly rejected
+REPRO P2-7 missing final LF and CRLF accepted by baseline publisher
+REPRO P2-6 failed reflow still saves preferences
+CONFIRM P2-2 no-change branch unconditionally prepares recovery and writes marker (new regression executes corrected branch)

@@ -1,0 +1,2 @@
+3824832129 5828 /etc/clarice/Recovery Previous/Inventory
+3430282633 3857 /etc/clarice/installed.catalog
