@@ -2,17 +2,16 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111957**, product **59e5116**, integrated local main.
-All51 manifest entries/36 payloads and sealed offline/source archives verified
-byte-for-byte through canonical HTTP and AFP. [Verification](review-b/verification.json).
-Batch B's seven P2 findings confirmed and fixed. Host fault/retry/legacy tests and
-Snow Plus/4MB/System6.0.8 upgrade, no-op, geometry and independent locked-file
-rollback pass. No physical acceptance or GitHub push. No new permanent allocation;
-Core package+1,536bytes, main CODE+340bytes, BSS unchanged.
-[Concise evidence and limitations](review-b/REPORT.md).
-Canonical HTTP remains `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Prior1956 recovery/distribution retained.
-Stop after Batch B; no Batch C work.
+Latest candidate **2026111958**, local integration/publication pending.
+Batch C removes duplicate same-call snapshot verification and ping's interval
+busy loop. Recovery model I/O−32.6%; fresh verification on resume retained.
+Host fault/corruption/legacy tests and Snow Plus/4MB/System6.0.8 installation,
+ICMP/DNS, both local cancellation shortcuts and repeated heap checks pass.
+Core/package/BSS unchanged; ping+64bytes, no persistent allocation/startup work.
+[Evidence and measurement limitations](review-c/REPORT.md).
+Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
+`Macintosh Exchange/Clarice/index.txt`. Prior1957 recovery/distribution retained.
+No physical deployment or GitHub push. Stop after Batch C.
 
 ## Review remediation Batch A
 

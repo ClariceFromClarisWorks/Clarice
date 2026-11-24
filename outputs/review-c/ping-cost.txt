@@ -1,0 +1,2 @@
+before two probes: elapsed=60 ticks busy_polls=60 pause_calls=0
+after two probes: elapsed=60 ticks busy_polls=1 pause_calls=1

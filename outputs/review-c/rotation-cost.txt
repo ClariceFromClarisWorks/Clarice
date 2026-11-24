@@ -1,0 +1,6 @@
+before PASS reserved HFS snapshot names rejected before I/O; legacy codecs unchanged
+PASS unchanged CLRSNAP1 inventory: exact legacy CRC, corruption rejection, native-copy rollback
+COST reads=7300 bytes=4653200 cpu_ms=18.479 per100 rotations
+after PASS reserved HFS snapshot names rejected before I/O; legacy codecs unchanged
+PASS unchanged CLRSNAP1 inventory: exact legacy CRC, corruption rejection, native-copy rollback
+COST reads=5100 bytes=3136400 cpu_ms=14.658 per100 rotations

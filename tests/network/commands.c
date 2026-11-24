@@ -16,17 +16,18 @@ static int network_help(int fd,const char *text){return help_format(66,fd,text,c
 #undef clarice_main
 #undef help_output
 int output_error;
-static int failure,calls,diagnostics,cancel,cancel_after;
-static unsigned long now,reply_ticks=3;
+static int failure,calls,diagnostics,cancel,cancel_after,pauses,polls;
+static unsigned long now,reply_ticks=3,echo_duration,paused_ticks;
 void say(const char *s){assert(strlen(output)+strlen(s)<sizeof output);strcat(output,s);}
 void errsay(const char *s){(void)s;diagnostics++;}
 void error(const char *s,int e){(void)s;assert(e);diagnostics++;}
-int app_yield(void){return cancel||(cancel_after&&calls>=cancel_after);}
+int app_yield(void){polls++;return cancel||(cancel_after&&calls>=cancel_after);}
 unsigned long TickCount(void){return now;}
 void SystemTask(void){now++;}
+int cli_pause_ticks(unsigned long ticks){pauses++;if(app_yield())return 1;now+=ticks;paused_ticks+=ticks;return 0;}
 OSErr NetAddress(unsigned long *a,unsigned long *m){*a=0x0a000002;*m=0xffffff00;return failure;}
 OSErr NetResolve(const char *n,unsigned long *a,NetPoll p,unsigned long t){(void)n;(void)p;(void)t;*a=0x0a000001;return failure==2?-23045:0;}
-OSErr NetEcho(unsigned long a,unsigned short s,NetPoll p,unsigned long *t){assert(a==0x0a000001&&s==1);(void)p;if(calls)assert(now>=60UL*(unsigned)calls);calls++;*t=reply_ticks;return failure;}
+OSErr NetEcho(unsigned long a,unsigned short s,NetPoll p,unsigned long *t){assert(a==0x0a000001&&s==1);(void)p;if(calls)assert(now>=60UL*(unsigned)calls);calls++;now+=echo_duration;*t=reply_ticks;return failure;}
 void NetFormatIP(unsigned long a,char s[16]){snprintf(s,16,"%lu.%lu.%lu.%lu",a>>24,(a>>16)&255,(a>>8)&255,a&255);}
 static int run_ping(int argc,char **argv){calls=0;now=0;return ping_main(argc,argv);}
 int main(void){
@@ -42,7 +43,9 @@ int main(void){
  output[0]=0;assert(!ipconfig_main(2,ih)&&strstr(output,"Usage:\n  ipconfig"));
  char *p[]={"ping","-c","2","-W","1","example.test"};output[0]=0;
  assert(!run_ping(6,p)&&calls==2&&strstr(output,"2 transmitted, 2 received"));
+ assert(pauses==1&&polls==1);
  assert(strstr(output,"time=50 ms")&&strstr(output,"0% packet loss"));
+ echo_duration=17;paused_ticks=0;output[0]=0;assert(!run_ping(6,p)&&paused_ticks==43);echo_duration=120;paused_ticks=0;output[0]=0;assert(!run_ping(6,p)&&paused_ticks==0);echo_duration=0;
  reply_ticks=0;calls=0;output[0]=0;assert(!run_ping(6,p)&&strstr(output,"time<17 ms"));
  reply_ticks=1;calls=0;output[0]=0;assert(!run_ping(6,p)&&strstr(output,"time=17 ms"));
  reply_ticks=2;calls=0;output[0]=0;assert(!run_ping(6,p)&&strstr(output,"time=33 ms"));

@@ -1,0 +1,6 @@
+reply from 10.0.0.1: seq=1 time=67 ms
+reply from 10.0.0.1: seq=2 time=67 ms
+reply from 10.0.0.1: seq=3 time=83 ms
+reply from 10.0.0.1: seq=4 time=100 ms
+4 transmitted, 4 received, 0% packet loss
+real 3.98 s

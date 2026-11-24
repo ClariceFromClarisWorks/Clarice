@@ -1,0 +1,2 @@
+reply from 172.66.147.243: seq=1 time=67 ms
+1 transmitted, 1 received, 0% packet loss

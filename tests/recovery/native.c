@@ -103,7 +103,12 @@ int main(void){
   assert(!memcmp(unchanged,fs[ix].fork[0],8192));assert(!recovery_verify(rotation.path[0],&legacy));recovery_dispose(&legacy);closed_all();
   puts("PASS unchanged CLRSNAP1 inventory: exact legacy CRC, corruption rejection, native-copy rollback");
  }
- make_snapshot(rotation.path[1]);memcpy(baseline,fs,sizeof fs);boundaries=0;assert(!recovery_rotate(&rotation));int total=boundaries;closed_all();
+ make_snapshot(rotation.path[1]);
+ /* A successful call must not authorize a later call using the same context. */
+ {char path[256];assert(!recovery_member(rotation.path[0],"@core",path));assert(!recovery_rotation_check(&rotation,0));fs[find(path)].fork[0][0]^=1;
+  assert(!recovery_rename(rotation.path[1],rotation.path[2]));assert(recovery_rotate(&rotation)==paramErr);assert(find(rotation.path[2])>=0);
+  fs[find(path)].fork[0][0]^=1;assert(!recovery_rename(rotation.path[2],rotation.path[1]));}
+ memcpy(baseline,fs,sizeof fs);boundaries=0;assert(!recovery_rotate(&rotation));int total=boundaries;closed_all();
  for(int fault=1;fault<=total;fault++){
   reset();fail_at=fault;(void)recovery_rotate(&rotation);fail_at=0;closed_all();
   int valid=0;for(int n=0;n<3;n++){RecoverySnapshot s;if(!recovery_inventory(rotation.path[n],&s,0)){valid+=!recovery_verify(rotation.path[n],&s);recovery_dispose(&s);}}

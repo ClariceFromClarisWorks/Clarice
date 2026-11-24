@@ -187,21 +187,21 @@ static int recovery_prune(const char *dir,uint32_t expected_id){
 }
 /* Snapshot rotation is the same three-slot native replacement used by Core.
  * The old generation is pruned only after the new generation passes readback. */
-typedef struct {char path[3][256];} RecoveryRotation;
+typedef struct {char path[3][256];uint32_t verified_retired_id;} RecoveryRotation;
 static int recovery_rotation_probe(void *v,int n){RecoveryRotation *r=v;CInfoPBRec c;int e=update_info(r->path[n],&c);return e==fnfErr?0:e?e:(c.hFileInfo.ioFlAttrib&16)?1:paramErr;}
-static int recovery_rotation_check(void *v,int n){RecoveryRotation *r=v;RecoverySnapshot s;int e=recovery_inventory(r->path[n],&s,0);if(!e){e=recovery_verify(r->path[n],&s);recovery_dispose(&s);}return e;}
+static int recovery_rotation_check(void *v,int n){RecoveryRotation *r=v;RecoverySnapshot s;int e=recovery_inventory(r->path[n],&s,0);if(!e){e=recovery_verify(r->path[n],&s);if(!e&&n==0)r->verified_retired_id=s.header.retired_id;recovery_dispose(&s);}return e;}
 static int recovery_rotation_closed(void *v,int n){(void)v;(void)n;return 0;}
 static int recovery_rotation_move(void *v,int a,int b){RecoveryRotation *r=v;return recovery_rename(r->path[a],r->path[b]);}
 static int recovery_rotation_flush(void *v){return update_flush(((RecoveryRotation*)v)->path[0]);}
-static int recovery_prune_retired(RecoveryRotation *r){
- RecoverySnapshot current;int e=recovery_inventory(r->path[0],&current,0);if(e)return e;e=recovery_verify(r->path[0],&current);uint32_t id=current.header.retired_id;recovery_dispose(&current);return e?e:recovery_prune(r->path[2],id);
-}
 static int recovery_rotate(RecoveryRotation *r){
+ /* Call-local proof only: every entry/retry verifies afresh. The successful
+    post-rename check supplies the retirement identity for immediate pruning. */
+ r->verified_retired_id=0;int checked_current=0;
  int a=recovery_rotation_probe(r,0),b=recovery_rotation_probe(r,2),p=recovery_rotation_probe(r,1),e;if(a<0||b<0||p<0)return a<0?a:b<0?b:p;
- if(b){if(a){if((e=recovery_rotation_check(r,0)))return e;if((e=recovery_prune_retired(r)))return e;}else{if((e=recovery_rotation_check(r,2)))return e;if((e=recovery_rotation_move(r,2,0))||(e=recovery_rotation_flush(r)))return e;}}
- if(!p)return recovery_rotation_check(r,0);
+ if(b){if(a){if((e=recovery_rotation_check(r,0)))return e;checked_current=1;if((e=recovery_prune(r->path[2],r->verified_retired_id)))return e;}else{if((e=recovery_rotation_check(r,2)))return e;if((e=recovery_rotation_move(r,2,0))||(e=recovery_rotation_flush(r)))return e;}}
+ if(!p)return checked_current?0:recovery_rotation_check(r,0);
  UpdateOps ops={r,recovery_rotation_probe,recovery_rotation_check,recovery_rotation_closed,recovery_rotation_move,recovery_rotation_flush};UpdateResult result=update_commit(&ops);if(result.error)return result.error;
- return result.previous_retained?recovery_prune_retired(r):0;
+ return result.previous_retained?recovery_prune(r->path[2],r->verified_retired_id):0;
 }
 
 /* An interrupted pre-upgrade preparation can hold the previous helper.

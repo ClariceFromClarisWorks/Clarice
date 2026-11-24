@@ -1,5 +1,6 @@
 #include "network/command.h"
 #include "../help-output.h"
+extern int cli_pause_ticks(unsigned long);
 static int positive(const char *s,unsigned max,unsigned *out){unsigned n=0;if(!*s)return 0;while(*s){if(*s<'0'||*s>'9'||n>max/10)return 0;n=n*10+*s++-'0';if(n>max)return 0;}if(!n)return 0;*out=n;return 1;}
 /* Rounded percentage without overflowing long-running counters or pulling in
    64-bit division support on the 68000. Runs only once at command completion. */
@@ -43,7 +44,8 @@ int clarice_main(int argc,char **argv){
   else error("ping: echo",e);
   if(output_error)return 1;
   if(e&&e!=(-23035)&&e!=NET_ECHO_INVALID)break;
-  while((!count||sent<count)&&(unsigned long)(TickCount()-start)<60){if(app_yield()){cancelled=1;break;}SystemTask();}
+  unsigned long elapsed=TickCount()-start;
+  if((!count||sent<count)&&elapsed<60&&cli_pause_ticks(60-elapsed))cancelled=1;
   if(cancelled)break;
  }
  unsigned loss=loss_percent(sent,received);
