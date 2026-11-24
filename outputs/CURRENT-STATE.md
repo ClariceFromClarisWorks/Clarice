@@ -39,7 +39,10 @@ Finder flags/position and creation/modification dates compare exactly. Two
 allocation or startup scan. Shared files image18916→19316B (+400B), Core MacBinary
 424960→425728B (+768B); native text unchanged, static data+8/BSS−8B, total unchanged.
 [Focused evidence](hfsattrib-q1/). Physical testing not performed.
-Publication verification pending; prior1948 distribution preserved.
+Product commit **c15720c**, integrated on local main and published to canonical
+HTTP/AFP. All51 entries/36 payloads, offline archive/HDA, source and seal pass
+HTTP download/AFP readback verification. Prior1948 distribution preserved.
+No GitHub push, physical deployment or release/tag changes.
 
 ## Q1-002 — root installation and managed recovery
 
