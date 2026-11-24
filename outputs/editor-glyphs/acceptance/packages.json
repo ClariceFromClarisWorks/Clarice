@@ -1,0 +1,16 @@
+{
+  "before": {
+    "build": "2026111943",
+    "package_bytes": 394752,
+    "sha256": "8ee36cf9fb1be3955809852fc8a14f00a69b40d1556890f5020c4b073da9a6b1",
+    "data_fork": 0,
+    "resource_fork": 394572
+  },
+  "after": {
+    "build": "2026111945",
+    "package_bytes": 395008,
+    "sha256": "a5d3c0e45902c25e72d272bcbaaf70426b33c70d2a227729ff29c3dc4b298140",
+    "data_fork": 0,
+    "resource_fork": 394807
+  }
+}

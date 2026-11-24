@@ -1,0 +1,17 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333226 largest=331580 image=198996 ticks=4716 load=155 owned-peak=77160 remaining=0\r\nLoader ticks: read=63 validate=2 imports=3 relocations=20 prepare=57 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333224 largest=331586 image=198996 ticks=4702 load=168 owned-peak=77160 remaining=0\r\nLoader ticks: read=63 validate=1 imports=3 relocations=21 prepare=70 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333222 largest=331626 image=198996 ticks=4700 load=155 owned-peak=77160 remaining=0\r\nLoader ticks: read=63 validate=2 imports=3 relocations=20 prepare=57 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333230 largest=331568 image=36336 ticks=4286 load=37 owned-peak=23396 remaining=0\r\nLoader ticks: read=18 validate=0 imports=2 relocations=4 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333230 largest=331568 image=36336 ticks=4285 load=36 owned-peak=23396 remaining=0\r\nLoader ticks: read=18 validate=0 imports=3 relocations=4 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333230 largest=331568 image=36336 ticks=4149 load=36 owned-peak=23396 remaining=0\r\nLoader ticks: read=18 validate=0 imports=3 relocations=3 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333230 largest=331568 image=36336 ticks=4262 load=35 owned-peak=23396 remaining=0\r\nLoader ticks: read=16 validate=2 imports=3 relocations=3 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=9 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "echo RECOVERED",
+    "status": 0,
+    "text": "echo RECOVERED; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRECOVERED\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=333222 largest=331586 image=198996 ticks=4716 load=178 owned-peak=77160 remaining=0\r\nLoader ticks: read=63 validate=2 imports=3 relocations=20 prepare=80 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=12 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  }
+]

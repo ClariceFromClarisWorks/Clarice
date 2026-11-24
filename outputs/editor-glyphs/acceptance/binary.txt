@@ -1,0 +1,33 @@
+Using multiversal interfaces
+   text	   data	    bss	    dec	    hex	filename
+ 232160	  35588	  41436	 309184	  4b7c0	/src/work/glyph-acceptance/before.gdb
+ 232384	  35588	  41436	 309408	  4b8a0	/src/work/build/Clarice.code.bin.gdb
+0000990e 00000630 t handle
+00040446 00000648 d exports.2
+000205a2 00000660 T expect_dollar
+00018bb6 000006d2 t sh_word
+0002845a 000007a8 T qsort
+00041aa8 00000800 b ahead_mods
+000081ea 00000882 t key
+00017874 000008a8 t sh_simple
+00026a74 00000974 T __gethex
+0001ef5e 00000c2e t compound_command
+0000a372 00000cfe T app_scroll_bench
+0003f2cf 00000d2a d .LC2
+000115a2 00000e6e t module_load_source
+0000b348 00000f1a T main
+0004451e 00001000 b prompt_pixels
+000455fe 000014a0 b last_screen
+00033364 000014a2 T _vfiprintf_r
+00035610 00001922 T __ssvfscanf_r
+0002465c 00001b18 T _strtod_l
+0002b768 00001f28 T _dtoa_r
+00003ee4 00002138 t draw.part.0
+00015344 00002520 t sh_dispatch
+0002d866 0000265c T _svfprintf_r
+00028c60 0000268e T _vfprintf_r
+00046b1e 00004200 b text
+
+Disassembly: editor-68000.txt (draw, containing inlined draw_editor).
+Before ELF: preserved Clarice-Vi-Response build at ce53aa7; exact packaged
+1943/1945 CODE resource lengths are independently recorded in resources.json.

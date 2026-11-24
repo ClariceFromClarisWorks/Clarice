@@ -1,6 +1,6 @@
 # Clarice current state
 
-## Editor glyph reuse — isolated experiment, resumed 24 November
+## Editor glyph reuse — normal-build acceptance complete, 24 November
 
 Branch `codex/editor-damage-20261119`, based on accepted main ae7bffd.
 Integrated into local main as2ad0967 (transcript cleanup b157ad5). Complete
@@ -22,11 +22,22 @@ burst input, saves/readback, Ctrl-C ownership, Command-period130 and recovery. N
 - Rejected4KiB row-shadow experiment: fewer cells, negligible overall gain and
   slight horizontal regression. Patch/evidence retained separately, removed
   from production source. Detailed status profiling remains diagnostic-only.
-- Remaining: nano-specific smoke check, complete distribution publication and
-  physical acceptance. Existing updater handoff -50/-36 prevented
-  diagnostic deployment; only stopped disposable Snow disks were populated.
-  The legacy native-glyphs host harness lacks current cache-header stubs; it did
-  not pass. Actual guest pixels are the current glyph integration evidence.
+- Normal-build follow-up passes six vi scroll/page/edit/save cycles in both
+  themes, nano edit/save/exit, cancellation and prompt restoration. Direct vi
+  exit heap333230/largest331568 stays identical over four runs; vi and nano
+  retain zero tracked command allocations. Repeated nano native heap varies
+  only4 bytes with no net decline across the measured sequence.
+- Sampled maximum scroll response867→700–717ms; page850→667ms; vertical
+  cursor100ms unchanged. These are matched diagnostic guest measurements;
+  normal-build testing verifies behaviour/cleanup, not instrumented timings.
+- No new persistent bitmap/static memory. Exact Core1943→1945 package grows
+  256 bytes, CODE/1 grows235 bytes. Actual -m68000 binary inspected.
+- [Acceptance evidence](editor-glyphs/acceptance/REPORT.md). Physical acceptance
+  remains pending. No new merge, publication, hardware deployment or Q1 work.
+  Earlier HTTP publication is complete; AFP was unmounted. Existing updater
+  handoff -50/-36 remains unrelated; disposable Snow disk installation used.
+  Legacy native-glyphs host harness remains unsupported;568 guest comparisons
+  preserved and460 host presentation comparisons pass.
 
 [Measurements](editor-glyphs/summary.json). Prior accepted baseline follows.
 
