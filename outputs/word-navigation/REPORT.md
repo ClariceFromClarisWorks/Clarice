@@ -41,5 +41,8 @@ real-key acceptance used the SE/ADB emulator; Plus correctness uses actual guest
 handler events. No emulator modification or physical hardware access. Physical
 Macintosh acceptance remains pending.
 
-Prior1954 distribution/recovery retained; no GitHub push. Publication verification
-is recorded alongside this report when complete.
+Product397c2af integrated in local main. HTTP publication verified against the seal:
+all51 manifest entries/36 payloads, offline packages and source archive. Prior1954
+distribution/recovery retained; no GitHub push. AFP remains pending: share unmounted
+and automatic reconnection unsuccessful. See verification.json; the complete same
+distribution is staged locally for mirroring when Macintosh Exchange returns.
