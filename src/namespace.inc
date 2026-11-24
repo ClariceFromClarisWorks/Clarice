@@ -66,7 +66,8 @@ static int namespace_install(void){SysEnvRec sys;WDPBRec wd;HParamBlockRec vp;CI
  id=wd.ioWDDirID;if(id<=2)id=vp.volumeParam.ioVFndrInfo[0];if(id<=2)return dirNFErr;
  for(int depth=0;id>2&&depth<32;depth++){memset(&cat,0,sizeof cat);cat.dirInfo.ioNamePtr=name;cat.dirInfo.ioVRefNum=wd.ioWDVRefNum;cat.dirInfo.ioDrDirID=id;cat.dirInfo.ioFDirIndex=-1;e=PBGetCatInfoSync(&cat);if(e)return e;if(name[0]+strlen(tail)+2>=sizeof part)return bdNamErr;memcpy(part,name+1,name[0]);part[name[0]]=':';strcpy(part+name[0]+1,tail);strcpy(tail,part);id=cat.dirInfo.ioDrParID;}
  if(id!=2||strlen(root_path)+strlen(tail)+32>255)return bdNamErr;strcat(root_path,tail);strcat(root_path,"Clarice Data:");
- static const char *dirs[]={"","bin","etc","etc:clarice","tmp","dev","mnt","usr","usr:bin",0};for(int i=0;dirs[i];i++){snprintf(part,sizeof part,"%s%s",root_path,dirs[i]);size_t n=strlen(part);if(part[n-1]==':')part[n-1]=0;pstr(name,part);e=create_dir(name,&id);if(e==dupFNErr){e=info(part,&cat);if(!e&&!(cat.hFileInfo.ioFlAttrib&16))e=dirNFErr;}if(e)return e;}
+ /* Existing directories need one read, not a failed create plus a read. */
+ static const char *dirs[]={"","bin","etc","etc:clarice","tmp","dev","mnt","usr","usr:bin",0};for(int i=0;dirs[i];i++){snprintf(part,sizeof part,"%s%s",root_path,dirs[i]);size_t n=strlen(part);if(part[n-1]==':')part[n-1]=0;pstr(name,part);e=info(part,&cat);if(e==fnfErr)e=create_dir(name,&id);else if(!e&&!(cat.hFileInfo.ioFlAttrib&16))e=dirNFErr;if(e)return e;}
  snprintf(part,sizeof part,"%.240setc:profile",root_path);pstr(name,part);e=HCreate(0,0,name,'S6UX','TEXT');if(e==dupFNErr)return 0;if(e)return e;short ref;e=HOpen(0,0,name,fsWrPerm,&ref);if(!e){static const char profile[]="# Clarice startup profile; sourced once at launch.\nexport PATH=/bin:/usr/bin\n# Optional local hostname (no networking required):\n# export HOSTNAME=macplus\n";long n=sizeof profile-1;e=FSWrite(ref,&n,profile);if(!e&&n!=sizeof profile-1)e=ioErr;FSClose(ref);}if(e)HDelete(0,0,name);FlushVol(0,0);return e;
 }
 
@@ -105,5 +106,7 @@ int shell_state_path(char *out,const char *file,const char *legacy){return migra
 static void migrate_reports(void){
  static const char *old[]={"Cached Scroll Report","Native Scroll Report","Scroll Report","Phase1 Report","Drag Report"};
  static const char *names[]={"legacy-cached-scroll.txt","legacy-native-scroll.txt","legacy-scroll.txt","legacy-phase1.txt","legacy-drag.txt"};
- for(int i=0;i<5;i++){char path[PATH_CAP];migrate_private_file(path,"tmp:",names[i],old[i]);}
+ /* Absent legacy reports need no destination lookup. Migration still owns
+    collision/error handling and never overwrites an existing destination. */
+ for(int i=0;i<5;i++){char path[PATH_CAP];CInfoPBRec pb;snprintf(path,sizeof path,"%s%s",root_path,old[i]);if(info(path,&pb)!=fnfErr)migrate_private_file(path,"tmp:",names[i],old[i]);}
 }

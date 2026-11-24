@@ -1,0 +1,2 @@
+PASS existing/fresh directories, wrong-kind path, native OOM/read-only errors; absent/existing/error legacy-report gates; no allocation
+PASS actual startup positioning: standard/no-move and alternate WDEF borders, menu heights and nonzero screens

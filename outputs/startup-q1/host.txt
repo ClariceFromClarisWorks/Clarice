@@ -1,0 +1,9 @@
+PASS existing/fresh directories, wrong-kind path, native OOM/read-only errors; absent/existing/error legacy-report gates; no allocation
+PASS production geometry: 8,505 metric/bounds combinations, actual rows, long-input caret/state, reflow, allocation failure rollback/retry and zero retained allocations
+PASS: explicit refs, case/spaces, indexed lookup, absent/ambiguous/invalid/error fail closed
+PASS: regression rejects previous zero-reference behavior
+PASS: cross-volume rename/recovery/flush, duplicate IDs/leaves, spaces/case, missing/ambiguous/error fail closed
+PASS: regression detects a successful rename on the wrong volume
+partial-output: partial/ > xy
+PASS partial output, canonical read, exact-width caret, wrapped input, scrollback, long editing, newlines, ring origin and background cursor
+PASS: queued control modifiers and exact editor capacity; all raw control bytes distinct from arrows, bounded editor queue

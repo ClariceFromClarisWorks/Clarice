@@ -2,15 +2,26 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111953**, product **2b3b187** on local main. Sealed Core
-+49 standard utilities; optional vi remains byte-identical1951. Q1-006 host/Snow
-acceptance and all51 manifest entries/36 payloads verified. Prior1952 artefacts
-and recovery material retained. No new physical-hardware acceptance.
+Latest normal build **2026111954**, Q1-007 on local main. Sealed Core +49 standard
+utilities; optional vi remains byte-identical1951. Snow acceptance completed;
+publication verification pending. Prior1953 artefacts/recovery retained.
+Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP mirror:
+`Macintosh Exchange/Clarice/index.txt`. No physical deployment or GitHub push.
 
-Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; exact AFP mirror:
-`Macintosh Exchange/Clarice/index.txt`. Offline/source/licence/provenance archives
-published with immutable payloads before activating the index. No GitHub push,
-public release or hardware deployment. [Verification](completion-q1/verification.json).
+## Q1-007 startup responsiveness — 25 November 2026
+
+Remove redundant failed directory creates, absent-report destination probes and
+window moves. One native event yield exposes Starting feedback early without
+consuming queued keys; prompt waits for required initialization/profile completion.
+Matched Snow launch-proxy→drawn prompt: first338→292ticks (5.63→4.87s), repeat335→286
+(5.58→4.77s); C-entry→drawn prompt198→151 /195→145. Native pre-entry141ticks now
+roughly half total. Tick timings include native scheduling; no physical claim.
+
+Fresh namespace, absent networking, legacy migration/collision preservation,
+queued startup input, prefs/geometry/theme persistence, vi save/restore, scrolling,
+Ctrl+C130 and focused host regressions pass. Repeat heap stable;212bytes less free,
+no new persistent buffers/allocations; Core package+128bytes. Physical acceptance
+pending. [Evidence, method and limitations](startup-q1/REPORT.md).
 
 ## Q1-006 responsive Tab completion — 25 November 2026
 

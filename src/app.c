@@ -676,7 +676,7 @@ static void load_preferences(void){
   p.width=d[40]*256+d[41];p.height=d[42]*256+d[43];if(n==52){p.x=(short)((d[48]<<8)|d[49]);p.y=(short)((d[50]<<8)|d[51]);}legacy=1;
  }else if(!prefs_parse(&p,data,n))return;
  short id;pstr(name,p.font);if(installed_font(name,&id))font_id=id;font_size=p.size;inverse=p.inverse;retained=p.retained;control_mode=p.control;
- MoveWindow(win,p.x,p.y,1);fit_window(p.width,p.height);
+ {Point origin={0,0};SetPort(win);LocalToGlobal(&origin);if(origin.h!=p.x||origin.v!=p.y)MoveWindow(win,p.x,p.y,1);}fit_window(p.width,p.height);
  if(p.fill)fill_window();if(legacy)save_preferences();
 }
 /* Write/flush a new file before replacing the old one. Keep the previous
@@ -1045,7 +1045,7 @@ static void welcome(void){
  snprintf(line,sizeof line,"RAM %s | Display %u x %u, %u-bit\n",ram,h.width,h.height,h.depth);term_puts(line);
  if(h.system)snprintf(line,sizeof line,"System %x.%x.%x (reported)\n",h.system>>8,(h.system>>4)&15,h.system&15);else strcpy(line,"System version unknown\n");term_puts(line);term_puts("Type help for commands; Tab completes.\n\n");
 }
-int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount();InitGraf(&qd.thePort);InitFonts();InitWindows();InitMenus();TEInit();InitDialogs(0);InitCursor();/* Reserve 64 KiB beyond the monochrome Mac default stack before growing the heap. */SetApplLimit(LMGetApplLimit()-65536);MaxApplZone();MoreMasters();SysEnvirons(1,&system_info);
+int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount();busy=1;InitGraf(&qd.thePort);InitFonts();InitWindows();InitMenus();TEInit();InitDialogs(0);InitCursor();/* Reserve 64 KiB beyond the monochrome Mac default stack before growing the heap. */SetApplLimit(LMGetApplLimit()-65536);MaxApplZone();MoreMasters();SysEnvirons(1,&system_info);
  m=NewMenu(128,(const unsigned char*)"\p\024");AppendMenu(m,(const unsigned char*)"\pAbout Clarice;(-");AppendResMenu(m,'DRVR');InsertMenu(m,0);
  m=NewMenu(129,(const unsigned char*)"\pFile");AppendMenu(m,(const unsigned char*)"\pClear terminal;Cancel command/.;(-;Preferences.../,;(-;Quit/Q");InsertMenu(m,0);
  m=NewMenu(130,(const unsigned char*)"\pEdit");AppendMenu(m,(const unsigned char*)"\pCopy/C;Paste/V;(-;Previous command/H;Next command/J");InsertMenu(m,0);
@@ -1054,8 +1054,13 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  m=NewMenu(134,(const unsigned char*)"\pScrollback");AppendMenu(m,(const unsigned char*)"\p32 lines;64 lines;128 lines");InsertMenu(m,-1);
  m=NewMenu(136,(const unsigned char*)"\pControl key");AppendMenu(m,(const unsigned char*)"\pControl only;Option;Command");InsertMenu(m,-1);
  m=NewMenu(133,(const unsigned char*)"\pView");AppendMenu(m,(const unsigned char*)"\pReverse colours;Fill screen / restore;(-;9 point;12 point;14 point");InsertMenu(m,0);DrawMenuBar();
- SetRect(&r,8,48,428,312);win=NewWindow(&win_record,&r,(const unsigned char*)"\pClarice",1,documentProc,(WindowPtr)-1,1,0);if(!win)return 1;SetPort(win);
- {Rect frame=(*((WindowPeek)win)->strucRgn)->rgnBBox;MoveWindow(win,r.left+qd.screenBits.bounds.left+2-frame.left,r.top+qd.screenBits.bounds.top+menu_bar_height()+2-frame.top,1);}
+ /* Start at the standard document-frame position; still correct against the
+    actual WDEF bounds below (including extensions and nonzero screens). */
+ SetRect(&r,3,menu_bar_height()+21,423,menu_bar_height()+285);OffsetRect(&r,qd.screenBits.bounds.left,qd.screenBits.bounds.top);win=NewWindow(&win_record,&r,(const unsigned char*)"\pClarice",1,documentProc,(WindowPtr)-1,1,0);if(!win)return 1;SetPort(win);
+ {Rect frame=(*((WindowPeek)win)->strucRgn)->rgnBBox;int dx=qd.screenBits.bounds.left+2-frame.left,dy=qd.screenBits.bounds.top+menu_bar_height()+2-frame.top;if(dx||dy)MoveWindow(win,r.left+dx,r.top+dy,1);}
+ /* Let MultiFinder finish the foreground handoff without consuming queued
+    input. Temporary native feedback is erased by the forced terminal draw. */
+ WaitNextEvent(0,&ev,0,0);SetPort(win);EraseRect(&win->portRect);MoveTo(4,16);DrawString((const unsigned char*)"\pStarting Clarice...");
  scroll_region=NewRgn();saved_clip=NewRgn();transfer_region=NewRgn();visible_region=NewRgn();
  OpenPort(&frame_port);frame_port.portBits.baseAddr=(Ptr)frame_pixels;frame_port.portBits.rowBytes=STRIDE;SetRect(&frame_port.portBits.bounds,0,0,512,HEIGHT);frame_port.portRect=frame_port.portBits.bounds;ClipRect(&frame_port.portRect);frame_ready=1;OpenPort(&prompt_port);prompt_port.portBits.baseAddr=(Ptr)prompt_pixels;prompt_port.portBits.rowBytes=STRIDE;SetRect(&prompt_port.portBits.bounds,0,0,512,64);prompt_port.portRect=prompt_port.portBits.bounds;ClipRect(&prompt_port.portRect);SetPort(win);
  SetRect(&r,win->portRect.right-15,0,win->portRect.right+1,win->portRect.bottom-14);history_bar=NewControl(win,&r,(const unsigned char*)"\p",1,0,0,0,scrollBarProc,0);

@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(StartupProbe C)
+add_application(StartClarice launcher.c ../native-bench/Worker.r TYPE APPL CREATOR CLNB)
+target_compile_options(StartClarice PRIVATE -Os -m68000 -Wno-multichar)
+set_target_properties(StartClarice PROPERTIES LINK_FLAGS "-Wl,--mac-single")
