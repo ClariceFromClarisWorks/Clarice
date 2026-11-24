@@ -1,0 +1,9 @@
+Using multiversal interfaces
+   text	   data	    bss	    dec	    hex	filename
+ 234392	  34828	  41436	 310656	  4bd80	/src/work/build-before-3cf5d04aaa084fc9b6b30ba74a6ec33a/Clarice.code.bin.gdb
+ 235236	  34848	  41436	 311520	  4c0e0	/src/work/build/Clarice.code.bin.gdb
+0000f600 <module_verify_payload>:
+    f600:	4fef f7fc      	lea %sp@(-2052),%sp
+    f604:	48e7 1f3a      	moveml %d3-%d7/%a2-%a4/%fp,%sp@-
+    f608:	246f 083e      	moveal %sp@(2110),%a2
+    f60c:	24bc 811c 9dc5 	movel #-2128831035,%a2@

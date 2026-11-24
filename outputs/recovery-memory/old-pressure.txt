@@ -1,0 +1,7 @@
+Checking repository...
+recoveryprobe -> build 1
+Preparing previous-installation recovery snapshot...
+VERIFY memory: image=198756 metadata=69732 free=163728 largest=91068 purge=188056 contiguous=91076 legacy=1
+command: native:Sys6Unix:System Folder:Clarice Data:bin:nano-profile: insufficient application memory
+clarice update: Mac OS error -108: Insufficient memory
+Completed packages are retained. Repeat clarice update -y to resume.

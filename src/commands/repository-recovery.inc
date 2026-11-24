@@ -39,7 +39,9 @@ static int repo_recovery_prepare(RepoItem *items,const char *own,uint32_t build)
  if(s.header.count>0x7fffffffUL/sizeof *s.files)return memFullErr;s.files=cli_alloc(s.header.count*sizeof *s.files);if(!s.files)return memFullErr;memset(s.files,0,s.header.count*sizeof *s.files);
  strcpy(s.files[0].name,"@core");strcpy(s.files[1].name,"@helper");strcpy(s.files[2].name,"@catalog");uint32_t n=3;
  for(RepoItem *i=items;i;i=i->next)if(!i->wanted.core&&strcmp(i->wanted.name,"clarice")){strcpy(s.files[n].name,i->wanted.name);s.files[n].data=i->wanted.size;s.files[n].data_crc=i->wanted.crc;n++;}
- say("Preparing previous-installation recovery snapshot...\n");e=recovery_prepare(&rotation,&s,helper,repo_recovery_validate);recovery_dispose(&s);return e;
+ say("Preparing previous-installation recovery snapshot...\n");/* Catalog hashes and native fork readback bind the saved bytes. Archived
+    optional diagnostics need not be runnable by this Core to be preserved. */
+ e=recovery_prepare(&rotation,&s,helper,0);recovery_dispose(&s);return e;
 }
 static int repo_recovery_load(RecoverySnapshot *s,RecoveryRotation *r){char root[256];int e=resolve("/",root);if(!e)e=repo_recovery_paths(root,r);if(!e){CInfoPBRec directory;e=info(r->path[0],&directory);if(!e){e=recovery_inventory(r->path[0],s,0);if(e==fnfErr||e==dirNFErr)e=paramErr;}}if(!e&&strcmp(root,s->header.root)){recovery_dispose(s);e=paramErr;}return e;}
 static int repo_recovery_root(const char *own,char target[256]){

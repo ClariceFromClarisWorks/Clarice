@@ -22,6 +22,7 @@ static int command_paths(const char *n,char *d,char *s,char *b){return command_p
 static int command_absent(const char *path){CInfoPBRec pb;int e=info(path,&pb);return e==fnfErr?0:e?e:dupFNErr;}
 static int command_flush(const char *path){short vol;int e=cli_native_volume(path,&vol);return e?e:FlushVol(0,vol);}
 static int command_check_native(const char *path){char full[PATH_CAP+8];snprintf(full,sizeof full,"native:%s",path);return module_load(full,0,0,0);}
+static int command_verify_native(const char *path){int e=command_check_native(path);return e?module_native_error:0;}
 static void command_recovery(const char *path){errsay("appinstall: retained recovery file: native:");errsay(path);errsay("\n");}
 static int command_restore(const char *backup,const char *dest){int e=cli_native_rename(backup,dest);if(!e)e=command_flush(dest);if(e)command_recovery(backup);return e;}
 /* Streaming file source; no bundled resource is held during validation. */
@@ -47,7 +48,7 @@ static int command_replace_mode(const char *name,const char *source,int replace,
  if(in>=0){int closed=FSClose(in);in=-1;if(!e)e=closed;}
  if(out>=0){int closed=FSClose(out);out=-1;if(!e)e=closed;}
  if(e)goto done;
- {int valid=command_check_native(stage);if(valid){e=valid==130?userCanceledErr:paramErr;goto done;}}
+ e=command_verify_native(stage);if(e)goto done;
  if(exists){CInfoPBRec staged;e=info(stage,&staged);if(e)goto done;
   staged.hFileInfo.ioFlFndrInfo=pb.hFileInfo.ioFlFndrInfo;
   staged.hFileInfo.ioFlXFndrInfo=pb.hFileInfo.ioFlXFndrInfo;
@@ -62,7 +63,7 @@ static int command_replace_mode(const char *name,const char *source,int replace,
  e=cli_native_rename(stage,dest);
  if(e){if(exists)command_restore(backup,dest);goto done;}
  owned=0;e=command_flush(dest);if(exists)command_recovery(backup);
- if(!e){int valid=command_check_native(dest);if(valid)e=valid==130?userCanceledErr:paramErr;}
+ if(!e)e=command_verify_native(dest);
 done:
  if(in>=0)FSClose(in);if(out>=0)FSClose(out);
  if(owned){int cleanup=HDelete(0,0,pn);if(cleanup)command_recovery(stage);}
@@ -124,7 +125,7 @@ static int appinstall_command(int argc,char **av){
 
 /* Repository files use a distinct bounded slot; historical/manual appinstall
    backups are never renamed or pruned by managed updates. */
-static int cli_appcheck(const char *source){int e=module_load(source,0,0,0);return e==130?userCanceledErr:e?paramErr:0;}
+static int cli_appcheck(const char *source){int e=module_load(source,0,0,0);return e?module_native_error:0;}
 static int command_same_image(const char *source,const char *native){
  char path[PATH_CAP+8];snprintf(path,sizeof path,"native:%s",native);short a=-1,b=-1;int e=open_path(source,fsRdPerm,&a);if(e)return e;e=open_path(path,fsRdPerm,&b);
  long an=0,bn=0;if(!e)e=GetEOF(a,&an);if(!e)e=GetEOF(b,&bn);if(!e&&an!=bn)e=paramErr;

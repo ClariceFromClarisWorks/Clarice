@@ -55,6 +55,6 @@ static int offline_recovery(const char *origin,const char *media,uint32_t build)
    }
   }
  }
- if(!e)e=recovery_prepare(&rotation,&s,helper,command_check_native);
+ if(!e)e=recovery_prepare(&rotation,&s,helper,0);
  recovery_dispose(&s);if(e)errsay("Installer: cannot verify a coherent previous catalog. Existing files kept.\n");return e;
 }

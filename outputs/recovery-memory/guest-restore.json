@@ -1,0 +1,9 @@
+{
+  "independent_helper": true,
+  "core_path_absent_before_restore": true,
+  "automatic_relaunch": "2026111952",
+  "inventory_unchanged": true,
+  "optional_both_forks_and_metadata": true,
+  "post_snapshot_probe_removed": true,
+  "unrelated_failed_core_and_user_note_preserved": true
+}

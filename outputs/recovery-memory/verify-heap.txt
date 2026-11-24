@@ -1,0 +1,22 @@
+Installed RAM             4194304 bytes
+Application heap extent   712660 bytes
+Free heap                 307008 bytes
+Largest free block        261640 bytes
+Free after purging        353232 bytes
+Largest after purging     261648 bytes
+VERIFY memory: image=198756 metadata=69732 free=307908 largest=261640 purge=354132 contiguous=261648 legacy=0
+command: /bin/nano-profile: incompatible runtime imports
+VERIFY memory: image=198756 metadata=69732 free=307924 largest=261640 purge=354148 contiguous=261648 legacy=0
+command: /bin/nano-profile: incompatible runtime imports
+VERIFY memory: image=198756 metadata=69732 free=307926 largest=261640 purge=354150 contiguous=261648 legacy=0
+command: /bin/nano-profile: incompatible runtime imports
+VERIFY memory: image=198756 metadata=69732 free=307924 largest=261640 purge=354148 contiguous=261648 legacy=0
+command: /bin/nano-profile: incompatible runtime imports
+VERIFY memory: image=198756 metadata=69732 free=307926 largest=261640 purge=354150 contiguous=261648 legacy=0
+command: /bin/nano-profile: incompatible runtime imports
+Installed RAM             4194304 bytes
+Application heap extent   712660 bytes
+Free heap                 306986 bytes
+Largest free block        261640 bytes
+Free after purging        353210 bytes
+Largest after purging     261648 bytes

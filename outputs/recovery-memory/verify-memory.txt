@@ -1,0 +1,4 @@
+BEFORE
+status=-50 requests=1 largest_request=198756 retained=0
+AFTER
+status=0 requests=0 largest_request=0 retained=0

@@ -25,6 +25,7 @@ typedef struct {uint32_t fdType,fdCreator;unsigned char rest[8];} Finder;
 typedef struct {struct {int ioFlAttrib;uint32_t ioDirID,ioFlParID,ioFlLgLen,ioFlRLgLen,ioFlCrDat,ioFlMdDat;Finder ioFlFndrInfo;unsigned char ioFlXFndrInfo[16];} hFileInfo;} CInfoPBRec;
 static int boundaries,fail_at,crash_at,allocs,fail_alloc,identity=100,fault_code=ioErr,cancel_poll;
 #define RECOVERY_POLL() (cancel_poll ? -128 : 0)
+static int native_scratch;
 static jmp_buf reset_point;
 static void *live[128];
 static int boundary_at(const char *where){boundaries++;if(boundaries==fail_at&&getenv("TRACE_FAULT"))fprintf(stderr,"failure %d at %s\n",boundaries,where);if(boundaries==crash_at)longjmp(reset_point,1);return boundaries==fail_at?fault_code:0;}
@@ -52,19 +53,19 @@ static int update_open(const char *p,int fork,int write,short *r){int e=boundary
 static int GetEOF(short r,long *size){struct Ref *f=&refs[r];assert(f->used);*size=f->fork?fs[f->file].info.hFileInfo.ioFlRLgLen:fs[f->file].info.hFileInfo.ioFlLgLen;return boundary();}
 static int FSRead(short r,long *n,void *p){int e=boundary();if(e)return e;struct Ref *f=&refs[r];assert(f->used);long size=f->fork?fs[f->file].info.hFileInfo.ioFlRLgLen:fs[f->file].info.hFileInfo.ioFlLgLen;long want=*n;if(*n>size-f->pos)*n=size-f->pos;memcpy(p,fs[f->file].fork[f->fork]+f->pos,*n);f->pos+=*n;return *n==want?0:eofErr;}
 static int FSWrite(short r,long *n,const void *p){int e=boundary();if(e)return e;struct Ref *f=&refs[r];assert(f->used&&f->write);if(f->pos+*n>8192)return -34;memcpy(fs[f->file].fork[f->fork]+f->pos,p,*n);f->pos+=*n;if(f->fork)fs[f->file].info.hFileInfo.ioFlRLgLen=f->pos;else fs[f->file].info.hFileInfo.ioFlLgLen=f->pos;return 0;}
-static int FSClose(short r){struct Ref *f=&refs[r];assert(f->used);fs[f->file].open--;f->used=0;return boundary();}
+static int FSClose(short r){struct Ref *f=&refs[r];assert(f->used);if(native_scratch&&f->write&&f->fork&&fs[f->file].info.hFileInfo.ioFlRLgLen>=256)memset(fs[f->file].fork[1]+48,0x5a,80);fs[f->file].open--;f->used=0;return boundary();}
 static int update_stamp(const char *path,uint32_t *build,unsigned *system){if(find(path)<0)return fnfErr;*build=1947;*system=0x600;return 0;}
 #include "../../src/update/recovery-restore.h"
 static void file(const char *p,const char *text){assert(!cli_native_create(p,'TEXT','CLRC'));int i=find(p);memcpy(fs[i].fork[0],text,strlen(text));fs[i].info.hFileInfo.ioFlLgLen=strlen(text);memcpy(fs[i].fork[1],"resource!",9);fs[i].info.hFileInfo.ioFlRLgLen=9;}
 static void make_snapshot(const char *dir){
- assert(!cli_native_mkdir(dir));RecoverySnapshot s={0};strcpy(s.header.root,"Disk:System:Clarice Data:");strcpy(s.header.origin,"Disk:Clarice");s.header.build=1947;s.header.origin_id=fs[find("Disk:Clarice")].info.hFileInfo.ioDirID;s.header.origin_modified=77;s.header.count=4;if(strstr(dir,"Preparing"))s.header.retired_id=fs[find("Disk:System:Clarice Data:etc:clarice:Recovery Previous")].info.hFileInfo.ioDirID;s.files=(RecoveryFile*)NewPtr(4*sizeof *s.files);memset(s.files,0,4*sizeof *s.files);
- const char *names[]={"@core","@helper","@catalog","ls"},*sources[]={"Disk:Clarice","Disk:Helper","Disk:System:Clarice Data:etc:clarice:installed.catalog","Disk:System:Clarice Data:bin:ls"};
- for(int i=0;i<4;i++){char dest[256];assert(!recovery_member(dir,names[i],dest));assert(!recovery_copy(sources[i],dest,names[i],&s.files[i]));}
+ assert(!cli_native_mkdir(dir));RecoverySnapshot s={0};strcpy(s.header.root,"Disk:System:Clarice Data:");strcpy(s.header.origin,"Disk:Clarice");s.header.build=1947;s.header.origin_id=fs[find("Disk:Clarice")].info.hFileInfo.ioDirID;s.header.origin_modified=77;s.header.count=5;if(strstr(dir,"Preparing"))s.header.retired_id=fs[find("Disk:System:Clarice Data:etc:clarice:Recovery Previous")].info.hFileInfo.ioDirID;s.files=(RecoveryFile*)NewPtr(5*sizeof *s.files);memset(s.files,0,5*sizeof *s.files);
+ const char *names[]={"@core","@helper","@catalog","ls","nano-profile"},*sources[]={"Disk:Clarice","Disk:Helper","Disk:System:Clarice Data:etc:clarice:installed.catalog","Disk:System:Clarice Data:bin:ls","Disk:System:Clarice Data:bin:nano-profile"};
+ for(int i=0;i<5;i++){char dest[256];assert(!recovery_member(dir,names[i],dest));assert(!recovery_copy(sources[i],dest,names[i],&s.files[i]));s.files[i].checksum_policy=0;assert(!recovery_fork(dest,0,1,s.files[i].resource,&s.files[i].resource_crc,recovery_normalized(&s.files[i])));}
  assert(!recovery_inventory(dir,&s,1));assert(!recovery_verify(dir,&s));recovery_dispose(&s);
 }
 static int prepare_snapshot(RecoveryRotation *r){
- RecoverySnapshot s={0};strcpy(s.header.root,"Disk:System:Clarice Data:");strcpy(s.header.origin,"Disk:Clarice");s.header.build=1947;s.header.origin_id=fs[find("Disk:Clarice")].info.hFileInfo.ioDirID;s.header.origin_modified=77;s.header.count=4;
- s.files=(RecoveryFile*)NewPtr(4*sizeof *s.files);if(!s.files)return memFullErr;memset(s.files,0,4*sizeof *s.files);const char *names[]={"@core","@helper","@catalog","ls"};for(int i=0;i<4;i++)strcpy(s.files[i].name,names[i]);
+ RecoverySnapshot s={0};strcpy(s.header.root,"Disk:System:Clarice Data:");strcpy(s.header.origin,"Disk:Clarice");s.header.build=1947;s.header.origin_id=fs[find("Disk:Clarice")].info.hFileInfo.ioDirID;s.header.origin_modified=77;s.header.count=5;
+ s.files=(RecoveryFile*)NewPtr(5*sizeof *s.files);if(!s.files)return memFullErr;memset(s.files,0,5*sizeof *s.files);const char *names[]={"@core","@helper","@catalog","ls","nano-profile"};for(int i=0;i<5;i++)strcpy(s.files[i].name,names[i]);
  int e=recovery_prepare(r,&s,"Disk:Helper",0);recovery_dispose(&s);return e;
 }
 static void reset(void){memcpy(fs,baseline,sizeof fs);memset(refs,0,sizeof refs);boundaries=fail_at=crash_at=fail_alloc=cancel_poll=0;fault_code=ioErr;assert(!allocs);}
@@ -76,17 +77,52 @@ static int validate_tool(const char *p){return find(p)<0?fnfErr:0;}
 int main(void){
  file("Disk:Notes","user-owned");file("Disk:System:Clarice Data:etc:clarice:clarice.conf","user-owned");file("Disk:System:Clarice Data:bin:.clx-ls.old","user-owned");
  file("Disk:Clarice","old core");file("Disk:Helper","helper");file("Disk:System:Clarice Data:etc:clarice:installed.catalog","CLARICE-INSTALLED 1\n");file("Disk:System:Clarice Data:bin:ls","old tool");
- fs[find("Disk:Clarice")].info.hFileInfo.ioFlRLgLen=256;
- fs[find("Disk:Helper")].info.hFileInfo.ioFlRLgLen=256;
+ /* Catalogued optional diagnostics are opaque backup members, not executed.
+    Exercise multiple bounded copy chunks in both forks. */
+ file("Disk:System:Clarice Data:bin:nano-profile","archived diagnostic");
+ int diagnostic=find("Disk:System:Clarice Data:bin:nano-profile");
+ for(int k=0;k<6000;k++)fs[diagnostic].fork[0][k]=(unsigned char)(k*19);
+ for(int k=0;k<7000;k++)fs[diagnostic].fork[1][k]=(unsigned char)(k*23);
+ fs[diagnostic].info.hFileInfo.ioFlLgLen=6000;fs[diagnostic].info.hFileInfo.ioFlRLgLen=7000;
+ for(int i=0;i<3;i++){
+  int n=i==0?find("Disk:Clarice"):i==1?find("Disk:Helper"):diagnostic;
+  unsigned char *r=fs[n].fork[1];uint32_t length=i==2?7000:540;
+  fs[n].info.hFileInfo.ioFlRLgLen=length;
+  recovery_put32(r,256);recovery_put32(r+4,length-28);recovery_put32(r+8,length-284);recovery_put32(r+12,28);
+ }
  RecoveryRotation rotation={ {"Disk:System:Clarice Data:etc:clarice:Recovery Previous","Disk:System:Clarice Data:etc:clarice:Recovery Preparing","Disk:System:Clarice Data:etc:clarice:Recovery Retiring"} };
- make_snapshot(rotation.path[0]);make_snapshot(rotation.path[1]);memcpy(baseline,fs,sizeof fs);boundaries=0;assert(!recovery_rotate(&rotation));int total=boundaries;closed_all();
+ make_snapshot(rotation.path[0]);
+ {RecoverySnapshot legacy;assert(!recovery_inventory(rotation.path[0],&legacy,0));assert(!legacy.header.format);assert(!recovery_verify(rotation.path[0],&legacy));
+  char inv[256],copy[256],launch[256];assert(!recovery_join(rotation.path[0],RECOVERY_MANIFEST,inv));int ix=find(inv);unsigned char unchanged[8192];memcpy(unchanged,fs[ix].fork[0],8192);
+  assert(!recovery_member(rotation.path[0],"nano-profile",copy));fs[find(copy)].fork[1][48]^=1;assert(recovery_verify(rotation.path[0],&legacy)==paramErr);fs[find(copy)].fork[1][48]^=1;
+  fs[diagnostic].fork[0][0]^=1;native_scratch=1;assert(!recovery_restore(rotation.path[0],launch));native_scratch=0;
+  assert(!memcmp(unchanged,fs[ix].fork[0],8192));assert(!recovery_verify(rotation.path[0],&legacy));recovery_dispose(&legacy);closed_all();
+  puts("PASS unchanged CLRSNAP1 inventory: exact legacy CRC, corruption rejection, native-copy rollback");
+ }
+ make_snapshot(rotation.path[1]);memcpy(baseline,fs,sizeof fs);boundaries=0;assert(!recovery_rotate(&rotation));int total=boundaries;closed_all();
  for(int fault=1;fault<=total;fault++){
   reset();fail_at=fault;(void)recovery_rotate(&rotation);fail_at=0;closed_all();
   int valid=0;for(int n=0;n<3;n++){RecoverySnapshot s;if(!recovery_inventory(rotation.path[n],&s,0)){valid+=!recovery_verify(rotation.path[n],&s);recovery_dispose(&s);}}
   assert(valid);closed_all();int retry=recovery_rotate(&rotation);if(retry){fprintf(stderr,"rotation retry failed boundary=%d error=%d\n",fault,retry);return 1;}closed_all();
  }
+ /* Interrupted CLRSNAP1 inventory writes resume with old checksum semantics. */
+ for(int bytes=8;bytes<=RECOVERY_HEADER+RECOVERY_ENTRY;bytes+=RECOVERY_HEADER-8){
+  reset();char inv[256];assert(!recovery_join(rotation.path[1],RECOVERY_MANIFEST,inv));fs[find(inv)].info.hFileInfo.ioFlLgLen=bytes;
+  assert(!prepare_snapshot(&rotation));RecoverySnapshot legacy;assert(!recovery_inventory(rotation.path[0],&legacy,0));assert(!legacy.header.format);assert(!recovery_verify(rotation.path[0],&legacy));recovery_dispose(&legacy);closed_all();
+ }
+ puts("PASS legacy interrupted inventory resumes without checksum reinterpretation");
+ /* A new installer replaces only a duplicate helper backed by verified old
+    recovery. Faults leave that generation intact and retry resumes. */
+ reset();{char hp[256];assert(!recovery_member(rotation.path[1],"@helper",hp));fs[find(hp)].info.hFileInfo.ioFlCrDat=fs[find(hp)].info.hFileInfo.ioFlMdDat=91;}{char p[256];assert(!recovery_join(rotation.path[1],RECOVERY_MANIFEST,p));assert(!cli_native_delete(p));}fs[find("Disk:Helper")].fork[0][0]^=1;boundaries=0;assert(!prepare_snapshot(&rotation));int helper_steps=boundaries;closed_all();
+ for(int crash=0;crash<2;crash++)for(int fault=1;fault<=helper_steps;fault++){
+  reset();{char hp[256];assert(!recovery_member(rotation.path[1],"@helper",hp));fs[find(hp)].info.hFileInfo.ioFlCrDat=fs[find(hp)].info.hFileInfo.ioFlMdDat=91;}{char p[256];assert(!recovery_join(rotation.path[1],RECOVERY_MANIFEST,p));assert(!cli_native_delete(p));}fs[find("Disk:Helper")].fork[0][0]^=1;boundaries=0;
+  if(crash){crash_at=fault;if(!setjmp(reset_point))(void)prepare_snapshot(&rotation);process_reset();}else{fail_at=fault;(void)prepare_snapshot(&rotation);fail_at=0;closed_all();}assert(!prepare_snapshot(&rotation));closed_all();
+ }
+ reset();{char helper[256],inv[256];assert(!recovery_member(rotation.path[1],"@helper",helper));fs[find(helper)].fork[0][0]^=2;assert(!recovery_join(rotation.path[1],RECOVERY_MANIFEST,inv));assert(!cli_native_delete(inv));fs[find("Disk:Helper")].fork[0][0]^=1;assert(prepare_snapshot(&rotation)==paramErr);assert(fs[find(helper)].fork[0][0]==((unsigned char)'h'^2));closed_all();}
+ printf("PASS previous-helper retry: %d error/interruption boundaries, unknown helper retained\n",helper_steps);
  /* Prepare from a live installation; fail/reset at each native boundary. */
  reset();assert(!recovery_prune(rotation.path[1],fs[find(rotation.path[1])].info.hFileInfo.ioDirID));memcpy(baseline,fs,sizeof fs);
+ reset();fail_alloc=1;assert(prepare_snapshot(&rotation)==memFullErr);fail_alloc=0;closed_all();assert(!prepare_snapshot(&rotation));closed_all();reset();
  boundaries=0;assert(!prepare_snapshot(&rotation));int prepare_steps=boundaries;closed_all();
  for(int crash=0;crash<2;crash++)for(int fault=1;fault<=prepare_steps;fault++){
   reset();if(crash){crash_at=fault;if(!setjmp(reset_point))(void)prepare_snapshot(&rotation);process_reset();}else{fail_at=fault;(void)prepare_snapshot(&rotation);fail_at=0;closed_all();}
@@ -98,6 +134,18 @@ int main(void){
  assert(!recovery_member(rotation.path[0],"@core",copy));fs[find(copy)].fork[1][48]^=17;
  assert(!recovery_resume_copy("Disk:Clarice",copy,&prefix.files[0]));
  fs[find(copy)].fork[1][128]^=17;assert(recovery_resume_copy("Disk:Clarice",copy,&prefix.files[0])==paramErr);
+
+ assert(!recovery_member(rotation.path[0],"nano-profile",copy));
+ RecoveryFile *nf=&prefix.files[4];assert(nf->checksum_policy==1);
+ fs[find(copy)].fork[1][48]^=17;assert(!recovery_check_file(copy,nf,1));
+ assert(!recovery_resume_copy("Disk:System:Clarice Data:bin:nano-profile",copy,nf));
+ fs[find(copy)].fork[1][300]^=1;assert(recovery_check_file(copy,nf,1)==paramErr);fs[find(copy)].fork[1][300]^=1;
+ fs[find(copy)].fork[1][6990]^=1;assert(recovery_check_file(copy,nf,1)==paramErr);fs[find(copy)].fork[1][6990]^=1;
+ fs[find(copy)].fork[1][0]^=1;assert(recovery_check_file(copy,nf,1)==paramErr);fs[find(copy)].fork[1][0]^=1;
+ fs[find(copy)].fork[0][17]^=1;assert(recovery_check_file(copy,nf,1)==paramErr);fs[find(copy)].fork[0][17]^=1;
+
+ {RecoveryFile raw;file("Disk:Opaque","opaque");int n=find("Disk:Opaque");fs[n].info.hFileInfo.ioFlRLgLen=300;memset(fs[n].fork[1],17,300);assert(!recovery_copy("Disk:Opaque","Disk:Opaque Copy","opaque",&raw));assert(raw.checksum_policy==2);fs[find("Disk:Opaque Copy")].fork[1][48]^=1;assert(recovery_check_file("Disk:Opaque Copy",&raw,1)==paramErr);}
+ puts("PASS explicit resource policy: mutable scratch accepted; payload/map/header/data corruption rejected");
  recovery_dispose(&prefix);closed_all();
  printf("PASS snapshot preparation: %d returned-error and %d interruption boundaries\n",prepare_steps,prepare_steps);
  /* First-ever snapshot has no previous generation: repeat the same failure

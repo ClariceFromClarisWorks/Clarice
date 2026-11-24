@@ -12,6 +12,7 @@
 #define fnfErr -43
 #define dupFNErr -48
 #define paramErr -50
+#define memFullErr -108
 #define bdNamErr -37
 #define ioErr -36
 #define eofErr -39
@@ -42,8 +43,10 @@ static void app_screen_close(void){}
 static void app_activity_interactive(int n){(void)n;}
 static void app_serial_input(int n){(void)n;}
 static int cli_prepare_stdio(void){return 0;}
+static int read_error;
 static int allocs;
-static Ptr NewPtr(unsigned long n){if(++alloc_calls==fail_alloc_at)return NULL;void *p=malloc(n);if(p)allocs++;return p;}
+static unsigned long allocation_limit=~0UL,largest_request;
+static Ptr NewPtr(unsigned long n){if(n>largest_request)largest_request=n;if(++alloc_calls==fail_alloc_at||n>allocation_limit)return NULL;void *p=malloc(n);if(p)allocs++;return p;}
 static void DisposePtr(Ptr p){assert(p);allocs--;free(p);}
 static char export_names[8192];
 static void *clx_import(const char *s){char key[70];snprintf(key,sizeof key,"\n%s\n",s);return !strcmp(s,"present")||strstr(export_names,key)?(void*)1:NULL;}
@@ -62,7 +65,7 @@ static int cli_native_set(const char *p,CInfoPBRec *pb){int i=find(p);if(i<0)ret
 static int HCreate(int v,int d,const unsigned char *p,unsigned long creator,unsigned long type){(void)v;(void)d;(void)creator;(void)type;const char *s=unpascal(p);if(find(s)>=0)return dupFNErr;for(int i=0;i<MAXFILES;i++)if(!*files[i].name){memset(&files[i],0,sizeof files[i]);strcpy(files[i].name,s);files[i].identity=++generation;files[i].modified=1;files[i].finder=11;return 0;}return ioErr;}
 static int HOpen(int v,int d,const unsigned char *p,int perm,short *ref){(void)v;(void)d;(void)perm;int i=find(unpascal(p));if(i<0)return fnfErr;files[i].pos=0;files[i].open++;*ref=i+1;return 0;}
 static int open_path(const char *p,int perm,short *ref){unsigned char pn[256];if(!strncmp(p,"native:",7))p+=7;pstr(pn,p);return HOpen(0,0,pn,perm,ref);}
-static int FSRead(short ref,long *n,void *out){struct file *f=&files[ref-1];long want=*n;if(*n>f->len-f->pos)*n=f->len-f->pos;memcpy(out,f->data+f->pos,*n);f->pos+=*n;return *n<want?eofErr:0;}
+static int FSRead(short ref,long *n,void *out){if(read_error)return read_error;struct file *f=&files[ref-1];long want=*n;if(*n>f->len-f->pos)*n=f->len-f->pos;memcpy(out,f->data+f->pos,*n);f->pos+=*n;return *n<want?eofErr:0;}
 static int FSWrite(short ref,long *n,const void *in){struct file *f=&files[ref-1];writes++;if(writes==fail_write)return ioErr;if(writes==short_write)(*n)--;assert(f->pos+*n<=524288);memcpy(f->data+f->pos,in,*n);f->pos+=*n;f->modified++;if(f->pos>f->len)f->len=f->pos;return 0;}
 static int FSClose(short ref){assert(files[ref-1].open>0);files[ref-1].open--;return ++closes==fail_close?ioErr:0;}
 static int SetEOF(short ref,long n){files[ref-1].len=n;files[ref-1].modified++;return 0;}
@@ -102,7 +105,7 @@ static void collection_fixture(void){
 }
 int main(int argc,char **argv){
  if(argc>1){FILE *exports=fopen(argv[1],"rb");assert(exports);size_t n=fread(export_names,1,sizeof export_names-1,exports);export_names[n]=0;fclose(exports);
-  for(int a=2;a<argc;a++){reset();FILE *f=fopen(argv[a],"rb");assert(f);strcpy(files[0].name,dest);files[0].len=fread(files[0].data,1,sizeof files[0].data,f);assert(!ferror(f));fclose(f);int status=command_check_native(dest);if(status)fprintf(stderr,"%s: %s",argv[a],diagnostics);assert(!status);assert(!allocs&&!files[0].open);}
+  for(int a=2;a<argc;a++){reset();FILE *f=fopen(argv[a],"rb");assert(f);strcpy(files[0].name,dest);files[0].len=fread(files[0].data,1,sizeof files[0].data,f);assert(!ferror(f));fclose(f);allocation_limit=16384;alloc_calls=0;int status=command_check_native(dest);assert(!alloc_calls);if(status)fprintf(stderr,"%s: %s",argv[a],diagnostics);assert(!status);assert(!allocs&&!files[0].open);}
   printf("PASS: production loader validated %d actual command images and imports (no execution)\n",argc-2);return 0;
  }
  bundle_len=make_image(bundle,1,1);updated_len=make_image(updated,2,2);
@@ -124,6 +127,13 @@ int main(int argc,char **argv){
   assert(!executions&&!allocs);fail_alloc_at=0;
  }
 
+ reset();setup();allocation_limit=0;largest_request=0;
+ assert(module_run(dest,0,0)==126&&module_native_error==memFullErr);
+ assert(strstr(diagnostics,"insufficient application memory")&&largest_request==4);
+ alloc_calls=0;assert(!cli_appcheck(dest)&&!alloc_calls&&!allocs);
+ allocation_limit=~0UL;reset();assert(cli_appcheck("missing")==fnfErr);
+ reset();setup();fail_close=1;assert(cli_appcheck(dest)==ioErr);
+ reset();setup();read_error=ioErr;assert(cli_appcheck(dest)==ioErr);read_error=0;assert(!cli_appcheck(dest));
  reset();setup();char first[]="awk",program[]="BEGIN {}";char *args[]={first,program,NULL};
  for(int run=0;run<3;run++){execute_status=run==0?0:run==1?2:130;assert(module_run(dest,2,args)==execute_status);assert(args[0]==first&&args[1]==program&&!args[2]);assert(!allocs);}execute_status=0;
  alloc_calls=0;fail_alloc_at=3;int prior=executions;assert(module_run(dest,2,args)==126);assert(executions==prior&&!allocs);assert(strstr(diagnostics,"argument memory"));fail_alloc_at=0;
@@ -217,7 +227,7 @@ int main(int argc,char **argv){
  files[find("Kit:awk")].data[0]='C';assert(!command_setup("Kit"));
  for(int point=1;point<=4;point++){
   reset();collection_fixture();alloc_calls=0;fail_alloc_at=point;
-  int e=command_setup("Kit");assert(e);assert(!allocs);fail_alloc_at=0;
+  int e=command_setup("Kit");assert(!e&&!alloc_calls);assert(!allocs);fail_alloc_at=0;
   assert(!command_setup("Kit"));
  }
  reset();collection_fixture();cancel_at=1;assert(command_setup("Kit")==userCanceledErr);

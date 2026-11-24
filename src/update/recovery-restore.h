@@ -47,6 +47,14 @@ static int recovery_restore_one(const char *dir,const RecoveryHeader *h,const Re
  if(!file->id)return recovery_restore_absent(h,file);
  RecoveryRestore r;memset(&r,0,sizeof r);r.file=*file;char source[256],journal[256],target[256];
  int e=recovery_target(h,file->name,target);if(!e)e=recovery_member(dir,file->name,source);if(!e)e=recovery_join(dir,RECOVERY_RESTORE_PLAN,journal);if(e)return e;
+ /* Authenticate a legacy source with its original exact checksum first.
+  * Only the transient native-copy expectation may then ignore valid resource
+  * scratch. Inventory and existing restore-plan CRCs remain unchanged. */
+ if(!file->checksum_policy&&!recovery_normalized(file)&&file->resource>=256){
+  e=recovery_check_file(source,file,1);if(e)return e;
+  e=recovery_select_policy(source,&r.file);if(e)return e;
+  if(r.file.checksum_policy==1){e=recovery_fork(source,0,1,file->resource,&r.file.resource_crc,1);if(e)return e;}
+ }
  e=recovery_plan_read(journal,&r.plan);int pending=!e;
  int partial=e==paramErr||e==eofErr;
  if(e&&e!=fnfErr&&!partial)return e;
@@ -54,7 +62,7 @@ static int recovery_restore_one(const char *dir,const RecoveryHeader *h,const Re
   if(!r.plan.kind||strcmp(r.plan.target,target))return paramErr;
   if(r.plan.build!=h->build||r.plan.data_size!=file->data||r.plan.resource_size!=file->resource||r.plan.data_crc!=file->data_crc||r.plan.resource_crc!=file->resource_crc||memcmp(r.plan.metadata,file->finder,16)||memcmp(r.plan.extra,file->extra,16)||r.plan.created!=file->created||r.plan.modified!=file->modified)return paramErr;
  }else{
-  e=recovery_check_file(target,file,0);if(!e)return 0;
+  e=recovery_check_file(target,&r.file,0);if(!e)return 0;
   CInfoPBRec c;e=update_info(target,&c);if(e&&e!=fnfErr)return e;
   r.plan.kind=e==fnfErr?2:1;r.plan.original_id=e==fnfErr?file->id:c.hFileInfo.ioDirID;r.plan.original_modified=e==fnfErr?0:c.hFileInfo.ioFlMdDat;
   if(!e&&(c.hFileInfo.ioFlAttrib&17))return permErr;
@@ -62,7 +70,7 @@ static int recovery_restore_one(const char *dir,const RecoveryHeader *h,const Re
   snprintf(leaf,sizeof r.plan.stage-(leaf-r.plan.stage),".cr-%08lx-%08lx.new",(unsigned long)r.plan.original_id,(unsigned long)h->build);strcpy(r.plan.backup,r.plan.stage);strcpy(r.plan.backup+strlen(r.plan.backup)-3,"old");
   r.plan.build=h->build;r.plan.data_size=file->data;r.plan.resource_size=file->resource;r.plan.data_crc=file->data_crc;r.plan.resource_crc=file->resource_crc;r.plan.created=file->created;r.plan.modified=file->modified;memcpy(r.plan.metadata,file->finder,16);memcpy(r.plan.extra,file->extra,16);
   CInfoPBRec stage;e=update_info(r.plan.stage,&stage);
-  if(e==fnfErr||!e)e=recovery_resume_copy(source,r.plan.stage,file);
+  if(e==fnfErr||!e)e=recovery_resume_copy(source,r.plan.stage,&r.file);
   if(e)return e;e=update_info(r.plan.stage,&stage);if(e)return e;r.plan.stage_id=stage.hFileInfo.ioDirID;
   e=partial?recovery_resume_plan(journal,&r.plan):recovery_plan_write(journal,&r.plan);if(e)return e;
  }

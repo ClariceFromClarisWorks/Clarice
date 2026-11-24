@@ -45,6 +45,13 @@ static int recovery_stat(const char *path,const char *name,RecoveryFile *f){
  CInfoPBRec c;int e=update_info(path,&c);if(e)return e;if(c.hFileInfo.ioFlAttrib&16)return paramErr;
  memset(f,0,sizeof *f);strcpy(f->name,name);f->id=c.hFileInfo.ioDirID;f->data=c.hFileInfo.ioFlLgLen;f->resource=c.hFileInfo.ioFlRLgLen;f->created=c.hFileInfo.ioFlCrDat;f->modified=c.hFileInfo.ioFlMdDat;memcpy(f->finder,&c.hFileInfo.ioFlFndrInfo,16);memcpy(f->extra,&c.hFileInfo.ioFlXFndrInfo,16);return 0;
 }
+/* Policy is explicit in CLRSNAP2; CLRSNAP1 semantics never change. */
+static int recovery_normalized(const RecoveryFile *f){return f->checksum_policy==1||(!f->checksum_policy&&(!strcmp(f->name,"@core")||!strcmp(f->name,"@helper")));}
+static int recovery_select_policy(const char *path,RecoveryFile *f){
+ f->checksum_policy=2;if(f->resource<256)return 0;
+ short ref;int e=update_open(path,1,0,&ref);if(e)return e;unsigned char h[16];e=recovery_read(ref,h,sizeof h);int x=FSClose(ref);if(!e)e=x;
+ if(!e&&!update_resource_layout(h,f->resource))f->checksum_policy=1;return e;
+}
 /* Finder may assign an icon position/folder and set hasBeenInited merely by
  * opening the snapshot folder, including FXInfo.fdIconID (its first word).
  * These are display state, not file integrity.
@@ -55,7 +62,8 @@ static int recovery_finder_equal(const unsigned char *a,const unsigned char *b){
 static int recovery_check_file(const char *path,const RecoveryFile *f,int identity){
  RecoveryFile c;int e=recovery_stat(path,f->name,&c);if(e)return e;
  if((identity&&f->id!=c.id)||f->data!=c.data||f->resource!=c.resource||f->created!=c.created||f->modified!=c.modified||!recovery_finder_equal(f->finder,c.finder)||memcmp(f->extra+2,c.extra+2,14))return paramErr;
- uint32_t hash;int app=!strcmp(f->name,"@core")||!strcmp(f->name,"@helper");
+ if(f->checksum_policy==1){e=recovery_select_policy(path,&c);if(e)return e;if(c.checksum_policy!=1)return paramErr;}
+ uint32_t hash;int app=recovery_normalized(f);
  e=recovery_fork(path,0,0,f->data,&hash,app);if(!e&&hash!=f->data_crc)e=paramErr;
  if(!e)e=recovery_fork(path,0,1,f->resource,&hash,app);if(!e&&hash!=f->resource_crc)e=paramErr;return e;
 }
@@ -63,9 +71,9 @@ static int recovery_check_file(const char *path,const RecoveryFile *f,int identi
  * before publishing this file in a completed recovery inventory. */
 static int recovery_copy(const char *source,const char *dest,const char *name,RecoveryFile *f){
  CInfoPBRec c;int e=update_info(source,&c);if(e)return e;if(c.hFileInfo.ioFlAttrib&17)return permErr;
- e=recovery_stat(source,name,f);if(e)return e;f->source_id=f->id;
+ e=recovery_stat(source,name,f);if(!e)e=recovery_select_policy(source,f);if(e)return e;f->source_id=f->id;
  e=recovery_create(dest,c.hFileInfo.ioFlFndrInfo.fdType,c.hFileInfo.ioFlFndrInfo.fdCreator);if(e)return e;
- int app=!strcmp(name,"@core")||!strcmp(name,"@helper");
+ int app=recovery_normalized(f);
  e=recovery_fork(source,dest,0,f->data,&f->data_crc,app);if(!e)e=recovery_fork(source,dest,1,f->resource,&f->resource_crc,app);
  if(!e)e=recovery_set(dest,&c);if(!e){RecoveryFile target;e=recovery_stat(dest,name,&target);if(!e)f->id=target.id;}
  if(!e)e=recovery_check_file(dest,f,1);
@@ -84,7 +92,7 @@ static int recovery_resume_copy(const char *source,const char *dest,const Recove
  CInfoPBRec c,original;int e=update_info(dest,&c);if(e==fnfErr){RecoveryFile copy;return recovery_copy(source,dest,f->name,&copy);}if(e)return e;
  if(c.hFileInfo.ioFlAttrib&17)return permErr;e=update_info(source,&original);if(e)return e;
  if(c.hFileInfo.ioFlFndrInfo.fdType!=original.hFileInfo.ioFlFndrInfo.fdType||c.hFileInfo.ioFlFndrInfo.fdCreator!=original.hFileInfo.ioFlFndrInfo.fdCreator)return paramErr;
- int app=!strcmp(f->name,"@core")||!strcmp(f->name,"@helper");
+ int app=recovery_normalized(f);
  e=recovery_prefix(source,dest,0,f->data,app);if(!e)e=recovery_prefix(source,dest,1,f->resource,app);if(e)return e;
  uint32_t crc;e=recovery_fork(source,dest,0,f->data,&crc,app);if(!e&&crc!=f->data_crc)e=paramErr;
  if(!e)e=recovery_fork(source,dest,1,f->resource,&crc,app);if(!e&&crc!=f->resource_crc)e=paramErr;
@@ -99,7 +107,8 @@ static int recovery_inventory_prefix(const char *path,const RecoverySnapshot *s)
  if(!e&&(left<0||(uint32_t)left>RECOVERY_HEADER+s->header.count*RECOVERY_ENTRY+4))e=paramErr;
  unsigned char b[RECOVERY_HEADER];UpdateCRC32 hash;update_crc32_init(&hash);
  if(!e)e=recovery_header_encode(&s->header,b);if(!e){update_crc32_bytes(&hash,b,RECOVERY_HEADER);e=recovery_prefix_bytes(ref,b,RECOVERY_HEADER,&left);}
- for(uint32_t i=0;!e&&i<s->header.count;i++){e=recovery_file_encode(&s->files[i],b);if(!e){update_crc32_bytes(&hash,b,RECOVERY_ENTRY);e=recovery_prefix_bytes(ref,b,RECOVERY_ENTRY,&left);}}
+ for(uint32_t i=0;!e&&i<s->header.count;i++){e=recovery_file_encode(&s->files[i],b);if(!e&&!s->header.format&&s->files[i].checksum_policy)e=paramErr;
+  if(!e){update_crc32_bytes(&hash,b,RECOVERY_ENTRY);e=recovery_prefix_bytes(ref,b,RECOVERY_ENTRY,&left);}}
  if(!e){recovery_put32(b,update_crc32_sum(&hash));e=recovery_prefix_bytes(ref,b,4,&left);}int x=FSClose(ref);return e?e:x;
 }
 static int recovery_inventory(const char *dir,RecoverySnapshot *s,int write){
@@ -112,6 +121,7 @@ static int recovery_inventory(const char *dir,RecoverySnapshot *s,int write){
  for(uint32_t i=0;!e&&i<s->header.count;i++){
   if(write){e=recovery_file_encode(&s->files[i],b);if(!e)e=recovery_write(ref,b,RECOVERY_ENTRY);}
   else{e=recovery_read(ref,b,RECOVERY_ENTRY);if(!e)e=recovery_file_decode(b,&s->files[i]);}
+  if(!e&&!s->header.format&&s->files[i].checksum_policy)e=paramErr;
   if(!e){update_crc32_bytes(&hash,b,RECOVERY_ENTRY);for(uint32_t j=0;j<i;j++)if(!strcmp(s->files[j].name,s->files[i].name)){e=paramErr;break;}}
  }
  if(!e){uint32_t crc=update_crc32_sum(&hash);if(write){recovery_put32(b,crc);e=recovery_write(ref,b,4);}else{e=recovery_read(ref,b,4);if(!e&&update_be32(b)!=crc)e=paramErr;}}
@@ -189,14 +199,39 @@ static int recovery_rotate(RecoveryRotation *r){
  return result.previous_retained?recovery_prune_retired(r):0;
 }
 
+/* An interrupted pre-upgrade preparation can hold the previous helper.
+ * Replace only a verified duplicate of the intact previous snapshot's helper;
+ * never discard an unknown file or the sole recovery copy. */
+static int recovery_refresh_helper(RecoveryRotation *rotation,const char *dest,const char *source,RecoveryFile *file,int legacy){
+ RecoverySnapshot old;int e=recovery_inventory(rotation->path[0],&old,0);if(e)return e;
+ e=recovery_verify(rotation->path[0],&old);const RecoveryFile *helper=0;
+ for(uint32_t i=0;!e&&i<old.header.count;i++)if(!strcmp(old.files[i].name,"@helper"))helper=&old.files[i];
+ if(!e){
+  if(!helper)e=paramErr;
+  else{RecoveryFile duplicate;e=recovery_stat(dest,"@helper",&duplicate);
+   /* Identical cached helpers may have been created on different dates.
+    * Only this disposable duplicate comparison permits those dates to differ. */
+   if(!e){RecoveryFile expected=*helper;expected.created=duplicate.created;expected.modified=duplicate.modified;e=recovery_check_file(dest,&expected,0);}
+  }
+ }
+ if(!e&&legacy)*file=*helper;
+ recovery_dispose(&old);if(e||legacy)return e;
+ e=recovery_delete(dest);if(!e)e=update_flush(dest);
+ return e?e:recovery_copy(source,dest,"@helper",file);
+}
 /* Caller supplies one live installation's inventory, never a selection of old
    backup files. All entries are copied before the generation becomes current. */
 static int recovery_prepare(RecoveryRotation *rotation,RecoverySnapshot *s,const char *helper,int (*validate)(const char *)){
- int e=recovery_rotation_probe(rotation,1);if(e<0)return e;int exists=e;
+ s->header.format=2;int e=recovery_rotation_probe(rotation,1);if(e<0)return e;int exists=e;
  if(exists){RecoverySnapshot pending;e=recovery_inventory(rotation->path[1],&pending,0);
   if(!e){if(strcmp(pending.header.root,s->header.root)||strcmp(pending.header.origin,s->header.origin)||pending.header.build!=s->header.build||pending.header.origin_id!=s->header.origin_id||pending.header.origin_modified!=s->header.origin_modified)e=paramErr;
    if(!e)e=recovery_verify(rotation->path[1],&pending);recovery_dispose(&pending);return e?e:recovery_rotate(rotation);}
   if(e!=fnfErr&&e!=eofErr&&e!=paramErr)return e;
+  char inventory[256];short ref;int x=recovery_join(rotation->path[1],RECOVERY_MANIFEST,inventory);if(x)return x;
+  x=update_open(inventory,0,0,&ref);if(x&&x!=fnfErr)return x;
+  if(!x){unsigned char magic[8];int read=recovery_read(ref,magic,8);int closed=FSClose(ref);if(closed)return closed;
+   if(read&&read!=eofErr)return read;if(!read&&!memcmp(magic,"CLRSNAP1",8))s->header.format=0;
+  }
  }
  CInfoPBRec retired;e=update_info(rotation->path[0],&retired);if(!e)s->header.retired_id=retired.hFileInfo.ioDirID;else if(e!=fnfErr)return e;
  e=0; /* No prior generation is normal, including a partial first-copy retry. */
@@ -221,11 +256,13 @@ static int recovery_prepare(RecoveryRotation *rotation,RecoverySnapshot *s,const
   if(!e&&f->name[0]!='@'&&validate)e=validate(source);
   if(!e)e=recovery_member(rotation->path[1],f->name,dest);
   if(!e){char name[24];strcpy(name,f->name);CInfoPBRec existing;int found=update_info(dest,&existing);
-   if(found==fnfErr)e=recovery_copy(source,dest,name,f);
+   if(found==fnfErr){e=recovery_copy(source,dest,name,f);if(!e&&!s->header.format){f->checksum_policy=0;e=recovery_fork(source,0,1,f->resource,&f->resource_crc,recovery_normalized(f));if(!e)e=recovery_check_file(dest,f,1);}}
    else if(found)e=found;
-   else{e=recovery_stat(source,name,f);f->source_id=f->id;int app=name[0]=='@'&&strcmp(name,"@catalog");
+   else{e=recovery_stat(source,name,f);f->source_id=f->id;if(!e&&s->header.format)e=recovery_select_policy(source,f);int app=recovery_normalized(f);
     if(!e)e=recovery_fork(source,0,0,f->data,&f->data_crc,app);if(!e)e=recovery_fork(source,0,1,f->resource,&f->resource_crc,app);
-    if(!e)e=recovery_resume_copy(source,dest,f);if(!e)f->id=existing.hFileInfo.ioDirID;
+    if(!e)e=recovery_resume_copy(source,dest,f);
+    if(e==paramErr&&!strcmp(name,"@helper")){e=recovery_refresh_helper(rotation,dest,source,f,!s->header.format);if(!e)e=update_info(dest,&existing);}
+    if(!e)f->id=existing.hFileInfo.ioDirID;
    }
   }
  }

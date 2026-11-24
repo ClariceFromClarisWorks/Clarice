@@ -16,6 +16,29 @@ host-only setting does not alter the sealed d14852d product archive. No push, pu
 release or hardware deployment. Q1-001 is completed below; Q1-002 is completed below.
 [Evidence and limitations](distribution-1946/REPORT.md).
 
+## Urgent recovery-memory regression — corrected in 2026111952
+
+Snow Plus/4 MB/System6.0.8 accepted. Snapshot preparation no longer loads/link-checks
+catalogued diagnostic executables. The archived nano-profile required268,488 transient
+bytes; explicit CLX verification now uses a2 KiB stack buffer with zero executable
+heap allocations. Native errors retain their actual codes instead of generic -50.
+
+Explicit CLRSNAP2 checksum policy normalises only system-reserved resource bytes
+16–127 in structurally bounded Resource Manager forks. Opaque forks stay exact.
+CLRSNAP1 checksums/inventories/journals remain unchanged and readable; legacy
+restoration validates the original before deriving a native-copy expectation.
+Meaningful payload/map/header/data corruption is rejected. Old helpers rejectv2;
+new snapshots carry their compatible helper. Interrupted old-helper retry replaces
+only a verified redundant copy, never the sole recovery generation.
+
+Host fault-injection and Snow final offline bootstrap, constrained update/cancel/retry,
+both-fork metadata readback and independent rollback/relaunch pass. Core package
++2,176 bytes; BSS unchanged, no new persistent buffers/startup work. Corrected offline
+installer is the bootstrap for an old updater blocked before it can install itself.
+Physical SE remains untouched and requires separate acceptance. See the concise
+[report and evidence](recovery-memory/REPORT.md). Publication verification follows
+acceptance; no GitHub push or public release.
+
 ## Q1-004 — width-aware help
 
 Build **2026111951**, product **8a4de27** on local main. Help for 49 standard
