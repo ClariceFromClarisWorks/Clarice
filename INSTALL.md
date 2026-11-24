@@ -1,3 +1,53 @@
+# Canonical development distribution
+
+Official private-LAN update index:
+`http://192.168.1.112:8089/full/index.txt`.
+The same verified manifest and immutable payloads are mirrored to
+`Macintosh Exchange/Clarice/index.txt`; the share is mounted through Chooser.
+
+```sh
+clarice update --check --source http://192.168.1.112:8089/full/index.txt
+clarice update -y --source http://192.168.1.112:8089/full/index.txt
+# Or, with the share mounted:
+clarice update -y --source "/mnt/Macintosh Exchange/Clarice/index.txt"
+```
+
+The configured default is the single URL or mounted path in
+`/etc/clarice/update.conf`. HTTP-only old Core versions must use HTTP first.
+Core remains a MacBinary package preserving forks/Finder metadata; tools are
+CLX payloads installed by appinstall. Recovery copies and unrelated files remain.
+The 68000 build targets SE, SE/30 and PowerBook 180 with supported System 6/7
+configurations and enough free application memory. Compatibility is not fresh
+hardware acceptance. No TCP/IP stack is required for mounted-share updates.
+HTTP access is limited to configured trusted peers; add a new machine's verified
+IP to the host server's `--peer` list before using it. Do not expose it publicly.
+
+Maintainer workflow (one source, no independent AFP builds):
+
+1. Integrate accepted source and tests; allocate a new build ID for changed bytes.
+2. Run `sh scripts/build.sh` (fresh output directory, complete inventory, seal).
+   Run optional vi builds sequentially after the full build: both build paths
+   prepare the same temporary BusyBox source tree.
+3. Publish into a fresh staging directory with `scripts/repository.py`.
+   Add accepted optional vi using `tests/busybox/publish.py` only after validating
+   its CLX against the current imports; retain its version if bytes are unchanged.
+4. Use `scripts/repository.py CANONICAL --mirror-from STAGE`. This validates
+   length/CRC/content-name hashes, copies immutable payloads and versioned index,
+   then atomically replaces the active index. Existing versions cannot mutate.
+5. Mirror CANONICAL to the mounted `Macintosh Exchange/Clarice` using the same
+   command. No rebuilding, repacking or editing the AFP index independently.
+6. Verify every HTTP/AFP payload against the sealed build and optional-app hash.
+   If AFP is unavailable or fails, report it as pending; do not claim parity.
+
+The current host canonical directory is
+`Clarice-Main-SelfUpdate-Merge/work/publication/http/full`; serve its parent
+with `scripts/dev-http.py` on the existing port 8089. Other worktree repositories
+are historical/test fixtures, not alternative official update channels. Do not
+remove them or their listeners until their test/legacy consumers are checked.
+Historical payloads and `idx-*.txt` manifests are retained for recovery. The
+active index is a single-file activation, not a cross-server or power-loss
+transaction; a failed mirror is retried from the same canonical distribution.
+
 ## Mounted update repositories (development build 2026111940)
 
 The updater is bundled with Core. Its help must list `PATH_OR_HTTP_URL`.
@@ -32,7 +82,7 @@ updater files are preserved but do not override the builtin command; old reposit
 entries for an external `clarice` command are ignored.
 
 Configure `/etc/clarice/update.conf` with one private HTTP index URL, for example
-`http://192.168.1.112:8083/index.txt`, then run:
+`http://192.168.1.112:8089/full/index.txt`, then run:
 
 ```
 clarice update --check

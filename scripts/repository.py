@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Prepare a private HTTP or mounted-volume repository from an existing verified complete build."""
 import argparse
+import binascii
+import os
+import re
+import tempfile
 import hashlib
 from pathlib import Path
 import release
@@ -47,8 +51,84 @@ def publish(root, destination):
     temporary.replace(destination/'index.txt')
     return destination/'index.txt'
 
+def verified_repository(directory):
+    """Read an existing publication once; verify bytes before any activation."""
+    index = (directory/'index.txt').read_bytes()
+    rows = index.decode('ascii').splitlines()
+    if not rows or rows[0] != 'CLARICE-REPOSITORY 1':
+        raise ValueError('invalid repository header')
+    records, names = [], set()
+    for row in rows[1:]:
+        kind, name, version, length, crc, leaf = row.split('\t')
+        if kind not in ('core', 'tool') or (kind, name) in names:
+            raise ValueError('invalid or duplicate repository entry')
+        names.add((kind, name))
+        if not re.fullmatch(r'[0-9a-f]{24}\.(bin|clx)', leaf):
+            raise ValueError('invalid immutable payload name')
+        if int(version) <= 0 or int(length) <= 0:
+            raise ValueError('invalid version or length')
+        data = (directory/leaf).read_bytes()
+        if (len(data) != int(length) or f'{binascii.crc32(data):08x}' != crc
+                or not hashlib.sha256(data).hexdigest().startswith(leaf[:24])):
+            raise ValueError(f'corrupt repository payload: {leaf}')
+        records.append((row, leaf, data))
+    if sum(row.startswith('core\tClarice\t') for row, _, _ in records) != 1:
+        raise ValueError('repository needs exactly one Clarice Core')
+    return index, records
+
+
+def immutable(path, data):
+    if path.exists():
+        if path.read_bytes() != data:
+            raise ValueError(f'conflicting immutable file: {path.name}')
+        return
+    atomic_write(path, data)
+    if path.read_bytes() != data:
+        raise ValueError(f'publication readback failed: {path.name}')
+
+
+def atomic_write(path, data):
+    # Short same-directory temporary names also work through classic AFP.
+    fd, temporary = tempfile.mkstemp(prefix='.pub-', dir=path.parent)
+    try:
+        with os.fdopen(fd, 'wb') as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        Path(temporary).replace(path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
+def mirror(source, destination):
+    """One verified publication, copied unchanged; active index always last."""
+    index, records = verified_repository(source)
+    destination.mkdir(parents=True, exist_ok=True)
+    previous = destination/'index.txt'
+    if previous.exists():
+        old_index = previous.read_bytes()
+        old = {tuple(row.split('\t')[:2]): row.split('\t')
+               for row in old_index.decode('ascii').splitlines()[1:]}
+        for row, _, _ in records:
+            fields = row.split('\t'); prior = old.get(tuple(fields[:2]))
+            if prior and (int(prior[2]) > int(fields[2]) or
+                          (prior[2] == fields[2] and prior != fields)):
+                raise ValueError('refusing downgrade or same-version mutation')
+        immutable(destination/('idx-'+hashlib.sha256(old_index).hexdigest()[:20]+'.txt'), old_index)
+    for _, leaf, data in records:
+        immutable(destination/leaf, data)
+    # Preserve a versioned index before exposing it as current.
+    immutable(destination/('idx-'+hashlib.sha256(index).hexdigest()[:20]+'.txt'), index)
+    atomic_write(previous, index)
+    verified_repository(destination)
+    return previous
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('directory', type=Path)
+    parser.add_argument('--mirror-from', type=Path,
+                        help='copy a verified publication unchanged, active index last')
     args = parser.parse_args()
-    print(publish(Path(__file__).resolve().parents[1], args.directory))
+    print(mirror(args.mirror_from, args.directory) if args.mirror_from else
+          publish(Path(__file__).resolve().parents[1], args.directory))
