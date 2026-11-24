@@ -56,7 +56,9 @@ standard native SizeWindow/update-event synchronisation is covered by host tests
 The older native-glyph extraction harness no longer compiles against the existing
 include layout; it is not counted as a passing test. Renderer tests above pass.
 Native reference: [Inside Macintosh window update regions](https://dev.os9.ca/techpubs/mac/Toolbox/Toolbox-206.html).
-Publication verification pending; previous1949 recovery material retained.
+Product **9444864**, integrated local main. Published canonical HTTP/AFP; all51
+manifest entries/36 payloads, offline HDA/archive, source and seal verified by
+HTTP download and AFP readback. Previous1949 recovery material retained.
 No physical deployment, GitHub push, main-branch merge, release or tag changes.
 
 ## Q1-003 — HFS attribute command rename
