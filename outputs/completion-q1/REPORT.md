@@ -1,6 +1,6 @@
 # Q1-006 — responsive completion (Snow acceptance)
 
-Build2026111953, local main. Normal Core and sealed collection rebuilt; no hardware
+Build2026111953, product2b3b187, local main. Normal Core and sealed collection rebuilt; no hardware
 access or GitHub push. Production confirmation/input tests pass on Snow Plus4MB,
 System6.0.8/MultiFinder at maximum FFWD. No renderer algorithm changes.
 
@@ -70,3 +70,6 @@ Remaining: physical-SE acceptance; full-scan LCP latency and native catalog-call
 latency remain. Non-ASCII case behaviour follows the existing byte/locale model,
 not a new Unicode or international HFS collation implementation. No index/cache
 or native filesystem changes were introduced.
+
+Publication: canonical HTTP/AFP verified51entries/36payloads, offline HDA, source,
+seal and archives. Previous1952 index and payloads preserved. See verification.json.

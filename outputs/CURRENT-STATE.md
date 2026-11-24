@@ -1,20 +1,16 @@
 # Clarice current state
 
-## Integrated development distribution — 24 November 2026
+## Integrated development distribution — 25 November 2026
 
-Accepted glyph source/evidence integrated into local main. Clean normal build
-**2026111946**, product source **d14852d**, sealed Core +49 standard utilities;
-rebuilt optional vi remains byte-identical1943. Host regression/recovery tests pass;
-actual renderer disassembly unchanged from Snow-accepted1945. No new hardware claim.
+Latest normal build **2026111953**, product **2b3b187** on local main. Sealed Core
++49 standard utilities; optional vi remains byte-identical1951. Q1-006 host/Snow
+acceptance and all51 manifest entries/36 payloads verified. Prior1952 artefacts
+and recovery material retained. No new physical-hardware acceptance.
 
-Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; exact verified AFP mirror:
-`Macintosh Exchange/Clarice/index.txt`. All51 entries/36 payloads downloaded and
-checked against sealed hashes. Offline/source/licence/provenance archives provided.
-Historical payloads retained; old test endpoints not retired without consumer checks.
-HTTP client IP restriction removed as requested; LAN bind retained. This subsequent
-host-only setting does not alter the sealed d14852d product archive. No push, public
-release or hardware deployment. Q1-001 is completed below; Q1-002 is completed below.
-[Evidence and limitations](distribution-1946/REPORT.md).
+Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; exact AFP mirror:
+`Macintosh Exchange/Clarice/index.txt`. Offline/source/licence/provenance archives
+published with immutable payloads before activating the index. No GitHub push,
+public release or hardware deployment. [Verification](completion-q1/verification.json).
 
 ## Q1-006 responsive Tab completion — 25 November 2026
 
