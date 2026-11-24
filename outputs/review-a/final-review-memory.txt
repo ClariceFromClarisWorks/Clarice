@@ -1,0 +1,21 @@
+Installed RAM             4096 KiB
+Application heap extent   695 KiB
+Free heap                 334 KiB
+Largest free block        334 KiB
+Free after purging        358 KiB
+Largest after purging     358 KiB
+Runtime: heap=345054 largest=344874 image=130196 ticks=32031 load=194 owned-peak=0 remaining=0
+Loader ticks: read=0 validate=185 imports=3 relocations=5 prepare=1 events=1 (events included above)
+Verification ticks: mode=full header=1 record=0 payload=184 metadata=0 structure=3 (structure included in relocations)
+Runtime: heap=345054 largest=344874 image=130196 ticks=9919 load=196 owned-peak=0 remaining=0
+Loader ticks: read=0 validate=187 imports=3 relocations=6 prepare=0 events=5 (events included above)
+Verification ticks: mode=full header=0 record=0 payload=187 metadata=0 structure=3 (structure included in relocations)
+Installed RAM             4096 KiB
+Application heap extent   695 KiB
+Free heap                 334 KiB
+Largest free block        334 KiB
+Free after purging        358 KiB
+Largest after purging     358 KiB
+Runtime: heap=345054 largest=344874 image=2308 ticks=24 load=19 owned-peak=0 remaining=0
+Loader ticks: read=6 validate=1 imports=1 relocations=0 prepare=3 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=8 payload=0 metadata=1 structure=0 (structure included in relocations)

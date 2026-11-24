@@ -31,6 +31,8 @@ static int offline_resume(const char *target,int *finished){
  if(e==fnfErr){
   strcpy(path,root_path);strcat(path,"etc:clarice:update.incomplete");short ref;e=update_open(path,0,0,&ref);if(e==fnfErr)return 0;if(e)return e;
   char text[768];long bytes;e=GetEOF(ref,&bytes);if(!e&&(bytes<0||bytes>=(long)sizeof text))e=paramErr;if(!e)e=recovery_read(ref,text,bytes);int x=FSClose(ref);if(!e)e=x;if(e)return e;text[bytes]=0;
+  /* A repository-bound retry must use its original index, not this kit. */
+  if(!strncmp(text,"CLARICE-UPDATE-INCOMPLETE 2\n",28)||!strncmp(text,"CLARICE-UPDATE-READY 2\n",23)){errsay("Resume the original repository update or use Recover Clarice before installing this kit.\n");return paramErr;}
   if(strncmp(text,"CLARICE-UPDATE-READY 1\n",23))return 0;
   char *row=text+23,*end=strchr(row,'\n');if(!end)return paramErr;*end++=0;RepoRecord core;e=repo_record(row,&core,1);if(e||!core.core)return paramErr;char *nl=strchr(end,'\n');if(!nl||nl[1])return paramErr;*nl=0;if(strcmp(end,target))return paramErr;
   uint32_t build;unsigned system;e=update_stamp(target,&build,&system);if(e==fnfErr)return 0;if(e)return e;if(build==core.version)*finished=1;return 0;
@@ -43,6 +45,15 @@ static int offline_resume(const char *target,int *finished){
  if(a==fnfErr&&saved){e=offline_closed(0,2);if(!e)e=offline_move(0,2,0);if(!e)e=offline_flush(0);if(e)return e;}
  e=info(target,&current);if(e)return e;if((uint32_t)current.hFileInfo.ioDirID!=pending.original_id||current.hFileInfo.ioFlMdDat!=pending.original_modified)return paramErr;
  e=offline_ready(target,pending.build);if(e)return e;UpdateOps ops={0,offline_probe,offline_check,offline_closed,offline_move,offline_flush};UpdateResult result=update_commit(&ops);if(!result.error)*finished=1;return result.error;
+}
+/* Install-if-absent is a no-op when every standard destination exists.
+ * Do not rotate a useful rollback generation just for reopening the kit. */
+static int offline_tools_present(void){
+ char marker[256];CInfoPBRec c;if(strlen(root_path)+30>sizeof marker)return bdNamErr;
+ strcpy(marker,root_path);strcat(marker,"etc:clarice:update.incomplete");int e=info(marker,&c);if(!e)return 0;if(e!=fnfErr)return e;
+ for(unsigned i=0;standard_commands[i];i++){char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec c;
+  int e=command_paths(standard_commands[i],dest,stage,backup);if(!e)e=info(dest,&c);if(e==fnfErr)return 0;if(e)return e;
+ }return 1;
 }
 int shell_install_offline(char target[256]){
  char own[256],source[PATH_CAP],kit[PATH_CAP],from[PATH_CAP+8];CInfoPBRec original,cat;
@@ -69,6 +80,7 @@ int shell_install_offline(char target[256]){
   {int busy=1;e=update_open_guard(origin,&busy);if(e||busy)return e?e:fBsyErr;}
   e=update_stamp(origin,&installed,&oldsystem);if(e)return e;copy=build>installed;
  }
+ if(present&&!copy&&!migrating){e=offline_tools_present();if(e<0)return e;if(e){say("Core and standard utilities already installed; kept unchanged.\n");return 0;}}
  if(present){
   char media[256];strcpy(media,own);size_t n=strlen(media);if(n&&media[n-1]==':')media[n-1]=0;
   e=offline_recovery(origin,media,installed);if(e)return e;
@@ -97,9 +109,9 @@ int shell_install_offline(char target[256]){
  e=offline_ready(target,build);if(e)return e;
  UpdateOps ops={0,offline_probe,offline_check,offline_closed,offline_move,offline_flush};
  UpdateResult result=update_commit(&ops);if(result.error){
-  if(!result.installed&&!result.previous_retained&&!result.rollback_error){
-   int cleanup=cli_native_delete(offline_plan.stage);if(cleanup)errsay("Installer: could not remove owned staging file.\n");
-  }else errsay("Installer: Core files and managed snapshot retained for recovery.\n");
+  /* The durable plan may already refer to this stage. A cancelled check is
+     retryable; never delete the candidate while leaving its plan behind. */
+  errsay("Installer: Core staging and recovery files retained for retry.\n");
   return result.error;
  }
  say("Installation complete. Launching installed Clarice...\n");return 0;

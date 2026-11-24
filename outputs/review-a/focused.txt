@@ -1,0 +1,7 @@
+PASS cancelled candidate retained for durable-plan retry
+PASS unchanged kit no-op, missing utility and pending update still resume
+PASS helper type/creator, both fork hashes and length failures
+PASS bound retry rejects changed index; legacy retry validates snapshot membership/payload; cleanup
+PASS old/new markers, Ready payload and all header truncations
+first snapshot with old helper, retry=0 (expected success)
+PASS corrected first helper: 402 errors + 402 resets, collision preservation, allocation retry, both forks, zero retained allocations

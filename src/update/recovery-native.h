@@ -203,7 +203,29 @@ static int recovery_rotate(RecoveryRotation *r){
  * Replace only a verified duplicate of the intact previous snapshot's helper;
  * never discard an unknown file or the sole recovery copy. */
 static int recovery_refresh_helper(RecoveryRotation *rotation,const char *dest,const char *source,RecoveryFile *file,int legacy){
- RecoverySnapshot old;int e=recovery_inventory(rotation->path[0],&old,0);if(e)return e;
+ RecoverySnapshot old;int e=recovery_inventory(rotation->path[0],&old,0);
+ if((e==fnfErr||e==dirNFErr)&&!legacy){
+  /* A first-ever pre-inventory attempt has no verified old helper to compare.
+     Preserve the unknown residue, as Core already does for orphaned stages;
+     never delete it or adopt it into a known-good snapshot. */
+  CInfoPBRec c;int x=update_info(rotation->path[0],&c);if(x!=fnfErr)return x?x:e;
+  char inventory[256];x=recovery_join(rotation->path[1],RECOVERY_MANIFEST,inventory);if(x)return x;
+  x=update_info(inventory,&c);if(x!=fnfErr)return x?x:paramErr;
+  x=update_info(dest,&c);if(x)return x;if(c.hFileInfo.ioFlAttrib&17)return permErr;
+  char saved[256];strcpy(saved,rotation->path[1]);char *leaf=strrchr(saved,':');if(!leaf)return paramErr;
+  int n=snprintf(leaf+1,sizeof saved-(leaf+1-saved),"Recovery Helper-%08lx",(unsigned long)c.hFileInfo.ioDirID);
+  if(n<0||(unsigned)n>=sizeof saved-(leaf+1-saved))return bdNamErr;
+  int busy=1;x=update_open_guard(dest,&busy);if(!x&&busy)x=fBsyErr;
+  /* HRename cannot move across directories. Preserve through the existing
+     bounded, resumable fork copy and verify before deleting the residue. */
+  RecoveryFile residue;if(!x)x=recovery_stat(dest,"@helper",&residue);if(!x)x=recovery_select_policy(dest,&residue);
+  if(!x)x=recovery_fork(dest,0,0,residue.data,&residue.data_crc,recovery_normalized(&residue));
+  if(!x)x=recovery_fork(dest,0,1,residue.resource,&residue.resource_crc,recovery_normalized(&residue));
+  if(!x)x=recovery_resume_copy(dest,saved,&residue);if(!x)x=update_flush(saved);
+  if(!x)x=recovery_check_file(dest,&residue,1);if(!x)x=recovery_delete(dest);if(!x)x=update_flush(dest);
+  return x?x:recovery_copy(source,dest,"@helper",file);
+ }
+ if(e)return e;
  e=recovery_verify(rotation->path[0],&old);const RecoveryFile *helper=0;
  for(uint32_t i=0;!e&&i<old.header.count;i++)if(!strcmp(old.files[i].name,"@helper"))helper=&old.files[i];
  if(!e){

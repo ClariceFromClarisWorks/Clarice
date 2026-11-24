@@ -19,12 +19,28 @@ static int repo_catalog_members(RepoItem **items){
  }
  if(!e&&n<0)e=n;int x=FSClose(r.ref);return e?e:x;
 }
-static int repo_recovery_prepare(RepoItem *items,const char *own,uint32_t build){
+static int repo_recovery_prepare(RepoItem *items,const char *own,uint32_t build,uint32_t index_size,uint32_t index_crc,int changes){
  char root[256],canonical[PATH_CAP],marker[PATH_CAP];int e=resolve("/",root);if(e)return e;
  RecoveryRotation rotation;e=repo_recovery_paths(root,&rotation);if(e)return e;
  e=checked(REPO_MARKER,marker,canonical,0);CInfoPBRec mark;if(!e)e=info(marker,&mark);
- if(!e){RecoverySnapshot s;e=recovery_inventory(rotation.path[0],&s,0);if(!e){if(strcmp(s.header.root,root))e=paramErr;else e=recovery_verify(rotation.path[0],&s);recovery_dispose(&s);}if(e)errsay("Incomplete legacy update has no verified managed snapshot; finish or recover it before migration.\n");return e;}
- if(e!=fnfErr)return e;
+ if(!e){
+  char text[768];const char *body;uint32_t size,crc;int bound;
+  e=read_text(REPO_MARKER,text,sizeof text);if(e)return e;
+  e=repo_marker_parse(text,&size,&crc,&body,&bound);if(e<0)return e;
+  if(bound&&(size!=index_size||crc!=index_crc)){errsay("Incomplete update belongs to a different repository index. Resume the original index or use Recover Clarice.\n");return paramErr;}
+  RecoverySnapshot snapshot;e=recovery_inventory(rotation.path[0],&snapshot,0);
+  if(!e){if(strcmp(snapshot.header.root,root))e=paramErr;else e=recovery_verify(rotation.path[0],&snapshot);
+   /* Old markers have no index fingerprint. Permit only the already captured
+      membership; an originally absent tool must match its recorded payload. */
+   for(RepoItem *i=items;!e&&i;i=i->next){if(i->wanted.core||!strcmp(i->wanted.name,"clarice"))continue;
+    RecoveryFile *f=0;for(uint32_t n=0;n<snapshot.header.count;n++)if(!strcmp(snapshot.files[n].name,i->wanted.name))f=&snapshot.files[n];
+    if(!f||(!f->id&&(f->data!=i->wanted.size||f->data_crc!=i->wanted.crc)))e=paramErr;
+   }
+   recovery_dispose(&snapshot);
+  }
+  if(e)errsay("Incomplete update does not match its verified recovery inventory; use the original repository or Recover Clarice.\n");return e;
+ }
+ if(e!=fnfErr)return e;if(!changes)return 0;
  /* Refuse to call an altered catalogued collection known-good. Independent
     appinstall changes remain untouched and require explicit reconciliation. */
  for(RepoItem *i=items;i;i=i->next)if(i->known){

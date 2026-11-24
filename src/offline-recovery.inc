@@ -3,6 +3,14 @@
 #include "update-helper-stamp.h"
 #include "update/recovery-native.h"
 #include "update/release-manifest.h"
+/* Same complete identity checks as the online helper cache: native type,
+ * creator, exact lengths and both fork checksums from the sealed kit. */
+static int offline_helper_check(const char *path){
+ CInfoPBRec c;int e=info(path,&c);if(e)return e;
+ if(c.hFileInfo.ioFlAttrib&17||c.hFileInfo.ioFlFndrInfo.fdType!='APPL'||c.hFileInfo.ioFlFndrInfo.fdCreator!='CLUP')return paramErr;
+ uint32_t crc;e=update_hash_fork(path,0,&crc,offline_helper_data);if(!e&&crc!=offline_helper_data_crc)e=paramErr;
+ if(!e)e=update_hash_fork(path,1,&crc,offline_helper_resource);if(!e&&crc!=offline_helper_resource_crc)e=paramErr;return e;
+}
 static int offline_recovery(const char *origin,const char *media,uint32_t build){
  RecoveryRotation rotation;const char *names[]={RECOVERY_CURRENT,RECOVERY_PENDING,RECOVERY_RETIRED};
  if(strlen(root_path)+12+strlen(RECOVERY_PENDING)+1>256)return bdNamErr;
@@ -11,9 +19,9 @@ static int offline_recovery(const char *origin,const char *media,uint32_t build)
  if(!pending){RecoverySnapshot previous;int x=recovery_inventory(rotation.path[0],&previous,0);if(!x){x=strcmp(previous.header.root,root_path)?paramErr:recovery_verify(rotation.path[0],&previous);recovery_dispose(&previous);}return x;}
  if(pending!=fnfErr)return pending;
  char helper_source[256],helper[256];int e=recovery_join(media,RECOVERY_HELPER,helper_source);if(e)return e;
- uint32_t crc;e=update_hash_fork(helper_source,0,&crc,offline_helper_data);if(!e&&crc!=offline_helper_data_crc)e=paramErr;if(!e)e=update_hash_fork(helper_source,1,&crc,offline_helper_resource);if(!e&&crc!=offline_helper_resource_crc)e=paramErr;if(e)return e;
+ uint32_t crc;e=offline_helper_check(helper_source);if(e)return e;
  if(strlen(root_path)+strlen(offline_helper_leaf)+13>256)return bdNamErr;strcpy(helper,root_path);strcat(helper,"etc:clarice:");strcat(helper,offline_helper_leaf);
- CInfoPBRec cat;e=info(helper,&cat);if(e==fnfErr){RecoveryFile copied;e=recovery_copy(helper_source,helper,"@helper",&copied);}else if(!e){e=update_hash_fork(helper,1,&crc,offline_helper_resource);if(!e&&crc!=offline_helper_resource_crc)e=paramErr;}if(e)return e;
+ CInfoPBRec cat;e=info(helper,&cat);if(e==fnfErr){RecoveryFile copied;e=recovery_copy(helper_source,helper,"@helper",&copied);}if(!e)e=offline_helper_check(helper);if(e)return e;
  RecoverySnapshot s;memset(&s,0,sizeof s);strcpy(s.header.root,root_path);strcpy(s.header.origin,origin);s.header.build=build;
  e=info(origin,&cat);if(e)return e;s.header.origin_id=cat.hFileInfo.ioDirID;s.header.origin_modified=cat.hFileInfo.ioFlMdDat;
  /* Catalog names are deduplicated while reading; grow only if necessary. */

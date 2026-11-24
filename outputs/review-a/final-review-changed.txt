@@ -1,0 +1,6 @@
+Checking repository...
+reviewthree -> build 1
+reviewtwo -> build 1
+Incomplete update belongs to a different repository index. Resume the original index or use Recover Clarice.
+clarice update: Mac OS error -50: Invalid parameter
+Completed packages are retained. Repeat clarice update -y to resume.

@@ -1,0 +1,50 @@
+{
+  "nano": {
+    "data_bytes": 268520,
+    "resource_bytes": 318,
+    "data_identical": true,
+    "resource_differences": [],
+    "type_creator": "CLX1CLRC",
+    "dates_preserved": true
+  },
+  "saved_helper": {
+    "data_bytes": 0,
+    "resource_bytes": 75678,
+    "data_identical": true,
+    "resource_differences": [
+      48,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      78,
+      79,
+      115,
+      116,
+      117
+    ],
+    "type_creator": "APPLCLUP",
+    "dates_preserved": true
+  },
+  "preferences_identical": true,
+  "rollback_removed_only_new_probes": true,
+  "legacy_inventory_sha256": "71ea5f4e0c0c9461f10b942d25ac681dcec5e204013998fb184191ed491eb0b8",
+  "legacy_inventory_identical": true,
+  "protected_finder_flags_preserved": true
+}

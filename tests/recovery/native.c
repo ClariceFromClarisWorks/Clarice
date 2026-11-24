@@ -11,6 +11,7 @@
 #define CLARICE_UPDATE_STAMP_H
 #define RECOVERY_COMMAND 1
 #define fnfErr -43
+#define dirNFErr -120
 #define paramErr -50
 #define bdNamErr -37
 #define ioErr -36
@@ -45,11 +46,11 @@ static int cli_native_create(const char *p,unsigned long type,unsigned long crea
 static int cli_native_mkdir(const char *p){int e=cli_native_create(p,0,0);if(!e)fs[find(p)].info.hFileInfo.ioFlAttrib=16;return e;}
 static int cli_native_delete(const char *p){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;if(fs[i].open)return fBsyErr;size_t n=strlen(p);for(int j=0;j<100;j++)if(!strncmp(fs[j].path,p,n)&&fs[j].path[n]==':')return fBsyErr;fs[i].path[0]=0;return 0;}
 static int cli_native_set(const char *p,CInfoPBRec *c){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;uint32_t id=fs[i].info.hFileInfo.ioDirID,d=fs[i].info.hFileInfo.ioFlLgLen,r=fs[i].info.hFileInfo.ioFlRLgLen;fs[i].info=*c;fs[i].info.hFileInfo.ioDirID=id;fs[i].info.hFileInfo.ioFlLgLen=d;fs[i].info.hFileInfo.ioFlRLgLen=r;return 0;}
-static int cli_native_rename(const char *a,const char *b){int e=boundary();if(e)return e;int i=find(a);if(i<0)return fnfErr;if(find(b)>=0)return dupFNErr;size_t n=strlen(a);for(int j=0;j<100;j++)if(!strcmp(fs[j].path,a)||(!strncmp(fs[j].path,a,n)&&fs[j].path[n]==':')){char path[256];snprintf(path,sizeof path,"%s%s",b,fs[j].path+n);strcpy(fs[j].path,path);}return 0;}
+static int cli_native_rename(const char *a,const char *b){const char *x=strrchr(a,':'),*y=strrchr(b,':');if(!x||!y||x-a!=y-b||memcmp(a,b,x-a))return paramErr;int e=boundary();if(e)return e;int i=find(a);if(i<0)return fnfErr;if(find(b)>=0)return dupFNErr;size_t n=strlen(a);for(int j=0;j<100;j++)if(!strcmp(fs[j].path,a)||(!strncmp(fs[j].path,a,n)&&fs[j].path[n]==':')){char path[256];snprintf(path,sizeof path,"%s%s",b,fs[j].path+n);strcpy(fs[j].path,path);}return 0;}
 static int update_rename(const char *a,const char *b){return cli_native_rename(a,b);}
 static int update_flush(const char *p){(void)p;return boundary();}
 static int update_open_guard(const char *p,int *busy){int i=find(p);if(i<0)return fnfErr;*busy=fs[i].open;return 0;}
-static int update_open(const char *p,int fork,int write,short *r){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;for(int j=0;j<32;j++)if(!refs[j].used){refs[j]=(struct Ref){1,i,fork,0,write};fs[i].open++;*r=j;return 0;}return fBsyErr;}
+static int update_open(const char *p,int fork,int write,short *r){int e=boundary();if(e)return e;int i=find(p);if(i<0){const char *leaf=strrchr(p,':');if(leaf&&!strcmp(leaf+1,"Inventory")){char parent[256];memcpy(parent,p,leaf-p);parent[leaf-p]=0;if(find(parent)<0)return dirNFErr;}return fnfErr;}for(int j=0;j<32;j++)if(!refs[j].used){refs[j]=(struct Ref){1,i,fork,0,write};fs[i].open++;*r=j;return 0;}return fBsyErr;}
 static int GetEOF(short r,long *size){struct Ref *f=&refs[r];assert(f->used);*size=f->fork?fs[f->file].info.hFileInfo.ioFlRLgLen:fs[f->file].info.hFileInfo.ioFlLgLen;return boundary();}
 static int FSRead(short r,long *n,void *p){int e=boundary();if(e)return e;struct Ref *f=&refs[r];assert(f->used);long size=f->fork?fs[f->file].info.hFileInfo.ioFlRLgLen:fs[f->file].info.hFileInfo.ioFlLgLen;long want=*n;if(*n>size-f->pos)*n=size-f->pos;memcpy(p,fs[f->file].fork[f->fork]+f->pos,*n);f->pos+=*n;return *n==want?0:eofErr;}
 static int FSWrite(short r,long *n,const void *p){int e=boundary();if(e)return e;struct Ref *f=&refs[r];assert(f->used&&f->write);if(f->pos+*n>8192)return -34;memcpy(fs[f->file].fork[f->fork]+f->pos,p,*n);f->pos+=*n;if(f->fork)fs[f->file].info.hFileInfo.ioFlRLgLen=f->pos;else fs[f->file].info.hFileInfo.ioFlLgLen=f->pos;return 0;}

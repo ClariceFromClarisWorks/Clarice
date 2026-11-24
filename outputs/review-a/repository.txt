@@ -1,0 +1,19 @@
+PASS repository/catalog records, bounds, paths, overflow and roundtrip
+PASS production catalog append/replay, torn tail/header recovery, malformed record rejection; index duplicates, truncation, allocation failure and cancellation
+PASS repository publication, repeat publication, changed/missing payload and preservation of previous index
+PASS identical mirror, repeat, failure/retry, missing/corrupt payload, downgrade, same-version mutation, retained recovery and unrelated files
+127.0.0.1 - - [25/Nov/2026 05:40:33] "GET /index.txt HTTP/1.1" 200 -
+127.0.0.1 - - [25/Nov/2026 05:40:33] code 403, message Unexpected peer
+127.0.0.1 - - [25/Nov/2026 05:40:33] "GET /index.txt HTTP/1.1" 403 -
+127.0.0.1 - - [25/Nov/2026 05:40:33] "GET /index.txt HTTP/1.1" 200 -
+127.0.0.1 - - [25/Nov/2026 05:40:33] code 404, message Not Found
+127.0.0.1 - - [25/Nov/2026 05:40:33] "GET / HTTP/1.1" 404 -
+PASS unrestricted LAN mode, optional allowlist, no directory listing
+PASS production helper recovery decisions: original, already installed, interrupted rename, unrelated target/backup, busy and failed flush
+PASS: 90 loader/installer scenarios; no leaked allocations or descriptors
+PASS 482 transaction scenarios: creation/replacement, every operation failure, rollback failure, busy candidate/target, invalid candidate, retained backup refusal; neither version deleted
+PASS: plan roundtrip, every byte corruption, unrelated/cross-volume/target backup rejected
+PASS: binary preservation of both forks, empty data fork, every seek/open/read/write/poll/close failure; no open writer retained
+PASS: Enter/y/yes, n/no, EOF, truncation, invalid and binary responses
+normal: 202 exact bindings, aliases, unknowns; at most 8 comparisons; ASan/UBSan passed
+profiling: 204 exact bindings, aliases, unknowns; at most 8 comparisons; ASan/UBSan passed

@@ -2,13 +2,25 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111955**, product **397c2af** on local main. Sealed Core
-+49 standard utilities; optional vi remains byte-identical1951. Host/Snow acceptance
-and all51 entries/36 payloads verified identical over HTTP and AFP, including
-offline/source archives. Prior1954 artefacts/recovery retained.
-[Verification](word-navigation/verification.json).
+Latest normal build **2026111956**, Batch A recovery corrections on local main.
+Sealed Core +49 standard utilities; optional vi remains byte-identical1951.
+Host and Snow Plus/4MB/System6.0.8 acceptance complete; publication verification
+is the remaining delivery step. Prior1955 distribution/recovery retained.
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP mirror:
 `Macintosh Exchange/Clarice/index.txt`. No physical deployment or GitHub push.
+
+## Review remediation Batch A
+
+All five P1 findings confirmed and corrected: retain failed-verification stages;
+bind repository retries to their index; avoid unchanged offline snapshot rotation;
+preserve/recover first-ever stale helpers; fully verify cached helper identities.
+Existing snapshot/catalog formats retained. Legacy unbound markers use inventory
+membership/payload checks; new markers reject changed indexes. Host failure/reset
+coverage and Snow offline retry, partial update, rejected index switch, successful
+resume and independent rollback pass. Preferences, both forks/metadata, historical
+snapshot and user files preserved. Stable guest heap and zero remaining command
+allocations; no new idle allocation/startup work; Core package +1,664 bytes.
+[Evidence and compatibility limits](review-a/REPORT.md). Stop after Batch A.
 
 ## Q1-008 Command–Arrow — 25 November 2026
 

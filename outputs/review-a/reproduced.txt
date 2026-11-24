@@ -1,0 +1,4 @@
+P1-1 staged Core retained=0 (wanted1)
+P1-3 unchanged install rotated=1 (wanted0)
+P1-5 bad helper accepted=1 (wanted0)
+P1-2 changed-index retry accepted=1 (wanted0)

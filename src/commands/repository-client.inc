@@ -1,6 +1,7 @@
 /* Repository orchestration only. Native HFS installation and the independent
  * Core helper remain the owners of replacement/rollback of individual files. */
 #include "../update/repository.h"
+#include "../update/repository-marker.h"
 #define REPO_CATALOG "/etc/clarice/installed.catalog"
 #define REPO_MARKER "/etc/clarice/update.incomplete"
 extern int cli_appinstall(const char *,const char *,unsigned long);
@@ -56,8 +57,10 @@ static int repo_marker(const char *text){
 #include "repository-recovery.inc"
 static int repo_finish(void){
  char text[768],own[256];int e=read_text(REPO_MARKER,text,sizeof text);if(e==fnfErr)return 0;if(e)return e;
- if(strncmp(text,"CLARICE-UPDATE-READY 1\n",23)){errsay("An update is incomplete. Run clarice update -y to resume.\n");return 0;}
- char *row=text+23,*end=strchr(row,'\n');if(!end)return paramErr;*end++=0;RepoRecord core;e=repo_record(row,&core,1);if(e||!core.core)return paramErr;
+ const char *body;uint32_t index_size,index_crc;int bound;
+ int kind=repo_marker_parse(text,&index_size,&index_crc,&body,&bound);if(kind<0)return kind;
+ if(kind!=2){errsay("An update is incomplete. Run clarice update -y to resume.\n");return 0;}
+ char *row=(char*)body,*end=strchr(row,'\n');if(!end)return paramErr;*end++=0;RepoRecord core;e=repo_record(row,&core,1);if(e||!core.core)return paramErr;
  char *nl=strchr(end,'\n');if(!nl||nl[1])return paramErr;*nl=0;
  e=update_application_path(own);if(e)return e;uint32_t build;unsigned system;e=update_stamp(own,&build,&system);if(e)return e;
  if(strcmp(end,own)||build!=core.version){errsay("Core update has not relaunched yet; update remains incomplete.\n");return 0;}
@@ -117,8 +120,12 @@ int clarice_main(int argc,char **argv){
  }
  if(check)goto done;
  if(changes&&!yes){int answer=repo_confirm();if(answer<0){e=userCanceledErr;goto done;}if(!answer)goto done;}
- if(changes){e=repo_recovery_prepare(items,own,current);if(e)goto done;}
- e=repo_marker("CLARICE-UPDATE-INCOMPLETE 1\n");if(e)goto done;
+ uint32_t index_size,index_crc;{char native[PATH_CAP],canonical[PATH_CAP];CInfoPBRec c;
+  e=checked(index,native,canonical,0);if(!e)e=info(native,&c);if(e)goto done;index_size=c.hFileInfo.ioFlLgLen;
+  e=update_hash_fork(native,0,&index_crc,index_size);if(e)goto done;
+ }
+ e=repo_recovery_prepare(items,own,current,index_size,index_crc,changes);if(e)goto done;
+ e=repo_marker_header(text,sizeof text,0,index_size,index_crc);if(e<0)goto done;e=repo_marker(text);if(e)goto done;
  if(repository_migrate){e=repo_recovery_root(own,repository_target);if(e)goto done;}
  for(RepoItem *i=items;i;i=i->next){if(i->wanted.core||!strcmp(i->wanted.name,"clarice"))continue;RepoRecord *r=&i->wanted;
   if(i->known&&i->installed.version>r->version)continue;
@@ -130,7 +137,8 @@ int clarice_main(int argc,char **argv){
  }
  if(core&&core->needed){
   char row[256];e=repo_line(&core->wanted,row,sizeof row);if(e)goto done;
-  snprintf(text,sizeof text,"CLARICE-UPDATE-READY 1\n%s%s\n",row,repository_target);e=repo_marker(text);if(e)goto done;
+  e=repo_marker_header(text,sizeof text,1,index_size,index_crc);if(e<0)goto done;
+  snprintf(text+e,sizeof text-e,"%s%s\n",row,repository_target);e=repo_marker(text);if(e)goto done;
   memset(&repository_core,0,sizeof repository_core);repository_core.build=core->wanted.version;repository_core.bytes=core->wanted.size;repository_core.system=0x600;snprintf(repository_core.version,sizeof repository_core.version,"build %lu",(unsigned long)core->wanted.version);snprintf(repository_core.crc,sizeof repository_core.crc,"%08lx",(unsigned long)core->wanted.crc);repository_package=core->wanted.file;
   char *args[]={"clarice","update","-y","--source",source};e=core_update(5,args);if(e)e=e==130?userCanceledErr:ioErr;
  }else{RepoRecord r;memset(&r,0,sizeof r);r.core=1;strcpy(r.name,"Clarice");r.version=current;e=core&&core->known&&core->installed.version==current?0:repo_catalog(0,&r);if(!e)e=repo_recovery_cleanup(0,own);if(!e)e=repo_marker(0);if(!e)say("All standard tools are current. Update complete.\n");}
