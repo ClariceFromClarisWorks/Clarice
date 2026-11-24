@@ -1,0 +1,24 @@
+{
+  "build": 2026111952,
+  "system": "Snow Plus 4 MB, System 6.0.8, Finder 6.1.8, MultiFinder",
+  "ordinary_switch": "text visible before Return",
+  "about_switch": "text visible before Return",
+  "normal_speed": true,
+  "accelerated_speed": true,
+  "prompt_at_bottom": true,
+  "longer_about_visit": true,
+  "apple_menu_switch": true,
+  "prompt_pixel_comparison": {
+    "pixels": 46250,
+    "different": 0,
+    "includes_cursor": true
+  },
+  "physical_test": false,
+  "reproduced": false,
+  "production_changes": false,
+  "return_executes_once": true,
+  "resized_60_columns_20_rows": true,
+  "dark_theme_switch": true,
+  "cancellation_status": 130,
+  "latency": "No invisible/delayed input observed; no quantitative latency benchmark or hardware result."
+}

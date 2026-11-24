@@ -107,7 +107,14 @@ static int parse(const char *s,char *buf,char **argv,char **target,int *append){
  }
  if(q||redirect_pending)return -1;if(active)buf[used++]=0;argv[argc]=0;return argc;
 }
-static int selftest(void){unsigned long t=TickCount(),n;int fail=0;char b[2048],*av[MAX_ARGS+1],*dst;int ap;
+#ifdef CLARICE_COMPLETION_DIAGNOSTICS
+static int completion_probe(void);
+#endif
+static int selftest(void){
+#ifdef CLARICE_COMPLETION_DIAGNOSTICS
+return completion_probe();
+#endif
+unsigned long t=TickCount(),n;int fail=0;char b[2048],*av[MAX_ARGS+1],*dst;int ap;
  {static const char *samples[]={"","a","abc","abababa","0123456789abcdefghijk","odd address","xxxxxxxxxxxxxxxxxxxxxxxx"};unsigned int x,y;for(x=0;x<sizeof samples/sizeof samples[0];x++)for(y=0;y<sizeof samples/sizeof samples[0];y++){if(asm_length(samples[x])!=strlen(samples[x]))fail++;if(asm_contains(samples[x],samples[y])!=(strstr(samples[x],samples[y])!=0))fail++;}for(x=0;x<sizeof samples/sizeof samples[0];x++){char odd[80];strcpy(odd+1,samples[x]);if(asm_length(odd+1)!=strlen(samples[x]))fail++;}}
  {unsigned char src[14],got[56],ref[56];int x;for(x=0;x<14;x++)src[x]=(unsigned char)(x*19);memset(got,0x55,sizeof got);memset(ref,0x55,sizeof ref);for(x=0;x<14;x++)ref[1+x*4]=src[x];asm_glyph(got+1,src,4,14);if(memcmp(got,ref,sizeof got))fail++;}
  if(!asm_contains("abc","")||!asm_contains("abc","bc")||asm_contains("abc","abcd")||asm_contains("abc","z"))fail++;
@@ -157,31 +164,7 @@ say(b);snprintf(b,sizeof b,"Verification ticks: mode=%s header=%lu record=%lu pa
  else {say("command not found: ");say(av[0]);say("\n");command_install_hint(av[0]);status=127;}
  if(output_error)status=1;shell_status=status;return status;
 }
-/* Completion scans the directory without retaining its entries. */
-static void match_candidate(const char *s,const char *prefix,char *common,int *count){size_t n=strlen(prefix),i;if(strlen(s)>=PATH_CAP||strncmp(s,prefix,n))return;if(!*count)strcpy(common,s);else for(i=0;common[i];i++)if(common[i]!=s[i]){common[i]=0;break;}(*count)++;}
-static void completion_item(const char *candidate,const char *prefix,char *common,int *count,int show,int *shown){match_candidate(candidate,prefix,common,count);if(show&&*shown<50&&!strncmp(candidate,prefix,strlen(prefix))){term_puts(candidate);term_puts("  ");(*shown)++;}}
-static void complete_functions(const char *,char *,int *,int,int *);
-static int builtin_name(const char *s){int i;for(i=0;commands[i];i++)if(!strcmp(commands[i],s))return 1;return 0;}
-static void complete_directory(const char *dir,const char *prefix,char *common,int *count,int show,int *shown,int command){char native[PATH_CAP],canonical[PATH_CAP],candidate[100],full[PATH_CAP];short vol;long id;int index=1,e;
- if(resolve_ex(dir,native,canonical,1))return;
- if(!strcmp(canonical,"/mnt")){char name[32];while(!volume_name(index++,name)){if(encode_name(name,candidate,sizeof candidate))continue;strcat(candidate,"/");completion_item(candidate,prefix,common,count,show,shown);if(app_yield())break;}return;}
- if(directory(dir,&vol,&id))return;
- for(;;){CInfoPBRec pb;unsigned char name[256];memset(&pb,0,sizeof pb);pb.hFileInfo.ioNamePtr=name;pb.hFileInfo.ioVRefNum=vol;pb.hFileInfo.ioDirID=id;pb.hFileInfo.ioFDirIndex=index++;e=PBGetCatInfoSync(&pb);if(e)break;name[name[0]+1]=0;if(encode_name((char*)name+1,candidate,sizeof candidate))continue;if(strncmp(candidate,prefix,strlen(prefix)))continue;
- if(strlen(dir)+strlen(candidate)+2>=sizeof full)continue;strcpy(full,dir);strcat(full,"/");strcat(full,candidate);
- if(command){char selected[PATH_CAP];if(builtin_name(candidate)||(pb.hFileInfo.ioFlAttrib&16)||!program_kind(full))continue;if(command_path(candidate,selected,0)!=1||strcmp(selected,full))continue;}
- else {int folder=pb.hFileInfo.ioFlAttrib&16;if(!folder&&is_link(&pb)){short v;long d;folder=!directory(full,&v,&d);}if(folder)strcat(candidate,"/");}
- completion_item(candidate,prefix,common,count,show,shown);if((index&15)==0&&app_yield())break;
- }
-}
-int shell_complete(char *line,int *cursor){static char previous[LINE_CAP];static int previous_cursor=-1;int show=previous_cursor==*cursor&&!strcmp(previous,line);int shown=0;char token[PATH_CAP],common[PATH_CAP],dir[PATH_CAP],encoded[PATH_CAP];int start=0,q=0,j=0,i,count=0,cmd=1;const char *base;
- for(i=0;i<*cursor;i++){char c=line[i];if(c=='\\'&&q!=1){i++;continue;}if(c=='\''&&q!=2){q=q==1?0:1;continue;}if(c=='"'&&q!=1){q=q==2?0:2;continue;}if(!q&&(c==' '||c=='\t')){start=i+1;cmd=0;}}
- q=0;for(i=start;i<*cursor&&j<PATH_CAP-2;i++){char c=line[i];if(c=='\''&&q!=2){q=q==1?0:1;continue;}if(c=='"'&&q!=1){q=q==2?0:2;continue;}if(c=='\\'&&q!=1&&i+1<*cursor)c=line[++i];token[j++]=c;}token[j]=0;
- if(cmd&&!strchr(token,'/')){for(i=0;commands[i];i++)completion_item(commands[i],token,common,&count,show,&shown);complete_functions(token,common,&count,show,&shown);const char *path=env_get("PATH");while(path_entry(&path,dir))complete_directory(dir,token,common,&count,show,&shown,1);}
- else{char *slash=strrchr(token,'/');if(slash){size_t n=(size_t)(slash-token)+1;memcpy(dir,token,n);dir[n]=0;base=slash+1;}else{strcpy(dir,".");base=token;}complete_directory(dir,base,common,&count,show,&shown,0);if(count&&slash){char tmp[PATH_CAP];size_t n=(size_t)(slash-token)+1;if(n+strlen(common)>=sizeof tmp)return 0;memcpy(tmp,token,n);strcpy(tmp+n,common);strcpy(common,tmp);}}
- if(shown){term_puts("\n");if(count>shown)term_puts("More matches; type a longer prefix.\n");}if(!count){previous_cursor=-1;return 0;}
- j=0;for(i=0;common[i]&&j<PATH_CAP-3;i++){char c=common[i];if(c==' '||c=='\t'||c=='\\'||c=='\''||c=='"'||c=='$'||c=='>'||c=='&'||c==';'||c=='|'||c=='('||c==')')encoded[j++]='\\';encoded[j++]=c;}if(count==1&&j&&encoded[j-1]!='/')encoded[j++]=' ';encoded[j]=0;
- if(start+j+(int)strlen(line+*cursor)>=LINE_CAP)return 0;memmove(line+start+j,line+*cursor,strlen(line+*cursor)+1);memcpy(line+start,encoded,j);*cursor=start+j;strcpy(previous,line);previous_cursor=*cursor;return count;
-}
+#include "completion.inc"
 
 #ifdef CLARICE_DRAW_DIAGNOSTICS
 void shell_dispatch_stats(unsigned long *out){out[0]=dispatch_path_ticks;out[1]=dispatch_kind_ticks;out[2]=module_load_ticks;out[3]=module_ticks;}
@@ -189,8 +172,12 @@ void shell_dispatch_stats(unsigned long *out){out[0]=dispatch_path_ticks;out[1]=
 #include "sh.inc"
 #include "session.inc"
 
-static void complete_functions(const char *p,char *c,int *n,int show,int *shown){for(struct sh_function *f=sh_functions;f;f=f->next)if(!builtin_name(f->name))completion_item(f->name,p,c,n,show,shown);}
+static void complete_functions(Completion *c){int n=0;for(struct sh_function *f=sh_functions;f&&!c->stop;f=f->next){if(!(n++&7)&&app_completion_poll()){c->stop=2;break;}if(!builtin_name(f->name))completion_item(c,f->name);}}
 
 #ifdef CLARICE_OFFLINE_INSTALLER
 #include "offline-install.inc"
+#endif
+
+#ifdef CLARICE_COMPLETION_DIAGNOSTICS
+#include "../tests/completion/guest.inc"
 #endif

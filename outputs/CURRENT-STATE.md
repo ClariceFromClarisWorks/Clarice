@@ -16,6 +16,30 @@ host-only setting does not alter the sealed d14852d product archive. No push, pu
 release or hardware deployment. Q1-001 is completed below; Q1-002 is completed below.
 [Evidence and limitations](distribution-1946/REPORT.md).
 
+## Q1-006 responsive Tab completion — 25 November 2026
+
+Normal build **2026111953** passes focused host and Snow Plus4MB/System6.0.8 tests.
+First Tab is silent/LCP; consecutive second Tab streams16-name/4-row pages with
+confirmation. Every8 scanned entries yields; typing cancels and replays, Ctrl+C
+restores status130. No completion heap allocations/cache; +968 code bytes,+8 BSS,
++532 temporary stack. Second-Tab1000-entry median365 ->37guestticks; full-LCP first
+Tab remains345 ->365ticks, dominated by native catalog I/O. Post-poll input service
+2–3ticks, visible recovery5–6ticks, including constrained heap; warmed heap stable.
+[Evidence and limitations](completion-q1/REPORT.md). Physical acceptance pending;
+no hardware deployment or GitHub push. Coherent HTTP/AFP publication verified in
+`completion-q1/verification.json`; previous1952 material retained.
+
+## Finder About activation investigation — 25 November 2026
+
+Unmodified build1952 does not reproduce invisible command input in Snow Plus/4MB,
+System6.0.8/Finder6.1.8/MultiFinder. Ordinary Finder and About-window switching,
+longer About visits, Apple-menu return, prompt at the bottom, normal/accelerated
+emulation, resizing to60×20 and dark theme all show text before Return. A46,250-pixel
+prompt/cursor comparison matches exactly; Return executes once; Ctrl+C returns130
+and recovers the prompt. No production change, rebuild or publication warranted.
+The earlier geometry fix may be relevant, but causation is unproven; physical-SE
+reproduction remains pending. No hardware access. [Checks](about-window/acceptance.json).
+
 ## Urgent recovery-memory regression — corrected in 2026111952
 
 Snow Plus/4 MB/System6.0.8 accepted. Snapshot preparation no longer loads/link-checks

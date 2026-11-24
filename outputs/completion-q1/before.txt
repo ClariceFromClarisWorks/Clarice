@@ -1,0 +1,28 @@
+complete run=0 entries=1 matches=1 ticks=16 heap=388552 largest=385516 retained=0 line=cat /tmp/completion/n1/e0000 
+second run=0 entries=1 matches=6 ticks=4
+complete run=0 entries=10 matches=10 ticks=19 heap=388552 largest=385516 retained=0 line=cat /tmp/completion/n10/e000
+second run=0 entries=10 matches=10 ticks=21
+complete run=0 entries=100 matches=100 ticks=71 heap=388552 largest=385516 retained=24328 line=cat /tmp/completion/n100/e00
+second run=0 entries=100 matches=100 ticks=62
+complete run=0 entries=1000 matches=1000 ticks=341 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n1000/e0
+second run=0 entries=1000 matches=1000 ticks=429
+complete run=1 entries=1 matches=1 ticks=17 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n1/e0000 
+second run=1 entries=1 matches=6 ticks=4
+complete run=1 entries=10 matches=10 ticks=19 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n10/e000
+second run=1 entries=10 matches=10 ticks=21
+complete run=1 entries=100 matches=100 ticks=57 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n100/e00
+second run=1 entries=100 matches=100 ticks=73
+complete run=1 entries=1000 matches=1000 ticks=439 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n1000/e0
+second run=1 entries=1000 matches=1000 ticks=365
+complete run=2 entries=1 matches=1 ticks=18 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n1/e0000 
+second run=2 entries=1 matches=6 ticks=4
+complete run=2 entries=10 matches=10 ticks=19 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n10/e000
+second run=2 entries=10 matches=10 ticks=20
+complete run=2 entries=100 matches=100 ticks=65 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n100/e00
+second run=2 entries=100 matches=100 ticks=73
+complete run=2 entries=1000 matches=1000 ticks=345 heap=364224 largest=361188 retained=0 line=cat /tmp/completion/n1000/e0
+second run=2 entries=1000 matches=1000 ticks=365
+display entries=8 ticks=8
+display entries=16 ticks=8
+display entries=32 ticks=10
+display entries=64 ticks=13

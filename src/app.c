@@ -74,6 +74,7 @@ static int out_col,columns=55,visible=15,scrollback;
 static int tty_reading,tty_ready,tty_count,tty_offset;
 static char tty_buffer[LINE_CAP];
 static int done,busy,cancelled,interrupted,background,dirty=1,force_draw=1;
+static int completing,completion_wait;
 /* Allocated only for an explicitly confirmed update handoff. */
 static char *update_handoff;
 static char input[LINE_CAP],killbuf[LINE_CAP],saved_input[LINE_CAP];
@@ -147,7 +148,7 @@ static void input_position(int lead,int end,int *row,int *col){
    to the same view coordinates as history, rather than a fixed bottom slot. */
 static long viewport_live_first(void){
  int rows=1;
- if((!busy||tty_reading)&&!searching){char prefix[132];int lead=(int)strlen(text[current_line%ROWS])+prompt_prefix(prefix),r,c;
+ if((!busy||tty_reading||(completing&&!completion_wait))&&!searching){char prefix[132];int lead=(int)strlen(text[current_line%ROWS])+prompt_prefix(prefix),r,c;
   input_position(lead,(int)strlen(input),&r,&c);rows=r+1;
   if(rows>visible+1){input_position(lead,cursor,&r,&c);rows=r+1;if(rows<visible+1)rows=visible+1;}
  }
@@ -155,7 +156,7 @@ static long viewport_live_first(void){
 }
 static void compose_input(char screen[40][COLS],long *first,int *prompt){
  char prefix[132];int base=(int)strlen(text[current_line%ROWS]),lead=prompt_prefix(prefix);
- int editing=(!busy||tty_reading)&&!searching;
+ int editing=(!busy||tty_reading||(completing&&!completion_wait))&&!searching;
  *first=viewport_live_first()-scrollback;if(*first<oldest_line)*first=oldest_line;
  *prompt=(int)(current_line-*first);memset(screen,0,40*COLS);
  for(int row=0;row<=visible;row++){long line=*first+row;if(line>=oldest_line&&line<=current_line)memcpy(screen[row],text[line%ROWS],columns);}
@@ -241,7 +242,7 @@ static int layout(void){activity_hide();Rect r=win->portRect;int previous_column
  /* Continuation rows of the editable command are virtual: reflow only owns
     committed history. Anchor these by input byte position, not a history index. */
  int input_anchor=-1;
- if(was_scrolled&&anchor>current_line&&(!busy||tty_reading)&&!searching){
+ if(was_scrolled&&anchor>current_line&&(!busy||tty_reading||(completing&&!completion_wait))&&!searching){
   char prefix[132];int lead=(int)strlen(text[current_line%ROWS])+prompt_prefix(prefix),row=lead/columns,col=lead%columns;input_anchor=0;
   while(input[input_anchor]&&row<anchor-current_line){if(input[input_anchor++]=='\n'){row++;col=0;}else if(++col==columns){row++;col=0;}}
  }
@@ -827,6 +828,36 @@ static unsigned char ahead_keys[LINE_CAP];
 static unsigned short ahead_mods[LINE_CAP];
 static unsigned int ahead_head,ahead_count;
 static int remote_pending;
+/* Completion yields through the existing event pump. Ordinary queued input
+   cancels the scan and is replayed by the outer loop, never recursively. */
+#ifdef CLARICE_COMPLETION_DIAGNOSTICS
+static int completion_inject,completion_polls,completion_posted;
+static unsigned long completion_post_tick,completion_delay;
+static void completion_post(int c){register long kind __asm__("a0")=keyDown;register long message __asm__("d0")=c;__asm__ volatile(".word 0xa02f" : "+a"(kind), "+d"(message) : : "d1","a1","cc","memory");completion_posted=1;completion_post_tick=TickCount();}
+#endif
+int app_completion_poll(void){
+ int stopped=app_yield()||ahead_count;
+#ifdef CLARICE_COMPLETION_DIAGNOSTICS
+ /* Inject just after a poll: measure the next full scan batch, not an event
+    conveniently arriving immediately before it is serviced. */
+ if(completing&&completion_inject&&++completion_polls==3)completion_post(completion_inject);
+#endif
+#ifdef CLARICE_COMPLETION_DIAGNOSTICS
+ if(completion_posted&&stopped)completion_delay=TickCount()-completion_post_tick;
+#endif
+ return stopped;
+}
+int app_completion_more(void){
+#ifdef CLARICE_COMPLETION_DIAGNOSTICS
+ if(!completing)return 0; /* Scripted timing declines pages without user input. */
+#endif
+ if(app_completion_poll())return 0;
+ completion_wait=1;term_puts("\nMore matches? [y/N] ");term_present();
+ while(completion_wait==1&&!cancelled&&!done&&!ahead_count){EventRecord ev;if(WaitNextEvent(everyEvent,&ev,1,0))handle(&ev);}
+ int yes=completion_wait==2&&!cancelled&&!done&&!ahead_count;
+ completion_wait=0;term_puts("\n");return yes;
+}
+
 #define PASTED_KEY 0x8000
 static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+1)*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1)b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
 static void insert_char(unsigned char c){size_t n=strlen(input);if(input_blocked)return;if(n>=LINE_CAP-1){input_fail("command exceeds 1023 bytes");return;}memmove(input+cursor+1,input+cursor,n-cursor+1);input[cursor++]=(char)c;dirty=1;}
@@ -865,8 +896,13 @@ int app_serial_input(int enabled){
 int app_serial_tty(int enabled){return app_serial_input(enabled?2:0);}
 int app_serial_key(void){if(serial_overflow)return -2;if(!serial_count)return -1;int c=ahead_keys[serial_head];serial_head=(serial_head+1)%LINE_CAP;serial_count--;return c;}
 static void key(unsigned char c,unsigned short mods){
+ if(!busy&&(c!=9||mods==PASTED_KEY))shell_completion_reset();
  if(shell_session_active()&&remote_pending){if(ahead_count<LINE_CAP){unsigned at=(ahead_head+ahead_count++)%LINE_CAP;ahead_keys[at]=c;ahead_mods[at]=mods;}else input_fail("pending input queue overflow");return;}
-if(mods==PASTED_KEY&&!busy){selection_clear();scrollback=0;insert_char(c);return;}int n=strlen(input);if(scrollback&&!((mods&shiftKey)&&(c==30||c==31))){selection_clear();scrollback=0;dirty=1;}if(paging){if((mods&shiftKey)&&(c==30||c==31)){scrollback+=c==30?visible:-visible;if(scrollback<0)scrollback=0;if(scrollback>scroll_limit())scrollback=scroll_limit();dirty=1;return;}if(c==' '){page_action=1;return;}if(c==13){page_action=2;return;}if(c=='q'||c=='Q'){cancelled=1;return;}}if((mods&ControlKey)&&c>=32&&c<127)c=control_ascii(c);if((mods&cmdKey)&&c=='.')c=3;if(input_blocked){if(c!=3)return;input_blocked=0;ahead_head=ahead_count=0;}if(tty_reading&&c!=3){
+if(mods==PASTED_KEY&&!busy){selection_clear();scrollback=0;insert_char(c);return;}int n=strlen(input);if(scrollback&&!((mods&shiftKey)&&(c==30||c==31))){selection_clear();scrollback=0;dirty=1;}if(paging){if((mods&shiftKey)&&(c==30||c==31)){scrollback+=c==30?visible:-visible;if(scrollback<0)scrollback=0;if(scrollback>scroll_limit())scrollback=scroll_limit();dirty=1;return;}if(c==' '){page_action=1;return;}if(c==13){page_action=2;return;}if(c=='q'||c=='Q'){cancelled=1;return;}}if((mods&ControlKey)&&c>=32&&c<127)c=control_ascii(c);if((mods&cmdKey)&&c=='.')c=3;if(input_blocked){if(c!=3)return;input_blocked=0;ahead_head=ahead_count=0;}if(completion_wait==1&&c!=3){
+ if(c=='y'||c=='Y'){completion_wait=2;return;}
+ if(c=='n'||c=='N'||c==13||c==27){completion_wait=3;return;}
+ completion_wait=3; /* Other typing belongs to the command, not the question. */
+}if(tty_reading&&c!=3){
  if(c==13||c==4){if(c==4&&!n){tty_ready=1;return;}memcpy(tty_buffer,input,n);tty_count=n;if(c==13)tty_buffer[tty_count++]='\n';tty_offset=0;term_write(input,n);if(c==13)term_puts("\n");input[0]=0;cursor=0;tty_ready=1;dirty=1;return;}
  if(c==8||c==127){if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}}
  else if(c==21){input[0]=0;cursor=0;}
@@ -882,7 +918,7 @@ if(mods==PASTED_KEY&&!busy){selection_clear();scrollback=0;insert_char(c);return
  /* Clear only the existing highlight; a click alone changes no pixels. */
  selection_clear();
  if(!((mods&shiftKey)&&(c==30||c==31)))scrollback=0;
- switch(c){case 13:if(shell_session_active())remote_pending=1;else execute();break;case 9:{int k;busy=1;cancelled=0;k=shell_complete(input,&cursor);busy=0;if(!k)SysBeep(1);break;}case 8:case 127:if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}break;
+ switch(c){case 13:if(shell_session_active())remote_pending=1;else execute();break;case 9:{int k;busy=completing=1;cancelled=interrupted=0;k=shell_complete(input,&cursor);busy=completing=0;dirty=1;if(interrupted){ahead_head=ahead_count=0;key(3,0);}else if(!k)SysBeep(1);break;}case 8:case 127:if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}break;
  case 1:cursor=0;break;case 5:cursor=n;break;case 2:case 28:if(cursor)cursor--;break;case 6:case 29:if(cursor<n)cursor++;break;
  case 16:case 30:if(mods&shiftKey){scrollback+=visible;if(scrollback>scroll_limit())scrollback=scroll_limit();}else history_move(-1);break;
  case 14:case 31:if(mods&shiftKey){scrollback-=visible;if(scrollback<0)scrollback=0;}else history_move(1);break;
@@ -981,6 +1017,9 @@ if(base)c=base;}
  case activateEvt:if((WindowPtr)ev->message==win){sync_window_geometry();background=!(ev->modifiers&activeFlag);if(editor_screen)editor_screen->dirty[editor_screen->row]=1;dirty=1;}break;
  case osEvt:if((ev->message>>24)==1){background=!(ev->message&1);dirty=force_draw=1;}break;
  default:break;}}
+#ifdef CLARICE_COMPLETION_DIAGNOSTICS
+#include "../tests/completion/input.inc"
+#endif
 #ifdef CLARICE_INPUT_DIAGNOSTICS
 #include "../tests/terminal/input-guest.inc"
 #endif

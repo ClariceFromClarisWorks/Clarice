@@ -9,7 +9,7 @@ code=r'''
 #define COLS 132
 #define ROWS 128
 static char text[ROWS][COLS],input[1024],search[128];
-static int columns=20,visible=4,scrollback,busy,tty_reading,searching,cursor,background,paging;
+static int columns=20,visible=4,scrollback,busy,completing,completion_wait,tty_reading,searching,cursor,background,paging;
 static long current_line,oldest_line;
 static int win=1;
 static int FrontWindow(void){return 1;}
@@ -69,6 +69,7 @@ int main(void){char screen[40][COLS];long first;int prompt;
  assert(first==198&&prompt==2&&!strcmp(screen[0],"oldest"));
  assert(!strncmp(screen[2],"/ > a",5)&&!strcmp(screen[3],"b"));
  assert(screen[4][COLS-1]==1);
+ {char ordinary[40][COLS];memcpy(ordinary,screen,sizeof ordinary);busy=completing=1;compose_input(screen,&first,&prompt);assert(!memcmp(ordinary,screen,sizeof ordinary));completion_wait=1;compose_input(screen,&first,&prompt);for(int i=0;i<=visible;i++)assert(!screen[i][COLS-1]);busy=completing=completion_wait=0;}
  background=1;compose_input(screen,&first,&prompt);
  for(int i=0;i<=visible;i++)assert(!screen[i][COLS-1]);
  puts("PASS partial output, canonical read, exact-width caret, wrapped input, scrollback, long editing, newlines, ring origin and background cursor");

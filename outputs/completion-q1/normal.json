@@ -1,0 +1,23 @@
+{
+  "build": 2026111953,
+  "system": "Snow Plus 4 MB, System 6.0.8, MultiFinder; maximum FFWD",
+  "single_command": "ec -> echo; marker executed once after waiting for completion",
+  "quoted_case_space": "cat \"/tmp/completion/my<Tab> -> cat \"/tmp/completion/My File\"; status 0",
+  "first_tab": "no list",
+  "second_tab": "16 names then visible confirmation",
+  "yes": "next 16 names",
+  "decline": [
+    "n",
+    "Return"
+  ],
+  "other_input": "X returns to original command and inserts X at cursor",
+  "continued_typing": "XYZ during nonmatching 1000-entry scan preserved in order",
+  "cancel": "Ctrl+C at question and prompt returns status 130; next command executes",
+  "themes": [
+    "dark",
+    "light"
+  ],
+  "edited_between_tabs": "fresh first Tab does not list",
+  "runtime_remaining": 0,
+  "physical_test": false
+}

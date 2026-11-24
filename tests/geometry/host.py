@@ -25,7 +25,7 @@ static struct {struct {Rect bounds;} screenBits;} qd;
 static int originx=4,originy=40,sizes,moves,allocations,fail_alloc,beeps;
 static short layout_width,layout_height,cell_w=6,line_h=11;
 static int filled,saves,invalidations;static void *editor_screen;
-static int columns=66,visible=23,scrollback,busy,tty_reading,searching,cursor,background,paging;
+static int columns=66,visible=23,scrollback,busy,completing,completion_wait,tty_reading,searching,cursor,background,paging;
 static int retained=128,out_col,page_start,select_start=-1,select_end=-1,dirty,force_draw,history_bar=1;
 static long current_line,oldest_line;
 static char text[ROWS][COLS],input[1024],search[128];static unsigned char wrapped[ROWS];

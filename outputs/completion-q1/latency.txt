@@ -1,0 +1,34 @@
+complete run=0 entries=1 matches=1 ticks=19 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n1/e0000 
+second run=0 entries=1 matches=6 ticks=4
+complete run=0 entries=10 matches=10 ticks=36 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n10/e000
+second run=0 entries=10 matches=10 ticks=31
+complete run=0 entries=100 matches=100 ticks=61 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n100/e00
+second run=0 entries=100 matches=17 ticks=40
+complete run=0 entries=1000 matches=1000 ticks=369 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n1000/e0
+second run=0 entries=1000 matches=17 ticks=41
+complete run=1 entries=1 matches=1 ticks=22 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n1/e0000 
+second run=1 entries=1 matches=6 ticks=4
+complete run=1 entries=10 matches=10 ticks=31 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n10/e000
+second run=1 entries=10 matches=10 ticks=31
+complete run=1 entries=100 matches=100 ticks=60 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n100/e00
+second run=1 entries=100 matches=17 ticks=41
+complete run=1 entries=1000 matches=1000 ticks=369 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n1000/e0
+second run=1 entries=1000 matches=17 ticks=41
+complete run=2 entries=1 matches=1 ticks=21 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n1/e0000 
+second run=2 entries=1 matches=6 ticks=4
+complete run=2 entries=10 matches=10 ticks=31 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n10/e000
+second run=2 entries=10 matches=10 ticks=33
+complete run=2 entries=100 matches=100 ticks=61 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n100/e00
+second run=2 entries=100 matches=17 ticks=40
+complete run=2 entries=1000 matches=1000 ticks=369 heap=361646 largest=358084 retained=0 line=cat /tmp/completion/n1000/e0
+second run=2 entries=1000 matches=17 ticks=42
+display entries=8 ticks=7
+display entries=16 ticks=8
+display entries=32 ticks=10
+display entries=64 ticks=13
+scan prefix=e0 matches=101 ticks=72
+scan prefix=z matches=0 ticks=317
+catalog-only entries=1000 ticks=249
+input mode=0 correct=1 event_ticks=3 response_ticks=5 heap_before=361646 heap_after=361646 largest=358084
+input mode=1 correct=1 event_ticks=2 response_ticks=6 heap_before=361646 heap_after=361646 largest=358084
+input mode=2 correct=1 event_ticks=3 response_ticks=5 heap_before=36322 heap_after=36322 largest=32760
