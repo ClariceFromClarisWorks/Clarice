@@ -2,10 +2,11 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111956**, Batch A recovery corrections on local main.
+Latest normal build **2026111956**, product **f64c9d0** on local main.
 Sealed Core +49 standard utilities; optional vi remains byte-identical1951.
-Host and Snow Plus/4MB/System6.0.8 acceptance complete; publication verification
-is the remaining delivery step. Prior1955 distribution/recovery retained.
+Host and Snow Plus/4MB/System6.0.8 acceptance complete. All51 entries/36 payloads
+and offline/source archives verified identical through HTTP and AFP. Prior1955
+distribution/recovery retained. [Verification](review-a/verification.json).
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP mirror:
 `Macintosh Exchange/Clarice/index.txt`. No physical deployment or GitHub push.
 

@@ -46,3 +46,9 @@ Core package432,384→434,048bytes (+1,664); main CODE text236,712, data34,872,
 BSS41,456 unchanged. No new resident allocation or ordinary startup work. A new
 update hashes its small downloaded index once; markers grow18bytes. First-helper
 rescue reuses2KiB streaming buffers and retains one old helper outside the snapshot.
+
+Product **f64c9d0**, integrated local main, normal build **2026111956**. Published
+through canonical HTTP `http://192.168.1.112:8089/full/index.txt` and AFP
+`Macintosh Exchange/Clarice/index.txt`. All51 entries/36 payloads, sealed offline
+HDA/archive and committed source verified byte-for-byte; previous1955 index and
+payloads retained. No physical deployment, GitHub push, public release or P2 work.
