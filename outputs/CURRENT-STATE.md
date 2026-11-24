@@ -3,7 +3,9 @@
 ## Editor glyph reuse — isolated experiment, resumed 24 November
 
 Branch `codex/editor-damage-20261119`, based on accepted main ae7bffd.
-Published build1943, HTTP/AFP packages and physical machines remain unchanged.
+Integrated into local main as2ad0967 (transcript cleanup b157ad5). Complete
+Core1945 +49 tools sealed and published to existing HTTP8089/full repository;
+optional vi1943 retained unchanged. AFP unmounted; physical machines untouched.
 Normal Core1945 compiled and passed exact20j/20-arrow positioning,120-key
 burst input, saves/readback, Ctrl-C ownership, Command-period130 and recovery. No new renderer, bitmap allocation or editor feature change.
 
