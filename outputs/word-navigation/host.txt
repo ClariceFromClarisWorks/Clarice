@@ -1,0 +1,4 @@
+PASS production word/plain movement, whitespace/quotes/paths, boundaries, 8192 modifier combinations, ownership guard, recalled editing and wrapped cursor/text invariance; allocation-free
+partial-output: partial/ > xy
+PASS partial output, canonical read, exact-width caret, wrapped input, scrollback, long editing, newlines, ring origin and background cursor
+PASS: queued control modifiers and exact editor capacity; all raw control bytes distinct from arrows, bounded editor queue

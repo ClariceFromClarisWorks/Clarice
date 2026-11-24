@@ -895,6 +895,14 @@ int app_serial_input(int enabled){
 /* Separate import lets old runtimes reject remote-tty clients safely. */
 int app_serial_tty(int enabled){return app_serial_input(enabled?2:0);}
 int app_serial_key(void){if(serial_overflow)return -2;if(!serial_count)return -1;int c=ahead_keys[serial_head];serial_head=(serial_head+1)%LINE_CAP;serial_count--;return c;}
+/* Shell words deliberately follow whitespace, not shell quoting syntax. */
+static int word_key(unsigned char c,unsigned short mods){return (c==28||c==29)&&(mods&cmdKey)&&!(mods&(ControlKey|optionKey));}
+static int word_space(unsigned char c){return c==' '||c=='\t'||c=='\n'||c=='\r'||c=='\v'||c=='\f';}
+static int word_position(const char *s,int at,int right){
+ if(right){while(s[at]&&!word_space(s[at]))at++;while(s[at]&&word_space(s[at]))at++;}
+ else{while(at&&word_space(s[at-1]))at--;while(at&&!word_space(s[at-1]))at--;}
+ return at;
+}
 static void key(unsigned char c,unsigned short mods){
  if(!busy&&(c!=9||mods==PASTED_KEY))shell_completion_reset();
  if(shell_session_active()&&remote_pending){if(ahead_count<LINE_CAP){unsigned at=(ahead_head+ahead_count++)%LINE_CAP;ahead_keys[at]=c;ahead_mods[at]=mods;}else input_fail("pending input queue overflow");return;}
@@ -919,7 +927,7 @@ if(mods==PASTED_KEY&&!busy){selection_clear();scrollback=0;insert_char(c);return
  selection_clear();
  if(!((mods&shiftKey)&&(c==30||c==31)))scrollback=0;
  switch(c){case 13:if(shell_session_active())remote_pending=1;else execute();break;case 9:{int k;busy=completing=1;cancelled=interrupted=0;k=shell_complete(input,&cursor);busy=completing=0;dirty=1;if(interrupted){ahead_head=ahead_count=0;key(3,0);}else if(!k)SysBeep(1);break;}case 8:case 127:if(cursor){memmove(input+cursor-1,input+cursor,n-cursor+1);cursor--;}break;
- case 1:cursor=0;break;case 5:cursor=n;break;case 2:case 28:if(cursor)cursor--;break;case 6:case 29:if(cursor<n)cursor++;break;
+ case 1:cursor=0;break;case 5:cursor=n;break;case 2:case 28:if(word_key(c,mods))cursor=word_position(input,cursor,0);else if(cursor)cursor--;break;case 6:case 29:if(word_key(c,mods))cursor=word_position(input,cursor,1);else if(cursor<n)cursor++;break;
  case 16:case 30:if(mods&shiftKey){scrollback+=visible;if(scrollback>scroll_limit())scrollback=scroll_limit();}else history_move(-1);break;
  case 14:case 31:if(mods&shiftKey){scrollback-=visible;if(scrollback<0)scrollback=0;}else history_move(1);break;
  case 4:if(cursor<n)memmove(input+cursor,input+cursor+1,n-cursor);break;
@@ -997,6 +1005,9 @@ static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEv
      Normalize their physical codes before character editing; main keyboard
      slash/equal use different codes. ADB machines retain their OS translation. */
  if(system_info.machineType==envMacPlus&&(ev->modifiers&shiftKey)){unsigned char code=(ev->message>>8)&255;if(code==0x4d)c=30;else if(code==0x48)c=31;}if((ev->modifiers&cmdKey)&&c=='.'){key(3,cmdKey);break;}
+ /* Shell-only shortcut, before menu/control substitution; editors and native
+    canonical/serial input retain their established modifier handling. */
+ if(!busy&&!editor_screen&&!tty_reading&&!searching&&!paging&&word_key(c,ev->modifiers)){key(c,ev->modifiers);break;}
  unsigned short mods=ev->modifiers;int explicit_control=control_mode==2&&(mods&cmdKey)&&(mods&optionKey);
  if((mods&cmdKey)&&!explicit_control){long action=MenuKey(c);if(action){menu(action);break;}if(control_mode!=2)break;}
 

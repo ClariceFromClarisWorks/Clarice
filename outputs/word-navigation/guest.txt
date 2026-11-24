@@ -1,0 +1,21 @@
+PASS previous word/trailing space
+PASS previous word/repeated space
+PASS next word start
+PASS right end
+PASS right boundary
+PASS plain left
+PASS plain right
+PASS Command-arrow precedes control substitution
+PASS Command-arrow precedes control substitution
+PASS Command-arrow precedes control substitution
+PASS empty boundary
+PASS history recall then word/edit
+PASS external screen plain arrow unchanged
+PASS external Command-arrow retains menu handling
+PASS wrapped movement changes only old/new caret pixels
+PASS wrapped movement changes only old/new caret pixels
+mode=plain events=120 logic_ticks=5 draw_inclusive=347 worst=3 heap_delta=0 largest_delta=0
+PASS navigation heap stable
+mode=word events=120 logic_ticks=9 draw_inclusive=411 worst=4 heap_delta=0 largest_delta=0
+PASS navigation heap stable
+failures=0
