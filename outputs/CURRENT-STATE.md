@@ -2,7 +2,9 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest candidate **2026111957**, integrated source pending local commit/publication.
+Latest normal build **2026111957**, product **59e5116**, integrated local main.
+All51 manifest entries/36 payloads and sealed offline/source archives verified
+byte-for-byte through canonical HTTP and AFP. [Verification](review-b/verification.json).
 Batch B's seven P2 findings confirmed and fixed. Host fault/retry/legacy tests and
 Snow Plus/4MB/System6.0.8 upgrade, no-op, geometry and independent locked-file
 rollback pass. No physical acceptance or GitHub push. No new permanent allocation;

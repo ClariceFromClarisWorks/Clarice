@@ -52,5 +52,8 @@ checks show free/largest334→313KiB with purgeable capacity358KiB unchanged; th
 native resource effects are reclaimable, not claimed as zero raw heap variation.
 No-op updates avoid the previous full snapshot verification cost; no timing claim.
 
-Local-main integration and canonical HTTP/AFP publication are recorded in
-CURRENT-STATE and verification.json once completed. No hardware or GitHub push.
+Product **59e5116**, integrated local main. Published build **2026111957** to
+`http://192.168.1.112:8089/full/index.txt` and `Macintosh Exchange/Clarice/index.txt`.
+All51 entries/36 payloads, sealed offline HDA/archive and committed source verified
+byte-for-byte; prior1956 index/payloads retained. [Verification](verification.json).
+No hardware operations, GitHub push or Batch C work.
