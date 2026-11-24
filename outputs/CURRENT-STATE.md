@@ -2,7 +2,9 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest candidate **2026111958**, local integration/publication pending.
+Latest normal build **2026111958**, product **28f187f**, integrated local main.
+All51 entries/36 payloads and sealed offline/source archives verified through
+canonical HTTP and AFP. [Verification](review-c/verification.json).
 Batch C removes duplicate same-call snapshot verification and ping's interval
 busy loop. Recovery model I/O−32.6%; fresh verification on resume retained.
 Host fault/corruption/legacy tests and Snow Plus/4MB/System6.0.8 installation,

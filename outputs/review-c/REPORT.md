@@ -43,5 +43,8 @@ Ping5,644→5,708bytes (+64). Rotation context adds4 transient stack bytes and a
 integer; no persistent allocation, bitmap, startup scan or disk-format change.
 Existing full verification before/after rename remains intentionally intact.
 
-Integration/publication identifiers follow in CURRENT-STATE and verification.json.
+Product **28f187f** on local main. Build **2026111958** published and verified at
+`http://192.168.1.112:8089/full/index.txt` and `Macintosh Exchange/Clarice/index.txt`.
+All51 entries/36 payloads, sealed offline/source archives and prior1957 recovery
+distribution verified. [Publication evidence](verification.json).
 No physical operations, GitHub push or further milestone work.
