@@ -80,3 +80,7 @@ launch; rebooting the fixture recovered it. No Clarice crash observed. Normal
 build, production loader/import validation and offline distribution build pass.
 Physical SE, System7 and third-party window extensions were not tested; the latter's
 bounds are host-simulated. No hardware accessed/deployed, no GitHub push.
+
+Product **4827238**, build **2026111954**, integrated in local main. Canonical HTTP
+and AFP publication verified: all51 entries/36 distinct payloads, sealed source,
+offline HDA/archive and previous1953 recovery material. See verification.json.

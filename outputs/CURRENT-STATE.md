@@ -2,11 +2,13 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111954**, Q1-007 on local main. Sealed Core +49 standard
-utilities; optional vi remains byte-identical1951. Snow acceptance completed;
-publication verification pending. Prior1953 artefacts/recovery retained.
+Latest normal build **2026111954**, product **4827238** on local main. Sealed Core
++49 standard utilities; optional vi remains byte-identical1951. Snow acceptance
+and all51 manifest entries/36 payloads verified over HTTP/AFP, including offline
+HDA/archive and sealed-source provenance. Prior1953 artefacts/recovery retained.
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP mirror:
 `Macintosh Exchange/Clarice/index.txt`. No physical deployment or GitHub push.
+[Publication verification](startup-q1/verification.json).
 
 ## Q1-007 startup responsiveness — 25 November 2026
 
