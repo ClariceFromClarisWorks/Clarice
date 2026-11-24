@@ -29,7 +29,17 @@ int poll(void){polls++;return cancel_at&&polls==cancel_at;}
 void SystemTask(void){now++;if(++step<4)return;
  if(pending==1){lookup->answer.addr[0]=0x01020304;lookup->answer.rtnCode=mode==3?-23046:0;resolved(&lookup->answer,(char*)lookup);pending=0;}
  else if(pending==2){echo->ioResult=0;pending=3;}
- else if(pending==3){NetICMPBlock b;memset(&b,0,sizeof b);b.icmpEchoInfo.userDataPtr=echo->csParam.IPEchoPB.userDataPtr;b.icmpEchoInfo.echoRequestOut=1;b.icmpEchoInfo.echoReplyIn=3;b.ioResult=mode==3?-23035:0;net_echo_result(&b);pending=0;}
+ else if(pending==3){NetICMPBlock b;memset(&b,0,sizeof b);b.icmpEchoInfo.userDataPtr=echo->csParam.IPEchoPB.userDataPtr;b.icmpEchoInfo.echoRequestOut=1;b.icmpEchoInfo.echoReplyIn=3;
+ b.icmpEchoInfo.echoedData.length=echo->csParam.IPEchoPB.data.length;
+ unsigned char bytes[16];memcpy(bytes,echo->csParam.IPEchoPB.data.ptr,16);b.icmpEchoInfo.echoedData.ptr=(Ptr)bytes;
+ if(mode==7)b.icmpEchoInfo.echoedData.length=0;
+ if(mode==8)bytes[15]^=1;
+ if(mode==9)b.icmpEchoInfo.echoReplyIn=0;
+ if(mode==10){b.icmpEchoInfo.echoRequestOut=0xffffffffUL;b.icmpEchoInfo.echoReplyIn=1;}
+ if(mode==11)b.icmpEchoInfo.echoReplyIn=1;
+ if(mode==12)b.icmpEchoInfo.echoedData.length=24;
+ if(mode==13)b.icmpEchoInfo.echoedData.length=15;
+b.ioResult=mode==3?-23035:0;net_echo_result(&b);pending=0;}
 }
 unsigned long NetParseIP(const char *s){return !strcmp(s,"1.2.3.4")?0x01020304:0;}
 static void reset(void){assert(!handles&&!pending);mode=step=cancel_at=polls=missing=closed=stack_error=0;now=0;}
@@ -45,5 +55,7 @@ int main(void){unsigned long a=0,m,t;
  reset();assert(NetResolve("bad@name",&a,poll,30)==paramErr&&!handles);
  for(int i=0;i<3;i++){reset();if(i==1)cancel_at=3;if(i==2)mode=3;assert(NetEcho(0x01020304,2,poll,&t)==(i==1?userCanceledErr:i==2?-23035:0));assert(!pending&&!handles);if(!i)assert(t==2);}
  reset();assert(!NetResolve("example.test",&a,poll,30));assert(!NetEcho(a,2,poll,&t));
+ for(int i=7;i<=13;i++){reset();mode=i;t=999;short e=NetEcho(0x01020304,2,poll,&t);assert(e==((i<=9||i==13)?NET_ECHO_INVALID:0));assert(t==((i<=9||i==13)?999:i==11?0:2));assert(!pending&&!handles);}
+ for(int i=0;i<30;i++){reset();assert(!NetEcho(0x01020304,2,poll,&t));assert(!pending&&!handles);}
  puts("PASS native adapter: status, numeric, immediate/deferred DNS, DNS error/missing/open failure, cancellation/deadline drain, ICMP submit/reply/timeout/cancel, repeated cleanup");
 }

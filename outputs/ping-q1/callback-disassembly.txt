@@ -1,0 +1,29 @@
+<net_echo_result>:
+   0:	226f 0004      	moveal %sp@(4),%a1
+   4:	2069 0044      	moveal %a1@(68),%a0
+   8:	3229 0010      	movew %a1@(16),%d1
+   c:	3141 0002      	movew %d1,%a0@(2)
+  10:	2029 0036      	movel %a1@(54),%d0
+  14:	90a9 0032      	subl %a1@(50),%d0
+  18:	2140 0004      	movel %d0,%a0@(4)
+  1c:	4a41           	tstw %d1
+  1e:	661a           	bnes 3a <net_echo_result+0x3a>
+  20:	2229 003c      	movel %a1@(60),%d1
+  24:	670e           	beqs 34 <net_echo_result+0x34>
+  26:	0c69 000f 003a 	cmpiw #15,%a1@(58)
+  2c:	6306           	blss 34 <net_echo_result+0x34>
+  2e:	b0a8 0008      	cmpl %a0@(8),%d0
+  32:	630c           	blss 40 <net_echo_result+0x40>
+  34:	317c 8044 0002 	movew #-32700,%a0@(2)
+  3a:	30bc 0001      	movew #1,%a0@
+  3e:	4e75           	rts
+  40:	7000           	moveq #0,%d0
+  42:	2241           	moveal %d1,%a1
+  44:	1431 0800      	moveb %a1@(0,%d0:l),%d2
+  48:	b430 080c      	cmpb %a0@(c,%d0:l),%d2
+  4c:	66e6           	bnes 34 <net_echo_result+0x34>
+  4e:	5280           	addql #1,%d0
+  50:	7410           	moveq #16,%d2
+  52:	b480           	cmpl %d0,%d2
+  54:	66ec           	bnes 42 <net_echo_result+0x42>
+  56:	60e2           	bras 3a <net_echo_result+0x3a>

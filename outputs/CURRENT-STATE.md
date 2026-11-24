@@ -13,8 +13,21 @@ checked against sealed hashes. Offline/source/licence/provenance archives provid
 Historical payloads retained; old test endpoints not retired without consumer checks.
 HTTP client IP restriction removed as requested; LAN bind retained. This subsequent
 host-only setting does not alter the sealed d14852d product archive. No push, public
-release or hardware deployment. Q1-001 remains next, not started.
+release or hardware deployment. Q1-001 is completed below; Q1-002 has not started.
 [Evidence and limitations](distribution-1946/REPORT.md).
+
+## Q1-001 — ICMP ping, 24 November 2026
+
+Build **2026111947**: genuine native ICMP, milliseconds instead of raw ticks,
+approximately one-second start spacing, continuous default until Ctrl+C; `-c`
+retains finite runs. Native callback payload/time validation covers both MoofTCP
+and Apple MacTCP's different reported data lengths. No networking startup work.
+Host sanitizer tests and Plus/4 MB/System 6.0.8 Snow tests pass: replies, loss,
+DNS, continuous mode, Ctrl+C130, recovery and repeated cleanup. Packet capture
+matches37 real request/reply pairs. Physical Macs and Open Transport remain
+untested. User clarified the reported empty field was actually raw tick output.
+No physical installation or Q1-002 work. Publication verification recorded in
+[focused evidence](ping-q1/REPORT.md).
 
 ## Editor glyph reuse — normal-build acceptance complete, 24 November
 

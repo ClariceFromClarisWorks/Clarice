@@ -1,0 +1,27 @@
+[
+  {
+    "command": "ipconfig",
+    "status": 0,
+    "text": "ipconfig; printf '\\nREMOTE_END_1:%d\\n' $?\r\nInterface: .IPP (installed Macintosh TCP/IP)\r\nIPv4: 10.0.0.2\r\nSubnet mask: 255.255.255.0\r\nGateway/DNS/link settings: consult the installed TCP/IP control panel.\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "ping -c 4 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "ping -c 4 -W 1 10.0.0.1; printf '\\nREMOTE_END_2:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=6 ticks\r\nreply from 10.0.0.1: seq=2 time=5 ticks\r\nreply from 10.0.0.1: seq=3 time=4 ticks\r\nreply from 10.0.0.1: seq=4 time=4 ticks\r\n4 transmitted, 4 received\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "ping -c 2 -W 1 10.0.0.254",
+    "status": 1,
+    "text": "ping -c 2 -W 1 10.0.0.254; printf '\\nREMOTE_END_3:%d\\n' $?\r\nping: echo: Mac OS error -23035\r\nping: echo: Mac OS error -23035\r\n2 transmitted, 0 received\r\n\r\nREMOTE_END_3:1\r\n/ > "
+  },
+  {
+    "command": "ping -c 1 -W 1 no-such-host.invalid",
+    "status": 1,
+    "text": "ping -c 1 -W 1 no-such-host.invalid; printf '\\nREMOTE_END_4:%d\\n' $?\r\nping: resolve: Mac OS error -23045\r\n\r\nREMOTE_END_4:1\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nRuntime: heap=333234 largest=331626 image=2628 ticks=65 load=27 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=2 imports=1 relocations=0 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "command": "wget -O /tmp/ping1947 http://192.168.1.112:8089/q1-ping/ping-final.clx",
+    "status": 0,
+    "text": "wget -O /tmp/ping1947 http://192.168.1.112:8089/q1-ping/ping-final.clx; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r[====================                                ]  39% 1.80 KiB / 4.57 KiB\u001b[K\r[====================================================] 100% 4.57 KiB / 4.57 KiB\u001b[K\r\nDownloaded 4.57 KB to /tmp/ping1947\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 4 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 4 -W 1 10.0.0.1; printf '\\nREMOTE_END_2:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=50 ms\r\nreply from 10.0.0.1: seq=2 time=33 ms\r\nreply from 10.0.0.1: seq=3 time=50 ms\r\nreply from 10.0.0.1: seq=4 time=33 ms\r\n4 transmitted, 4 received, 0% packet loss\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 2 -W 1 10.0.0.254",
+    "status": 1,
+    "text": "/tmp/ping1947 -c 2 -W 1 10.0.0.254; printf '\\nREMOTE_END_3:%d\\n' $?\r\nrequest timeout: seq=1\r\nrequest timeout: seq=2\r\n2 transmitted, 0 received, 100% packet loss\r\n\r\nREMOTE_END_3:1\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 1 -W 1 example.com",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 1 -W 1 example.com; printf '\\nREMOTE_END_4:%d\\n' $?\r\nreply from 104.20.23.154: seq=1 time=50 ms\r\n1 transmitted, 1 received, 0% packet loss\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 1 -W 1 no-such-host.invalid",
+    "status": 1,
+    "text": "/tmp/ping1947 -c 1 -W 1 no-such-host.invalid; printf '\\nREMOTE_END_5:%d\\n' $?\r\nping: resolve: Mac OS error -23045\r\n\r\nREMOTE_END_5:1\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 2 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 2 -W 1 10.0.0.1; printf '\\nREMOTE_END_6:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=50 ms\r\nreply from 10.0.0.1: seq=2 time=50 ms\r\n2 transmitted, 2 received, 0% packet loss\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=333234 largest=331266 image=3336 ticks=92 load=23 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=8 imports=1 relocations=0 prepare=1 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=8 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 2 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 2 -W 1 10.0.0.1; printf '\\nREMOTE_END_8:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=50 ms\r\nreply from 10.0.0.1: seq=2 time=33 ms\r\n2 transmitted, 2 received, 0% packet loss\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_9:%d\\n' $?\r\nRuntime: heap=333234 largest=331266 image=3336 ticks=93 load=25 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=11 imports=1 relocations=0 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=1 record=4 payload=10 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 2 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 2 -W 1 10.0.0.1; printf '\\nREMOTE_END_10:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=67 ms\r\nreply from 10.0.0.1: seq=2 time=33 ms\r\n2 transmitted, 2 received, 0% packet loss\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_11:%d\\n' $?\r\nRuntime: heap=333234 largest=331266 image=3336 ticks=90 load=23 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=8 imports=0 relocations=1 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=8 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 2 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 2 -W 1 10.0.0.1; printf '\\nREMOTE_END_12:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=33 ms\r\nreply from 10.0.0.1: seq=2 time=33 ms\r\n2 transmitted, 2 received, 0% packet loss\r\n\r\nREMOTE_END_12:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_13:%d\\n' $?\r\nRuntime: heap=333234 largest=331266 image=3336 ticks=92 load=25 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=9 imports=1 relocations=0 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=9 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_13:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 2 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 2 -W 1 10.0.0.1; printf '\\nREMOTE_END_14:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=50 ms\r\nreply from 10.0.0.1: seq=2 time=50 ms\r\n2 transmitted, 2 received, 0% packet loss\r\n\r\nREMOTE_END_14:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_15:%d\\n' $?\r\nRuntime: heap=333234 largest=331266 image=3336 ticks=91 load=24 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=8 imports=0 relocations=1 prepare=1 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=8 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_15:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 2 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 2 -W 1 10.0.0.1; printf '\\nREMOTE_END_16:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=33 ms\r\nreply from 10.0.0.1: seq=2 time=50 ms\r\n2 transmitted, 2 received, 0% packet loss\r\n\r\nREMOTE_END_16:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_17:%d\\n' $?\r\nRuntime: heap=333234 largest=331266 image=3336 ticks=93 load=25 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=9 imports=1 relocations=0 prepare=2 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=9 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_17:0\r\n/ > "
+  },
+  {
+    "command": "remote Ctrl+C",
+    "text": "/tmp/ping1947 -W 1 10.0.0.254\r\n^C\r\n/ > "
+  },
+  {
+    "command": "echo CANCEL_STATUS=$?",
+    "status": 0,
+    "text": "echo CANCEL_STATUS=$?; printf '\\nREMOTE_END_18:%d\\n' $?\r\nCANCEL_STATUS=130\r\n\r\nREMOTE_END_18:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_19:%d\\n' $?\r\nRuntime: heap=333234 largest=331266 image=3336 ticks=88 load=23 owned-peak=0 remaining=0\r\nLoader ticks: read=9 validate=8 imports=1 relocations=0 prepare=0 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=5 payload=8 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_19:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/ping1947 -c 1 -W 1 10.0.0.1",
+    "status": 0,
+    "text": "/tmp/ping1947 -c 1 -W 1 10.0.0.1; printf '\\nREMOTE_END_20:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=50 ms\r\n1 transmitted, 1 received, 0% packet loss\r\n\r\nREMOTE_END_20:0\r\n/ > "
+  },
+  {
+    "command": "echo RECOVERED",
+    "status": 0,
+    "text": "echo RECOVERED; printf '\\nREMOTE_END_21:%d\\n' $?\r\nRECOVERED\r\n\r\nREMOTE_END_21:0\r\n/ > "
+  }
+]

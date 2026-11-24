@@ -1,0 +1,20 @@
+[
+  {
+    "test": "control-c",
+    "status": 0,
+    "text": "cat /tmp/ping-cancel-status; printf '\\nREMOTE_END_1:%d\\n' $?\r\n130\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "control-c cleanup",
+    "text": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=333234 largest=331626 image=9196 ticks=48 load=39 owned-peak=0 remaining=0\r\nLoader ticks: read=15 validate=0 imports=3 relocations=0 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "command-period",
+    "status": 0,
+    "text": "cat /tmp/ping-cancel-status; printf '\\nREMOTE_END_1:%d\\n' $?\r\n130\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "command-period cleanup",
+    "text": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=333234 largest=331626 image=9196 ticks=48 load=40 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=2 imports=2 relocations=1 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "output": "/tmp/ping1947 -W 1 10.0.0.1\r\nreply from 10.0.0.1: seq=1 time=50 ms\r\nreply from 10.0.0.1: seq=2 time=50 ms\r\nreply from 10.0.0.1: seq=3 time=50 ms\r\nreply from 10.0.0.1: seq=4 time=33 ms\r\nreply from 10.0.0.1: seq=5 time=33 ms\r\nreply from 10.0.0.1: seq=6 time=33 ms\r\nreply from 10.0.0.1: seq=7 time=50 ms\r\nreply from 10.0.0.1: seq=8 time=50 ms\r\n^C\r\n/ > ",
+  "status": "echo CANCEL_STATUS=$?; printf '\\nREMOTE_END_1:%d\\n' $?\r\nCANCEL_STATUS=130\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+  "recovery": "/tmp/ping1947 -c 1 -W 1 10.0.0.1; printf '\\nREMOTE_END_2:%d\\n' $?\r\nreply from 10.0.0.1: seq=1 time=67 ms\r\n1 transmitted, 1 received, 0% packet loss\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+  "memory": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=333234 largest=331266 image=3336 ticks=35 load=24 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=8 imports=0 relocations=1 prepare=0 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=8 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+}
