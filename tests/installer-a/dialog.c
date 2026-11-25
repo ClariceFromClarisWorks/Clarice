@@ -1,0 +1,62 @@
+/* Run the production dialog controller with deterministic Toolbox events.
+ * Namespace/backend entry counters model all installation writes. */
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+typedef void *DialogPtr,*WindowPtr,*Handle,*ControlHandle;
+typedef struct {short top,left,bottom,right;} Rect;
+typedef struct {short what;unsigned long message;unsigned short modifiers;} EventRecord;
+#define pascal
+enum {keyDown=3,autoKey=5,charCodeMask=255,cmdKey=256,ControlKey=4096,everyEvent=65535,userCanceledErr=-128,fBsyErr=-47};
+static unsigned long ticks;
+static int create_fail,disposed,initialised,installed,launched,init_error,install_error,cancel_in_backend,event_index,event_count,poll_empty;
+static EventRecord events[16];
+static char labels[7][256];
+static void *GetNewDialog(int a,void*b,void*c){(void)a;(void)b;(void)c;return create_fail?0:(void*)1;}
+static void GetDialogItem(DialogPtr d,short i,short*t,Handle*h,Rect*r){(void)d;*t=0;*h=(void*)(intptr_t)i;*r=(Rect){0,0,16,100};}
+static void SetDialogItemText(Handle h,const unsigned char*s){int i=(int)(intptr_t)h;memcpy(labels[i],s+1,s[0]);labels[i][s[0]]=0;}
+static void SetDialogItem(DialogPtr d,short i,short t,Handle h,Rect*r){(void)d;(void)i;(void)t;(void)h;(void)r;}
+#define NewUserItemUPP(p) (p)
+static void FrameRect(Rect*r){(void)r;}
+static void InsetRect(Rect*r,int x,int y){r->left+=x;r->right-=x;r->top+=y;r->bottom-=y;}
+static void PaintRect(Rect*r){assert(r->left<=r->right);}
+static void EraseRect(Rect*r){assert(r->left<=r->right);}
+static void SetPort(void*p){(void)p;}
+static void ShowWindow(void*p){(void)p;}
+static void DrawDialog(void*p){(void)p;}
+static void DisposeDialog(void*p){assert(p);disposed++;}
+static void HiliteControl(void*p,int v){(void)p;(void)v;}
+static void SetControlTitle(void*p,const unsigned char*s){(void)p;(void)s;}
+static unsigned long TickCount(void){return ticks+=2;}
+static int WaitNextEvent(int mask,EventRecord*e,int sleep,void*r){(void)mask;(void)r;if(!sleep&&poll_empty){poll_empty=0;return 0;}assert(event_index<event_count);*e=events[event_index++];poll_empty=!sleep;return 1;}
+static int IsDialogEvent(EventRecord*e){return e->what==1;}
+static int DialogSelect(EventRecord*e,DialogPtr*d,short*i){*d=(void*)1;*i=e->message;return 1;}
+static char *LMGetApplLimit(void){return (char*)(uintptr_t)0x200000;}
+static void SetApplLimit(void*p){(void)p;}
+static void MaxApplZone(void){}
+static void MoreMasters(void){}
+int shell_install_init(void){initialised++;return init_error;}
+int shell_install_offline(char*);
+static int update_native_launch(const char*p){assert(!strcmp(p,"Disk:Clarice"));launched++;return 0;}
+#include "../../src/installer-ui.inc"
+int shell_install_offline(char*p){installed++;strcpy(p,"Disk:Clarice");app_install_progress("Checking Core",3,4);return cancel_in_backend&&installer_poll()?userCanceledErr:install_error;}
+static void reset(void){
+ installer_dialog=0;installer_running=installer_cancel=installer_choice=0;installer_step=installer_steps=installer_used=0;installer_last_poll=0;
+ ticks=0;create_fail=disposed=initialised=installed=launched=init_error=install_error=cancel_in_backend=event_index=event_count=poll_empty=0;
+ memset(labels,0,sizeof labels);
+}
+static void event(short w,unsigned long m,unsigned short mods){events[event_count++]=(EventRecord){w,m,mods};}
+int main(void){
+ for(int n=0;n<5;n++){reset();if(!n)event(1,2,0);else event(keyDown,n==1?27:n==2?'.':n==3?'q':'c',n==4?ControlKey:cmdKey);assert(!installer_main(0));assert(disposed==1&&!initialised&&!installed&&!launched);}
+ reset();create_fail=1;assert(installer_main(0)==1&&!initialised&&!disposed);
+ /* Poll receives a harmless event then no further event in the same slice. */
+ reset();event(1,1,0);event(keyDown,'.',cmdKey);event(1,2,0);assert(installer_main(0)==1&&!initialised&&!installed&&!launched&&disposed==1);
+ reset();event(keyDown,13,0);event(0,0,0);assert(!installer_main(0)&&initialised==1&&installed==1&&launched==1&&disposed==1);
+ reset();init_error=-108;event(1,1,0);event(0,0,0);event(1,2,0);assert(installer_main(0)==1&&initialised==1&&!installed&&!launched&&disposed==1);
+ reset();install_error=-34;event(1,1,0);event(0,0,0);event(1,2,0);assert(installer_main(0)==1&&initialised==1&&installed==1&&!launched&&disposed==1);
+ reset();cancel_in_backend=1;event(1,1,0);event(0,0,0);event(1,2,0);event(1,2,0);assert(installer_main(0)==1&&initialised==1&&installed==1&&!launched&&disposed==1);
+ reset();installer_dialog=(void*)1;installer_running=1;app_install_progress("bounded",99,4);assert(installer_step==4);char line[1024];memset(line,'x',sizeof line);line[1023]='\n';installer_text(line,sizeof line);assert(strlen(labels[5])==255&&installer_used==0);
+ puts("PASS native confirmation: five no-write cancellation forms; dialog allocation failure; cancellation before and during backend; one-shot success/handoff; initialization and disk-full errors; bounded progress/text");
+ return 0;
+}

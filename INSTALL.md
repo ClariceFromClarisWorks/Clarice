@@ -74,6 +74,15 @@ capability. Standard utilities are separate CLX files. Nano remains optional. Us
 distribution for the first installation; repository updates subsequently maintain
 the standard tools and update Core last.
 
+**Install Clarice** opens a native welcome window before creating any installation
+files. Cancel leaves the installation unchanged. Install keeps the recommended
+locations (Core at the startup disk root; Clarice Data inside the System Folder),
+then shows the current operation and completed installation steps. Cancel or
+Command-period during installation stops safely at the existing backend's polling
+points; completed utilities are retained. Run the same installer again to resume.
+No shell prompt, profile execution or terminal setup is needed for confirmation.
+Installer A is tested in System 6.0.8 Snow; System 7 testing is deferred.
+
 ## Private repository updates
 
 `clarice update` is built into Core. It does not require an installed

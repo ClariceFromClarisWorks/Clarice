@@ -29,6 +29,12 @@ static void handoff_trace(const char *s){unsigned char p[]="\053Sys6Unix:HIL Res
 #endif
 #include "update/native-launch.h"
 
+#ifdef CLARICE_OFFLINE_INSTALLER
+static int installer_main(unsigned long);
+static int installer_poll(void);
+static void installer_text(const char *,long);
+#endif
+
 /* Multiversal's fixed low-memory pointer triggers GCC array-bounds warnings
    after inlining. Read the same documented word explicitly on the 68000. */
 static short menu_bar_height(void){short h;__asm__ volatile("move.w 0x0baa,%0":"=d"(h)::"memory");return h;}
@@ -194,7 +200,11 @@ static void newline(void){current_line++;if(current_line-retained+1>oldest_line)
 static void soft_newline(void){wrapped[current_line%ROWS]=1;newline();}
 static int serial_input; /* mode 2: remote tty byte/control semantics */
 /* Copy printable runs with one bounded operation per terminal row. */
-void term_write(const char *s,long n){if(shell_session_output(s,n))return;if(n>0){activity_hide();activity_output_tick=TickCount();}long i=0;if(test_ref>=0){long k=n;FSWrite(test_ref,&k,s);}while(i<n){unsigned char c=s[i++];if(serial_input==2&&c=='\r'){out_col=0;last_cr=0;}else if(serial_input==2&&c==8){if(out_col)out_col--;}else if(c=='\n'){if(!last_cr)newline();last_cr=0;}else if(c=='\r'){newline();last_cr=1;}else if(c=='\t'){int k=4-(out_col%4);while(k--){if(out_col>=columns)soft_newline();text[current_line%ROWS][out_col++]=' ';}}else if(c>=32){last_cr=0;if(out_col>=columns)soft_newline();i--;long room=columns-out_col;if(room>n-i)room=n-i;long k=copy_printable(text[current_line%ROWS]+out_col,s+i,room);out_col+=k;i+=k;}}dirty=1;}
+void term_write(const char *s,long n){
+#ifdef CLARICE_OFFLINE_INSTALLER
+ installer_text(s,n);return;
+#endif
+if(shell_session_output(s,n))return;if(n>0){activity_hide();activity_output_tick=TickCount();}long i=0;if(test_ref>=0){long k=n;FSWrite(test_ref,&k,s);}while(i<n){unsigned char c=s[i++];if(serial_input==2&&c=='\r'){out_col=0;last_cr=0;}else if(serial_input==2&&c==8){if(out_col)out_col--;}else if(c=='\n'){if(!last_cr)newline();last_cr=0;}else if(c=='\r'){newline();last_cr=1;}else if(c=='\t'){int k=4-(out_col%4);while(k--){if(out_col>=columns)soft_newline();text[current_line%ROWS][out_col++]=' ';}}else if(c>=32){last_cr=0;if(out_col>=columns)soft_newline();i--;long room=columns-out_col;if(room>n-i)room=n-i;long k=copy_printable(text[current_line%ROWS]+out_col,s+i,room);out_col+=k;i+=k;}}dirty=1;}
 void term_puts(const char *s){term_write(s,(long)asm_length(s));}
 /* One bounded local progress row. No input ownership, allocation or ANSI mode. */
 void app_progress(const char *s,int finish){
@@ -881,7 +891,11 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
  SetPort(win);InvalRect(&win->portRect);save_preferences();term_present();
  /* The forced visible repaint is complete; do not paint it again on updateEvt. */
  ValidRect(&win->portRect);return preferences_unsaved?1:0;}
-int app_yield(void){shell_service_poll(0);EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return (shell_session_active()?shell_session_cancelled():cancelled)||done;int ui=shell_session_ui_begin();unsigned long t=TickCount();for(int i=0;i<16&&!cancelled&&!done;i++){if(!WaitNextEvent(everyEvent,&ev,0,0))break;handle(&ev);}event_ticks+=TickCount()-t;if(dirty&&TickCount()-last_paint>=output_paint_ticks){
+int app_yield(void){
+#ifdef CLARICE_OFFLINE_INSTALLER
+ return installer_poll();
+#endif
+shell_service_poll(0);EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return (shell_session_active()?shell_session_cancelled():cancelled)||done;int ui=shell_session_ui_begin();unsigned long t=TickCount();for(int i=0;i<16&&!cancelled&&!done;i++){if(!WaitNextEvent(everyEvent,&ev,0,0))break;handle(&ev);}event_ticks+=TickCount()-t;if(dirty&&TickCount()-last_paint>=output_paint_ticks){
 #ifdef CLARICE_DRAW_DIAGNOSTICS
 if(output_paint_ticks==listing_paint_interval&&out_col)listing_partial_frames++;
 #endif
@@ -1145,7 +1159,14 @@ static void welcome(void){
  snprintf(line,sizeof line,"RAM %s | Display %u x %u, %u-bit\n",ram,h.width,h.height,h.depth);term_puts(line);
  if(h.system)snprintf(line,sizeof line,"System %x.%x.%x (reported)\n",h.system>>8,(h.system>>4)&15,h.system&15);else strcpy(line,"System version unknown\n");term_puts(line);term_puts("Type help for commands; Tab completes.\n\n");
 }
-int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount();busy=1;InitGraf(&qd.thePort);InitFonts();InitWindows();InitMenus();TEInit();InitDialogs(0);InitCursor();/* Reserve 64 KiB beyond the monochrome Mac default stack before growing the heap. */SetApplLimit(LMGetApplLimit()-65536);MaxApplZone();MoreMasters();SysEnvirons(1,&system_info);
+#ifdef CLARICE_OFFLINE_INSTALLER
+#include "installer-ui.inc"
+#endif
+int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount();busy=1;InitGraf(&qd.thePort);InitFonts();InitWindows();InitMenus();TEInit();InitDialogs(0);InitCursor();
+#ifdef CLARICE_OFFLINE_INSTALLER
+ return installer_main(launch);
+#endif
+/* Reserve 64 KiB beyond the monochrome Mac default stack before growing the heap. */SetApplLimit(LMGetApplLimit()-65536);MaxApplZone();MoreMasters();SysEnvirons(1,&system_info);
  m=NewMenu(128,(const unsigned char*)"\p\024");AppendMenu(m,(const unsigned char*)"\pAbout Clarice;(-");AppendResMenu(m,'DRVR');InsertMenu(m,0);
  m=NewMenu(129,(const unsigned char*)"\pFile");AppendMenu(m,(const unsigned char*)"\pClear terminal;Cancel command/.;(-;Preferences.../,;(-;Quit/Q");InsertMenu(m,0);
  m=NewMenu(130,(const unsigned char*)"\pEdit");AppendMenu(m,(const unsigned char*)"\pCopy/C;Paste/V;(-;Previous command/H;Next command/J");InsertMenu(m,0);
@@ -1177,19 +1198,7 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  shell_profile();
 #endif
  busy=0;dirty=1;initial_free=FreeMem();start_tick=TickCount()-launch;last_yield=TickCount();
-#ifdef CLARICE_OFFLINE_INSTALLER
- {extern int shell_install_offline(char *);char target[256];
-  SetWTitle(win,(const unsigned char*)"\pInstall Clarice");app_clear();term_puts("Clarice installation\n\n");draw();
-  if(CautionAlert(152,0)==1){busy=1;cancelled=0;int e=shell_install_offline(target);busy=0;draw();
-   if(!e)e=app_update_handoff(target);
-   if(e){char detail[150];unsigned char message[151];
-    if(e==130||e==userCanceledErr)strcpy(detail,"Installation cancelled. Completed utilities are kept. Run Install Clarice again to resume.");
-    else if(e==fBsyErr)strcpy(detail,"Quit the installed Clarice, then run Install Clarice again. The running application has not been replaced.");
-    else snprintf(detail,sizeof detail,"Installation stopped (%d). Completed files are kept. See Read Me for retry or recovery instructions.",e);
-    pstr(message,detail);ParamText(message,0,0,0);StopAlert(151,0);app_quit();}
-  }else app_quit();
- }
-#endif
+
  while(!done){
 #ifdef CLARICE_ACTIVITY_DIAGNOSTICS
  static int activity_tested;if(!activity_tested&&FrontWindow()==win){activity_tested=1;activity_probe();}

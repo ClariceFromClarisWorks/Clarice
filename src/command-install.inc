@@ -97,6 +97,9 @@ static int command_setup(const char *directory){
  if(source_error)return source_error;size_t base=strlen(source);
  say("appinstall: existing commands are kept unchanged, not checked.\n");
  for(int i=0;standard_commands[i];i++){
+#ifdef CLARICE_OFFLINE_INSTALLER
+  app_install_progress(standard_commands[i],i+2,sizeof standard_commands/sizeof *standard_commands-1+4);
+#endif
   if(module_poll())return userCanceledErr;
   char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec pb;
   const char *name=standard_commands[i];int e=command_paths(name,dest,stage,backup);

@@ -79,6 +79,13 @@ static void history_add(const char *s){char record[LINE_CAP];long n;unsigned lon
 int history_get(int back,char *out){if(history_ref<0||back<1||back>HISTORY_SLOTS||(unsigned long)back>history_count)return 0;return hist_record(history_count-(unsigned long)back+1,out,0)==0;}
 int history_search(const char *needle,int start,char *out){int i;for(i=start;i<=HISTORY_SLOTS&&(unsigned long)i<=history_count;i++){if(history_get(i,out)&&asm_contains(out,needle))return i;if(app_yield())break;}return 0;}
 void history_shutdown(void){if(history_ref>=0){FSClose(history_ref);history_ref=-1;FlushVol(0,0);}}
+#ifdef CLARICE_OFFLINE_INSTALLER
+/* No history, profile execution or legacy-report migration for the installer. */
+int shell_install_init(void){
+ self_update_resources=CurResFile();int e=namespace_install();
+ if(!e){strcpy(shell_cwd,root_path);strcpy(home_path,root_path);}return e;
+}
+#endif
 void shell_init(void){
  self_update_resources=CurResFile();unsigned char vol[256];short vr;WDPBRec pb;unsigned long head[2];long n=8;char path[PATH_CAP];unsigned char pn[256];
  GetVol(vol,&vr);memcpy(shell_cwd,vol+1,vol[0]);shell_cwd[vol[0]]=':';shell_cwd[vol[0]+1]=0;

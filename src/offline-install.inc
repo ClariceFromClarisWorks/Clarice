@@ -56,6 +56,8 @@ static int offline_tools_present(void){
  }return 1;
 }
 int shell_install_offline(char target[256]){
+ unsigned steps=sizeof standard_commands/sizeof *standard_commands-1+4;
+ app_install_progress("Checking installation and recovery",1,steps);
  char own[256],source[PATH_CAP],kit[PATH_CAP],from[PATH_CAP+8];CInfoPBRec original,cat;
  int e=update_application_path(own);if(e)return e;char *leaf=strrchr(own,':');if(!leaf)return bdNamErr;*++leaf=0;
  if(strlen(own)+10>=sizeof source)return bdNamErr;
@@ -95,6 +97,7 @@ int shell_install_offline(char target[256]){
  say("Installing standard utilities. Existing files are kept.\nControl-C cancels; run Install Clarice again to resume.\n");
  e=command_setup(from);if(e)return e;
  if(!copy){say("Installed core is the same build or newer; kept unchanged.\n");return offline_ready(target,installed);}
+ app_install_progress("Copying and checking Clarice Core",steps-2,steps);
  say("Copying and checking Clarice Core (both forks)...\n");
  offline_plan.build=build;offline_plan.data_size=cat.hFileInfo.ioFlLgLen;offline_plan.resource_size=cat.hFileInfo.ioFlRLgLen;
  e=update_hash_fork(source,0,&offline_plan.data_crc,offline_plan.data_size);if(e)return e;
@@ -107,6 +110,7 @@ int shell_install_offline(char target[256]){
  memcpy(offline_plan.metadata,&cat.hFileInfo.ioFlFndrInfo,16);memcpy(offline_plan.extra,&cat.hFileInfo.ioFlXFndrInfo,16);
  if(present){char planpath[256];if(strlen(root_path)+strlen(UPDATE_PLAN_NAME)+13>256)return bdNamErr;strcpy(planpath,root_path);strcat(planpath,"etc:clarice:");strcat(planpath,UPDATE_PLAN_NAME);e=recovery_plan_write(planpath,&offline_plan);if(e)return e;}
  e=offline_ready(target,build);if(e)return e;
+ app_install_progress("Activating verified installation",steps-1,steps);
  UpdateOps ops={0,offline_probe,offline_check,offline_closed,offline_move,offline_flush};
  UpdateResult result=update_commit(&ops);if(result.error){
   /* The durable plan may already refer to this stage. A cancelled check is

@@ -5,6 +5,9 @@
 #define LINE_CAP 1024
 #define MAX_ARGS 32
 #define PATH_CAP 512
+#ifdef CLARICE_OFFLINE_INSTALLER
+void app_install_progress(const char *,unsigned,unsigned);
+#endif
 void term_write(const char *s, long n);
 void term_puts(const char *s);
 void term_present(void);

@@ -1,7 +1,10 @@
 #include "Types.r"
-resource 'ALRT' (152) {{45,40,280,472},152,{OK,visible,silent,OK,visible,silent,OK,visible,silent,OK,visible,silent},0};
+resource 'DLOG' (152) {{40,40,280,472},dBoxProc,visible,noGoAway,0,152,"Install Clarice",0};
 resource 'DITL' (152) {{
- {195,320,217,412}, Button {enabled,"Install"};
- {195,210,217,302}, Button {enabled,"Cancel"};
- {14,16,179,412}, StaticText {disabled,"Install Clarice at the startup disk root and add standard utilities?\r\rExisting utilities/settings are kept; managed recovery stays in Clarice Data.\r\rQuit Clarice first. Allow several minutes. Do not reset. Clarice opens when finished."}
+ {210,320,232,412}, Button {enabled,"Install"};
+ {210,210,232,302}, Button {enabled,"Cancel"};
+ {14,16,112,412}, StaticText {disabled,"Welcome to Clarice.\r\rClarice goes at the startup disk root. Utilities and your files go in Clarice Data inside the System Folder.\r\rExisting files are kept. Quit Clarice before installing."};
+ {122,16,138,412}, UserItem {disabled};
+ {148,16,180,412}, StaticText {disabled,"Choose Install to begin, or Cancel to leave the installation unchanged."};
+ {184,16,202,412}, StaticText {disabled,""}
 }};
