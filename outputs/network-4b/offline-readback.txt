@@ -1,0 +1,1 @@
+PASS guest binaries match final build; offline Core forks/metadata, Release, all49 tools and tar match sealed kit.

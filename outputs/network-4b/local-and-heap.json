@@ -1,0 +1,22 @@
+[
+  {
+    "test": "local statuses",
+    "status": 0,
+    "text": "cat /tmp/net4b-telnet-status /tmp/net4b-telnet-cancel /tmp/net4b-local-status; test ! -e /tmp/net4b-local-cancel; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\n0\r\n130\r\n130\r\nRuntime: heap=323648 largest=323058 image=10056 ticks=137 load=107 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=36 imports=2 relocations=1 prepare=5 events=8 (events included above)\r\nVerification ticks: mode=full header=0 record=46 payload=27 metadata=9 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "dual probe download",
+    "status": 0,
+    "text": "wget -O /tmp/tcp-dual http://192.168.1.112:21864/tcp-dual.clx; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r[==========================                          ]  51% 1.80 KiB / 3.52 KiB\u001b[K\r[====================================================] 100% 3.52 KiB / 3.52 KiB\u001b[K\r\nDownloaded 3.52 KB to /tmp/tcp-dual\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "two connections system heap",
+    "status": 0,
+    "text": "/tmp/tcp-dual 192.168.1.112 22364 3; printf '\\nREMOTE_END_3:%d\\n' $?\r\nTCP probe mode=3 result=0 close=0 waits=2 maxgap=5 ticks=17 system-delta=0 peak-system=32784 owned=0\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "test": "final stable heap",
+    "status": 0,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\napp=324496 largest=323058 system=45622 largest=45508\r\nRuntime: heap=324670 largest=323058 image=164 ticks=26 load=24 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=1 imports=0 relocations=0 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  }
+]

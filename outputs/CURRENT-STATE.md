@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest accepted normal build **2026111972**, local main: Batch4B cooperative TCP
+Latest accepted normal build **2026111972**, product **dbaca7c**, local main: Batch4B cooperative TCP
 and native cleanup ownership. Foreground connect/send/receive/close yield through
 existing events; failed teardown retains its command or pre-registration Telnetd
 owner until safe release. Native cancellation is130. No new resident allocation,
@@ -14,8 +14,9 @@ Snow's accelerated NAT refusal timing is separated from passing1x refusal tests.
 Physical acceptance remains pending. Prior Batch4A serial/EOF fixes preserved.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Build1972 publication verification pending;
-prior1971 recovery/distribution and unrelated work preserved. No GitHub push or
+`Macintosh Exchange/Clarice/index.txt`. Build1972:51 entries/36 payloads, source/seal,
+offline tar/HDA and optional Telnetd verified on both sources
+([verification](network-4b/verification.json)). Prior1971 recovery/distribution and unrelated work preserved. No GitHub push or
 physical hardware access. Stop after4B.
 
 ## Review remediation Batch A

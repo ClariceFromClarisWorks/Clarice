@@ -1,6 +1,6 @@
 # Batch 4B — cooperative TCP and native ownership
 
-Normal build2026111972; baseline1971/30d7b1e. Local main, host and disposable
+Accepted normal build2026111972, productdbaca7c; baseline1971/30d7b1e. Local main, host and disposable
 Snow Plus/4MiB/System6.0.8 evidence only. No physical access or GitHub push.
 
 ## Correction
@@ -67,5 +67,8 @@ checks use1x; other functional checks use fixed maximum acceleration.
 Reference: Apple's [MacTCP Programmer's Guide](https://mirrors.apple2.org.za/www.bitsavers.org/pdf/apple/mac/developer/Networking/MacTCP_Programmers_Guide_1989.pdf),
 TCP asynchronous calls, Abort and Release; pinned MoofTCP
 [PB ownership/completion](https://github.com/matthewmrichter/mooftcp/blob/a72e90ae8dd65e99a7be4981f15da85e1795e1c7/mac/glue/mt_pb_tcp.c).
-No upstream protocol/renderer replacement. Publication verification follows in
-verification.json; prior1971 distribution/recovery and unrelated work retained.
+No upstream protocol/renderer replacement. HTTP/AFP publication verified:
+51 manifest entries/36 payloads, source/seal and complete offline tar/HDA.
+Optional updated Telnetd is a separate versioned artefact; it is not added to
+the standard managed collection. See verification.json. Prior1971 distribution,
+recovery and unrelated work retained.

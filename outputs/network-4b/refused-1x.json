@@ -1,0 +1,10 @@
+{
+  "test": "refused endpoint at1x (NAT host timeout)",
+  "status": 1,
+  "text": "wget -O /tmp/net4b-final/refused http://192.168.1.112:22366/no; printf '\\nREMOTE_END_1:%d\\n' $?\r\nwget: MacTCP connect (Mac error -23016)\r\n\r\nREMOTE_END_1:1\r\n/ > ",
+  "host_seconds": 6.009112459,
+  "recovery": [
+    0,
+    "test ! -e /tmp/net4b-final/refused; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=324326 largest=323058 image=18596 ticks=397 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=1 imports=2 relocations=2 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=1 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  ]
+}

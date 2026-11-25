@@ -1,0 +1,5 @@
+{
+  "command": "normal wget refused endpoint",
+  "text": "wget -O /tmp/net4b-final/refused http://192.168.1.112:22366/no\r\n",
+  "host_seconds": 20.055870833
+}

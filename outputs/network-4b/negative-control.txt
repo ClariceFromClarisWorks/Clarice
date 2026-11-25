@@ -1,0 +1,2 @@
+Baseline30d7b1e rejects new cooperative-call regression, exit -6
+Assertion failed: (!"peer-dependent operation submitted synchronously"), function PBControlSync, file baseline-host.c, line 35.

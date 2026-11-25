@@ -1,0 +1,224 @@
+[
+  {
+    "test": "fixture",
+    "command": "mkdir -p /tmp/net4b-final; cd /tmp/net4b-final",
+    "status": 0,
+    "passed": true,
+    "text": "mkdir -p /tmp/net4b-final; cd /tmp/net4b-final; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\nnet4b-final > ",
+    "host_seconds": 0.15797525
+  },
+  {
+    "test": "HTTP binary",
+    "command": "wget -O binary http://192.168.1.112:21864/binary.dat",
+    "status": 0,
+    "passed": true,
+    "text": "wget -O binary http://192.168.1.112:21864/binary.dat; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r[===========                                         ]  22% 1.80 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to binary\r\n\r\nREMOTE_END_2:0\r\nnet4b-final > ",
+    "host_seconds": 0.21173545900000001
+  },
+  {
+    "test": "FTP binary roundtrip",
+    "command": "ftp -P 21264 put 192.168.1.112 binary roundtrip4b.dat && ftp -P 21264 get 192.168.1.112 roundtrip4b.dat returned && cmp binary returned",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 put 192.168.1.112 binary roundtrip4b.dat && ftp -P 21264 get 192.168.1.112 roundtrip4b.dat returned && cmp binary returned; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[=========================================] 100% 8.00 KiB / 8.00 KiB 8.00 KiB/s\u001b[K\r\nUploaded 8192 bytes\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\n\r\nREMOTE_END_3:0\r\nnet4b-final > ",
+    "host_seconds": 0.661610375
+  },
+  {
+    "test": "FTP unknown-size orderly EOF",
+    "command": "ftp -P 21265 get 192.168.1.112 normal unknown && cmp binary unknown",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21265 get 192.168.1.112 normal unknown && cmp binary unknown; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r[>                                                               ] 2.00 KiB / ?\u001b[K\r[   >                                                 ] 8.00 KiB / ? 2.67 KiB/s\u001b[K\r\nDownloaded 8192 bytes\r\n\r\nREMOTE_END_4:0\r\nnet4b-final > ",
+    "host_seconds": 0.8746723330000001
+  },
+  {
+    "test": "FTP empty",
+    "command": "ftp -P 21264 get 192.168.1.112 empty.dat empty",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 empty.dat empty; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r[==============================================================] 100% 0 B / 0 B\u001b[K\r\nDownloaded 0 bytes\r\n\r\nREMOTE_END_5:0\r\nnet4b-final > ",
+    "host_seconds": 0.55655725
+  },
+  {
+    "test": "native echo probe",
+    "command": "tcp-probe 192.168.1.112 22364 0",
+    "status": 0,
+    "passed": true,
+    "text": "tcp-probe 192.168.1.112 22364 0; printf '\\nREMOTE_END_6:%d\\n' $?\r\nTCP probe mode=0 result=0 close=0 waits=2 maxgap=4 ticks=10 system-delta=0 owned=0\r\n\r\nREMOTE_END_6:0\r\nnet4b-final > ",
+    "host_seconds": 0.10637904199999992
+  },
+  {
+    "test": "three failed native releases then cleanup",
+    "command": "tcp-probe 192.168.1.112 22364 1",
+    "status": 1,
+    "passed": true,
+    "text": "tcp-probe 192.168.1.112 22364 1; printf '\\nREMOTE_END_7:%d\\n' $?\r\nTCP cleanup pending; waiting for the native driver to release its buffer.\r\nTCP probe mode=1 result=0 close=-36 waits=20 maxgap=7 ticks=47 system-delta=0 owned=0\r\n\r\nREMOTE_END_7:1\r\nnet4b-final > ",
+    "host_seconds": 0.14751004199999995
+  },
+  {
+    "test": "pending receive, three failed aborts, cancellation",
+    "text": "tcp-probe 192.168.1.112 22365 2\r\nTCP probe mode=2 result=-128 close=-23008 waits=30 maxgap=4 ticks=67 system-delta=0 owned=0\r\nnet4b-final > "
+  },
+  {
+    "test": "probe cancellation status",
+    "command": "test \"$?\" -eq 130",
+    "status": 0,
+    "passed": true,
+    "text": "test \"$?\" -eq 130; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\nnet4b-final > ",
+    "host_seconds": 0.043256249999999774
+  },
+  {
+    "test": "native receive timeout and cleanup",
+    "command": "tcp-probe 192.168.1.112 22365 0",
+    "status": 1,
+    "passed": true,
+    "text": "tcp-probe 192.168.1.112 22365 0; printf '\\nREMOTE_END_9:%d\\n' $?\r\nTCP probe mode=0 result=-23016 close=0 waits=151 maxgap=4 ticks=309 system-delta=0 owned=0\r\n\r\nREMOTE_END_9:1\r\nnet4b-final > ",
+    "host_seconds": 0.4460846250000001
+  },
+  {
+    "test": "warm heap",
+    "command": "netheap2; status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_10:%d\\n' $?\r\napp=324496 largest=323058 system=45622 largest=45508\r\nRuntime: heap=324670 largest=323058 image=164 ticks=26 load=23 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=1 imports=0 relocations=0 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\nnet4b-final > ",
+    "host_seconds": 0.093147541
+  },
+  {
+    "test": "heap before repeated transfers",
+    "command": "netheap2",
+    "status": 0,
+    "passed": true,
+    "text": "netheap2; printf '\\nREMOTE_END_11:%d\\n' $?\r\napp=324888 largest=323058 system=45622 largest=45508\r\n\r\nREMOTE_END_11:0\r\nnet4b-final > ",
+    "host_seconds": 0.08084524999999987
+  },
+  {
+    "test": "repeat 0",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=49 load=34 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=2 imports=2 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_12:0\r\nnet4b-final > ",
+    "host_seconds": 0.5172522080000004
+  },
+  {
+    "test": "repeat 1",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=47 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=2 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_13:0\r\nnet4b-final > ",
+    "host_seconds": 0.5270222919999998
+  },
+  {
+    "test": "repeat 2",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=47 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_14:0\r\nnet4b-final > ",
+    "host_seconds": 0.5198487090000006
+  },
+  {
+    "test": "repeat 3",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=48 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=2 imports=2 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_15:0\r\nnet4b-final > ",
+    "host_seconds": 0.5793123329999998
+  },
+  {
+    "test": "repeat 4",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=46 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=0 imports=2 relocations=3 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_16:0\r\nnet4b-final > ",
+    "host_seconds": 0.5509396250000007
+  },
+  {
+    "test": "repeat 5",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=47 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_17:0\r\nnet4b-final > ",
+    "host_seconds": 0.5336874590000003
+  },
+  {
+    "test": "repeat 6",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=48 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_18:0\r\nnet4b-final > ",
+    "host_seconds": 0.5405500829999994
+  },
+  {
+    "test": "repeat 7",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=49 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=0 imports=3 relocations=2 prepare=5 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_19:0\r\nnet4b-final > ",
+    "host_seconds": 0.5248577499999998
+  },
+  {
+    "test": "repeat 8",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=46 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_20:0\r\nnet4b-final > ",
+    "host_seconds": 0.5419539999999996
+  },
+  {
+    "test": "repeat 9",
+    "command": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "ftp -P 21264 get 192.168.1.112 binary.dat repeat && cmp binary repeat && rm repeat && status runtime; printf '\\nREMOTE_END_21:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nRuntime: heap=323112 largest=323058 image=13508 ticks=48 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=0 imports=3 relocations=2 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_21:0\r\nnet4b-final > ",
+    "host_seconds": 0.5566288329999995
+  },
+  {
+    "test": "heap after repeated transfers",
+    "command": "netheap2",
+    "status": 0,
+    "passed": true,
+    "text": "netheap2; printf '\\nREMOTE_END_22:%d\\n' $?\r\napp=324888 largest=323058 system=45622 largest=45508\r\n\r\nREMOTE_END_22:0\r\nnet4b-final > ",
+    "host_seconds": 0.081471917
+  },
+  {
+    "test": "Telnet IP prompt recovery",
+    "text": "ftp -P 21266 get 192.168.1.112 large.dat cancelled\r\n\r[                                                    ]   0% 2.00 KiB / 1.00 MiB\u001b[K^C\r\nnet4b-final > ",
+    "host_seconds": 0.025679541000000583
+  },
+  {
+    "test": "Telnet IP status130 and staging cleanup",
+    "command": "test \"$?\" -eq 130 && test ! -e cancelled && test -z \"$(find . -name '.ftp-*')\" && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "test \"$?\" -eq 130 && test ! -e cancelled && test -z \"$(find . -name '.ftp-*')\" && status runtime; printf '\\nREMOTE_END_23:%d\\n' $?\r\nRuntime: heap=322402 largest=321124 image=10320 ticks=98 load=87 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=32 imports=2 relocations=1 prepare=6 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=34 payload=26 metadata=6 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_23:0\r\nnet4b-final > ",
+    "host_seconds": 0.25147262500000167
+  },
+  {
+    "test": "remote Ctrl+C prompt recovery",
+    "text": "ftp -P 21266 get 192.168.1.112 large.dat cancelled\r\n\r[                                                    ]   0% 2.00 KiB / 1.00 MiB\u001b[K^C\r\nnet4b-final > ",
+    "host_seconds": 0.021075791999999538
+  },
+  {
+    "test": "remote Ctrl+C status130 and staging cleanup",
+    "command": "test \"$?\" -eq 130 && test ! -e cancelled && test -z \"$(find . -name '.ftp-*')\" && status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "test \"$?\" -eq 130 && test ! -e cancelled && test -z \"$(find . -name '.ftp-*')\" && status runtime; printf '\\nREMOTE_END_24:%d\\n' $?\r\nRuntime: heap=322408 largest=321182 image=10320 ticks=51 load=38 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=7 imports=1 relocations=1 prepare=5 events=6 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=7 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_24:0\r\nnet4b-final > ",
+    "host_seconds": 0.19010200000000133
+  },
+  {
+    "test": "HTTP recovery",
+    "command": "wget -O recovered http://192.168.1.112:21864/binary.dat && cmp binary recovered",
+    "status": 0,
+    "passed": true,
+    "text": "wget -O recovered http://192.168.1.112:21864/binary.dat && cmp binary recovered; printf '\\nREMOTE_END_25:%d\\n' $?\r\n\r[===========                                         ]  22% 1.80 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to recovered\r\n\r\nREMOTE_END_25:0\r\nnet4b-final > ",
+    "host_seconds": 0.4014942500000007
+  },
+  {
+    "test": "final cleanup",
+    "command": "netheap2; status runtime",
+    "status": 0,
+    "passed": true,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_26:%d\\n' $?\r\napp=324498 largest=321182 system=45622 largest=45508\r\nRuntime: heap=324672 largest=321182 image=164 ticks=24 load=21 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_26:0\r\nnet4b-final > ",
+    "host_seconds": 0.09301583299999905
+  }
+]

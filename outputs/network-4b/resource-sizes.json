@@ -1,0 +1,32 @@
+{
+  "before": {
+    "ALRT": 28,
+    "BNDL": 28,
+    "CLRC": 8,
+    "CLUP": 16,
+    "CLXU": 150476,
+    "CODE": 285543,
+    "DITL": 1378,
+    "DLOG": 106,
+    "FREF": 7,
+    "ICN#": 256,
+    "SIZE": 10,
+    "ics#": 64
+  },
+  "after": {
+    "ALRT": 28,
+    "BNDL": 28,
+    "CLRC": 8,
+    "CLUP": 16,
+    "CLXU": 151208,
+    "CODE": 285541,
+    "DITL": 1378,
+    "DLOG": 106,
+    "FREF": 7,
+    "ICN#": 256,
+    "SIZE": 10,
+    "ics#": 64
+  },
+  "telnetd_before": 40964,
+  "telnetd_after": 41048
+}
