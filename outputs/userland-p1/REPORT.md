@@ -1,5 +1,7 @@
 # Whole-codebase P1 acceptance — build 2026111959
 
+Product commit: bd831614a9b704fe97e6d1dcf4f74c3fcae32663 (local main).
+
 All six candidate corrections accepted in normal 68000 Snow Plus/4MB/System6.0.8:
 
 - Temporary-assignment frames unlinked before freeing; nested/local/remote shell
@@ -42,3 +44,6 @@ or GitHub push; unrelated working files and historical worktrees retained.
 Publication: sealed Core/49 standard utilities, preserved optional vi, offline tar
 and HDA with fork/metadata readback, committed-source archive and optional telnetd.
 See verification.json for canonical HTTP/AFP equality and prior1958 retention.
+
+Publication verified:51 catalog entries/36 unique payloads equal over HTTP/AFP;
+all offline artifacts and optional telnetd match; prior1958 index/payloads retained.

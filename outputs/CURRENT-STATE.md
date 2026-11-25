@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111959**, local main: six whole-codebase P1 corrections
+Latest normal build **2026111959**, product **bd83161**, local main: six whole-codebase P1 corrections
 plus directly related bracket-pattern quoting. Host fault/recovery and normal
 Snow Plus/4MB/System6.0.8 shell, glob, append-after-seek, remote read queue and both
 local cancellation shortcuts pass. Repeated probes retain0 command allocations;
