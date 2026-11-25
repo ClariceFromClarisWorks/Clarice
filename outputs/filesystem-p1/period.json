@@ -1,0 +1,17 @@
+[
+  {
+    "command": "cat /tmp/batch3a/period-status",
+    "status": 0,
+    "text": "cat /tmp/batch3a/period-status; printf '\\nREMOTE_END_1:%d\\n' $?\r\n130\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "test ! -e /tmp/batch3a/local-target",
+    "status": 0,
+    "text": "test ! -e /tmp/batch3a/local-target; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "rm /tmp/batch3a/large; status runtime",
+    "status": 0,
+    "text": "rm /tmp/batch3a/large; status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\rrm 1: large [>                                              ] 1 items completed\u001b[K\rrm 1: large [====================================================] 1 items done\u001b[K\r\nRuntime: heap=324756 largest=323098 image=13028 ticks=88 load=44 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=2 imports=2 relocations=3 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=15 payload=0 metadata=2 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

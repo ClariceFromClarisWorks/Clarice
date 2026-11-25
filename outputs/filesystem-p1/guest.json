@@ -1,0 +1,389 @@
+[
+  {
+    "test": "disposable workspace",
+    "command": "cd /tmp/batch3a",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cd /tmp/batch3a; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\nbatch3a > ",
+    "host_seconds": 0.05393833299999999
+  },
+  {
+    "test": "encoded filenames and fork copy",
+    "command": "cp -p fork-source 'percent%25slash%2Fname'; cmp fork-source 'percent%25slash%2Fname'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cp -p fork-source 'percent%25slash%2Fname'; cmp fork-source 'percent%25slash%2Fname'; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\rcp 0: fork-source [                                      ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: fork-source [=============================== ]  99% 12.36 KiB / 12.36 KiB\u001b[K\rcp 1: fork-source [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_2:0\r\nbatch3a > ",
+    "host_seconds": 0.518106541
+  },
+  {
+    "test": "cp seed",
+    "command": "cp -p fork-source source",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cp -p fork-source source; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\rcp 0: fork-source [                                      ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: fork-source [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_3:0\r\nbatch3a > ",
+    "host_seconds": 0.20975858400000003
+  },
+  {
+    "test": "cp encoded destination 511",
+    "command": "cp -p source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././cp%25%2Ftarget'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cp -p source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././cp%25%2Ftarget'; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\rcp 0: source [ >                                            ] 0 items completed\u001b[K\rcp 0: source [   >                                          ] 0 items completed\u001b[K\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_4:0\r\nbatch3a > ",
+    "host_seconds": 0.5621527080000001
+  },
+  {
+    "test": "cp boundary target contents",
+    "command": "cmp fork-source 'cp%25%2Ftarget'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source 'cp%25%2Ftarget'; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\nbatch3a > ",
+    "host_seconds": 0.21735095799999993
+  },
+  {
+    "test": "cp reseed after valid transfer",
+    "command": "cp -p fork-source source",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cp -p fork-source source; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\rcp 0: fork-source [                                      ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: fork-source [=============================== ]  99% 12.36 KiB / 12.36 KiB\u001b[K\rcp 1: fork-source [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_6:0\r\nbatch3a > ",
+    "host_seconds": 0.22541975000000014
+  },
+  {
+    "test": "cp encoded destination 512",
+    "command": "cp -p source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././/cp%25%2Ftarget'",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "cp -p source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././/cp%25%2Ftarget'; printf '\\nREMOTE_END_7:%d\\n' $?\r\ncp: Mac OS error -37: Invalid file or volume name\r\n\r\nREMOTE_END_7:1\r\nbatch3a > ",
+    "host_seconds": 0.18193679200000012
+  },
+  {
+    "test": "cp rejected transfer preserves source and destination",
+    "command": "cmp fork-source source && cmp fork-source 'cp%25%2Ftarget'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source source && cmp fork-source 'cp%25%2Ftarget'; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\nbatch3a > ",
+    "host_seconds": 0.36316812500000006
+  },
+  {
+    "test": "cp encoded destination 600",
+    "command": "cp -p source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././/cp%25%2Ftarget'",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "cp -p source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././/cp%25%2Ftarget'; printf '\\nREMOTE_END_9:%d\\n' $?\r\ncp: Mac OS error -37: Invalid file or volume name\r\n\r\nREMOTE_END_9:1\r\nbatch3a > ",
+    "host_seconds": 0.18194570799999976
+  },
+  {
+    "test": "cp rejected transfer preserves source and destination",
+    "command": "cmp fork-source source && cmp fork-source 'cp%25%2Ftarget'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source source && cmp fork-source 'cp%25%2Ftarget'; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r\nREMOTE_END_10:0\r\nbatch3a > ",
+    "host_seconds": 0.3689409590000001
+  },
+  {
+    "test": "mv seed",
+    "command": "cp -p fork-source source",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cp -p fork-source source; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\rcp 0: fork-source [                                      ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: fork-source [=============================== ]  99% 12.36 KiB / 12.36 KiB\u001b[K\rcp 1: fork-source [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_11:0\r\nbatch3a > ",
+    "host_seconds": 0.22646641700000014
+  },
+  {
+    "test": "mv encoded destination 511",
+    "command": "mv source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././mv%25%2Ftarget'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "mv source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././mv%25%2Ftarget'; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\rmv 0: source [ >                                            ] 0 items completed\u001b[K\rmv 1: source [   >                                          ] 1 items completed\u001b[K\rmv 1: source [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_12:0\r\nbatch3a > ",
+    "host_seconds": 0.4477939590000002
+  },
+  {
+    "test": "mv boundary target contents",
+    "command": "cmp fork-source 'mv%25%2Ftarget'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source 'mv%25%2Ftarget'; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r\nREMOTE_END_13:0\r\nbatch3a > ",
+    "host_seconds": 0.2060310839999997
+  },
+  {
+    "test": "mv reseed after valid transfer",
+    "command": "cp -p fork-source source",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cp -p fork-source source; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\rcp 0: fork-source [                                      ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: fork-source [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_14:0\r\nbatch3a > ",
+    "host_seconds": 0.2030614169999998
+  },
+  {
+    "test": "mv encoded destination 512",
+    "command": "mv source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././/mv%25%2Ftarget'",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "mv source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././/mv%25%2Ftarget'; printf '\\nREMOTE_END_15:%d\\n' $?\r\nmv: Mac OS error -37: Invalid file or volume name\r\n\r\nREMOTE_END_15:1\r\nbatch3a > ",
+    "host_seconds": 0.16530158299999975
+  },
+  {
+    "test": "mv rejected transfer preserves source and destination",
+    "command": "cmp fork-source source && cmp fork-source 'mv%25%2Ftarget'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source source && cmp fork-source 'mv%25%2Ftarget'; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\r\nREMOTE_END_16:0\r\nbatch3a > ",
+    "host_seconds": 0.36183670799999934
+  },
+  {
+    "test": "mv encoded destination 600",
+    "command": "mv source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././/mv%25%2Ftarget'",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "mv source '/tmp/batch3a/././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././././/mv%25%2Ftarget'; printf '\\nREMOTE_END_17:%d\\n' $?\r\nmv: Mac OS error -37: Invalid file or volume name\r\n\r\nREMOTE_END_17:1\r\nbatch3a > ",
+    "host_seconds": 0.1821769170000005
+  },
+  {
+    "test": "mv rejected transfer preserves source and destination",
+    "command": "cmp fork-source source && cmp fork-source 'mv%25%2Ftarget'",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source source && cmp fork-source 'mv%25%2Ftarget'; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\nbatch3a > ",
+    "host_seconds": 0.36052929099999975
+  },
+  {
+    "test": "directory operand",
+    "command": "mkdir targets; cp -p source targets/; cmp source targets/source; mv targets/source targets/moved; cmp source targets/moved",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "mkdir targets; cp -p source targets/; cmp source targets/source; mv targets/source targets/moved; cmp source targets/moved; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [==================================== ]  99% 12.36 KiB / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rmv 1: source [>                                             ] 1 items completed\u001b[K\rmv 1: source [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_19:0\r\nbatch3a > ",
+    "host_seconds": 0.8186644999999997
+  },
+  {
+    "test": "symlink seed",
+    "command": "mkdir -p target/sub; cp -p fork-source target/sub/sentinel; ln -s target dirlink",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "mkdir -p target/sub; cp -p fork-source target/sub/sentinel; ln -s target dirlink; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\rcp 0: fork-source [>                                        ] 0 items completed\u001b[K\rcp 0: fork-source [=============================== ]  97% 12.11 KiB / 12.36 KiB\u001b[K\rcp 1: fork-source [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_20:0\r\nbatch3a > ",
+    "host_seconds": 0.5150166250000003
+  },
+  {
+    "test": "reject dirlink/",
+    "command": "rm -R 'dirlink/'",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "rm -R 'dirlink/'; printf '\\nREMOTE_END_21:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_21:1\r\nbatch3a > ",
+    "host_seconds": 0.1788097500000001
+  },
+  {
+    "test": "target and link intact dirlink/",
+    "command": "cmp fork-source target/sub/sentinel; test \"$(readlink dirlink)\" = target",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source target/sub/sentinel; test \"$(readlink dirlink)\" = target; printf '\\nREMOTE_END_22:%d\\n' $?\r\n\r\nREMOTE_END_22:0\r\nbatch3a > ",
+    "host_seconds": 0.37353120800000017
+  },
+  {
+    "test": "reject dirlink///",
+    "command": "rm -R 'dirlink///'",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "rm -R 'dirlink///'; printf '\\nREMOTE_END_23:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_23:1\r\nbatch3a > ",
+    "host_seconds": 0.10148316700000048
+  },
+  {
+    "test": "target and link intact dirlink///",
+    "command": "cmp fork-source target/sub/sentinel; test \"$(readlink dirlink)\" = target",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source target/sub/sentinel; test \"$(readlink dirlink)\" = target; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\r\nREMOTE_END_24:0\r\nbatch3a > ",
+    "host_seconds": 0.3060554159999995
+  },
+  {
+    "test": "reject dirlink/.///",
+    "command": "rm -R 'dirlink/.///'",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "rm -R 'dirlink/.///'; printf '\\nREMOTE_END_25:%d\\n' $?\r\nrm: Mac OS error -50: Invalid parameter\r\n\r\nREMOTE_END_25:1\r\nbatch3a > ",
+    "host_seconds": 0.08787687500000008
+  },
+  {
+    "test": "target and link intact dirlink/.///",
+    "command": "cmp fork-source target/sub/sentinel; test \"$(readlink dirlink)\" = target",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source target/sub/sentinel; test \"$(readlink dirlink)\" = target; printf '\\nREMOTE_END_26:%d\\n' $?\r\n\r\nREMOTE_END_26:0\r\nbatch3a > ",
+    "host_seconds": 0.3075064999999997
+  },
+  {
+    "test": "force cannot bypass rejection",
+    "command": "rm -Rf dirlink/",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "rm -Rf dirlink/; printf '\\nREMOTE_END_27:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_27:1\r\nbatch3a > ",
+    "host_seconds": 0.10197800000000079
+  },
+  {
+    "test": "unlink final symlink",
+    "command": "rm -R dirlink; test ! -e dirlink && cmp fork-source target/sub/sentinel",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "rm -R dirlink; test ! -e dirlink && cmp fork-source target/sub/sentinel; printf '\\nREMOTE_END_28:%d\\n' $?\r\n\r\nREMOTE_END_28:0\r\nbatch3a > ",
+    "host_seconds": 0.2988334160000008
+  },
+  {
+    "test": "dot slash seed",
+    "command": "mkdir -p dot/sub; cp -p fork-source dot/sub/sentinel",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "mkdir -p dot/sub; cp -p fork-source dot/sub/sentinel; printf '\\nREMOTE_END_29:%d\\n' $?\r\n\rcp 0: fork-source [>                                        ] 0 items completed\u001b[K\rcp 0: fork-source [=============================== ]  97% 12.11 KiB / 12.36 KiB\u001b[K\rcp 1: fork-source [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_29:0\r\nbatch3a > ",
+    "host_seconds": 0.3417617919999998
+  },
+  {
+    "test": "dot slash rejection",
+    "command": "rm -R dot/.///",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "rm -R dot/.///; printf '\\nREMOTE_END_30:%d\\n' $?\r\nrm: Mac OS error -50: Invalid parameter\r\n\r\nREMOTE_END_30:1\r\nbatch3a > ",
+    "host_seconds": 0.09119991699999908
+  },
+  {
+    "test": "dot contents intact",
+    "command": "cmp fork-source dot/sub/sentinel",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cmp fork-source dot/sub/sentinel; printf '\\nREMOTE_END_31:%d\\n' $?\r\n\r\nREMOTE_END_31:0\r\nbatch3a > ",
+    "host_seconds": 0.21188800000000008
+  },
+  {
+    "test": "ordinary trailing slash with contained link",
+    "command": "mkdir ordinary; ln -s ../target ordinary/childlink; rm -R ordinary///; test ! -e ordinary && cmp fork-source target/sub/sentinel",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "mkdir ordinary; ln -s ../target ordinary/childlink; rm -R ordinary///; test ! -e ordinary && cmp fork-source target/sub/sentinel; printf '\\nREMOTE_END_32:%d\\n' $?\r\n\rrm 2: ordinary [>                                           ] 2 items completed\u001b[K\rrm 2: ordinary [=================================================] 2 items done\u001b[K\r\n\r\nREMOTE_END_32:0\r\nbatch3a > ",
+    "host_seconds": 0.5226402080000003
+  },
+  {
+    "test": "normal recursive removal",
+    "command": "mkdir -p ordinary/sub; printf value > ordinary/sub/file; rm -R ordinary/; test ! -e ordinary",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "mkdir -p ordinary/sub; printf value > ordinary/sub/file; rm -R ordinary/; test ! -e ordinary; printf '\\nREMOTE_END_33:%d\\n' $?\r\n\rrm 1: file [>                                               ] 1 items completed\u001b[K\rrm 3: ordinary [=================================================] 3 items done\u001b[K\r\n\r\nREMOTE_END_33:0\r\nbatch3a > ",
+    "host_seconds": 0.35305112500000035
+  },
+  {
+    "test": "error and recovery",
+    "command": "cp source missing/parent/file",
+    "status": 1,
+    "expected": 1,
+    "passed": true,
+    "text": "cp source missing/parent/file; printf '\\nREMOTE_END_34:%d\\n' $?\r\ncp: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_34:1\r\nbatch3a > ",
+    "host_seconds": 0.11505504199999983
+  },
+  {
+    "test": "fork and metadata after errors",
+    "command": "hfsattrib source; cmp source fork-source",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "hfsattrib source; cmp source fork-source; printf '\\nREMOTE_END_35:%d\\n' $?\r\nsource: type='TEXT' creator='TEST' flags=4000 locked=off invisible=on\r\n\r\nREMOTE_END_35:0\r\nbatch3a > ",
+    "host_seconds": 0.358299959
+  },
+  {
+    "test": "warm command data",
+    "command": "cp -p source warm; rm warm; status runtime",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cp -p source warm; rm warm; status runtime; printf '\\nREMOTE_END_36:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\nRuntime: heap=324204 largest=323098 image=13028 ticks=55 load=37 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=2 imports=4 relocations=2 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_36:0\r\nbatch3a > ",
+    "host_seconds": 0.2878158329999998
+  },
+  {
+    "test": "repeated cp/rm cleanup 0",
+    "command": "i=0; while test $i -lt 20; do cp -p source repeat || break; rm repeat || break; i=$((i+1)); done; test $i -eq 20; status runtime",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "i=0; while test $i -lt 20; do cp -p source repeat || break; rm repeat || break; i=$((i+1)); done; test $i -eq 20; status runtime; printf '\\nREMOTE_END_37:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\nRuntime: heap=321292 largest=321124 image=13028 ticks=54 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=1 imports=4 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_37:0\r\nbatch3a > ",
+    "host_seconds": 5.102035917
+  },
+  {
+    "test": "repeated cp/rm cleanup 1",
+    "command": "i=0; while test $i -lt 20; do cp -p source repeat || break; rm repeat || break; i=$((i+1)); done; test $i -eq 20; status runtime",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "i=0; while test $i -lt 20; do cp -p source repeat || break; rm repeat || break; i=$((i+1)); done; test $i -eq 20; status runtime; printf '\\nREMOTE_END_38:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [==================================== ]  99% 12.36 KiB / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\nRuntime: heap=321300 largest=321132 image=13028 ticks=61 load=42 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=7 imports=4 relocations=2 prepare=5 events=7 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=7 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_38:0\r\nbatch3a > ",
+    "host_seconds": 5.184752542
+  },
+  {
+    "test": "repeated cp/rm cleanup 2",
+    "command": "i=0; while test $i -lt 20; do cp -p source repeat || break; rm repeat || break; i=$((i+1)); done; test $i -eq 20; status runtime",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "i=0; while test $i -lt 20; do cp -p source repeat || break; rm repeat || break; i=$((i+1)); done; test $i -eq 20; status runtime; printf '\\nREMOTE_END_39:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [==================================== ]  99% 12.36 KiB / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 12.36 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\nRuntime: heap=321292 largest=321124 image=13028 ticks=55 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=1 imports=3 relocations=3 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_39:0\r\nbatch3a > ",
+    "host_seconds": 5.0706644579999995
+  },
+  {
+    "test": "cancellation source",
+    "command": "dd if=source of=large bs=1024 seek=2048 count=1",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "dd if=source of=large bs=1024 seek=2048 count=1; printf '\\nREMOTE_END_40:%d\\n' $?\r\n1+0 records in\r\n1+0 records out\r\n\r\nREMOTE_END_40:0\r\nbatch3a > ",
+    "host_seconds": 6.395154209000001
+  },
+  {
+    "test": "cancellation destination",
+    "command": "cp -p fork-source cancel-target",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "cp -p fork-source cancel-target; printf '\\nREMOTE_END_41:%d\\n' $?\r\n\rcp 0: fork-source [>                                        ] 0 items completed\u001b[K\rcp 0: fork-source [==========                       ]  32% 4.00 KiB / 12.36 KiB\u001b[K\rcp 1: fork-source [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_41:0\r\nbatch3a > ",
+    "host_seconds": 0.25375916699999834
+  },
+  {
+    "test": "cancel status and recovery",
+    "command": "echo $?; cmp fork-source cancel-target; status runtime",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "echo $?; cmp fork-source cancel-target; status runtime; printf '\\nREMOTE_END_42:%d\\n' $?\r\n130\r\nRuntime: heap=324204 largest=321180 image=8960 ticks=168 load=41 owned-peak=4748 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_42:0\r\nbatch3a > ",
+    "host_seconds": 0.271096208000003
+  },
+  {
+    "test": "cleanup large scratch",
+    "command": "rm large; status runtime",
+    "status": 0,
+    "expected": 0,
+    "passed": true,
+    "text": "rm large; status runtime; printf '\\nREMOTE_END_43:%d\\n' $?\r\n\rrm 1: large [>                                              ] 1 items completed\u001b[K\rrm 1: large [====================================================] 1 items done\u001b[K\r\nRuntime: heap=324756 largest=321180 image=13028 ticks=97 load=44 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=1 imports=3 relocations=2 prepare=6 events=0 (events included above)\r\nVerification ticks: mode=fast header=1 record=15 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_43:0\r\nbatch3a > ",
+    "host_seconds": 0.18157579200000384
+  }
+]

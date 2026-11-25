@@ -67,11 +67,14 @@ static int remove_one(const char *path,int depth,int onlydir){
  while(end&&path[end-1]=='/')end--;start=end;while(start&&path[start-1]!='/')start--;
  if(end-start==1&&path[start]=='.')return paramErr;
  if(end-start==2&&path[start]=='.'&&path[start+1]=='.')return paramErr;
- strcpy(pending,path);
+ /* A trailing separator makes the resolver follow a final link. Strip it
+    for this no-follow operation, then require an actual directory. */
+ int trailing=end&&path[end];strcpy(pending,path);if(trailing)pending[end]=0;
  for(;;){
   if(app_yield()){e=130;break;}
   file_progress_current(pending);file_progress_show(0);
   e=checked(pending,native,canonical,0);if(!e)e=info(native,&pb);
+  if(!e&&trailing&&!isdir(&pb)){e=dirNFErr;break;}trailing=0;
   if((e==fnfErr||e==dirNFErr)&&force)e=0;
   else if(!e){
    if(isdir(&pb)&&recursive&&!onlydir){
@@ -138,7 +141,10 @@ static int copy_one(const char *source,const char *destination,int depth){
  while(top){CopyFrame *f=top;top=f->parent;cli_free(f);}return e;
 }
 static int transfer(int argc,char **av,int start,int moving){
- if(argc-start<2)return 2;int status=0;char target[PATH_CAP],native[PATH_CAP],dc[PATH_CAP];CInfoPBRec pb;int targetdir=!resolve(av[argc-1],native)&&!info(native,&pb)&&isdir(&pb);if(argc-start>2&&!targetdir)return 2;
+ if(argc-start<2)return 2;
+ /* Check the encoded operand before resolution or any per-source work. */
+ if(strlen(av[argc-1])>=PATH_CAP)return fail(av[0],bdNamErr);
+ int status=0;char target[PATH_CAP],native[PATH_CAP],dc[PATH_CAP];CInfoPBRec pb;int targetdir=!resolve(av[argc-1],native)&&!info(native,&pb)&&isdir(&pb);if(argc-start>2&&!targetdir)return 2;
  for(int i=start;i<argc-1;i++){
   file_progress_current(av[i]);file_progress_show(0);
   char src[PATH_CAP],sc[PATH_CAP],leaf[PATH_CAP];int e=checked(av[i],src,sc,0);if(e){status=fail(av[0],e);continue;}

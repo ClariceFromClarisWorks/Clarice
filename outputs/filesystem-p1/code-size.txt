@@ -1,0 +1,6 @@
+Using multiversal interfaces
+   text	   data	    bss	    dec	    hex	filename
+  12664	      0	    168	  12832	   3220	/src/work/filesystem-p1/before-files.o
+  12796	      0	    168	  12964	   32a4	/src/work/build/files.o
+ 239600	  35096	  41448	 316144	  4d2f0	/src/work/filesystem-p1/before.code.bin.gdb
+ 239600	  35096	  41448	 316144	  4d2f0	/src/work/build/Clarice.code.bin.gdb

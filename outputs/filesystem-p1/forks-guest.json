@@ -1,0 +1,47 @@
+[
+  {
+    "command": "cd /tmp/batch3a/native; cp -p source \"percent%25slash%2Fname\"; cp -p source moved; mv moved renamed; cmp source renamed",
+    "status": 0,
+    "text": "cd /tmp/batch3a/native; cp -p source \"percent%25slash%2Fname\"; cp -p source moved; mv moved renamed; cmp source renamed; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [===                                   ]  10% 8.00 KiB / 72.96 KiB\u001b[K\rcp 0: source [========================             ]  66% 48.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [=                                     ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: source [======================               ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rmv 1: moved [ >                                             ] 1 items completed\u001b[K\rmv 1: moved [====================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_1:0\r\nnative > "
+  },
+  {
+    "command": "ln -s target dirlink",
+    "status": 0,
+    "text": "ln -s target dirlink; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\nnative > "
+  },
+  {
+    "command": "rm -R dirlink/",
+    "status": 1,
+    "text": "rm -R dirlink/; printf '\\nREMOTE_END_3:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_3:1\r\nnative > "
+  },
+  {
+    "command": "cmp source target/sub/sentinel; test \"$(readlink dirlink)\" = target",
+    "status": 0,
+    "text": "cmp source target/sub/sentinel; test \"$(readlink dirlink)\" = target; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\nnative > "
+  },
+  {
+    "command": "cp source missing/parent/file",
+    "status": 1,
+    "text": "cp source missing/parent/file; printf '\\nREMOTE_END_5:%d\\n' $?\r\ncp: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_5:1\r\nnative > "
+  },
+  {
+    "command": "dd if=source of=large bs=1024 seek=2048 count=1",
+    "status": 0,
+    "text": "dd if=source of=large bs=1024 seek=2048 count=1; printf '\\nREMOTE_END_6:%d\\n' $?\r\n1+0 records in\r\n1+0 records out\r\n\r\nREMOTE_END_6:0\r\nnative > "
+  },
+  {
+    "command": "test \"$?\" -eq 130; cmp source cancel-target; status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130; cmp source cancel-target; status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=323942 largest=323098 image=8960 ticks=178 load=40 owned-peak=4748 remaining=0\r\nLoader ticks: read=16 validate=0 imports=2 relocations=2 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\nnative > "
+  },
+  {
+    "command": "rm large; status runtime",
+    "status": 0,
+    "text": "rm large; status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\rrm 1: large [ >                                             ] 1 items completed\u001b[K\rrm 1: large [====================================================] 1 items done\u001b[K\r\nRuntime: heap=324780 largest=323098 image=13028 ticks=110 load=45 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=4 imports=2 relocations=2 prepare=5 events=3 (events included above)\r\nVerification ticks: mode=fast header=1 record=15 payload=0 metadata=3 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\nnative > "
+  },
+  {
+    "command": "test \"$?\" -eq 130 && cmp source cancel-target && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && cmp source cancel-target && status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=323896 largest=323098 image=8960 ticks=156 load=31 owned-peak=4748 remaining=0\r\nLoader ticks: read=12 validate=0 imports=2 relocations=1 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\nnative > "
+  }
+]

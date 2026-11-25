@@ -2,25 +2,21 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111965**, product **8d136a1**, local main: Batch 2 final closure accepted in
-normal 68000 Snow Plus/4 MiB/System 6.0.8. Clipboard endings now use the same
-presented frame as selected characters, using existing spare row bytes. Unchanged
-Preferences menu OK/Cancel avoids invented dirty state; screen-clamped no-op sizes
-skip layout/save. Genuine clipped exposure, changes and failed-save retry remain.
-[Focused evidence](terminal-closure/REPORT.md): 271 guest checks, 143 exact pixel
-comparisons, host baseline repros and geometry/allocation-failure regressions pass.
-Dialog dismissal: zero forced full updates, one clipped exposure; clamped no-ops:
-zero layouts/writes/painted rows. Normal typing worst2 guest ticks; real menu,
-partial input, cancellation130 and repeated execution pass. Free heap stable,
-zero retained command allocations; largest block recovers after transient
-fragmentation. No new bitmap/allocation; code/data+288bytes, Core package+256bytes.
-Prior accepted renderer, shell/runtime and recovery corrections remain intact.
+Latest normal build **2026111966**, local main: Batch3A filesystem P1 corrections.
+Encoded cp/mv destinations are checked before native work/copying; recursive
+removal rejects final symlinks with trailing separators through the existing
+no-follow path. Ordinary slash directories and links without suffixes remain.
+[Focused evidence](filesystem-p1/REPORT.md): both baseline failures reproduced,
+ASan/UBSan/fault tests and43 normal68000 Snow Plus/4MiB/System6.0.8 checks pass.
+Local/remote cancellation130 and recovery pass; repeated heap stable, zero owned
+survivors. Both forks/metadata checked, including native reserved resource bytes.
+Shared file image+156bytes; Core size/static memory unchanged, no new allocations
+or startup work. Prior terminal, shell and recovery corrections preserved.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Publication verification is recorded in
-`terminal-closure/verification.json`; previous1964 recovery material retained.
-Physical acceptance pending. No GitHub push or hardware deployment. Stop after
-these two closure corrections.
+`Macintosh Exchange/Clarice/index.txt`. Publication readback and product commit
+are recorded in `filesystem-p1/verification.json`; previous1965 material retained.
+Physical acceptance pending. No GitHub push/hardware deployment. Stop after3A.
 
 ## Review remediation Batch A
 
