@@ -1,0 +1,24 @@
+{
+  "build": 2026111964,
+  "system": "Snow Macintosh Plus, 68000, 4 MiB, System 6.0.8",
+  "normal_diagnostics": false,
+  "observed": [
+    "Real OK on unchanged Preferences restores terminal; file checksum unchanged",
+    "Changed size field then Cancel restores terminal; file checksum unchanged",
+    "Changed CLI geometry to 60 columns/20 rows and dark theme",
+    "Vi opened, accepted hello/world on separate lines, quit without save, terminal restored",
+    "Ctrl+C and Command-period independently returned status 130 and subsequent commands succeeded",
+    "Normal quit/relaunch visibly restored dark 60x20 window and interactive prompt"
+  ],
+  "limitations": [
+    "No physical SE acceptance",
+    "Host keyboard injector was paced; burst sent during Telnet startup lost characters",
+    "Latency measured with guest PostEvent/TickCount and actual compositor; not calibrated physical input latency"
+  ],
+  "offline_checks": [
+    "HDA Core data/resource forks and Finder metadata match sealed Core",
+    "HDA Release and all 49 utility payloads match sealed kit",
+    "All 51 tar files match kit",
+    "All old catalog entries/payloads remain present and verified on HTTP/AFP"
+  ]
+}
