@@ -1,0 +1,1 @@
+PASS stopped guest Core forks and rm utility byte-identical to sealed1970 build. Baseline Core readback matched sealed1969 forks.

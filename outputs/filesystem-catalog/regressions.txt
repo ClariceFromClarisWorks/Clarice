@@ -1,0 +1,2 @@
+Focused prior regressions passed: tests/userland-p1/native.py, tests/batch1-closure/native.py, tests/filesystem-native-remove/host.py, tests/filesystem-p2/unlink.py, tests/utility-correctness/file-depth.py, tests/performance-050/traversal.py
+See prior-p1.txt and copy-faults.txt for original failure controls and232 fork-copy cases.

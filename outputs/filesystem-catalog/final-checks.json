@@ -1,0 +1,12 @@
+[
+  {
+    "command": "cd /tmp/batch3e; test ! -e keep%2F && fsprobe same reference keep/sentinel && fsprobe same reference outer/sentinel",
+    "status": 0,
+    "text": "cd /tmp/batch3e; test ! -e keep%2F && fsprobe same reference keep/sentinel && fsprobe same reference outer/sentinel; printf '\\nREMOTE_END_1:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_1:0\r\nbatch3e > "
+  },
+  {
+    "command": "test ! -e dirlink; rm -Rf --no-progress /mnt/Perf/cmdperiod3e; status runtime",
+    "status": 0,
+    "text": "test ! -e dirlink; rm -Rf --no-progress /mnt/Perf/cmdperiod3e; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=323788 largest=323090 image=13508 ticks=116 load=44 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=1 imports=2 relocations=3 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\nbatch3e > "
+  }
+]

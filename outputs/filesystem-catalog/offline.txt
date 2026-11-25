@@ -1,0 +1,1 @@
+PASS offline HDA Core/installer/recovery helper data and resource forks and Finder fields; Release and49 utilities match seal; all USTAR members match kit.

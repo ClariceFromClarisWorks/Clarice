@@ -1,0 +1,296 @@
+[
+  {
+    "test": "setup",
+    "command": "mkdir -p /tmp/batch3e/outer/selected; cd /tmp/batch3e; cp -p /tmp/batch3b/source reference; fsprobe seed reference; cp -p reference outer/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p /tmp/batch3e/outer/selected; cd /tmp/batch3e; cp -p /tmp/batch3b/source reference; fsprobe seed reference; cp -p reference outer/sentinel; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [============                         ]  33% 24.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_1:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal nested catalog dots",
+    "command": "mkdir outer/selected/%2E outer/selected/%2E%2E; cp -p reference outer/selected/%2E/%2E%2E; cp -p reference outer/selected/%2E%2E/%2E",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir outer/selected/%2E outer/selected/%2E%2E; cp -p reference outer/selected/%2E/%2E%2E; cp -p reference outer/selected/%2E%2E/%2E; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [===                                ]  10% 8.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [==========================        ]  77% 56.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [===                                ]  10% 8.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [==========================        ]  77% 56.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_2:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal /",
+    "command": "cp -p reference 'outer/selected/%2F' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:/'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/%2F' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:/'; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [===                                ]  11% 8.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===========================       ]  82% 60.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_3:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal %",
+    "command": "cp -p reference 'outer/selected/%25' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/%25' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%'; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [===                                ]  10% 8.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [==========================        ]  77% 56.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_4:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal mid/name",
+    "command": "cp -p reference 'outer/selected/mid%2Fname' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:mid/name'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/mid%2Fname' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:mid/name'; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===========================       ]  82% 60.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_5:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal tail/",
+    "command": "cp -p reference 'outer/selected/tail%2F' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:tail/'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/tail%2F' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:tail/'; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [===                                ]  11% 8.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===========================       ]  82% 60.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_6:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal %2E",
+    "command": "cp -p reference 'outer/selected/%252E' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%2E'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/%252E' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%2E'; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\rcp 0: reference [ >                                         ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [======================            ]  66% 48.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_7:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal %2E%2E",
+    "command": "cp -p reference 'outer/selected/%252E%252E' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%2E%2E'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/%252E%252E' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%2E%2E'; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_8:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal %2F",
+    "command": "cp -p reference 'outer/selected/%252F' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%2F'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/%252F' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%2F'; printf '\\nREMOTE_END_9:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_9:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal %3A",
+    "command": "cp -p reference 'outer/selected/%253A' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%3A'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/%253A' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:%3A'; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_10:0\r\nbatch3e > "
+  },
+  {
+    "test": "literal ..%2F..",
+    "command": "cp -p reference 'outer/selected/..%252F..' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:..%2F..'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'outer/selected/..%252F..' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:..%2F..'; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [===                                ]  11% 8.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===========================       ]  82% 60.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_11:0\r\nbatch3e > "
+  },
+  {
+    "test": "link fixture",
+    "command": "ln -s /tmp/batch3e/outer outer/selected/link; ln -s nowhere outer/selected/dangling",
+    "status": 0,
+    "expected": 0,
+    "text": "ln -s /tmp/batch3e/outer outer/selected/link; ln -s nowhere outer/selected/dangling; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\nbatch3e > "
+  },
+  {
+    "test": "navigation unchanged",
+    "command": "cd outer/selected; test \"$(pwd)\" = /tmp/batch3e/outer/selected; cd ..; test \"$(pwd)\" = /tmp/batch3e/outer; cd ./selected/../..; test \"$(pwd)\" = /tmp/batch3e",
+    "status": 0,
+    "expected": 0,
+    "text": "cd outer/selected; test \"$(pwd)\" = /tmp/batch3e/outer/selected; cd ..; test \"$(pwd)\" = /tmp/batch3e/outer; cd ./selected/../..; test \"$(pwd)\" = /tmp/batch3e; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r\nREMOTE_END_13:0\r\nbatch3e > "
+  },
+  {
+    "test": "native dot directory addresses",
+    "command": "fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:.:..' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:..:.'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:.:..' && fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:outer:selected:..:.'; printf '\\nREMOTE_END_14:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_14:0\r\nbatch3e > "
+  },
+  {
+    "test": "wildcard identities",
+    "command": "printf '<%s>\\n' outer/selected/.*",
+    "status": 0,
+    "expected": 0,
+    "text": "printf '<%s>\\n' outer/selected/.*; printf '\\nREMOTE_END_15:%d\\n' $?\r\n<outer/selected/%2E>\r\n<outer/selected/%2E%2E>\r\n<outer/selected/..%252F..>\r\n\r\nREMOTE_END_15:0\r\nbatch3e > "
+  },
+  {
+    "test": "find literal output",
+    "command": "find outer/selected",
+    "status": 0,
+    "expected": 0,
+    "text": "find outer/selected; printf '\\nREMOTE_END_16:%d\\n' $?\r\nouter/selected\r\nouter/selected/%25\r\nouter/selected/%252E\r\nouter/selected/%252E%252E\r\nouter/selected/%252F\r\nouter/selected/%253A\r\nouter/selected/%2E\r\nouter/selected/%2E/%2E%2E\r\nouter/selected/%2E%2E\r\nouter/selected/%2E%2E/%2E\r\nouter/selected/..%252F..\r\nouter/selected/%2F\r\nouter/selected/dangling\r\nouter/selected/link\r\nouter/selected/mid%2Fname\r\nouter/selected/tail%2F\r\n\r\nREMOTE_END_16:0\r\nbatch3e > "
+  },
+  {
+    "test": "du literal output",
+    "command": "du outer/selected",
+    "status": 0,
+    "expected": 0,
+    "text": "du outer/selected; printf '\\nREMOTE_END_17:%d\\n' $?\r\n147\touter/selected/%2E\r\n147\touter/selected/%2E%2E\r\n1619\touter/selected\r\n\r\nREMOTE_END_17:0\r\nbatch3e > "
+  },
+  {
+    "test": "copy nested names",
+    "command": "cp -Rp --no-progress outer/selected copied && fsprobe same reference copied/%2E/%2E%2E && fsprobe same reference copied/%2E%2E/%2E && test \"$(readlink copied/link)\" = /tmp/batch3e/outer",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -Rp --no-progress outer/selected copied && fsprobe same reference copied/%2E/%2E%2E && fsprobe same reference copied/%2E%2E/%2E && test \"$(readlink copied/link)\" = /tmp/batch3e/outer; printf '\\nREMOTE_END_18:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_18:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity /",
+    "command": "fsprobe same reference 'copied/%2F'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/%2F'; printf '\\nREMOTE_END_19:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_19:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity %",
+    "command": "fsprobe same reference 'copied/%25'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/%25'; printf '\\nREMOTE_END_20:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_20:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity mid/name",
+    "command": "fsprobe same reference 'copied/mid%2Fname'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/mid%2Fname'; printf '\\nREMOTE_END_21:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_21:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity tail/",
+    "command": "fsprobe same reference 'copied/tail%2F'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/tail%2F'; printf '\\nREMOTE_END_22:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_22:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity %2E",
+    "command": "fsprobe same reference 'copied/%252E'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/%252E'; printf '\\nREMOTE_END_23:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_23:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity %2E%2E",
+    "command": "fsprobe same reference 'copied/%252E%252E'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/%252E%252E'; printf '\\nREMOTE_END_24:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_24:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity %2F",
+    "command": "fsprobe same reference 'copied/%252F'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/%252F'; printf '\\nREMOTE_END_25:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_25:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity %3A",
+    "command": "fsprobe same reference 'copied/%253A'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/%253A'; printf '\\nREMOTE_END_26:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_26:0\r\nbatch3e > "
+  },
+  {
+    "test": "copied identity ..%2F..",
+    "command": "fsprobe same reference 'copied/..%252F..'",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference 'copied/..%252F..'; printf '\\nREMOTE_END_27:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_27:0\r\nbatch3e > "
+  },
+  {
+    "test": "native directory move",
+    "command": "mkdir -p destination; mv copied destination/copied && test ! -e copied && fsprobe same reference destination/copied/%2E/%2E%2E",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p destination; mv copied destination/copied && test ! -e copied && fsprobe same reference destination/copied/%2E/%2E%2E; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\rmv 1: copied [>                                             ] 1 items completed\u001b[K\rmv 1: copied [===================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_2:0\r\nbatch3e > "
+  },
+  {
+    "test": "cross-volume move",
+    "command": "cp -p reference cross%2F; mv cross%2F /mnt/Perf/batch3e-cross%2F && fsprobe cross reference /mnt/Perf/batch3e-cross%2F && test ! -e cross%2F",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference cross%2F; mv cross%2F /mnt/Perf/batch3e-cross%2F && fsprobe cross reference /mnt/Perf/batch3e-cross%2F && test ! -e cross%2F; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [==============                    ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rmv 0: cross%2F [>                                           ] 0 items completed\u001b[K\rmv 0: cross/ [=====                                ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rmv 0: cross/ [==================================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rmv 1: cross/ [===================================================] 1 items done\u001b[K\r\nPASS cross forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_3:0\r\nbatch3e > "
+  },
+  {
+    "test": "reject directory link slash",
+    "command": "rm -R outer/selected/link/",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R outer/selected/link/; printf '\\nREMOTE_END_4:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_4:1\r\nbatch3e > "
+  },
+  {
+    "test": "outside sentinel intact",
+    "command": "fsprobe same reference outer/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference outer/sentinel; printf '\\nREMOTE_END_5:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_5:0\r\nbatch3e > "
+  },
+  {
+    "test": "remove only native dot entry",
+    "command": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:destination:copied:.' && test ! -e destination/copied/%2E && fsprobe same reference destination/copied/%2E%2E/%2E && fsprobe same reference outer/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3e:destination:copied:.' && test ! -e destination/copied/%2E && fsprobe same reference destination/copied/%2E%2E/%2E && fsprobe same reference outer/sentinel; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\rrm 1: %2E%2E [ >                                            ] 1 items completed\u001b[K\rrm 2: %2E [======================================================] 2 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_6:0\r\nbatch3e > "
+  },
+  {
+    "test": "recursive removal confines root",
+    "command": "rm -R --no-progress outer/selected && test ! -e outer/selected && fsprobe same reference outer/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "rm -R --no-progress outer/selected && test ! -e outer/selected && fsprobe same reference outer/sentinel; printf '\\nREMOTE_END_7:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_7:0\r\nbatch3e > "
+  },
+  {
+    "test": "ordinary trailing slash",
+    "command": "rm -R --no-progress destination/// && test ! -e destination && fsprobe same reference outer/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "rm -R --no-progress destination/// && test ! -e destination && fsprobe same reference outer/sentinel; printf '\\nREMOTE_END_8:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_8:0\r\nbatch3e > "
+  },
+  {
+    "test": "missing entry",
+    "command": "rm -R missing",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R missing; printf '\\nREMOTE_END_9:%d\\n' $?\r\nrm: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_9:1\r\nbatch3e > "
+  },
+  {
+    "test": "failure recovery",
+    "command": "fsprobe same reference outer/sentinel && echo RECOVERED && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference outer/sentinel && echo RECOVERED && status runtime; printf '\\nREMOTE_END_10:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRECOVERED\r\nRuntime: heap=323916 largest=323090 image=1204 ticks=314 load=37 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=2 imports=1 relocations=0 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\nbatch3e > "
+  },
+  {
+    "test": "repeated nested copy/remove 0",
+    "command": "mkdir -p repeat/%2E/%2E%2E; cp -p reference repeat/%2E/%2E%2E/file; cp -Rp --no-progress repeat clone; rm -R --no-progress repeat clone; fsprobe same reference outer/sentinel; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p repeat/%2E/%2E%2E; cp -p reference repeat/%2E/%2E%2E/file; cp -Rp --no-progress repeat clone; rm -R --no-progress repeat clone; fsprobe same reference outer/sentinel; status runtime; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=321886 largest=321718 image=1204 ticks=303 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=0 imports=1 relocations=0 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=15 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_11:0\r\nbatch3e > "
+  },
+  {
+    "test": "repeated nested copy/remove 1",
+    "command": "mkdir -p repeat/%2E/%2E%2E; cp -p reference repeat/%2E/%2E%2E/file; cp -Rp --no-progress repeat clone; rm -R --no-progress repeat clone; fsprobe same reference outer/sentinel; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p repeat/%2E/%2E%2E; cp -p reference repeat/%2E/%2E%2E/file; cp -Rp --no-progress repeat clone; rm -R --no-progress repeat clone; fsprobe same reference outer/sentinel; status runtime; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=321886 largest=321718 image=1204 ticks=304 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=1 imports=1 relocations=0 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=15 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_12:0\r\nbatch3e > "
+  },
+  {
+    "test": "repeated nested copy/remove 2",
+    "command": "mkdir -p repeat/%2E/%2E%2E; cp -p reference repeat/%2E/%2E%2E/file; cp -Rp --no-progress repeat clone; rm -R --no-progress repeat clone; fsprobe same reference outer/sentinel; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p repeat/%2E/%2E%2E; cp -p reference repeat/%2E/%2E%2E/file; cp -Rp --no-progress repeat clone; rm -R --no-progress repeat clone; fsprobe same reference outer/sentinel; status runtime; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=321886 largest=321718 image=1204 ticks=310 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=2 imports=0 relocations=1 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=15 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_13:0\r\nbatch3e > "
+  },
+  {
+    "test": "cancel seed",
+    "command": "cp -Rp --no-progress /mnt/Perf/n100 /mnt/Perf/cancel3e",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -Rp --no-progress /mnt/Perf/n100 /mnt/Perf/cancel3e; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r\nREMOTE_END_14:0\r\nbatch3e > "
+  },
+  {
+    "test": "cancellation status and recovery",
+    "command": "test \"$?\" -eq 130 && fsprobe same reference outer/sentinel && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$?\" -eq 130 && fsprobe same reference outer/sentinel && status runtime; printf '\\nREMOTE_END_15:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=323608 largest=323090 image=1204 ticks=323 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=1 imports=1 relocations=0 prepare=6 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_15:0\r\nbatch3e > "
+  },
+  {
+    "test": "retry cleanup",
+    "command": "rm -Rf --no-progress /mnt/Perf/cancel3e; rm /mnt/Perf/batch3e-cross%2F; fsprobe same reference outer/sentinel; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "rm -Rf --no-progress /mnt/Perf/cancel3e; rm /mnt/Perf/batch3e-cross%2F; fsprobe same reference outer/sentinel; status runtime; printf '\\nREMOTE_END_16:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=323324 largest=323090 image=1204 ticks=319 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=1 imports=1 relocations=0 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=14 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_16:0\r\nbatch3e > "
+  }
+]

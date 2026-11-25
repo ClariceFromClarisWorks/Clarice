@@ -1,0 +1,29 @@
+{
+  "core_macbinary": [
+    438656,
+    438784
+  ],
+  "changed_resources": {
+    "CODE/1": [
+      285507,
+      285519
+    ]
+  },
+  "files_clx": [
+    21208,
+    21212
+  ],
+  "files_text": [
+    13274,
+    13276
+  ],
+  "files_bss": [
+    168,
+    168
+  ],
+  "inspect_clx": [
+    14284,
+    14284
+  ],
+  "new_persistent_allocations": 0
+}

@@ -2,22 +2,25 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111969**, product **70ca55c**, local main: Batch3D native HFS removal safety.
-Removal distinguishes native colon separators from Unix slashes; a native file
-named `keep/` no longer becomes the sibling directory `keep`. Earlier final-link
-protections remain. [Focused evidence](filesystem-native-remove/REPORT.md):1968
-negative control reproduces data loss; sanitizer/fault tests and42 normal68000
-Snow Plus/4MiB/System6.0.8 checks pass, including exact-entry removal, untouched
-sibling forks/metadata, cancellation130, retry and stable heap/zero command survivors.
-Matched100-file rm execution median2259→2259 guest ticks; Batch3C traversal preserved.
-Shared files image+124bytes (code+36); Core/inspect sizes and static memory unchanged.
-No new allocations, frame fields or startup work. Physical acceptance pending.
+Latest normal build **2026111970**, product **3fc4251**, local main: Batch3E HFS catalog-name compatibility.
+Shared encoding preserves literal catalog `.`/`..` as `%2E`/`%2E%2E`; raw Unix
+navigation stays unchanged. Recursive utilities and native wildcard expansion use
+the same convention. Native literal slashes and final-symlink safeguards remain.
+[Focused evidence](filesystem-catalog/REPORT.md):1969 negative control, sanitizer/
+fault/retry tests and42 normal68000 Snow Plus/4MiB/System6.0.8 checks pass; additional
+native sibling/cancellation checks pass. Outside-root forks/metadata preserved;
+Ctrl+C and local Command-period130 recover the prompt. Repeated heap/largest block
+stable; zero retained command allocations, no new persistent state/startup work.
+Core CODE+12bytes (package+128); files code+2bytes (CLX+4); inspect unchanged.
+Matched guest execution medians: cp (100 files) 8646→7698, rm (100) 2649→2278,
+find (1000) 682→692, du (1000) 621→625 ticks. Copy/removal cache variation prevents claiming a speedup;
+small find/du slowdowns recorded. Physical acceptance remains pending.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. All51 entries/36 payloads and offline packages verified on HTTP/AFP
-(`filesystem-native-remove/verification.json`). Previous1968 recovery/distribution
-and unrelated work preserved. No GitHub push or physical hardware access.
-Stop after3D.
+`Macintosh Exchange/Clarice/index.txt`. All51 entries/36 payloads, source/seal and
+offline packages verified on HTTP/AFP ([verification](filesystem-catalog/verification.json)).
+Previous1969 recovery/distribution and unrelated work preserved. No GitHub push or
+physical hardware access. Stop after3E.
 
 ## Review remediation Batch A
 

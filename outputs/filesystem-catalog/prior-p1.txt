@@ -1,0 +1,4 @@
+REPRODUCED destination on 1965
+PASS cp/mv destination 511/512/1024, encoded HFS bytes, no mutation on rejection and subsequent success
+REPRODUCED remove on 1965
+PASS actual resolver + rm: final symlink slash rejection, target sentinel, ordinary slash directories, dot, low memory, I/O failure, cancellation/recovery

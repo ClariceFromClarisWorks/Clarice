@@ -1,0 +1,3 @@
+REPRODUCED1969: enumerated literal .. removes outside-root sentinel
+PASS catalog literals, navigation, single decoding, sibling forks/metadata; 121 native faults, 20 cancellation points, 3 allocation failures, retry and zero survivors
+PASS dot/slash/percent wildcard identities and exact 511/512-byte encoded bounds

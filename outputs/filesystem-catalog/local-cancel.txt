@@ -1,0 +1,8 @@
+test "$(cat /tmp/batch3e/cancel-status)" -eq 130 && test -d /mnt/Perf/localcancel3e && fsprobe same /tmp/batch3e/reference /tmp/batch3e/outer/sentinel; result=$?; status runtime; test $result -eq 0; printf '\nREMOTE_END_1:%d\n' $?
+PASS same forks/metadata, backup=3700000002 script=9
+Runtime: heap=321564 largest=320330 image=1204 ticks=311 load=31 owned-peak=0 remaining=0
+Loader ticks: read=10 validate=2 imports=1 relocations=0 prepare=5 events=2 (events included above)
+Verification ticks: mode=fast header=0 record=13 payload=0 metadata=2 structure=0 (structure included in relocations)
+
+REMOTE_END_1:0
+/ >
