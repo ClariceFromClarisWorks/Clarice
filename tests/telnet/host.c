@@ -5,6 +5,7 @@ static unsigned char sent[16384],shown[16384],input[4096];
 static unsigned sn,on,in,off,ticks,polls;
 static int allocations,allocfail,screenfail,fail_at,alloc_calls;
 static size_t live_bytes,peak_bytes;
+static int status_error;
 static int active,terminal,connectfail,sendfail,outfail,cancel,overflow,escape_test,closed,ttys;
 int cli_isatty(int f){(void)f;return ttys;}
 long cli_write(int f,const void *p,unsigned long n){if(f==2)return n;if(outfail)return -1;assert(on+n<sizeof shown);memcpy(shown+on,p,n);on+=n;return n;}
@@ -16,9 +17,9 @@ int NetResolve(const char *s,unsigned long *ip,int(*p)(void),unsigned long t){(v
 int NetConnect(NetConn *c,unsigned long ip,unsigned short p){assert(ip==1&&p==23);if(connectfail)return -108;c->open=1;return 0;}
 int NetClose(NetConn *c){c->open=0;return 0;}
 int NetSend(NetConn *c,const void *p,unsigned short n){(void)c;if(sendfail)return -1;assert(sn+n<sizeof sent);memcpy(sent+sn,p,n);sn+=n;return 0;}
-long NetAvailable(NetConn *c){(void)c;return off<in?1:closed?-1:0;}
+long NetAvailable(NetConn *c){(void)c;if(status_error)return status_error;return off<in?1:closed?connectionClosing:0;}
 long NetRecv(NetConn *c,void *p,unsigned short n,unsigned char t){(void)c;(void)n;(void)t;*(unsigned char*)p=input[off++];return 1;}
-static void reset(void){assert(!active&&!terminal);if(engine){telnet_free(engine);engine=0;}protocol_failed=0;dn=tn=cr=escaped=mac_error=0;sn=on=in=off=ticks=polls=0;connectfail=sendfail=outfail=cancel=overflow=escape_test=closed=allocfail=screenfail=0;ttys=1;dumb=1;reason="test";assert(protocol_open());}
+static void reset(void){status_error=0;assert(!active&&!terminal);if(engine){telnet_free(engine);engine=0;}protocol_failed=0;dn=tn=cr=escaped=mac_error=0;sn=on=in=off=ticks=polls=0;connectfail=sendfail=outfail=cancel=overflow=escape_test=closed=allocfail=screenfail=0;ttys=1;dumb=1;reason="test";assert(protocol_open());}
 static void feed(const unsigned char *p,unsigned n){for(unsigned i=0;i<n;i++)assert(receive(p[i]));assert(flush_tx()&&flush_display());}
 static int run(void){char *a[]={"telnet","--dumb","host"};telnet_free(engine);engine=0;int r=clarice_main(3,a);assert(!active&&!terminal&&!conn.open);return r;}
 int app_columns(void){return 80;}int app_screen_rows(void){return 24;}
@@ -41,6 +42,7 @@ int main(void){
  reset();cancel=1;assert(run()==130);
  reset();overflow=1;assert(run()==1);
  reset();escape_test=1;assert(run()==0);
+ reset();status_error=-23012;assert(run()==1&&mac_error==-23012);
  reset();connectfail=1;assert(run()==1);
  reset();input[in++]=IAC;input[in++]=WILL;input[in++]=ECHO;sendfail=1;assert(run()==1);
  reset();input[in++]='x';outfail=1;assert(run()==1);

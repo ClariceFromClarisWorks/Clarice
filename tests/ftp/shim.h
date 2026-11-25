@@ -1,3 +1,4 @@
+#define connectionClosing (-23005)
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

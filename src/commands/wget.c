@@ -20,17 +20,17 @@ static NetConn net;
 static unsigned char buffer[2048];
 static unsigned used,available;
 static unsigned long last_data;
-static int cancelled;
+static int cancelled,input_error;
 static unsigned long download_limit;
 static const char *input_failure;
 static int poll_input(void){
  if(app_yield()){cancelled=1;return -1;}
  if(used<available)return 1;
- long n=NetAvailable(&net);if(n<0){input_failure="connection closed before response completed";return -1;}
+ long n=NetAvailable(&net);if(n<0){input_error=n;input_failure="connection closed before response completed";return -1;}
  if(!n){if(cli_ticks()-last_data>1800UL){input_failure="response timed out after 30 seconds without data";return -1;}return 0;}
  if(n>(long)sizeof buffer)n=sizeof buffer;
  n=NetRecv(&net,buffer,(unsigned short)n,1);
- if(n<=0){input_failure="network receive failed";return -1;}used=0;available=(unsigned)n;last_data=cli_ticks();return 1;
+ if(n<=0){if(n<0)input_error=n;input_failure="network receive failed";return -1;}used=0;available=(unsigned)n;last_data=cli_ticks();return 1;
 }
 #include "http-response.inc"
 static int number(const char *s,unsigned long *out){
@@ -41,7 +41,7 @@ static int number(const char *s,unsigned long *out){
 }
 int clarice_main(int argc,char **argv){
  /* Also callable sequentially by the updater within one command invocation. */
- memset(&net,0,sizeof net);used=available=cancelled=0;last_data=0;input_failure=0;progress_enabled=0;
+ memset(&net,0,sizeof net);used=available=cancelled=input_error=0;last_data=0;input_failure=0;progress_enabled=0;
  const char *url=0,*output=0;char host[260],request[1024],header[1024];
  char http_status[128];
  char native[PATH_CAP],canonical[PATH_CAP],stage[PATH_CAP];
@@ -112,7 +112,7 @@ int clarice_main(int argc,char **argv){
  char amount[32];display_size(amount,written);snprintf(header,sizeof header,"Downloaded %s to %s\n",amount,output);say(header);result=0;
 done:
  if(progress_enabled){progress_update(written,size,have_length,-1);progress_enabled=0;}
- if(input_failure&&!cancelled)why=input_failure;
+ if(input_failure&&!cancelled)why=input_failure;if(input_error&&!e)e=input_error;
  if(file>=0){int close_error=cli_native_close(file);if(close_error&&!e)e=close_error;}
  int net_error=NetClose(&net);
  if(net_error){snprintf(header,sizeof header,"wget: MacTCP release failed (%d); receive buffer retained for driver safety\n",net_error);errsay(header);if(!result){result=1;why="download saved but network cleanup failed";}}

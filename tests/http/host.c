@@ -21,7 +21,7 @@ unsigned long NetParseIP(const char *a){return !strcmp(a,"127.0.0.1")?0x7f000001
 int NetResolve(const char *s,unsigned long *out,int (*poll)(void),unsigned long ticks){(void)poll;(void)ticks;if(!strcmp(s,"example.test")||!strcmp(s,"127.0.0.1")){*out=0x7f000001;return 0;}return -23045;}
 int NetConnect(NetConn *a,unsigned long b,unsigned short c){(void)a;(void)b;(void)c;network++;return 0;}
 int NetSend(NetConn *a,const void *b,unsigned short n){(void)a;assert(n&&strstr(b,"GET /test HTTP/1.0\r\n"));return 0;}
-long NetAvailable(NetConn *a){(void)a;return stall?0:pos<length?(long)(length-pos):-1;}
+long NetAvailable(NetConn *a){(void)a;return stall?0:pos<length?(long)(length-pos):connectionClosing;}
 long NetRecv(NetConn *a,void *b,unsigned short n,unsigned char c){(void)a;(void)c;if(n>fragment)n=fragment;memcpy(b,response+pos,n);pos+=n;return n;}
 int NetClose(NetConn *a){(void)a;return 0;}
 void say(const char *s){(void)s;}

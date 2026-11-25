@@ -14,6 +14,7 @@ extern int cli_isatty(int);
 extern int app_serial_tty(int);
 extern int app_serial_key(void);
 extern long cli_write(int,const void *,unsigned long);
+#include "serial-cleanup.h"
 /* CLX BSS belongs to this invocation, not the idle terminal. */
 static char input_buffer[4096];
 static int output(const char *s){return cli_write(1,s,strlen(s))<0;}
@@ -98,10 +99,10 @@ int clarice_main(int argc,char **argv){
 end:
  app_serial_tty(0);app_activity_interactive(0);
  /* Cancel pending DMA/interrupt access before stack/image storage is released. */
- if(out&&pending&&((volatile ParamBlockRec *)&write_pb)->ioParam.ioResult>0){int cleanup=KillIO(out);if(!e&&cleanup){e=cleanup;reason="cancel output";}}
+ if(out&&pending){int cleanup=serial_drain(out,&write_pb);if(!e&&cleanup){e=cleanup;reason="cancel output";}}
  /* Restore the receive buffer before closing either half of the shared port. */
- if(in){int cleanup;if(buffer_set){cleanup=SerSetBuf(in,0,0);if(!e&&cleanup){e=cleanup;reason="restore receive buffer";}}cleanup=CloseDriver(in);if(!e&&cleanup){e=cleanup;reason="close input";}}
- if(out){int cleanup=CloseDriver(out);if(!e&&cleanup){e=cleanup;reason="close output";}}
+ if(in){int cleanup=serial_detach(in,&buffer_set);if(!e&&cleanup){e=cleanup;reason="restore receive buffer";}cleanup=serial_close_driver(&in);if(!e&&cleanup){e=cleanup;reason="close input";}}
+ if(out){int cleanup=serial_close_driver(&out);if(!e&&cleanup){e=cleanup;reason="close output";}}
  if(e==userCanceledErr)return 130;if(e)return failure(reason,e);return result;
 usage_error:
  cli_write(2,usage,strlen(usage));return 2;

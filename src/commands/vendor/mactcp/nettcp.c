@@ -136,7 +136,7 @@ long NetAvailable(NetConn *c)
 	OSErr err;
 
 	if (!c->isOpen)
-		return -1;
+		return connectionDoesntExist;
 
 	pb.ioCRefNum = gIPPRefNum;
 	pb.csCode = TCPStatus;
@@ -144,12 +144,14 @@ long NetAvailable(NetConn *c)
 	pb.csParam.status.userDataPtr = nil;
 	err = PBControlSync((ParmBlkPtr)&pb);
 	if (err != noErr)
-		return -1;					/* connection gone */
+		return err;
 	/* Drain queued data, then recognize peer FIN/closed states. MacTCP
 	 * Programmer's Guide TCPStatus: ESTABLISHED = 8. This active-only
 	 * client has already completed TCPActiveOpen before polling here. */
 	if (!pb.csParam.status.amtUnreadData && pb.csParam.status.connectionState != 8)
-		return -1;
+		/* Only CLOSE-WAIT (peer FIN) establishes orderly EOF for an active
+		 * client that has not issued TCPClose. CLOSED/reset is not success. */
+		return pb.csParam.status.connectionState == 14 ? connectionClosing : connectionTerminated;
 	return (long)pb.csParam.status.amtUnreadData;
 }
 
@@ -160,7 +162,7 @@ long NetRecv(NetConn *c, void *buf, unsigned short maxlen, unsigned char timeout
 	OSErr err;
 
 	if (!c->isOpen)
-		return -1;
+		return connectionDoesntExist;
 
 	pb.ioCRefNum = gIPPRefNum;
 	pb.csCode = TCPRcv;
@@ -173,11 +175,6 @@ long NetRecv(NetConn *c, void *buf, unsigned short maxlen, unsigned char timeout
 
 	if (err == noErr)
 		return (long)pb.csParam.receive.rcvBuffLen;	/* bytes actually received */
-
-	/* peer closed, or nothing more arrived in time → "no more data" */
-	if (err == connectionClosing || err == connectionTerminated ||
-		err == commandTimeout || err == connectionDoesntExist)
-		return 0;
 
 	return (long)err; /* OSErr is already negative. */
 }

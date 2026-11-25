@@ -39,13 +39,14 @@ unsigned long NetParseIP(const char *dotted);
 OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port);
 
 /* Non-blocking poll: bytes currently waiting to be read (won't block).
-   Returns >=0 unread bytes, or -1 if the connection is gone. Use this to drive
+   Returns >=0 unread bytes, connectionClosing for drained orderly EOF, or the
+   original negative OSErr on failure. Use this to drive
    a progressive/event-loop receive (read only what's already arrived). */
 long NetAvailable(NetConn *c);
 
 /* Receive up to maxlen bytes into buf, waiting up to timeoutSecs for data.
-   Returns: >0 = bytes received; 0 = peer closed OR timed out (no more data);
-            <0 = (-OSErr) on a real error. Loop until <=0 for a bulk read. */
+   Returns >=0 bytes received; connectionClosing is orderly EOF. Other negative
+   values retain the original OSErr, including timeout/reset. */
 long NetRecv(NetConn *c, void *buf, unsigned short maxlen, unsigned char timeoutSecs);
 
 /* Send len bytes (pushed immediately). Blocks until acked or timeout. */

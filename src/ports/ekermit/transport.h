@@ -33,6 +33,7 @@ static int transport_close(void){int e=0;if(wire>=0){/* Give the PTY bridge time
 #include "../../commands/mac-files.h"
 #include <Serial.h>
 #include <Devices.h>
+#include "../../commands/serial-cleanup.h"
 extern long cli_remote_wire(int,void *,unsigned long);
 static int remote_wire,remote_transfer_failed;
 static short serial_in,serial_out;static char receive_buffer[4096];static int buffer_set;
@@ -55,8 +56,8 @@ static int wire_write(const unsigned char *p,int n){
  ParamBlockRec pb;unsigned long start=ticks();int e;memset(&pb,0,sizeof pb);
  pb.ioParam.ioRefNum=serial_out;pb.ioParam.ioBuffer=(char *)p;pb.ioParam.ioReqCount=n;
  e=PBWriteAsync(&pb);if(e<0)return -1;
- while(((volatile ParamBlockRec *)&pb)->ioParam.ioResult>0){if(yield()||ticks()-start>=300){KillIO(serial_out);return -1;}}
+  while(((volatile ParamBlockRec *)&pb)->ioParam.ioResult>0){if(yield()||ticks()-start>=300){serial_drain(serial_out,&pb);return -1;}}
  return pb.ioParam.ioResult||pb.ioParam.ioActCount!=n?-1:0;
 }
-static int transport_close(void){if(remote_wire){int e=cli_remote_wire(4,0,remote_transfer_failed);remote_wire=0;return e;}int e=0,c;app_serial_input(0);if(serial_in){if(buffer_set)e=SerSetBuf(serial_in,0,0);c=CloseDriver(serial_in);if(!e)e=c;serial_in=0;}if(serial_out){c=CloseDriver(serial_out);if(!e)e=c;serial_out=0;}return e;}
+static int transport_close(void){if(remote_wire){int e=cli_remote_wire(4,0,remote_transfer_failed);remote_wire=0;return e;}int e=0,c;app_serial_input(0);if(serial_in){e=serial_detach(serial_in,&buffer_set);c=serial_close_driver(&serial_in);if(!e)e=c;}if(serial_out){c=serial_close_driver(&serial_out);if(!e)e=c;}return e;}
 #endif
