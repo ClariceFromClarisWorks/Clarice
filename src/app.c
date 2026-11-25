@@ -890,7 +890,7 @@ if(output_paint_ticks==listing_paint_interval&&out_col)listing_partial_frames++;
 long app_terminal_read(void *data,unsigned long count){
  if(!count)return 0;
  if(tty_offset>=tty_count){EventRecord ev;tty_count=tty_offset=tty_ready=0;input[0]=0;cursor=0;tty_reading=1;scrollback=0;activity_hide();dirty=1;
-  while(!tty_ready&&!cancelled&&!done){if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);}
+  while(!tty_ready&&!cancelled&&!done){shell_service_poll(0);if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,6,0))handle(&ev);}
   tty_reading=0;dirty=1;if(cancelled||done){input[0]=0;cursor=0;return -1;}
  }
  unsigned long n=tty_count-tty_offset;if(n>count)n=count;memcpy(data,tty_buffer+tty_offset,n);tty_offset+=n;return n;

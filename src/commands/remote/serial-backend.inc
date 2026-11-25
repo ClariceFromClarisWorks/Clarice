@@ -26,18 +26,20 @@ static int listen_again(void){int e;SerShk h;
 static void pump(void){
  if(!driver||failed)return;unsigned long now=TickCount();if(now==last_pump)return;last_pump=now;
  if(connected&&protected_login&&!session&&now-auth_started>3600){wipe(password,sizeof password);failed=1;return;}
+ send_prompt();
  if(send_pending){int e=((volatile ParamBlockRec*)&driver->sending)->ioParam.ioResult;if(e>0){if(now-send_tick>300)failed=1;}else{send_pending=0;if(e||driver->sending.ioParam.ioActCount!=driver->sending.ioParam.ioReqCount)failed=1;}}
  if(!send_pending&&used&&!failed){memcpy(driver->send,output,used);memset(&driver->sending,0,sizeof driver->sending);driver->sending.ioParam.ioRefNum=driver->out;driver->sending.ioParam.ioBuffer=(Ptr)driver->send;driver->sending.ioParam.ioReqCount=used;used=0;
   if(PBWriteAsync(&driver->sending)<0)failed=1;else{send_pending=1;send_tick=now;}}
  if(closing&&!used&&!send_pending){failed=1;return;}
+ receive_pending();if(received_count||used)return;
  SerStaRec status;long count=0;if(SerStatus(driver->in,&status)||status.cumErrs||SerGetBuf(driver->in,&count)){failed=1;return;}
- if(count){char data[256];if(count>sizeof data)count=sizeof data;if(FSRead(driver->in,&count,data)){failed=1;return;}
+ if(count){if(count>sizeof received)count=sizeof received;if(FSRead(driver->in,&count,received)){failed=1;return;}
   if(!connected){/* Return wakes a serial login; cable removal has no reliable carrier indication. */
-   for(long i=0;i<count;i++)if(data[i]=='\r'||data[i]=='\n'){
+   for(long i=0;i<count;i++)if(received[i]=='\r'||received[i]=='\n'){
     if(auth_retry&&(long)(now-auth_retry)<0)return;
-    connected=1;after_cr=data[i]=='\r';engine=(void*)1;auth_started=now;app_remote_indicator(1,1);text("Clarice serial shell (unencrypted; one session)\nPassword: ");break;
+    connected=1;after_cr=received[i]=='\r';engine=(void*)1;auth_started=now;app_remote_indicator(1,1);text("Clarice serial shell (unencrypted; one session)\nPassword: ");break;
    }return;
   }
-  for(long i=0;i<count;i++)character((unsigned char)data[i]);
+  received_count=count;receive_pending();
  }
 }

@@ -1,7 +1,7 @@
 #include "../../src/commands/remote/telnetd.c"
 #include <assert.h>
 static int cancel_auth,fail_listen,fail_register,release_fail,startup_pauses;static unsigned allocations,execs,session_opens,indicator_ons;static int fail_memory;static int alive,abort_delay,hang_send;static TCPiopb *pending_open,*pending_send;
-static char incoming[2048],wire[16384];static unsigned in_count,wire_count;static unsigned long ticks=1;
+static char incoming[2048],wire[262144];static unsigned in_count,wire_count;static unsigned long ticks=1;
 Ptr NewPtrSys(unsigned long n){if(fail_memory)return NULL;Ptr p=malloc(n);if(p)allocations++;return p;}
 Ptr NewPtrSysClear(unsigned long n){Ptr p=NewPtrSys(n);if(p)memset(p,0,n);return p;}
 void DisposePtr(Ptr p){assert(p);assert(p!=(Ptr)driver||!alive);allocations--;free(p);}
@@ -15,16 +15,17 @@ case TCPRelease:assert(!pending_open&&!pending_send);if(release_fail){release_fa
 case TCPStatus:p->csParam.status.amtUnreadData=in_count;p->csParam.status.connectionState=8;break;
 case TCPRcv:{unsigned n=p->csParam.receive.rcvBuffLen;if(n>in_count)n=in_count;memcpy(p->csParam.receive.rcvBuff,incoming,n);memmove(incoming,incoming+n,in_count-n);in_count-=n;p->csParam.receive.rcvBuffLen=n;break;}
 default:break;}return 0;}
-short PBControlAsync(ParmBlkPtr p0){TCPiopb *p=p0;p->ioResult=1;if(p->csCode==TCPPassiveOpen){if(fail_listen){p->ioResult=-36;return -36;}assert(!p->csParam.open.remoteHost&&!p->csParam.open.remotePort);pending_open=p;}else if(p->csCode==TCPClose){p->ioResult=0;}else if(p->csCode==TCPSend){assert(!pending_send);pending_send=p;if(!hang_send){memcpy(wire+wire_count,driver->send,driver->wds.length);wire_count+=driver->wds.length;p->ioResult=0;pending_send=0;}}return 0;}
+short PBControlAsync(ParmBlkPtr p0){TCPiopb *p=p0;p->ioResult=1;if(p->csCode==TCPPassiveOpen){if(fail_listen){p->ioResult=-36;return -36;}assert(!p->csParam.open.remoteHost&&!p->csParam.open.remotePort);pending_open=p;}else if(p->csCode==TCPClose){p->ioResult=0;}else if(p->csCode==TCPSend){assert(!pending_send);pending_send=p;if(!hang_send){assert(wire_count+driver->wds.length<=sizeof wire);memcpy(wire+wire_count,driver->send,driver->wds.length);wire_count+=driver->wds.length;p->ioResult=0;pending_send=0;}}return 0;}
 long cli_write(int fd,const void *p,unsigned long n){(void)fd;(void)p;return n;}
 int cli_service_register_slot(int slot,const ClariceService *p){assert(slot==0);assert(p->poll==poll_service&&p->stop==stop);return fail_register;}
+int cli_service_register_status_slot(int slot,const ClariceService *s,int (*status)(void)){assert(status==listener_status);return cli_service_register_slot(slot,s);}
 void *cli_session_open(const ClariceSessionIO *p){assert(p->read&&p->write&&p->cancelled);session_opens++;return (void*)1;}
 int cli_session_close(void *p){assert(p==(void*)1);return 0;}
 void cli_session_prompt(void *p,char *out,unsigned long cap){(void)p;snprintf(out,cap,"/ > ");}
 int cli_session_run(void *p,const char *cmd){assert(p==(void*)1);assert(!strcmp(cmd,"echo good"));execs++;return 0;}
 int app_yield(void){pump();return cancel_auth;}
 int cli_pause_ticks(unsigned long n){assert(n==1);startup_pauses++;ticks++;if(abort_delay)abort_delay--;assert(driver&&alive&&allocations);return cancel_auth;}
-static void feed_bytes(const char *p,unsigned n){in_count=n;assert(in_count<sizeof incoming);memcpy(incoming,p,in_count);while(in_count)pump();}
+static void feed_bytes(const char *p,unsigned n){in_count=n;assert(in_count<sizeof incoming);memcpy(incoming,p,in_count);while(in_count||received_count||used)pump();}
 static void feed(const char *p){feed_bytes(p,strlen(p));}
 /* Configuration native boundary: independently exercised in Snow. */
 static char config_fixture[256];
@@ -71,6 +72,24 @@ int main(void){char *av[]={"telnetd","--no-password","--peer","10.0.0.1",0};
  feed("echo bad\033[D\003");assert(!line_used&&!line_cursor&&!escape);
  feed("echo\tgood\033[D\033[C\025");assert(!line_used&&!line_cursor);
  feed("\033[123456789~");assert(!line_used&&!escape);
+
+ /* A valid paste into a long line amplifies echo; hold a native send while
+    the bounded receive batch waits, then release it without losing input. */
+ char tail[701],paste[301];memset(tail,'t',700);tail[700]=0;memset(paste,'p',300);paste[300]=0;
+ for(unsigned cycle=0;cycle<5;cycle++){
+  feed(tail);feed("\033[H");hang_send=1;text("held");pump();assert(pending_send);
+  memcpy(incoming,paste,300);in_count=300;pump();assert(!failed&&used<=QUEUE);
+  unsigned held_at=received_at;for(unsigned k=0;k<8;k++)pump();assert(!failed&&received_at==held_at);
+  pending_send->ioResult=0;pending_send=0;hang_send=0;
+  while(in_count||received_count||used)pump();
+  assert(!failed&&line_used==1000&&line_cursor==300&&!memcmp(line,paste,300)&&!memcmp(line+300,tail,700));
+  feed("\010\033[C\033[D");assert(line_used==999&&line_cursor==299);
+  feed("\025");assert(!line_used&&!line_cursor&&!failed);
+ }
+ /* Largest history replacement including bytes doubled by Telnet IAC. */
+ memset(previous,255,LINE-1);previous[LINE-1]=0;feed(tail);feed("\033[A");
+ assert(line_used==LINE-1&&line_cursor==LINE-1&&!failed);feed("\033[B");assert(!line_used&&!failed);previous[0]=0;
+ puts("PASS bounded echo: five 1000-byte mid-line paste cycles, stalled sends, cursor/backspace, 1023-byte IAC history; no disconnect or lost bytes");
  feed("echo good\r\n");assert(!execs);poll_service(1);assert(execs==1);
  char longline[1500];memset(longline,'x',sizeof longline-1);longline[sizeof longline-1]=0;feed(longline);feed("\r");poll_service(1);assert(execs==1&&!ready_used);
  feed("echo good\r\n");poll_service(1);assert(execs==2);
@@ -86,6 +105,14 @@ int main(void){char *av[]={"telnetd","--no-password","--peer","10.0.0.1",0};
  text("LOGOUT_LAST");closing=1;pump();pump();pump();assert(failed);poll_service(0);assert(pending_open);complete_open(peer);
  feed("bad\003");assert(!line_used&&!ready_used&&!interrupted);
  hang_send=1;text("pending");pump();assert(pending_send);abort_delay=1;assert(stop());assert(driver&&alive&&pending_send);abort_delay=0;assert(!stop());assert(!allocations&&!alive&&!pending_send);
+
+ /* A registered listener can fail/retry; never call that state listening. */
+ failed=used=closing=retry_tick=0;hang_send=0;assert(!clarice_main(4,av));assert(listener_status()==0);
+ complete_open(peer);assert(listener_status()==1);failed=1;fail_listen=1;poll_service(0);
+ assert(failed&&listener_status()==-36&&driver&&alive);unsigned long retry=retry_tick;
+ poll_service(0);assert(retry_tick==retry);fail_listen=0;ticks=retry;poll_service(0);
+ assert(!failed&&pending_open&&listener_status()==0&&!session);assert(!stop()&&!allocations&&!alive);
+ puts("PASS listener: listening/connected/native-failure/retry/recovery; failed listener retries throttled to one second");
  /* Reconnection resets both command state and native buffer ownership. */
  failed=used=line_used=ready_used=ready_at=0;hang_send=0;assert(!clarice_main(4,av));complete_open(peer);failed=1;poll_service(0);assert(pending_open&&!session&&!engine);assert(!stop());assert(!allocations&&!alive);
 

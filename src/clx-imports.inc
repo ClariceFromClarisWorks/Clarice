@@ -96,6 +96,7 @@
  CLX_IMPORT("cli_service_enabled_slot", cli_service_enabled_slot)
  CLX_IMPORT("cli_service_register", cli_service_register)
  CLX_IMPORT("cli_service_register_slot", cli_service_register_slot)
+ CLX_IMPORT("cli_service_register_status_slot", cli_service_register_status_slot)
  CLX_IMPORT("cli_service_stop", cli_service_stop)
  CLX_IMPORT("cli_service_stop_slot", cli_service_stop_slot)
  CLX_IMPORT("cli_session_close", cli_session_close)

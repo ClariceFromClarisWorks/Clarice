@@ -41,7 +41,7 @@ long app_screen_read(void *p,unsigned long n){if(!editor_screen)return -1;
 #ifdef CLARICE_INPUT_DIAGNOSTICS
  if(probe_curses){probe_curses=0;screen_key(30,0);screen_key('z',0);screen_key(3,1);screen_key('q',0);}
 #endif
-while(!editor_screen->count&&!cancelled&&!done){EventRecord ev;if(dirty)draw();
+while(!editor_screen->count&&!cancelled&&!done){EventRecord ev;shell_service_poll(0);if(dirty)draw();
 #ifdef CLARICE_NANO_PERF
 app_nano_mark(8);
 #endif

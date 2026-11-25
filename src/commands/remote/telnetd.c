@@ -56,10 +56,15 @@ static void *session;
 static unsigned long peer;
 static unsigned short port;
 static int connected,running,failed,interrupted,send_pending,opening_pending,closing;
-static unsigned long send_tick,last_pump;
+static unsigned long send_tick,last_pump,retry_tick;
+static int listener_error;
 static char output[QUEUE],line[LINE],ready[QUEUE],previous[LINE];
 static unsigned used,line_used,line_cursor,ready_used,ready_at;
-static int bad_line,after_cr,escape,eof_pending;
+/* Retain a bounded native receive batch while amplified echo drains. Native
+ * TCP receive-window backpressure owns the rest; no recursive event pumping. */
+static char received[256];
+static unsigned received_at,received_count;
+static int bad_line,after_cr,escape,eof_pending,prompt_pending;
 extern void *cli_alloc(unsigned long);
 extern void cli_free(void *);
 static unsigned char *binary_input;
@@ -79,7 +84,8 @@ static void terminal_text(const char *p,unsigned long n){
 #endif
  telnet_send_text(engine,p,n);
 }
-static void prompt(void){char p[132];cli_session_prompt(session,p,sizeof p);terminal_text(p,strlen(p));}
+static void prompt(void){prompt_pending=1;}
+static void send_prompt(void){if(prompt_pending&&!used&&engine&&session&&!failed){char p[132];cli_session_prompt(session,p,sizeof p);terminal_text(p,strlen(p));prompt_pending=0;}}
 static void text(const char *s){if(engine)terminal_text(s,strlen(s));}
 static void echo_text(const char *s){if(engine&&clarice_telnet_enabled(engine,TELNET_TELOPT_ECHO,1))text(s);}
 /* NVT backspace redraw works without claiming a full-screen terminal. */
@@ -97,6 +103,17 @@ static void line_tail(void){
 }
 static void line_clear(void){
  line_left(line_cursor);for(unsigned i=0;i<line_used;i++)echo_text(" ");line_left(line_used);line_used=line_cursor=0;
+}
+/* Replace history in one pass: even IAC-escaped bytes fit the 4 KiB queue. */
+static void line_history(int recall){
+ unsigned old=line_used;line_left(line_cursor);line_used=line_cursor=0;
+ if(recall){strcpy(line,previous);line_used=line_cursor=strlen(line);line_echo(line,line_used);}
+ if(old>line_used){for(unsigned i=line_used;i<old;i++)echo_text(" ");line_left(old-line_used);}
+}
+static void line_insert(const char *p,unsigned n){
+ unsigned room=LINE-1-line_used;if(n>room){n=room;bad_line=1;}
+ memmove(line+line_cursor+n,line+line_cursor,line_used-line_cursor);
+ memcpy(line+line_cursor,p,n);line_cursor+=n;line_used+=n;line_echo(p,n);line_tail();
 }
 static void interrupt(void){if(binary_input){interrupted=1;return;}if(protected_login&&!session){wipe(password,sizeof password);failed=1;return;}interrupted=1;line_used=line_cursor=ready_used=ready_at=bad_line=escape=0;text("^C\n");if(!running){interrupted=0;prompt();}}
 static void character(unsigned char c){
@@ -129,7 +146,7 @@ static void character(unsigned char c){
    else if(c=='C'){if(line_cursor<line_used){line_echo(line+line_cursor,1);line_cursor++;}}
    else if(c=='H'){line_left(line_cursor);line_cursor=0;}
    else if(c=='F'){line_echo(line+line_cursor,line_used-line_cursor);line_cursor=line_used;}
-   else if(c=='A'||c=='B'){line_clear();if(c=='A'){strcpy(line,previous);line_used=line_cursor=strlen(line);line_echo(line,line_used);}}
+   else if(c=='A'||c=='B')line_history(c=='A');
    else if(c>=0x20&&c<0x40)return; /* consume bounded CSI parameters */
   }escape=0;return;
  }
@@ -139,13 +156,37 @@ static void character(unsigned char c){
  if(c==21){line_clear();return;}
  if(c<32&&c!='\t')return;
  if(line_used>=LINE-1){bad_line=1;return;}
- memmove(line+line_cursor+1,line+line_cursor,line_used-line_cursor);line[line_cursor++]=c;line_used++;line_echo((char*)&c,1);line_tail();
+ line_insert((char*)&c,1);
+}
+/* Coalesce printable paste runs: redraw the tail once, not once per byte. */
+static int printable(unsigned char c){return c>=32&&c!=127&&c!=255;}
+static void characters(const char *p,unsigned n){
+ while(n){unsigned k=0;
+  if(!binary_input&&(!protected_login||session)&&!closing&&!bad_line&&!escape)
+   while(k<n&&printable((unsigned char)p[k]))k++;
+  if(k){after_cr=0;line_insert(p,k);p+=k;n-=k;}else{character((unsigned char)*p++);n--;}
+ }
+}
+/* One action needs at most 4092 echo bytes (including doubled IAC). Drain
+ * existing output first. Escape/protocol bytes stay with the upstream parser. */
+static void receive_pending(void){
+ while(received_at<received_count&&!used&&!failed){unsigned n=1;
+  if(!escape&&printable((unsigned char)received[received_at]))
+   while(received_at+n<received_count&&printable((unsigned char)received[received_at+n]))n++;
+#ifdef REMOTE_SERIAL
+  characters(received+received_at,n);
+#else
+  telnet_recv(engine,received+received_at,n);
+#endif
+  received_at+=n;
+ }
+ if(received_at==received_count)received_at=received_count=0;
 }
 #ifndef REMOTE_SERIAL
 static void event(telnet_t *t,telnet_event_t *e,void *ctx){(void)t;(void)ctx;
  switch(e->type){
  case TELNET_EV_SEND:if(e->data.size>QUEUE-used){failed=1;break;}memcpy(output+used,e->data.buffer,e->data.size);used+=e->data.size;break;
- case TELNET_EV_DATA:for(size_t i=0;i<e->data.size;i++)character((unsigned char)e->data.buffer[i]);break;
+ case TELNET_EV_DATA:characters(e->data.buffer,e->data.size);break;
  case TELNET_EV_IAC:if(e->iac.cmd==TELNET_IP||e->iac.cmd==TELNET_BREAK)interrupt();else if(e->iac.cmd==TELNET_EC)character(8);else if(e->iac.cmd==TELNET_EL)character(21);break;
  case TELNET_EV_ERROR:case TELNET_EV_WARNING:failed=1;break;
  default:break;
@@ -221,6 +262,7 @@ static void pump(void){
  }
  if(!connected)return;
  if(protected_login&&!session&&now-auth_started>3600){wipe(password,sizeof password);failed=1;return;}
+ send_prompt();
  if(send_pending){if((*(volatile short*)&driver->sending.ioResult)==1){if(TickCount()-send_tick>600)failed=1;}else{send_pending=0;if(driver->sending.ioResult)failed=1;}}
  if(!send_pending&&used&&!failed){memcpy(driver->send,output,used);driver->wds.length=used;driver->wds.ptr=(Ptr)driver->send;driver->wds.end=0;used=0;
   pb_init(&driver->sending,TCPSend);driver->sending.csParam.send.wdsPtr=(Ptr)&driver->wds;driver->sending.csParam.send.pushFlag=1;
@@ -231,12 +273,13 @@ static void pump(void){
   pb_init(&driver->opening,TCPClose);driver->opening.csParam.close.ulpTimeoutValue=5;driver->opening.csParam.close.ulpTimeoutAction=1;driver->opening.csParam.close.validityFlags=0xc0;
   if(PBControlAsync((ParmBlkPtr)&driver->opening))failed=1;else{closing=2;opening_pending=1;}return;
  }
+ receive_pending();if(received_count||used)return;
  TCPiopb p;pb_init(&p,TCPStatus);if(PBControlSync((ParmBlkPtr)&p)){failed=1;return;}
  unsigned long available=p.csParam.status.amtUnreadData;
  if(!available){if(p.csParam.status.connectionState!=8)failed=1;return;}
- char bytes[256];if(available>sizeof bytes)available=sizeof bytes;
- pb_init(&p,TCPRcv);p.csParam.receive.rcvBuff=bytes;p.csParam.receive.rcvBuffLen=available;p.csParam.receive.commandTimeoutValue=1;
- if(PBControlSync((ParmBlkPtr)&p)){failed=1;return;}telnet_recv(engine,bytes,p.csParam.receive.rcvBuffLen);
+ if(available>sizeof received)available=sizeof received;
+ pb_init(&p,TCPRcv);p.csParam.receive.rcvBuff=received;p.csParam.receive.rcvBuffLen=available;p.csParam.receive.commandTimeoutValue=1;
+ if(PBControlSync((ParmBlkPtr)&p)){failed=1;return;}received_count=p.csParam.receive.rcvBuffLen;receive_pending();
 }
 #endif
 /* Raw bytes are owned only for a foreground transfer. LibTelnet still handles
@@ -256,12 +299,18 @@ static long session_wire(int op,void *data,unsigned long size){
 }
 static int stop(void){if(running)return -1;if(release_stream())return -1;
  if(session){cli_session_close(session);session=0;}if(engine){telnet_free(engine);engine=0;}
- session_wire(4,0,0);if(driver){DisposePtr((Ptr)driver);driver=0;}wipe(password,sizeof password);wipe(verifier,sizeof verifier);return 0;
+ session_wire(4,0,0);received_at=received_count=prompt_pending=0;if(driver){DisposePtr((Ptr)driver);driver=0;}wipe(password,sizeof password);wipe(verifier,sizeof verifier);return 0;
+}
+static int listener_status(void){
+#ifndef REMOTE_SERIAL
+ if(opening_pending&&!connected&&driver->opening.ioResult<0)return driver->opening.ioResult;
+#endif
+ return failed?(listener_error?listener_error:2):connected?1:0;
 }
 static void poll_service(int execute){
  pump();
- if(failed&&!running){if(release_stream())return;if(session){cli_session_close(session);session=0;}if(engine){telnet_free(engine);engine=0;}
-  used=line_used=line_cursor=ready_used=ready_at=bad_line=after_cr=escape=interrupted=eof_pending=closing=0;previous[0]=0;wipe(password,sizeof password);auth_pending=auth_length=auth_overflow=0;failed=0;if(listen_again())failed=1;return;}
+ if(failed&&!running){unsigned long now=TickCount();if(retry_tick&&(long)(now-retry_tick)<0)return;retry_tick=now+60;int e=release_stream();if(e){listener_error=e;return;}if(session){cli_session_close(session);session=0;}if(engine){telnet_free(engine);engine=0;}
+  received_at=received_count=prompt_pending=used=line_used=line_cursor=ready_used=ready_at=bad_line=after_cr=escape=interrupted=eof_pending=closing=0;previous[0]=0;wipe(password,sizeof password);auth_pending=auth_length=auth_overflow=0;failed=0;listener_error=listen_again();if(listener_error)failed=1;else retry_tick=0;return;}
  if(execute&&auth_pending&&!session&&!failed){
   unsigned char result[32];int e=derive(password,result);unsigned difference=0;for(int i=0;i<32;i++)difference|=result[i]^verifier[i];wipe(result,sizeof result);wipe(password,sizeof password);
   auth_pending=0;if(e||difference||auth_overflow||!auth_length){text("\nAuthentication failed.\n");auth_retry=TickCount()+300;closing=1;return;}
@@ -290,10 +339,10 @@ int clarice_main(int argc,char **argv){int explicit_no_password=0;port=SERVICE_S
  OSErr start_error=NetInit();if(start_error){char message[128];snprintf(message,sizeof message,"telnetd: %s (Mac OS %d)\n",NetErrStr(start_error),start_error);cli_write(2,message,strlen(message));return 1;}driver=(DriverStorage*)NewPtrSysClear(sizeof *driver);if(!driver)return 1;
 #ifdef REMOTE_SERIAL
  if(listen_again()){if(!release_stream()){DisposePtr((Ptr)driver);driver=0;}return 1;}
- ClariceService service={poll_service,stop};if(cli_service_register_slot(SERVICE_SLOT,&service)){stop();return 1;}
+ ClariceService service={poll_service,stop};if(cli_service_register_status_slot(SERVICE_SLOT,&service,listener_status)){stop();return 1;}
 #else
  if(listen_again())goto startup_failed;
- ClariceService service={poll_service,stop};if(cli_service_register_slot(SERVICE_SLOT,&service))goto startup_failed;
+ ClariceService service={poll_service,stop};if(cli_service_register_status_slot(SERVICE_SLOT,&service,listener_status))goto startup_failed;
 #endif
  const char *m=SERVICE_NAME " enabled for the configured endpoint. Unencrypted; use remote off to stop.\n";cli_write(1,m,strlen(m));return 0;
 #ifndef REMOTE_SERIAL

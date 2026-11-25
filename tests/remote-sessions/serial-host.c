@@ -19,6 +19,7 @@ int KillIO(short r){(void)r;if(delay_abort)return -1;if(pending){pending->ioPara
 int app_yield(void){return 0;}long cli_write(int fd,const void *p,unsigned long n){(void)fd;(void)p;return n;}
 void app_remote_indicator(int slot,int state){assert(slot==1);(void)state;}
 int cli_service_register_slot(int slot,const ClariceService *s){assert(slot==1&&s->poll==poll_service);return 0;}
+int cli_service_register_status_slot(int slot,const ClariceService *s,int (*status)(void)){assert(status==listener_status);return cli_service_register_slot(slot,s);}
 int cli_service_stop_slot(int slot){assert(slot==1);return stop();}int cli_service_enabled_slot(int slot){assert(slot==1);return driver!=0;}
 int app_remote_settings(ClariceRemoteSettings *s){(void)s;return 0;}int app_serial_remote_settings(ClariceRemoteSettings *s){(void)s;return 0;}
 int cli_file_open(const char *p,const char *m){(void)p;(void)m;return -1;}long cli_file_read(int r,void *p,unsigned long n){(void)r;(void)p;(void)n;return -1;}
@@ -29,7 +30,7 @@ void *cli_session_open(const ClariceSessionIO *io){assert(io->read&&io->write);r
 int cli_session_set_wire(void *p,ClariceSessionWire w){assert(p==(void*)1&&w==session_wire);return 0;}
 void cli_session_prompt(void *p,char *b,unsigned long n){assert(p==(void*)1);snprintf(b,n,"/ > ");}
 int cli_session_run(void *p,const char *cmd){assert(p==(void*)1&&!strcmp(cmd,"echo good"));executed++;return 0;}
-static void feed(const char *p,unsigned n){assert(n<=sizeof input);memcpy(input,p,n);input_size=n;while(input_size)pump();}
+static void feed(const char *p,unsigned n){assert(n<=sizeof input);memcpy(input,p,n);input_size=n;while(input_size||received_count||used)pump();}
 int main(void){
  peer=1;port=57600;protected_login=1;memset(salt,0,sizeof salt);assert(!derive("test",verifier));driver=(DriverStorage*)NewPtrSysClear(sizeof *driver);assert(!listen_again());
  feed("\r",1);assert(connected&&!session);feed("test\r\necho bad\r\n",16);poll_service(1);assert(session&&!ready_used&&!executed);
