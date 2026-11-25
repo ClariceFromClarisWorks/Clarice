@@ -1,0 +1,1 @@
+PASS 101 Data files: both forks and MacBinary Finder metadata byte-identical after app-only uninstall

@@ -1,0 +1,2 @@
+Core-only confirmation Cancel exact disk equality: True
+Full Data confirmation Cancel exact disk equality: True

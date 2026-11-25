@@ -1,5 +1,25 @@
 # Clarice current state
 
+## Installer C — 26 November 2026
+
+Build **2026111978**, product **f571f7c**, local main. Native Uninstall defaults to
+Core-only removal with all Data preserved; full Data deletion requires explicit
+confirmation. Existing location/catalog identification, native File Manager IDs
+and catalog-last retry preserve path safety without another recovery architecture.
+
+Host fault/reset/cancellation tests and normal68000 System6 Snow pass: no-write
+Cancel, custom/legacy removal, locked-file failure/retry, invalid-record refusal,
+101 unchanged Data files/forks/metadata, retained siblings and successful custom
+reinstall. Ten commands show stable heap and zero retained command allocations.
+Core/helper sizes unchanged; installer CODE +4861 bytes; partition unchanged.
+[Acceptance and limitations](installer-c/REPORT.md).
+
+**Publication pending:** verified coherent51-entry/36-payload distribution and
+offline packages staged in `work/installer-c/publication`; Macintosh Exchange is
+unmounted. Canonical HTTP remains1977 unchanged. Remount, publish and verify the
+existing artifacts; no further implementation is required. Recovery material and
+unrelated work preserved. No hardware access or GitHub push. Stop after Installer C.
+
 ## Installer B — 26 November 2026
 
 Accepted build **2026111977**, product **f67102f**, local main. Native same-volume

@@ -1,0 +1,10 @@
+Using multiversal interfaces
+/src/work/installer-c/accepted-full.hda: contains 1 HFS partition
+Volume name is "Sys6Unix"
+Volume was created on Tue Nov 24 10:32:24 2026
+Volume was last modified on Wed Nov 25 16:59:18 2026
+Volume has 20115968 bytes free
+f  TEST/FPts     66232      8476 Nov 25 07:30 Sentinel
+/Retro68-build/toolchain/bin/hls: ":System Folder:Clarice Locations": no such file or directory
+f  APPL/CLRC    439822         0 Nov 25 12:37 :Saved Clarice
+f  APPL/CLRC    425043         0 Nov 24 10:41 :Saved Previous

@@ -1,0 +1,4 @@
+PASS native uninstall: app-only preservation; full literal native tree; siblings/forks/metadata; 55 I/O/disk-full/interruption retry boundaries; locks, cancellation, invalid/missing authority, foreign Core; zero allocations
+PASS uninstall native confirmations: app-only default, full Data opt-in, Cancel at both stages, no install/launch side effects
+PASS native confirmation: five no-write cancellation forms; dialog allocation failure; cancellation before and during backend; one-shot success/handoff; initialization and disk-full errors; bounded progress/text
+PASS installer decision precedes terminal/shell/namespace initialization; narrow installer init excludes history and profile execution
