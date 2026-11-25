@@ -1,0 +1,5 @@
+Assertion failed: (!failed), function main, file baseline-host.c, line 68.
+
+Expected baseline failure: 256-byte mid-line paste overflows echo queue.
+Assertion failed: (polls==events), function WaitNextEvent, file baseline-input.c, line 13.
+Expected pre-fix local wait failure: no service progress before native input wait.

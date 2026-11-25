@@ -1,0 +1,57 @@
+[
+  {
+    "test": "remote status",
+    "status": 0,
+    "text": "remote status; printf '\\nREMOTE_END_1:%d\\n' $?\r\nTelnet service connected\r\nSerial service disabled\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_2:%d\\n' $?\r\napp=323598 largest=323092 system=45622 largest=45508\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=323648 largest=323092 image=164 ticks=27 load=25 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=2 imports=0 relocations=0 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "test": "1000-byte mid-line paste/backspace/wrapped command",
+    "cycle": 0,
+    "host_seconds": 0.527590875,
+    "wire_bytes": 9058
+  },
+  {
+    "test": "1000-byte mid-line paste/backspace/wrapped command",
+    "cycle": 1,
+    "host_seconds": 0.4539749580000001,
+    "wire_bytes": 9058
+  },
+  {
+    "test": "1000-byte mid-line paste/backspace/wrapped command",
+    "cycle": 2,
+    "host_seconds": 0.4521727499999999,
+    "wire_bytes": 9058
+  },
+  {
+    "test": "1000-byte mid-line paste/backspace/wrapped command",
+    "cycle": 3,
+    "host_seconds": 0.5069190000000003,
+    "wire_bytes": 9058
+  },
+  {
+    "test": "1000-byte mid-line paste/backspace/wrapped command",
+    "cycle": 4,
+    "host_seconds": 0.49881137499999983,
+    "wire_bytes": 9058
+  },
+  {
+    "test": "echo RECOVERED; status runtime",
+    "status": 0,
+    "text": "echo RECOVERED; status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nRECOVERED\r\nRuntime: heap=323260 largest=321322 image=164 ticks=27 load=25 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=2 imports=0 relocations=0 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_5:%d\\n' $?\r\napp=323598 largest=321322 system=45622 largest=45508\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  }
+]

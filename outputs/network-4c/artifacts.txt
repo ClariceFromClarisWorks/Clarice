@@ -1,0 +1,6 @@
+PASS normal 68000 sealed build: 35 actual CLX images/imports, 49 standard commands.
+PASS guest readback: Core data/resource payload/map and Finder type/creator; exact optional Telnetd image.
+PASS offline HDA readback: Core, 49 utilities, Release, native Installer and independent Recover application.
+PASS complete offline tar: every regular file equals the sealed kit.
+Native application comparisons allow only documented mutable resource-fork reserved bytes 16..127; meaningful resource bytes and maps match.
+PASS previous1972 Build manifest: offline/recovery/source/seal and optional Telnetd still match their original SHA256 on HTTP storage and AFP.

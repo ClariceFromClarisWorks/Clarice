@@ -1,0 +1,6 @@
+{
+  "injected": "TCPCreate -36 for ten seconds after first connection",
+  "status": 0,
+  "text": "cat /tmp/retrying; remote status; status runtime; netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\nTelnet service retrying (Mac OS -36)\r\nSerial service disabled\r\nTelnet service connected\r\nSerial service disabled\r\nRuntime: heap=322354 largest=321290 image=10056 ticks=41 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\napp=322180 largest=321290 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+  "recovered": true
+}

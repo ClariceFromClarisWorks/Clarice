@@ -1,0 +1,161 @@
+[
+  {
+    "test": "test \"$(cat /tmp/overlap)\" = 0 && test \"$(cat /tmp/localread)\" = answer && test \"$(cat /tmp/localcancel)\" = 130 && test \"$(cat /tmp/editorstatus)\" = 130",
+    "status": 0,
+    "text": "test \"$(cat /tmp/overlap)\" = 0 && test \"$(cat /tmp/localread)\" = answer && test \"$(cat /tmp/localcancel)\" = 130 && test \"$(cat /tmp/editorstatus)\" = 130; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "remote Ctrl+C prompt",
+    "host_seconds": 0.30978970900000036,
+    "text": "sleep 100\r\n^C\r\n/ > "
+  },
+  {
+    "test": "test \"$?\" = 130 && echo cancel-recovered",
+    "status": 0,
+    "text": "test \"$?\" = 130 && echo cancel-recovered; printf '\\nREMOTE_END_2:%d\\n' $?\r\ncancel-recovered\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=25 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=5 validate=2 imports=0 relocations=0 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=23 load=20 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=24 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=3 imports=0 relocations=0 prepare=3 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=3 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=23 load=20 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=0 relocations=0 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=25 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=2 imports=0 relocations=0 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=23 load=20 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=0 relocations=0 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=23 load=20 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=25 load=20 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=23 load=20 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=0 imports=0 relocations=0 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=25 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=2 imports=0 relocations=0 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=23 load=20 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=0 imports=1 relocations=0 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "netheap2",
+    "status": 0,
+    "text": "netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323564 largest=321126 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "printf okay; status runtime",
+    "status": 0,
+    "text": "printf okay; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nokayRuntime: heap=323208 largest=321126 image=164 ticks=25 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=2 imports=0 relocations=0 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "12 connect/run/disconnect cycles native heap",
+    "values": [
+      323564,
+      321126,
+      45622,
+      45508
+    ],
+    "stable": true
+  },
+  {
+    "test": "cat /tmp/listening /tmp/disabled /tmp/onheap /tmp/offheap /tmp/offread",
+    "status": 0,
+    "text": "cat /tmp/listening /tmp/disabled /tmp/onheap /tmp/offheap /tmp/offread; printf '\\nREMOTE_END_1:%d\\n' $?\r\nTelnet service listening\r\nSerial service disabled\r\nTelnet service disabled\r\nSerial service disabled\r\napp=324582 largest=321144 system=45622 largest=45508\r\napp=355118 largest=352064 system=66322 largest=66208\r\n0\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "test \"$(cat /tmp/offread)\" = 0 && status runtime",
+    "status": 0,
+    "text": "test \"$(cat /tmp/offread)\" = 0 && status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=322492 largest=321126 image=10056 ticks=42 load=34 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=3 imports=2 relocations=1 prepare=5 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=3 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "disabled service input/status and restart",
+    "passed": true
+  }
+]

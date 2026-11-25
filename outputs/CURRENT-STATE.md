@@ -2,22 +2,28 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest accepted normal build **2026111972**, product **dbaca7c**, local main: Batch4B cooperative TCP
-and native cleanup ownership. Foreground connect/send/receive/close yield through
-existing events; failed teardown retains its command or pre-registration Telnetd
-owner until safe release. Native cancellation is130. No new resident allocation,
-startup work or receive buffer. [Focused evidence](network-4b/REPORT.md): host
-fault/sanitizer tests and normal68000 Snow pass; FTP/HTTP/Telnet, cancellation,
-reconnection and repeated native heaps stable. Dual rings32784 system bytes,
-all returned. A permanently broken driver must keep cleanup waiting for safety.
-Snow's accelerated NAT refusal timing is separated from passing1x refusal tests.
-Physical acceptance remains pending. Prior Batch4A serial/EOF fixes preserved.
+Latest accepted normal build **2026111973**, product **27b8fbf**, local main: Batch4C
+remote service responsiveness. Canonical read and vi/nano waits poll services
+without executing remote commands. Bounded paste batching/backpressure preserves
+valid long edits; listener status distinguishes listening, connected and retrying
+with native errors. Original service registration remains compatible. Prior4A/4B
+native ownership and transport corrections retained.
+
+[Focused evidence](network-4c/REPORT.md): host sanitizer/fault tests and normal68000
+Snow pass, including deferred command execution, cancellation, listener retry,
+reconnection and exact long-command output. Twelve repeated cycles have identical
+native heaps and zero retained command allocations. Core status state+8bytes;
+optional service state+276bytes, native system buffers unchanged. Physical
+acceptance remains pending; visual wrapping across remote clients is not exhaustively
+validated. Password verification retains its existing execution-slot deferral.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Build1972:51 entries/36 payloads, source/seal,
-offline tar/HDA and optional Telnetd verified on both sources
-([verification](network-4b/verification.json)). Prior1971 recovery/distribution and unrelated work preserved. No GitHub push or
-physical hardware access. Stop after4B.
+`Macintosh Exchange/Clarice/index.txt`. Build1973:51 entries/36 payloads, source/seal,
+offline tar/HDA and optional Telnetd/Seriald verified on both sources
+([verification](network-4c/verification.json)). Optional new services require the
+matching Core; they remain separate from the standard managed utility collection.
+Prior1972 recovery/distribution and unrelated work preserved. No GitHub push or
+physical hardware access. Stop after4C.
 
 ## Review remediation Batch A
 

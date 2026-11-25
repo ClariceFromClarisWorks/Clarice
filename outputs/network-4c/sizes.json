@@ -1,0 +1,23 @@
+{
+  "telnetd": {
+    "bytes": 42632,
+    "loaded_image": 30912,
+    "before_bytes": 41048,
+    "before_image": 30024,
+    "file_growth": 1584,
+    "loaded_growth": 888
+  },
+  "seriald": {
+    "bytes": 31736,
+    "loaded_image": 22288
+  },
+  "Core": {
+    "package_before": 439552,
+    "package_after": 439936,
+    "CODE_before": 285541,
+    "CODE_after": 285947,
+    "resident_status_bytes": 8,
+    "optional_service_state_growth_bytes": 276,
+    "new_system_heap_bytes": 0
+  }
+}

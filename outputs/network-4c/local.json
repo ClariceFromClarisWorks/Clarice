@@ -1,0 +1,72 @@
+[
+  {
+    "test": "connect during local wait",
+    "host_seconds": 0.376986083
+  },
+  {
+    "test": "rm -f /tmp/deferred /tmp/overlap /tmp/localread /tmp/localcancel",
+    "status": 0,
+    "text": "rm -f /tmp/deferred /tmp/overlap /tmp/localread /tmp/localcancel; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "connect during local wait",
+    "host_seconds": 0.3298512500000008
+  },
+  {
+    "test": "test \"$(cat /tmp/overlap)\" = 0; test \"$(cat /tmp/localread)\" = answer; test -e /tmp/deferred",
+    "status": 0,
+    "text": "test \"$(cat /tmp/overlap)\" = 0; test \"$(cat /tmp/localread)\" = answer; test -e /tmp/deferred; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "canonical read deferred remote execution",
+    "echo_bytes": 49,
+    "completed": true
+  },
+  {
+    "test": "connect during local wait",
+    "host_seconds": 0.307418375000001
+  },
+  {
+    "test": "test \"$(cat /tmp/localcancel)\" = 130; status runtime",
+    "status": 0,
+    "text": "test \"$(cat /tmp/localcancel)\" = 130; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=322532 largest=321150 image=10056 ticks=40 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=0 imports=2 relocations=1 prepare=6 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "connect during local wait",
+    "host_seconds": 0.2962352079999988
+  },
+  {
+    "test": "connect during local wait",
+    "host_seconds": 0.24349083300000274
+  },
+  {
+    "test": "cat /tmp/editorstatus; status runtime; netheap2",
+    "status": 0,
+    "text": "cat /tmp/editorstatus; status runtime; netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\n0\r\nRuntime: heap=322944 largest=321902 image=10056 ticks=40 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=1 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\napp=322770 largest=321902 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "vi idle connect/type/disconnect/reconnect; deferred command and restoration",
+    "completed": true
+  },
+  {
+    "test": "connect during local wait",
+    "host_seconds": 0.3114892089999941
+  },
+  {
+    "test": "connect during local wait",
+    "host_seconds": 0.22396112500000243
+  },
+  {
+    "test": "cat /tmp/editorstatus; status runtime; netheap2",
+    "status": 0,
+    "text": "cat /tmp/editorstatus; status runtime; netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\n130\r\nRuntime: heap=322926 largest=282926 image=10056 ticks=42 load=34 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=4 imports=2 relocations=1 prepare=4 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=4 structure=1 (structure included in relocations)\r\napp=322752 largest=282926 system=45622 largest=45508\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "nano idle connect/type/disconnect/reconnect; deferred command and restoration",
+    "completed": true
+  },
+  {
+    "test": "local waits complete",
+    "completed": true
+  }
+]

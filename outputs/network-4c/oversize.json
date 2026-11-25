@@ -1,0 +1,5 @@
+{
+  "rejected": true,
+  "wire_bytes": 1081,
+  "recovery": "echo oversized-recovered; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\noversized-recovered\r\nRuntime: heap=323170 largest=321426 image=164 ticks=28 load=25 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=2 imports=0 relocations=0 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+}
