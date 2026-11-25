@@ -1,0 +1,9 @@
+0
+cat /tmp/net4a/normal-status; cmp /tmp/net4a/binary /tmp/net4a/normal-kermit; status runtime; printf '\nREMOTE_END_1:%d\n' $?
+0
+Runtime: heap=324006 largest=323090 image=8960 ticks=145 load=33 owned-peak=4748 remaining=0
+Loader ticks: read=12 validate=0 imports=2 relocations=2 prepare=5 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=1 (structure included in relocations)
+
+REMOTE_END_1:0
+/ > 

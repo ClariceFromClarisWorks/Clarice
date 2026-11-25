@@ -1,0 +1,1 @@
+Assertion failed: (r&&!buffer_live&&!pending), function CloseDriver, file client-host.c, line 37.

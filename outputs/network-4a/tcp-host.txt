@@ -1,0 +1,1 @@
+PASS TCP: queued FIN data, orderly EOF, reset/invalid state, original status and receive errors, failed native teardown retains system buffer; retry/idempotent close; 20 system-buffer allocation/release cycles

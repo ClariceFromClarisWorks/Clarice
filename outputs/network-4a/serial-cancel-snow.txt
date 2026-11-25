@@ -1,0 +1,14 @@
+serial-cancel; netheap2; status runtime; printf '\nREMOTE_END_1:%d\n' $?
+Serial session; remote echo. Ctrl+] then q exits; Ctrl+C interrupts remote; Cmd-period cancels locally.
+cancel 0: rc=130 pending=1 hold=0 KillIO=0 ioResult=-27 heap_delta=0
+Serial session; remote echo. Ctrl+] then q exits; Ctrl+C interrupts remote; Cmd-period cancels locally.
+cancel 1: rc=130 pending=1 hold=0 KillIO=0 ioResult=-27 heap_delta=0
+Serial session; remote echo. Ctrl+] then q exits; Ctrl+C interrupts remote; Cmd-period cancels locally.
+cancel 2: rc=130 pending=1 hold=0 KillIO=0 ioResult=-27 heap_delta=0
+app=324272 largest=323090 system=45622 largest=45508
+Runtime: heap=324446 largest=323090 image=164 ticks=24 load=21 owned-peak=0 remaining=0
+Loader ticks: read=8 validate=0 imports=0 relocations=0 prepare=3 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)
+
+REMOTE_END_1:0
+/ > 

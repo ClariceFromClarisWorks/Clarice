@@ -1,0 +1,12 @@
+[
+  {
+    "test": "normal FTP Command-period130 and staging cleanup",
+    "status": 0,
+    "text": "test \"$(cat /tmp/net4a/localstatus)\" = 130 && test ! -e /tmp/net4a/local-ftp && test -z \"$(find /tmp/net4a -name '.ftp-*')\" && netheap2 && status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=321566 largest=320434 system=45622 largest=45508\r\nRuntime: heap=321738 largest=320434 image=164 ticks=26 load=23 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=2 imports=0 relocations=0 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "normal Kermit Ctrl+C130 cleanup and prompt",
+    "status": 0,
+    "text": "test \"$(cat /tmp/net4a/localstatus)\" = 130 && test ! -e /tmp/net4a/local-kcancel && netheap2 && status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=322756 largest=321662 system=45622 largest=45508\r\nRuntime: heap=322928 largest=321662 image=164 ticks=25 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=1 relocations=0 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  }
+]

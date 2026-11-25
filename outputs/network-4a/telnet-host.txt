@@ -1,0 +1,37 @@
+Usage:
+  telnet [--dumb] HOST [PORT]
+Use a monochrome VT100/ANSI terminal over unencrypted TCP. Default
+port: 23. Both streams must be terminals.
+Options:
+  --dumb        Use the line-oriented NVT instead of a full-screen
+                terminal.
+Ctrl+] then q exits; Ctrl+] twice sends Ctrl+]. Command-period
+cancels locally. Ctrl+C sends Telnet IP.
+Return sends CR LF; Backspace sends DEL. Application arrows are
+supported.
+Uses libtelnet and TERM=vt100 with NAWS. Resize before connecting;
+size is fixed for the session.
+Supports inverse, cursor movement, erase, scroll regions,
+insert/delete and ASCII line graphics.
+No colour, UTF-8, double-size rows, alternate-screen history,
+bold, underline, blink or VT52.
+No TLS, autologin, transfers or urgent SYNCH. DNS/TCP may delay
+cancellation.
+No idle timeout. Incomplete controls time out after 30 seconds.
+Overflow ends the session.
+Status: 0 peer close/local escape, 1 error, 2 usage, 130
+cancelled.
+PASS ownership: injected allocation failures, subsequent recovery, Q queued reversal; ordinary host peak 11744 bytes
+PASS Telnet: fragmented NVT/IAC, echo transitions/duplicates, TTYPE, refused options, CRLF/CRNUL, escaped IAC, IP, malformed/bounded controls, timeout, EOF, cancel/escape, overflow, connect/send/output failures and repeated restoration
+PASS VT: wrap, regions/index/reverse-index, origin/CPR, save/restore, insert/delete, ACS, modes, strings, parameter bounds, 200000 fuzz bytes; model 11128 bytes
+PASS upstream environ01
+PASS upstream environ02
+PASS upstream environ03
+PASS upstream mssp01
+PASS upstream rfc1143
+PASS upstream simple01
+PASS upstream simple02
+PASS upstream ttype01
+PASS upstream zmp01
+PASS upstream zmp02
+PASS upstream zmp03

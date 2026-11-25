@@ -1,0 +1,20 @@
+Usage:
+  ftp [options] get HOST REMOTE NEW_LOCAL
+  ftp [options] put HOST LOCAL REMOTE
+Transfer data forks over batch binary FTP. Use MacBinary for
+complete Macintosh files.
+Options:
+  -u USER       Log in as USER. Default: anonymous.
+  -P PORT       Connect to PORT. Default: 21.
+  --password-stdin
+    Read one password line (up to 511 bytes). Keep secrets out of
+    shell history.
+Downloads refuse existing files and commit after server success.
+Uploads can overwrite remote files. Failed uploads may leave
+partial files.
+Uses system DNS and passive EPSV/PASV. No TLS, active mode,
+resume, recursion or interactive commands.
+Idle timeout: 30 seconds. DNS and pending callbacks can delay
+Ctrl+C.
+Status: 0 success, 1 failure, 2 usage, 130 cancelled.
+PASS FTP: binary/empty GET and PUT; fragmented/multiline replies; EPSV/PASV peer isolation; unknown size; truncation/final failure; existing destination; timeout/cancel; allocation/create/write/close/rename failures; cleanup diagnostics; repeated resource release.

@@ -1,0 +1,1 @@
+PASS native Kermit: failed/delayed KillIO, timeout, failed detach/close, live PB and buffer ownership, repeated cleanup, 20 recovery cycles; no heap allocation

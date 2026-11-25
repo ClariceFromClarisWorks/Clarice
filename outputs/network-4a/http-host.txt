@@ -1,0 +1,3 @@
+HTTP final header peak=608 bytes; all allocations released
+PASS: binary, fragmented headers/body, zero length, truncation, status, length bounds, duplicates, encoding, framing, existing file, write/close/rename/create failures, cancel, timeout, cleanup recovery path
+PASS: width 1..200, current/total IEC sizes, unknown/zero totals, overflow-safe percentages, failure/final rows, throttle, redirected suppression

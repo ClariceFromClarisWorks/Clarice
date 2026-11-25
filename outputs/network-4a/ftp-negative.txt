@@ -1,0 +1,2 @@
+Assertion failed: (run()!=0&&!committed&&!temp&&bytes==2048), function main, file host.c, line 42.
+tests/ftp/run-host.sh: line 6: 25912 Abort trap: 6           work/ftp/host

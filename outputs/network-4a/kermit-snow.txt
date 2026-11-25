@@ -1,0 +1,6 @@
+PASS kermit-receive
+PASS kermit-send
+PASS kermit-cancel
+PASS kermit-recovery
+PASS kermit-empty
+PASS Kermit native binary roundtrip, cancellation130, cleanup/recovery, empty file

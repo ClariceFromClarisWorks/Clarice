@@ -1,0 +1,2 @@
+Published immutable artefacts before active indexes; committed source matches sealed inputs 30d7b1eaea1d274cd846d51c6629675ac57ee0f8
+PASS seal, 51 entries (Core +49 standard +vi), 36 unique payloads, exact HTTP/AFP equality; offline archive and seal verified

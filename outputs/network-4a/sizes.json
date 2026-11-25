@@ -1,0 +1,32 @@
+{
+  "serial": {
+    "before": 10468,
+    "after": 10944,
+    "delta": 476
+  },
+  "kermit": {
+    "before": 26660,
+    "after": 27084,
+    "delta": 424
+  },
+  "wget": {
+    "before": 23988,
+    "after": 24072,
+    "delta": 84
+  },
+  "ftp": {
+    "before": 19932,
+    "after": 20128,
+    "delta": 196
+  },
+  "telnet": {
+    "before": 25808,
+    "after": 25908,
+    "delta": 100
+  },
+  "Core": {
+    "before": 438784,
+    "after": 438784,
+    "delta": 0
+  }
+}

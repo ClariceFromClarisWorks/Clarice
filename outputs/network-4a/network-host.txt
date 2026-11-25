@@ -1,0 +1,4 @@
+PASS native adapter: status, numeric, immediate/deferred DNS, DNS error/missing/open failure, cancellation/deadline drain, ICMP submit/reply/timeout/cancel, repeated cleanup
+PASS network command options, status, output errors, numeric formatting, timeout and cancellation statuses
+HTTP final header peak=608 bytes; all allocations released
+PASS: binary, fragmented headers/body, zero length, truncation, status, length bounds, duplicates, encoding, framing, existing file, write/close/rename/create failures, cancel, timeout, cleanup recovery path

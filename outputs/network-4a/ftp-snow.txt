@@ -1,0 +1,24 @@
+PASS fixture
+PASS binary put
+PASS known empty EOF
+PASS unknown EOF
+PASS native TCP failure after data despite final226
+PASS failure retains no target or staging
+PASS warm heap
+PASS heap before repeated transfers
+PASS repeat 0
+PASS repeat 1
+PASS repeat 2
+PASS repeat 3
+PASS repeat 4
+PASS repeat 5
+PASS repeat 6
+PASS repeat 7
+PASS repeat 8
+PASS repeat 9
+PASS heap after repeated transfers
+PASS Telnet IP status130 and clean staging
+PASS remote Ctrl+C status130 and clean staging
+PASS recovery download
+PASS final heap
+PASS guest binary, empty/unknown EOF, injected error, repeated heaps, cancellation/recovery

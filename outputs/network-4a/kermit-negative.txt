@@ -1,0 +1,7 @@
+Assertion failed: (!pending), function main, file kermit-before.c, line 96.
+Traceback (most recent call last):
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Main-SelfUpdate-Merge/tests/kermit/native-lifecycle.py", line 53, in <module>
+    subprocess.run([str(f.with_suffix(''))],check=True)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/williamprestwich/Documents/ChatGPT/Clarice-Main-SelfUpdate-Merge/work/network-4a/kermit-before']' died with <Signals.SIGABRT: 6>.
