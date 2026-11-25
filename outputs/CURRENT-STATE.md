@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111961**, local main: focused parser/CLX performance batch.
+Latest normal build **2026111961**, product **6effb1d**, local main: focused parser/CLX performance batch.
 Read-cursor parsing removes repeated source moves;8 KiB Snow script210→31seconds.
 Repeated full awk checks8.83→7.66seconds by omitting an unused receipt digest;
 mandatory verification and receipt formats unchanged. Normal ls loading stays about

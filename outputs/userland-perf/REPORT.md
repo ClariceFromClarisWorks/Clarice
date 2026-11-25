@@ -1,5 +1,6 @@
 # Shell/CLX performance — build 2026111961
 
+Accepted product **6effb1d**, build **2026111961**, local main.
 Baseline product 98c0b8a/build1960. Normal 68000 Snow Plus/4 MiB/System 6.0.8;
 uncapped emulator observed around1.5x under load. Times below are guest TickCount
 seconds, including native scheduling/I/O, not host elapsed time or physical-SE results.
@@ -44,3 +45,7 @@ that test-only error and a test declaration mismatch were corrected before colle
 accepted pressure evidence. They required no production fix. Full test data:
 [measurements](measurements.json). Publication identity/checksums: [verification](verification.json).
 No physical access, GitHub push or next audit batch.
+
+Publication passed: all 51 catalog entries and 36 unique payloads match the seal
+and both canonical HTTP/AFP sources. Offline HDA/tar and source archive verified;
+previous 1960 index and payloads remain available.
