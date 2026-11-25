@@ -1,5 +1,26 @@
 # Clarice current state
 
+## Installer A — 26 November 2026
+
+Accepted build **2026111976**, product **9ef7ed7**, integrated into local main.
+System 7 emulator acceptance was explicitly deferred by the user. Native
+Install/Cancel now precedes namespace,
+history, profile and terminal initialization. Existing installer/recovery
+backend is unchanged apart from progress notifications.
+
+System 6.0.8/4 MB Snow: whole-disk byte-identical Cancel, fresh installation,
+button/Command-period cancellation and retry, interrupted snapshot preparation
+and upgrade, unchanged reinstall, 49 utilities, launched Core and user forks/
+Finder metadata preservation pass. ASan/UBSan dialog and existing recovery
+fault tests pass; locally sealed distribution/offline readbacks verified.
+Installer CODE -27,844 bytes; MacBinary -27,776 bytes; ordinary Core size and
+768 KiB requested partition unchanged. Diagnostic entry-to-confirmation 34 guest
+ticks; excludes Finder loading. [Evidence and limitations](installer-a/REPORT.md).
+HTTP/AFP publication verified:51 entries/36 payloads, exact sealed bytes and
+matching offline HDA/USTAR/source packages; previous1975 recovery distribution
+retained. [Verification](installer-a/verification.json). No physical access or
+GitHub push; unrelated working files preserved. Stop after Installer A.
+
 ## Integrated development distribution — 25 November 2026
 
 Latest accepted normal build **2026111975**, product **a0efcc5**, local main: Batch4E Seriald

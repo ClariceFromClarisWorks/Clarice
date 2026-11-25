@@ -1,0 +1,2 @@
+PASS native confirmation: five no-write cancellation forms; dialog allocation failure; cancellation before and during backend; one-shot success/handoff; initialization and disk-full errors; bounded progress/text
+PASS installer decision precedes terminal/shell/namespace initialization; narrow installer init excludes history and profile execution

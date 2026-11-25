@@ -1,0 +1,14 @@
+{
+  "build": 2026111976,
+  "standard_utilities": 49,
+  "cancel_disk_sha256": "0dd1a2b484312c682af1a7005b1462445885e5fe6e8b88d126881b0a7db483a1",
+  "cancel_disk_bytes": 33605120,
+  "complete_core_and_tools": true,
+  "user_both_forks_and_finder_metadata_unchanged": true,
+  "historical_apps_unchanged": true,
+  "reinstall_snapshot_unchanged": true,
+  "system": "Snow Plus, 4 MB, System 6.0.8",
+  "system7_tested": false,
+  "system7_deferred_by_user": true,
+  "physical_tested": false
+}

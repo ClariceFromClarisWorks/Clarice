@@ -1,0 +1,6 @@
+Installed RAM             4194304 bytes
+Application heap extent   712660 bytes
+Free heap                 378220 bytes
+Largest free block        376810 bytes
+Free after purging        378220 bytes
+Largest after purging     376818 bytes

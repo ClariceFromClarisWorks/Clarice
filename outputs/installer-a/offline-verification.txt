@@ -1,0 +1,1 @@
+PASS offline HDA Core/49 utilities/Release/Installer/Recover forks and Finder codes; complete USTAR contents equal sealed kit. Only native-copy resource reserved bytes16..127 excluded.
