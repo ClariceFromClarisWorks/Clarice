@@ -8,7 +8,7 @@ code=r'''
 #include <assert.h>
 #define COLS 132
 #define ROWS 128
-static char text[ROWS][COLS],input[1024],search[128];
+static char text[ROWS][COLS],input[1024],search[128],wrapped[ROWS];
 static int columns=20,visible=4,scrollback,busy,completing,completion_wait,tty_reading,searching,cursor,background,paging;
 static long current_line,oldest_line;
 static int win=1;

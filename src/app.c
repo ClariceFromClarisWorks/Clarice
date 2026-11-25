@@ -133,6 +133,7 @@ static int prompt_prefix(char *out){if(tty_reading){out[0]=0;return 0;}if(contin
 #ifdef CLARICE_USABILITY_DIAGNOSTICS
 static unsigned long ux_rows,ux_pixels,ux_moves,ux_writes,ux_layouts,ux_saves;
 static int ux_wrap_legacy,ux_dialog_action;
+static unsigned long ux_full_updates,ux_clipped_updates;
 #endif
 static void hide_caret(void){dirty=1;}
 #ifdef CLARICE_SELECTION_DIAGNOSTICS
@@ -163,16 +164,18 @@ static void compose_input(char screen[40][COLS],long *first,int *prompt){
  int editing=(!busy||tty_reading||(completing&&!completion_wait))&&!searching;
  *first=viewport_live_first()-scrollback;if(*first<oldest_line)*first=oldest_line;
  *prompt=(int)(current_line-*first);memset(screen,0,40*COLS);
- for(int row=0;row<=visible;row++){long line=*first+row;if(line>=oldest_line&&line<=current_line)memcpy(screen[row],text[line%ROWS],columns);}
+ /* COLS-2 is outside the maximum text width; COLS-1 already holds the
+    caret. Keep logical endings beside the characters in the presented model. */
+ for(int row=0;row<=visible;row++){long line=*first+row;if(line>=oldest_line&&line<=current_line){memcpy(screen[row],text[line%ROWS],columns);screen[row][COLS-2]=line<current_line&&!wrapped[line%ROWS];}}
  if(searching){if(*prompt>=0&&*prompt<=visible)snprintf(screen[*prompt],COLS,"search: %.100s",search);}
  else if(editing){int total=base+lead+(int)strlen(input),r=0,c=0;
   for(int i=0;i<total;i++){unsigned char ch=i<base?text[current_line%ROWS][i]:i<base+lead?prefix[i-base]:input[i-base-lead];
-   int row=*prompt+r;if(ch=='\n'){r++;c=0;continue;}
+   int row=*prompt+r;if(ch=='\n'){if(row>=0&&row<=visible)screen[row][COLS-2]=1;r++;c=0;continue;}
    if(row>=0&&row<=visible)screen[row][c]=ch;if(++c==columns){r++;c=0;}}
   if(!scrollback&&!background&&FrontWindow()==win){int cr,cc;input_position(base+lead,cursor,&cr,&cc);int row=*prompt+cr;if(row>=0&&row<=visible)screen[row][COLS-1]=cc+1;}
  }
  /* Explicit more owns its status row; ordinary output never enters this mode. */
- if(paging)snprintf(screen[visible],COLS,"-- More -- Space: next; Return: line; Q: stop");
+ if(paging){snprintf(screen[visible],COLS,"-- More -- Space: next; Return: line; Q: stop");screen[visible][COLS-2]=0;}
 }
 static void pstr(unsigned char *p,const char *s){size_t n=strlen(s);if(n>255)n=255;p[0]=(unsigned char)n;memcpy(p+1,s,n);}
 static void clear_terminal_row(char *row){
@@ -236,11 +239,22 @@ static void fit_window(int width,int height){
  if(f.top+dy<screen.top+menu_bar_height()+2)dy=screen.top+menu_bar_height()+2-f.top;
  if(dx||dy)MoveWindow(win,o.h+dx,o.v+dy,1);
 }
-static void grid_window(int cols,int rows,int cw,int lh){
+/* Compute the same screen/minimum clamp before changing native geometry. */
+static void grid_dimensions(int cols,int rows,int cw,int lh,int *width,int *height){
  int maxw,maxh;geometry_limits(&maxw,&maxh);
  if(cols>COLS-2)cols=COLS-2;if(rows>38)rows=38;
  long w=(long)cols*cw+TEXT_LEFT+16,h=(long)rows*lh+TEXT_TOP;
- fit_window(w>maxw?maxw:(int)w,h>maxh?maxh:(int)h);
+ if(w<180)w=180;if(h<100)h=100;
+ *width=w>maxw?maxw:(int)w;*height=h>maxh?maxh:(int)h;
+}
+static int same_grid(int cols,int rows,int cw,int lh){
+ int w,h;grid_dimensions(cols,rows,cw,lh,&w,&h);
+ int c=(w-TEXT_LEFT-16)/cw,r=(h-TEXT_TOP)/lh;
+ if(c<1)c=1;if(c>COLS-2)c=COLS-2;if(r<1)r=1;if(r>38)r=38;
+ return c==columns&&r==visible+1;
+}
+static void grid_window(int cols,int rows,int cw,int lh){
+ int w,h;grid_dimensions(cols,rows,cw,lh,&w,&h);fit_window(w,h);
 }
 static int layout(void){
 #ifdef CLARICE_USABILITY_DIAGNOSTICS
@@ -403,7 +417,7 @@ static void draw_native(void){unsigned long exposed_start=0;int row,x;char scree
  if(force_draw)erase_margins();
  /* Configure the reusable row port once per paint, not once per row. */
  if(line_h<=64){SetPort(&prompt_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);SetPort(win);}
- for(row=0;row<visible+1;row++){DRAW_STAMP(plan_start);int selected=selection_a>=0&&selection_b>selection_a&&row<visible+1;if(force_draw||(FRAME_LEGACY?memcmp(last_screen[row],screen[row],COLS):asm_terminal_row_changed(last_screen[row],screen[row]))||selected){Rect area,destination;char rendered[COLS];int left=0,right=columns,buffered=line_h<=64;
+ for(row=0;row<visible+1;row++){last_screen[row][COLS-2]=screen[row][COLS-2];DRAW_STAMP(plan_start);int selected=selection_a>=0&&selection_b>selection_a&&row<visible+1;if(force_draw||(FRAME_LEGACY?memcmp(last_screen[row],screen[row],COLS):asm_terminal_row_changed(last_screen[row],screen[row]))||selected){Rect area,destination;char rendered[COLS];int left=0,right=columns,buffered=line_h<=64;
  if(!force_draw&&!selected){while(left<right&&last_screen[row][left]==screen[row][left])left++;while(right>left&&last_screen[row][right-1]==screen[row][right-1])right--;
   /* Include both composed cursor cells without repainting the whole prompt. */
   int old=(unsigned char)last_screen[row][COLS-1]-1,now=(unsigned char)screen[row][COLS-1]-1;
@@ -549,7 +563,7 @@ static void draw_cached(void){
  if(!force_draw&&select_start<0&&!scroll_area_has_caret()&&!((render_mode==1||DRAW_LEGACY)&&last_screen[visible][COLS-1])&&prompt>=visible&&drawn_prompt>=visible&&first!=drawn_first&&prefer_pixel_scroll(screen,(int)(first-drawn_first))){long d=first-drawn_first;int moved=!DRAW_LEGACY&&d&&labs(d)<visible?scroll_window_rows((int)d):0;if(d>0&&d<visible){if(render_mode==2){asm_copy_rows(frame_pixels,frame_pixels+d*line_h*STRIDE,STRIDE,(visible-d)*line_h,STRIDE,STRIDE);asm_copy_rows((unsigned char*)last_screen,(unsigned char*)(last_screen+d),COLS,visible-d,COLS,COLS);}else{memmove(frame_pixels,frame_pixels+d*line_h*STRIDE,(visible-d)*line_h*STRIDE);memmove(last_screen,last_screen+d,(visible-d)*COLS);}memset(last_screen+visible-d,255,d*COLS);if(!moved){lo=0;hi=visible;xmin=0;xmax=columns;}}else if(d<0&&-d<visible){d=-d;if(render_mode==2){asm_copy_rows(frame_pixels+(visible*line_h-1)*STRIDE,frame_pixels+((visible-d)*line_h-1)*STRIDE,STRIDE,(visible-d)*line_h,-STRIDE,-STRIDE);asm_copy_rows((unsigned char*)last_screen[visible-1],(unsigned char*)last_screen[visible-d-1],COLS,visible-d,-COLS,-COLS);}else{memmove(frame_pixels+d*line_h*STRIDE,frame_pixels,(visible-d)*line_h*STRIDE);memmove(last_screen+d,last_screen,(visible-d)*COLS);}memset(last_screen,255,d*COLS);if(!moved){lo=0;hi=visible;xmin=0;xmax=columns;}}}
  profile[1]+=TickCount()-stamp;stamp=TickCount();
  SetPort(&frame_port);TextFont(font_id);TextSize(font_size);TextFace(0);TextMode(srcCopy);ForeColor(blackColor);BackColor(whiteColor);
- for(row=0;row<visible+1;row++)if(force_draw||memcmp(screen[row],last_screen[row],COLS)||select_start>=0){
+ for(row=0;row<visible+1;row++){last_screen[row][COLS-2]=screen[row][COLS-2];if(force_draw||memcmp(screen[row],last_screen[row],COLS)||select_start>=0){
   int left=0,right=columns;unsigned char *pixels=frame_pixels+row*line_h*STRIDE;Rect r;
   if(glyph_ready&&!force_draw&&select_start<0&&row!=prompt&&!screen[row][COLS-1]&&!last_screen[row][COLS-1]){int group=1;while((group*cell_w)&7)group++;while(left<right&&screen[row][left]==last_screen[row][left])left++;while(right>left&&screen[row][right-1]==last_screen[row][right-1])right--;left=left/group*group;right=(right+group-1)/group*group;if(right>columns)right=columns;}
   SetRect(&r,left*cell_w,row*line_h,right*cell_w,(row+1)*line_h);
@@ -560,7 +574,7 @@ static void draw_cached(void){
   if(screen[row][COLS-1]){int cx=(unsigned char)screen[row][COLS-1]-1;Rect caret;SetRect(&caret,cx*cell_w,r.top,(cx+1)*cell_w,r.bottom);InvertRect(&caret);}
   if(left<xmin)xmin=left;if(right>xmax)xmax=right;if(row<lo)lo=row;if(row+1>hi)hi=row+1;memcpy(last_screen[row],screen[row],COLS);
  }
- profile[2]+=TickCount()-stamp;stamp=TickCount();
+ }profile[2]+=TickCount()-stamp;stamp=TickCount();
  SetPort(win);if(force_draw){ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);erase_margins();}
  /* CopyBits uses the destination port's colours even for a monochrome bitmap. */
  ForeColor(blackColor);BackColor(whiteColor);if(hi>lo)present_rows(lo,hi,xmin,xmax);
@@ -817,6 +831,7 @@ static void preferences_window(void){
    int n=preference_number(size),count=preference_number(cols),rowcount=preference_number(rows);if(!installed_font(name,&id)||n<6||n>24||count<1||rowcount<1){StopAlert(141,0);continue;}
    int want_fill=GetControlValue(dialog_control(d,13)),dark=GetControlValue(dialog_control(d,10));
    int change_grid=count!=columns||rowcount!=visible+1;
+   if(change_grid&&want_fill==filled&&id==font_id&&n==font_size&&same_grid(count,rowcount,cell_w,line_h))change_grid=0;
    if(!change_grid&&id==font_id&&n==font_size&&want_fill==filled&&dark==inverse&&
       retained==(cap==1?32:cap==2?64:128)&&control_mode==ctrl-1){
     DisposeDialog(d);SetPort(win);unchanged_preferences();return;
@@ -859,7 +874,7 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
 #else
  else if(!strcmp(argv[1],"cache")||!strcmp(argv[1],"renderer")){term_puts("Rendering is selected automatically.\n");return 2;}
 #endif
- else if(argc==3&&(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))){int n=preference_number(argv[2]);if(n<1)return 2;if(n==(!strcmp(argv[1],"columns")?columns:visible+1))return unchanged_preferences();grid_window(!strcmp(argv[1],"columns")?n:columns,!strcmp(argv[1],"rows")?n:visible+1,cell_w,line_h);}
+ else if(argc==3&&(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))){int n=preference_number(argv[2]);if(n<1)return 2;if(n==(!strcmp(argv[1],"columns")?columns:visible+1)||same_grid(!strcmp(argv[1],"columns")?n:columns,!strcmp(argv[1],"rows")?n:visible+1,cell_w,line_h))return unchanged_preferences();grid_window(!strcmp(argv[1],"columns")?n:columns,!strcmp(argv[1],"rows")?n:visible+1,cell_w,line_h);}
  else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | columns N | rows N | fill]\n");return 2;}
  /* Grid-only changes reuse the existing font glyphs, as manual resizing does. */
  if(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows")){if(!layout()){MoveWindow(win,previous.h,previous.v,1);return 1;}filled=0;}else if(!font_layout())return 1;
@@ -919,24 +934,7 @@ int app_completion_more(void){
 }
 
 #define PASTED_KEY 0x8000
-/* History records real versus visual line endings. Editable continuation
-   rows are virtual: derive their boundaries using the same wrap rule as
-   compose_input, including explicit newlines in pasted input. */
-static int selection_line_break(int row){
- long line=drawn_first+row;
- if(paging&&row==visible)return 0;
- if(line<current_line)return !wrapped[line%ROWS];
- if((busy&&!tty_reading&&!(completing&&!completion_wait))||searching)return 0;
- char prefix[132];int lead=(int)strlen(text[current_line%ROWS])+prompt_prefix(prefix);
- int target=(int)(line-current_line),r=lead/columns,c=lead%columns;
- if(target<r)return 0;
- for(int i=0;input[i];i++){
-  if(input[i]=='\n'){if(r==target)return 1;r++;c=0;}
-  else if(++c==columns){if(r==target)return 0;r++;c=0;}
- }
- return 0;
-}
-static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+1)*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1&&selection_line_break(i/columns))b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
+static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+1)*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1&&last_screen[i/columns][COLS-2])b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
 static void insert_char(unsigned char c){size_t n=strlen(input);if(input_blocked)return;if(n>=LINE_CAP-1){input_fail("command exceeds 1023 bytes");return;}memmove(input+cursor+1,input+cursor,n-cursor+1);input[cursor++]=(char)c;dirty=1;}
 /* Validate the complete paste before changing the line. Newlines are retained
    (CR/CRLF normalized), never submitted as Return events. */
@@ -1038,7 +1036,7 @@ void app_run_checks(void){unsigned char pn[256];char path[PATH_CAP];int i,failed
  term_puts(failed?"PHASE1_CHECKS FAIL\n":"PHASE1_CHECKS PASS\n");if(test_ref>=0){FSClose(test_ref);test_ref=-1;FlushVol(0,0);}busy=0;dirty=1;}
 static void welcome(void);
 static void menu(long choice){short id=(short)(choice>>16),item=(short)choice;if(id==128){if(item==1){welcome();}else{MenuHandle m=GetMenuHandle(128);unsigned char name[256];GetMenuItemText(m,item,name);OpenDeskAcc(name);SetPort(win);}}
- if(id==129){if(item==1&&!editor_screen)app_clear();if(item==2)key(3,(editor_screen||serial_input==2)?cmdKey:0);if(item==4&&!busy)preferences_window();if(item==6)app_quit();}
+ if(id==129){if(item==1&&!editor_screen)app_clear();if(item==2)key(3,(editor_screen||serial_input==2)?cmdKey:0);if(item==4&&!busy){preferences_window();HiliteMenu(0);return;}if(item==6)app_quit();}
  if(id==130){if(item==1)copy_selection();if(item==2)paste();if(item==4&&!busy)history_move(-1);if(item==5&&!busy)history_move(1);}
  if(id==131&&!busy){if(item==1)app_run_checks();if(item==2)app_metrics(0);}
  if(id==132){unsigned char name[256];GetMenuItemText(GetMenuHandle(132),item,name);short id;GetFNum(name,&id);if(id==font_id)unchanged_preferences();else {font_id=id;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}}
@@ -1074,6 +1072,9 @@ static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if
    paint after EndUpdate, not a clipped paint that forgets unpainted pixels. */
 static void update_window(void){
  SetPort(win);sync_window_geometry();int pending=dirty||force_draw;
+#ifdef CLARICE_USABILITY_DIAGNOSTICS
+ if(pending)ux_full_updates++;else ux_clipped_updates++;
+#endif
  BeginUpdate(win);
  if(!pending){force_draw=dirty=1;draw();}
  EndUpdate(win);

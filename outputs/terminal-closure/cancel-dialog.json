@@ -1,0 +1,12 @@
+[
+  {
+    "command": "cat /tmp/closure-input",
+    "status": 0,
+    "output": "cat /tmp/closure-input; printf '\\nREMOTE_END_1:%d\\n' $?\r\nkeep123\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cksum /etc/clarice/clarice.conf",
+    "status": 0,
+    "output": "cksum /etc/clarice/clarice.conf; printf '\\nREMOTE_END_2:%d\\n' $?\r\n1874369612 229 /etc/clarice/clarice.conf\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  }
+]

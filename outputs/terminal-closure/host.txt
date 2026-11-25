@@ -1,0 +1,25 @@
+PASS presented soft/hard boundaries survive pending history output, ring reuse and changed editable input
+PASS Preferences menu keeps clean state clean and preserves genuine pending damage
+PASS actual preference dispatcher: seven unchanged settings, minimum/maximum clamped no-ops, validation, first save, failed-save retry, unchanged under memory pressure, changed-layout failure
+PASS history soft-wrap and hard newline
+PASS real newlines preserved
+PASS editable soft wrap then explicit newline
+PASS input continuation viewport
+PASS one past final visible cell
+PASS right boundary clamp
+PASS left/top clamp
+PASS final visible character copied
+PASS pending pixels survive clipped update
+PASS one paint suffices for pending update
+PASS clean update remains a single clipped paint
+partial-output: partial/ > xy
+PASS partial output, canonical read, exact-width caret, wrapped input, scrollback, long editing, newlines, ring origin and background cursor
+PASS pending cancellation/ordinary key ends thumb tracking without consuming it
+PASS no key preserves tracking until button release
+PASS production geometry: 8,505 metric/bounds combinations, actual rows, long-input caret/state, reflow, allocation failure rollback/retry and zero retained allocations
+PASS failed CLI layout returns nonzero before save/present; success persists
+PASS: wrapped input and cursor bounds across widths 3..130 and 0..1023 input bytes
+PASS: escaped, quoted and chained line continuation cases
+PASS: 160 glyph-path presentation/fallback comparisons (host glyph stub; real glyph pixels require guest probe)
+PASS: 300 complete production-renderer comparisons, mixed dirty rows, font metrics, attributes, cursor, colours and clipping; full screen copies 25 -> 5; staging bounds checked
+PASS 5922 wrap transitions, model/pixel pairing, multirow inputs, caret and admission boundaries

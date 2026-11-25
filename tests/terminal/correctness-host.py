@@ -34,11 +34,11 @@ static void check(const char *s,int ok){printf("%s %s\n",ok?"PASS":"FAIL",s);fai
 '''
 body=r'''
 int main(void){
- current_line=2;memcpy(last_screen[0],"abcd",4);memcpy(last_screen[1],"efgh",4);memcpy(last_screen[2],"ijkl",4);
+ current_line=2;last_screen[0][COLS-2]=0;last_screen[1][COLS-2]=1;memcpy(last_screen[0],"abcd",4);memcpy(last_screen[1],"efgh",4);memcpy(last_screen[2],"ijkl",4);
  select_start=0;select_end=8;wrapped[0]=1;copy_selection();check("history soft-wrap and hard newline",length==9&&!memcmp(scrap,"abcdefgh\r",9));
- wrapped[0]=0;copy_selection();check("real newlines preserved",length==10&&!memcmp(scrap,"abcd\refgh\r",10));
- current_line=0;busy=0;strcpy(input,"xyzw\npq");select_end=8;copy_selection();check("editable soft wrap then explicit newline",length==9&&!memcmp(scrap,"abcdefgh\r",9));
- drawn_first=1;copy_selection();check("input continuation viewport",length==9&&!memcmp(scrap,"abcd\refgh",9));drawn_first=0;
+ wrapped[0]=0;last_screen[0][COLS-2]=1;copy_selection();check("real newlines preserved",length==10&&!memcmp(scrap,"abcd\refgh\r",10));
+ last_screen[0][COLS-2]=0;last_screen[1][COLS-2]=1;current_line=0;busy=0;strcpy(input,"xyzw\npq");select_end=8;copy_selection();check("editable soft wrap then explicit newline",length==9&&!memcmp(scrap,"abcdefgh\r",9));
+ drawn_first=1;last_screen[0][COLS-2]=1;last_screen[1][COLS-2]=0;copy_selection();check("input continuation viewport",length==9&&!memcmp(scrap,"abcd\refgh",9));drawn_first=0;
  Point p={32,28};check("one past final visible cell",cell(p)==12);p.h=32767;check("right boundary clamp",cell(p)==12);p.h=-1;p.v=-1;check("left/top clamp",cell(p)==0);
  select_start=11;select_end=12;copy_selection();check("final visible character copied",length==1&&scrap[0]=='l');
  dirty=1;model=1;pixels=0;draws=0;update_window();if(dirty)draw();check("pending pixels survive clipped update",pixels==1);check("one paint suffices for pending update",draws==1);

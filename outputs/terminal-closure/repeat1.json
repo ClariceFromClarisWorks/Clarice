@@ -1,0 +1,12 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "output": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324636 largest=321596 image=10056 ticks=36 load=27 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=2 imports=2 relocations=1 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=8 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cksum /etc/clarice/clarice.conf",
+    "status": 0,
+    "output": "cksum /etc/clarice/clarice.conf; printf '\\nREMOTE_END_2:%d\\n' $?\r\n1874369612 229 /etc/clarice/clarice.conf\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  }
+]

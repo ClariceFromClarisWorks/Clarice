@@ -1,0 +1,7 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "output": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324636 largest=306620 image=10056 ticks=34 load=25 owned-peak=0 remaining=0\r\nLoader ticks: read=10 validate=1 imports=2 relocations=1 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  }
+]

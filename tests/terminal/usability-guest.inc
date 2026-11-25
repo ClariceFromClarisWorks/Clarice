@@ -7,6 +7,7 @@ static void usability_reset(void){busy=cancelled=interrupted=input_blocked=0;inp
 #include "ux-guest.inc"
 #include "correctness-guest.inc"
 #include "performance-guest.inc"
+#include "closure-guest.inc"
 static void usability_probe(void){char path[PATH_CAP];unsigned char pn[256];shell_temp_path(path,"usability.txt");pstr(pn,path);HCreate(0,0,pn,'CLRC','TEXT');if(HOpen(0,0,pn,fsWrPerm,&usability_ref))return;SetEOF(usability_ref,0);
  usability_record("launch window in front",FrontWindow()==win);usability_reset();draw();
  memcpy(last_screen[0],"copyme",6);select_start=0;select_end=6;usability_command('c');Handle h=NewHandle(0);long off,n=GetScrap(h,'TEXT',&off);usability_record("Command-C selected text",n==6&&!memcmp(*h,"copyme",6));DisposeHandle(h);select_start=select_end=-1;
@@ -16,6 +17,6 @@ static void usability_probe(void){char path[PATH_CAP];unsigned char pn[256];shel
  usability_reset();busy=1;for(int i=0;i<LINE_CAP;i++)key('x',0);ZeroScrap();PutScrap(1,'TEXT',"y");usability_command('v');usability_record("busy paste overflow fails closed",input_blocked&&!ahead_count&&cancelled);
  usability_reset();busy=1;key('z',0);int e=app_screen_open();unsigned char c=0;long got=editor_screen&&app_screen_pending()?app_screen_read(&c,1):0;usability_record("loading typeahead transferred to editor",!e&&got==1&&c=='z'&&!ahead_count);app_screen_close();usability_reset();
  force_draw=dirty=1;draw();busy=activity_command=1;activity_interactive=0;activity_output_tick=TickCount()-301;activity_tick(TickCount());usability_record("pinwheel inverse background",activity_visible&&GetPixel(activity_rect.right-1,activity_rect.top)==!inverse);activity_hide();busy=activity_command=0;
- ux_probe();correctness_probe();performance_probe();
+ ux_probe();correctness_probe();performance_probe();closure_probe();
  char b[100];snprintf(b,sizeof b,"failures=%d heap=%ld\n",usability_failures,FreeMem());n=strlen(b);FSWrite(usability_ref,&n,b);FSClose(usability_ref);usability_ref=-1;FlushVol(0,0);usability_reset();force_draw=dirty=1;term_puts("USABILITY-PROBE-DONE\n");
 }

@@ -2,26 +2,25 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111964**, local main: Batch 2 performance accepted in
-normal 68000 Snow Plus/4 MiB/System 6.0.8. Guarded live-input pixel scrolling reduces
-wrap-boundary reconstruction from 24 rows to 2; equal Preferences skip layout,
-redraw and disk writes while failed saves remain retryable. Prior Batch 2
-clipped-update, tracking cancellation and clipboard corrections remain intact.
-[Focused evidence](terminal-performance/REPORT.md): matched 12-event light/dark
-wrap draw totals 244/271 → 109/110 guest ticks; worst queued-to-visible 21/24 → 10/10.
-Ordinary typing unchanged. Equal CLI preferences 76–81 → below one tick, zero
-layouts/saves/writes. 245 guest checks (139 exact pixel comparisons), host failure/
-geometry tests, normal wrapped input, OK/Cancel, theme/geometry restart persistence,
-vi restoration, both cancellation shortcuts and zero retained command allocations.
-Warm heap/largest-block stable. No new bitmap or heap allocation; one-byte save
-retry flag; code/data +464 bytes, Core package +512 bytes. Physical acceptance pending.
+Latest normal build **2026111965**, local main: Batch 2 final closure accepted in
+normal 68000 Snow Plus/4 MiB/System 6.0.8. Clipboard endings now use the same
+presented frame as selected characters, using existing spare row bytes. Unchanged
+Preferences menu OK/Cancel avoids invented dirty state; screen-clamped no-op sizes
+skip layout/save. Genuine clipped exposure, changes and failed-save retry remain.
+[Focused evidence](terminal-closure/REPORT.md): 271 guest checks, 143 exact pixel
+comparisons, host baseline repros and geometry/allocation-failure regressions pass.
+Dialog dismissal: zero forced full updates, one clipped exposure; clamped no-ops:
+zero layouts/writes/painted rows. Normal typing worst2 guest ticks; real menu,
+partial input, cancellation130 and repeated execution pass. Free heap stable,
+zero retained command allocations; largest block recovers after transient
+fragmentation. No new bitmap/allocation; code/data+288bytes, Core package+256bytes.
+Prior accepted renderer, shell/runtime and recovery corrections remain intact.
 
-Prior Batch 1 closure and parser/CLX improvements retained; command-heavy 32 KiB
-scripts remain slow. [Prior measurements](userland-perf/REPORT.md).
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
 `Macintosh Exchange/Clarice/index.txt`. Publication verification is recorded in
-`terminal-performance/verification.json`; previous 1963 recovery material retained.
-No GitHub push or hardware deployment. Stop after these two performance findings.
+`terminal-closure/verification.json`; previous1964 recovery material retained.
+Physical acceptance pending. No GitHub push or hardware deployment. Stop after
+these two closure corrections.
 
 ## Review remediation Batch A
 
