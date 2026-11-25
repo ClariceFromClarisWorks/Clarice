@@ -1,0 +1,7 @@
+Using multiversal interfaces
+/src/work/distribution/Clarice.hda: contains 1 HFS partition
+Volume name is "Clarice"
+Volume was created on Wed Nov 25 03:39:56 2026
+Volume was last modified on Wed Nov 25 03:39:59 2026
+Volume has 30751744 bytes free
+PASS offline HDA Core forks/Finder attributes,49utility payloads and Release; tar members equal kit

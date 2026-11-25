@@ -37,7 +37,7 @@ static void parent_path(char *s){char *p=strrchr(s,'/');if(p==s)s[1]=0;else if(p
 static int resolve_full(const char *s,char *native,char *canonical,int follow,CInfoPBRec *result){char pending[PATH_CAP],done[PATH_CAP]="/",part[100],target[PATH_CAP];int links=0,have_info=0;CInfoPBRec pb;
  if(!*s)return bdNamErr; /* An empty operand is not the working directory. */
  if(!strncmp(s,"native:",7)){int e=unix_from_native(s+7,pending);if(e)return e;}
- else if(*s=='~'&&(s[1]=='/'||!s[1])){if(strlen(s)>=PATH_CAP)return bdNamErr;strcpy(pending,s+1);if(!*pending)strcpy(pending,"/");}
+ else if(*s=='~'&&(s[1]=='/'||!s[1])){if(strlen(s)>=PATH_CAP)return bdNamErr;const char *home=env_get("HOME"),*base=*home&&*home!='/'?unix_cwd:"";if(strlen(base)+strlen(home)+strlen(s+1)+2>=PATH_CAP)return bdNamErr;strcpy(pending,base);if(*base)strcat(pending,"/");strcat(pending,home);strcat(pending,s+1);if(!*pending)strcpy(pending,"/");}
  else if(*s=='/'){if(strlen(s)>=PATH_CAP)return bdNamErr;strcpy(pending,s);}
  else {if(strlen(unix_cwd)+strlen(s)+2>=PATH_CAP)return bdNamErr;strcpy(pending,unix_cwd);if(strcmp(pending,"/"))strcat(pending,"/");strcat(pending,s);}
  while(*pending){while(*pending=='/')memmove(pending,pending+1,strlen(pending));if(!*pending)break;char *slash=strchr(pending,'/');size_t n=slash?(size_t)(slash-pending):strlen(pending);if(n>=sizeof part)return bdNamErr;memcpy(part,pending,n);part[n]=0;memmove(pending,pending+n,strlen(pending+n)+1);
@@ -67,7 +67,7 @@ static int namespace_install(void){SysEnvRec sys;WDPBRec wd;HParamBlockRec vp;CI
  for(int depth=0;id>2&&depth<32;depth++){memset(&cat,0,sizeof cat);cat.dirInfo.ioNamePtr=name;cat.dirInfo.ioVRefNum=wd.ioWDVRefNum;cat.dirInfo.ioDrDirID=id;cat.dirInfo.ioFDirIndex=-1;e=PBGetCatInfoSync(&cat);if(e)return e;if(name[0]+strlen(tail)+2>=sizeof part)return bdNamErr;memcpy(part,name+1,name[0]);part[name[0]]=':';strcpy(part+name[0]+1,tail);strcpy(tail,part);id=cat.dirInfo.ioDrParID;}
  if(id!=2||strlen(root_path)+strlen(tail)+32>255)return bdNamErr;strcat(root_path,tail);strcat(root_path,"Clarice Data:");
  /* Existing directories need one read, not a failed create plus a read. */
- static const char *dirs[]={"","bin","etc","etc:clarice","tmp","dev","mnt","usr","usr:bin",0};for(int i=0;dirs[i];i++){snprintf(part,sizeof part,"%s%s",root_path,dirs[i]);size_t n=strlen(part);if(part[n-1]==':')part[n-1]=0;pstr(name,part);e=info(part,&cat);if(e==fnfErr)e=create_dir(name,&id);else if(!e&&!(cat.hFileInfo.ioFlAttrib&16))e=dirNFErr;if(e)return e;}
+ static const char *dirs[]={"","bin","etc","etc:clarice","tmp","home","dev","mnt","usr","usr:bin",0};for(int i=0;dirs[i];i++){snprintf(part,sizeof part,"%s%s",root_path,dirs[i]);size_t n=strlen(part);if(part[n-1]==':')part[n-1]=0;pstr(name,part);e=info(part,&cat);if(e==fnfErr)e=create_dir(name,&id);else if(!e&&!(cat.hFileInfo.ioFlAttrib&16))e=dirNFErr;if(e)return e;}
  snprintf(part,sizeof part,"%.240setc:profile",root_path);pstr(name,part);e=HCreate(0,0,name,'S6UX','TEXT');if(e==dupFNErr)return 0;if(e)return e;short ref;e=HOpen(0,0,name,fsWrPerm,&ref);if(!e){static const char profile[]="# Clarice startup profile; sourced once at launch.\nexport PATH=/bin:/usr/bin\n# Optional local hostname (no networking required):\n# export HOSTNAME=macplus\n";long n=sizeof profile-1;e=FSWrite(ref,&n,profile);if(!e&&n!=sizeof profile-1)e=ioErr;FSClose(ref);}if(e)HDelete(0,0,name);FlushVol(0,0);return e;
 }
 

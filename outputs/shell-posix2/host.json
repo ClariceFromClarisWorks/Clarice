@@ -204,7 +204,7 @@
     "status": 0,
     "stdout": "local:unset\nexported:private\nreassigned:changed\n",
     "expected": "local:unset\nexported:private\nreassigned:changed\n",
-    "stderr": "ALLOC calls=66 peak=1051 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=66 peak=1059 remaining=0 fault=0\n"
   },
   {
     "name": "export-unset",
@@ -213,7 +213,7 @@
     "status": 0,
     "stdout": "\nchild:\nchild:value\n",
     "expected": "\nchild:\nchild:value\n",
-    "stderr": "ALLOC calls=51 peak=1050 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=51 peak=1058 remaining=0 fault=0\n"
   },
   {
     "name": "prefix-export",
@@ -222,7 +222,7 @@
     "status": 0,
     "stdout": "child:new\nparent:old\nstill:unset\n",
     "expected": "child:new\nparent:old\nstill:unset\n",
-    "stderr": "ALLOC calls=50 peak=1630 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=50 peak=1646 remaining=0 fault=0\n"
   },
   {
     "name": "export-assignment",
@@ -231,7 +231,7 @@
     "status": 0,
     "stdout": "two words *\n",
     "expected": "two words *\n",
-    "stderr": "ALLOC calls=29 peak=1085 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=29 peak=1093 remaining=0 fault=0\n"
   },
   {
     "name": "export-subshell",
@@ -240,7 +240,7 @@
     "status": 0,
     "stdout": "inner:parent\nouter:unset\n",
     "expected": "inner:parent\nouter:unset\n",
-    "stderr": "ALLOC calls=48 peak=1642 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=48 peak=1658 remaining=0 fault=0\n"
   },
   {
     "name": "unset-export",
@@ -249,7 +249,7 @@
     "status": 0,
     "stdout": "unset\n",
     "expected": "unset\n",
-    "stderr": "ALLOC calls=34 peak=997 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=34 peak=1005 remaining=0 fault=0\n"
   },
   {
     "name": "unset-function",
@@ -267,7 +267,7 @@
     "status": 0,
     "stdout": "child:127\nparent\n",
     "expected": "child:127\nparent\n",
-    "stderr": "ALLOC calls=34 peak=969 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=34 peak=977 remaining=0 fault=0\n"
   },
   {
     "name": "export-roundtrip",
@@ -303,7 +303,7 @@
     "status": 0,
     "stdout": "unset:visible\nchanged:visible\n",
     "expected": "unset:visible\nchanged:visible\n",
-    "stderr": "ALLOC calls=45 peak=1195 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=45 peak=1203 remaining=0 fault=0\n"
   },
   {
     "name": "function-prefix",
@@ -312,7 +312,7 @@
     "status": 0,
     "stdout": "new\nold:kept:value\nunset:value\n",
     "expected": "new\nold:kept:value\nunset:value\n",
-    "stderr": "ALLOC calls=61 peak=1130 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=61 peak=1138 remaining=0 fault=0\n"
   },
   {
     "name": "function-args",
@@ -330,7 +330,7 @@
     "status": 0,
     "stdout": "6:sourced\nfunction\nunset:visible\n",
     "expected": "6:sourced\nfunction\nunset:visible\n",
-    "stderr": "ALLOC calls=74 peak=1107 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=74 peak=1115 remaining=0 fault=0\n"
   },
   {
     "name": "source-args",
@@ -348,7 +348,7 @@
     "status": 0,
     "stdout": "inner:yes\nchanged\nouter:unset\noriginal\n",
     "expected": "inner:yes\nchanged\nouter:unset\noriginal\n",
-    "stderr": "ALLOC calls=71 peak=1743 remaining=0 fault=0\n"
+    "stderr": "ALLOC calls=71 peak=1759 remaining=0 fault=0\n"
   },
   {
     "name": "printf-strings",

@@ -1,0 +1,52 @@
+cat /tmp/p2-result; printf '\nREMOTE_END_1:%d\n' $?
+HOME=</home> tilde=</home>
+/home
+/tmp
+override=</tmp>
+restored=</home>
+a
+kept
+b
+kept
+pipeline-alive
+sub=<> status=1
+assignment-status=1
+at=<a>
+at=<b>
+at=<c>
+at=<d>
+empty-ifs=<prea>
+empty-ifs=<b>
+empty-ifs=<post>
+/bin/cat
+path-ok
+device-status=0
+zero-status=0
+Runtime: heap=356120 largest=354962 image=104 ticks=14 load=14 owned-peak=0 remaining=0
+Loader ticks: read=5 validate=2 imports=0 relocations=0 prepare=2 events=2 (events included above)
+Verification ticks: mode=full header=0 record=4 payload=2 metadata=0 structure=0 (structure included in relocations)
+device-status=0
+zero-status=0
+Runtime: heap=356118 largest=354962 image=104 ticks=13 load=13 owned-peak=0 remaining=0
+Loader ticks: read=6 validate=1 imports=0 relocations=0 prepare=2 events=0 (events included above)
+Verification ticks: mode=full header=0 record=4 payload=1 metadata=0 structure=0 (structure included in relocations)
+device-status=0
+zero-status=0
+Runtime: heap=356120 largest=354962 image=104 ticks=13 load=13 owned-peak=0 remaining=0
+Loader ticks: read=5 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)
+Verification ticks: mode=full header=0 record=4 payload=1 metadata=0 structure=0 (structure included in relocations)
+device-status=0
+zero-status=0
+Runtime: heap=356118 largest=354962 image=104 ticks=14 load=14 owned-peak=0 remaining=0
+Loader ticks: read=5 validate=2 imports=0 relocations=0 prepare=3 events=2 (events included above)
+Verification ticks: mode=full header=0 record=4 payload=2 metadata=0 structure=0 (structure included in relocations)
+device-status=0
+zero-status=0
+Runtime: heap=356120 largest=354962 image=104 ticks=13 load=13 owned-peak=0 remaining=0
+Loader ticks: read=5 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)
+Verification ticks: mode=full header=0 record=4 payload=1 metadata=0 structure=0 (structure included in relocations)
+P2-LOCAL-DONE
+
+REMOTE_END_1:0
+/ > 
+PASS local script, native devices, remote high-status survival, blocked read cancellation and prompt recovery

@@ -1,5 +1,16 @@
 import subprocess,os,json
 cases=[
+'f() { return 7 | cat; echo kept; }; f; echo end',
+'for x in a b; do continue | cat; echo "$x"; done',
+'echo x | exit 9; echo $?; echo alive',
+
+'for x in a b; do echo $x | cat; break | cat; echo kept; done; echo end',
+'exit 7 | cat; echo alive',
+'false; printf \'<%s>:%s\\n\' "$(true)" "$?"',
+'true; x=$(false); echo $?',
+"IFS=:; set -- a b 'c:d' ''; printf '<%s>\\n' $@",
+"IFS=; set -- a b ''; printf '<%s>\\n' pre$@post",
+
 "case '\\' in [\\*]) echo BAD;; *) echo good;; esac",
 "case '*' in [\\*]) echo good;; *) echo BAD;; esac",
 r"case abc in \*) echo BAD;; *) echo good;; esac",
@@ -44,7 +55,7 @@ r"x='abc?'; printf '<%s>\n' ${x%\?} ${x%?}",
 results=[]
 for c in cases:
  a=subprocess.run(['work/sh-host',c],capture_output=True,text=True,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},timeout=5)
- b=subprocess.run(['/bin/sh','-c',c],capture_output=True,text=True,timeout=5)
+ b=subprocess.run(['/bin/dash','-c',c],capture_output=True,text=True,timeout=5)
  ok=a.stdout==b.stdout and a.returncode==b.returncode
  results.append({'source':c,'pass':ok,'actual':a.stdout,'expected':b.stdout,'status':a.returncode,'expected_status':b.returncode,'stderr':a.stderr})
  if not ok:print(json.dumps(results[-1]))

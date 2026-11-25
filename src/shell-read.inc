@@ -20,7 +20,7 @@ static int sh_read(int n,char **v){
   }
   line[used]=c;protected[used++]=quote;
  }
- if(count<0){rc=sh_fail("read failed");goto done;}
+ if(count<0){rc=app_yield()?130:sh_fail("read failed");goto done;}
  if(line)line[used]=0;
  const char *ifs=sh_isset("IFS")?env_get("IFS"):" \t\n";
  #define READ_SEP(k) (!protected[k]&&strchr(ifs,line[k]))

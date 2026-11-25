@@ -23,8 +23,8 @@ static int ensure_dirs(void){char part[512];unsigned char name[256];int e;long i
 '''+loop+r'''
 return 0;}
 '''+reports+r'''
-int main(void){present=1;assert(!ensure_dirs()&&creates==0&&checks==9);
- present=0;checks=0;assert(!ensure_dirs()&&creates==9&&checks==9);
+int main(void){present=1;assert(!ensure_dirs()&&creates==0&&checks==10);
+ present=0;checks=0;assert(!ensure_dirs()&&creates==10&&checks==10);
  create_fail=-34;creates=0;assert(ensure_dirs()==-34&&creates==1);create_fail=-108;assert(ensure_dirs()==-108);create_fail=0;
  present=1;bad=1;creates=0;assert(ensure_dirs()==dirNFErr&&!creates);bad=0;
  fail=-108;assert(ensure_dirs()==-108&&!creates);fail=-44;assert(ensure_dirs()==-44&&!creates);

@@ -39,7 +39,7 @@ static const char *commands[]={"clarice","remote","env","time","command","help",
 static void pstr(unsigned char *p,const char *s) {size_t n=strlen(s); if(n>255)n=255;p[0]=(unsigned char)n;memcpy(p+1,s,n);}
 #include "streams.inc"
 static void say(const char *s){emit(s,(long)asm_length(s));}
-static const char *env_get(const char *key){struct sh_env *e=env_find(sh_env,key);if(e)return e->value;if(!strcmp(key,"HOME"))return "/";if(!strcmp(key,"PWD"))return unix_cwd;return "";}
+static const char *env_get(const char *key){struct sh_env *e=env_find(sh_env,key);if(e)return e->value;if(!strcmp(key,"HOME"))return "/home";if(!strcmp(key,"PWD"))return unix_cwd;return "";}
 static int shell_relocate_cwd(const char *,const char *,int);
 #include "namespace.inc"
 /* GetCatInfo resolves a full pathname but ioVRefNum is an input, not a
@@ -63,7 +63,7 @@ void shell_dispatch_legacy(int old){dispatch_legacy=old;}
 static int program_kind_native(const char *path,const char *native){short ref;unsigned char pn[256];char head[96];long n=sizeof head-1;pstr(pn,native);int e=HOpen(0,0,pn,fsRdPerm,&ref);if(e)return 0;e=FSRead(ref,&n,head);FSClose(ref);if(e&&e!=eofErr)return 0;head[n]=0;if(n>=4&&!memcmp(head,"CLX1",4))return 2;if(memchr(head,0,n))return 0;if(n>=2&&head[0]=='#'&&head[1]=='!'){char *end=strpbrk(head,"\r\n");if(!end)return 0;*end=0;return !strcmp(head+2,"/bin/sh")||!strcmp(head+2,"/usr/bin/sh");}size_t len=strlen(path);return len>=3&&!strcmp(path+len-3,".sh");}
 /* Reuse the resolved path while choosing an executable; no resident cache. */
 static int program_kind(const char *path){char native[PATH_CAP];if(resolve(path,native))return 0;return program_kind_native(path,native);}
-static int path_entry(const char **cursor,char *out){const char *p=*cursor;if(!p)return 0;const char *end=strchr(p,':');size_t n=end?(size_t)(end-p):strlen(p);if(n>=PATH_CAP)return 0;memcpy(out,p,n);out[n]=0;if(!n)strcpy(out,".");*cursor=end?end+1:0;return 1;}
+static int path_entry(const char **cursor,char *out){while(*cursor){const char *p=*cursor,*end=strchr(p,':');size_t n=end?(size_t)(end-p):strlen(p);*cursor=end?end+1:0;if(n>=PATH_CAP)continue;memcpy(out,p,n);out[n]=0;if(!n)strcpy(out,".");return 1;}return 0;}
 static int command_path(const char *name,char *out,int *kind){char native[PATH_CAP];CInfoPBRec pb;int rejected=0;
  if(strchr(name,'/')||!strncmp(name,"native:",7)){if(strlen(name)>=PATH_CAP)return -1;strcpy(out,name);if(resolve(out,native)||info(native,&pb))return 0;if(!(pb.hFileInfo.ioFlAttrib&16)){int k=dispatch_legacy?program_kind(out):program_kind_native(out,native);if(k){if(kind)*kind=k;return 1;}}errsay("command is not an executable command\n");return -1;}
  const char *p=env_get("PATH");while(path_entry(&p,out)){size_t n=strlen(out);if(n+strlen(name)+2>=PATH_CAP)continue;strcat(out,"/");strcat(out,name);if(resolve(out,native)||info(native,&pb))continue;if(!(pb.hFileInfo.ioFlAttrib&16)){int k=dispatch_legacy?program_kind(out):program_kind_native(out,native);if(k){if(kind)*kind=k;return 1;}}rejected=1;}

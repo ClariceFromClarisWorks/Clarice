@@ -1,5 +1,5 @@
 static unsigned long cli_ticks(void){return TickCount();}
-static int cli_isatty(int fd){short ref=fd==0?input_ref:fd==1?output_ref:fd==2?error_ref:-2;return ref<0&&ref!=-2;}
+static int cli_isatty(int fd){short ref=fd==0?input_ref:fd==1?output_ref:fd==2?error_ref:-2;return ref==-1||ref==-3;}
 static unsigned long port_peak,port_remaining,module_ticks,module_bytes,module_load_ticks;
 static void cli_port_stats(unsigned long peak,unsigned long remaining){port_peak=peak;port_remaining=remaining;}
 /* Keep error reporting, cancellation and file cleanup viable under pressure.
@@ -41,7 +41,7 @@ static int cli_file_open(const char *path,const char *mode){
  int kind=vstream_kind(canonical);if(kind){if(mode[0]=='x'){errno=EEXIST;return -1;}return VSTREAM_TAG+kind*4+(update?3:mode[0]=='r'?1:2);}
  pstr(name,p);
  short permission=strchr(mode,'+')?fsRdWrPerm:mode[0]=='r'?fsRdPerm:fsWrPerm;
- if(mode[0]=='x'){e=HCreate(0,0,name,'CLRC','TEXT');if(e==dupFNErr){errno=EEXIST;return -1;}if(e)return port_errno(e);e=HOpen(0,0,name,permission,&ref);}
+ if(mode[0]=='x'){e=HCreate(0,0,name,'CLRC','TEXT');if(e==dupFNErr){errno=EEXIST;return -1;}if(e)return port_errno(e);e=HOpen(0,0,name,permission,&ref);if(e){int cleanup=HDelete(0,0,name);if(cleanup)error("exclusive-create cleanup failed",cleanup);return port_errno(e);}}
  else {e=HOpen(0,0,name,permission,&ref);if(e==fnfErr&&mode[0]!='r'){e=HCreate(0,0,name,'CLRC','TEXT');if(!e)e=HOpen(0,0,name,permission,&ref);}}
  if(e)return port_errno(e);
  if(mode[0]=='w')e=SetEOF(ref,0);else if(mode[0]=='a')e=SetFPos(ref,fsFromLEOF,0);

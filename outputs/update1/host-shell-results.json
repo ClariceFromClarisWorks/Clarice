@@ -1,5 +1,86 @@
 [
   {
+    "source": "f() { return 7 | cat; echo kept; }; f; echo end",
+    "pass": true,
+    "actual": "kept\nend\n",
+    "expected": "kept\nend\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "for x in a b; do continue | cat; echo \"$x\"; done",
+    "pass": true,
+    "actual": "a\nb\n",
+    "expected": "a\nb\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "echo x | exit 9; echo $?; echo alive",
+    "pass": true,
+    "actual": "9\nalive\n",
+    "expected": "9\nalive\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "for x in a b; do echo $x | cat; break | cat; echo kept; done; echo end",
+    "pass": true,
+    "actual": "a\nkept\nb\nkept\nend\n",
+    "expected": "a\nkept\nb\nkept\nend\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "exit 7 | cat; echo alive",
+    "pass": true,
+    "actual": "alive\n",
+    "expected": "alive\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "false; printf '<%s>:%s\\n' \"$(true)\" \"$?\"",
+    "pass": true,
+    "actual": "<>:1\n",
+    "expected": "<>:1\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "true; x=$(false); echo $?",
+    "pass": true,
+    "actual": "1\n",
+    "expected": "1\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=:; set -- a b 'c:d' ''; printf '<%s>\\n' $@",
+    "pass": true,
+    "actual": "<a>\n<b>\n<c>\n<d>\n",
+    "expected": "<a>\n<b>\n<c>\n<d>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "IFS=; set -- a b ''; printf '<%s>\\n' pre$@post",
+    "pass": true,
+    "actual": "<prea>\n<b>\n<post>\n",
+    "expected": "<prea>\n<b>\n<post>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
     "source": "case '\\' in [\\*]) echo BAD;; *) echo good;; esac",
     "pass": true,
     "actual": "good\n",

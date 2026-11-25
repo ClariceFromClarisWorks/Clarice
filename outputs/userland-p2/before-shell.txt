@@ -1,0 +1,8 @@
+{"source": "for x in a b; do echo $x | cat; break | cat; echo kept; done; echo end", "pass": false, "actual": "a\nend\n", "expected": "a\nkept\nb\nkept\nend\n", "status": 0, "expected_status": 0, "stderr": ""}
+{"source": "IFS=:; set -- a b 'c:d' ''; printf '<%s>\\n' $@", "pass": false, "actual": "<a b c>\n<d >\n", "expected": "<a>\n<b>\n<c>\n<d>\n", "status": 0, "expected_status": 0, "stderr": ""}
+{"source": "IFS=; set -- a b ''; printf '<%s>\\n' pre$@post", "pass": false, "actual": "<prea b post>\n", "expected": "<prea>\n<b>\n<post>\n", "status": 0, "expected_status": 0, "stderr": ""}
+42 / 45 passed
+Traceback (most recent call last):
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Main-SelfUpdate-Merge/tests/shell/compare.py", line 61, in <module>
+    assert all(r["pass"] for r in results), "shell comparison failed"
+AssertionError: shell comparison failed

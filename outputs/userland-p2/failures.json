@@ -1,0 +1,24 @@
+[
+  {
+    "source": "echo BAD | cat",
+    "status": 2,
+    "out": "STREAMS-RESTORED\n",
+    "error": "sh: cannot rewind pipeline spool\nALLOC calls=14 peak=844 remaining=0 fault=0\n"
+  },
+  {
+    "source": "cat <<EOF\nBAD\nEOF\n",
+    "status": 2,
+    "out": "STREAMS-RESTORED\n",
+    "error": "sh: cannot rewind here-document\nALLOC calls=11 peak=282 remaining=0 fault=0\n"
+  },
+  {
+    "source": "x=$(echo BAD)",
+    "status": 2,
+    "out": "STREAMS-RESTORED\n",
+    "error": "sh: cannot read command substitution (I/O, binary data or memory)\nALLOC calls=17 peak=1036 remaining=0 fault=0\n"
+  },
+  {
+    "source": "HOME defaults and override",
+    "out": "/home:/home\n/tmp/file\n"
+  }
+]

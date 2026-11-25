@@ -1,0 +1,27 @@
+[
+  {
+    "test": "local-script",
+    "status": 0,
+    "output": "cat /tmp/p2-result; printf '\\nREMOTE_END_1:%d\\n' $?\r\nHOME=</home> tilde=</home>\r\n/home\r\n/tmp\r\noverride=</tmp>\r\nrestored=</home>\r\na\r\nkept\r\nb\r\nkept\r\npipeline-alive\r\nsub=<> status=1\r\nassignment-status=1\r\nat=<a>\r\nat=<b>\r\nat=<c>\r\nat=<d>\r\nempty-ifs=<prea>\r\nempty-ifs=<b>\r\nempty-ifs=<post>\r\n/bin/cat\r\npath-ok\r\ndevice-status=0\r\nzero-status=0\r\nRuntime: heap=356120 largest=354962 image=104 ticks=14 load=14 owned-peak=0 remaining=0\r\nLoader ticks: read=5 validate=2 imports=0 relocations=0 prepare=2 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=2 metadata=0 structure=0 (structure included in relocations)\r\ndevice-status=0\r\nzero-status=0\r\nRuntime: heap=356118 largest=354962 image=104 ticks=13 load=13 owned-peak=0 remaining=0\r\nLoader ticks: read=6 validate=1 imports=0 relocations=0 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=1 metadata=0 structure=0 (structure included in relocations)\r\ndevice-status=0\r\nzero-status=0\r\nRuntime: heap=356120 largest=354962 image=104 ticks=13 load=13 owned-peak=0 remaining=0\r\nLoader ticks: read=5 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=1 metadata=0 structure=0 (structure included in relocations)\r\ndevice-status=0\r\nzero-status=0\r\nRuntime: heap=356118 largest=354962 image=104 ticks=14 load=14 owned-peak=0 remaining=0\r\nLoader ticks: read=5 validate=2 imports=0 relocations=0 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=2 metadata=0 structure=0 (structure included in relocations)\r\ndevice-status=0\r\nzero-status=0\r\nRuntime: heap=356120 largest=354962 image=104 ticks=13 load=13 owned-peak=0 remaining=0\r\nLoader ticks: read=5 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=1 metadata=0 structure=0 (structure included in relocations)\r\nP2-LOCAL-DONE\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "child-status-256",
+    "output": "sh -c 'exit 256'\r\n/ > echo connected; printf '\\nREMOTE_END_2:%d\\n' $?\r\nconnected\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "child-status-511",
+    "output": "sh -c 'exit 511'\r\n/ > echo connected; printf '\\nREMOTE_END_3:%d\\n' $?\r\nconnected\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "test": "child-status--1",
+    "output": "sh -c 'exit -1'\r\n/ > echo connected; printf '\\nREMOTE_END_4:%d\\n' $?\r\nconnected\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "test": "blocked-read-cancel",
+    "output": "read blocked\r\n^C\r\n/ > echo $?; printf '\\nREMOTE_END_5:%d\\n' $?\r\n130\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "test": "recovery",
+    "output": "printf \"remote-home=%s\\n\" \"$HOME\"; status runtime; printf '\\nREMOTE_END_6:%d\\n' $?\r\nremote-home=/home\r\nRuntime: heap=326042 largest=304882 image=10056 ticks=65 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=2 imports=2 relocations=1 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  }
+]

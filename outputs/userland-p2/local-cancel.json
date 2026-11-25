@@ -1,0 +1,4 @@
+{
+  "status": 0,
+  "output": "cat /tmp/p2-cancel; echo recovered; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nlocal=130\r\nrecovered\r\nRuntime: heap=326016 largest=304882 image=10056 ticks=39 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+}

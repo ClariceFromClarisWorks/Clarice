@@ -18,6 +18,7 @@ preamble=r'''
 #define paramErr -50
 typedef struct {struct {int ioFlAttrib;} hFileInfo;int identity;} CInfoPBRec;
 static char unix_cwd[512]="/tmp";
+static const char *env_get(const char *name){(void)name;return "/home";}
 struct Node {const char *path,*target;int directory;} nodes[]={
  {"/",0,1},{"/tmp",0,1},{"/tmp/file",0,0},{"/mnt",0,1},
  {"/mnt/Test 2",0,1},{"/mnt/Test 2/file",0,0},{"/alias","/tmp",0},

@@ -15,10 +15,12 @@ preamble=r'''
 #define paramErr -50
 typedef struct {struct {int ioFlAttrib;} hFileInfo;int identity;} CInfoPBRec;
 static char unix_cwd[512]="/tmp";
+static const char *home="/home";
+static const char *env_get(const char *name){(void)name;return home;}
 struct Node {const char *path,*target;int directory;} nodes[]={
  {"/",0,1},{"/tmp",0,1},{"/tmp/file",0,0},{"/mnt",0,1},
  {"/mnt/Test 2",0,1},{"/mnt/Test 2/file",0,0},{"/alias","/tmp",0},
- {"/tmp/ref","file",0},{"/tmp/up","..",0},{"/cycle","/cycle",0}};
+ {"/tmp/ref","file",0},{"/tmp/up","..",0},{"/cycle","/cycle",0},{"/home",0,1}};
 static int calls,fail;
 static int native_path(const char *s,char *p){strcpy(p,s);return 0;}
 static int unix_from_native(const char *s,char *p){strcpy(p,s);return 0;}
@@ -45,6 +47,7 @@ int main(void){
  calls=0;assert(!cli_resolve_info("/tmp/file",path,0,&pb));assert(calls==2);
  assert(!cli_resolve_info("/mnt/Test 2/file",path,0,&pb));assert(pb.identity==5);
  assert(!cli_resolve_info("/tmp/file",path,0,&pb));assert(pb.identity==2);
+ assert(!resolve_ex("~",path,0,1)&&!strcmp(path,"/home"));home="/tmp";assert(!resolve_ex("~/file",path,0,1)&&!strcmp(path,"/tmp/file"));home="../home";assert(!resolve_ex("~",path,0,1)&&!strcmp(path,"/home"));
  fail=1;pb.identity=-1;assert(cli_resolve_info("/tmp/file",path,0,&pb)==-36);assert(pb.identity==-1);
  assert(cli_resolve_info("/tmp/file",path,0,0)==paramErr);
  puts("PASS same-operation metadata: paths, links, dot/dotdot, volumes/spaces, missing/error, no stale result; 3->2 catalog calls");

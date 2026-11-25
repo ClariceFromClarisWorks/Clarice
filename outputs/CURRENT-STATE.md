@@ -2,18 +2,19 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111959**, product **bd83161**, local main: six whole-codebase P1 corrections
-plus directly related bracket-pattern quoting. Host fault/recovery and normal
-Snow Plus/4MB/System6.0.8 shell, glob, append-after-seek, remote read queue and both
-local cancellation shortcuts pass. Repeated probes retain0 command allocations;
-largest block stable; Core package+768bytes, no new persistent allocation.
-[Acceptance and limitations](userland-p1/REPORT.md). Extreme encoded-glob boundary
-and injected FSClose failure are host-validated, not guest-injected.
-Canonical publication: `http://192.168.1.112:8089/full/index.txt`, AFP
-`Macintosh Exchange/Clarice/index.txt`. Same sealed Core/49standard utilities and
-preserved optional vi; telnetd correction supplied separately as optional artifact.
-[Publication verification](userland-p1/verification.json). Prior1958 recovery and
-immutable distributions retained. No hardware deployment or GitHub push. Stop after P1.
+Latest normal build **2026111960**, local main: all eleven shell/runtime P2/P3
+findings corrected. Pipeline/control/status scope, HOME=/home, unquoted $@,
+spool rewind errors, remote logout/cancel, virtual-device isatty, exclusive-create
+cleanup, PATH skipping and ABI diagnostics pass focused host and normal68000
+Snow Plus/4MB/System6.0.8 acceptance. Prior P1 corrections retained.
+[Evidence and limits](userland-p2/REPORT.md). Zero retained command allocations;
+repeat largest block stable. Core package+512bytes, BSS+8; no new persistent heap
+blocks. Ensuring /home adds one native directory check to existing startup.
+Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
+`Macintosh Exchange/Clarice/index.txt`. Same sealed Core/49utilities plus preserved
+optional vi. [Publication verification](userland-p2/verification.json).
+Prior1959 distribution/recovery retained. Native fault injection host-only;
+physical acceptance pending. No hardware deployment or GitHub push. Stop after batch.
 
 ## Review remediation Batch A
 

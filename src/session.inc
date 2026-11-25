@@ -60,7 +60,7 @@ int cli_session_run(void *opaque,const char *command){
  ShellSession *s=opaque;if(!s||s!=remote_session||local_session||s->closed||!command)return 125;
  ShellSession local;session_capture(&local);local_session=&local;session_activate(s);session_io=&s->io;
  session_exit_requested=0;int rc=shell_run(command);s->closed=session_exit_requested;
- session_capture(s);session_io=0;session_activate(&local);local_session=0;return rc|(s->closed?256:0);
+ session_capture(s);session_io=0;session_activate(&local);local_session=0;return (rc&255)|(s->closed?256:0);
 }
 int cli_session_close(void *opaque){
  ShellSession *s=opaque;if(!s||s!=remote_session||local_session)return -1;

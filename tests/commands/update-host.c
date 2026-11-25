@@ -144,7 +144,7 @@ int main(int argc,char **argv){
  reset();int i=setup();assert(!install_test_command());same_old(i,dest);
  reset();i=put(dest,updated,updated_len);assert(!install_test_command());assert(find(dest)==i&&!memcmp(files[i].data,updated,updated_len));
  reset();i=put(dest,(const unsigned char*)"damaged",7);assert(!install_test_command());assert(files[i].len==7);assert(command_check_native(dest)==126);assert(strstr(diagnostics,"damaged"));
- reset();unsigned char bad[256];memcpy(bad,updated,updated_len);clx_put32(bad+36,CLX_RUNTIME_MINOR+1);clx_put32(bad+44,asm_fnv1a(2166136261UL,bad,44));i=put(dest,bad,updated_len);assert(!install_test_command());assert(command_check_native(dest)==126);assert(strstr(diagnostics,"incompatible runtime"));assert(!memcmp(files[i].data,bad,updated_len));
+ reset();unsigned char bad[256];memcpy(bad,updated,updated_len);clx_put32(bad+36,CLX_RUNTIME_MINOR+1);clx_put32(bad+44,asm_fnv1a(2166136261UL,bad,44));i=put(dest,bad,updated_len);assert(!install_test_command());assert(command_check_native(dest)==126);assert(strstr(diagnostics,"host is " CLX_STRING(CLX_RUNTIME_MAJOR) "." CLX_STRING(CLX_RUNTIME_MINOR)));assert(!memcmp(files[i].data,bad,updated_len));
  reset();memcpy(bad,updated,updated_len);clx_put32(bad+36,CLX_RUNTIME_MINOR);clx_put32(bad+44,asm_fnv1a(2166136261UL,bad,44));put(dest,bad,updated_len);assert(!command_check_native(dest));
  reset();memcpy(bad,updated,updated_len);clx_put32(bad+40,2);clx_put32(bad+44,asm_fnv1a(2166136261UL,bad,44));put(dest,bad,updated_len);assert(command_check_native(dest)==126);assert(strstr(diagnostics,"capabilities"));
  reset();memcpy(bad,updated,updated_len);bad[48]^=1;put(dest,bad,updated_len);assert(command_check_native(dest)==126);assert(strstr(diagnostics,"checksum"));

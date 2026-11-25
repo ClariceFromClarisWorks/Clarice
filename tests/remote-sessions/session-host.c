@@ -7,8 +7,8 @@ static int session_exit_requested;
 #undef main
 #include "../../src/session.inc"
 #include <assert.h>
-struct IO {char out[4096];size_t used;const char *input;int cancelled,fail,check_ui;};
-static long read_remote(void *v,void *p,unsigned long n){struct IO *io=v;size_t len=strlen(io->input);if(n>len)n=len;memcpy(p,io->input,n);io->input+=n;return n;}
+struct IO {char out[4096];size_t used;const char *input;int cancelled,fail,check_ui,cancel_read;};
+static long read_remote(void *v,void *p,unsigned long n){struct IO *io=v;if(io->cancel_read){io->cancelled=1;return -1;}size_t len=strlen(io->input);if(n>len)n=len;memcpy(p,io->input,n);io->input+=n;return n;}
 static long write_remote(void *v,int fd,const void *p,unsigned long n){struct IO *io=v;(void)fd;if(io->check_ui){io->check_ui=0;int entered=shell_session_ui_begin();assert(entered);assert(!strcmp(env_get("SHARED"),"exported"));assert(!strcmp(sh_argv[1],"local"));assert(!shell_session_ui_begin());shell_session_ui_end(entered);assert(!strcmp(env_get("SHARED"),"remote"));}if(io->fail)return -1;if(n>sizeof io->out-io->used-1)return -1;memcpy(io->out+io->used,p,n);io->used+=n;io->out[io->used]=0;return n;}
 static int cancel_remote(void *v){return ((struct IO*)v)->cancelled;}
 int main(void){
@@ -25,6 +25,8 @@ int main(void){
  assert(cli_session_run(s,"if")!=0);assert(!output_error);
  io.cancelled=1;assert(cli_session_run(s,"echo must-not-run")==130);
  io.cancelled=0;assert(!cli_session_run(s,"true"));assert(!shell_run("true"));
+ io.cancel_read=1;assert(cli_session_run(s,"read blocked")==130);io.cancel_read=io.cancelled=0;
+ assert(cli_session_run(s,"sh -c 'exit 256'")==0);assert(cli_session_run(s,"sh -c 'exit 511'")==255);assert(!cli_session_run(s,"true"));
  size_t live=host_live;
  for(unsigned i=1;i<=80;i++){
   char n[32];snprintf(n,sizeof n,"%lu",(unsigned long)host_calls+i);

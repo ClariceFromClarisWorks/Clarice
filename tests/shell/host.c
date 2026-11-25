@@ -36,7 +36,7 @@ static int FSRead(short,long*,char*);
 static void say(const char*s){emit(s,strlen(s));}
 #include "alloc.h"
 #include "../../src/shell-env.inc"
-static const char *env_get(const char *name){struct sh_env *e=env_find(sh_env,name);return e?e->value:"";}
+static const char *env_get(const char *name){struct sh_env *e=env_find(sh_env,name);return e?e->value:!strcmp(name,"HOME")?"/home":"";}
 static void pstr(unsigned char*p,const char*s){*p=strlen(s);memcpy(p+1,s,*p);}
 static void pathstr(char *s,const unsigned char*p){memcpy(s,p+1,*p);s[*p]=0;}
 static int HCreate(int a,int b,const unsigned char*p,int c,int d){char s[256];(void)a;(void)b;(void)c;(void)d;pathstr(s,p);FILE*f=fopen(s,"wx");if(!f)return dupFNErr;fclose(f);return 0;}
@@ -45,7 +45,7 @@ static int stream_input_open(const char *path,short *ref){int kind=vstream_kind(
 static int HOpen(int a,int b,const unsigned char*p,short mode,short*ref){char s[256];(void)a;(void)b;pathstr(s,p);return open_path(s,mode,ref);}
 static int HDelete(int a,int b,const unsigned char*p){char s[256];(void)a;(void)b;pathstr(s,p);return unlink(s);}
 static int FSClose(short r){int rc=fclose(refs[r]);refs[r]=0;return rc;}
-static int SetFPos(short r,int mode,long pos){(void)mode;return fseek(refs[r],pos,SEEK_SET);}
+static int SetFPos(short r,int mode,long pos){(void)mode;if(getenv("CLARICE_SHELL_FAIL_REWIND"))return -36;return fseek(refs[r],pos,SEEK_SET);}
 static int FSRead(short r,long*n,char*b){long count=fread(b,1,*n,refs[r]);int rc=count==*n?0:eofErr;*n=count;return rc;}
 static int GetEOF(short r,long*n){long p=ftell(refs[r]);fseek(refs[r],0,SEEK_END);*n=ftell(refs[r]);fseek(refs[r],p,SEEK_SET);return 0;}
 static int redirect(const char*s,int append){int kind=vstream_kind(s);if(kind){output_ref=-(kind*4+2);return 0;}for(int i=0;i<128;i++)if(!refs[i]){refs[i]=fopen(s,append?"ab":"wb");if(!refs[i])return 1;output_ref=i;return 0;}return 1;}
