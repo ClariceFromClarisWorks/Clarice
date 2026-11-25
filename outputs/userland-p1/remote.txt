@@ -1,0 +1,5 @@
+PASS independent session exports, variables, functions, arguments, read/write, exit, parser/write failure, allocation exhaustion and cleanup
+PASS wildcard listen: twelve unapproved-peer completions rejected before bytes/auth/session/indicator; stream rearmed, allowed peer accepted, no retained allocations
+PASS authentication: upstream PBKDF2 known answer; no pre-auth shell or pipelined execution; wrong/right password, wiped input, strict missing/malformed config; zero retained allocations
+PASS service: allocation failure, graceful logout drain, negotiated echo, idle dispatch, CRLF, overlong input rejection/recovery, interrupt, delayed abort retains buffers, reconnect and zero retained allocations
+PASS native serial login, pre-auth discard, shell input, raw binary, delayed abort ownership and cleanup

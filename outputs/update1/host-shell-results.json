@@ -1,5 +1,77 @@
 [
   {
+    "source": "case '\\' in [\\*]) echo BAD;; *) echo good;; esac",
+    "pass": true,
+    "actual": "good\n",
+    "expected": "good\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "case '*' in [\\*]) echo good;; *) echo BAD;; esac",
+    "pass": true,
+    "actual": "good\n",
+    "expected": "good\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "case abc in \\*) echo BAD;; *) echo good;; esac",
+    "pass": true,
+    "actual": "good\n",
+    "expected": "good\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "case '*' in \\*) echo good;; *) echo BAD;; esac",
+    "pass": true,
+    "actual": "good\n",
+    "expected": "good\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "case abc in 'a*') echo BAD;; *) echo good;; esac",
+    "pass": true,
+    "actual": "good\n",
+    "expected": "good\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x='*abc'; printf '<%s>\\n' \"${x#\\*}\" \"${x#*}\" \"${x#'*'}\"",
+    "pass": true,
+    "actual": "<abc>\n<*abc>\n<abc>\n",
+    "expected": "<abc>\n<*abc>\n<abc>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "x='abc?'; printf '<%s>\\n' ${x%\\?} ${x%?}",
+    "pass": true,
+    "actual": "<abc>\n<abc>\n",
+    "expected": "<abc>\n<abc>\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
+    "source": "TEMP=x true; echo after; (INNER=y true); echo recovered",
+    "pass": true,
+    "actual": "after\nrecovered\n",
+    "expected": "after\nrecovered\n",
+    "status": 0,
+    "expected_status": 0,
+    "stderr": ""
+  },
+  {
     "source": "cat <<EOF\none\nEOF\necho after; cat <<EOF\ntwo\nEOF\necho end\n",
     "pass": true,
     "actual": "one\nafter\ntwo\nend\n",

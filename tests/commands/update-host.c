@@ -133,6 +133,7 @@ int main(int argc,char **argv){
  alloc_calls=0;assert(!cli_appcheck(dest)&&!alloc_calls&&!allocs);
  allocation_limit=~0UL;reset();assert(cli_appcheck("missing")==fnfErr);
  reset();setup();fail_close=1;assert(cli_appcheck(dest)==ioErr);
+ reset();setup();fail_close=1;assert(module_run(dest,0,0)==126);assert(module_native_error==ioErr&&!allocs&&!executions);fail_close=0;assert(!module_run(dest,0,0)&&!allocs);
  reset();setup();read_error=ioErr;assert(cli_appcheck(dest)==ioErr);read_error=0;assert(!cli_appcheck(dest));
  reset();setup();char first[]="awk",program[]="BEGIN {}";char *args[]={first,program,NULL};
  for(int run=0;run<3;run++){execute_status=run==0?0:run==1?2:130;assert(module_run(dest,2,args)==execute_status);assert(args[0]==first&&args[1]==program&&!args[2]);assert(!allocs);}execute_status=0;

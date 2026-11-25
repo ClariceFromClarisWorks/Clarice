@@ -81,6 +81,7 @@ static void command_install_hint(const char *name){(void)name;}
 int main(int argc,char **argv){
  if(argc<2)return 2;if(argc>2)cancel_after=atoi(argv[2]);
  int rc=shell_run(argv[1]);
+ if(sh_saved_frames){fprintf(stderr,"saved frame retained after command\n");return 123;}
  for(int i=0;i<128;i++)if(refs[i]){fprintf(stderr,"leaked native reference %d\n",i);return 125;}
  if(getenv("CLARICE_SHELL_RECOVERY")){unsetenv("CLARICE_SHELL_FAIL_ALLOC");cancel_after=polls=0;shell_run("printf 'STREAMS-RESTORED\\n'");}
  sh_functions_free(sh_functions);

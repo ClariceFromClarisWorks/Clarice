@@ -753,6 +753,13 @@ struct mrsh_word *word(struct mrsh_parser *parser, char end) {
 				read_continuation_line(parser);
 				continue;
 			}
+			if (!c) {parser_set_error(parser,"unfinished escape");goto error;}
+			if (!push_buffer_word_string(parser,&children,&buf,&child_begin)) goto error;
+			char *literal=malloc(2);if (!literal) {parser_oom(parser);goto error;}
+			literal[0]=parser_read_char(parser);literal[1]=0;
+			struct mrsh_word_string *escaped=parser_string(parser,literal,true);
+			if (!escaped || !parser_word_add(parser,&children,&escaped->word)) goto error;
+			continue;
 		} else if (is_operator_start(c) || isblank(c)) {
 			break;
 		}

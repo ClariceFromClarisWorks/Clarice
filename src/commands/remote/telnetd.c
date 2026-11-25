@@ -267,7 +267,7 @@ static void poll_service(int execute){
   auth_pending=0;if(e||difference||auth_overflow||!auth_length){text("\nAuthentication failed.\n");auth_retry=TickCount()+300;closing=1;return;}
   auth_length=0;ClariceSessionIO io={0,read_session,write_session,cancel_session};session=cli_session_open(&io);if(session)cli_session_set_wire(session,session_wire);if(!session){failed=1;return;}cli_session_set_wire(session,session_wire);text("\n");prompt();
  }
- if(execute&&session&&ready_used&&!running&&!failed&&!closing){char command[LINE];unsigned n=0;while(n<ready_used&&ready[n]!='\n')n++;if(n>=LINE){failed=1;return;}memcpy(command,ready,n);command[n]=0;
+ if(execute&&session&&ready_used&&!running&&!failed&&!closing){if(ready_at){memmove(ready,ready+ready_at,ready_used-ready_at);ready_used-=ready_at;ready_at=0;}char command[LINE];unsigned n=0;while(n<ready_used&&ready[n]!='\n')n++;if(n>=LINE){failed=1;return;}memcpy(command,ready,n);command[n]=0;
   strcpy(previous,command);unsigned consumed=n<ready_used?n+1:n;memmove(ready,ready+consumed,ready_used-consumed);ready_used-=consumed;ready_at=0;running=1;interrupted=0;int rc=cli_session_run(session,command);running=0;
   if(rc&256)closing=1;else if(!failed&&!closing){interrupted=0;prompt();}pump();
  }

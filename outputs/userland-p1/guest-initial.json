@@ -1,0 +1,17 @@
+[
+  {
+    "command": "cat /tmp/p1-result",
+    "status": 0,
+    "output": "cat /tmp/p1-result; printf '\\nREMOTE_END_1:%d\\n' $?\r\nframe-ok\r\nnested-ok\r\nPASS-escaped\r\nPASS-bracket\r\ntrim=abc\r\nglob=</tmp/p1/abc>\r\nglob=</tmp/p1/axc>\r\nliteral=</tmp/p1/*>\r\nPASS binary update streams, seek, descriptor ownership and reopen\r\nappend-status=0\r\nRuntime: heap=367496 largest=367410 image=7708 ticks=108 load=34 owned-peak=4208 remaining=0\r\nLoader ticks: read=9 validate=16 imports=2 relocations=1 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=16 metadata=0 structure=0 (structure included in relocations)\r\nPASS binary update streams, seek, descriptor ownership and reopen\r\nappend-status=0\r\nRuntime: heap=367494 largest=367410 image=7708 ticks=100 load=33 owned-peak=4208 remaining=0\r\nLoader ticks: read=8 validate=16 imports=1 relocations=2 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=16 metadata=0 structure=1 (structure included in relocations)\r\nPASS binary update streams, seek, descriptor ownership and reopen\r\nappend-status=0\r\nRuntime: heap=367496 largest=367410 image=7708 ticks=104 load=33 owned-peak=4208 remaining=0\r\nLoader ticks: read=8 validate=16 imports=1 relocations=2 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=16 metadata=0 structure=1 (structure included in relocations)\r\nPASS binary update streams, seek, descriptor ownership and reopen\r\nappend-status=0\r\nRuntime: heap=367494 largest=367410 image=7708 ticks=101 load=33 owned-peak=4208 remaining=0\r\nLoader ticks: read=9 validate=16 imports=2 relocations=1 prepare=1 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=16 metadata=0 structure=0 (structure included in relocations)\r\nPASS binary update streams, seek, descriptor ownership and reopen\r\nappend-status=0\r\nRuntime: heap=367496 largest=367410 image=7708 ticks=100 load=33 owned-peak=4208 remaining=0\r\nLoader ticks: read=8 validate=16 imports=1 relocations=2 prepare=1 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=5 payload=16 metadata=0 structure=1 (structure included in relocations)\r\nabXYefGHP1-LOCAL-DONE\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "cat /tmp/p1/memory",
+    "status": 0,
+    "output": "cat /tmp/p1/memory; printf '\\nREMOTE_END_2:%d\\n' $?\r\nInstalled RAM             4096 KiB\r\nApplication heap extent   695 KiB\r\nFree heap                 356 KiB\r\nLargest free block        356 KiB\r\nFree after purging        356 KiB\r\nLargest after purging     356 KiB\r\nInstalled RAM             4096 KiB\r\nApplication heap extent   695 KiB\r\nFree heap                 356 KiB\r\nLargest free block        356 KiB\r\nFree after purging        356 KiB\r\nLargest after purging     356 KiB\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "output": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=327318 largest=315014 image=10056 ticks=49 load=28 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=0 imports=2 relocations=1 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

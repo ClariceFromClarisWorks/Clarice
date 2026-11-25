@@ -1,5 +1,14 @@
 import subprocess,os,json
 cases=[
+"case '\\' in [\\*]) echo BAD;; *) echo good;; esac",
+"case '*' in [\\*]) echo good;; *) echo BAD;; esac",
+r"case abc in \*) echo BAD;; *) echo good;; esac",
+r"case '*' in \*) echo good;; *) echo BAD;; esac",
+r"case abc in 'a*') echo BAD;; *) echo good;; esac",
+    'x=\'*abc\'; printf \'<%s>\\n\' "${x#\\*}" "${x#*}" "${x#\'*\'}"',
+r"x='abc?'; printf '<%s>\n' ${x%\?} ${x%?}",
+"TEMP=x true; echo after; (INNER=y true); echo recovered",
+
 "cat <<EOF\none\nEOF\necho after; cat <<EOF\ntwo\nEOF\necho end\n",
 "x=world; cat <<EOF\nhello $x\nEOF\n",
 "x=world; cat <<'EOF'\nhello $x\nEOF\n",

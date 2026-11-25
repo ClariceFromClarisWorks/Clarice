@@ -1,0 +1,1 @@
+PASS 347 adapter allocation failures; zero retained tracked allocations

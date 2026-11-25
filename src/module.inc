@@ -189,7 +189,7 @@ if(!meta){e=memFullErr;reason="insufficient relocation memory";goto close;}
  relocations+=TickCount()-phase;phase=TickCount();
 verified:
  if(eligible){unsigned char current[32];if(!clx_identity(ref,native,current)||memcmp(identity,current,32)){reason="installed command changed during validation";goto close;}}
- if(!embedded){if(meta)DisposePtr((Ptr)meta);e=FSClose(ref);ref=-1;if(e){reason="command close failed";goto close;}}meta=0;
+ if(!embedded){if(meta)DisposePtr((Ptr)meta);meta=0;e=FSClose(ref);ref=-1;if(e){reason="command close failed";goto close;}}meta=0;
  preparation+=TickCount()-phase;phase=TickCount();
  if(eligible&&!matched){memset(receipt,0,sizeof receipt);memcpy(receipt,"CLXV0001",8);memcpy(receipt+8,identity,32);memcpy(receipt+40,header,48);strcpy((char*)receipt+88,native);clx_put32(receipt+344,metadata_hash);clx_put32(receipt+348,clx_hash(2166136261UL,receipt,348));clx_receipt_write(receipt_path,receipt);}
  record_time+=TickCount()-phase;

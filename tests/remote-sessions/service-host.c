@@ -69,6 +69,9 @@ int main(void){char *av[]={"telnetd","--no-password","--peer","10.0.0.1",0};
  char longline[1500];memset(longline,'x',sizeof longline-1);longline[sizeof longline-1]=0;feed(longline);feed("\r");poll_service(1);assert(execs==1&&!ready_used);
  feed("echo good\r\n");poll_service(1);assert(execs==2);
  feed("echo good\r\necho good\r\n");poll_service(1);poll_service(1);assert(execs==4);
+ /* read consumed a complete line, leaving a queued command. */
+ feed("do-not-execute\r\necho good\r\n");char consumed[15];
+ assert(read_session(0,consumed,15)==15);poll_service(1);assert(execs==5&&!ready_used);
  /* Eight-bit negotiation must not turn ordinary shell LF into stair-step text. */
  feed_bytes("\377\375\000",3);pump();assert(clarice_telnet_enabled(engine,TELNET_TELOPT_BINARY,1));
  before=used;terminal_text("a\nb",3);assert(used==before+4&&!memcmp(output+before,"a\r\nb",4));

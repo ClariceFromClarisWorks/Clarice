@@ -1,0 +1,19 @@
+[
+  {
+    "test": "queued-read",
+    "output": "read value; printf 'consumed=<%s>\\n' \"$value\"\r\ntouch /tmp/P1-BAD\r\nprintf 'QUEUE-DONE\\n'\r\nconsumed=<touch /tmp/P1-BAD>\r\n/ > QUEUE-DONE\r\n/ > "
+  },
+  {
+    "test": "not-executed",
+    "status": 0,
+    "output": "test ! -e /tmp/P1-BAD; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "cancel",
+    "output": "while :; do :; done\r\n^C\r\n/ > echo $?; printf '\\nREMOTE_END_2:%d\\n' $?\r\n130\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "recovered",
+    "output": "echo recovered; status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nrecovered\r\nRuntime: heap=326876 largest=315014 image=1536 ticks=44 load=43 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=6 imports=0 relocations=0 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=full header=0 record=25 payload=4 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

@@ -1,0 +1,3 @@
+REPRO saved assignment frame remains linked after free
+REPRO escaped wildcard becomes active case pattern
+REPRO failed FSClose double-frees relocation metadata

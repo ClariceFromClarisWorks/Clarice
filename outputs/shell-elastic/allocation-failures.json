@@ -1,5 +1,11 @@
 [
   {
+    "name": "quoted-pattern",
+    "injected_failures": 18,
+    "host_adapter_peak": 976,
+    "remaining": 0
+  },
+  {
     "name": "record",
     "injected_failures": 21,
     "host_adapter_peak": 36998,
@@ -8,19 +14,19 @@
   {
     "name": "multi",
     "injected_failures": 14,
-    "host_adapter_peak": 423,
+    "host_adapter_peak": 447,
     "remaining": 0
   },
   {
     "name": "substitution",
     "injected_failures": 20,
-    "host_adapter_peak": 1648,
+    "host_adapter_peak": 1040,
     "remaining": 0
   },
   {
     "name": "scope",
     "injected_failures": 37,
-    "host_adapter_peak": 1555,
+    "host_adapter_peak": 955,
     "remaining": 0
   },
   {
@@ -32,7 +38,7 @@
   {
     "name": "prefix",
     "injected_failures": 26,
-    "host_adapter_peak": 1622,
+    "host_adapter_peak": 1022,
     "remaining": 0
   }
 ]

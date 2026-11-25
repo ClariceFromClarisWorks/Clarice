@@ -28,6 +28,9 @@ static void cli_free(void *p){if(p)DisposePtr((Ptr)p);}
 static int port_errno(int e){
  switch(e){case fnfErr:case dirNFErr:errno=ENOENT;break;case permErr:case wPrErr:case fLckdErr:errno=EACCES;break;case dskFulErr:errno=ENOSPC;break;case tmfoErr:errno=EMFILE;break;case memFullErr:errno=ENOMEM;break;default:errno=EIO;break;}return -1;
 }
+/* Opaque file tokens already distinguish virtual streams. Keep append intent
+   above the native signed-short reference; no retained per-open allocation. */
+#define PORT_APPEND_REF 131072
 static int cli_file_open(const char *path,const char *mode){
  short ref;char p[PATH_CAP],canonical[PATH_CAP];unsigned char name[256];int e;
  if(!mode||!mode[0]||!strchr("rwaxc",mode[0])){errno=EINVAL;return -1;}
@@ -42,7 +45,7 @@ static int cli_file_open(const char *path,const char *mode){
  else {e=HOpen(0,0,name,permission,&ref);if(e==fnfErr&&mode[0]!='r'){e=HCreate(0,0,name,'CLRC','TEXT');if(!e)e=HOpen(0,0,name,permission,&ref);}}
  if(e)return port_errno(e);
  if(mode[0]=='w')e=SetEOF(ref,0);else if(mode[0]=='a')e=SetFPos(ref,fsFromLEOF,0);
- if(e){FSClose(ref);return port_errno(e);}return ref;
+ if(e){FSClose(ref);return port_errno(e);}return mode[0]=='a'?(int)ref|PORT_APPEND_REF:ref;
 }
 static long cli_file_read(int ref,void *buf,unsigned long count){if(vstream_code(ref))return vstream_read(ref,buf,count);long n=count;
 #ifdef CLARICE_NANO_PERF
@@ -53,7 +56,9 @@ static long cli_file_read(int ref,void *buf,unsigned long count){if(vstream_code
  perf_read_ticks+=TickCount()-t;
 #endif
 if(e&&e!=eofErr)return port_errno(e);return n;}
-static long cli_file_write(int ref,const void *buf,unsigned long count){if(vstream_code(ref))return vstream_write(ref,count);long n=count;int e=FSWrite(ref,&n,buf);if(e)return port_errno(e);return n;}
+static long cli_file_write(int ref,const void *buf,unsigned long count){if(vstream_code(ref))return vstream_write(ref,count);long n=count;int e;
+ if(ref&PORT_APPEND_REF){ParamBlockRec pb;memset(&pb,0,sizeof pb);pb.ioParam.ioRefNum=(short)ref;pb.ioParam.ioBuffer=(Ptr)buf;pb.ioParam.ioReqCount=count;pb.ioParam.ioPosMode=fsFromLEOF;e=PBWriteSync(&pb);n=pb.ioParam.ioActCount;}
+ else e=FSWrite(ref,&n,buf);if(e)return port_errno(e);return n;}
 static int cli_file_close(int ref){if(vstream_code(ref))return 0;int e=FSClose(ref);return e?port_errno(e):0;}
 /* newlib retains FILE records for reuse. Allocate that bounded pool before any
    command image, so a late FILE allocation cannot split the freed image hole. */

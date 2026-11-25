@@ -208,6 +208,7 @@ int port_open(const char *path,int flags,...){
  else if(flags==(O_WRONLY|O_CREAT|O_TRUNC))mode="w";
  else if(flags==(O_WRONLY|O_CREAT))mode="c";
  else if(flags==(O_WRONLY|O_CREAT|O_APPEND))mode="a";
+ else if(flags==(O_RDWR|O_CREAT|O_APPEND))mode="a+";
  else if(flags==(O_WRONLY|O_CREAT|O_EXCL))mode="x";
  else if(flags==(O_RDWR|O_CREAT|O_EXCL))mode="x+";
  else if(flags==O_RDWR)mode="r+";

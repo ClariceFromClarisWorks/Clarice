@@ -1,7 +1,7 @@
 from pathlib import Path
 import subprocess,os,re,json
 r=Path(__file__).resolve().parents[2];rows=[]
-fixtures=[('record','read -r x',b'a'*8192+b'\n'),('multi','read a b c',b'one two three\n'),('substitution','x=$(printf hello); printf "%s\\n" "$x"',b''),('scope','x=old; set -- outer; (set -- inner; x=new); printf "%s:%s\\n" "$x" "$1"',b''),('args','set -- '+ ' '.join(str(i) for i in range(100)),b''),('prefix','x=old; x=new read y; printf "%s:%s\\n" "$x" "$y"',b'value\n')]
+fixtures=[('quoted-pattern',r"x='*abc'; case abc in \*) echo BAD;; *) printf '%s\n' ${x#\*};; esac",b''),('record','read -r x',b'a'*8192+b'\n'),('multi','read a b c',b'one two three\n'),('substitution','x=$(printf hello); printf "%s\\n" "$x"',b''),('scope','x=old; set -- outer; (set -- inner; x=new); printf "%s:%s\\n" "$x" "$1"',b''),('args','set -- '+ ' '.join(str(i) for i in range(100)),b''),('prefix','x=old; x=new read y; printf "%s:%s\\n" "$x" "$y"',b'value\n')]
 for name,source,data in fixtures:
  env={**os.environ,'CLARICE_SHELL_ALLOC_STATS':'1'}
  base=subprocess.run([str(r/'work/sh-host'),source],input=data,capture_output=True,env=env)

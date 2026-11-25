@@ -14,6 +14,8 @@ static int cancel_remote(void *v){return ((struct IO*)v)->cancelled;}
 int main(void){
  struct IO io={.input="hello remote\n"};ClariceSessionIO ops={&io,read_remote,write_remote,cancel_remote};
  assert(!shell_run("export SHARED=exported; LOCAL=private; localfn() { echo local; }; set -- local arguments"));
+ assert(!shell_run("TEMP=x true; f() { INNER=y true; }; OUTER=z f; unset -f f"));
+ assert(!sh_saved_frames);
  size_t baseline=host_live;void *s=cli_session_open(&ops);assert(s&&!cli_session_open(&ops));
  assert(!cli_session_run(s,"printf '%s:%s\\n' \"$SHARED\" \"${LOCAL-unset}\"; SHARED=remote; remotefn() { printf remote; }; set -- remote args"));
  assert(!strcmp(io.out,"exported:unset\n"));io.used=0;io.out[0]=0;

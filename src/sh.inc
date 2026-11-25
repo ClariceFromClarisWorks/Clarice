@@ -29,7 +29,7 @@ static int sh_isset(const char *name){if(!strcmp(name,"HOME")||!strcmp(name,"PWD
 /* A single owned block stores positional pointers and strings. */
 static char *sh_positions_copy(int n,char **v,char ***out){size_t bytes;if(n<1||(size_t)n>((size_t)-1/sizeof(char*))-1)return 0;bytes=((size_t)n+1)*sizeof(char*);for(int i=0;i<n;i++){size_t len=strlen(v[i])+1;if(len>(size_t)-1-bytes)return 0;bytes+=len;}char *storage=malloc(bytes);if(!storage)return 0;char **args=(char**)storage;char *p=storage+((size_t)n+1)*sizeof(char*);for(int i=0;i<n;i++){size_t len=strlen(v[i])+1;args[i]=p;memcpy(p,v[i],len);p+=len;}args[n]=0;*out=args;return storage;}
 static int sh_positions(int n,char **v){char **args;char *storage=sh_positions_copy(n,v,&args);if(!storage)return sh_fail("out of memory storing positional parameters");free(sh_owned_args);sh_owned_args=storage;sh_argv=args;sh_argc=n;return 0;}
-static int sh_pattern(const char *p,const char *s){while(*p){if(*p=='*'){while(*p=='*')p++;if(!*p)return 1;do{if(sh_pattern(p,s))return 1;}while(*s++);return 0;}if(*p=='?'){if(!*s)return 0;p++;s++;continue;}if(*p=='['){int yes=0,neg=0;unsigned char c=*s++;if(!c)return 0;p++;if(*p=='!'||*p=='^'){neg=1;p++;}while(*p&&*p!=']'){unsigned char lo=*p++,hi=lo;if(*p=='-'&&p[1]&&p[1]!=']'){p++;hi=*p++;}if(c>=lo&&c<=hi)yes=1;}if(*p!=']'||yes==neg)return 0;p++;continue;}if(*p=='\\'&&p[1])p++;if(*p++!=*s++)return 0;}return !*s;}
+static int sh_pattern(const char *p,const char *s){while(*p){if(*p=='*'){while(*p=='*')p++;if(!*p)return 1;do{if(sh_pattern(p,s))return 1;}while(*s++);return 0;}if(*p=='?'){if(!*s)return 0;p++;s++;continue;}if(*p=='['){int yes=0,neg=0;unsigned char c=*s++;if(!c)return 0;p++;if(*p=='!'||*p=='^'){neg=1;p++;}while(*p&&*p!=']'){unsigned char lo=*p++;if(lo=='\\'&&*p)lo=*p++;unsigned char hi=lo;if(*p=='-'&&p[1]&&p[1]!=']'){p++;hi=*p++;if(hi=='\\'&&*p)hi=*p++;}if(c>=lo&&c<=hi)yes=1;}if(*p!=']'||yes==neg)return 0;p++;continue;}if(*p=='\\'&&p[1])p++;if(*p++!=*s++)return 0;}return !*s;}
 struct sh_saved {
 struct sh_saved *saved_next;
 #if !defined(SH_HOST_TEST)||defined(SH_SESSION_HOST_TEST)
@@ -95,6 +95,12 @@ static void sh_word_free(struct sh_word *w){if(w){if(w->text!=w->small)free(w->t
 static int sh_append(struct sh_word *w,const char *s,int mode){size_t n=strlen(s),need;if(n>(size_t)INT_MAX-1-(size_t)w->used)return sh_fail("expanded word too large");need=(size_t)w->used+n+1;
  if(need>w->cap){size_t cap=w->cap+w->cap/2;if(cap<w->cap||cap<need)cap=need;if(cap>(size_t)-1/2)return sh_fail("expanded word too large");char *p=malloc(cap*2);if(!p)return sh_fail("out of memory expanding word");memcpy(p,w->text,w->used);memcpy(p+cap,w->mode,w->used);if(w->text!=w->small)free(w->text);w->text=p;w->mode=(unsigned char*)p+cap;w->cap=cap;}
  memcpy(w->text+w->used,s,n);memset(w->mode+w->used,mode,n);w->used+=(int)n;w->text[w->used]=0;if(mode==1){w->quoted=1;w->quote_end=w->used;}return 0;}
+/* Preserve lexical quoting when passing expanded words to the matcher. */
+static int sh_quote_pattern(struct sh_word *w){
+ struct sh_word *p=sh_word_new();if(!p)return sh_fail("out of memory");int rc=0;
+ for(int i=0;!rc&&i<w->used;i++){char c[2]={w->text[i],0};if(w->mode[i]==1&&strchr("*?[\\",c[0]))rc=sh_append(p,"\\",0);if(!rc)rc=sh_append(p,c,0);}
+ if(!rc){sh_word_reset(w);rc=sh_append(w,p->text,0);}sh_word_free(p);return rc;
+}
 static int sh_word(struct mrsh_word *node,struct sh_word *w,int quoted){size_t i;char num[32];if(!node)return 0;switch(node->type){
 case MRSH_WORD_STRING:{struct mrsh_word_string *s=(void*)node;return sh_append(w,s->str,quoted||s->single_quoted?1:0);}
 case MRSH_WORD_LIST:{struct mrsh_word_list *l=(void*)node;if(l->double_quoted)w->quoted=1;for(i=0;i<l->children.len;i++){int rc=sh_word(l->children.data[i],w,quoted||l->double_quoted);if(rc)return rc;}return 0;}
@@ -106,7 +112,7 @@ case MRSH_WORD_PARAMETER:{struct mrsh_word_parameter *p=(void*)node;const char *
  if(p->op==MRSH_PARAM_EQUAL&&!unset)return sh_append(w,value,quoted?1:2);
  if(p->op==MRSH_PARAM_QMARK&&!unset)return sh_append(w,value,quoted?1:2);
  if(p->op==MRSH_PARAM_PLUS&&unset)return 0;
- stable=malloc(strlen(value)+1);if(!stable)return sh_fail("out of memory");strcpy(stable,value);value=stable;arg=sh_word_new();if(!arg){free(stable);return sh_fail("out of memory");}int rc=sh_word(p->arg,arg,quoted);
+ stable=malloc(strlen(value)+1);if(!stable)return sh_fail("out of memory");strcpy(stable,value);value=stable;arg=sh_word_new();if(!arg){free(stable);return sh_fail("out of memory");}int trimming=p->op==MRSH_PARAM_HASH||p->op==MRSH_PARAM_DHASH||p->op==MRSH_PARAM_PERCENT||p->op==MRSH_PARAM_DPERCENT;int rc=sh_word(p->arg,arg,trimming?0:quoted);if(!rc&&trimming)rc=sh_quote_pattern(arg);
  if(!rc){if(p->op==MRSH_PARAM_QMARK)rc=sh_fail(arg->used?arg->text:"unset parameter");
  else if(p->op==MRSH_PARAM_EQUAL){rc=sh_set(p->name,arg->text);if(!rc)rc=sh_append(w,arg->text,quoted?1:2);}
  else if(p->op==MRSH_PARAM_MINUS||p->op==MRSH_PARAM_PLUS)rc=sh_append(w,arg->text,quoted?1:2);
@@ -128,7 +134,7 @@ static int sh_glob(struct sh_args *a,char *s,unsigned char *mode){int i,has=0,st
  if(prefix>=sizeof path)return 2;if(prefix){memcpy(path,s,prefix);path[prefix]=0;for(i=0;i<(int)prefix;i++)if(strchr("*?[",path[i]))return sh_fail("wildcards in parent directories are not implemented");}else strcpy(path,".");
  int used=0;for(i=(int)prefix;s[i];i++){if(used>PATH_CAP-3)return 2;if(mode[i]==1&&strchr("*?[\\",s[i]))pattern[used++]='\\';pattern[used++]=s[i];}pattern[used]=0;
  e=directory(path,&vol,&id);if(e)return sh_arg(a,s);
- for(;;){CInfoPBRec pb;unsigned char name[256];char candidate[PATH_CAP];memset(&pb,0,sizeof pb);pb.hFileInfo.ioNamePtr=name;pb.hFileInfo.ioVRefNum=vol;pb.hFileInfo.ioDirID=id;pb.hFileInfo.ioFDirIndex=index++;e=PBGetCatInfoSync(&pb);if(e==fnfErr)break;if(e)return sh_fail("glob directory read failed");name[name[0]+1]=0;if(name[1]=='.'&&pattern[0]!='.')continue;if(!sh_pattern(pattern,(char*)name+1))continue;memcpy(candidate,s,prefix);int n=prefix,j;for(j=1;j<=name[0];j++){unsigned char c=name[j];if(c=='/'||c=='%'){candidate[n++]='%';candidate[n++]='2';candidate[n++]=c=='/'?'F':'5';}else candidate[n++]=c;}candidate[n]=0;if(sh_arg(a,candidate))return 2;if(app_yield())return 130;}
+ for(;;){CInfoPBRec pb;unsigned char name[257];char candidate[PATH_CAP];memset(&pb,0,sizeof pb);pb.hFileInfo.ioNamePtr=name;pb.hFileInfo.ioVRefNum=vol;pb.hFileInfo.ioDirID=id;pb.hFileInfo.ioFDirIndex=index++;e=PBGetCatInfoSync(&pb);if(e==fnfErr)break;if(e)return sh_fail("glob directory read failed");name[name[0]+1]=0;if(name[1]=='.'&&pattern[0]!='.')continue;if(!sh_pattern(pattern,(char*)name+1))continue;size_t encoded=prefix;for(unsigned j=1;j<=name[0];j++)encoded+=name[j]=='/'||name[j]=='%'?3:1;if(encoded>=sizeof candidate)return sh_fail("expanded pathname too long");memcpy(candidate,s,prefix);int n=prefix,j;for(j=1;j<=name[0];j++){unsigned char c=name[j];if(c=='/'||c=='%'){candidate[n++]='%';candidate[n++]='2';candidate[n++]=c=='/'?'F':'5';}else candidate[n++]=c;}candidate[n]=0;if(sh_arg(a,candidate))return 2;if(app_yield())return 130;}
  if(a->n==start)return sh_arg(a,s);for(i=start+1;i<a->n;i++){int j=i;char *value=a->v[i];while(j>start&&strcmp(a->v[j-1],value)>0){a->v[j]=a->v[j-1];j--;}a->v[j]=value;}return 0;
 #endif
 }
@@ -337,6 +343,7 @@ static int sh_simple(struct mrsh_simple_command *c,struct mrsh_command *compound
     (notably IFS= read -r value). Restore only the assigned names. */
  for(i=0;i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];free(env_take(&sh_env,x->name));}
  for(i=0;i<c->assignments.len;i++){struct mrsh_assignment *x=c->assignments.data[i];struct sh_env *e=env_take(&saved->env,x->name);if(e)env_put(&sh_env,e);}
+ sh_saved_frames=saved->saved_next;
  env_free(saved->env);free(saved->args);sh_functions_free(saved->functions);free(saved);
  }sh_args_free(a);return rc;}
 /* The existing simple-command redirect owner also scopes compound execution.
@@ -352,7 +359,7 @@ case MRSH_SUBSHELL:{struct sh_saved *s=sh_save();int flow=sh_flow;if(!s){rc=2;br
 case MRSH_IF_CLAUSE:{struct mrsh_if_clause *c=(void*)cmd;rc=sh_array(&c->condition);if(!sh_flow){if(!rc)rc=sh_array(&c->body);else rc=c->else_part?sh_command(c->else_part):0;}break;}
 case MRSH_FOR_CLAUSE:{struct mrsh_for_clause *c=(void*)cmd;struct sh_args *a=calloc(1,sizeof *a);if(!a){rc=2;break;}if(c->in){for(i=0;!rc&&i<c->word_list.len;i++)rc=sh_expand(c->word_list.data[i],a);}else for(i=1;!rc&&i<(size_t)sh_argc;i++)rc=sh_arg(a,sh_argv[i]);if(!rc){sh_loop++;for(i=0;i<(size_t)a->n;i++){if(sh_set(c->name,a->v[i])){rc=2;break;}rc=sh_array(&c->body);if(sh_flow==2)sh_flow=0;else if(sh_flow)break;}sh_loop--;if(sh_flow==1)sh_flow=0;}sh_args_free(a);break;}
 case MRSH_LOOP_CLAUSE:{struct mrsh_loop_clause *c=(void*)cmd;sh_loop++;while(!sh_flow){int cond=sh_array(&c->condition);if(sh_flow||((cond==0)!=(c->type==MRSH_LOOP_WHILE)))break;rc=sh_array(&c->body);if(sh_flow==2)sh_flow=0;if(app_yield()){rc=130;sh_flow=4;sh_flow_status=130;break;}}sh_loop--;if(sh_flow==1)sh_flow=0;break;}
-case MRSH_CASE_CLAUSE:{struct mrsh_case_clause *c=(void*)cmd;struct sh_word *word=sh_word_new(),*pat=sh_word_new();int matched=0;if(!word||!pat){sh_word_free(word);sh_word_free(pat);rc=2;break;}rc=sh_word(c->word,word,1);for(i=0;!rc&&!matched&&i<c->items.len;i++){struct mrsh_case_item *item=c->items.data[i];size_t j;for(j=0;!matched&&j<item->patterns.len;j++){sh_word_reset(pat);rc=sh_word(item->patterns.data[j],pat,1);if(rc)break;matched=sh_pattern(pat->text,word->text);}if(matched)rc=sh_array(&item->body);}sh_word_free(word);sh_word_free(pat);break;}
+case MRSH_CASE_CLAUSE:{struct mrsh_case_clause *c=(void*)cmd;struct sh_word *word=sh_word_new(),*pat=sh_word_new();int matched=0;if(!word||!pat){sh_word_free(word);sh_word_free(pat);rc=2;break;}rc=sh_word(c->word,word,1);for(i=0;!rc&&!matched&&i<c->items.len;i++){struct mrsh_case_item *item=c->items.data[i];size_t j;for(j=0;!matched&&j<item->patterns.len;j++){sh_word_reset(pat);rc=sh_word(item->patterns.data[j],pat,0);if(!rc)rc=sh_quote_pattern(pat);if(rc)break;matched=sh_pattern(pat->text,word->text);}if(matched)rc=sh_array(&item->body);}sh_word_free(word);sh_word_free(pat);break;}
 case MRSH_FUNCTION_DEFINITION:{struct mrsh_function_definition *c=(void*)cmd;if(c->io_redirects.len){rc=sh_fail("function redirections unsupported");break;}struct sh_function *replacement=sh_function_new(c->name,c->body);if(!replacement){rc=sh_fail("out of memory copying function");break;}struct sh_function **slot=&sh_functions;while(*slot&&strcmp((*slot)->name,c->name))slot=&(*slot)->next;struct sh_function *old=*slot;replacement->next=old?old->next:0;*slot=replacement;if(old){old->next=0;sh_functions_free(old);}break;}}
 
 sh_depth--;shell_status=rc;return rc;}

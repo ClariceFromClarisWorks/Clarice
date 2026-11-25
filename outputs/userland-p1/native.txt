@@ -1,0 +1,1 @@
+PASS encoded HFS glob bounds; append after seek, native write failure, ordinary overwrite

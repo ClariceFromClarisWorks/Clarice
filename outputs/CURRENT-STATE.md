@@ -2,18 +2,18 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111958**, product **28f187f**, integrated local main.
-All51 entries/36 payloads and sealed offline/source archives verified through
-canonical HTTP and AFP. [Verification](review-c/verification.json).
-Batch C removes duplicate same-call snapshot verification and ping's interval
-busy loop. Recovery model I/O−32.6%; fresh verification on resume retained.
-Host fault/corruption/legacy tests and Snow Plus/4MB/System6.0.8 installation,
-ICMP/DNS, both local cancellation shortcuts and repeated heap checks pass.
-Core/package/BSS unchanged; ping+64bytes, no persistent allocation/startup work.
-[Evidence and measurement limitations](review-c/REPORT.md).
-Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Prior1957 recovery/distribution retained.
-No physical deployment or GitHub push. Stop after Batch C.
+Latest normal build **2026111959**, local main: six whole-codebase P1 corrections
+plus directly related bracket-pattern quoting. Host fault/recovery and normal
+Snow Plus/4MB/System6.0.8 shell, glob, append-after-seek, remote read queue and both
+local cancellation shortcuts pass. Repeated probes retain0 command allocations;
+largest block stable; Core package+768bytes, no new persistent allocation.
+[Acceptance and limitations](userland-p1/REPORT.md). Extreme encoded-glob boundary
+and injected FSClose failure are host-validated, not guest-injected.
+Canonical publication: `http://192.168.1.112:8089/full/index.txt`, AFP
+`Macintosh Exchange/Clarice/index.txt`. Same sealed Core/49standard utilities and
+preserved optional vi; telnetd correction supplied separately as optional artifact.
+[Publication verification](userland-p1/verification.json). Prior1958 recovery and
+immutable distributions retained. No hardware deployment or GitHub push. Stop after P1.
 
 ## Review remediation Batch A
 
