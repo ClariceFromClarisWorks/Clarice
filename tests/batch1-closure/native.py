@@ -12,7 +12,7 @@ def fn(s,name):
  while n:n+=(s[e]=='{')-(s[e]=='}');e+=1
  return s[a:e]
 sh=Path('src/sh.inc').read_text();port=Path('src/port-files.inc').read_text()
-code=pre+'\n#include <ctype.h>\n'+Path('src/shell-env.inc').read_text()+'\nstatic char unix_cwd[]="/tmp";\n'+fn(port,'cli_environment')+fn(sh,'sh_pattern')+fn(sh,'sh_glob')+r'''
+code=pre+'\n#define bdNamErr -37\n'+fn(Path('src/namespace.inc').read_text(),'encode_name')+'\n#include <ctype.h>\n'+Path('src/shell-env.inc').read_text()+'\nstatic char unix_cwd[]="/tmp";\n'+fn(port,'cli_environment')+fn(sh,'sh_pattern')+fn(sh,'sh_glob')+r'''
 int main(void){
  char value[128];assert(cli_environment(0,value,sizeof value)==1);printf("default=%s\n",value);
  assert(!strcmp(value,BEFORE?"HOME=/":"HOME=/home"));

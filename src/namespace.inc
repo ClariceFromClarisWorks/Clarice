@@ -1,7 +1,11 @@
 /* Bounded Unix namespace backed by ordinary HFS folders and mounted volumes. */
 static int info(const char *path,CInfoPBRec *pb);
 static int same_name(const char *a,const char *b){while(*a&&*b)if(tolower((unsigned char)*a++)!=tolower((unsigned char)*b++))return 0;return !*a&&!*b;}
-static int encode_name(const char *s,char *out,size_t cap){size_t n=0;while(*s){unsigned char c=*s++;if(n+4>=cap)return bdNamErr;if(c=='/'||c=='%'){out[n++]='%';out[n++]='2';out[n++]=c=='/'?'F':'5';}else out[n++]=c;}out[n]=0;return 0;}
+static int encode_name(const char *s,char *out,size_t cap){
+ /* Syntax is interpreted before percent decoding. Quote whole dot names so a
+    native catalog child cannot become Unix self/parent traversal on re-entry. */
+ if(s[0]=='.'&&(!s[1]||(s[1]=='.'&&!s[2]))){size_t n=s[1]?6:3;if(cap<=n)return bdNamErr;memcpy(out,"%2E%2E",n);out[n]=0;return 0;}
+ size_t n=0;while(*s){unsigned char c=*s++;if(n+4>=cap)return bdNamErr;if(c=='/'||c=='%'){out[n++]='%';out[n++]='2';out[n++]=c=='/'?'F':'5';}else out[n++]=c;}out[n]=0;return 0;}
 static int decode_name(const char *s,size_t n,char *out){size_t i,j=0;for(i=0;i<n;i++){unsigned char c=s[i];if(c=='%'&&i+2<n&&isxdigit((unsigned char)s[i+1])&&isxdigit((unsigned char)s[i+2])){char h[3]={s[i+1],s[i+2],0};c=strtol(h,0,16);i+=2;}if(!c||c==':'||j>=31)return bdNamErr;out[j++]=c;}out[j]=0;return 0;}
 static int volume_name(int index,char *name){HParamBlockRec pb;unsigned char n[256];memset(&pb,0,sizeof pb);pb.volumeParam.ioNamePtr=n;pb.volumeParam.ioVolIndex=index;int e=PBHGetVInfoSync(&pb);if(e)return e;memcpy(name,n+1,n[0]);name[n[0]]=0;return 0;}
 /* Volume labels are never silently resolved to the wrong duplicate volume. */

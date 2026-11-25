@@ -32,7 +32,7 @@ static int app_yield(void){return 0;}
 struct sh_args {char*v[4];int n;};
 static int sh_arg(struct sh_args*a,const char*p){a->v[a->n++]=strdup(p);return 0;}
 '''
-s=Path('src/sh.inc').read_text();code=pre+function(Path('src/port-files.inc').read_text(),'cli_file_write')+function(s,'sh_pattern')+function(s,'sh_glob')+r'''
+s=Path('src/sh.inc').read_text();code=pre+'\n#define bdNamErr -37\n'+function(Path('src/namespace.inc').read_text(),'encode_name')+function(Path('src/port-files.inc').read_text(),'cli_file_write')+function(s,'sh_pattern')+function(s,'sh_glob')+r'''
 int main(void){
  assert(cli_file_write(7|PORT_APPEND_REF,"A",1)==1&&!memcmp(data,"originalA",9));
  pos=0;assert(cli_file_write(7|PORT_APPEND_REF,"B",1)==1&&!memcmp(data,"originalAB",10));

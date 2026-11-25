@@ -76,8 +76,8 @@ static int remove_one(const char *path,int depth,int onlydir){
  size_t prefix=!strncmp(path,"native:",7)?7:0;char separator=prefix?':':'/';
  while(end>prefix&&path[end-1]==separator)end--;if(end<=prefix)return bdNamErr;
  start=end;while(start>prefix&&path[start-1]!=separator)start--;
- if(end-start==1&&path[start]=='.')return paramErr;
- if(end-start==2&&path[start]=='.'&&path[start+1]=='.')return paramErr;
+ if(!prefix&&end-start==1&&path[start]=='.')return paramErr;
+ if(!prefix&&end-start==2&&path[start]=='.'&&path[start+1]=='.')return paramErr;
  /* A trailing separator makes the resolver follow a final link. Strip it
     for this no-follow operation, then require an actual directory. */
  int trailing=end&&path[end];strcpy(pending,path);if(trailing)pending[end]=0;
