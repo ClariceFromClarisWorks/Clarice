@@ -58,7 +58,14 @@ static int mkdir_one(const char *path){char native[PATH_CAP],canonical[PATH_CAP]
   if(e==fnfErr||e==dirNFErr){e=checked(part,native,canonical,1);if(!e)e=cli_native_mkdir(native);}else if(!e&&!isdir(&pb))e=dirNFErr;
   part[i]=c;if(e)return e;if(app_yield())return 130;}return 0;}
 /* Explicit DFS frames keep stack use constant; only active directories allocate. */
-typedef struct RemoveFrame {struct RemoveFrame *parent;char native[PATH_CAP],path[PATH_CAP];} RemoveFrame;
+/* Bind each active directory once, as find/du already do. HFS overwrites the
+   result ID, so restore the parent's ID and explicit volume on every call. */
+static int directory_nth(short volume,long dirid,int index,char *leaf,CInfoPBRec *pb){
+ unsigned char name[256];memset(pb,0,sizeof *pb);pb->hFileInfo.ioNamePtr=name;
+ pb->hFileInfo.ioVRefNum=volume;pb->hFileInfo.ioDirID=dirid;pb->hFileInfo.ioFDirIndex=index;
+ int e=PBGetCatInfoSync(pb);if(!e){if(name[0]>31)return bdNamErr;memcpy(leaf,name+1,name[0]);leaf[name[0]]=0;}return e;
+}
+typedef struct RemoveFrame {struct RemoveFrame *parent;char native[PATH_CAP],path[PATH_CAP];short volume;long dirid;} RemoveFrame;
 static int remove_one(const char *path,int depth,int onlydir){
  (void)depth;RemoveFrame *top=NULL;char pending[PATH_CAP],native[PATH_CAP],canonical[PATH_CAP],leaf[32],encoded[100];CInfoPBRec pb;int e=0;
  /* Reject dot operands before resolution erases their spelling or traversal
@@ -78,15 +85,16 @@ static int remove_one(const char *path,int depth,int onlydir){
   if((e==fnfErr||e==dirNFErr)&&force)e=0;
   else if(!e){
    if(isdir(&pb)&&recursive&&!onlydir){
+    if(!pb.hFileInfo.ioVRefNum){e=nsvErr;break;}
     RemoveFrame *f=cli_alloc(sizeof *f);if(!f){e=memFullErr;break;}
-    f->parent=top;strcpy(f->native,native);strcpy(f->path,canonical);top=f;
+    f->parent=top;f->volume=pb.hFileInfo.ioVRefNum;f->dirid=pb.dirInfo.ioDrDirID;strcpy(f->native,native);strcpy(f->path,canonical);top=f;
    }else if(isdir(&pb)&&!onlydir)e=paramErr;
    else if(!isdir(&pb)&&onlydir)e=dirNFErr;
    else{e=cli_native_delete(native);if(!e)file_progress_complete();}
   }
   if(e)break;
   while(top){
-   e=cli_native_nth(top->native,1,leaf,&pb);
+   e=directory_nth(top->volume,top->dirid,1,leaf,&pb);
    if(!e){e=encode_name(leaf,encoded,sizeof encoded);if(!e)e=join_path(top->path,encoded,pending);break;}
    if(e!=fnfErr)break;
    file_progress_current(top->path);e=cli_native_delete(top->native);if(e)break;file_progress_complete();
@@ -126,7 +134,7 @@ static int copy_file(const char *src,const char *dst,CInfoPBRec *source){
  if(exists)e=cli_native_delete(backup);
  if(!e&&preserve&&(source->hFileInfo.ioFlAttrib&1))e=cli_native_lock(dst,1);if(!e&&!file_progress_moving)file_progress_complete();return e;
 }
-typedef struct CopyFrame {struct CopyFrame *parent;char native[PATH_CAP],source[PATH_CAP],destination[PATH_CAP];int index;} CopyFrame;
+typedef struct CopyFrame {struct CopyFrame *parent;char source[PATH_CAP],destination[PATH_CAP];int index;short volume;long dirid;} CopyFrame;
 static int copy_one(const char *source,const char *destination,int depth){
  (void)depth;CopyFrame *top=NULL;char pending_src[PATH_CAP],pending_dst[PATH_CAP],src[PATH_CAP],dst[PATH_CAP],sc[PATH_CAP],dc[PATH_CAP],leaf[32],enc[100];CInfoPBRec pb,target;int e=0;
  if(strlen(source)>=PATH_CAP||strlen(destination)>=PATH_CAP)return bdNamErr;
@@ -139,14 +147,15 @@ static int copy_one(const char *source,const char *destination,int depth){
   if(!isdir(&pb))e=copy_file(src,dst,&pb);
   else{
    size_t n=strlen(src);if(!recursive||(!strncasecmp(src,dst,n)&&(dst[n]==':'||!dst[n]))){e=paramErr;break;}
+   if(!pb.hFileInfo.ioVRefNum){e=nsvErr;break;}
    CopyFrame *f=cli_alloc(sizeof *f);if(!f){e=memFullErr;break;}
-   f->parent=top;f->index=1;strcpy(f->native,src);strcpy(f->source,sc);strcpy(f->destination,dc);top=f;
+   f->parent=top;f->index=1;f->volume=pb.hFileInfo.ioVRefNum;f->dirid=pb.dirInfo.ioDrDirID;strcpy(f->source,sc);strcpy(f->destination,dc);top=f;
    e=info(dst,&target);if(e==fnfErr)e=cli_native_mkdir(dst);else if(!e&&!isdir(&target))e=paramErr;
   }
   if(e)break;
   while(top){
    if(top->index>32767){e=paramErr;break;}
-   e=cli_native_nth(top->native,top->index++,leaf,&target);
+   e=directory_nth(top->volume,top->dirid,top->index++,leaf,&target);
    if(!e){e=encode_name(leaf,enc,sizeof enc);if(!e)e=join_path(top->source,enc,pending_src);if(!e)e=join_path(top->destination,enc,pending_dst);break;}
    if(e!=fnfErr)break;
    file_progress_current(top->source);file_progress_complete();CopyFrame *f=top;top=f->parent;cli_free(f);e=0;

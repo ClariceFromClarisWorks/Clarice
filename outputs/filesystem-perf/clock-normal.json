@@ -1,0 +1,4 @@
+{
+  "status": 0,
+  "text": "/mnt/Perf/clock; printf '\\nREMOTE_END_1:%d\\n' $?\r\nclock iterations=100000 ticks=85 sum=4144466567\r\nclock iterations=200000 ticks=166 sum=150598631\r\nclock iterations=400000 ticks=316 sum=4144300327\r\n\r\nREMOTE_END_1:0\r\n/ > "
+}

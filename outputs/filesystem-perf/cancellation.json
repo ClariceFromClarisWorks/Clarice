@@ -1,0 +1,188 @@
+[
+  {
+    "test": "cancel before find profile=True",
+    "host_reply_ms": 8.08,
+    "text": "/mnt/Perf/before/iprofile find /mnt/Perf/n1000 > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery before find",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=10692 ticks=95 load=58 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=27 imports=1 relocations=1 prepare=1 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=27 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "cancel before du profile=True",
+    "host_reply_ms": 7.03,
+    "text": "/mnt/Perf/before/iprofile du /mnt/Perf/n1000 > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery before du",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=10692 ticks=84 load=57 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=26 imports=2 relocations=1 prepare=0 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=26 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "cancel before cp profile=True",
+    "host_reply_ms": 23.56,
+    "text": "/mnt/Perf/before/fprofile cp -R --no-progress /mnt/Perf/n1000 /mnt/Perf/cancel-cp > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery before cp",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=13836 ticks=101 load=72 owned-peak=0 remaining=0\r\nLoader ticks: read=21 validate=36 imports=2 relocations=2 prepare=1 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=36 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "test": "cancel seed before",
+    "command": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "test": "cancel before rm profile=True",
+    "host_reply_ms": 26.52,
+    "text": "/mnt/Perf/before/fprofile rm -R --no-progress /mnt/Perf/cancel-rm > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery before rm",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_6:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=13836 ticks=113 load=72 owned-peak=0 remaining=0\r\nLoader ticks: read=20 validate=36 imports=2 relocations=3 prepare=0 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=36 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "test": "cancel after find profile=True",
+    "host_reply_ms": 6.64,
+    "text": "/mnt/Perf/after/iprofile find /mnt/Perf/n1000 > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery after find",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=10948 ticks=100 load=59 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=27 imports=2 relocations=1 prepare=1 events=4 (events included above)\r\nVerification ticks: mode=full header=1 record=10 payload=26 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "test": "cancel after du profile=True",
+    "host_reply_ms": 73.06,
+    "text": "/mnt/Perf/after/iprofile du /mnt/Perf/n1000 > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery after du",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_9:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=10948 ticks=39 load=0 owned-peak=0 remaining=0\r\nLoader ticks: read=0 validate=0 imports=0 relocations=0 prepare=0 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=12 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  },
+  {
+    "test": "cancel after cp profile=True",
+    "host_reply_ms": 49.33,
+    "text": "/mnt/Perf/after/fprofile cp -R --no-progress /mnt/Perf/n1000 /mnt/Perf/cancel-cp > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery after cp",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_10:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=14144 ticks=108 load=82 owned-peak=0 remaining=0\r\nLoader ticks: read=21 validate=43 imports=3 relocations=4 prepare=0 events=10 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=43 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "test": "cancel seed after",
+    "command": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\n/ > "
+  },
+  {
+    "test": "cancel after rm profile=True",
+    "host_reply_ms": 21.73,
+    "text": "/mnt/Perf/after/fprofile rm -R --no-progress /mnt/Perf/cancel-rm > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery after rm",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_13:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=14144 ticks=96 load=78 owned-peak=0 remaining=0\r\nLoader ticks: read=25 validate=37 imports=3 relocations=2 prepare=0 events=3 (events included above)\r\nVerification ticks: mode=full header=1 record=11 payload=36 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_13:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r\nREMOTE_END_14:0\r\n/ > "
+  },
+  {
+    "test": "cancel after find profile=False",
+    "host_reply_ms": 5.72,
+    "text": "/mnt/Perf/after/find /mnt/Perf/n1000 > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery after find",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_15:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=10320 ticks=95 load=57 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=25 imports=1 relocations=1 prepare=2 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_15:0\r\n/ > "
+  },
+  {
+    "test": "cancel after du profile=False",
+    "host_reply_ms": 4.66,
+    "text": "/mnt/Perf/after/du /mnt/Perf/n1000 > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery after du",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_16:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=10320 ticks=95 load=54 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=23 imports=1 relocations=1 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=23 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_16:0\r\n/ > "
+  },
+  {
+    "test": "cancel after cp profile=False",
+    "host_reply_ms": 14.08,
+    "text": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n1000 /mnt/Perf/cancel-cp > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery after cp",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_17:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=13468 ticks=100 load=72 owned-peak=0 remaining=0\r\nLoader ticks: read=20 validate=36 imports=3 relocations=2 prepare=0 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=36 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_17:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\n/ > "
+  },
+  {
+    "test": "cancel seed after",
+    "command": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\r\nREMOTE_END_19:0\r\n/ > "
+  },
+  {
+    "test": "cancel after rm profile=False",
+    "host_reply_ms": 10.38,
+    "text": "/mnt/Perf/after/rm -R --no-progress /mnt/Perf/cancel-rm > /dev/null\r\n^C\r\n/ > "
+  },
+  {
+    "test": "status and recovery after rm",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "test \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_20:%d\\n' $?\r\nRuntime: heap=324262 largest=323098 image=13468 ticks=93 load=76 owned-peak=0 remaining=0\r\nLoader ticks: read=25 validate=34 imports=2 relocations=3 prepare=0 events=3 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=34 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_20:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_21:%d\\n' $?\r\n\r\nREMOTE_END_21:0\r\n/ > "
+  }
+]

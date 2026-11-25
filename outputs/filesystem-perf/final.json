@@ -1,0 +1,82 @@
+[
+  {
+    "test": "clock calibration",
+    "status": 0,
+    "text": "/mnt/Perf/clock; printf '\\nREMOTE_END_1:%d\\n' $?\r\nclock iterations=100000 ticks=85 sum=4144466567\r\nclock iterations=200000 ticks=166 sum=150598631\r\nclock iterations=400000 ticks=319 sum=4144300327\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "0 before find",
+    "status": 0,
+    "text": "/mnt/Perf/before/iprofile find /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nPROFILE ticks=1084 yields=2021 yield_ticks=276 maxgap=10 allocs=1011 requested=547962 peak=1626 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324216 largest=323098 image=10692 ticks=1142 load=55 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=25 imports=2 relocations=1 prepare=0 events=1 (events included above)\r\nVerification ticks: mode=full header=1 record=10 payload=24 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "0 before du",
+    "status": 0,
+    "text": "/mnt/Perf/before/iprofile du /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nPROFILE ticks=1057 yields=2022 yield_ticks=132 maxgap=9 allocs=1011 requested=547962 peak=1626 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324220 largest=323098 image=10692 ticks=1115 load=55 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=24 imports=2 relocations=1 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=24 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "test": "0 after find",
+    "status": 0,
+    "text": "/mnt/Perf/after/iprofile find /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nPROFILE ticks=703 yields=2021 yield_ticks=105 maxgap=9 allocs=11 requested=5962 peak=1084 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324218 largest=323098 image=10948 ticks=765 load=59 owned-peak=0 remaining=0\r\nLoader ticks: read=20 validate=24 imports=2 relocations=1 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=24 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "test": "0 after du",
+    "status": 0,
+    "text": "/mnt/Perf/after/iprofile du /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nPROFILE ticks=652 yields=2022 yield_ticks=128 maxgap=9 allocs=11 requested=5962 peak=1084 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324220 largest=323098 image=10948 ticks=714 load=59 owned-peak=0 remaining=0\r\nLoader ticks: read=19 validate=26 imports=2 relocations=1 prepare=0 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=26 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "test": "1 before find",
+    "status": 0,
+    "text": "/mnt/Perf/before/iprofile find /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_6:%d\\n' $?\r\nPROFILE ticks=1085 yields=2021 yield_ticks=256 maxgap=9 allocs=1011 requested=547962 peak=1626 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324216 largest=323098 image=10692 ticks=1145 load=57 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=26 imports=2 relocations=1 prepare=0 events=3 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=26 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "test": "1 before du",
+    "status": 0,
+    "text": "/mnt/Perf/before/iprofile du /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nPROFILE ticks=1055 yields=2022 yield_ticks=137 maxgap=9 allocs=1011 requested=547962 peak=1626 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324220 largest=323098 image=10692 ticks=1115 load=57 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=26 imports=1 relocations=2 prepare=1 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=26 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "test": "1 after find",
+    "status": 0,
+    "text": "/mnt/Perf/after/iprofile find /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\nPROFILE ticks=703 yields=2021 yield_ticks=105 maxgap=9 allocs=11 requested=5962 peak=1084 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324218 largest=323098 image=10948 ticks=764 load=58 owned-peak=0 remaining=0\r\nLoader ticks: read=20 validate=24 imports=2 relocations=1 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=24 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "test": "1 after du",
+    "status": 0,
+    "text": "/mnt/Perf/after/iprofile du /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_9:%d\\n' $?\r\nPROFILE ticks=656 yields=2022 yield_ticks=109 maxgap=9 allocs=11 requested=5962 peak=1084 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324220 largest=323098 image=10948 ticks=717 load=58 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=26 imports=1 relocations=2 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=1 record=10 payload=25 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  },
+  {
+    "test": "2 before find",
+    "status": 0,
+    "text": "/mnt/Perf/before/iprofile find /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_10:%d\\n' $?\r\nPROFILE ticks=1085 yields=2021 yield_ticks=261 maxgap=9 allocs=1011 requested=547962 peak=1626 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324204 largest=323098 image=10692 ticks=1145 load=57 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=26 imports=2 relocations=1 prepare=0 events=3 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=26 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "test": "2 before du",
+    "status": 0,
+    "text": "/mnt/Perf/before/iprofile du /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_11:%d\\n' $?\r\nPROFILE ticks=1054 yields=2022 yield_ticks=139 maxgap=9 allocs=1011 requested=547962 peak=1626 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324218 largest=323098 image=10692 ticks=1115 load=58 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=26 imports=2 relocations=1 prepare=1 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=26 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "test": "2 after find",
+    "status": 0,
+    "text": "/mnt/Perf/after/iprofile find /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_12:%d\\n' $?\r\nPROFILE ticks=702 yields=2021 yield_ticks=99 maxgap=10 allocs=11 requested=5962 peak=1084 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324216 largest=323098 image=10948 ticks=765 load=60 owned-peak=0 remaining=0\r\nLoader ticks: read=19 validate=27 imports=2 relocations=1 prepare=0 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=27 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_12:0\r\n/ > "
+  },
+  {
+    "test": "2 after du",
+    "status": 0,
+    "text": "/mnt/Perf/after/iprofile du /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_13:%d\\n' $?\r\nPROFILE ticks=657 yields=2022 yield_ticks=123 maxgap=10 allocs=11 requested=5962 peak=1084 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nRuntime: heap=324220 largest=323098 image=10948 ticks=718 load=58 owned-peak=0 remaining=0\r\nLoader ticks: read=19 validate=25 imports=2 relocations=1 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_13:0\r\n/ > "
+  },
+  {
+    "test": "final copy frame payload",
+    "status": 0,
+    "text": "/mnt/Perf/after/fprofile cp -Rp --no-progress /mnt/Perf/n10 /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_14:%d\\n' $?\r\nPROFILE ticks=822 yields=73 yield_ticks=47 maxgap=43 allocs=3 requested=3114 peak=2076 live=0 enum_catalog=15 enum_volume=0 info=37 status=0\r\nRuntime: heap=323896 largest=323098 image=14144 ticks=900 load=75 owned-peak=0 remaining=0\r\nLoader ticks: read=21 validate=38 imports=2 relocations=3 prepare=1 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=38 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_14:0\r\n/ > "
+  },
+  {
+    "test": "final removal frame payload",
+    "status": 0,
+    "text": "/mnt/Perf/after/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_15:%d\\n' $?\r\nPROFILE ticks=283 yields=19 yield_ticks=13 maxgap=23 allocs=4 requested=4136 peak=3102 live=0 enum_catalog=17 enum_volume=0 info=14 status=0\r\nRuntime: heap=324012 largest=323098 image=14144 ticks=360 load=75 owned-peak=0 remaining=0\r\nLoader ticks: read=22 validate=35 imports=2 relocations=2 prepare=2 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=35 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_15:0\r\n/ > "
+  },
+  {
+    "test": "final heap",
+    "status": 0,
+    "text": "echo recovery-ok; status runtime; printf '\\nREMOTE_END_16:%d\\n' $?\r\nrecovery-ok\r\nRuntime: heap=324588 largest=323098 image=14144 ticks=360 load=75 owned-peak=0 remaining=0\r\nLoader ticks: read=22 validate=35 imports=2 relocations=2 prepare=2 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=35 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_16:0\r\n/ > "
+  }
+]

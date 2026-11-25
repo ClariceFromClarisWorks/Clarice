@@ -41,8 +41,9 @@ static void format_size(char *b,unsigned long long n,int human){(void)human;snpr
 main=r'''
 static void reset(void){assert(!live);attempts=polls=resolves=infos=output_error=fault=zero_volume=oversize=0;fail_at=cancel_at=-1;output[0]=0;}
 int main(void){unsigned long long total;
- for(int v=0;v<2;v++){reset();const char *root=v?"/mnt/Test 2":"/mnt/Boot";assert(!walk(root,0,0,&total));assert(total==4096);assert(resolves==1&&infos==1);assert(strstr(output,"/sub/nested\n")&&strstr(output,"/a%2Fb%25\n")&&strstr(output,"/link\n"));assert(!live);}
- for(int n=0;n<8;n++){reset();fail_at=n;int rc=walk("/mnt/Test 2",0,0,&total);if(n<6)assert(rc==1);assert(!live);reset();assert(!walk("/mnt/Test 2",0,1,&total));assert(total==4096);}
+ for(int v=0;v<2;v++){reset();const char *root=v?"/mnt/Test 2":"/mnt/Boot";assert(!walk(root,0,0,&total));assert(total==4096);assert(resolves==1&&infos==1&&attempts==2);assert(strstr(output,"/sub/nested\n")&&strstr(output,"/a%2Fb%25\n")&&strstr(output,"/link\n"));assert(!live);}
+ reset();all=1;assert(!walk("/mnt/Test 2",0,1,&total)&&total==4096&&attempts==2);assert(strstr(output,"2\t/mnt/Test 2/plain\n")&&strstr(output,"2\t/mnt/Test 2/sub/nested\n")&&strstr(output,"8\t/mnt/Test 2\n"));all=0;
+ for(int n=0;n<8;n++){reset();fail_at=n;int rc=walk("/mnt/Test 2",0,0,&total);if(n<2)assert(rc==1);else assert(!rc);assert(!live);reset();assert(!walk("/mnt/Test 2",0,1,&total));assert(total==4096);}
  for(int n=0;n<12;n++){reset();cancel_at=n;int rc=walk("/mnt/Test 2",0,0,&total);assert(rc==0||rc==130);assert(!live);}
  reset();fault=1;assert(walk("/mnt/Test 2",0,0,&total)==1);assert(!live);
  reset();assert(walk("/mnt/Missing",0,0,&total)==1);assert(!live&&infos==0);

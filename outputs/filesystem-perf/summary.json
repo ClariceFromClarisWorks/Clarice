@@ -1,0 +1,230 @@
+[
+  {
+    "entries": 10,
+    "command": "find",
+    "before": {
+      "ticks": 84,
+      "load": 55,
+      "execution": 29,
+      "heap": 323166,
+      "largest": 323098
+    },
+    "after": {
+      "ticks": 79,
+      "load": 56,
+      "execution": 23,
+      "heap": 323166,
+      "largest": 323098
+    },
+    "execution_reduction_percent": 20.7
+  },
+  {
+    "entries": 10,
+    "command": "du",
+    "before": {
+      "ticks": 89,
+      "load": 56,
+      "execution": 28,
+      "heap": 323166,
+      "largest": 321948
+    },
+    "after": {
+      "ticks": 81,
+      "load": 57,
+      "execution": 24,
+      "heap": 323176,
+      "largest": 321976
+    },
+    "execution_reduction_percent": 14.3
+  },
+  {
+    "entries": 10,
+    "command": "cp",
+    "before": {
+      "ticks": 915,
+      "load": 72,
+      "execution": 845,
+      "heap": 322834,
+      "largest": 322654
+    },
+    "after": {
+      "ticks": 884,
+      "load": 74,
+      "execution": 810,
+      "heap": 322836,
+      "largest": 322668
+    },
+    "execution_reduction_percent": 4.1
+  },
+  {
+    "entries": 10,
+    "command": "rm",
+    "before": {
+      "ticks": 329,
+      "load": 70,
+      "execution": 259,
+      "heap": 322950,
+      "largest": 322768
+    },
+    "after": {
+      "ticks": 313,
+      "load": 73,
+      "execution": 239,
+      "heap": 322950,
+      "largest": 321710
+    },
+    "execution_reduction_percent": 7.7
+  },
+  {
+    "entries": 100,
+    "command": "find",
+    "before": {
+      "ticks": 229,
+      "load": 56,
+      "execution": 174,
+      "heap": 323166,
+      "largest": 323098
+    },
+    "after": {
+      "ticks": 189,
+      "load": 57,
+      "execution": 131,
+      "heap": 323166,
+      "largest": 323098
+    },
+    "execution_reduction_percent": 24.7
+  },
+  {
+    "entries": 100,
+    "command": "du",
+    "before": {
+      "ticks": 233,
+      "load": 54,
+      "execution": 179,
+      "heap": 323166,
+      "largest": 321948
+    },
+    "after": {
+      "ticks": 187,
+      "load": 58,
+      "execution": 129,
+      "heap": 323166,
+      "largest": 321948
+    },
+    "execution_reduction_percent": 27.9
+  },
+  {
+    "entries": 100,
+    "command": "cp",
+    "before": {
+      "ticks": 8112,
+      "load": 72,
+      "execution": 8040,
+      "heap": 322834,
+      "largest": 322654
+    },
+    "after": {
+      "ticks": 7819,
+      "load": 74,
+      "execution": 7744,
+      "heap": 322834,
+      "largest": 322654
+    },
+    "execution_reduction_percent": 3.7
+  },
+  {
+    "entries": 100,
+    "command": "rm",
+    "before": {
+      "ticks": 2500,
+      "load": 73,
+      "execution": 2427,
+      "heap": 322950,
+      "largest": 322768
+    },
+    "after": {
+      "ticks": 2313,
+      "load": 79,
+      "execution": 2234,
+      "heap": 322950,
+      "largest": 322768
+    },
+    "execution_reduction_percent": 8.0
+  },
+  {
+    "entries": 1000,
+    "command": "find",
+    "before": {
+      "ticks": 1171,
+      "load": 54,
+      "execution": 1117,
+      "heap": 323166,
+      "largest": 323098
+    },
+    "after": {
+      "ticks": 737,
+      "load": 48,
+      "execution": 683,
+      "heap": 323166,
+      "largest": 323098
+    },
+    "execution_reduction_percent": 38.9
+  },
+  {
+    "entries": 1000,
+    "command": "du",
+    "before": {
+      "ticks": 1135,
+      "load": 48,
+      "execution": 1087,
+      "heap": 323166,
+      "largest": 321948
+    },
+    "after": {
+      "ticks": 682,
+      "load": 46,
+      "execution": 636,
+      "heap": 323166,
+      "largest": 321948
+    },
+    "execution_reduction_percent": 41.5
+  },
+  {
+    "entries": 1000,
+    "command": "cp",
+    "before": {
+      "ticks": 96846,
+      "load": 64,
+      "execution": 96783,
+      "heap": 322834,
+      "largest": 322654
+    },
+    "after": {
+      "ticks": 93296,
+      "load": 65,
+      "execution": 93231,
+      "heap": 322834,
+      "largest": 322654
+    },
+    "execution_reduction_percent": 3.7
+  },
+  {
+    "entries": 1000,
+    "command": "rm",
+    "before": {
+      "ticks": 26828,
+      "load": 73,
+      "execution": 26755,
+      "heap": 322948,
+      "largest": 322752
+    },
+    "after": {
+      "ticks": 23980,
+      "load": 79,
+      "execution": 23901,
+      "heap": 322950,
+      "largest": 322768
+    },
+    "execution_reduction_percent": 10.7
+  }
+]

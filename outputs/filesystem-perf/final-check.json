@@ -1,0 +1,17 @@
+[
+  {
+    "command": "/mnt/Perf/clock",
+    "status": 0,
+    "text": "/mnt/Perf/clock; printf '\\nREMOTE_END_1:%d\\n' $?\r\nclock iterations=100000 ticks=85 sum=4144466567\r\nclock iterations=200000 ticks=166 sum=150598631\r\nclock iterations=400000 ticks=320 sum=4144300327\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "/mnt/Perf/after/cp -Rp --no-progress /mnt/Perf/n10 /mnt/Perf/copy; /mnt/Perf/after/find /mnt/Perf/n10; /mnt/Perf/after/find /mnt/Perf/copy",
+    "status": 0,
+    "text": "/mnt/Perf/after/cp -Rp --no-progress /mnt/Perf/n10 /mnt/Perf/copy; /mnt/Perf/after/find /mnt/Perf/n10; /mnt/Perf/after/find /mnt/Perf/copy; printf '\\nREMOTE_END_2:%d\\n' $?\r\n/mnt/Perf/n10\r\n/mnt/Perf/n10/d0\r\n/mnt/Perf/n10/d0/file 0001\r\n/mnt/Perf/n10/d0/file 0002\r\n/mnt/Perf/n10/d0/file 0003\r\n/mnt/Perf/n10/d0/file 0004\r\n/mnt/Perf/n10/d0/slash%2F%25\r\n/mnt/Perf/n10/d1\r\n/mnt/Perf/n10/d1/file 0001\r\n/mnt/Perf/n10/d1/file 0002\r\n/mnt/Perf/n10/d1/file 0003\r\n/mnt/Perf/n10/d1/file 0004\r\n/mnt/Perf/n10/d1/slash%2F%25\r\n/mnt/Perf/copy\r\n/mnt/Perf/copy/d0\r\n/mnt/Perf/copy/d0/file 0001\r\n/mnt/Perf/copy/d0/file 0002\r\n/mnt/Perf/copy/d0/file 0003\r\n/mnt/Perf/copy/d0/file 0004\r\n/mnt/Perf/copy/d0/slash%2F%25\r\n/mnt/Perf/copy/d1\r\n/mnt/Perf/copy/d1/file 0001\r\n/mnt/Perf/copy/d1/file 0002\r\n/mnt/Perf/copy/d1/file 0003\r\n/mnt/Perf/copy/d1/file 0004\r\n/mnt/Perf/copy/d1/slash%2F%25\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "/mnt/Perf/after/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime",
+    "status": 0,
+    "text": "/mnt/Perf/after/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nPROFILE ticks=235 yields=17 yield_ticks=12 maxgap=22 allocs=3 requested=3102 peak=2068 live=0 enum_catalog=15 enum_volume=0 info=13 status=0\r\nRuntime: heap=324012 largest=323098 image=14144 ticks=313 load=75 owned-peak=0 remaining=0\r\nLoader ticks: read=21 validate=38 imports=2 relocations=3 prepare=0 events=6 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=38 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

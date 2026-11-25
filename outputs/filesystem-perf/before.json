@@ -1,0 +1,80 @@
+[
+  {
+    "label": "warmup",
+    "command": "/mnt/Perf/before/iprofile find /mnt/Perf/n10 > /dev/null",
+    "status": 0,
+    "text": "/mnt/Perf/before/iprofile find /mnt/Perf/n10 > /dev/null; printf '\\nREMOTE_END_1:%d\\n' $?\r\nPROFILE ticks=23 yields=25 yield_ticks=5 maxgap=5 allocs=13 requested=7046 peak=1626 live=0 enum_catalog=15 enum_volume=0 info=1 status=0\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "label": "find-10",
+    "command": "time /mnt/Perf/before/iprofile find /mnt/Perf/n10 > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/iprofile find /mnt/Perf/n10 > /dev/null; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nPROFILE ticks=22 yields=25 yield_ticks=4 maxgap=5 allocs=13 requested=7046 peak=1626 live=0 enum_catalog=15 enum_volume=0 info=1 status=0\r\nreal 1.51 s\r\nRuntime: heap=324130 largest=323356 image=10692 ticks=80 load=55 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=26 imports=2 relocations=1 prepare=7 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=6 payload=26 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "label": "du-10",
+    "command": "time /mnt/Perf/before/iprofile du /mnt/Perf/n10 > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/iprofile du /mnt/Perf/n10 > /dev/null; status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nPROFILE ticks=23 yields=26 yield_ticks=5 maxgap=5 allocs=13 requested=7046 peak=1626 live=0 enum_catalog=15 enum_volume=0 info=1 status=0\r\nreal 1.45 s\r\nRuntime: heap=324134 largest=323282 image=10692 ticks=77 load=51 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=26 imports=1 relocations=2 prepare=3 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=5 payload=26 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "label": "cp-10",
+    "command": "time /mnt/Perf/before/fprofile cp -Rp --no-progress /mnt/Perf/n10 /mnt/Perf/copy > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/fprofile cp -Rp --no-progress /mnt/Perf/n10 /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nPROFILE ticks=688 yields=73 yield_ticks=41 maxgap=36 allocs=3 requested=4632 peak=3088 live=0 enum_catalog=30 enum_volume=30 info=37 status=0\r\nreal 12.85 s\r\nRuntime: heap=323790 largest=323356 image=13836 ticks=761 load=70 owned-peak=0 remaining=0\r\nLoader ticks: read=15 validate=37 imports=3 relocations=2 prepare=7 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=6 payload=37 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "label": "rm-10",
+    "command": "time /mnt/Perf/before/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nPROFILE ticks=232 yields=17 yield_ticks=10 maxgap=21 allocs=3 requested=3084 peak=2056 live=0 enum_catalog=30 enum_volume=30 info=13 status=0\r\nreal 5.23 s\r\nRuntime: heap=323920 largest=323356 image=13836 ticks=303 load=68 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=38 imports=2 relocations=3 prepare=0 events=6 (events included above)\r\nVerification ticks: mode=full header=0 record=7 payload=38 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "label": "find-100",
+    "command": "time /mnt/Perf/before/iprofile find /mnt/Perf/n100 > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/iprofile find /mnt/Perf/n100 > /dev/null; status runtime; printf '\\nREMOTE_END_6:%d\\n' $?\r\nPROFILE ticks=167 yields=221 yield_ticks=36 maxgap=8 allocs=111 requested=60162 peak=1626 live=0 enum_catalog=121 enum_volume=0 info=1 status=0\r\nreal 3.95 s\r\nRuntime: heap=324108 largest=323282 image=10692 ticks=225 load=55 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=26 imports=1 relocations=2 prepare=0 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=9 payload=26 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "label": "du-100",
+    "command": "time /mnt/Perf/before/iprofile du /mnt/Perf/n100 > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/iprofile du /mnt/Perf/n100 > /dev/null; status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nPROFILE ticks=165 yields=222 yield_ticks=26 maxgap=9 allocs=111 requested=60162 peak=1626 live=0 enum_catalog=121 enum_volume=0 info=1 status=0\r\nreal 4.01 s\r\nRuntime: heap=324128 largest=323282 image=10692 ticks=230 load=62 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=31 imports=2 relocations=1 prepare=2 events=10 (events included above)\r\nVerification ticks: mode=full header=0 record=9 payload=31 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "label": "cp-100",
+    "command": "time /mnt/Perf/before/fprofile cp -Rp --no-progress /mnt/Perf/n100 /mnt/Perf/copy > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/fprofile cp -Rp --no-progress /mnt/Perf/n100 /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\nPROFILE ticks=6892 yields=503 yield_ticks=348 maxgap=44 allocs=11 requested=16984 peak=3088 live=0 enum_catalog=242 enum_volume=242 info=323 status=0\r\nreal 116.35 s\r\nRuntime: heap=323786 largest=323282 image=13836 ticks=6970 load=75 owned-peak=0 remaining=0\r\nLoader ticks: read=19 validate=38 imports=2 relocations=3 prepare=4 events=6 (events included above)\r\nVerification ticks: mode=full header=0 record=9 payload=38 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "label": "rm-100",
+    "command": "time /mnt/Perf/before/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_9:%d\\n' $?\r\nPROFILE ticks=2035 yields=123 yield_ticks=80 maxgap=32 allocs=11 requested=11308 peak=2056 live=0 enum_catalog=242 enum_volume=242 info=111 status=0\r\nreal 35.30 s\r\nRuntime: heap=323922 largest=323282 image=13836 ticks=2106 load=65 owned-peak=0 remaining=0\r\nLoader ticks: read=16 validate=37 imports=3 relocations=3 prepare=0 events=6 (events included above)\r\nVerification ticks: mode=full header=0 record=6 payload=37 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  },
+  {
+    "label": "find-1000",
+    "command": "time /mnt/Perf/before/iprofile find /mnt/Perf/n1000 > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/iprofile find /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_10:%d\\n' $?\r\nPROFILE ticks=1100 yields=2021 yield_ticks=304 maxgap=6 allocs=1011 requested=547962 peak=1626 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nreal 19.38 s\r\nRuntime: heap=324108 largest=323282 image=10692 ticks=1153 load=48 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=26 imports=2 relocations=1 prepare=0 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=6 payload=26 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "label": "du-1000",
+    "command": "time /mnt/Perf/before/iprofile du /mnt/Perf/n1000 > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/iprofile du /mnt/Perf/n1000 > /dev/null; status runtime; printf '\\nREMOTE_END_11:%d\\n' $?\r\nPROFILE ticks=1073 yields=2022 yield_ticks=232 maxgap=5 allocs=1011 requested=547962 peak=1626 live=0 enum_catalog=1021 enum_volume=0 info=1 status=0\r\nreal 18.90 s\r\nRuntime: heap=324104 largest=323282 image=10692 ticks=1124 load=48 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=25 imports=1 relocations=1 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=6 payload=25 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "label": "cp-1000",
+    "command": "time /mnt/Perf/before/fprofile cp -Rp --no-progress /mnt/Perf/n1000 /mnt/Perf/copy > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/fprofile cp -Rp --no-progress /mnt/Perf/n1000 /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_12:%d\\n' $?\r\nPROFILE ticks=84277 yields=3203 yield_ticks=2674 maxgap=71 allocs=11 requested=16984 peak=3088 live=0 enum_catalog=2042 enum_volume=2042 info=3023 status=0\r\nreal 1405.91 s\r\nRuntime: heap=323788 largest=323282 image=13836 ticks=84345 load=65 owned-peak=0 remaining=0\r\nLoader ticks: read=16 validate=38 imports=2 relocations=2 prepare=2 events=6 (events included above)\r\nVerification ticks: mode=full header=0 record=5 payload=38 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_12:0\r\n/ > "
+  },
+  {
+    "label": "rm-1000",
+    "command": "time /mnt/Perf/before/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime",
+    "status": 0,
+    "text": "time /mnt/Perf/before/fprofile rm -R --no-progress /mnt/Perf/copy > /dev/null; status runtime; printf '\\nREMOTE_END_13:%d\\n' $?\r\nPROFILE ticks=26336 yields=1023 yield_ticks=887 maxgap=43 allocs=11 requested=11308 peak=2056 live=0 enum_catalog=2042 enum_volume=2042 info=1011 status=0\r\nreal 440.45 s\r\nRuntime: heap=323922 largest=323282 image=13836 ticks=26414 load=75 owned-peak=0 remaining=0\r\nLoader ticks: read=21 validate=37 imports=3 relocations=2 prepare=1 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=37 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_13:0\r\n/ > "
+  }
+]

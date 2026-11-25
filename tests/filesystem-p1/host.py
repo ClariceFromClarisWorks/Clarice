@@ -25,8 +25,11 @@ int main(void){char dest[1025];char *v[]={"cp","A:source",dest};
 # Native calls are mocked, but symlink/trailing separator decisions use the real resolver.
 pre_rm=b['preamble'].replace('static int calls,fail;','static int calls,fail;static unsigned active=0x3ff;')
 pre_rm=pre_rm.replace('if(!strcasecmp(s,nodes[i].path))','if((active&(1u<<i))&&!strcasecmp(s,nodes[i].path))')
+pre_rm=pre_rm.replace('struct {int ioFlAttrib;} hFileInfo;','struct {int ioFlAttrib;short ioVRefNum;} hFileInfo;struct {long ioDrDirID;} dirInfo;')
+pre_rm=pre_rm.replace('p->identity=i;', 'p->hFileInfo.ioVRefNum=-1;p->dirInfo.ioDrDirID=i;p->identity=i;')
 pre_rm+=r'''
 #define memFullErr -108
+#define nsvErr -35
 static int recursive=1,force,live,deletes,polls,cancel_at,allocation_fail;
 static int app_yield(void){return cancel_at&&++polls==cancel_at;}
 static void file_progress_current(const char*s){(void)s;}
@@ -37,6 +40,7 @@ static void cli_free(void*p){if(p){live--;free(p);}}
 static int isdir(const CInfoPBRec*p){return !!(p->hFileInfo.ioFlAttrib&16);}
 static int cli_native_delete(const char*p){CInfoPBRec pb;int e=info(p,&pb);if(e)return e;active&=~(1u<<pb.identity);deletes++;return 0;}
 static int cli_native_nth(const char*p,int n,char*leaf,CInfoPBRec*pb){(void)n;if(!strcmp(p,"/tmp")&&(active&4)){strcpy(leaf,"file");return info("/tmp/file",pb);}return fnfErr;}
+static int directory_nth(short volume,long id,int n,char*leaf,CInfoPBRec*pb){assert(volume==-1);return cli_native_nth(nodes[id].path,n,leaf,pb);}
 static int encode_name(const char*p,char*q,size_t n){assert(strlen(p)<n);strcpy(q,p);return 0;}
 static int join_path(const char*p,const char*q,char*out){return snprintf(out,PATH_CAP,"%s/%s",p,q)>=PATH_CAP?bdNamErr:0;}
 '''

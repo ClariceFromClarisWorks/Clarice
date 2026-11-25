@@ -39,6 +39,9 @@ static WalkFrame *walk_frame(const char *path,int depth,WalkFrame *parent,int du
  if(!du&&selected(path,base,f->directory,link)){say(path);say("\n");}
  return f;
 }
+static void walk_size(const char *path,unsigned long long size){
+ char b[64];if(human)format_size(b,size,1);else snprintf(b,sizeof b,"%lu",(unsigned long)((size+unit-1)/unit));say(b);say("\t");say(path);say("\n");
+}
 static int walk(const char *path,int depth,int du,unsigned long long *total){
  int status=0;*total=0;WalkFrame *f=walk_frame(path,depth,NULL,du,&status,NULL);
  while(f){
@@ -55,13 +58,21 @@ static int walk(const char *path,int depth,int du,unsigned long long *total){
    if(!e){if(name[0]>31)e=bdNamErr;else{memcpy(leaf,name+1,name[0]);leaf[name[0]]=0;}}
    if(!e){
     f->index++;e=encode_name(leaf,enc,sizeof enc);if(!e)e=join_path(f->path,enc,child);
-    if(e){error(f->path,e);status=1;}else{WalkFrame *next=walk_frame(child,f->depth+1,f,du,&status,&pb);if(next){f=next;continue;}}
+    if(e){error(f->path,e);status=1;}
+    else if(!isdir(&pb)){
+     /* A leaf has no traversal state to retain. Keep the old child yield
+        before accounting/output, including cancellation and output errors. */
+     if(!du&&selected(child,enc,0,is_link(&pb))){say(child);say("\n");}
+     if(app_yield()){status=130;break;}if(output_error){status=1;break;}
+     unsigned long long size=(unsigned long)pb.hFileInfo.ioFlPyLen+(unsigned long long)(unsigned long)pb.hFileInfo.ioFlRPyLen;
+     f->size+=size;if(du&&all)walk_size(child,size);
+    }else{WalkFrame *next=walk_frame(child,f->depth+1,f,du,&status,&pb);if(next){f=next;continue;}}
    }else if(e!=fnfErr){error(f->path,e);status=1;}
    else goto finish;
    if(!e)continue;
   }
 finish:
-  if(du&&((f->directory&&(!summarize||!f->depth))||all||!f->depth)){char b[64];if(human)format_size(b,f->size,1);else snprintf(b,sizeof b,"%lu",(unsigned long)((f->size+unit-1)/unit));say(b);say("\t");say(f->path);say("\n");}
+  if(du&&((f->directory&&(!summarize||!f->depth))||all||!f->depth))walk_size(f->path,f->size);
   WalkFrame *parent=f->parent;if(parent)parent->size+=f->size;else *total=f->size;cli_free(f);f=parent;
  }
  while(f){WalkFrame *parent=f->parent;cli_free(f);f=parent;}

@@ -1,0 +1,320 @@
+[
+  {
+    "test": "seed",
+    "command": "mkdir -p /tmp/traverse-check/sub; echo KEEP > /tmp/traverse-out; cp -p /tmp/batch3b/source /tmp/traverse-check/sub/slash%2F%25; ln -s /tmp/traverse-out /tmp/traverse-check/link; ln -s /tmp/absent /tmp/traverse-check/dangling",
+    "status": 0,
+    "text": "mkdir -p /tmp/traverse-check/sub; echo KEEP > /tmp/traverse-out; cp -p /tmp/batch3b/source /tmp/traverse-check/sub/slash%2F%25; ln -s /tmp/traverse-out /tmp/traverse-check/link; ln -s /tmp/absent /tmp/traverse-check/dangling; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [============                         ]  33% 24.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "find output ",
+    "command": "/mnt/Perf/before/find /tmp/traverse-check  > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check  > /tmp/find-after; cmp /tmp/find-before /tmp/find-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/find /tmp/traverse-check  > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check  > /tmp/find-after; cmp /tmp/find-before /tmp/find-after; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "find output -type f",
+    "command": "/mnt/Perf/before/find /tmp/traverse-check -type f > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -type f > /tmp/find-after; cmp /tmp/find-before /tmp/find-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/find /tmp/traverse-check -type f > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -type f > /tmp/find-after; cmp /tmp/find-before /tmp/find-after; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "test": "find output -type l",
+    "command": "/mnt/Perf/before/find /tmp/traverse-check -type l > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -type l > /tmp/find-after; cmp /tmp/find-before /tmp/find-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/find /tmp/traverse-check -type l > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -type l > /tmp/find-after; cmp /tmp/find-before /tmp/find-after; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "test": "find output -maxdepth 0",
+    "command": "/mnt/Perf/before/find /tmp/traverse-check -maxdepth 0 > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -maxdepth 0 > /tmp/find-after; cmp /tmp/find-before /tmp/find-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/find /tmp/traverse-check -maxdepth 0 > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -maxdepth 0 > /tmp/find-after; cmp /tmp/find-before /tmp/find-after; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "test": "find output -maxdepth 1",
+    "command": "/mnt/Perf/before/find /tmp/traverse-check -maxdepth 1 > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -maxdepth 1 > /tmp/find-after; cmp /tmp/find-before /tmp/find-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/find /tmp/traverse-check -maxdepth 1 > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -maxdepth 1 > /tmp/find-after; cmp /tmp/find-before /tmp/find-after; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "test": "find output -name \"[s]*\"",
+    "command": "/mnt/Perf/before/find /tmp/traverse-check -name \"[s]*\" > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -name \"[s]*\" > /tmp/find-after; cmp /tmp/find-before /tmp/find-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/find /tmp/traverse-check -name \"[s]*\" > /tmp/find-before; /mnt/Perf/after/find /tmp/traverse-check -name \"[s]*\" > /tmp/find-after; cmp /tmp/find-before /tmp/find-after; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "test": "du output ",
+    "command": "/mnt/Perf/before/du  /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du  /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/du  /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du  /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "test": "du output -a",
+    "command": "/mnt/Perf/before/du -a /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du -a /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/du -a /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du -a /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after; printf '\\nREMOTE_END_9:%d\\n' $?\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  },
+  {
+    "test": "du output -s",
+    "command": "/mnt/Perf/before/du -s /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du -s /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/du -s /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du -s /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "test": "du output -h",
+    "command": "/mnt/Perf/before/du -h /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du -h /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/du -h /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du -h /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "test": "du output -k",
+    "command": "/mnt/Perf/before/du -k /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du -k /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/du -k /tmp/traverse-check > /tmp/du-before; /mnt/Perf/after/du -k /tmp/traverse-check > /tmp/du-after; cmp /tmp/du-before /tmp/du-after; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\n/ > "
+  },
+  {
+    "test": "root file find",
+    "command": "/mnt/Perf/before/find /tmp/traverse-out > /tmp/leaf-before; /mnt/Perf/after/find /tmp/traverse-out > /tmp/leaf-after; cmp /tmp/leaf-before /tmp/leaf-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/find /tmp/traverse-out > /tmp/leaf-before; /mnt/Perf/after/find /tmp/traverse-out > /tmp/leaf-after; cmp /tmp/leaf-before /tmp/leaf-after; printf '\\nREMOTE_END_13:%d\\n' $?\r\n\r\nREMOTE_END_13:0\r\n/ > "
+  },
+  {
+    "test": "missing path find",
+    "command": "/mnt/Perf/after/find /tmp/missing-traverse",
+    "status": 1,
+    "text": "/mnt/Perf/after/find /tmp/missing-traverse; printf '\\nREMOTE_END_14:%d\\n' $?\r\n/tmp/missing-traverse: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_14:1\r\n/ > "
+  },
+  {
+    "test": "root file du",
+    "command": "/mnt/Perf/before/du /tmp/traverse-out > /tmp/leaf-before; /mnt/Perf/after/du /tmp/traverse-out > /tmp/leaf-after; cmp /tmp/leaf-before /tmp/leaf-after",
+    "status": 0,
+    "text": "/mnt/Perf/before/du /tmp/traverse-out > /tmp/leaf-before; /mnt/Perf/after/du /tmp/traverse-out > /tmp/leaf-after; cmp /tmp/leaf-before /tmp/leaf-after; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r\nREMOTE_END_15:0\r\n/ > "
+  },
+  {
+    "test": "missing path du",
+    "command": "/mnt/Perf/after/du /tmp/missing-traverse",
+    "status": 1,
+    "text": "/mnt/Perf/after/du /tmp/missing-traverse; printf '\\nREMOTE_END_16:%d\\n' $?\r\n/tmp/missing-traverse: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_16:1\r\n/ > "
+  },
+  {
+    "test": "recursive copy two forks and symlinks",
+    "command": "/mnt/Perf/after/cp -Rp --no-progress /tmp/traverse-check /mnt/Perf/check && fsprobe cross /tmp/traverse-check/sub/slash%2F%25 /mnt/Perf/check/sub/slash%2F%25 && test \"$(readlink /mnt/Perf/check/link)\" = /tmp/traverse-out && test \"$(readlink /mnt/Perf/check/dangling)\" = /tmp/absent",
+    "status": 0,
+    "text": "/mnt/Perf/after/cp -Rp --no-progress /tmp/traverse-check /mnt/Perf/check && fsprobe cross /tmp/traverse-check/sub/slash%2F%25 /mnt/Perf/check/sub/slash%2F%25 && test \"$(readlink /mnt/Perf/check/link)\" = /tmp/traverse-out && test \"$(readlink /mnt/Perf/check/dangling)\" = /tmp/absent; printf '\\nREMOTE_END_17:%d\\n' $?\r\nPASS cross forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_17:0\r\n/ > "
+  },
+  {
+    "test": "safe recursive removal",
+    "command": "/mnt/Perf/after/rm -R --no-progress /mnt/Perf/check && test ! -e /mnt/Perf/check && test \"$(cat /tmp/traverse-out)\" = KEEP",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -R --no-progress /mnt/Perf/check && test ! -e /mnt/Perf/check && test \"$(cat /tmp/traverse-out)\" = KEEP; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\r\nREMOTE_END_18:0\r\n/ > "
+  },
+  {
+    "test": "cancel before find profile=True",
+    "text": "/mnt/Perf/before/iprofile find /mnt/Perf/n1000 > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery before find",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_19:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=10692 ticks=109 load=52 owned-peak=0 remaining=0\r\nLoader ticks: read=16 validate=24 imports=2 relocations=1 prepare=0 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=9 payload=24 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_19:0\r\n/ > "
+  },
+  {
+    "test": "cancel before du profile=True",
+    "text": "/mnt/Perf/before/iprofile du /mnt/Perf/n1000 > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery before du",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_20:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=10692 ticks=89 load=54 owned-peak=0 remaining=0\r\nLoader ticks: read=16 validate=26 imports=1 relocations=2 prepare=1 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=8 payload=26 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_20:0\r\n/ > "
+  },
+  {
+    "test": "cancel before cp profile=True",
+    "text": "/mnt/Perf/before/fprofile cp -R --no-progress /mnt/Perf/n1000 /mnt/Perf/cancel-cp > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery before cp",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_21:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=13836 ticks=117 load=71 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=39 imports=3 relocations=2 prepare=0 events=8 (events included above)\r\nVerification ticks: mode=full header=0 record=9 payload=39 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_21:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_22:%d\\n' $?\r\n\r\nREMOTE_END_22:0\r\n/ > "
+  },
+  {
+    "test": "cancel seed before",
+    "command": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_23:%d\\n' $?\r\n\r\nREMOTE_END_23:0\r\n/ > "
+  },
+  {
+    "test": "cancel before rm profile=True",
+    "text": "/mnt/Perf/before/fprofile rm -R --no-progress /mnt/Perf/cancel-rm > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery before rm",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_24:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=13836 ticks=117 load=74 owned-peak=0 remaining=0\r\nLoader ticks: read=21 validate=37 imports=3 relocations=2 prepare=0 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=37 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_24:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_25:%d\\n' $?\r\n\r\nREMOTE_END_25:0\r\n/ > "
+  },
+  {
+    "test": "cancel after find profile=True",
+    "text": "/mnt/Perf/after/iprofile find /mnt/Perf/n1000 > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery after find",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_26:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=10948 ticks=97 load=59 owned-peak=0 remaining=0\r\nLoader ticks: read=19 validate=26 imports=2 relocations=1 prepare=1 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=26 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_26:0\r\n/ > "
+  },
+  {
+    "test": "cancel after du profile=True",
+    "text": "/mnt/Perf/after/iprofile du /mnt/Perf/n1000 > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery after du",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_27:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=10948 ticks=105 load=58 owned-peak=0 remaining=0\r\nLoader ticks: read=19 validate=25 imports=2 relocations=1 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_27:0\r\n/ > "
+  },
+  {
+    "test": "cancel after cp profile=True",
+    "text": "/mnt/Perf/after/fprofile cp -R --no-progress /mnt/Perf/n1000 /mnt/Perf/cancel-cp > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery after cp",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_28:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=14144 ticks=114 load=83 owned-peak=0 remaining=0\r\nLoader ticks: read=22 validate=45 imports=2 relocations=2 prepare=1 events=12 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=45 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_28:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_29:%d\\n' $?\r\n\r\nREMOTE_END_29:0\r\n/ > "
+  },
+  {
+    "test": "cancel seed after",
+    "command": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_30:%d\\n' $?\r\n\r\nREMOTE_END_30:0\r\n/ > "
+  },
+  {
+    "test": "cancel after rm profile=True",
+    "text": "/mnt/Perf/after/fprofile rm -R --no-progress /mnt/Perf/cancel-rm > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery after rm",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_31:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=14144 ticks=100 load=79 owned-peak=0 remaining=0\r\nLoader ticks: read=25 validate=37 imports=3 relocations=2 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=1 record=11 payload=36 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_31:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_32:%d\\n' $?\r\n\r\nREMOTE_END_32:0\r\n/ > "
+  },
+  {
+    "test": "cancel after find profile=False",
+    "text": "/mnt/Perf/after/find /mnt/Perf/n1000 > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery after find",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_33:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=10320 ticks=110 load=56 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=25 imports=1 relocations=1 prepare=0 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=25 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_33:0\r\n/ > "
+  },
+  {
+    "test": "cancel after du profile=False",
+    "text": "/mnt/Perf/after/du /mnt/Perf/n1000 > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery after du",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_34:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=10320 ticks=111 load=54 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=24 imports=1 relocations=1 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=24 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_34:0\r\n/ > "
+  },
+  {
+    "test": "cancel after cp profile=False",
+    "text": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n1000 /mnt/Perf/cancel-cp > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery after cp",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_35:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=13468 ticks=103 load=72 owned-peak=0 remaining=0\r\nLoader ticks: read=20 validate=36 imports=2 relocations=3 prepare=0 events=6 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=36 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_35:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_36:%d\\n' $?\r\n\r\nREMOTE_END_36:0\r\n/ > "
+  },
+  {
+    "test": "cancel seed after",
+    "command": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_37:%d\\n' $?\r\n\r\nREMOTE_END_37:0\r\n/ > "
+  },
+  {
+    "test": "cancel after rm profile=False",
+    "text": "/mnt/Perf/after/rm -R --no-progress /mnt/Perf/cancel-rm > ",
+    "timing_note": "Superseded by cancellation.json: initial timing read matched command echo."
+  },
+  {
+    "test": "status and recovery after rm",
+    "command": "test \"$?\" -eq 130 && status runtime",
+    "status": 0,
+    "text": "/dev/null\r\n^C\r\ntest \"$?\" -eq 130 && status runtime; printf '\\nREMOTE_END_38:%d\\n' $?\r\n/ > Runtime: heap=324236 largest=321742 image=13468 ticks=97 load=76 owned-peak=0 remaining=0\r\nLoader ticks: read=25 validate=34 imports=3 relocations=2 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=34 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_38:0\r\n/ > "
+  },
+  {
+    "test": "partial disposable cleanup",
+    "command": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm",
+    "status": 0,
+    "text": "/mnt/Perf/after/rm -Rf --no-progress /mnt/Perf/cancel-cp /mnt/Perf/cancel-rm; printf '\\nREMOTE_END_39:%d\\n' $?\r\n\r\nREMOTE_END_39:0\r\n/ > "
+  },
+  {
+    "test": "repeat 0",
+    "command": "i=0; while test $i -lt 10; do /mnt/Perf/after/find /mnt/Perf/n100 > /dev/null || break; /mnt/Perf/after/du /mnt/Perf/n100 > /dev/null || break; i=$((i+1)); done; test $i -eq 10 && status runtime",
+    "status": 0,
+    "text": "i=0; while test $i -lt 10; do /mnt/Perf/after/find /mnt/Perf/n100 > /dev/null || break; /mnt/Perf/after/du /mnt/Perf/n100 > /dev/null || break; i=$((i+1)); done; test $i -eq 10 && status runtime; printf '\\nREMOTE_END_40:%d\\n' $?\r\nRuntime: heap=320722 largest=320554 image=10320 ticks=171 load=50 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=20 imports=2 relocations=1 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=20 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_40:0\r\n/ > "
+  },
+  {
+    "test": "repeat 1",
+    "command": "i=0; while test $i -lt 10; do /mnt/Perf/after/find /mnt/Perf/n100 > /dev/null || break; /mnt/Perf/after/du /mnt/Perf/n100 > /dev/null || break; i=$((i+1)); done; test $i -eq 10 && status runtime",
+    "status": 0,
+    "text": "i=0; while test $i -lt 10; do /mnt/Perf/after/find /mnt/Perf/n100 > /dev/null || break; /mnt/Perf/after/du /mnt/Perf/n100 > /dev/null || break; i=$((i+1)); done; test $i -eq 10 && status runtime; printf '\\nREMOTE_END_41:%d\\n' $?\r\nRuntime: heap=320722 largest=320554 image=10320 ticks=170 load=49 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=21 imports=1 relocations=1 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=21 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_41:0\r\n/ > "
+  },
+  {
+    "test": "repeat 2",
+    "command": "i=0; while test $i -lt 10; do /mnt/Perf/after/find /mnt/Perf/n100 > /dev/null || break; /mnt/Perf/after/du /mnt/Perf/n100 > /dev/null || break; i=$((i+1)); done; test $i -eq 10 && status runtime",
+    "status": 0,
+    "text": "i=0; while test $i -lt 10; do /mnt/Perf/after/find /mnt/Perf/n100 > /dev/null || break; /mnt/Perf/after/du /mnt/Perf/n100 > /dev/null || break; i=$((i+1)); done; test $i -eq 10 && status runtime; printf '\\nREMOTE_END_42:%d\\n' $?\r\nRuntime: heap=320722 largest=320554 image=10320 ticks=173 load=50 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=21 imports=1 relocations=1 prepare=1 events=3 (events included above)\r\nVerification ticks: mode=full header=0 record=9 payload=21 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_42:0\r\n/ > "
+  },
+  {
+    "test": "final source retained",
+    "command": "test \"$(cat /tmp/traverse-out)\" = KEEP && fsprobe same /tmp/batch3b/source /tmp/traverse-check/sub/slash%2F%25",
+    "status": 0,
+    "text": "test \"$(cat /tmp/traverse-out)\" = KEEP && fsprobe same /tmp/batch3b/source /tmp/traverse-check/sub/slash%2F%25; printf '\\nREMOTE_END_43:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_43:0\r\n/ > "
+  }
+]
