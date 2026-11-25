@@ -12,6 +12,8 @@ int cli_isatty(int f){(void)f;return ttys;}
 long cli_write(int f,const void *p,unsigned long n){if(f==2)return n;if(outfail)return -1;assert(on+n<sizeof shown);memcpy(shown+on,p,n);on+=n;return n;}
 int app_serial_tty(int x){terminal=x;return 0;}void app_activity_interactive(int x){active=x;}
 int app_serial_key(void){if(overflow)return -2;if(escape_test){int n=escape_test++;if(n==1)return 29;if(n==2)return 'q';}return -1;}
+static unsigned pauses;
+int cli_pause_ticks(unsigned long n){assert(n==1);pauses++;ticks+=n;return app_yield();}
 unsigned long cli_ticks(void){return ++ticks;}
 int app_yield(void){polls++;return cancel&&polls>2;}
 int NetResolve(const char *s,unsigned long *ip,int(*p)(void),unsigned long t){(void)s;(void)p;(void)t;*ip=1;return 0;}

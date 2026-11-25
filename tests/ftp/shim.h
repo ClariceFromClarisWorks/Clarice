@@ -28,3 +28,5 @@ int NetResolve(const char *,unsigned long *,int (*)(void),unsigned long);
 #define eofErr (-39)
 int isdir(CInfoPBRec *);
 int cli_native_read(short,void *,long *);
+
+int cli_pause_ticks(unsigned long);

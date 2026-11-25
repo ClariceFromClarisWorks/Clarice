@@ -27,3 +27,5 @@ int NetResolve(const char *,unsigned long *,int (*)(void),unsigned long);
 
 void *cli_alloc(unsigned long);
 void cli_free(void *);
+
+int cli_pause_ticks(unsigned long);

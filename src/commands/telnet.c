@@ -156,12 +156,14 @@ int clarice_main(int argc,char **argv){
   long n=NetAvailable(&conn);
   if(n<0&&n!=connectionClosing){mac_error=n;reason="connection status failed";goto end;}
   if(n==connectionClosing){if(clarice_telnet_pending(engine)){reason="connection ended inside Telnet control";goto end;}if(vt&&vt->parser){reason="connection ended inside terminal control";goto end;}result=0;break;}
+  int active=n!=0;
   if(n){if(n>(long)sizeof rx)n=sizeof rx;n=NetRecv(&conn,rx,n,1);if(n<=0){if(n<0)mac_error=n;reason="receive failed";goto end;}
    for(long i=0;i<n;i++)if(!receive(rx[i]))goto end;paint_bytes+=(unsigned)n;
   }
   if(clarice_telnet_pending(engine)&&cli_ticks()-protocol_tick>=1800){reason="incomplete Telnet control timeout";goto end;}
   for(unsigned i=0;i<64;i++){
    int c;if(vt){unsigned char key;if(!app_screen_pending())break;c=cli_read(0,&key,1)==1?key:-2;}else c=app_serial_key();if(c==-1)break;if(c<0){reason="keyboard queue overflow; session stopped";goto end;}
+   active=1;
    if(escaped){escaped=0;if(c=='q'){result=0;goto end;}if(c!=29&&!terminal_key(29))goto end;}
    else if(c==29){escaped=1;continue;}
    if(!terminal_key(c))goto end;
@@ -171,6 +173,9 @@ int clarice_main(int argc,char **argv){
   /* Consume burst output before painting; keep a bounded 4 KiB frame budget
      and service keys/cancellation on every 512-byte receive iteration. */
   if(!vt||n<(long)sizeof rx||paint_bytes>=4096)if(!flush_display())goto end;
+  /* Do not delay received text or keys. Idle connections sleep one tick
+     through the existing event/service wait instead of spinning TCPStatus. */
+  if(!active&&cli_pause_ticks(1)){result=130;break;}
  }
 end:
  if(tty){if(!flush_display()&&!result)result=1;if(tty==2)app_screen_close();else app_serial_tty(0);app_activity_interactive(0);}if(vt){cli_free(vt);vt=0;}

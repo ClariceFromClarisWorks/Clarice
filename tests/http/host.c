@@ -14,7 +14,10 @@ static char diagnostics[4096];
 int app_columns(void){return 80;}
 int cli_isatty(int fd){(void)fd;return 0;}
 void app_progress(const char *s,int done){(void)s;(void)done;assert(0);}
-int app_yield(void){return stop&&++calls>5;}
+/* Cancel once response data has arrived, independently of parser yield frequency. */
+int app_yield(void){calls++;return stop&&pos>0;}
+static unsigned pauses;
+int cli_pause_ticks(unsigned long n){assert(n==1);pauses++;ticks+=n;return app_yield();}
 unsigned long cli_ticks(void){return ++ticks;}
 int checked(const char *a,char *b,char *c,int d){(void)d;strcpy(b,"Disk:");strcat(b,a);strcpy(c,a);return 0;}
 int info(const char *a,CInfoPBRec *b){(void)a;(void)b;return exists?0:fnfErr;}

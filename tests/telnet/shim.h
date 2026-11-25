@@ -8,3 +8,5 @@ int NetResolve(const char *,unsigned long *,int (*)(void),unsigned long);
 int NetConnect(NetConn *,unsigned long,unsigned short),NetClose(NetConn *),NetSend(NetConn *,const void *,unsigned short);
 long NetAvailable(NetConn *),NetRecv(NetConn *,void *,unsigned short,unsigned char);
 int app_yield(void);void app_activity_interactive(int);
+
+int cli_pause_ticks(unsigned long);

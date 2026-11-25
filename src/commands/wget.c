@@ -24,10 +24,12 @@ static int cancelled,input_error;
 static unsigned long download_limit;
 static const char *input_failure;
 static int poll_input(void){
- if(app_yield()){cancelled=1;return -1;}
+ /* Buffered headers need bounded event checks, not one yield per byte.
+    Refills always check; body processing remains bounded by the 2 KiB buffer. */
+ if((used==available||!(used&255))&&app_yield()){cancelled=1;return -1;}
  if(used<available)return 1;
  long n=NetAvailable(&net);if(n<0){input_error=n;input_failure="connection closed before response completed";return -1;}
- if(!n){if(cli_ticks()-last_data>1800UL){input_failure="response timed out after 30 seconds without data";return -1;}return 0;}
+ if(!n){if(cli_ticks()-last_data>1800UL){input_failure="response timed out after 30 seconds without data";return -1;}if(cli_pause_ticks(1)){cancelled=1;return -1;}return 0;}
  if(n>(long)sizeof buffer)n=sizeof buffer;
  n=NetRecv(&net,buffer,(unsigned short)n,1);
  if(n<=0){if(n<0)input_error=n;input_failure="network receive failed";return -1;}used=0;available=(unsigned)n;last_data=cli_ticks();return 1;

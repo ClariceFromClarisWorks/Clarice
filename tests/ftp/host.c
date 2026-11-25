@@ -10,7 +10,9 @@ static char diagnostics[4096];
 static void queue(const char *s){assert(wp==wl);wp=0;wl=strlen(s);memcpy(wire,s,wl);}
 int app_columns(void){return 80;}int cli_isatty(int f){(void)f;return 0;}
 void app_progress(const char *s,int d){(void)s;(void)d;assert(0);}
-int app_yield(void){return stop==2?bytes>0:stop&&++calls>80;}unsigned long cli_ticks(void){return ++ticks;}
+int app_yield(void){calls++;return stop==2?bytes>0:stop&&calls>80;}static unsigned pauses;
+int cli_pause_ticks(unsigned long n){assert(n==1);pauses++;ticks+=n;return app_yield();}
+unsigned long cli_ticks(void){return ++ticks;}
 int checked(const char *a,char *b,char *c,int f){(void)f;snprintf(b,PATH_CAP,"Disk:%s",a);strcpy(c,a);return 0;}
 int info(const char *s,CInfoPBRec *p){(void)s;p->hFileInfo.ioFlLgLen=len;return upload||exists?0:fnfErr;}int isdir(CInfoPBRec *p){(void)p;return 0;}
 long cli_read(int f,void *p,unsigned long n){(void)f;(void)p;(void)n;return 0;}

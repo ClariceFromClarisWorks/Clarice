@@ -22,12 +22,14 @@ static int cancelled,mac_error;
 static const char *failure;
 static char reply_text[1024];
 static int poll(void){if(app_yield()){cancelled=1;failure="cancelled";return 0;}return 1;}
+/* Only empty native reads sleep; buffered reply parsing checks every 256 bytes. */
+static int idle(void){if(cli_pause_ticks(1)){cancelled=1;failure="cancelled";return 0;}return 1;}
 static int clean(const char *s){for(;*s;s++)if((unsigned char)*s<32||(unsigned char)*s==127)return 0;return 1;}
 static int decimal(const char *s,unsigned long *n){unsigned long v=0;if(!*s)return 0;for(;*s;s++){if(*s<'0'||*s>'9'||v>214748364UL||(v==214748364UL&&*s>'7'))return 0;v=v*10+*s-'0';}*n=v;return 1;}
 static int line(void){unsigned n=0;int cr=0;for(;;){
- if(!poll())return 0;
+ if((at==have||!(at&255))&&!poll())return 0;
  if(at==have){long k=NetAvailable(&control);if(k<0){mac_error=k;failure=k==connectionClosing?"control connection closed":"control status failed";return 0;}
-  if(!k){if(cli_ticks()-activity>1800UL){failure="control response timeout";return 0;}continue;}
+  if(!k){if(cli_ticks()-activity>1800UL){failure="control response timeout";return 0;}if(!idle())return 0;continue;}
   if(k>(long)sizeof cb)k=sizeof cb;k=NetRecv(&control,cb,(unsigned short)k,1);
   if(k<=0){if(k<0)mac_error=k;failure="control receive failed";return 0;}at=0;have=k;activity=cli_ticks();}
  unsigned char c=cb[at++];if(c=='\n'&&cr){reply_text[n]=0;return 1;}
@@ -106,7 +108,7 @@ int clarice_main(int argc,char **argv){
  progress_begin();activity=cli_ticks();failure="data transfer";
  for(;;){if(!poll())goto done;long n=sizeof buffer;
   if(put){mac_error=cli_native_read(file,buffer,&n);if(mac_error&&mac_error!=eofErr)goto done;mac_error=0;if(!n)break;if((unsigned long)n>total-done){failure="local file changed during upload";goto done;}mac_error=NetSend(&data,buffer,n);if(mac_error)goto done;}
-  else{n=NetAvailable(&data);if(n==connectionClosing)break;if(n<0){mac_error=n;failure="data status failed";goto done;}if(!n){if(cli_ticks()-activity>1800UL){failure="data timeout";goto done;}continue;}if(n>(long)sizeof buffer)n=sizeof buffer;n=NetRecv(&data,buffer,n,1);if(n==connectionClosing)break;if(n<=0){if(n<0)mac_error=n;failure="data receive failed";goto done;}
+  else{n=NetAvailable(&data);if(n==connectionClosing)break;if(n<0){mac_error=n;failure="data status failed";goto done;}if(!n){if(cli_ticks()-activity>1800UL){failure="data timeout";goto done;}if(!idle())goto done;continue;}if(n>(long)sizeof buffer)n=sizeof buffer;n=NetRecv(&data,buffer,n,1);if(n==connectionClosing)break;if(n<=0){if(n<0)mac_error=n;failure="data receive failed";goto done;}
    if((unsigned long)n>2147483647UL-done||(known&&((unsigned long)n>total-done))){failure="download exceeds declared/platform size";goto done;}long want=n;mac_error=cli_native_write(file,buffer,&n);if(mac_error||n!=want){if(!mac_error)mac_error=ioErr;goto done;}}
   done+=n;activity=cli_ticks();progress_update(done,total,known,0);
  }
