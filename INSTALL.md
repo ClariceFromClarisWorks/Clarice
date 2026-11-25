@@ -1,4 +1,11 @@
-# Canonical development distribution
+# Installing Clarice 0.5.0
+
+For the local installer ZIP, follow [Start Here](RELEASE-START.md) to
+place the kit on HFS and decode the three MacBinary applications. Then
+follow the offline installation steps below from that Finder folder.
+The private update and disk workflows below remain useful to maintainers.
+
+## Canonical development distribution
 
 Official private-LAN update index:
 `http://192.168.1.112:8089/full/index.txt`.
@@ -164,7 +171,7 @@ those checks or introduce a general dependency resolver.
 Networking clients and diagnostics are **Standard Unix Utilities**, installed as
 external commands in Clarice Data (`/bin`), not part of Clarice Core. This includes
 `ipconfig`/network status, `ping`, hostname-aware `wget`, `ftp` and `telnet`.
-The 0.5.0 candidate contains 47 standard commands. This is a development candidate:
+The 0.5.0 draft installer contains 49 standard commands. This is a development candidate:
 consolidated physical-SE acceptance is pending; no release has been published.
 
 Core works without an installed or configured networking stack. Network commands
@@ -174,13 +181,14 @@ Core. Shared transport and DNS support is loaded on demand with the commands,
 without networking startup work or idle-memory overhead in Core.
 
 Use the same offline installer, `appinstall`, external repair sources and recovery
-rules below for these utilities. Nano and future editors remain optional,
-independently installed applications. A future Telnet server would be an optional,
-disabled-by-default service, not a permanently resident Core component.
+rules below for these utilities. BusyBox vi and nano are optional, independently installed applications.
+Optional Telnetd and Seriald components require separate installation and
+configuration.
 
 ## Offline installation — no commands or file copying required
 
-1. Open the **Clarice** distribution disk in Finder.
+1. Open the prepared **Clarice 0.5.0** kit folder in Finder, or use the
+   private development disk if you already have it.
 2. Double-click **Install Clarice**. Keep the recommended folders or choose
    **Core...** and **Data...**, then click **Install/Upgrade**.
 3. Wait for the file names and checking messages. Clarice opens automatically
@@ -195,9 +203,9 @@ System Folder discovery applies. Do not move or rename installed locations or
 edit this checksummed record; relocation is not supported in 0.5.0.
 You can eject the distribution disk afterwards; keep it for repair.
 
-No network, command-line knowledge, archive extractor or preinstalled utility
-is needed. The installer uses the Utilities folder beside it, so it also works
-if the disk label changes. Keep the disk's files together.
+Once the folder is prepared, setup runs entirely in Finder without a network
+connection or a preinstalled Clarice utility. Keep the installer and its
+sibling files together.
 
 Upgrade verifies the kit and installed catalog. It replaces unchanged older managed
 tools, adopts exact matching legacy tools, and preserves verified newer compatible
@@ -290,7 +298,7 @@ User files, configuration and unrelated commands are not part of setup. A missin
 command produces an installation hint. Damaged commands fail on execution or
 `appinstall check`; startup intentionally does not scan the collection.
 
-## Building the offline disk
+## Building private offline media
 
 `scripts/build.sh` builds the core and utilities and stages `work/distribution/kit`.
 `scripts/distribution-disk.sh` makes a clean native HFS application disk containing the native
@@ -300,7 +308,9 @@ native services. This offline launcher remains optional; ordinary Core contains
 its own on-demand online updater. The disk
 contains no ROM or System software. It retains only the existing template’s
 Apple Driver43 device header/driver; provenance is recorded separately. Supply
-a compatible template path as the script’s first argument if necessary. The MacBinary core preserves both forks;
+a compatible template path as the script’s first argument if necessary.
+This driver-bearing development image is private. Use the MacBinary ZIP
+format for staging a driver-free release kit. The MacBinary core preserves both forks;
 CLX utility files are ordinary data files. Copying the native app through a
 non-Macintosh filesystem requires its MacBinary container or an HFS image.
 

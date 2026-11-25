@@ -1,124 +1,92 @@
-# Third-party notices
+# Clarice 0.5.0 attribution and redistribution
 
-Clarice combines original shell/file utilities with source ports. The grep, sed, wc, head, tail, cut, tr, sort, uniq, tee, basename, dirname, cmp, cksum, sleep, printenv, mktemp and dd commands use **sbase**, not GNU grep or GNU sed. The development tree also contains a One True Awk port; nano is an experimental source port; vi remains planned.
+Distribution draft for build 2026111978, product commit f571f7c.
+The installed inventory is defined by `src/standard-commands.inc` and
+the release manifest. Retained research source and optional tools have
+separate terms.
 
-- **sbase grep, sed, wc, head, tail, cut, tr, sort, uniq, tee, basename, dirname, cmp, cksum, sleep, printenv, mktemp and dd**, the suckless developers and individual authors listed in `src/vendor/sbase/LICENSE` and source headers, MIT/ISC and retained per-file notices. Pinned commit `c546c3a5724c81cee9a11d816a38ccdf17472129` from https://git.suckless.org/sbase . Imported source is preserved verbatim. `scripts/prepare-ports.py` stages cooperative polling, explicit regex-execution errors and preservation of errno while printing diagnostics; `scripts/prepare-pipelines.py` adds help/cooperative polling, fixes the tail line-scan boundary and sort empty-input check, disables unsupported tail -m/tee -i options, adds exclusive-create mktemp and elastic printenv environment adapters, checks dd size arithmetic and corrects seek to use output blocks, and connects sort to the bounded merge driver in `src/ports/sort-spill.inc`; `src/ports/` supplies the Macintosh runtime. `scripts/prepare-utf.py` stages allocation-free ASCII fast paths in the upstream rune I/O and whitespace helpers; Unicode decoding and source notices remain unchanged. The source snapshot includes manual pages and the relevant utility/UTF helpers.
-- **musl regular expression engine**, Rich Felker and contributors, with TRE-derived portions by Ville Laurikari. Pinned commit `7813e9119eb5fe681b6750b8a033a0490bca0941` from https://git.musl-libc.org/git/musl . Full copyright inventory is `src/vendor/musl-regex/COPYRIGHT`; TRE's notices remain in the source files. The standalone header in `src/ports/include/regex.h` replaces musl-internal type includes. The build stages cancellation hooks separately and uses untranslated C-locale error strings.
+## In the installer kit
 
-Source revisions are also recorded in `src/vendor/USERLAND-SOURCES.json`. The awk entry identifies the source now bundled in the development tree; historical guest failures and later fixes are distinguished in the test reports.
+| Component | Attribution and terms |
+| --- | --- |
+| BusyBox 1.37.0 | BusyBox contributors. Standard **wc, tr and sort** and their selected libbb code use GPL-2.0-only. Upstream archive SHA-256 `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`. See `Licenses/busybox/LICENSE`, `AUTHORS`, `src/ports/busybox-tools` and `scripts/prepare-busybox-tools.py`. |
+| sbase | suckless developers and per-file authors, MIT/ISC and retained file notices. Provides grep, sed, head, tail, cut, uniq, tee, basename, dirname, cmp, cksum, sleep, printenv, mktemp and dd, plus the explicit wc-sbase, tr-sbase and sort-sbase alternatives. Revision `c546c3a5724c81cee9a11d816a38ccdf17472129`. Preparation and Macintosh adapters are in `scripts/` and `src/ports/`. |
+| musl regex and fnmatch | Rich Felker and contributors, with Ville Laurikari's TRE-derived regex; retained notices for each snapshot. Regex supports the sbase ports; the byte-oriented fnmatch adaptation serves native file inspection/traversal. See the two musl copyright files and `src/vendor/USERLAND-SOURCES.json`. |
+| One True Awk | Lucent Technologies and authors listed in `src/vendor/awk`. Revision `72e9b56caddb4a6f8d1405315a5183c26b8650a4`. Preparation and Macintosh runtime are in `scripts/prepare-awk.py` and `src/ports/awk-runtime.c`. |
+| mrsh | emersion and contributors, MIT, revision `4c81598721bc5eeb28f9faa818b3102d0471b7f6`. Parser and AST are adapted; shell execution is Clarice's Macintosh implementation. |
+| E-Kermit 1.8 | Frank da Cruz and the Trustees of Columbia University, revised three-clause BSD. Original notices and sources are in `src/ports/ekermit/upstream`. |
+| Macinclaude MacTCP adapter | Bart Decrem, MIT. Provenance and changes in `src/commands/vendor/mactcp`. |
+| libtelnet | Sean Middleditch and contributors, public-domain dedication and authors in `src/commands/vendor/libtelnet`. Used with the native transport and terminal adapter. |
+| picohttpparser | Tokuhiro Matsuno, Kazuho Oku and contributors, MIT option, revision `dd573d8fa9264c646a400e96ce9f07dea6f156e4`. HTTP parsing in wget and the updater. |
+| newlib getopt | Gregory Pietsch, public-domain notice preserved in the original source and the kit. Used by BusyBox ports. |
+| Macintosh toolchain | Retro68 by Wolfgang Thaller and contributors, GPL-3.0-or-later with GCC Runtime Library Exception 3.1; Multiversal MIT; GCC runtime exception; individual newlib notices. The pinned image digest is in `scripts/build.sh`. The newlib file is the upstream notice inventory. Exact linked-runtime source revisions are unverified; the digest alone does not establish source provenance. |
 
-- **One True Awk**, Lucent Technologies and the authors/contributors credited in `src/vendor/awk/LICENSE`, `README.md` and source headers; pinned revision `72e9b56caddb4a6f8d1405315a5183c26b8650a4` from https://github.com/onetrueawk/awk . The original notices and licence accompany the source. `scripts/prepare-awk.py` stages Macintosh limits and cooperative polling separately; `src/ports/awk-runtime.c` supplies the adapter. The staged integer formatter fixes the guest runtime’s missing 64-bit printf support; host and Plus guest verification are recorded in outputs/userland-next.
+Notice filenames in the kit are under `Licenses/`. Source headers and
+upstream documentation retain per-file notices. The project uses the
+Macintosh's installed fonts. The historical JetBrains Mono-derived
+bitmap source is kept with the SIL OFL notice; no font is installed
+by the kit.
 
-- **mrsh parser and AST**, copyright (c) 2018 emersion, MIT. Sources and full licence are in `src/vendor/mrsh/`. Imported from https://github.com/emersion/mrsh at commit `4c81598721bc5eeb28f9faa818b3102d0471b7f6`. This is a parser/AST adaptation, not an unmodified port of the complete mrsh shell. Local changes fix AND/OR associativity, arithmetic unary precedence/ternary whitespace, parameter-token context (so `$#` after another expansion is not consumed as a comment), empty assignment boundaries, optional compound-command redirections with AST ownership/copying, and compiler portability; the original upstream execution/process layer is not included. `src/sh.inc` implements the bounded Macintosh adapter.
-- **Sys6 Mono** (retained historical source asset; no longer used for terminal rendering) is a monochrome 8×14 bitmap derivative of **JetBrains Mono**, copyright 2020 The JetBrains Mono Project Authors. The source TTF and SIL Open Font License are in `assets/font/`; a copy of the licence is in `licenses/JetBrainsMono-OFL.txt`. No font installation is required. `scripts/make-font.py` records the conversion. Original upstream: https://github.com/JetBrains/JetBrainsMono .
-- **Retro68 runtime**, copyright Wolfgang Thaller and contributors, GPL v3 or later with GCC Runtime Library Exception 3.1. Full licence and exception are in `licenses/`. The pinned Docker build is recorded in `scripts/build.sh`. Upstream: https://github.com/autc04/Retro68 . Runtime sources are not modified by this project.
-- **Multiversal interfaces/glue**, copyright 2019 Wolfgang Thaller, MIT. Full notice: `licenses/multiversal-MIT.txt`. Upstream: https://github.com/autc04/multiversal .
-- **GCC runtime** uses the GCC Runtime Library Exception; copies of GPLv3 and the exception are included.
-- **newlib C library** includes contributions from Red Hat, the University of California and numerous other authors under the per-component terms reproduced in `licenses/COPYING.NEWLIB`. Upstream licence inventory retrieved from https://github.com/mirror/newlib-cygwin/blob/master/COPYING.NEWLIB . This is the full upstream inventory, not a claim that every listed component is linked.
+## Optional editors and development tools
 
-The developer's existing ROM, System, Finder, MultiFinder and Snow installation are used only in the private test fixture. They are not included in the application/source delivery. Other research checkouts are not incorporated into the application. Installed Macintosh fonts are used through the system Font Manager and are not redistributed.
+- The optional repository **vi** is the BusyBox 1.37.0 editor by Sterling
+  Huxley and contributors, with corresponding BusyBox GPL-2.0-only
+  obligations. It is not a standard installer utility. Its existing
+  optional repository build is 2026111951. See `src/ports/busybox` and
+  `scripts/prepare-busybox-vi.py`. Berkeley/Heirloom ex/vi and xvi are
+  comparison ports; their notices remain under `Licenses/vi` and
+  `Licenses/xvi`. This product includes software developed by the
+  University of California, Berkeley and its contributors where the
+  Berkeley prototype is distributed. The prototype retains the
+  Caldera attribution and copying terms in its own notice.
+- GNU nano 9.2 is an optional source port, GPL-3.0-or-later, with
+  GNU helper files under their own retained terms including LGPL.
+  The accepted generated configuration is under
+  `src/ports/nano/prepared`. See `scripts/prepare-nano.py` and
+  `outputs/nano/ADAPTATIONS.md`. Ncurses 6.5 is an experimental
+  source dependency with its notice in `src/vendor/ncurses/COPYING`.
+  No nano or ncurses binary is in the standard kit.
+- microtar by rxi (MIT) and the sbase public-domain SHA-256 reference
+  are retained in source. Production repository payload checks use CRC-32.
+  The SHA-256 source is used by optional remote authentication.
+- SEControl and the Snow emulator are separate development tools.
+  SEControl's MiniVNC-derived portions are GPL-3.0-or-later and
+  Macinclaude portions retain MIT terms. Snow is MIT. Their binaries
+  and Apple ROM or System media are outside the kit.
 
-The licence inventories have been retained in full. The Docker image identifies its upstream repository but does not identify a source commit in its labels; the local Retro68 checkout and current upstream licence inventories must not be represented as the exact source revision of that image. The release identifies the exact toolchain image by digest. Individual source revisions of its linked runtime libraries have not been independently reconstructed; the notices above describe that provenance limitation and do not claim a version-exact source audit.
+## Original Clarice code and corresponding source
 
-## Project-local Snow emulator input patch
+The product tree has no project-wide licence grant for original Clarice
+code. The listed third-party permissions apply to their respective
+components. There is no blanket permission to redistribute Clarice by
+virtue of a public source repository. Obtain the rights holders'
+explicit grant and confirm compatibility for Clarice adapters linked
+into GPL-covered utilities. Clarify the linked-runtime exception and
+CLX integration boundaries for this distribution before release.
 
-The development/test emulator is Snow by Thomas W. (https://github.com/twvd/snow), MIT licensed. The local input patch is based on a921b108ef8bce8ba43fce121d46df0ea9d219af. Upstream copyright and licence are preserved in outputs/emulator-input/SNOW-LICENSE.txt; modifications and reproduction instructions are recorded alongside it. This host-side emulator is separate from the Clarice Macintosh executable. No Snow emulator code is linked into Clarice. The Clarice package includes the patch and build instructions, not the emulator binary, ROMs or guest system media.
+The local source companion **@SOURCE_ARCHIVE@** stages the pinned
+product source, licence inventory, adaptations, compilation and
+installation scripts, and hash-verified BusyBox 1.37.0 upstream source.
+Provide complete corresponding source alongside any binary distribution
+of the BusyBox applets under GPLv2 section 3, including the granted
+terms for required linked adapters. A pinned archive, fetch URL, or
+toolchain image digest is not a substitute for resolving any missing
+corresponding source. Optional GPL editors need their own matching
+complete source and build materials when distributed. Confirm the
+rights grant and remaining runtime/source provenance before publication.
 
-- **ncurses 6.5** (experimental dependency): Thomas E. Dickey, Free Software Foundation, Inc., and upstream contributors; full licence in `src/vendor/ncurses/COPYING`. `scripts/prepare-ncurses.py` verifies the official source archive and stages it with the Clarice terminal description. Build/configuration and native adapters are separate from upstream implementation. See `outputs/nano/ADAPTATIONS.md` for the pinned checksum and limitations. This dependency is not in the published v0.3.0 package.
+BusyBox licensing: https://busybox.net/license.html
+GPLv2: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+GPLv3: https://www.gnu.org/licenses/gpl-3.0.html
 
-- **GNU nano 9.2 and bundled GNU helpers** (unreleased binary experiment): upstream Free Software Foundation and individual contributors retain their notices. Nano source carries GPL-3.0-or-later terms; helper files have their own notices, including LGPL terms. Current source/configuration staging lives under ignored `work/nano/`; the link probe is not a complete distributable source package. Full source, notices, adaptation/build reproduction and compatibility review remain release gates. See `outputs/nano/ADAPTATIONS.md`. No new editor release is made by this documentation update.
+## Apple driver and private media
 
-## Physical-device application disk
-
-The optional v0.4.0 HDA contains an unchanged Apple_Driver43 SCSI driver partition, copyright Apple, from the existing local formatted device template. It is separate from Clarice, not covered by Clarice or upstream utility licences. `outputs/release-0.4.0/HDA-PROVENANCE.json` records its checksum. The HFS partition is newly formatted; no System/Finder/ROM, user files or free-space contents from the template are copied.
-
-## Development checkpoint additions (no new release)
-
-- **E-Kermit 1.8**, Frank da Cruz / Trustees of Columbia University, revised
-  three-clause BSD. Unmodified upstream source and COPYING are retained in
-  `src/ports/ekermit/upstream`; bounds/transport adaptations and archive checksum
-  are recorded in `src/ports/ekermit/README.md`.
-- **Macinclaude MacTCP adapter**, Bart Decrem, MIT; pinned revision and local
-  changes in `src/commands/vendor/mactcp/README.md`, full LICENSE beside source.
-- **SEControl** is separate development infrastructure. Its MiniVNC-derived
-  mouse technique and integration are GPL-3.0-or-later, with Marcio Teixeira's
-  notices and source revision in `tools/se-control/vendor/`. Macinclaude network
-  files retain their MIT licence. None of this helper's mouse code is linked
-  into Clarice.
-- Nano's accepted generated target configuration and GNU helper headers are
-  preserved under `src/ports/nano/prepared/`, with original notices and GPL COPYING.
-  `scripts/prepare-nano.py` verifies nano 9.2's pinned source archive and restores
-  this preparation before the separately maintained adaptation scripts run.
-- Updater SHA-256 reference source retains sbase's public-domain notices and
-  revision in `src/update/vendor/README.md`; current LAN updates use CRC-32.
-
-## Networking in the 0.5.0 candidate
-
-Telnet uses genuine libtelnet by Sean Middleditch and contributors, with its
-public-domain dedication and authors retained under
-`src/commands/vendor/libtelnet`. `README.clarice` records provenance and bounded
-allocation adaptations. The native transport and terminal renderer are separate.
-
-HTTP response and chunk parsing uses pristine picohttpparser by Tokuhiro Matsuno,
-Kazuho Oku and contributors, revision dd573d8fa9264c646a400e96ce9f07dea6f156e4,
-under its MIT option; source, notices and licence are in
-`src/commands/vendor/picohttpparser`. Both licences are included in the offline kit.
-
-FTP and the bounded VT100 model remain independently implemented adapters; they
-are not claimed to be ftplib or libvterm ports. The release review records the
-upstream comparison and supported scope.
-
-## microtar (coherent-deployment experiment)
-
-Copyright (c) 2017 rxi, MIT. Pristine source and licence in
-`src/update/vendor/microtar`, pinned to27076e1b9290e9c7842bb7890a54fcf172406c84.
-Source: https://github.com/rxi/microtar . A separate restricted release reader
-checks field bounds and approved member names before calling upstream parsing.
-No general archive extraction or compression support is added. Native product
-integration remains unfinished.
-
-- **BusyBox 1.37.0**, GPL-2.0: standard wc, tr and sort and required libbb
-  sources. Official archive SHA256
-  `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`.
-  `scripts/prepare-busybox-source.py` fetches verified upstream source;
-  adaptations remain in `src/ports/busybox-tools` and the separate preparer.
-  Copyright, licence and AUTHORS retained in `licenses/busybox`.
-- **newlib getopt**, Gregory Pietsch, public domain: original notice retained
-  in `src/vendor/newlib-getopt/getopt.c`; pinned URL/hash in SOURCE.json.
-
-
-## Optional experimental xvi
-
-The separate xvi investigation uses Chris and John Downey's STEVIE-derived xvi,
-original work by Tim Thompson and Tony Andrews, later maintained by Martin Guy.
-Pinned upstream: https://github.com/martinwguy/xvi commit
-`109d2f39849ec81cc36001dbc341aaa45ff7e8ce` (source version string 2.50).
-This is the portable editor with Atari ST/TOS support, not an X Windows frontend.
-See [copying permission](licenses/xvi/COPYING), [preparation](scripts/prepare-xvi.py)
-and [investigation](outputs/xvi/README.md). Original source/notices remain intact;
-Clarice-specific adaptations are separately located in `src/ports/xvi` and are
-provided under those copying terms. Distribute corresponding source with any
-compiled xvi package; this investigation does not publish a binary release.
-
-## Original Berkeley/Heirloom ex/vi — comparison prototype
-
-`https://github.com/n-t-roff/heirloom-ex-vi`, pinned
-`3f1e9786d249d18012600ae21175eb3521579402`, with bundled BSD termcap and
-Heirloom libcommon traditional `regexp.h` pinned by `scripts/prepare-vi.py`.
-Bill Joy, Mark Horton, the Regents of the University of California, Gunnar
-Ritter and Caldera authorship retained. Terms: `licenses/vi/LICENSE` and
-`licenses/vi/regexp-NOTICE`; all upstream notices remain in fetched source.
-This product includes software developed by the University of California,
-Berkeley and its contributors. This product includes software developed or
-owned by Caldera International, Inc.
-Separable adaptations: `src/ports/vi`; test status and limitations:
-`outputs/vi/README.md`. Not a production-complete port.
-
-- **BusyBox vi 1.37.0** (experimental optional `bbvi`): Sterling Huxley and
-  BusyBox contributors; GPL notices and AUTHORS in `licenses/busybox/` and
-  retained source headers. Official archive SHA-256
-  `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`.
-  `scripts/prepare-busybox-vi.py` stages genuine editor and selected libbb sources;
-  `src/ports/busybox/` contains separate configuration, patch and Macintosh
-  boundaries. This is not a port of the whole BusyBox suite. See
-  `outputs/busybox/README.md` for enabled features, tests and limitations.
+The historical private physical-device HDA contains an Apple_Driver43
+partition from a local template. The available provenance shows its
+origin and checksum, not a redistribution grant. No permission specific
+to that driver was verified. Do not redistribute that HDA. The local ZIP
+uses fork-preserving MacBinary files and contains no Apple driver,
+ROM, System, Finder or emulator image. Existing private HDA and
+recovery material remain available for their existing use. Apple lists
+licences according to the terms applicable to each product:
+https://www.apple.com/legal/sla/
