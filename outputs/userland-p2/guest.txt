@@ -48,5 +48,5 @@ Verification ticks: mode=full header=0 record=4 payload=1 metadata=0 structure=0
 P2-LOCAL-DONE
 
 REMOTE_END_1:0
-/ > 
+/ >
 PASS local script, native devices, remote high-status survival, blocked read cancellation and prompt recovery

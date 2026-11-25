@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111960**, local main: all eleven shell/runtime P2/P3
+Latest normal build **2026111960**, product **98c0b8a**, local main: all eleven shell/runtime P2/P3
 findings corrected. Pipeline/control/status scope, HOME=/home, unquoted $@,
 spool rewind errors, remote logout/cancel, virtual-device isatty, exclusive-create
 cleanup, PATH skipping and ABI diagnostics pass focused host and normal68000

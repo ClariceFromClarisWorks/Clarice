@@ -1,5 +1,7 @@
 # Shell/runtime P2/P3 correctness — build 2026111960
 
+Product commit98c0b8a61ee5f8fde967747978e8c1036d04270e, local main.
+
 All eleven findings confirmed and corrected; none disproved or deferred.
 
 | Finding | Correction and focused evidence |
@@ -37,3 +39,6 @@ Offline HDA readback matches Core forks/type/creator/flags, Release and49utiliti
 all tar payloads match the sealed kit. Publication verification covers canonical
 HTTP/AFP, preserved optional vi/Telnetd, source archive and prior1959 distribution.
 Unrelated files/recovery/worktrees retained; no GitHub push or hardware deployment.
+
+Publication passed:51 catalog entries/36 distinct payloads, exact HTTP/AFP
+checksums and offline/source archives; prior1959 index and payloads retained.
