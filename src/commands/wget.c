@@ -114,8 +114,8 @@ done:
  if(progress_enabled){progress_update(written,size,have_length,-1);progress_enabled=0;}
  if(input_failure&&!cancelled)why=input_failure;if(input_error&&!e)e=input_error;
  if(file>=0){int close_error=cli_native_close(file);if(close_error&&!e)e=close_error;}
- int net_error=NetClose(&net);
- if(net_error){snprintf(header,sizeof header,"wget: MacTCP release failed (%d); receive buffer retained for driver safety\n",net_error);errsay(header);if(!result){result=1;why="download saved but network cleanup failed";}}
+ int net_error=NetClose(&net);if(e==userCanceledErr||net_error==userCanceledErr)cancelled=1;
+ if(net_error){snprintf(header,sizeof header,"wget: MacTCP cleanup reported error %d (resources released)\n",net_error);errsay(header);if(!result){result=1;why="download saved but network cleanup failed";}}
  if(owned){int remove_error=cli_native_delete(stage);if(remove_error){errsay("wget: cleanup failed; incomplete file retained at native:");errsay(stage);errsay("\n");}}
  if(result){if(cancelled){errsay("wget: cancelled\n");return 130;}errsay("wget: ");errsay(why);if(e){snprintf(header,sizeof header," (Mac error %d)",e);errsay(header);}errsay("\n");}
  return result;

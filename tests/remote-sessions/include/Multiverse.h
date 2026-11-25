@@ -4,6 +4,8 @@
 typedef char *Ptr;typedef const unsigned char *ConstStringPtr;typedef unsigned char Boolean;typedef short OSErr,SInt8;typedef void *ParmBlkPtr;
 #define nil NULL
 #define noErr 0
+#define userCanceledErr -128
+#define paramErr -50
 #define false 0
 #define true 1
 #define TCPCreate 1

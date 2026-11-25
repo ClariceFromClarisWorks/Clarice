@@ -1,17 +1,56 @@
 /*
- * nettcp.c — minimal synchronous MacTCP client. See nettcp.h.
+ * nettcp.c — cooperative MacTCP client. See nettcp.h.
  */
 #include <Devices.h>
 #include <Memory.h>
 #include <Multiverse.h> /* pinned Multiversal includes MacTCP declarations */
 #include "nettcp.h"
 #include <string.h>
-/* Local proof hardening: zero parameter blocks and bounded five-second calls. */
+#define IPP_RCVBUF_LEN 16384UL /* Existing system-heap receive ring per stream. */
+static short gIPPRefNum = 0;
+static Boolean gDriverOpen = false;
+extern int app_yield(void);
+extern int cli_pause_ticks(unsigned long);
+extern long cli_write(int,const void *,unsigned long);
 
-#define IPP_RCVBUF_LEN	16384UL		/* MacTCP wants >= 4*MTU; 16K is comfortable */
-
-static short	gIPPRefNum = 0;
-static Boolean	gDriverOpen = false;
+/* Abort/Release do not wait for a peer. They need their own PB while another
+ * operation is outstanding; notify/completion callbacks are deliberately nil. */
+static OSErr net_control(NetConn *c,short code)
+{
+ TCPiopb pb;memset(&pb,0,sizeof pb);pb.ioCRefNum=gIPPRefNum;
+ pb.tcpStream=c->stream;pb.csCode=code;return PBControlSync((ParmBlkPtr)&pb);
+}
+static void net_cleanup_pause(void)
+{
+ /* Cancellation must not turn failed-driver cleanup into a busy spin. */
+ for(unsigned i=0;i<6;i++)(void)cli_pause_ticks(1);
+}
+static OSErr net_wait(NetConn *c,TCPiopb *pb,unsigned long timeout)
+{
+ OSErr reason=0,e;unsigned long start=TickCount();
+ if(app_yield())return userCanceledErr;
+ e=PBControlAsync((ParmBlkPtr)pb);if(e<0)return e;
+ while(*(volatile short*)&pb->ioResult>0){
+  if(cli_pause_ticks(1))reason=userCanceledErr;
+  if(!reason&&timeout&&TickCount()-start>=timeout)reason=commandTimeout;
+  if(reason&&*(volatile short*)&pb->ioResult>0){
+   (void)net_control(c,TCPAbort);
+   /* Abort failure is not detachment. Keep PB, WDS and caller buffers alive
+    * until the ORIGINAL operation completes, retrying cooperatively. */
+   if(*(volatile short*)&pb->ioResult>0)net_cleanup_pause();
+  }
+ }
+ return reason?reason:pb->ioResult;
+}
+static OSErr net_release(NetConn *c)
+{
+ OSErr first=0,e;
+ while((e=net_control(c,TCPRelease))!=noErr){
+  if(!first){const char *m="TCP cleanup pending; waiting for the native driver to release its buffer.\n";first=e;cli_write(2,m,strlen(m));}
+  (void)net_control(c,TCPAbort);net_cleanup_pause();
+ }
+ c->stream=0;return first;
+}
 
 OSErr NetInit(void)
 {
@@ -54,6 +93,7 @@ OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port)
 	memset(&pb, 0, sizeof pb);
 	OSErr err;
 
+	if(c->stream || c->rcvBuff)return paramErr;
 	c->stream = 0;
 	c->rcvBuff = nil;
 	c->rcvBuffLen = 0;
@@ -89,6 +129,7 @@ OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port)
 	if (err != noErr) {
 		DisposePtr(c->rcvBuff);
 		c->rcvBuff = nil;
+		c->rcvBuffLen = 0;
 		return err;
 	}
 	c->stream = pb.tcpStream;
@@ -100,7 +141,7 @@ OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port)
 	pb.csParam.open.ulpTimeoutValue = 5;	/* seconds */
 	pb.csParam.open.ulpTimeoutAction = 1;	/* abort on timeout */
 	pb.csParam.open.validityFlags = 0xC0;	/* timeoutValue + timeoutAction valid */
-	pb.csParam.open.commandTimeoutValue = 0;
+	pb.csParam.open.commandTimeoutValue = 5;
 	pb.csParam.open.remoteHost = host;
 	pb.csParam.open.remotePort = port;
 	pb.csParam.open.localHost = 0;
@@ -112,18 +153,8 @@ OSErr NetConnect(NetConn *c, unsigned long host, unsigned short port)
 	pb.csParam.open.security = 0;
 	pb.csParam.open.optionCnt = 0;
 	pb.csParam.open.userDataPtr = nil;
-	err = PBControlSync((ParmBlkPtr)&pb);
-	if (err != noErr) {
-		/* release the stream we created */
-		pb.ioCRefNum = gIPPRefNum;
-		pb.csCode = TCPRelease;
-		pb.tcpStream = c->stream;
-		if (PBControlSync((ParmBlkPtr)&pb) != noErr) return err;
-		DisposePtr(c->rcvBuff);
-		c->rcvBuff = nil;
-		c->stream = 0;
-		return err;
-	}
+	err = net_wait(c,&pb,300);
+ if(err){(void)NetClose(c);return err;}
 
 	c->isOpen = 1;
 	return noErr;
@@ -171,7 +202,7 @@ long NetRecv(NetConn *c, void *buf, unsigned short maxlen, unsigned char timeout
 	pb.csParam.receive.rcvBuff = (Ptr)buf;
 	pb.csParam.receive.rcvBuffLen = maxlen;
 	pb.csParam.receive.userDataPtr = nil;
-	err = PBControlSync((ParmBlkPtr)&pb);
+	err = net_wait(c,&pb,(unsigned long)timeoutSecs*60);
 
 	if (err == noErr)
 		return (long)pb.csParam.receive.rcvBuffLen;	/* bytes actually received */
@@ -203,38 +234,24 @@ OSErr NetSend(NetConn *c, const void *buf, unsigned short len)
 	pb.csParam.send.urgentFlag = 0;
 	pb.csParam.send.wdsPtr = (Ptr)&wds;
 	pb.csParam.send.userDataPtr = nil;
-	return PBControlSync((ParmBlkPtr)&pb);
+	return net_wait(c,&pb,300);
 }
 
 OSErr NetClose(NetConn *c)
 {
-	TCPiopb pb;
-	memset(&pb, 0, sizeof pb);
-
-	if (c->stream != 0) {
-		if (c->isOpen) {
-			pb.ioCRefNum = gIPPRefNum;
-			pb.csCode = TCPClose;
-			pb.tcpStream = c->stream;
-			pb.csParam.close.ulpTimeoutValue = 5;
-			pb.csParam.close.ulpTimeoutAction = 1;
-			pb.csParam.close.validityFlags = 0xC0;
-			pb.csParam.close.userDataPtr = nil;
-			(void)PBControlSync((ParmBlkPtr)&pb);
-		}
-		pb.ioCRefNum = gIPPRefNum;
-		pb.csCode = TCPRelease;
-		pb.tcpStream = c->stream;
-		OSErr release = PBControlSync((ParmBlkPtr)&pb);
-		if (release != noErr) { c->isOpen = 0; return release; }
-		c->stream = 0;
-	}
-	if (c->rcvBuff != nil) {
-		DisposePtr(c->rcvBuff);
-		c->rcvBuff = nil;
-	}
-	c->isOpen = 0;
-	return noErr;
+ OSErr e=0;
+ if(c->stream){
+  if(c->isOpen){
+   TCPiopb pb;memset(&pb,0,sizeof pb);pb.ioCRefNum=gIPPRefNum;
+   pb.csCode=TCPClose;pb.tcpStream=c->stream;
+   pb.csParam.close.ulpTimeoutValue=5;pb.csParam.close.ulpTimeoutAction=1;
+   pb.csParam.close.validityFlags=0xC0;
+   e=net_wait(c,&pb,300);
+  }
+  OSErr release=net_release(c);if(!e)e=release;
+ }
+ if(c->rcvBuff){DisposePtr(c->rcvBuff);c->rcvBuff=nil;}
+ c->rcvBuffLen=0;c->isOpen=0;return e;
 }
 
 const char *NetErrStr(OSErr e)

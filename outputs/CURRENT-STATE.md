@@ -2,24 +2,21 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111971**, product **30d7b1e**, local main: Batch4A serial lifetime
-and FTP completion corrections. Foreground Serial/Kermit cleanup retains driver-
-referenced PBs/buffers until completion/detachment and retries failed teardown.
-Shared TCP preserves native errors and distinguishes orderly EOF; FTP cannot
-commit an unknown-size download after a native failure. Telnet/wget preserve
-native errors. [Focused evidence](network-4a/REPORT.md): host fault/sanitizer and
-normal68000 Snow Plus/4MiB/System6.0.8 acceptance. Repeated application/system
-heap sizes stable; zero retained command allocations; no persistent buffer or
-startup work. Five CLX packages total+1280bytes; Core package size unchanged.
-A permanently unresponsive Serial Driver must keep cleanup waiting for safety.
-Snow NAT reset-to-EOF translation limits real reset testing; explicit native-error
-injection passes. Physical acceptance remains pending.
+Latest accepted normal build **2026111972**, local main: Batch4B cooperative TCP
+and native cleanup ownership. Foreground connect/send/receive/close yield through
+existing events; failed teardown retains its command or pre-registration Telnetd
+owner until safe release. Native cancellation is130. No new resident allocation,
+startup work or receive buffer. [Focused evidence](network-4b/REPORT.md): host
+fault/sanitizer tests and normal68000 Snow pass; FTP/HTTP/Telnet, cancellation,
+reconnection and repeated native heaps stable. Dual rings32784 system bytes,
+all returned. A permanently broken driver must keep cleanup waiting for safety.
+Snow's accelerated NAT refusal timing is separated from passing1x refusal tests.
+Physical acceptance remains pending. Prior Batch4A serial/EOF fixes preserved.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. All51 entries/36 payloads, source/seal and offline packages verified
-on both sources ([verification](network-4a/verification.json)).
-Previous1970 recovery/distribution and unrelated work preserved. No GitHub push or
-physical hardware access. Stop after4A.
+`Macintosh Exchange/Clarice/index.txt`. Build1972 publication verification pending;
+prior1971 recovery/distribution and unrelated work preserved. No GitHub push or
+physical hardware access. Stop after4B.
 
 ## Review remediation Batch A
 

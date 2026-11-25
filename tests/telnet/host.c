@@ -1,6 +1,7 @@
 #define TELNET_HOST_TEST
 #include "../../src/commands/telnet.c"
 #include <assert.h>
+static int native_cancel;
 static unsigned char sent[16384],shown[16384],input[4096];
 static unsigned sn,on,in,off,ticks,polls;
 static int allocations,allocfail,screenfail,fail_at,alloc_calls;
@@ -14,9 +15,9 @@ int app_serial_key(void){if(overflow)return -2;if(escape_test){int n=escape_test
 unsigned long cli_ticks(void){return ++ticks;}
 int app_yield(void){polls++;return cancel&&polls>2;}
 int NetResolve(const char *s,unsigned long *ip,int(*p)(void),unsigned long t){(void)s;(void)p;(void)t;*ip=1;return 0;}
-int NetConnect(NetConn *c,unsigned long ip,unsigned short p){assert(ip==1&&p==23);if(connectfail)return -108;c->open=1;return 0;}
-int NetClose(NetConn *c){c->open=0;return 0;}
-int NetSend(NetConn *c,const void *p,unsigned short n){(void)c;if(sendfail)return -1;assert(sn+n<sizeof sent);memcpy(sent+sn,p,n);sn+=n;return 0;}
+int NetConnect(NetConn *c,unsigned long ip,unsigned short p){if(native_cancel==1)return userCanceledErr;assert(ip==1&&p==23);if(connectfail)return -108;c->open=1;return 0;}
+int NetClose(NetConn *c){c->open=0;return native_cancel==3?userCanceledErr:0;}
+int NetSend(NetConn *c,const void *p,unsigned short n){if(native_cancel==2)return userCanceledErr;(void)c;if(sendfail)return -1;assert(sn+n<sizeof sent);memcpy(sent+sn,p,n);sn+=n;return 0;}
 long NetAvailable(NetConn *c){(void)c;if(status_error)return status_error;return off<in?1:closed?connectionClosing:0;}
 long NetRecv(NetConn *c,void *p,unsigned short n,unsigned char t){(void)c;(void)n;(void)t;*(unsigned char*)p=input[off++];return 1;}
 static void reset(void){status_error=0;assert(!active&&!terminal);if(engine){telnet_free(engine);engine=0;}protocol_failed=0;dn=tn=cr=escaped=mac_error=0;sn=on=in=off=ticks=polls=0;connectfail=sendfail=outfail=cancel=overflow=escape_test=closed=allocfail=screenfail=0;ttys=1;dumb=1;reason="test";assert(protocol_open());}
@@ -28,6 +29,8 @@ void app_screen_close(void){terminal=0;}long cli_read(int f,void*p,unsigned long
 void *cli_alloc(unsigned long n){size_t *p;if(allocfail||(++alloc_calls==fail_at))return 0;p=calloc(1,n+sizeof *p);assert(p);*p=n;allocations++;live_bytes+=n;if(live_bytes>peak_bytes)peak_bytes=live_bytes;return p+1;}
 void cli_free(void*p){if(p){size_t *h=(size_t*)p-1;live_bytes-=*h;allocations--;free(h);}}
 int main(void){
+ for(int phase=1;phase<=3;phase++){reset();native_cancel=phase;closed=1;input[in++]=IAC;input[in++]=DO;input[in++]=TTYPE;assert(run()==130&&!allocations&&!live_bytes&&!conn.open&&!terminal);native_cancel=0;}
+
  reset();unsigned char a[]={IAC,WILL,ECHO,IAC,WILL,ECHO,IAC,DO,TTYPE,IAC,SB,TTYPE,1,IAC,SE};feed(a,sizeof a);
  unsigned char expected[]={IAC,DO,ECHO,IAC,WILL,TTYPE,IAC,SB,TTYPE,0,'D','U','M','B',IAC,SE};assert(sn==sizeof expected&&!memcmp(sent,expected,sn)&&!on);
  assert(send_key('a')&&flush_tx()&&flush_display()&&!on);

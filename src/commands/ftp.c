@@ -120,7 +120,7 @@ int clarice_main(int argc,char **argv){
  memset(password,0,sizeof password);
  if(progress_enabled){progress_update(done,total,known,-1);progress_enabled=0;}
  if(file>=0){int e=cli_native_close(file);if(e&&!mac_error)mac_error=e;}
- int de=NetClose(&data),ce=NetClose(&control);if(de||ce){errsay("ftp: network release failed; driver buffer retained for safety\n");if(!result){result=1;failure="transfer finished but network cleanup failed";}}
+ int de=NetClose(&data),ce=NetClose(&control);if(mac_error==userCanceledErr||de==userCanceledErr||ce==userCanceledErr)cancelled=1;if(!mac_error)mac_error=de?de:ce;if(de||ce){errsay("ftp: network cleanup reported an error (resources released)\n");if(!result){result=1;failure="transfer finished but network cleanup failed";}}
  if(owned){int e=cli_native_delete(stage);if(e){errsay("ftp: cleanup failed; recover temporary file at native:");errsay(stage);errsay("\n");}}
  if(result){errsay("ftp: ");errsay(cancelled?"cancelled":failure);if(mac_error){snprintf(msg,sizeof msg," (Mac error %d)",mac_error);errsay(msg);}errsay("\n");if(put&&started){errsay("ftp: remote upload may be partial: ");errsay(remote);errsay("\n");}}
  else{snprintf(msg,sizeof msg,"%s %lu bytes\n",put?"Uploaded":"Downloaded",done);say(msg);}

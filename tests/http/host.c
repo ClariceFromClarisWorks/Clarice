@@ -1,6 +1,7 @@
 #define WGET_HOST_TEST
 #include "../../src/commands/wget.c"
 #include <assert.h>
+static int native_cancel;
 static unsigned char response[16384],saved[16384];
 static unsigned length,pos,bytes,ticks,calls;
 static unsigned fragment=17,alloc_calls,fail_alloc,live,peak;
@@ -19,11 +20,11 @@ int checked(const char *a,char *b,char *c,int d){(void)d;strcpy(b,"Disk:");strca
 int info(const char *a,CInfoPBRec *b){(void)a;(void)b;return exists?0:fnfErr;}
 unsigned long NetParseIP(const char *a){return !strcmp(a,"127.0.0.1")?0x7f000001:0;}
 int NetResolve(const char *s,unsigned long *out,int (*poll)(void),unsigned long ticks){(void)poll;(void)ticks;if(!strcmp(s,"example.test")||!strcmp(s,"127.0.0.1")){*out=0x7f000001;return 0;}return -23045;}
-int NetConnect(NetConn *a,unsigned long b,unsigned short c){(void)a;(void)b;(void)c;network++;return 0;}
-int NetSend(NetConn *a,const void *b,unsigned short n){(void)a;assert(n&&strstr(b,"GET /test HTTP/1.0\r\n"));return 0;}
+int NetConnect(NetConn *a,unsigned long b,unsigned short c){if(native_cancel==1)return userCanceledErr;(void)a;(void)b;(void)c;network++;return 0;}
+int NetSend(NetConn *a,const void *b,unsigned short n){if(native_cancel==2)return userCanceledErr;(void)a;assert(n&&strstr(b,"GET /test HTTP/1.0\r\n"));return 0;}
 long NetAvailable(NetConn *a){(void)a;return stall?0:pos<length?(long)(length-pos):connectionClosing;}
 long NetRecv(NetConn *a,void *b,unsigned short n,unsigned char c){(void)a;(void)c;if(n>fragment)n=fragment;memcpy(b,response+pos,n);pos+=n;return n;}
-int NetClose(NetConn *a){(void)a;return 0;}
+int NetClose(NetConn *a){(void)a;return native_cancel==3?userCanceledErr:0;}
 void say(const char *s){(void)s;}
 void errsay(const char *s){if(strlen(diagnostics)+strlen(s)<sizeof diagnostics)strcat(diagnostics,s);}
 int cli_native_create(const char *a,unsigned long b,unsigned long c){(void)a;(void)b;(void)c;if(create_error)return -44;assert(!temporary);temporary=1;return 0;}
@@ -35,6 +36,8 @@ int cli_native_delete(const char *a){(void)a;if(cleanup_error)return ioErr;tempo
 static void reset(const char *header){assert(!live);alloc_calls=fail_alloc=peak=0;fragment=17;memset(&net,0,sizeof net);used=available=cancelled=0;last_data=0;input_failure=0;progress_enabled=0;length=strlen(header);memcpy(response,header,length);pos=bytes=ticks=calls=0;exists=temporary=committed=network=stop=stall=write_error=close_error=rename_error=create_error=cleanup_error=0;diagnostics[0]=0;}
 static int run(void){char *av[]={"wget","-O","result","http://127.0.0.1/test"};return clarice_main(4,av);}
 int main(void){
+ for(int phase=1;phase<=3;phase++){reset("HTTP/1.0 200 OK\r\nContent-Length: 0\r\n\r\n");native_cancel=phase;assert(run()==130&&!temporary&&!live);native_cancel=0;}
+
  reset("HTTP/1.0 200 OK\r\nContent-Length: 4096\r\n\r\n");for(unsigned i=0;i<4096;i++)response[length++]=i;
  assert(run()==0&&committed&&bytes==4096&&!temporary);for(unsigned i=0;i<4096;i++)assert(saved[i]==(unsigned char)i);
  const char *bad[]={"HTTP/1.0 404 Missing\r\nContent-Length: 0\r\n\r\n","HTTP/1.0 200 OK\r\n\r\n","HTTP/1.0 200 OK\r\nContent-Length: 5\r\n\r\nabc","HTTP/1.0 200 OK\r\nContent-Length: 0\r\nContent-Length: 0\r\n\r\n","HTTP/1.0 200 OK\r\nContent-Length: 2147483648\r\n\r\n","HTTP/1.0 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n","HTTP/1.0 200 OK\n\n"};

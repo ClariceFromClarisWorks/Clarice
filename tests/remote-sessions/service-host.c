@@ -1,6 +1,6 @@
 #include "../../src/commands/remote/telnetd.c"
 #include <assert.h>
-static int cancel_auth;static unsigned allocations,execs,session_opens,indicator_ons;static int fail_memory;static int alive,abort_delay,hang_send;static TCPiopb *pending_open,*pending_send;
+static int cancel_auth,fail_listen,fail_register,release_fail,startup_pauses;static unsigned allocations,execs,session_opens,indicator_ons;static int fail_memory;static int alive,abort_delay,hang_send;static TCPiopb *pending_open,*pending_send;
 static char incoming[2048],wire[16384];static unsigned in_count,wire_count;static unsigned long ticks=1;
 Ptr NewPtrSys(unsigned long n){if(fail_memory)return NULL;Ptr p=malloc(n);if(p)allocations++;return p;}
 Ptr NewPtrSysClear(unsigned long n){Ptr p=NewPtrSys(n);if(p)memset(p,0,n);return p;}
@@ -11,18 +11,19 @@ short OpenDriver(ConstStringPtr p,short *r){(void)p;*r=-1;return 0;}
 short PBControlSync(ParmBlkPtr p0){TCPiopb *p=p0;switch(p->csCode){
 case TCPCreate:assert(!alive);alive=1;p->tcpStream=(Ptr)1;break;
 case TCPAbort:if(abort_delay)return 0;if(pending_open){pending_open->ioResult=-1;pending_open=0;}if(pending_send){pending_send->ioResult=-1;pending_send=0;}break;
-case TCPRelease:assert(!pending_open&&!pending_send);alive=0;in_count=0;break;
+case TCPRelease:assert(!pending_open&&!pending_send);if(release_fail){release_fail--;return -36;}alive=0;in_count=0;break;
 case TCPStatus:p->csParam.status.amtUnreadData=in_count;p->csParam.status.connectionState=8;break;
 case TCPRcv:{unsigned n=p->csParam.receive.rcvBuffLen;if(n>in_count)n=in_count;memcpy(p->csParam.receive.rcvBuff,incoming,n);memmove(incoming,incoming+n,in_count-n);in_count-=n;p->csParam.receive.rcvBuffLen=n;break;}
 default:break;}return 0;}
-short PBControlAsync(ParmBlkPtr p0){TCPiopb *p=p0;p->ioResult=1;if(p->csCode==TCPPassiveOpen){assert(!p->csParam.open.remoteHost&&!p->csParam.open.remotePort);pending_open=p;}else if(p->csCode==TCPClose){p->ioResult=0;}else if(p->csCode==TCPSend){assert(!pending_send);pending_send=p;if(!hang_send){memcpy(wire+wire_count,driver->send,driver->wds.length);wire_count+=driver->wds.length;p->ioResult=0;pending_send=0;}}return 0;}
+short PBControlAsync(ParmBlkPtr p0){TCPiopb *p=p0;p->ioResult=1;if(p->csCode==TCPPassiveOpen){if(fail_listen){p->ioResult=-36;return -36;}assert(!p->csParam.open.remoteHost&&!p->csParam.open.remotePort);pending_open=p;}else if(p->csCode==TCPClose){p->ioResult=0;}else if(p->csCode==TCPSend){assert(!pending_send);pending_send=p;if(!hang_send){memcpy(wire+wire_count,driver->send,driver->wds.length);wire_count+=driver->wds.length;p->ioResult=0;pending_send=0;}}return 0;}
 long cli_write(int fd,const void *p,unsigned long n){(void)fd;(void)p;return n;}
-int cli_service_register_slot(int slot,const ClariceService *p){assert(slot==0);assert(p->poll==poll_service&&p->stop==stop);return 0;}
+int cli_service_register_slot(int slot,const ClariceService *p){assert(slot==0);assert(p->poll==poll_service&&p->stop==stop);return fail_register;}
 void *cli_session_open(const ClariceSessionIO *p){assert(p->read&&p->write&&p->cancelled);session_opens++;return (void*)1;}
 int cli_session_close(void *p){assert(p==(void*)1);return 0;}
 void cli_session_prompt(void *p,char *out,unsigned long cap){(void)p;snprintf(out,cap,"/ > ");}
 int cli_session_run(void *p,const char *cmd){assert(p==(void*)1);assert(!strcmp(cmd,"echo good"));execs++;return 0;}
 int app_yield(void){pump();return cancel_auth;}
+int cli_pause_ticks(unsigned long n){assert(n==1);startup_pauses++;ticks++;if(abort_delay)abort_delay--;assert(driver&&alive&&allocations);return cancel_auth;}
 static void feed_bytes(const char *p,unsigned n){in_count=n;assert(in_count<sizeof incoming);memcpy(incoming,p,in_count);while(in_count)pump();}
 static void feed(const char *p){feed_bytes(p,strlen(p));}
 /* Configuration native boundary: independently exercised in Snow. */
@@ -44,6 +45,11 @@ int cli_session_set_wire(void *s,ClariceSessionWire w){assert(s==(void*)1&&w==se
 /* Native completion returns the actual remote address, not the listen wildcard. */
 static void complete_open(unsigned long address){assert(pending_open);pending_open->csParam.open.remoteHost=address;pending_open->ioResult=0;pending_open=0;poll_service(0);}
 int main(void){char *av[]={"telnetd","--no-password","--peer","10.0.0.1",0};
+ /* Failure before service registration must retain the image until detached. */
+ fail_listen=1;release_fail=3;assert(clarice_main(4,av)==1&&!driver&&!alive&&!allocations&&startup_pauses>=18);fail_listen=0;
+ fail_register=1;release_fail=3;abort_delay=3;startup_pauses=0;cancel_auth=1;
+ assert(clarice_main(4,av)==1&&!driver&&!alive&&!allocations&&!pending_open&&startup_pauses>=24);
+ fail_register=cancel_auth=0;
  fail_memory=1;assert(clarice_main(4,av)==1&&!allocations&&!alive);fail_memory=0;
  assert(!clarice_main(4,av));assert(alive&&pending_open);
  /* Reject before negotiation, password handling, session creation or indicator.

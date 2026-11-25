@@ -895,7 +895,8 @@ long app_terminal_read(void *data,unsigned long count){
  }
  unsigned long n=tty_count-tty_offset;if(n>count)n=count;memcpy(data,tty_buffer+tty_offset,n);tty_offset+=n;return n;
 }
-int cli_pause_ticks(unsigned long ticks){EventRecord ev;unsigned long start=TickCount();while(TickCount()-start<ticks){if(app_yield())return 1;int ui=shell_session_ui_begin();if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,1,0))handle(&ev);shell_session_ui_end(ui);}return 0;}
+/* Even after cancellation, yield one event-loop tick for native I/O teardown. */
+int cli_pause_ticks(unsigned long ticks){EventRecord ev;unsigned long start=TickCount();while(TickCount()-start<ticks){int interrupted=app_yield();int ui=shell_session_ui_begin();if(dirty)draw();if(WaitNextEvent(everyEvent,&ev,1,0))handle(&ev);shell_session_ui_end(ui);if(interrupted)return 1;}return 0;}
 /* Presentation does not service events: only app_yield advances last_yield. */
 void term_present(void){int ui=shell_session_ui_begin();if(dirty)draw();shell_session_ui_end(ui);}
 /* Fixed queue, replayed only by the outer event loop: no recursive execute. */

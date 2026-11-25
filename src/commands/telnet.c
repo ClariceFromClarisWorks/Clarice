@@ -175,7 +175,7 @@ int clarice_main(int argc,char **argv){
 end:
  if(tty){if(!flush_display()&&!result)result=1;if(tty==2)app_screen_close();else app_serial_tty(0);app_activity_interactive(0);}if(vt){cli_free(vt);vt=0;}
  if(engine){telnet_free(engine);engine=0;}
- {int e=NetClose(&conn);if(e){message("telnet: network release failed; driver buffer retained for safety\n");if(!mac_error)mac_error=e;if(!result)result=1;}}
+ {int e=NetClose(&conn);if(e){message("telnet: network cleanup reported an error (resources released)\n");if(e==userCanceledErr||!mac_error)mac_error=e;if(!result)result=1;}}
  if(mac_error==userCanceledErr)result=130;
  if(result==1){char b[160];snprintf(b,sizeof b,"\ntelnet: %s (Mac error %d)\n",reason,mac_error);message(b);}
  else message(result==130?"\nTelnet cancelled.\n":"\nTelnet connection closed.\n");
