@@ -1,0 +1,20 @@
+{
+  "build": 2026111962,
+  "closure_cases": 10,
+  "closure_allocation_faults": 61,
+  "shell_cases": 48,
+  "shell_cancel": 3,
+  "posix_cases": 54,
+  "adapter_faults": 347,
+  "loader_scenarios": 92,
+  "receipt_memory_failures": 6,
+  "native_environment_and_glob": true,
+  "remote_session_regressions": true,
+  "remaining_allocations": 0,
+  "code_delta": {
+    "text": 16,
+    "data": 16,
+    "bss": 0,
+    "core_package": 0
+  }
+}

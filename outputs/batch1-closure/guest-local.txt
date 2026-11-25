@@ -1,0 +1,43 @@
+cat /tmp/closure-result; status runtime; printf '\nREMOTE_END_1:%d\n' $?
+PASS-case
+PASS-hyphen
+at=<x>
+at=<~>
+PASS-home
+PASS-glob
+pressure before free=46776 largest=46656 blocks=35
+pressure result=126 freed=333794/333794 largest=333674/333674
+refused=126
+PASS-receipt
+ENTRY free=269830 largest=269618 marker=1
+Runtime: heap=335756 largest=335538 image=65912 ticks=49 load=33 owned-peak=0 remaining=0
+Loader ticks: read=18 validate=1 imports=1 relocations=0 prepare=5 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=8 payload=0 metadata=1 structure=0 (structure included in relocations)
+ENTRY free=269658 largest=269618 marker=1
+Runtime: heap=335590 largest=335538 image=65912 ticks=54 load=37 owned-peak=0 remaining=0
+Loader ticks: read=19 validate=2 imports=0 relocations=0 prepare=7 events=2 (events included above)
+Verification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=0 (structure included in relocations)
+ENTRY free=269658 largest=269618 marker=1
+Runtime: heap=335590 largest=335538 image=65912 ticks=52 load=35 owned-peak=0 remaining=0
+Loader ticks: read=20 validate=1 imports=0 relocations=0 prepare=5 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=9 payload=0 metadata=1 structure=0 (structure included in relocations)
+ENTRY free=269658 largest=269618 marker=1
+Runtime: heap=335590 largest=335538 image=65912 ticks=54 load=36 owned-peak=0 remaining=0
+Loader ticks: read=18 validate=2 imports=1 relocations=0 prepare=6 events=2 (events included above)
+Verification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=0 (structure included in relocations)
+ENTRY free=269658 largest=269618 marker=1
+Runtime: heap=335590 largest=335538 image=65912 ticks=54 load=35 owned-peak=0 remaining=0
+Loader ticks: read=19 validate=1 imports=0 relocations=0 prepare=6 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=9 payload=0 metadata=1 structure=0 (structure included in relocations)
+ENTRY free=269658 largest=269618 marker=1
+Runtime: heap=335590 largest=335538 image=65912 ticks=55 load=37 owned-peak=0 remaining=0
+Loader ticks: read=20 validate=2 imports=0 relocations=0 prepare=6 events=2 (events included above)
+Verification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=0 (structure included in relocations)
+CLOSURE-LOCAL-DONE
+0
+Runtime: heap=325774 largest=311210 image=10056 ticks=76 load=33 owned-peak=0 remaining=0
+Loader ticks: read=12 validate=1 imports=2 relocations=1 prepare=6 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)
+
+REMOTE_END_1:0
+/ >

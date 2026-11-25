@@ -1,0 +1,17 @@
+[
+  {
+    "command": "case b in [a\\-c]) echo WRONG;; *) echo literal;; esac",
+    "status": 0,
+    "output": "case b in [a\\-c]) echo WRONG;; *) echo literal;; esac; printf '\\nREMOTE_END_1:%d\\n' $?\r\nWRONG\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "set -- x '~'; printf '<%s>\\n' $@",
+    "status": 0,
+    "output": "set -- x '~'; printf '<%s>\\n' $@; printf '\\nREMOTE_END_2:%d\\n' $?\r\n<x>\r\n</home>\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "awk 'BEGIN {print ENVIRON[\"HOME\"]}' ",
+    "status": 0,
+    "output": "awk 'BEGIN {print ENVIRON[\"HOME\"]}' ; printf '\\nREMOTE_END_3:%d\\n' $?\r\n/\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

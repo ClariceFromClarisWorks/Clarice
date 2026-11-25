@@ -1,0 +1,70 @@
+[
+  {
+    "command": "case b in [a\\-c]) echo wrong;; *) echo literal;; esac",
+    "status": 0,
+    "output": "literal\n",
+    "reference": "literal\n",
+    "match": true
+  },
+  {
+    "command": "case - in [a\\-c]) echo literal;; *) echo wrong;; esac",
+    "status": 0,
+    "output": "literal\n",
+    "reference": "literal\n",
+    "match": true
+  },
+  {
+    "command": "x=bword; printf '<%s>\\n' ${x#[a\\-c]}",
+    "status": 0,
+    "output": "<bword>\n",
+    "reference": "<bword>\n",
+    "match": true
+  },
+  {
+    "command": "x=wordb; printf '<%s>\\n' ${x%[a\\-c]}",
+    "status": 0,
+    "output": "<wordb>\n",
+    "reference": "<wordb>\n",
+    "match": true
+  },
+  {
+    "command": "set -- x '~'; printf '<%s>\\n' $@",
+    "status": 0,
+    "output": "<x>\n<~>\n",
+    "reference": "<x>\n<~>\n",
+    "match": true
+  },
+  {
+    "command": "x='~'; printf '<%s>\\n' $x",
+    "status": 0,
+    "output": "<~>\n",
+    "reference": "<~>\n",
+    "match": true
+  },
+  {
+    "command": "set -- '~' '~/file'; printf '<%s>\\n' $@",
+    "status": 0,
+    "output": "<~>\n<~/file>\n",
+    "reference": "<~>\n<~/file>\n",
+    "match": true
+  },
+  {
+    "command": "HOME=/tmp; printf '<%s>\\n' ~ ~/file; set -- x '~'; printf '<%s>\\n' $@",
+    "status": 0,
+    "output": "</tmp>\n</tmp/file>\n<x>\n<~>\n",
+    "reference": "</tmp>\n</tmp/file>\n<x>\n<~>\n",
+    "match": true
+  },
+  {
+    "command": "! echo BAD | cat",
+    "status": 2,
+    "output": "STREAMS-RESTORED\n",
+    "error": "sh: cannot rewind pipeline spool\nALLOC calls=14 peak=844 remaining=0 fault=0\n"
+  },
+  {
+    "command": "! while :; do :; done | cat",
+    "status": 130,
+    "output": "STREAMS-RESTORED\n",
+    "error": "ALLOC calls=24 peak=837 remaining=0 fault=0\n"
+  }
+]

@@ -2,21 +2,21 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111961**, product **6effb1d**, local main: focused parser/CLX performance batch.
-Read-cursor parsing removes repeated source moves;8 KiB Snow script210→31seconds.
-Repeated full awk checks8.83→7.66seconds by omitting an unused receipt digest;
-mandatory verification and receipt formats unchanged. Normal ls loading stays about
-30 ticks. Loader now preserves its existing recovery headroom under cumulative
-pressure; fragmented-memory execution and retry pass. No new persistent buffers.
-[Measurements and acceptance limits](userland-perf/REPORT.md). Normal 68000
-Snow Plus/4 MB/System 6.0.8 accepted; physical acceptance pending. 32 KiB command-heavy
-scripts remain slow (361.81s); no completed old-build guest comparison for that case.
-Core package+512bytes; zero retained command allocations and stable largest block.
+Latest normal build **2026111962**, local main: all five Batch 1 closure defects
+corrected. Escaped bracket hyphens, external HOME=/home, positional literal tilde,
+negated-pipeline failure/cancellation and receipt retention on memory refusal pass
+focused host and normal 68000 Snow Plus/4 MiB/System 6.0.8 acceptance.
+[Results and limits](batch1-closure/REPORT.md). Exact receipt preservation under
+native pressure, fast retry, genuine corruption rejection and zero retained command
+allocations verified. Warm heap/largest block stable. Core package unchanged;
+compiled text/data +32 bytes, no BSS or persistent-allocation increase.
+
+Accepted parser/CLX performance improvements retained; command-heavy 32 KiB scripts
+remain slow. [Prior measurements](userland-perf/REPORT.md). Physical acceptance pending.
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Publication verification is recorded in
-[userland-perf/verification.json](userland-perf/verification.json), including product
-commit and preserved prior 1960 distribution. No GitHub push or hardware deployment.
-Stop after the three performance findings.
+`Macintosh Exchange/Clarice/index.txt`. [Publication verification](batch1-closure/verification.json)
+records the product commit, complete sealed build and preserved prior 1961 distribution.
+No GitHub push or hardware deployment. Stop after closure corrections.
 
 ## Review remediation Batch A
 

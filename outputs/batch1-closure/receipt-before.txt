@@ -1,0 +1,6 @@
+receipt-memory mode=0 status=126 retained=0 native=-108 remaining=0
+receipt-memory mode=1 status=126 retained=0 native=-108 remaining=0
+receipt-memory mode=2 status=126 retained=0 native=-108 remaining=0
+receipt-memory mode=3 status=126 retained=0 native=-108 remaining=0
+receipt-memory mode=4 status=126 retained=0 native=-50 remaining=0
+receipt-memory mode=5 status=126 retained=0 native=-108 remaining=0

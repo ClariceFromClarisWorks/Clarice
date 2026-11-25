@@ -45,7 +45,8 @@ static int app_yield(void){return cancel_at&&++yields==cancel_at;}
 static void app_screen_close(void){}
 static void app_activity_interactive(int n){(void)n;}
 static void app_serial_input(int n){(void)n;}
-static int cli_prepare_stdio(void){return 0;}
+static int stdio_failure;
+static int cli_prepare_stdio(void){return stdio_failure;}
 static int read_error;
 static int allocs;
 static unsigned long allocation_limit=~0UL,largest_request;
@@ -107,6 +108,32 @@ static void collection_fixture(void){
  for(int j=0;standard_commands[j];j++){char p[256];snprintf(p,sizeof p,"Kit:%s",standard_commands[j]);put(p,bundle,bundle_len);}
 }
 int main(int argc,char **argv){
+ if(argc>1&&!strcmp(argv[1],"--receipt-memory")){
+  bundle_len=make_image(bundle,1,1);updated_len=make_image(updated,2,2);
+  for(int mode=0;mode<6;mode++){
+   reset();put(dest,updated,updated_len);assert(!command_check_native(dest));
+   char record[PATH_CAP];unsigned char original[CLX_RECORD_BYTES];assert(clx_record_path(dest,record));int rec=find(record);assert(rec>=0);memcpy(original,files[rec].data,sizeof original);
+   alloc_calls=0;
+   if(mode==0)heap_budget=32768;
+   if(mode>=1&&mode<=3)fail_alloc_at=mode;
+   if(mode==4)stdio_failure=1;
+   if(mode==5)heap_budget=32768+5; /* image and one metadata byte fit, argv does not */
+   int rc=module_run(dest,0,NULL);int kept=find(record)>=0;
+   printf("receipt-memory mode=%d status=%d retained=%d native=%d remaining=%lu\n",mode,rc,kept,module_native_error,heap_used);
+#ifdef CLOSURE_REPRO
+   assert(!kept);
+#else
+   assert(kept&&module_native_error==memFullErr&&!memcmp(original,files[find(record)].data,sizeof original));
+#endif
+   assert(rc==126&&!executions&&!heap_used);
+   heap_budget=0x7fffffffUL;fail_alloc_at=stdio_failure=0;
+   assert(!module_run(dest,0,NULL)&&!heap_used);
+#ifndef CLOSURE_REPRO
+   assert(module_fast);
+#endif
+  }
+  return 0;
+ }
  if(argc>1&&!strcmp(argv[1],"--pressure")){
   unsigned char *image=calloc(1,65536+48);assert(image);
   memcpy(image,"CLX1",4);clx_put32(image+4,2);clx_put32(image+8,65536);clx_put32(image+32,1);clx_put32(image+40,1);

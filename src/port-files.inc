@@ -81,7 +81,7 @@ static int cli_environment(int index,char *out,unsigned long capacity){
  const char *name=0,*value=0;int at=0;if(index<0)return 0;
  for(int i=0;i<2;i++)if(sh_env_defaults&(1<<i)){
   const char *key=i?"PWD":"HOME";struct sh_env *e=env_find(sh_env,key);
-  if(at++==index){name=key;value=e&&(e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT)?e->value:i?unix_cwd:"/";break;}
+  if(at++==index){name=key;value=e&&(e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT)?e->value:i?unix_cwd:"/home";break;}
  }
  if(!name)for(struct sh_env *e=sh_env;e;e=e->next)if((e->flags&(SH_ENV_SET|SH_ENV_EXPORT))==(SH_ENV_SET|SH_ENV_EXPORT)){
   if((!strcmp(e->name,"HOME")&&(sh_env_defaults&1))||(!strcmp(e->name,"PWD")&&(sh_env_defaults&2)))continue;

@@ -98,7 +98,7 @@ static int sh_append(struct sh_word *w,const char *s,int mode){size_t n=strlen(s
 /* Preserve lexical quoting when passing expanded words to the matcher. */
 static int sh_quote_pattern(struct sh_word *w){
  struct sh_word *p=sh_word_new();if(!p)return sh_fail("out of memory");int rc=0;
- for(int i=0;!rc&&i<w->used;i++){char c[2]={w->text[i],0};if(w->mode[i]==1&&strchr("*?[\\",c[0]))rc=sh_append(p,"\\",0);if(!rc)rc=sh_append(p,c,0);}
+ for(int i=0;!rc&&i<w->used;i++){char c[2]={w->text[i],0};if(w->mode[i]==1&&strchr("*?[\\-",c[0]))rc=sh_append(p,"\\",0);if(!rc)rc=sh_append(p,c,0);}
  if(!rc){sh_word_reset(w);rc=sh_append(w,p->text,0);}sh_word_free(p);return rc;
 }
 static int sh_word(struct mrsh_word *node,struct sh_word *w,int quoted){size_t i;char num[32];if(!node)return 0;switch(node->type){
@@ -132,14 +132,14 @@ static int sh_glob(struct sh_args *a,char *s,unsigned char *mode){int i,has=0,st
 #else
  char path[PATH_CAP],pattern[PATH_CAP];char *slash=strrchr(s,'/');short vol;long id;int index=1,e;size_t prefix=slash?(size_t)(slash-s)+1:0;
  if(prefix>=sizeof path)return 2;if(prefix){memcpy(path,s,prefix);path[prefix]=0;for(i=0;i<(int)prefix;i++)if(strchr("*?[",path[i]))return sh_fail("wildcards in parent directories are not implemented");}else strcpy(path,".");
- int used=0;for(i=(int)prefix;s[i];i++){if(used>PATH_CAP-3)return 2;if(mode[i]==1&&strchr("*?[\\",s[i]))pattern[used++]='\\';pattern[used++]=s[i];}pattern[used]=0;
+ int used=0;for(i=(int)prefix;s[i];i++){if(used>PATH_CAP-3)return 2;if(mode[i]==1&&strchr("*?[\\-",s[i]))pattern[used++]='\\';pattern[used++]=s[i];}pattern[used]=0;
  e=directory(path,&vol,&id);if(e)return sh_arg(a,s);
  for(;;){CInfoPBRec pb;unsigned char name[257];char candidate[PATH_CAP];memset(&pb,0,sizeof pb);pb.hFileInfo.ioNamePtr=name;pb.hFileInfo.ioVRefNum=vol;pb.hFileInfo.ioDirID=id;pb.hFileInfo.ioFDirIndex=index++;e=PBGetCatInfoSync(&pb);if(e==fnfErr)break;if(e)return sh_fail("glob directory read failed");name[name[0]+1]=0;if(name[1]=='.'&&pattern[0]!='.')continue;if(!sh_pattern(pattern,(char*)name+1))continue;size_t encoded=prefix;for(unsigned j=1;j<=name[0];j++)encoded+=name[j]=='/'||name[j]=='%'?3:1;if(encoded>=sizeof candidate)return sh_fail("expanded pathname too long");memcpy(candidate,s,prefix);int n=prefix,j;for(j=1;j<=name[0];j++){unsigned char c=name[j];if(c=='/'||c=='%'){candidate[n++]='%';candidate[n++]='2';candidate[n++]=c=='/'?'F':'5';}else candidate[n++]=c;}candidate[n]=0;if(sh_arg(a,candidate))return 2;if(app_yield())return 130;}
  if(a->n==start)return sh_arg(a,s);for(i=start+1;i<a->n;i++){int j=i;char *value=a->v[i];while(j>start&&strcmp(a->v[j-1],value)>0){a->v[j]=a->v[j-1];j--;}a->v[j]=value;}return 0;
 #endif
 }
 static int sh_fields(struct sh_word *w,struct sh_args *a){int rc=0,i,start,prior=a->n;const char *ifs;
- ifs=sh_isset("IFS")?env_get("IFS"):" \t\n";if(!rc&&w->used&&w->text[0]=='~'&&w->mode[0]!=1&&(w->text[1]=='/'||!w->text[1])){const char *tail=w->text+1;if(*tail=='/')tail++;
+ ifs=sh_isset("IFS")?env_get("IFS"):" \t\n";if(!rc&&w->used&&w->text[0]=='~'&&w->mode[0]==0&&(w->text[1]=='/'||!w->text[1])){const char *tail=w->text+1;if(*tail=='/')tail++;
  const char *home=env_get("HOME");size_t len=strlen(home)+strlen(tail)+2;char *expanded=malloc(len);if(expanded)snprintf(expanded,len,"%s%s%s",home,*tail&&*home&&home[strlen(home)-1]!='/'?"/":"",tail);
  if(!expanded)rc=sh_fail("out of memory");else{sh_word_reset(w);rc=sh_append(w,expanded,1);free(expanded);}}
 
@@ -360,7 +360,7 @@ case MRSH_FUNCTION_DEFINITION:{struct mrsh_function_definition *c=(void*)cmd;if(
 
 sh_depth--;shell_status=rc;return rc;}
 static int sh_andor(struct mrsh_and_or_list *node){if(node->type==MRSH_AND_OR_LIST_BINOP){struct mrsh_binop *b=(void*)node;int rc=sh_andor(b->left);if(!sh_flow&&((b->type==MRSH_BINOP_AND&&!rc)||(b->type==MRSH_BINOP_OR&&rc)))rc=sh_andor(b->right);return rc;}
- struct mrsh_pipeline *p=(void*)node;size_t i;int rc=0;short oldin=input_ref,oldout=output_ref,previous=-1;unsigned char previous_name[256];for(i=0;i<p->commands.len&&!sh_flow;i++){short next=-1;unsigned char name[256];struct sh_saved *saved=p->commands.len>1?sh_save():0;if(p->commands.len>1&&!saved){rc=2;break;}if(i+1<p->commands.len&&sh_temp(&next,name)){if(saved)sh_restore(saved);rc=sh_fail("cannot create pipeline spool");break;}input_ref=previous>=0?previous:oldin;output_ref=next>=0?next:oldout;int flow=sh_flow,flow_status=sh_flow_status;if(saved)script_depth++;rc=sh_command(p->commands.data[i]);if(saved){script_depth--;sh_restore(saved);sh_flow=flow;sh_flow_status=flow_status;}if(previous>=0)sh_temp_close(previous,previous_name);previous=next;if(next>=0){memcpy(previous_name,name,sizeof name);if(SetFPos(next,fsFromStart,0)){rc=sh_fail("cannot rewind pipeline spool");break;}}if(rc==130)break;}if(previous>=0)sh_temp_close(previous,previous_name);input_ref=oldin;output_ref=oldout;return rc==130?130:p->bang?!rc:rc;}
+ struct mrsh_pipeline *p=(void*)node;size_t i;int rc=0,spool_error=0;short oldin=input_ref,oldout=output_ref,previous=-1;unsigned char previous_name[256];for(i=0;i<p->commands.len&&!sh_flow;i++){short next=-1;unsigned char name[256];struct sh_saved *saved=p->commands.len>1?sh_save():0;if(p->commands.len>1&&!saved){rc=2;spool_error=1;break;}if(i+1<p->commands.len&&sh_temp(&next,name)){if(saved)sh_restore(saved);rc=sh_fail("cannot create pipeline spool");spool_error=1;break;}input_ref=previous>=0?previous:oldin;output_ref=next>=0?next:oldout;int flow=sh_flow,flow_status=sh_flow_status;if(saved)script_depth++;rc=sh_command(p->commands.data[i]);if(sh_flow==4&&sh_flow_status==130)rc=130;if(saved){script_depth--;sh_restore(saved);sh_flow=flow;sh_flow_status=flow_status;}if(previous>=0)sh_temp_close(previous,previous_name);previous=next;if(next>=0){memcpy(previous_name,name,sizeof name);if(rc!=130&&SetFPos(next,fsFromStart,0)){rc=sh_fail("cannot rewind pipeline spool");spool_error=1;break;}}if(rc==130)break;}if(previous>=0)sh_temp_close(previous,previous_name);input_ref=oldin;output_ref=oldout;return rc==130||spool_error?rc:p->bang?!rc:rc;}
 static int sh_array(struct mrsh_array *a){size_t i;int rc=0;for(i=0;i<a->len&&!sh_flow;i++){struct mrsh_command_list *c=a->data[i];if(c->ampersand)return sh_fail("background jobs are not implemented");rc=sh_andor(c->and_or_list);shell_status=rc;if(rc==130){sh_flow=4;sh_flow_status=130;}}return rc;}
 static int sh_source(const char *source){struct mrsh_parser *parser;struct mrsh_program *program;int rc;size_t n=strlen(source);
 if(sh_depth>=SH_DEPTH||sh_source_depth>=8)return sh_fail("source nesting limit");

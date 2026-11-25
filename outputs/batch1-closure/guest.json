@@ -1,0 +1,48 @@
+[
+  {
+    "test": "local",
+    "status": 0,
+    "output": "cat /tmp/closure-result; printf '\\nREMOTE_END_1:%d\\n' $?\r\nPASS-case\r\nPASS-hyphen\r\nat=<x>\r\nat=<~>\r\nPASS-home\r\nPASS-glob\r\npressure before free=46776 largest=46656 blocks=35\r\npressure result=126 freed=333794/333794 largest=333674/333674\r\nrefused=126\r\nPASS-receipt\r\nENTRY free=269830 largest=269618 marker=1\r\nRuntime: heap=335756 largest=335538 image=65912 ticks=49 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=1 imports=1 relocations=0 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=8 payload=0 metadata=1 structure=0 (structure included in relocations)\r\nENTRY free=269658 largest=269618 marker=1\r\nRuntime: heap=335590 largest=335538 image=65912 ticks=54 load=37 owned-peak=0 remaining=0\r\nLoader ticks: read=19 validate=2 imports=0 relocations=0 prepare=7 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=0 (structure included in relocations)\r\nENTRY free=269658 largest=269618 marker=1\r\nRuntime: heap=335590 largest=335538 image=65912 ticks=52 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=20 validate=1 imports=0 relocations=0 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=1 structure=0 (structure included in relocations)\r\nENTRY free=269658 largest=269618 marker=1\r\nRuntime: heap=335590 largest=335538 image=65912 ticks=54 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=18 validate=2 imports=1 relocations=0 prepare=6 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=0 (structure included in relocations)\r\nENTRY free=269658 largest=269618 marker=1\r\nRuntime: heap=335590 largest=335538 image=65912 ticks=54 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=19 validate=1 imports=0 relocations=0 prepare=6 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=1 structure=0 (structure included in relocations)\r\nENTRY free=269658 largest=269618 marker=1\r\nRuntime: heap=335590 largest=335538 image=65912 ticks=55 load=37 owned-peak=0 remaining=0\r\nLoader ticks: read=20 validate=2 imports=0 relocations=0 prepare=6 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=9 payload=0 metadata=2 structure=0 (structure included in relocations)\r\nCLOSURE-LOCAL-DONE\r\n0\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "remote-pattern",
+    "status": 0,
+    "output": "case b in [a\\-c]) false;; *) echo PASS;; esac; x=bword; test ${x#[a\\-c]} = bword; r=$?; echo trim=$r; test $r = 0; printf '\\nREMOTE_END_2:%d\\n' $?\r\nPASS\r\ntrim=0\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "test": "remote-at",
+    "status": 0,
+    "output": "set -- x '~'; set -- $@; printf '<%s>\\n' \"$@\"; test \"$2\" = '~'; printf '\\nREMOTE_END_3:%d\\n' $?\r\n<x>\r\n<~>\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "test": "remote-home",
+    "status": 0,
+    "output": "awk 'BEGIN {print ENVIRON[\"HOME\"]}'; HOME=/override awk 'BEGIN {print ENVIRON[\"HOME\"]}'; env -i /bin/awk 'BEGIN {print (\"HOME\" in ENVIRON)}'; echo \"$HOME\"; printf '\\nREMOTE_END_4:%d\\n' $?\r\n/home\r\n/override\r\n0\r\n/home\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "test": "negated-pipeline-cancel",
+    "status": 0,
+    "output": "echo cancel=$?; echo recovered; status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\ncancel=130\r\nrecovered\r\nRuntime: heap=325224 largest=311210 image=137960 ticks=128 load=118 owned-peak=15813 remaining=0\r\nLoader ticks: read=77 validate=2 imports=3 relocations=21 prepare=5 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=13 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > ",
+    "interrupt_reply": "! while :; do :; done | cat\r\n^C\r\n/ > "
+  },
+  {
+    "test": "receipt-corrupt",
+    "status": 0,
+    "output": "appinstall install /mnt/Sys6Unix/Perf/entry.clx closure-bad; test -f /etc/clarice/clx-closure-bad.ok || exit 1; printf x | dd of=/bin/closure-bad bs=1 seek=1024 conv=notrunc; appinstall check /bin/closure-bad; r=$?; echo rejected=$r; test \"$r\" = 126 && test ! -f /etc/clarice/clx-closure-bad.ok; printf '\\nREMOTE_END_6:%d\\n' $?\r\nappinstall: complete (existing files kept by install/setup)\r\n1+0 records in\r\n1+0 records out\r\ncommand: /bin/closure-bad: CLX payload checksum mismatch\r\nrejected=126\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "test": "repeat-0",
+    "status": 0,
+    "output": "/bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nRuntime: heap=325630 largest=311192 image=10056 ticks=63 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "test": "repeat-1",
+    "status": 0,
+    "output": "/bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\nRuntime: heap=325630 largest=311192 image=10056 ticks=63 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=0 imports=2 relocations=1 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "test": "repeat-2",
+    "status": 0,
+    "output": "/bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_9:%d\\n' $?\r\nRuntime: heap=325630 largest=311192 image=10056 ticks=63 load=28 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=0 imports=3 relocations=1 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > "
+  }
+]

@@ -146,7 +146,7 @@ static int module_load_source(const char *path,int argc,char **argv,int execute,
   e=module_verify_payload(ref,size,nr,ni,clx_u32(header+24),eligible&&!matched?&metadata_hash:0,&reason);
   if(e){if(e==userCanceledErr)status=130;goto close;}goto verified;
  }
- if(execute&&cli_prepare_stdio()){reason="insufficient stdio memory";goto close;}
+ if(execute&&cli_prepare_stdio()){e=memFullErr;reason="insufficient stdio memory";goto close;}
  if(execute)module_bytes=size;
  /* Reserve the same recovery space as command allocations. NewPtr still
     decides whether each block fits contiguously; no executable-size ceiling. */
@@ -225,7 +225,7 @@ verified:
 close:
  module_fast=fast;module_header_ticks=header_time;module_record_ticks=record_time;module_payload_ticks=payload_time;module_metadata_ticks=metadata_time;module_structure_ticks=structure_time;
  if(command_argv)DisposePtr((Ptr)command_argv);if(ref>=0){int closed=FSClose(ref);if(!e)e=closed;}if(meta&&!embedded)DisposePtr((Ptr)meta);if(file&&!embedded)DisposePtr((Ptr)file);
- if(status==126&&!executed&&!embedded&&!resolve(path,native)){
+ if(status==126&&e!=memFullErr&&!executed&&!embedded&&!resolve(path,native)){
   if(clx_receipt_forget(native)){clx_fast_blocked=1;errsay("command: cannot revoke verification record; fast launch disabled for this session\n");}
  }
  if(status==126&&!executed){errsay("command: ");errsay(path);errsay(": ");errsay(reason);errsay("\n");}
