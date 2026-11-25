@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111967**, local main: Batch3B HFS correctness.
+Latest normal build **2026111967**, product **0f82946**, local main: Batch3B HFS correctness.
 Portable unlink resolves the final component without following links and rejects
 trailing separators on links. New vi/nano documents use type TEXT, creator CLRC.
 Copy-based mv (and cp -p) preserves backup dates and extended Finder information;
@@ -15,8 +15,8 @@ image+156; static BSS unchanged, no new allocations or startup work. Batch3A and
 prior terminal, shell and recovery corrections preserved.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Publication is pending final readback;
-previous1966 material retained. Physical acceptance pending. No GitHub push or
+`Macintosh Exchange/Clarice/index.txt`. All51 entries/36 payloads and offline packages verified on HTTP/AFP
+(`filesystem-p2/verification.json`); previous1966 material retained. Physical acceptance pending. No GitHub push or
 hardware access. Stop after3B.
 
 ## Review remediation Batch A

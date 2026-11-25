@@ -1,7 +1,9 @@
 # Batch 3B — HFS correctness, build 2026111967
 
 All three defects reproduced against 15f2c3e and corrected without changing the
-namespace, file-copy transaction or safe-save architecture. Publication pending.
+namespace, file-copy transaction or safe-save architecture. Product **0f82946**,
+integrated local main. HTTP/AFP readback verifies51 entries/36 payloads, offline
+packages and committed-source/seal identity; previous1966 material remains verified.
 
 - Portable `cli_remove`: use existing no-follow resolution, with slash/colon
   suffix guards. File, directory and dangling links remove only their own entry;

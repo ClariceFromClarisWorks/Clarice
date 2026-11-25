@@ -1,0 +1,327 @@
+{
+  "build": 2026111967,
+  "source_commit": "0f829467fd2c625ffbfc874f70482a1a4a6bad85",
+  "seal_identity": "11d90ad9f09a8479a113767df236dbf781b75704dcb9269ab506323a010fcb62",
+  "index_sha256": "e743aca47affb8db9792bf2bef4e47800a2f08a7f85b25654fb39c4025cdf685",
+  "http": "http://192.168.1.112:8089/full/index.txt",
+  "afp": "Macintosh Exchange/Clarice/index.txt",
+  "entries": 51,
+  "unique_payloads": 36,
+  "checks": [
+    {
+      "name": "Clarice",
+      "version": 2026111967,
+      "bytes": 438656,
+      "sha256": "4aee1a75c98d876cf6eeefe09fda5b537f0d94bfb2cd225229a5ec650cab46d8"
+    },
+    {
+      "name": "ls",
+      "version": 2026111967,
+      "bytes": 15008,
+      "sha256": "2074a1285165003f9c58d1e4f123e55757b5716105799447aa6eed4eaeb7d9da"
+    },
+    {
+      "name": "df",
+      "version": 2026111967,
+      "bytes": 15008,
+      "sha256": "2074a1285165003f9c58d1e4f123e55757b5716105799447aa6eed4eaeb7d9da"
+    },
+    {
+      "name": "cat",
+      "version": 2026111967,
+      "bytes": 15008,
+      "sha256": "2074a1285165003f9c58d1e4f123e55757b5716105799447aa6eed4eaeb7d9da"
+    },
+    {
+      "name": "benchls",
+      "version": 2026111967,
+      "bytes": 15008,
+      "sha256": "2074a1285165003f9c58d1e4f123e55757b5716105799447aa6eed4eaeb7d9da"
+    },
+    {
+      "name": "benchscan",
+      "version": 2026111967,
+      "bytes": 15008,
+      "sha256": "2074a1285165003f9c58d1e4f123e55757b5716105799447aa6eed4eaeb7d9da"
+    },
+    {
+      "name": "grep",
+      "version": 2026111967,
+      "bytes": 47028,
+      "sha256": "51be99c37ff074dc896bc29bdca912606cc288fae5faa6499f9bfac6b28780d7"
+    },
+    {
+      "name": "sed",
+      "version": 2026111967,
+      "bytes": 66648,
+      "sha256": "5abe0ec95c8e3c301585bc76ef3b7bbeeb616aaaec4640db7f4f1c66f9496bb8"
+    },
+    {
+      "name": "awk",
+      "version": 2026111967,
+      "bytes": 189644,
+      "sha256": "a3dc84052c149b1ee13144b493e63b61eb9b81259e12c4434822989c68771fe5"
+    },
+    {
+      "name": "serial",
+      "version": 2026111967,
+      "bytes": 10468,
+      "sha256": "2d62eb28253cd28cfe3bf643e2b3d1e110bdc3047b1b6368a2aae9ffe45c6ead"
+    },
+    {
+      "name": "wc",
+      "version": 2026111967,
+      "bytes": 22368,
+      "sha256": "a5721658df4a16baf236928bc536e92a793e4ba9caa50b1a14cd700f576251cf"
+    },
+    {
+      "name": "wc-sbase",
+      "version": 2026111967,
+      "bytes": 16188,
+      "sha256": "ad3dd673862b53ee145574d3a523b265dae97cf5124e736b81c1cb165d6c2638"
+    },
+    {
+      "name": "head",
+      "version": 2026111967,
+      "bytes": 16188,
+      "sha256": "a2026da92511ecef6f8a396b3717881848d6e9f4fe8f45f1ceb00e730d2aac54"
+    },
+    {
+      "name": "cut",
+      "version": 2026111967,
+      "bytes": 19440,
+      "sha256": "e2d0f9b4559f633b6c21a8ef36dce1f206cbb70c68b39b0a244b9769386b4795"
+    },
+    {
+      "name": "tr",
+      "version": 2026111967,
+      "bytes": 22612,
+      "sha256": "22927399cdb11bb9c012f5dccb308fa3186fc50818d90d4d553ba0dc462f214e"
+    },
+    {
+      "name": "tr-sbase",
+      "version": 2026111967,
+      "bytes": 33084,
+      "sha256": "b6c049905968c9cb0f29b540338ea4a3b641406a6cd0c0df7058c5e8da3ae165"
+    },
+    {
+      "name": "uniq",
+      "version": 2026111967,
+      "bytes": 17152,
+      "sha256": "43740925ff2c6da4c77aeecc878b8fa7d51e4b934a3f48684b5e9cd6a906e475"
+    },
+    {
+      "name": "tee",
+      "version": 2026111967,
+      "bytes": 14036,
+      "sha256": "8fbaab86db258ce1fabbacd48d6992e04cc9df1f1307c30369fe679a4c260193"
+    },
+    {
+      "name": "tail",
+      "version": 2026111967,
+      "bytes": 18524,
+      "sha256": "3a433e44a9b39e59ac7d1ab9f1340c94d5026e873d5c719e6ea927e4f4bd29e6"
+    },
+    {
+      "name": "sort",
+      "version": 2026111967,
+      "bytes": 30096,
+      "sha256": "041ef1a20616dd72bf1687a0c23f549665587c1595a7e66d7d6b4a1855b3ca09"
+    },
+    {
+      "name": "sort-sbase",
+      "version": 2026111967,
+      "bytes": 40736,
+      "sha256": "4f4f321314dfeb83020636cbf1e47c48cb45a8c070c95bd4d2f401656fe03ca8"
+    },
+    {
+      "name": "cp",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "mv",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "touch",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "rmdir",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "mkdir",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "rm",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "ln",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "readlink",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "hfsattrib",
+      "version": 2026111967,
+      "bytes": 20792,
+      "sha256": "9fd0e0214bd28cdc1b830adf36597e1d617315b9cef9bdfa26dc1f6e98f07404"
+    },
+    {
+      "name": "find",
+      "version": 2026111967,
+      "bytes": 13928,
+      "sha256": "9e0add7ed13279cb1a96558334223df4323c8252c3543fb9243b665e3990bb52"
+    },
+    {
+      "name": "du",
+      "version": 2026111967,
+      "bytes": 13928,
+      "sha256": "9e0add7ed13279cb1a96558334223df4323c8252c3543fb9243b665e3990bb52"
+    },
+    {
+      "name": "file",
+      "version": 2026111967,
+      "bytes": 13928,
+      "sha256": "9e0add7ed13279cb1a96558334223df4323c8252c3543fb9243b665e3990bb52"
+    },
+    {
+      "name": "od",
+      "version": 2026111967,
+      "bytes": 7184,
+      "sha256": "710aa1e91b3e2508e76022079ef2519e06bd6a9e4b0e4391f6a9e9d360216f91"
+    },
+    {
+      "name": "more",
+      "version": 2026111967,
+      "bytes": 7184,
+      "sha256": "710aa1e91b3e2508e76022079ef2519e06bd6a9e4b0e4391f6a9e9d360216f91"
+    },
+    {
+      "name": "basename",
+      "version": 2026111967,
+      "bytes": 12844,
+      "sha256": "d59f2c0e84b09a9115f10bb991c0feae32a29ee80863fe7fe720a8fd95faa713"
+    },
+    {
+      "name": "dirname",
+      "version": 2026111967,
+      "bytes": 12688,
+      "sha256": "163cfdfbbbdbac3d1f9d4fd15a1ea9cb2cc3444d6800fc3e783e453b91bed874"
+    },
+    {
+      "name": "kermit",
+      "version": 2026111967,
+      "bytes": 26660,
+      "sha256": "760481426fb34325ddbcce92505f1f1d99abcb9898297a89ece2d70bc73f9330"
+    },
+    {
+      "name": "wget",
+      "version": 2026111967,
+      "bytes": 23988,
+      "sha256": "6578a18ac20efd9600da39b47a18e75290f7003b90d967db338c9b0a7b4d5c0a"
+    },
+    {
+      "name": "cmp",
+      "version": 2026111967,
+      "bytes": 14204,
+      "sha256": "be5c67a6275316d28e85567e240e9ca9775c33c898227cd5dca0250e2b6884fb"
+    },
+    {
+      "name": "cksum",
+      "version": 2026111967,
+      "bytes": 15280,
+      "sha256": "e8f28ebabec72ce1369be0287d8d642074edda48cae47e5a03a09c78c964649b"
+    },
+    {
+      "name": "free",
+      "version": 2026111967,
+      "bytes": 3560,
+      "sha256": "4854f76402106648a8e181728d5a638cbbe006fff3c8da1754f97adc9a607699"
+    },
+    {
+      "name": "sleep",
+      "version": 2026111967,
+      "bytes": 13256,
+      "sha256": "69fef7d1e4627e9ed3b65543b9479c3619ee0b07de96a3c8e8b69a8526ffd789"
+    },
+    {
+      "name": "printenv",
+      "version": 2026111967,
+      "bytes": 13800,
+      "sha256": "258d2f22b68c592342ae1014c8ca429b7bff57c5acdd924e8359b8e8806d6b4a"
+    },
+    {
+      "name": "mktemp",
+      "version": 2026111967,
+      "bytes": 18692,
+      "sha256": "9fefb6fb6cb325d7420313f3170ca209dae400e31ac4c02a3e7265c5b42c32a5"
+    },
+    {
+      "name": "dd",
+      "version": 2026111967,
+      "bytes": 18736,
+      "sha256": "d1d076b3f7dd2c45429e79113884f01c37d9df6f467204e10997fb296c020a27"
+    },
+    {
+      "name": "ipconfig",
+      "version": 2026111967,
+      "bytes": 2676,
+      "sha256": "648c50ceea087f5926bd6169ab4d1ff1f9ba4662566fa9361b140e106f4003ad"
+    },
+    {
+      "name": "ping",
+      "version": 2026111967,
+      "bytes": 5708,
+      "sha256": "b0fcbf5020964099df1beb6bdd68b242d9b4514649d4bc2db53e001be5b16734"
+    },
+    {
+      "name": "ftp",
+      "version": 2026111967,
+      "bytes": 19932,
+      "sha256": "7f33efc140c6c87c08abeb9cdb149931677a32c7e4295e175d4b35c0af579713"
+    },
+    {
+      "name": "telnet",
+      "version": 2026111967,
+      "bytes": 25808,
+      "sha256": "79d02fca7a7a07e930a74762a3e9a390b9a53b365f66f4211d260033b222dd36"
+    },
+    {
+      "name": "vi",
+      "version": 2026111951,
+      "bytes": 52264,
+      "sha256": "6a7566b40706c0313c09bdc39a48e1b5bdbaf9456d0639825ecf54211e6b8c91"
+    }
+  ],
+  "offline": [
+    "telnetd-2026111959.clx",
+    "seal-2026111967.json",
+    "Clarice-1967.tar",
+    "Clarice-1967.hda",
+    "Source-1967.tar.gz",
+    "Build-1967.txt"
+  ],
+  "physical_testing": false
+}
