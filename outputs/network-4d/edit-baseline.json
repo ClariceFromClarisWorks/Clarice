@@ -1,0 +1,39 @@
+{
+  "echo_host_seconds": [
+    0.1654293750000022,
+    0.15342037499999606,
+    0.14645062499999995,
+    0.16583062500001233,
+    0.15393237500001078,
+    0.15152579200000105,
+    0.16563283300001785,
+    0.16561599999999999,
+    0.15115537500000187,
+    0.14495658299998126,
+    0.14500054199999113,
+    0.16989104099999963,
+    0.15115462500000376,
+    0.14276279199998498,
+    0.15996595799998659,
+    0.1474925000000269,
+    0.14381154100001936,
+    0.162664417000002,
+    0.14873479100000964,
+    0.15647666699999263
+  ],
+  "midline": [
+    {
+      "seconds": 3.7167462079999893,
+      "bytes": 9058
+    },
+    {
+      "seconds": 3.7813656250000065,
+      "bytes": 9058
+    },
+    {
+      "seconds": 3.7894895420000125,
+      "bytes": 9058
+    }
+  ],
+  "heap": "netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323206 largest=321246 system=45602 largest=45488\r\nRuntime: heap=323380 largest=321246 image=164 ticks=24 load=21 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=0 imports=1 relocations=0 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+}

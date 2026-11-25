@@ -1,0 +1,1078 @@
+{
+  "baseline": {
+    "HTTP fast/1024 probe": [
+      {
+        "total_ticks": 146,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 71,
+        "checks": 120,
+        "yields": 7,
+        "pauses": 3,
+        "wait": 9,
+        "status": 1,
+        "empty": 0,
+        "recv": 1,
+        "send": 1,
+        "gap": 21,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 120,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 59,
+        "checks": 120,
+        "yields": 9,
+        "pauses": 3,
+        "wait": 7,
+        "status": 1,
+        "empty": 0,
+        "recv": 1,
+        "send": 1,
+        "gap": 15,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 119,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 61,
+        "checks": 120,
+        "yields": 9,
+        "pauses": 2,
+        "wait": 6,
+        "status": 1,
+        "empty": 0,
+        "recv": 1,
+        "send": 1,
+        "gap": 13,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP fast/1024 normal": [
+      {
+        "total_ticks": 102,
+        "rep": 0
+      },
+      {
+        "total_ticks": 101,
+        "rep": 1
+      },
+      {
+        "total_ticks": 100,
+        "rep": 2
+      }
+    ],
+    "HTTP fast/8192 probe": [
+      {
+        "total_ticks": 145,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 87,
+        "checks": 128,
+        "yields": 19,
+        "pauses": 3,
+        "wait": 10,
+        "status": 5,
+        "empty": 0,
+        "recv": 5,
+        "send": 1,
+        "gap": 14,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 133,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 75,
+        "checks": 128,
+        "yields": 14,
+        "pauses": 3,
+        "wait": 10,
+        "status": 5,
+        "empty": 0,
+        "recv": 5,
+        "send": 1,
+        "gap": 13,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 140,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 78,
+        "checks": 128,
+        "yields": 16,
+        "pauses": 2,
+        "wait": 8,
+        "status": 5,
+        "empty": 0,
+        "recv": 5,
+        "send": 1,
+        "gap": 14,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP fast/8192 normal": [
+      {
+        "total_ticks": 121,
+        "rep": 0
+      },
+      {
+        "total_ticks": 116,
+        "rep": 1
+      },
+      {
+        "total_ticks": 122,
+        "rep": 2
+      }
+    ],
+    "HTTP fast/65536 probe": [
+      {
+        "total_ticks": 329,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 271,
+        "checks": 185,
+        "yields": 36,
+        "pauses": 3,
+        "wait": 11,
+        "status": 33,
+        "empty": 0,
+        "recv": 33,
+        "send": 1,
+        "gap": 13,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 332,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 272,
+        "checks": 185,
+        "yields": 48,
+        "pauses": 4,
+        "wait": 12,
+        "status": 33,
+        "empty": 0,
+        "recv": 33,
+        "send": 1,
+        "gap": 19,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 333,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 273,
+        "checks": 185,
+        "yields": 45,
+        "pauses": 2,
+        "wait": 10,
+        "status": 33,
+        "empty": 0,
+        "recv": 33,
+        "send": 1,
+        "gap": 16,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP fast/65536 normal": [
+      {
+        "total_ticks": 315,
+        "rep": 0
+      },
+      {
+        "total_ticks": 310,
+        "rep": 1
+      },
+      {
+        "total_ticks": 325,
+        "rep": 2
+      }
+    ],
+    "HTTP header/1024 probe": [
+      {
+        "total_ticks": 383,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 327,
+        "checks": 4135,
+        "yields": 163,
+        "pauses": 3,
+        "wait": 10,
+        "status": 3,
+        "empty": 0,
+        "recv": 3,
+        "send": 1,
+        "gap": 14,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 390,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 333,
+        "checks": 4135,
+        "yields": 179,
+        "pauses": 2,
+        "wait": 8,
+        "status": 3,
+        "empty": 0,
+        "recv": 3,
+        "send": 1,
+        "gap": 13,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 400,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 341,
+        "checks": 4135,
+        "yields": 159,
+        "pauses": 3,
+        "wait": 10,
+        "status": 3,
+        "empty": 0,
+        "recv": 3,
+        "send": 1,
+        "gap": 13,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP header/1024 normal": [
+      {
+        "total_ticks": 284,
+        "rep": 0
+      },
+      {
+        "total_ticks": 291,
+        "rep": 1
+      },
+      {
+        "total_ticks": 305,
+        "rep": 2
+      }
+    ],
+    "HTTP idle/1024 probe": [
+      {
+        "total_ticks": 184,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 126,
+        "checks": 359,
+        "yields": 16,
+        "pauses": 2,
+        "wait": 4,
+        "status": 240,
+        "empty": 239,
+        "recv": 1,
+        "send": 1,
+        "gap": 15,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 185,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 126,
+        "checks": 343,
+        "yields": 19,
+        "pauses": 3,
+        "wait": 7,
+        "status": 224,
+        "empty": 223,
+        "recv": 1,
+        "send": 1,
+        "gap": 13,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 186,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 128,
+        "checks": 328,
+        "yields": 15,
+        "pauses": 2,
+        "wait": 5,
+        "status": 209,
+        "empty": 208,
+        "recv": 1,
+        "send": 1,
+        "gap": 14,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP idle/1024 normal": [
+      {
+        "total_ticks": 164,
+        "rep": 0
+      },
+      {
+        "total_ticks": 356,
+        "rep": 1
+      },
+      {
+        "total_ticks": 169,
+        "rep": 2
+      }
+    ],
+    "FTP 1024 probe": [
+      {
+        "total_ticks": 238,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 105,
+        "checks": 275,
+        "yields": 24,
+        "pauses": 9,
+        "wait": 26,
+        "status": 9,
+        "empty": 1,
+        "recv": 8,
+        "send": 6,
+        "gap": 9,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 160,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 104,
+        "checks": 275,
+        "yields": 29,
+        "pauses": 9,
+        "wait": 23,
+        "status": 9,
+        "empty": 1,
+        "recv": 8,
+        "send": 6,
+        "gap": 10,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 174,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 114,
+        "checks": 275,
+        "yields": 31,
+        "pauses": 9,
+        "wait": 26,
+        "status": 9,
+        "empty": 1,
+        "recv": 8,
+        "send": 6,
+        "gap": 12,
+        "system-peak": 32784,
+        "system-delta": 0
+      }
+    ],
+    "FTP 1024 normal": [
+      {
+        "total_ticks": 203,
+        "rep": 0
+      },
+      {
+        "total_ticks": 144,
+        "rep": 1
+      },
+      {
+        "total_ticks": 148,
+        "rep": 2
+      }
+    ],
+    "FTP 8192 probe": [
+      {
+        "total_ticks": 182,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 123,
+        "checks": 281,
+        "yields": 23,
+        "pauses": 9,
+        "wait": 29,
+        "status": 12,
+        "empty": 1,
+        "recv": 11,
+        "send": 6,
+        "gap": 13,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 180,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 119,
+        "checks": 281,
+        "yields": 22,
+        "pauses": 9,
+        "wait": 25,
+        "status": 12,
+        "empty": 1,
+        "recv": 11,
+        "send": 6,
+        "gap": 11,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 180,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 122,
+        "checks": 281,
+        "yields": 26,
+        "pauses": 9,
+        "wait": 27,
+        "status": 12,
+        "empty": 1,
+        "recv": 11,
+        "send": 6,
+        "gap": 10,
+        "system-peak": 32784,
+        "system-delta": 0
+      }
+    ],
+    "FTP 8192 normal": [
+      {
+        "total_ticks": 152,
+        "rep": 0
+      },
+      {
+        "total_ticks": 156,
+        "rep": 1
+      },
+      {
+        "total_ticks": 166,
+        "rep": 2
+      }
+    ],
+    "FTP 65536 probe": [
+      {
+        "total_ticks": 353,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 296,
+        "checks": 338,
+        "yields": 65,
+        "pauses": 10,
+        "wait": 32,
+        "status": 40,
+        "empty": 1,
+        "recv": 39,
+        "send": 6,
+        "gap": 16,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 370,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 312,
+        "checks": 338,
+        "yields": 63,
+        "pauses": 9,
+        "wait": 30,
+        "status": 40,
+        "empty": 1,
+        "recv": 39,
+        "send": 6,
+        "gap": 12,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 376,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 317,
+        "checks": 338,
+        "yields": 60,
+        "pauses": 9,
+        "wait": 28,
+        "status": 40,
+        "empty": 1,
+        "recv": 39,
+        "send": 6,
+        "gap": 11,
+        "system-peak": 32784,
+        "system-delta": 0
+      }
+    ],
+    "FTP 65536 normal": [
+      {
+        "total_ticks": 338,
+        "rep": 0
+      },
+      {
+        "total_ticks": 339,
+        "rep": 1
+      },
+      {
+        "total_ticks": 348,
+        "rep": 2
+      }
+    ]
+  },
+  "candidate": {
+    "HTTP fast/1024 probe": [
+      {
+        "total_ticks": 200,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 48,
+        "checks": 7,
+        "yields": 2,
+        "pauses": 2,
+        "wait": 5,
+        "status": 1,
+        "empty": 0,
+        "recv": 1,
+        "send": 1,
+        "gap": 17,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 118,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 58,
+        "checks": 7,
+        "yields": 10,
+        "pauses": 3,
+        "wait": 9,
+        "status": 1,
+        "empty": 0,
+        "recv": 1,
+        "send": 1,
+        "gap": 18,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 118,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 59,
+        "checks": 7,
+        "yields": 9,
+        "pauses": 3,
+        "wait": 9,
+        "status": 1,
+        "empty": 0,
+        "recv": 1,
+        "send": 1,
+        "gap": 17,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP fast/1024 normal": [
+      {
+        "total_ticks": 173,
+        "rep": 0
+      },
+      {
+        "total_ticks": 101,
+        "rep": 1
+      },
+      {
+        "total_ticks": 96,
+        "rep": 2
+      }
+    ],
+    "HTTP fast/8192 probe": [
+      {
+        "total_ticks": 138,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 78,
+        "checks": 15,
+        "yields": 9,
+        "pauses": 3,
+        "wait": 11,
+        "status": 5,
+        "empty": 0,
+        "recv": 5,
+        "send": 1,
+        "gap": 20,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 128,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 70,
+        "checks": 15,
+        "yields": 6,
+        "pauses": 3,
+        "wait": 10,
+        "status": 5,
+        "empty": 0,
+        "recv": 5,
+        "send": 1,
+        "gap": 20,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 134,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 74,
+        "checks": 15,
+        "yields": 5,
+        "pauses": 3,
+        "wait": 10,
+        "status": 5,
+        "empty": 0,
+        "recv": 5,
+        "send": 1,
+        "gap": 22,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP fast/8192 normal": [
+      {
+        "total_ticks": 125,
+        "rep": 0
+      },
+      {
+        "total_ticks": 123,
+        "rep": 1
+      },
+      {
+        "total_ticks": 121,
+        "rep": 2
+      }
+    ],
+    "HTTP fast/65536 probe": [
+      {
+        "total_ticks": 325,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 266,
+        "checks": 71,
+        "yields": 52,
+        "pauses": 3,
+        "wait": 12,
+        "status": 33,
+        "empty": 0,
+        "recv": 33,
+        "send": 1,
+        "gap": 20,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 320,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 260,
+        "checks": 71,
+        "yields": 36,
+        "pauses": 2,
+        "wait": 10,
+        "status": 33,
+        "empty": 0,
+        "recv": 33,
+        "send": 1,
+        "gap": 21,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 329,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 268,
+        "checks": 71,
+        "yields": 42,
+        "pauses": 2,
+        "wait": 9,
+        "status": 33,
+        "empty": 0,
+        "recv": 33,
+        "send": 1,
+        "gap": 20,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP fast/65536 normal": [
+      {
+        "total_ticks": 310,
+        "rep": 0
+      },
+      {
+        "total_ticks": 313,
+        "rep": 1
+      },
+      {
+        "total_ticks": 316,
+        "rep": 2
+      }
+    ],
+    "HTTP header/1024 probe": [
+      {
+        "total_ticks": 173,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 116,
+        "checks": 25,
+        "yields": 14,
+        "pauses": 3,
+        "wait": 11,
+        "status": 3,
+        "empty": 0,
+        "recv": 3,
+        "send": 1,
+        "gap": 19,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 179,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 121,
+        "checks": 25,
+        "yields": 19,
+        "pauses": 2,
+        "wait": 10,
+        "status": 3,
+        "empty": 0,
+        "recv": 3,
+        "send": 1,
+        "gap": 20,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 180,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 118,
+        "checks": 25,
+        "yields": 12,
+        "pauses": 3,
+        "wait": 10,
+        "status": 3,
+        "empty": 0,
+        "recv": 3,
+        "send": 1,
+        "gap": 21,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP header/1024 normal": [
+      {
+        "total_ticks": 162,
+        "rep": 0
+      },
+      {
+        "total_ticks": 159,
+        "rep": 1
+      },
+      {
+        "total_ticks": 158,
+        "rep": 2
+      }
+    ],
+    "HTTP idle/1024 probe": [
+      {
+        "total_ticks": 178,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 118,
+        "checks": 40,
+        "yields": 25,
+        "pauses": 35,
+        "wait": 41,
+        "status": 34,
+        "empty": 33,
+        "recv": 1,
+        "send": 1,
+        "gap": 17,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 176,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 115,
+        "checks": 38,
+        "yields": 21,
+        "pauses": 34,
+        "wait": 40,
+        "status": 32,
+        "empty": 31,
+        "recv": 1,
+        "send": 1,
+        "gap": 16,
+        "system-peak": 16392,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 183,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 124,
+        "checks": 42,
+        "yields": 26,
+        "pauses": 37,
+        "wait": 42,
+        "status": 36,
+        "empty": 35,
+        "recv": 1,
+        "send": 1,
+        "gap": 19,
+        "system-peak": 16392,
+        "system-delta": 0
+      }
+    ],
+    "HTTP idle/1024 normal": [
+      {
+        "total_ticks": 164,
+        "rep": 0
+      },
+      {
+        "total_ticks": 172,
+        "rep": 1
+      },
+      {
+        "total_ticks": 167,
+        "rep": 2
+      }
+    ],
+    "FTP 1024 probe": [
+      {
+        "total_ticks": 218,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 91,
+        "checks": 35,
+        "yields": 13,
+        "pauses": 8,
+        "wait": 21,
+        "status": 9,
+        "empty": 1,
+        "recv": 8,
+        "send": 6,
+        "gap": 12,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 160,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 101,
+        "checks": 35,
+        "yields": 16,
+        "pauses": 10,
+        "wait": 27,
+        "status": 9,
+        "empty": 1,
+        "recv": 8,
+        "send": 6,
+        "gap": 15,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 152,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 93,
+        "checks": 35,
+        "yields": 13,
+        "pauses": 8,
+        "wait": 23,
+        "status": 9,
+        "empty": 1,
+        "recv": 8,
+        "send": 6,
+        "gap": 11,
+        "system-peak": 32784,
+        "system-delta": 0
+      }
+    ],
+    "FTP 1024 normal": [
+      {
+        "total_ticks": 200,
+        "rep": 0
+      },
+      {
+        "total_ticks": 139,
+        "rep": 1
+      },
+      {
+        "total_ticks": 139,
+        "rep": 2
+      }
+    ],
+    "FTP 8192 probe": [
+      {
+        "total_ticks": 168,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 109,
+        "checks": 41,
+        "yields": 18,
+        "pauses": 9,
+        "wait": 28,
+        "status": 12,
+        "empty": 1,
+        "recv": 11,
+        "send": 6,
+        "gap": 12,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 170,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 111,
+        "checks": 41,
+        "yields": 13,
+        "pauses": 9,
+        "wait": 36,
+        "status": 12,
+        "empty": 1,
+        "recv": 11,
+        "send": 6,
+        "gap": 12,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 167,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 107,
+        "checks": 41,
+        "yields": 17,
+        "pauses": 10,
+        "wait": 30,
+        "status": 12,
+        "empty": 1,
+        "recv": 11,
+        "send": 6,
+        "gap": 11,
+        "system-peak": 32784,
+        "system-delta": 0
+      }
+    ],
+    "FTP 8192 normal": [
+      {
+        "total_ticks": 155,
+        "rep": 0
+      },
+      {
+        "total_ticks": 154,
+        "rep": 1
+      },
+      {
+        "total_ticks": 154,
+        "rep": 2
+      }
+    ],
+    "FTP 65536 probe": [
+      {
+        "total_ticks": 346,
+        "rep": 0,
+        "rc": 0,
+        "ticks": 288,
+        "checks": 97,
+        "yields": 62,
+        "pauses": 9,
+        "wait": 29,
+        "status": 40,
+        "empty": 1,
+        "recv": 39,
+        "send": 6,
+        "gap": 12,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 357,
+        "rep": 1,
+        "rc": 0,
+        "ticks": 296,
+        "checks": 97,
+        "yields": 60,
+        "pauses": 9,
+        "wait": 31,
+        "status": 40,
+        "empty": 1,
+        "recv": 39,
+        "send": 6,
+        "gap": 12,
+        "system-peak": 32784,
+        "system-delta": 0
+      },
+      {
+        "total_ticks": 349,
+        "rep": 2,
+        "rc": 0,
+        "ticks": 287,
+        "checks": 97,
+        "yields": 51,
+        "pauses": 8,
+        "wait": 26,
+        "status": 40,
+        "empty": 1,
+        "recv": 39,
+        "send": 6,
+        "gap": 12,
+        "system-peak": 32784,
+        "system-delta": 0
+      }
+    ],
+    "FTP 65536 normal": [
+      {
+        "total_ticks": 332,
+        "rep": 0
+      },
+      {
+        "total_ticks": 324,
+        "rep": 1
+      },
+      {
+        "total_ticks": 344,
+        "rep": 2
+      }
+    ]
+  }
+}

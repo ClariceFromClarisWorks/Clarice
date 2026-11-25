@@ -1,0 +1,14 @@
+{
+  "wget": {
+    "old_loaded": 18596,
+    "new_loaded": 18624
+  },
+  "ftp": {
+    "old_loaded": 14488,
+    "new_loaded": 14588
+  },
+  "telnet": {
+    "old_loaded": 19572,
+    "new_loaded": 19604
+  }
+}

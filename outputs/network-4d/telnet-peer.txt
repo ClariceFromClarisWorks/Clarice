@@ -1,0 +1,17 @@
+{"t": 0.162276833, "event": "listening", "address": "192.168.1.112", "port": 22366}
+{"t": 345.592465916, "event": "connected", "term": null}
+{"t": 348.247430333, "event": "key", "value": 101}
+{"t": 348.288412166, "event": "key", "value": 99}
+{"t": 348.288609291, "event": "key", "value": 104}
+{"t": 348.377257916, "event": "key", "value": 111}
+{"t": 348.377348583, "event": "key", "value": 32}
+{"t": 348.462273916, "event": "key", "value": 115}
+{"t": 348.46236075, "event": "key", "value": 109}
+{"t": 348.462392333, "event": "key", "value": 97}
+{"t": 348.546033375, "event": "key", "value": 108}
+{"t": 348.546115583, "event": "key", "value": 108}
+{"t": 348.633144916, "event": "key", "value": 13}
+{"t": 348.633222541, "event": "command", "text": "echo small"}
+{"t": 348.633262625, "event": "key", "value": 10}
+{"t": 349.845181125, "event": "interrupt"}
+{"t": 351.858569041, "event": "closed"}

@@ -25,3 +25,9 @@ delay40s for the client's30s timeout. Host peers run independently of guest time
 use Snow1x for matched network timings, not maximum acceleration. Record host
 latency separately; no extrapolation to physical hardware. Prior Telnet fixtures
 supply negotiation/echo/cancellation and a delayed orderly-close workload.
+
+`measure-snow.py baseline|candidate` records three matched HTTP/FTP repetitions
+and byte comparisons through the existing localhost-only Snow Telnet fixture
+(port23265). It expects profiling aliases wb/fb or wcand/fcand, normal wget/ftp
+or wnormal/fnormal, and `/tmp/expectedSIZE` fixtures. Install only in a disposable
+emulator image. Results go to `outputs/network-4d`; no physical host is contacted.

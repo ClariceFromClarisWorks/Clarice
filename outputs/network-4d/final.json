@@ -1,0 +1,131 @@
+[
+  {
+    "test": "rm -f /tmp/timeout4d /tmp/localwait /tmp/ftpcancel /tmp/slow4d",
+    "status": 0,
+    "text": "rm -f /tmp/timeout4d /tmp/localwait /tmp/ftpcancel /tmp/slow4d; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "HTTP 30-second inactivity timeout",
+    "status": 1,
+    "text": "time wnormal -O /tmp/timeout4d http://192.168.1.112:18085/stall/1024; printf '\\nREMOTE_END_2:%d\\n' $?\r\nwget: response timed out after 30 seconds without data\r\nreal 31.20 s\r\n\r\nREMOTE_END_2:1\r\n/ > "
+  },
+  {
+    "test": "test ! -e /tmp/timeout4d; status runtime; netheap2",
+    "status": 0,
+    "text": "test ! -e /tmp/timeout4d; status runtime; netheap2; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=322804 largest=321246 image=18624 ticks=1862 load=38 owned-peak=0 remaining=0\r\nLoader ticks: read=17 validate=2 imports=2 relocations=2 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=1 (structure included in relocations)\r\napp=322630 largest=321246 system=45602 largest=45488\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "test": "time wnormal -O /tmp/slow4d http://192.168.1.112:18085/slow/65536",
+    "status": 0,
+    "text": "time wnormal -O /tmp/slow4d http://192.168.1.112:18085/slow/65536; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r[=                                                  ]   2% 1.89 KiB / 64.00 KiB\u001b[K\r[===========                           ]  31% 19.89 KiB / 64.00 KiB 19.89 KiB/s\u001b[K\r[===================                   ]  52% 33.89 KiB / 64.00 KiB 16.94 KiB/s\u001b[K\r[===============================       ]  84% 53.89 KiB / 64.00 KiB 17.96 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/slow4d\r\nreal 5.65 s\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "test": "cmp /tmp/slow4d /tmp/expected65536",
+    "status": 0,
+    "text": "cmp /tmp/slow4d /tmp/expected65536; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "test": "fnormal -P 22368 put 192.168.1.112 /tmp/expected8192 uploaded4d",
+    "status": 0,
+    "text": "fnormal -P 22368 put 192.168.1.112 /tmp/expected8192 uploaded4d; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nUploaded 8192 bytes\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "test": "FTP upload binary integrity",
+    "bytes": 8192
+  },
+  {
+    "test": "FTP remote Ctrl+C",
+    "host_seconds": 0.18714395800000005,
+    "text": "^C\r\n/ > "
+  },
+  {
+    "test": "test \"$?\" = 130 && test ! -e /tmp/ftpcancel && echo ftp-recovered; status runtime",
+    "status": 0,
+    "text": "test \"$?\" = 130 && test ! -e /tmp/ftpcancel && echo ftp-recovered; status runtime; printf '\\nREMOTE_END_7:%d\\n' $?\r\nftp-recovered\r\nRuntime: heap=321910 largest=321246 image=14588 ticks=148 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=15 validate=1 imports=2 relocations=2 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_7:0\r\n/ > "
+  },
+  {
+    "test": "test \"$(cat /tmp/wcancel)\" = 130 && test ! -e /tmp/localwait && echo local-recovered; status runtime",
+    "status": 0,
+    "text": "test \"$(cat /tmp/wcancel)\" = 130 && test ! -e /tmp/localwait && echo local-recovered; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nlocal-recovered\r\nRuntime: heap=321526 largest=321194 image=10056 ticks=54 load=44 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=16 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "test \"$(cat /tmp/tcancel)\" = 130 && echo telnet-recovered; status runtime",
+    "status": 0,
+    "text": "test \"$(cat /tmp/tcancel)\" = 130 && echo telnet-recovered; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\ntelnet-recovered\r\nRuntime: heap=322016 largest=321246 image=10056 ticks=42 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=3 imports=2 relocations=2 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=1 record=11 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "Telnet normal VT100 echo, Ctrl+C IP, Command-period restoration",
+    "passed": true
+  },
+  {
+    "test": "netheap2; status runtime",
+    "status": 0,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323204 largest=321246 system=45602 largest=45488\r\nRuntime: heap=323378 largest=321246 image=164 ticks=25 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=0 relocations=0 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "netheap2; status runtime",
+    "status": 0,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323204 largest=321246 system=45602 largest=45488\r\nRuntime: heap=323378 largest=321246 image=164 ticks=24 load=21 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=0 imports=1 relocations=0 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "netheap2; status runtime",
+    "status": 0,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323204 largest=321246 system=45602 largest=45488\r\nRuntime: heap=323378 largest=321246 image=164 ticks=24 load=21 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=0 relocations=0 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "netheap2; status runtime",
+    "status": 0,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323204 largest=321246 system=45602 largest=45488\r\nRuntime: heap=323378 largest=321246 image=164 ticks=26 load=20 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=1 relocations=0 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "netheap2; status runtime",
+    "status": 0,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323204 largest=321246 system=45602 largest=45488\r\nRuntime: heap=323378 largest=321246 image=164 ticks=24 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "netheap2; status runtime",
+    "status": 0,
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323204 largest=321246 system=45602 largest=45488\r\nRuntime: heap=323378 largest=321246 image=164 ticks=24 load=21 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=0 imports=0 relocations=0 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "six repeated sessions native heap stable",
+    "values": [
+      [
+        323204,
+        321246,
+        45602,
+        45488
+      ],
+      [
+        323204,
+        321246,
+        45602,
+        45488
+      ],
+      [
+        323204,
+        321246,
+        45602,
+        45488
+      ],
+      [
+        323204,
+        321246,
+        45602,
+        45488
+      ],
+      [
+        323204,
+        321246,
+        45602,
+        45488
+      ],
+      [
+        323204,
+        321246,
+        45602,
+        45488
+      ]
+    ]
+  }
+]

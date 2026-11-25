@@ -1,0 +1,78 @@
+PASS actual TCP: async open/send/receive/close, delayed completion, refused/failed submit, timeout, cancellation with failed abort, failed release/retry, preserved native errors/EOF, idempotent cleanup; 20 repeated cycles; peak two 16 KiB system buffers, zero retained ownership
+PASS runtime pause: service/event progress, one-tick wait even after cancellation, bounded return, restored UI context
+Usage:
+  ftp [options] get HOST REMOTE NEW_LOCAL
+  ftp [options] put HOST LOCAL REMOTE
+Transfer data forks over batch binary FTP. Use MacBinary for
+complete Macintosh files.
+Options:
+  -u USER       Log in as USER. Default: anonymous.
+  -P PORT       Connect to PORT. Default: 21.
+  --password-stdin
+    Read one password line (up to 511 bytes). Keep secrets out of
+    shell history.
+Downloads refuse existing files and commit after server success.
+Uploads can overwrite remote files. Failed uploads may leave
+partial files.
+Uses system DNS and passive EPSV/PASV. No TLS, active mode,
+resume, recursion or interactive commands.
+Idle timeout: 30 seconds. DNS and pending callbacks can delay
+Ctrl+C.
+Status: 0 success, 1 failure, 2 usage, 130 cancelled.
+PASS FTP: binary/empty GET and PUT; fragmented/multiline replies; EPSV/PASV peer isolation; unknown size; truncation/final failure; existing destination; timeout/cancel; allocation/create/write/close/rename failures; cleanup diagnostics; repeated resource release.
+HTTP final header peak=608 bytes; all allocations released
+PASS: binary, fragmented headers/body, zero length, truncation, status, length bounds, duplicates, encoding, framing, existing file, write/close/rename/create failures, cancel, timeout, cleanup recovery path
+PASS: width 1..200, current/total IEC sizes, unknown/zero totals, overflow-safe percentages, failure/final rows, throttle, redirected suppression
+Usage:
+  telnet [--dumb] HOST [PORT]
+Use a monochrome VT100/ANSI terminal over unencrypted TCP. Default
+port: 23. Both streams must be terminals.
+Options:
+  --dumb        Use the line-oriented NVT instead of a full-screen
+                terminal.
+Ctrl+] then q exits; Ctrl+] twice sends Ctrl+]. Command-period
+cancels locally. Ctrl+C sends Telnet IP.
+Return sends CR LF; Backspace sends DEL. Application arrows are
+supported.
+Uses libtelnet and TERM=vt100 with NAWS. Resize before connecting;
+size is fixed for the session.
+Supports inverse, cursor movement, erase, scroll regions,
+insert/delete and ASCII line graphics.
+No colour, UTF-8, double-size rows, alternate-screen history,
+bold, underline, blink or VT52.
+No TLS, autologin, transfers or urgent SYNCH. DNS/TCP may delay
+cancellation.
+No idle timeout. Incomplete controls time out after 30 seconds.
+Overflow ends the session.
+Status: 0 peer close/local escape, 1 error, 2 usage, 130
+cancelled.
+PASS ownership: injected allocation failures, subsequent recovery, Q queued reversal; ordinary host peak 11744 bytes
+PASS Telnet: fragmented NVT/IAC, echo transitions/duplicates, TTYPE, refused options, CRLF/CRNUL, escaped IAC, IP, malformed/bounded controls, timeout, EOF, cancel/escape, overflow, connect/send/output failures and repeated restoration
+PASS VT: wrap, regions/index/reverse-index, origin/CPR, save/restore, insert/delete, ACS, modes, strings, parameter bounds, 200000 fuzz bytes; model 11128 bytes
+PASS upstream environ01
+PASS upstream environ02
+PASS upstream environ03
+PASS upstream mssp01
+PASS upstream rfc1143
+PASS upstream simple01
+PASS upstream simple02
+PASS upstream ttype01
+PASS upstream zmp01
+PASS upstream zmp02
+PASS upstream zmp03
+PASS independent session exports, variables, functions, arguments, read/write, exit, parser/write failure, allocation exhaustion and cleanup
+PASS bounded echo: five 1000-byte mid-line paste cycles, stalled sends, cursor/backspace, 1023-byte IAC history; no disconnect or lost bytes
+PASS listener: listening/connected/native-failure/retry/recovery; failed listener retries throttled to one second
+PASS wildcard listen: twelve unapproved-peer completions rejected before bytes/auth/session/indicator; stream rearmed, allowed peer accepted, no retained allocations
+PASS authentication: upstream PBKDF2 known answer; no pre-auth shell or pipelined execution; wrong/right password, wiped input, strict missing/malformed config; zero retained allocations
+PASS service: allocation failure, graceful logout drain, negotiated echo, idle dispatch, CRLF, overlong input rejection/recovery, interrupt, delayed abort retains buffers, reconnect and zero retained allocations
+PASS native serial login, pre-auth discard, shell input, raw binary, delayed abort ownership and cleanup
+PASS actual canonical/editor waits: bounded non-executing service polls, connect/type/disconnect progress, normal input and cancellation, no reentrant execution
+PASS service status: disabled idle has zero callbacks; active/native-error/retry/legacy status; old registration ABI and stop cleanup
+PASS independent session exports, variables, functions, arguments, read/write, exit, parser/write failure, allocation exhaustion and cleanup
+PASS bounded echo: five 1000-byte mid-line paste cycles, stalled sends, cursor/backspace, 1023-byte IAC history; no disconnect or lost bytes
+PASS listener: listening/connected/native-failure/retry/recovery; failed listener retries throttled to one second
+PASS wildcard listen: twelve unapproved-peer completions rejected before bytes/auth/session/indicator; stream rearmed, allowed peer accepted, no retained allocations
+PASS authentication: upstream PBKDF2 known answer; no pre-auth shell or pipelined execution; wrong/right password, wiped input, strict missing/malformed config; zero retained allocations
+PASS service: allocation failure, graceful logout drain, negotiated echo, idle dispatch, CRLF, overlong input rejection/recovery, interrupt, delayed abort retains buffers, reconnect and zero retained allocations
+PASS native serial login, pre-auth discard, shell input, raw binary, delayed abort ownership and cleanup

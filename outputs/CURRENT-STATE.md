@@ -2,28 +2,31 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest accepted normal build **2026111973**, product **27b8fbf**, local main: Batch4C
-remote service responsiveness. Canonical read and vi/nano waits poll services
-without executing remote commands. Bounded paste batching/backpressure preserves
-valid long edits; listener status distinguishes listening, connected and retrying
-with native errors. Original service registration remains compatible. Prior4A/4B
-native ownership and transport corrections retained.
+Latest accepted normal build **2026111974**, product **f9b5f73**, local main:
+Batch 4D network efficiency. HTTP/FTP buffered parsing checks events every 256
+bytes and at refills; empty reads and idle Telnet iterations use existing
+one-tick cooperative waits. Native ownership, remote queues and buffer sizes
+remain unchanged. Prior Batch 4A–4C correctness work is preserved.
 
-[Focused evidence](network-4c/REPORT.md): host sanitizer/fault tests and normal68000
-Snow pass, including deferred command execution, cancellation, listener retry,
-reconnection and exact long-command output. Twelve repeated cycles have identical
-native heaps and zero retained command allocations. Core status state+8bytes;
-optional service state+276bytes, native system buffers unchanged. Physical
-acceptance remains pending; visual wrapping across remote clients is not exhaustively
-validated. Password verification retains its existing execution-slot deferral.
+[Evidence](network-4d/REPORT.md): matched Snow 1x normal HTTP with a 4 KiB header
+falls 291→159 guest ticks (45%). Median idle TCPStatus calls fall 224→34 for HTTP
+and 635→84 for Telnet. Ordinary throughput is broadly unchanged; small FTP gains
+and the HTTP 8 KiB 121→123 tick result are recorded. These are emulator results,
+not physical SE or pure CPU measurements. Host fault/sanitizer and normal 68000
+Snow transfer, timeout, cancellation, echo/restoration and heap checks pass.
+Six repeated sessions have identical native heaps and zero retained allocations.
+No new permanent memory; native rings stay 16 KiB. Client files +64/+220/+44 bytes;
+Core package +128 bytes, CODE unchanged. Remote mid-line tail resending and
+six-tick idle scheduling remain measurable presentation costs; no redesign here.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Build1973:51 entries/36 payloads, source/seal,
-offline tar/HDA and optional Telnetd/Seriald verified on both sources
-([verification](network-4c/verification.json)). Optional new services require the
-matching Core; they remain separate from the standard managed utility collection.
-Prior1972 recovery/distribution and unrelated work preserved. No GitHub push or
-physical hardware access. Stop after4C.
+`Macintosh Exchange/Clarice/index.txt`. Build 1974: 51 entries/36 payloads,
+source/seal, offline tar/HDA and optional services verified on both sources
+([verification](network-4d/verification.json)). Complete Snow update/relaunch,
+installed readback and subsequent no-op check pass. Prior 1973 recovery/distribution
+and unrelated work remain preserved. Physical stack/throughput/teardown and
+remote-client visual-wrap acceptance remain pending. No hardware access or GitHub
+push. Stop after Batch 4D.
 
 ## Review remediation Batch A
 

@@ -1,0 +1,27 @@
+rm -f /tmp/actualhttp /tmp/actualftp; printf '\nREMOTE_END_1:%d\n' $?
+
+REMOTE_END_1:0
+/ > 
+wget -O /tmp/actualhttp http://192.168.1.112:18085/header/1024; printf '\nREMOTE_END_2:%d\n' $?
+[====================================================] 100% 1.00 KiB / 1.00 KiB[K[====================================================] 100% 1.00 KiB / 1.00 KiB[K
+Downloaded 1.00 KB to /tmp/actualhttp
+
+REMOTE_END_2:0
+/ > 
+ftp -P 22368 get 192.168.1.112 8192 /tmp/actualftp; printf '\nREMOTE_END_3:%d\n' $?
+[=============                                       ]  25% 2.00 KiB / 8.00 KiB[K[====================================================] 100% 8.00 KiB / 8.00 KiB[K
+Downloaded 8192 bytes
+
+REMOTE_END_3:0
+/ > 
+cmp /tmp/actualhttp /tmp/expected1024 && cmp /tmp/actualftp /tmp/expected8192; status runtime; printf '\nREMOTE_END_4:%d\n' $?
+Runtime: heap=322566 largest=321180 image=8960 ticks=130 load=32 owned-peak=4748 remaining=0
+Loader ticks: read=12 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)
+Verification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)
+
+REMOTE_END_4:0
+/ > 
+printf '%s\n' 'clarice update -y --source http://192.168.1.112:18085/fast/index.txt > /tmp/check4d' > /tmp/check.sh; printf '\nREMOTE_END_5:%d\n' $?
+
+REMOTE_END_5:0
+/ > 

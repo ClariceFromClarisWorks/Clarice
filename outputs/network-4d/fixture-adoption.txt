@@ -1,0 +1,7 @@
+cat /tmp/adopt4d; printf '\nREMOTE_END_1:%d\n' $?
+Checking repository...
+Downloaded 3.29 KB to /tmp/clarice-sort-453707-2
+All standard tools are current.
+
+REMOTE_END_1:0
+/ > 

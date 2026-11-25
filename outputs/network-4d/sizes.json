@@ -1,0 +1,22 @@
+{
+  "wget": {
+    "before": 24804,
+    "after": 24868,
+    "delta": 64
+  },
+  "ftp": {
+    "before": 20956,
+    "after": 21176,
+    "delta": 220
+  },
+  "telnet": {
+    "before": 26596,
+    "after": 26640,
+    "delta": 44
+  },
+  "Core package": {
+    "before": 439936,
+    "after": 440064,
+    "delta": 128
+  }
+}

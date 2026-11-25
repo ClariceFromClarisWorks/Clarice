@@ -1,0 +1,20 @@
+[
+  {
+    "rep": 0,
+    "host_seconds": 0.15274366700000108,
+    "reply": "^C\r\n/ > ",
+    "recovery": "test \"$?\" = 130 && test ! -e /tmp/cancel4d && echo recovered; status runtime; netheap2; printf '\\nREMOTE_END_2:%d\\n' $?\r\nrecovered\r\nRuntime: heap=321652 largest=321246 image=18624 ticks=154 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=16 validate=1 imports=2 relocations=2 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\napp=321478 largest=321150 system=45602 largest=45488\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "host_seconds": 0.05405666700000111,
+    "reply": "^C\r\n/ > ",
+    "recovery": "test \"$?\" = 130 && test ! -e /tmp/cancel4d && echo recovered; status runtime; netheap2; printf '\\nREMOTE_END_4:%d\\n' $?\r\nrecovered\r\nRuntime: heap=321548 largest=321246 image=18624 ticks=146 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=16 validate=1 imports=2 relocations=2 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\napp=321372 largest=321194 system=45602 largest=45488\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "host_seconds": 0.06973883299999883,
+    "reply": "^C\r\n/ > ",
+    "recovery": "test \"$?\" = 130 && test ! -e /tmp/cancel4d && echo recovered; status runtime; netheap2; printf '\\nREMOTE_END_6:%d\\n' $?\r\nrecovered\r\nRuntime: heap=321558 largest=321246 image=18624 ticks=144 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=16 validate=1 imports=2 relocations=2 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=1 (structure included in relocations)\r\napp=321384 largest=321194 system=45602 largest=45488\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  }
+]

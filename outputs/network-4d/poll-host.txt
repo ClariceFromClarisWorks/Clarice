@@ -1,0 +1,68 @@
+HTTP final header peak=608 bytes; all allocations released
+PASS: binary, fragmented headers/body, zero length, truncation, status, length bounds, duplicates, encoding, framing, existing file, write/close/rename/create failures, cancel, timeout, cleanup recovery path
+HTTP buffered header: 18 checks, 0 sleeps
+PASS buffered-event bounds, empty-read sleep/cancellation, available-data fast path and cleanup
+In file included from tests/network-4d/poll-host.c:6:
+tests/network-4d/../ftp/host.c:53:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   53 | }
+      | ^
+1 warning generated.
+Usage:
+  ftp [options] get HOST REMOTE NEW_LOCAL
+  ftp [options] put HOST LOCAL REMOTE
+Transfer data forks over batch binary FTP. Use MacBinary for
+complete Macintosh files.
+Options:
+  -u USER       Log in as USER. Default: anonymous.
+  -P PORT       Connect to PORT. Default: 21.
+  --password-stdin
+    Read one password line (up to 511 bytes). Keep secrets out of
+    shell history.
+Downloads refuse existing files and commit after server success.
+Uploads can overwrite remote files. Failed uploads may leave
+partial files.
+Uses system DNS and passive EPSV/PASV. No TLS, active mode,
+resume, recursion or interactive commands.
+Idle timeout: 30 seconds. DNS and pending callbacks can delay
+Ctrl+C.
+Status: 0 success, 1 failure, 2 usage, 130 cancelled.
+PASS FTP: binary/empty GET and PUT; fragmented/multiline replies; EPSV/PASV peer isolation; unknown size; truncation/final failure; existing destination; timeout/cancel; allocation/create/write/close/rename failures; cleanup diagnostics; repeated resource release.
+PASS buffered-event bounds, empty-read sleep/cancellation, available-data fast path and cleanup
+In file included from tests/network-4d/poll-host.c:8:
+tests/network-4d/../telnet/host.c:1:9: warning: 'TELNET_HOST_TEST' macro redefined [-Wmacro-redefined]
+    1 | #define TELNET_HOST_TEST
+      |         ^
+<command line>:1:9: note: previous definition is here
+    1 | #define TELNET_HOST_TEST 1
+      |         ^
+In file included from tests/network-4d/poll-host.c:8:
+tests/network-4d/../telnet/host.c:109:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  109 | }
+      | ^
+2 warnings generated.
+Usage:
+  telnet [--dumb] HOST [PORT]
+Use a monochrome VT100/ANSI terminal over unencrypted TCP. Default
+port: 23. Both streams must be terminals.
+Options:
+  --dumb        Use the line-oriented NVT instead of a full-screen
+                terminal.
+Ctrl+] then q exits; Ctrl+] twice sends Ctrl+]. Command-period
+cancels locally. Ctrl+C sends Telnet IP.
+Return sends CR LF; Backspace sends DEL. Application arrows are
+supported.
+Uses libtelnet and TERM=vt100 with NAWS. Resize before connecting;
+size is fixed for the session.
+Supports inverse, cursor movement, erase, scroll regions,
+insert/delete and ASCII line graphics.
+No colour, UTF-8, double-size rows, alternate-screen history,
+bold, underline, blink or VT52.
+No TLS, autologin, transfers or urgent SYNCH. DNS/TCP may delay
+cancellation.
+No idle timeout. Incomplete controls time out after 30 seconds.
+Overflow ends the session.
+Status: 0 peer close/local escape, 1 error, 2 usage, 130
+cancelled.
+PASS ownership: injected allocation failures, subsequent recovery, Q queued reversal; ordinary host peak 11744 bytes
+PASS Telnet: fragmented NVT/IAC, echo transitions/duplicates, TTYPE, refused options, CRLF/CRNUL, escaped IAC, IP, malformed/bounded controls, timeout, EOF, cancel/escape, overflow, connect/send/output failures and repeated restoration
+PASS buffered-event bounds, empty-read sleep/cancellation, available-data fast path and cleanup

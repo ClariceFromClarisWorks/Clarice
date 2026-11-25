@@ -1,0 +1,14 @@
+[
+  {
+    "repeat": 0,
+    "output": "cat /tmp/4dmetrics; netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nNETPROFILE rc=0 ticks=215 checks=95 yields=36 pauses=85 wait=162 status=85 empty=80 recv=5 send=3 gap=13 system-peak=16392 system-delta=0\r\napp=322812 largest=321246 system=45602 largest=45488\r\nRuntime: heap=322986 largest=321246 image=164 ticks=27 load=24 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=1 imports=0 relocations=0 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "repeat": 1,
+    "output": "cat /tmp/4dmetrics; netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nNETPROFILE rc=0 ticks=215 checks=95 yields=36 pauses=85 wait=162 status=85 empty=80 recv=5 send=3 gap=13 system-peak=16392 system-delta=0\r\nNETPROFILE rc=0 ticks=211 checks=93 yields=36 pauses=82 wait=161 status=83 empty=78 recv=5 send=3 gap=13 system-peak=16392 system-delta=0\r\napp=322812 largest=321246 system=45602 largest=45488\r\nRuntime: heap=322986 largest=321246 image=164 ticks=25 load=22 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=1 relocations=0 prepare=2 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "repeat": 2,
+    "output": "cat /tmp/4dmetrics; netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nNETPROFILE rc=0 ticks=215 checks=95 yields=36 pauses=85 wait=162 status=85 empty=80 recv=5 send=3 gap=13 system-peak=16392 system-delta=0\r\nNETPROFILE rc=0 ticks=211 checks=93 yields=36 pauses=82 wait=161 status=83 empty=78 recv=5 send=3 gap=13 system-peak=16392 system-delta=0\r\nNETPROFILE rc=0 ticks=202 checks=94 yields=25 pauses=83 wait=161 status=84 empty=79 recv=5 send=3 gap=13 system-peak=16392 system-delta=0\r\napp=322812 largest=321246 system=45602 largest=45488\r\nRuntime: heap=322986 largest=321246 image=164 ticks=26 load=23 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=1 imports=0 relocations=0 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  }
+]

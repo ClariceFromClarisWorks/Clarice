@@ -1,0 +1,10 @@
+cat /tmp/check4d; test ! -e /etc/clarice/update.incomplete; status runtime; printf '\nREMOTE_END_1:%d\n' $?
+Checking repository...
+Downloaded 3.29 KB to /tmp/clarice-sort-576077-1
+All standard tools are current.
+Runtime: heap=322610 largest=321180 image=10056 ticks=45 load=34 owned-peak=0 remaining=0
+Loader ticks: read=14 validate=0 imports=2 relocations=2 prepare=4 events=0 (events included above)
+Verification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=1 (structure included in relocations)
+
+REMOTE_END_1:0
+/ > 

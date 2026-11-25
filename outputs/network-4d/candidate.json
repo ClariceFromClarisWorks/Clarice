@@ -1,0 +1,242 @@
+[
+  {
+    "rep": 0,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/1024; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=48 checks=7 yields=2 pauses=2 wait=5 status=1 empty=0 recv=1 send=1 gap=17 system-peak=16392 system-delta=0\r\nreal 3.33 s\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/1024; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 2.88 s\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/8192",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/8192; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\r[===========                                         ]  23% 1.89 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=78 checks=15 yields=9 pauses=3 wait=11 status=5 empty=0 recv=5 send=1 gap=20 system-peak=16392 system-delta=0\r\nreal 2.30 s\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/8192",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/8192; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\r[===========                                         ]  23% 1.89 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/4dgot\r\nreal 2.08 s\r\n\r\nREMOTE_END_11:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/65536",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/65536; printf '\\nREMOTE_END_14:%d\\n' $?\r\n\r[=                                                  ]   2% 1.89 KiB / 64.00 KiB\u001b[K\r[===========                           ]  31% 19.89 KiB / 64.00 KiB 19.89 KiB/s\u001b[K\r[======================                ]  59% 37.89 KiB / 64.00 KiB 18.94 KiB/s\u001b[K\r[===============================       ]  84% 53.89 KiB / 64.00 KiB 17.96 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=266 checks=71 yields=52 pauses=3 wait=12 status=33 empty=0 recv=33 send=1 gap=20 system-peak=16392 system-delta=0\r\nreal 5.41 s\r\n\r\nREMOTE_END_14:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/65536",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/65536; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\r[=                                                  ]   2% 1.89 KiB / 64.00 KiB\u001b[K\r[===========                           ]  31% 19.89 KiB / 64.00 KiB 19.89 KiB/s\u001b[K\r[======================                ]  59% 37.89 KiB / 64.00 KiB 18.94 KiB/s\u001b[K\r[===============================       ]  84% 53.89 KiB / 64.00 KiB 17.96 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/4dgot\r\nreal 5.16 s\r\n\r\nREMOTE_END_17:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/header/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/header/1024; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=116 checks=25 yields=14 pauses=3 wait=11 status=3 empty=0 recv=3 send=1 gap=19 system-peak=16392 system-delta=0\r\nreal 2.88 s\r\n\r\nREMOTE_END_20:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/header/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/header/1024; printf '\\nREMOTE_END_23:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 2.70 s\r\n\r\nREMOTE_END_23:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/idle/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/idle/1024; printf '\\nREMOTE_END_26:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=118 checks=40 yields=25 pauses=35 wait=41 status=34 empty=33 recv=1 send=1 gap=17 system-peak=16392 system-delta=0\r\nreal 2.96 s\r\n\r\nREMOTE_END_26:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/idle/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/idle/1024; printf '\\nREMOTE_END_29:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 2.73 s\r\n\r\nREMOTE_END_29:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time fcand -P 22368 get 192.168.1.112 1024 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 1024 /tmp/4dgot; printf '\\nREMOTE_END_32:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1024 bytes\r\nNETPROFILE rc=0 ticks=91 checks=35 yields=13 pauses=8 wait=21 status=9 empty=1 recv=8 send=6 gap=12 system-peak=32784 system-delta=0\r\nreal 3.63 s\r\n\r\nREMOTE_END_32:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time fnormal -P 22368 get 192.168.1.112 1024 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 1024 /tmp/4dgot; printf '\\nREMOTE_END_35:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1024 bytes\r\nreal 3.33 s\r\n\r\nREMOTE_END_35:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time fcand -P 22368 get 192.168.1.112 8192 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 8192 /tmp/4dgot; printf '\\nREMOTE_END_38:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nNETPROFILE rc=0 ticks=109 checks=41 yields=18 pauses=9 wait=28 status=12 empty=1 recv=11 send=6 gap=12 system-peak=32784 system-delta=0\r\nreal 2.80 s\r\n\r\nREMOTE_END_38:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time fnormal -P 22368 get 192.168.1.112 8192 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 8192 /tmp/4dgot; printf '\\nREMOTE_END_41:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nreal 2.58 s\r\n\r\nREMOTE_END_41:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time fcand -P 22368 get 192.168.1.112 65536 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 65536 /tmp/4dgot; printf '\\nREMOTE_END_44:%d\\n' $?\r\n\r[=                                                  ]   3% 2.00 KiB / 64.00 KiB\u001b[K\r[============                          ]  34% 22.00 KiB / 64.00 KiB 22.00 KiB/s\u001b[K\r[========================              ]  65% 42.00 KiB / 64.00 KiB 21.00 KiB/s\u001b[K\r[====================================  ]  96% 62.00 KiB / 64.00 KiB 20.67 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 65536 bytes\r\nNETPROFILE rc=0 ticks=288 checks=97 yields=62 pauses=9 wait=29 status=40 empty=1 recv=39 send=6 gap=12 system-peak=32784 system-delta=0\r\nreal 5.76 s\r\n\r\nREMOTE_END_44:0\r\n/ > "
+  },
+  {
+    "rep": 0,
+    "command": "time fnormal -P 22368 get 192.168.1.112 65536 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 65536 /tmp/4dgot; printf '\\nREMOTE_END_47:%d\\n' $?\r\n\r[=                                                  ]   3% 2.00 KiB / 64.00 KiB\u001b[K\r[============                          ]  34% 22.00 KiB / 64.00 KiB 22.00 KiB/s\u001b[K\r[========================              ]  65% 42.00 KiB / 64.00 KiB 21.00 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 65536 bytes\r\nreal 5.53 s\r\n\r\nREMOTE_END_47:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/1024; printf '\\nREMOTE_END_50:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=58 checks=7 yields=10 pauses=3 wait=9 status=1 empty=0 recv=1 send=1 gap=18 system-peak=16392 system-delta=0\r\nreal 1.96 s\r\n\r\nREMOTE_END_50:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/1024; printf '\\nREMOTE_END_53:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 1.68 s\r\n\r\nREMOTE_END_53:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/8192",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/8192; printf '\\nREMOTE_END_56:%d\\n' $?\r\n\r[===========                                         ]  23% 1.89 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=70 checks=15 yields=6 pauses=3 wait=10 status=5 empty=0 recv=5 send=1 gap=20 system-peak=16392 system-delta=0\r\nreal 2.13 s\r\n\r\nREMOTE_END_56:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/8192",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/8192; printf '\\nREMOTE_END_59:%d\\n' $?\r\n\r[===========                                         ]  23% 1.89 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/4dgot\r\nreal 2.05 s\r\n\r\nREMOTE_END_59:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/65536",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/65536; printf '\\nREMOTE_END_62:%d\\n' $?\r\n\r[=                                                  ]   2% 1.89 KiB / 64.00 KiB\u001b[K\r[============                          ]  34% 21.89 KiB / 64.00 KiB 21.89 KiB/s\u001b[K\r[=======================               ]  62% 39.89 KiB / 64.00 KiB 19.94 KiB/s\u001b[K\r[===================================   ]  93% 59.89 KiB / 64.00 KiB 19.96 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=260 checks=71 yields=36 pauses=2 wait=10 status=33 empty=0 recv=33 send=1 gap=21 system-peak=16392 system-delta=0\r\nreal 5.33 s\r\n\r\nREMOTE_END_62:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/65536",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/65536; printf '\\nREMOTE_END_65:%d\\n' $?\r\n\r[=                                                  ]   2% 1.89 KiB / 64.00 KiB\u001b[K\r[===========                           ]  31% 19.89 KiB / 64.00 KiB 19.89 KiB/s\u001b[K\r[======================                ]  59% 37.89 KiB / 64.00 KiB 18.94 KiB/s\u001b[K\r[=================================     ]  87% 55.89 KiB / 64.00 KiB 18.63 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/4dgot\r\nreal 5.21 s\r\n\r\nREMOTE_END_65:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/header/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/header/1024; printf '\\nREMOTE_END_68:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=121 checks=25 yields=19 pauses=2 wait=10 status=3 empty=0 recv=3 send=1 gap=20 system-peak=16392 system-delta=0\r\nreal 2.98 s\r\n\r\nREMOTE_END_68:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/header/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/header/1024; printf '\\nREMOTE_END_71:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 2.65 s\r\n\r\nREMOTE_END_71:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/idle/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/idle/1024; printf '\\nREMOTE_END_74:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=115 checks=38 yields=21 pauses=34 wait=40 status=32 empty=31 recv=1 send=1 gap=16 system-peak=16392 system-delta=0\r\nreal 2.93 s\r\n\r\nREMOTE_END_74:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/idle/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/idle/1024; printf '\\nREMOTE_END_77:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 2.86 s\r\n\r\nREMOTE_END_77:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time fcand -P 22368 get 192.168.1.112 1024 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 1024 /tmp/4dgot; printf '\\nREMOTE_END_80:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1024 bytes\r\nNETPROFILE rc=0 ticks=101 checks=35 yields=16 pauses=10 wait=27 status=9 empty=1 recv=8 send=6 gap=15 system-peak=32784 system-delta=0\r\nreal 2.66 s\r\n\r\nREMOTE_END_80:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time fnormal -P 22368 get 192.168.1.112 1024 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 1024 /tmp/4dgot; printf '\\nREMOTE_END_83:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1024 bytes\r\nreal 2.31 s\r\n\r\nREMOTE_END_83:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time fcand -P 22368 get 192.168.1.112 8192 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 8192 /tmp/4dgot; printf '\\nREMOTE_END_86:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nNETPROFILE rc=0 ticks=111 checks=41 yields=13 pauses=9 wait=36 status=12 empty=1 recv=11 send=6 gap=12 system-peak=32784 system-delta=0\r\nreal 2.83 s\r\n\r\nREMOTE_END_86:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time fnormal -P 22368 get 192.168.1.112 8192 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 8192 /tmp/4dgot; printf '\\nREMOTE_END_89:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nreal 2.56 s\r\n\r\nREMOTE_END_89:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time fcand -P 22368 get 192.168.1.112 65536 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 65536 /tmp/4dgot; printf '\\nREMOTE_END_92:%d\\n' $?\r\n\r[=                                                  ]   3% 2.00 KiB / 64.00 KiB\u001b[K\r[===========                           ]  31% 20.00 KiB / 64.00 KiB 20.00 KiB/s\u001b[K\r[=======================               ]  62% 40.00 KiB / 64.00 KiB 20.00 KiB/s\u001b[K\r[====================================  ]  96% 62.00 KiB / 64.00 KiB 20.67 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 65536 bytes\r\nNETPROFILE rc=0 ticks=296 checks=97 yields=60 pauses=9 wait=31 status=40 empty=1 recv=39 send=6 gap=12 system-peak=32784 system-delta=0\r\nreal 5.95 s\r\n\r\nREMOTE_END_92:0\r\n/ > "
+  },
+  {
+    "rep": 1,
+    "command": "time fnormal -P 22368 get 192.168.1.112 65536 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 65536 /tmp/4dgot; printf '\\nREMOTE_END_95:%d\\n' $?\r\n\r[=                                                  ]   3% 2.00 KiB / 64.00 KiB\u001b[K\r[============                          ]  34% 22.00 KiB / 64.00 KiB 22.00 KiB/s\u001b[K\r[========================              ]  65% 42.00 KiB / 64.00 KiB 21.00 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 65536 bytes\r\nreal 5.40 s\r\n\r\nREMOTE_END_95:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/1024; printf '\\nREMOTE_END_98:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=59 checks=7 yields=9 pauses=3 wait=9 status=1 empty=0 recv=1 send=1 gap=17 system-peak=16392 system-delta=0\r\nreal 1.96 s\r\n\r\nREMOTE_END_98:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/1024; printf '\\nREMOTE_END_101:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 1.60 s\r\n\r\nREMOTE_END_101:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/8192",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/8192; printf '\\nREMOTE_END_104:%d\\n' $?\r\n\r[===========                                         ]  23% 1.89 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=74 checks=15 yields=5 pauses=3 wait=10 status=5 empty=0 recv=5 send=1 gap=22 system-peak=16392 system-delta=0\r\nreal 2.23 s\r\n\r\nREMOTE_END_104:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/8192",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/8192; printf '\\nREMOTE_END_107:%d\\n' $?\r\n\r[===========                                         ]  23% 1.89 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8.00 KB to /tmp/4dgot\r\nreal 2.01 s\r\n\r\nREMOTE_END_107:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/65536",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/fast/65536; printf '\\nREMOTE_END_110:%d\\n' $?\r\n\r[=                                                  ]   2% 1.89 KiB / 64.00 KiB\u001b[K\r[===========                           ]  31% 19.89 KiB / 64.00 KiB 19.89 KiB/s\u001b[K\r[======================                ]  59% 37.89 KiB / 64.00 KiB 18.94 KiB/s\u001b[K\r[==================================    ]  90% 57.89 KiB / 64.00 KiB 19.30 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=268 checks=71 yields=42 pauses=2 wait=9 status=33 empty=0 recv=33 send=1 gap=20 system-peak=16392 system-delta=0\r\nreal 5.48 s\r\n\r\nREMOTE_END_110:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/65536",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/fast/65536; printf '\\nREMOTE_END_113:%d\\n' $?\r\n\r[=                                                  ]   2% 1.89 KiB / 64.00 KiB\u001b[K\r[===========                           ]  31% 19.89 KiB / 64.00 KiB 19.89 KiB/s\u001b[K\r[======================                ]  59% 37.89 KiB / 64.00 KiB 18.94 KiB/s\u001b[K\r[==================================    ]  90% 57.89 KiB / 64.00 KiB 19.30 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 64.00 KB to /tmp/4dgot\r\nreal 5.26 s\r\n\r\nREMOTE_END_113:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/header/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/header/1024; printf '\\nREMOTE_END_116:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=118 checks=25 yields=12 pauses=3 wait=10 status=3 empty=0 recv=3 send=1 gap=21 system-peak=16392 system-delta=0\r\nreal 3.00 s\r\n\r\nREMOTE_END_116:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/header/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/header/1024; printf '\\nREMOTE_END_119:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 2.63 s\r\n\r\nREMOTE_END_119:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/idle/1024",
+    "output": "time wcand -O /tmp/4dgot http://192.168.1.112:18085/idle/1024; printf '\\nREMOTE_END_122:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nNETPROFILE rc=0 ticks=124 checks=42 yields=26 pauses=37 wait=42 status=36 empty=35 recv=1 send=1 gap=19 system-peak=16392 system-delta=0\r\nreal 3.05 s\r\n\r\nREMOTE_END_122:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/idle/1024",
+    "output": "time wnormal -O /tmp/4dgot http://192.168.1.112:18085/idle/1024; printf '\\nREMOTE_END_125:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1.00 KB to /tmp/4dgot\r\nreal 2.78 s\r\n\r\nREMOTE_END_125:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time fcand -P 22368 get 192.168.1.112 1024 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 1024 /tmp/4dgot; printf '\\nREMOTE_END_128:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1024 bytes\r\nNETPROFILE rc=0 ticks=93 checks=35 yields=13 pauses=8 wait=23 status=9 empty=1 recv=8 send=6 gap=11 system-peak=32784 system-delta=0\r\nreal 2.53 s\r\n\r\nREMOTE_END_128:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time fnormal -P 22368 get 192.168.1.112 1024 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 1024 /tmp/4dgot; printf '\\nREMOTE_END_131:%d\\n' $?\r\n\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r[====================================================] 100% 1.00 KiB / 1.00 KiB\u001b[K\r\nDownloaded 1024 bytes\r\nreal 2.31 s\r\n\r\nREMOTE_END_131:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time fcand -P 22368 get 192.168.1.112 8192 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 8192 /tmp/4dgot; printf '\\nREMOTE_END_134:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nNETPROFILE rc=0 ticks=107 checks=41 yields=17 pauses=10 wait=30 status=12 empty=1 recv=11 send=6 gap=11 system-peak=32784 system-delta=0\r\nreal 2.78 s\r\n\r\nREMOTE_END_134:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time fnormal -P 22368 get 192.168.1.112 8192 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 8192 /tmp/4dgot; printf '\\nREMOTE_END_137:%d\\n' $?\r\n\r[=============                                       ]  25% 2.00 KiB / 8.00 KiB\u001b[K\r[====================================================] 100% 8.00 KiB / 8.00 KiB\u001b[K\r\nDownloaded 8192 bytes\r\nreal 2.56 s\r\n\r\nREMOTE_END_137:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time fcand -P 22368 get 192.168.1.112 65536 /tmp/4dgot",
+    "output": "time fcand -P 22368 get 192.168.1.112 65536 /tmp/4dgot; printf '\\nREMOTE_END_140:%d\\n' $?\r\n\r[=                                                  ]   3% 2.00 KiB / 64.00 KiB\u001b[K\r[============                          ]  34% 22.00 KiB / 64.00 KiB 22.00 KiB/s\u001b[K\r[========================              ]  65% 42.00 KiB / 64.00 KiB 21.00 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 65536 bytes\r\nNETPROFILE rc=0 ticks=287 checks=97 yields=51 pauses=8 wait=26 status=40 empty=1 recv=39 send=6 gap=12 system-peak=32784 system-delta=0\r\nreal 5.81 s\r\n\r\nREMOTE_END_140:0\r\n/ > "
+  },
+  {
+    "rep": 2,
+    "command": "time fnormal -P 22368 get 192.168.1.112 65536 /tmp/4dgot",
+    "output": "time fnormal -P 22368 get 192.168.1.112 65536 /tmp/4dgot; printf '\\nREMOTE_END_143:%d\\n' $?\r\n\r[=                                                  ]   3% 2.00 KiB / 64.00 KiB\u001b[K\r[============                          ]  34% 22.00 KiB / 64.00 KiB 22.00 KiB/s\u001b[K\r[========================              ]  65% 42.00 KiB / 64.00 KiB 21.00 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r[======================================] 100% 64.00 KiB / 64.00 KiB 21.33 KiB/s\u001b[K\r\nDownloaded 65536 bytes\r\nreal 5.73 s\r\n\r\nREMOTE_END_143:0\r\n/ > "
+  }
+]
