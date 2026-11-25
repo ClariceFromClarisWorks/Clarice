@@ -23,7 +23,7 @@
 #define fsFromStart 1
 typedef char *Ptr;
 typedef struct {uint32_t fdType,fdCreator;unsigned char rest[8];} Finder;
-typedef struct {struct {int ioFlAttrib;uint32_t ioDirID,ioFlParID,ioFlLgLen,ioFlRLgLen,ioFlCrDat,ioFlMdDat;Finder ioFlFndrInfo;unsigned char ioFlXFndrInfo[16];} hFileInfo;} CInfoPBRec;
+typedef struct {struct {unsigned char *ioNamePtr;short ioVRefNum,ioFDirIndex;int ioFlAttrib;uint32_t ioDirID,ioFlParID,ioFlLgLen,ioFlRLgLen,ioFlCrDat,ioFlMdDat;Finder ioFlFndrInfo;unsigned char ioFlXFndrInfo[16];} hFileInfo;struct {unsigned char *ioNamePtr;short ioVRefNum,ioFDirIndex;long ioDrDirID,ioDrParID;} dirInfo;} CInfoPBRec;
 static int boundaries,fail_at,crash_at,allocs,fail_alloc,identity=100,fault_code=ioErr,cancel_poll;
 #define RECOVERY_POLL() (cancel_poll ? -128 : 0)
 static int native_scratch;
@@ -43,7 +43,7 @@ static int update_volume(const char *p,short *v){if(strncmp(p,"Disk:",5))return 
 static void update_pstr(unsigned char *p,const char *s){p[0]=strlen(s);memcpy(p+1,s,p[0]);}
 static int update_info(const char *p,CInfoPBRec *c){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;*c=fs[i].info;return 0;}
 static int cli_native_create(const char *p,unsigned long type,unsigned long creator){int e=boundary();if(e)return e;if(find(p)>=0)return dupFNErr;for(int i=0;i<100;i++)if(!fs[i].path[0]){memset(&fs[i],0,sizeof fs[i]);strcpy(fs[i].path,p);fs[i].info.hFileInfo.ioDirID=++identity;fs[i].info.hFileInfo.ioFlFndrInfo.fdType=type;fs[i].info.hFileInfo.ioFlFndrInfo.fdCreator=creator;fs[i].info.hFileInfo.ioFlCrDat=fs[i].info.hFileInfo.ioFlMdDat=77;return 0;}return memFullErr;}
-static int cli_native_mkdir(const char *p){int e=cli_native_create(p,0,0);if(!e)fs[find(p)].info.hFileInfo.ioFlAttrib=16;return e;}
+static int cli_native_mkdir(const char *p){int e=cli_native_create(p,0,0);if(!e){fs[find(p)].info.hFileInfo.ioFlAttrib=16;fs[find(p)].info.dirInfo.ioDrDirID=fs[find(p)].info.hFileInfo.ioDirID;}return e;}
 static int cli_native_lock(const char *p,int locked){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;fs[i].info.hFileInfo.ioFlAttrib=(fs[i].info.hFileInfo.ioFlAttrib&~1)|!!locked;return 0;}
 static int cli_native_delete(const char *p){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;if(fs[i].open)return fBsyErr;if(fs[i].info.hFileInfo.ioFlAttrib&1)return permErr;size_t n=strlen(p);for(int j=0;j<100;j++)if(!strncmp(fs[j].path,p,n)&&fs[j].path[n]==':')return fBsyErr;fs[i].path[0]=0;return 0;}
 static int cli_native_set(const char *p,CInfoPBRec *c){int e=boundary();if(e)return e;int i=find(p);if(i<0)return fnfErr;uint32_t id=fs[i].info.hFileInfo.ioDirID,d=fs[i].info.hFileInfo.ioFlLgLen,r=fs[i].info.hFileInfo.ioFlRLgLen;int attr=fs[i].info.hFileInfo.ioFlAttrib;fs[i].info=*c;fs[i].info.hFileInfo.ioFlAttrib=attr;fs[i].info.hFileInfo.ioDirID=id;fs[i].info.hFileInfo.ioFlLgLen=d;fs[i].info.hFileInfo.ioFlRLgLen=r;return 0;}

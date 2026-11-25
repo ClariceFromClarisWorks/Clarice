@@ -2,7 +2,8 @@
 #define main previous_recovery_main
 #include "../recovery/native.c"
 #undef main
-static int system_path(char *p){strcpy(p,"Disk:System:");return 0;}
+static const char *test_system_path="Disk:System:";
+static int system_path(char *p){strcpy(p,test_system_path);return 0;}
 #define LOCATIONS_SYSTEM_PATH system_path
 #define CLARICE_OFFLINE_INSTALLER 1
 static int HCreate(short v,long d,const unsigned char *p,unsigned long creator,unsigned long type){(void)v;(void)d;char s[256];memcpy(s,p+1,p[0]);s[p[0]]=0;return cli_native_create(s,type,creator);}
@@ -14,6 +15,7 @@ static int custom_snapshot(RecoveryRotation *rotation){
  RecoverySnapshot s={0};strcpy(s.header.root,"Disk:Files:Clarice Data:");strcpy(s.header.origin,"Disk:Apps:Clarice");s.header.build=1947;s.header.format=3;s.header.count=4;s.header.origin_id=fs[find(s.header.origin)].info.hFileInfo.ioDirID;s.header.origin_modified=77;s.files=f;
  return recovery_prepare(rotation,&s,"Disk:Helper",0);
 }
+#ifndef INSTALLER_C_REUSE
 int main(void){
  InstallLocations p={"Disk:Apps:Clarice","Disk:Files:Clarice Data:"},got;
  initial_locations();assert(!locations_load(&got));assert(!strcmp(got.core,"Disk:Clarice")&&!strcmp(got.data,"Disk:System:Clarice Data:"));assert(!boundaries||find("Disk:System:Clarice Locations")<0);
@@ -44,3 +46,5 @@ int main(void){
  }
  printf("PASS custom V3 Core/data restore: %d I/O + disk-full + interruption boundaries; both forks, catalog, root sibling, user files and exact launch target preserved\n",total);
 }
+
+#endif

@@ -203,6 +203,7 @@ static void complete_functions(Completion *c){int n=0;for(struct sh_function *f=
 
 #ifdef CLARICE_OFFLINE_INSTALLER
 #include "offline-install.inc"
+#include "offline-uninstall.inc"
 #endif
 
 #ifdef CLARICE_COMPLETION_DIAGNOSTICS

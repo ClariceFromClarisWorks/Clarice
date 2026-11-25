@@ -11,5 +11,7 @@ resource 'DITL' (152) {{
  {100,336,120,432}, Button {enabled,"Data..."};
  {54,16,94,328}, StaticText {disabled,""};
  {98,16,138,328}, StaticText {disabled,""};
- {142,16,160,432}, CheckBox {enabled,"Repair missing or changed standard tools"}
+ {142,16,160,432}, CheckBox {enabled,"Repair missing or changed standard tools"};
+ {256,16,278,114}, Button {enabled,"Uninstall..."};
+ {142,16,160,432}, CheckBox {enabled,"Also delete ALL Clarice Data, including /home"}
 }};

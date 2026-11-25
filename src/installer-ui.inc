@@ -3,6 +3,9 @@
  * Existing backend yields service this dialog, never the terminal event loop. */
 static DialogPtr installer_dialog;
 static int installer_running,installer_cancel,installer_choice;
+static int installer_uninstall,installer_remove_data,installer_finished;
+extern int shell_uninstall_locations(char *,char *);
+extern int shell_uninstall(const char *,const char *,int);
 static int installer_fixed,installer_location_error,installer_repair,installer_same_volume;
 static char installer_core[256],installer_data[256];
 extern int shell_install_locations(char *,char *,int *);
@@ -30,7 +33,7 @@ static pascal void installer_bar(DialogPtr dialog,short item){
 void app_install_progress(const char *phase,unsigned step,unsigned total){
  if(step>total)step=total;installer_step=step;installer_steps=total;
  installer_label(5,phase);char text[80];
- snprintf(text,sizeof text,"Installation steps: %u of %u",step,total);installer_label(6,text);
+ snprintf(text,sizeof text,"Steps: %u of %u",step,total);installer_label(6,text);
  SetPort(installer_dialog);installer_bar(installer_dialog,4);
 }
 static void installer_text(const char *text,long length){
@@ -48,7 +51,7 @@ static void installer_locations(void){
  if(!same)installer_label(5,"Choose Core and Clarice Data on the same disk.");
  else installer_label(5,installer_fixed?"Existing locations retained; user data will not move.":"Defaults are recommended; choose Install to confirm your choices.");
 }
-static void installer_choose(int data){
+static __attribute__((noinline)) void installer_choose(int data){
  if(installer_running||installer_fixed||installer_location_error)return;
  SFReply reply;Point point={40,30};short volume;long directory;
  int e=shell_install_folder(data?installer_data:installer_core,&volume,&directory);
@@ -68,12 +71,26 @@ static int installer_ready(void){return !installer_location_error&&installer_sam
 static void installer_event(EventRecord *event){
  if(event->what==keyDown||event->what==autoKey){unsigned char c=event->message&charCodeMask;
   if(c==27||((event->modifiers&cmdKey)&&(c=='.'||c=='q'))||((event->modifiers&ControlKey)&&(c==3||c=='c'))){installer_cancel=1;installer_choice=2;return;}
-  if(!installer_running&&installer_ready()&&(c==13||c==3)){installer_choice=1;return;}
+  if(!installer_finished&&!installer_running&&!installer_uninstall&&installer_ready()&&(c==13||c==3)){installer_choice=1;return;}
  }
  DialogPtr dialog;short item;
  if(IsDialogEvent(event)&&DialogSelect(event,&dialog,&item)&&dialog==installer_dialog){
   if(item==2){installer_cancel=1;installer_choice=2;}
-  else if(item==1&&!installer_running&&installer_ready())installer_choice=1;
+  else if(item==1&&!installer_finished&&!installer_running&&installer_ready())installer_choice=1;
+  else if(item==12&&!installer_finished&&!installer_running&&installer_fixed){
+   installer_running=1;int e=shell_uninstall_locations(installer_core,installer_data);installer_running=0;
+   if(installer_cancel)return;
+   if(e){char text[200];snprintf(text,sizeof text,"Cannot safely identify an idle installation (Mac OS %d). No files changed.",e);installer_label(5,text);return;}
+   installer_uninstall=1;installer_label(9,installer_core);installer_label(10,installer_data);
+   installer_label(3,"Uninstall these exact locations? By default only the Clarice application is removed. Clarice Data is kept.");
+   installer_label(5,"Full Data removal permanently deletes /home, configuration, all files and recovery copies. It cannot be undone.");
+   HideDialogItem(installer_dialog,11);ShowDialogItem(installer_dialog,13);
+   short t;Handle h;Rect r;GetDialogItem(installer_dialog,1,&t,&h,&r);SetControlTitle((ControlHandle)h,(const unsigned char*)"\pRemove");
+   for(int i=7;i<=12;i++){if(i==9||i==10||i==11)continue;GetDialogItem(installer_dialog,i,&t,&h,&r);HiliteControl((ControlHandle)h,255);}
+  }
+  else if(item==13&&installer_uninstall&&!installer_running&&!installer_finished){short t;Handle h;Rect r;installer_remove_data=!installer_remove_data;GetDialogItem(installer_dialog,13,&t,&h,&r);SetControlValue((ControlHandle)h,installer_remove_data);
+   installer_label(3,installer_remove_data?"Delete Clarice and ALL Clarice Data permanently?\r/home, settings and recovery will be lost. Click Remove to confirm.":"Remove only the Clarice application? All Clarice Data, tools, preferences, /home and recovery copies will be kept.");
+  }
   else if(item==7||item==8)installer_choose(item==8);
   else if(item==11&&!installer_running&&installer_fixed){short type;Handle handle;Rect box;installer_repair=!installer_repair;GetDialogItem(installer_dialog,11,&type,&handle,&box);SetControlValue((ControlHandle)handle,installer_repair);}
  }
@@ -90,7 +107,8 @@ static int installer_main(unsigned long launch){
  GetDialogItem(installer_dialog,4,&type,&handle,&box);SetDialogItem(installer_dialog,4,type,(Handle)NewUserItemUPP(installer_bar),&box);
  ShowWindow(installer_dialog);DrawDialog(installer_dialog);
  installer_location_error=shell_install_locations(installer_core,installer_data,&installer_fixed);
- installer_locations();
+ installer_locations();HideDialogItem(installer_dialog,13);
+ GetDialogItem(installer_dialog,12,&type,&handle,&box);HiliteControl((ControlHandle)handle,installer_fixed&&!installer_location_error?0:255);
  for(int item=7;item<=8;item++){GetDialogItem(installer_dialog,item,&type,&handle,&box);HiliteControl((ControlHandle)handle,installer_fixed||installer_location_error?255:0);}
  GetDialogItem(installer_dialog,11,&type,&handle,&box);HiliteControl((ControlHandle)handle,installer_fixed?0:255);
  if(installer_location_error)installer_label(5,"Cannot read installation locations. Cancel and check Clarice Locations in the System Folder.");
@@ -99,9 +117,21 @@ static int installer_main(unsigned long launch){
 #endif
  EventRecord event;while(!installer_choice){if(WaitNextEvent(everyEvent,&event,6,0))installer_event(&event);}
  if(installer_choice==2){DisposeDialog(installer_dialog);installer_dialog=0;return 0;}
+ if(installer_uninstall){
+  installer_running=1;installer_choice=0;
+  for(int i=1;i<=13;i++){if(i==2||i==3||i==4||i==5||i==6||i==9||i==10)continue;GetDialogItem(installer_dialog,i,&type,&handle,&box);HiliteControl((ControlHandle)handle,255);}
+  int e=shell_uninstall(installer_core,installer_data,installer_remove_data);
+  if(!e)app_install_progress("Removal complete",2,2);
+  installer_running=0;installer_finished=1;installer_cancel=0;installer_choice=0;
+  char message[240];if(!e)strcpy(message,installer_remove_data?"Uninstall complete. Clarice and Clarice Data have been removed.":"Clarice application removed. Clarice Data, /home and recovery copies are unchanged. You can reinstall using this installer.");
+  else snprintf(message,sizeof message,"Removal stopped (Mac OS %d). Remaining files were kept.\rCorrect the error, then run Uninstall again.",e);
+  installer_label(3,message);installer_label(5,e?"Cancel cannot restore files already removed.":"");installer_label(6,"");GetDialogItem(installer_dialog,2,&type,&handle,&box);SetControlTitle((ControlHandle)handle,(const unsigned char*)"\pClose");
+  while(!installer_choice){if(WaitNextEvent(everyEvent,&event,6,0))installer_event(&event);}
+  DisposeDialog(installer_dialog);installer_dialog=0;return e?1:0;
+ }
  installer_running=1;GetDialogItem(installer_dialog,1,&type,&handle,&box);HiliteControl((ControlHandle)handle,255);
  installer_label(3,"Installing Clarice. Please do not reset the Macintosh.\rCancel keeps completed tools for retry.");
- for(int item=7;item<=11;item++){if(item==9||item==10)continue;GetDialogItem(installer_dialog,item,&type,&handle,&box);HiliteControl((ControlHandle)handle,255);}
+ for(int item=7;item<=13;item++){if(item==9||item==10)continue;GetDialogItem(installer_dialog,item,&type,&handle,&box);HiliteControl((ControlHandle)handle,255);}
  app_install_progress("Preparing Clarice Data",0,1);
  /* Keep the existing working-stack allowance, but only after confirmation. */
  SetApplLimit(LMGetApplLimit()-65536);MaxApplZone();MoreMasters();

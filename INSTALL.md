@@ -354,3 +354,23 @@ individually catalogued. Unknown/manual legacy copies are preserved and reported
 modified managed copies block cleanup rather than being deleted. The previous
 snapshot retains the old command for rollback. Historical catalog rows are
 retained but no longer treated as current repository members.
+
+## Uninstall without opening Clarice
+
+Open **Install Clarice**, then choose **Uninstall...**. Check the displayed Core
+and Clarice Data paths. **Remove** normally removes only the Clarice application;
+it preserves all Clarice Data, installed utilities, `/home`, settings and recovery
+copies. The location record remains so reinstall finds that same data.
+
+To remove everything at those destinations, select **Also delete ALL Clarice Data,
+including /home**, read the permanent-deletion warning, then click **Remove**.
+This deletes the entire selected pseudo-filesystem, including user files and
+recovery copies. Cancel before Remove changes nothing. Cancel during removal
+stops further work; already removed files are not restored. Run Uninstall again
+to finish an interrupted removal. Locked files remain locked: unlock the intended
+file in Finder before retrying. Copies outside the selected locations are kept.
+
+An invalid location record/catalog, inconsistent Core version or pending update
+is refused. Finish installation/recovery before uninstalling an inconsistent
+installation. Do not run the installer from inside the Data folder being deleted.
+System 7 and physical-hardware acceptance remain separate.
