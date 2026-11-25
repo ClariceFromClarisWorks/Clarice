@@ -1,6 +1,6 @@
 # Batch 3C — HFS traversal performance
 
-Build 2026111968, based on accepted 1967/0f82946. Both focused changes retained.
+Build 2026111968, product0ab807e, based on accepted1967/0f82946. Both focused changes retained.
 Snow Plus, 68000, 4 MiB, System 6.0.8; maximum acceleration, no hardware access.
 
 ## Changes and measurements
@@ -81,5 +81,6 @@ comparison in final-check.json confirms the matched two-level footprint.
 Normal full build, loader import validation and sealed release checks pass.
 Offline HDA Core/installer/helper forks and Finder metadata, Release and49 tools,
 plus all51 USTAR members match sealed inputs. HTTP/AFP publication verification
-will be recorded in verification.json. Previous1967 recovery/distribution and unrelated
+passed for all51 manifest entries/36 payloads, source, seal and offline packages
+(verification.json). Previous1967 recovery/distribution and unrelated
 work are preserved. Physical acceptance pending; no GitHub push. Stop after3C.

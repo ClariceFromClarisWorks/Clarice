@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111968**, local main: Batch3C HFS performance accepted in
+Latest normal build **2026111968**, product **0ab807e**, local main: Batch3C HFS performance accepted in
 Snow Plus/68000/4 MiB/System6.0.8. Recursive cp/rm retain native directory identity;
 find/du avoid frames for enumerated leaves. No new cache, startup work or idle RAM.
 [Matched evidence](filesystem-perf/REPORT.md): three normal-build pairs on10/100/1,000
@@ -14,8 +14,8 @@ repeated heap stability preserved. Core size unchanged; shared files+292bytes,
 inspect+356; no BSS increase. Batch3A/B correctness remains covered.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Coherent1968 build and offline readback
-verified; publication verification pending. Previous1967 distribution/recovery
+`Macintosh Exchange/Clarice/index.txt`. All51 manifest entries/36 payloads, source, seal and offline packages verified
+on HTTP/AFP (`filesystem-perf/verification.json`). Previous1967 distribution/recovery
 and unrelated work preserved. Physical acceptance pending. No GitHub push or
 hardware access. Stop after3C.
 
