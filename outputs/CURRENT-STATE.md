@@ -2,31 +2,26 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest accepted normal build **2026111974**, product **f9b5f73**, local main:
-Batch 4D network efficiency. HTTP/FTP buffered parsing checks events every 256
-bytes and at refills; empty reads and idle Telnet iterations use existing
-one-tick cooperative waits. Native ownership, remote queues and buffer sizes
-remain unchanged. Prior Batch 4A–4C correctness work is preserved.
+Latest accepted normal build **2026111975**, local main: Batch4E Seriald
+startup cleanup. Failed initialization or service registration now retains its
+owner until native teardown succeeds; repeated stop after success is harmless.
+No new buffers, idle work or permanent allocations. Seriald file+40bytes;
+loaded image, Core size and standard utility sizes unchanged.
 
-[Evidence](network-4d/REPORT.md): matched Snow 1x normal HTTP with a 4 KiB header
-falls 291→159 guest ticks (45%). Median idle TCPStatus calls fall 224→34 for HTTP
-and 635→84 for Telnet. Ordinary throughput is broadly unchanged; small FTP gains
-and the HTTP 8 KiB 121→123 tick result are recorded. These are emulator results,
-not physical SE or pure CPU measurements. Host fault/sanitizer and normal 68000
-Snow transfer, timeout, cancellation, echo/restoration and heap checks pass.
-Six repeated sessions have identical native heaps and zero retained allocations.
-No new permanent memory; native rings stay 16 KiB. Client files +64/+220/+44 bytes;
-Core package +128 bytes, CODE unchanged. Remote mid-line tail resending and
-six-tick idle scheduling remain measurable presentation costs; no redesign here.
+[Evidence](network-4e/REPORT.md): host negative control plus60 fault/retry cases,
+ASan/UBSan remote/transport regressions and normal68000 Snow acceptance pass.
+Native probe heap deltas0; normal serial login, command/read cancellation130,
+logout/stop/restart and subsequent prompt recovery pass. Final matched app/system
+heaps stable, zero retained command allocations. Prior4A–4D fixes preserved.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Build 1974: 51 entries/36 payloads,
-source/seal, offline tar/HDA and optional services verified on both sources
-([verification](network-4d/verification.json)). Complete Snow update/relaunch,
-installed readback and subsequent no-op check pass. Prior 1973 recovery/distribution
-and unrelated work remain preserved. Physical stack/throughput/teardown and
-remote-client visual-wrap acceptance remain pending. No hardware access or GitHub
-push. Stop after Batch 4D.
+`Macintosh Exchange/Clarice/index.txt`. Coherent1975 publication pending final
+verification; prior1974 distribution/recovery retained. Optional Seriald stays
+separate from the standard collection. Physical native-driver acceptance pending.
+A permanently broken driver may keep safe cleanup waiting. One separate Snow
+update handoff with a connected remote session crashed; fresh-clone update with
+services stopped succeeded. That updater observation remains unresolved.
+No hardware access or GitHub push. Stop after Batch4E.
 
 ## Review remediation Batch A
 

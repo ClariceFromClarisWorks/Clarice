@@ -10,6 +10,7 @@ static unsigned long NetParseIP(const char *p){return !strcmp(p,"modem")||!strcm
 static int NetInit(void){return 0;}
 static const char *NetErrStr(int e){(void)e;return "native serial driver error";}
 static int release_stream(void){int e;
+ if(!driver)return 0;
  if(driver->out&&send_pending){e=KillIO(driver->out);if(e)return e;if(((volatile ParamBlockRec*)&driver->sending)->ioParam.ioResult>0)return -1;send_pending=0;}
  if(driver->in&&driver->buffer_set){e=SerSetBuf(driver->in,0,0);if(e)return e;driver->buffer_set=0;}
  if(driver->in){e=CloseDriver(driver->in);if(e)return e;driver->in=0;}

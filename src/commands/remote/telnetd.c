@@ -33,6 +33,7 @@ static void serial_text(const char *,unsigned long);
 #endif
 extern long cli_write(int,const void *,unsigned long);
 extern int app_yield(void);
+extern int cli_pause_ticks(unsigned long);
 #define LINE 1024
 #define QUEUE 4096
 /* All memory referenced by MacTCP survives application teardown until release. */
@@ -337,19 +338,19 @@ int clarice_main(int argc,char **argv){int explicit_no_password=0;port=SERVICE_S
  if(!peer||!explicit_no_password){const char *m="telnetd: require --no-password and --peer IPv4 (trusted local network only)\n";cli_write(2,m,strlen(m));return 2;}
  start:;
  OSErr start_error=NetInit();if(start_error){char message[128];snprintf(message,sizeof message,"telnetd: %s (Mac OS %d)\n",NetErrStr(start_error),start_error);cli_write(2,message,strlen(message));return 1;}driver=(DriverStorage*)NewPtrSysClear(sizeof *driver);if(!driver)return 1;
-#ifdef REMOTE_SERIAL
- if(listen_again()){if(!release_stream()){DisposePtr((Ptr)driver);driver=0;}return 1;}
- ClariceService service={poll_service,stop};if(cli_service_register_status_slot(SERVICE_SLOT,&service,listener_status)){stop();return 1;}
-#else
  if(listen_again())goto startup_failed;
  ClariceService service={poll_service,stop};if(cli_service_register_status_slot(SERVICE_SLOT,&service,listener_status))goto startup_failed;
-#endif
  const char *m=SERVICE_NAME " enabled for the configured endpoint. Unencrypted; use remote off to stop.\n";cli_write(1,m,strlen(m));return 0;
-#ifndef REMOTE_SERIAL
  startup_failed:
  /* Before registration no resident service owns this image. Do not return
-  * through the loader while MacTCP still references DriverStorage. */
- while(stop())net_cleanup_pause();
- return 1;
+  * through the loader while a native driver still owns resources/storage.
+  * Cancellation cannot abandon ownership; even failed cleanup must yield. */
+ while(stop()){
+#ifdef REMOTE_SERIAL
+  (void)cli_pause_ticks(1);
+#else
+  net_cleanup_pause();
 #endif
+ }
+ return 1;
 }
