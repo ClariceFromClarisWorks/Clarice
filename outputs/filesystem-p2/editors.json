@@ -1,0 +1,62 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324936 largest=323710 image=37136 ticks=79798 load=48 owned-peak=21508 remaining=0\r\nLoader ticks: read=22 validate=0 imports=3 relocations=5 prepare=8 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe new /tmp/batch3b/vi-new && cat /tmp/batch3b/vi-new",
+    "status": 0,
+    "text": "fsprobe new /tmp/batch3b/vi-new && cat /tmp/batch3b/vi-new; printf '\\nREMOTE_END_2:%d\\n' $?\r\nNew vi document\r\nZZ\u0003ZZ\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "cp -p /tmp/batch3b/source /tmp/batch3b/vi-existing && cp -p /tmp/batch3b/vi-existing /tmp/batch3b/vi-ref",
+    "status": 0,
+    "text": "cp -p /tmp/batch3b/source /tmp/batch3b/vi-existing && cp -p /tmp/batch3b/vi-existing /tmp/batch3b/vi-ref; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: vi-existing [>                                        ] 0 items completed\u001b[K\rcp 0: vi-existing [=====                           ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: vi-existing [=============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: vi-existing [==============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "cp -p /tmp/batch3b/source /tmp/batch3b/nano-existing && cp -p /tmp/batch3b/nano-existing /tmp/batch3b/nano-ref",
+    "status": 0,
+    "text": "cp -p /tmp/batch3b/source /tmp/batch3b/nano-existing && cp -p /tmp/batch3b/nano-existing /tmp/batch3b/nano-ref; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [=                                     ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: source [========================             ]  66% 48.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: nano-existing [>                                      ] 0 items completed\u001b[K\rcp 0: nano-existing [=                              ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: nano-existing [===================           ]  66% 48.28 KiB / 72.96 KiB\u001b[K\rcp 1: nano-existing [============================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324930 largest=323306 image=198600 ticks=42165 load=680 owned-peak=80596 remaining=0\r\nLoader ticks: read=105 validate=481 imports=3 relocations=26 prepare=15 events=38 (events included above)\r\nVerification ticks: mode=full header=0 record=50 payload=382 metadata=99 structure=16 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe new /tmp/batch3b/nano-new && cat /tmp/batch3b/nano-new",
+    "status": 0,
+    "text": "fsprobe new /tmp/batch3b/nano-new && cat /tmp/batch3b/nano-new; printf '\\nREMOTE_END_2:%d\\n' $?\r\nNew nano document\r\n\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324976 largest=323306 image=37136 ticks=16652 load=43 owned-peak=21508 remaining=0\r\nLoader ticks: read=22 validate=1 imports=3 relocations=4 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe edited /tmp/batch3b/vi-ref /tmp/batch3b/vi-existing && head -n 1 /tmp/batch3b/vi-existing",
+    "status": 0,
+    "text": "fsprobe edited /tmp/batch3b/vi-ref /tmp/batch3b/vi-existing && head -n 1 /tmp/batch3b/vi-existing; printf '\\nREMOTE_END_2:%d\\n' $?\r\nPASS edited forks/metadata, backup=0 script=9\r\nEDIT\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=349256 largest=347630 image=198600 ticks=48750 load=208 owned-peak=92662 remaining=0\r\nLoader ticks: read=102 validate=1 imports=4 relocations=26 prepare=65 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=16 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe edited /tmp/batch3b/nano-ref /tmp/batch3b/nano-existing && head -n 1 /tmp/batch3b/nano-existing",
+    "status": 0,
+    "text": "fsprobe edited /tmp/batch3b/nano-ref /tmp/batch3b/nano-existing && head -n 1 /tmp/batch3b/nano-existing; printf '\\nREMOTE_END_2:%d\\n' $?\r\nPASS edited forks/metadata, backup=0 script=9\r\nEDIT\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "find /tmp/batch3b -name \".clarice-*\"",
+    "status": 0,
+    "text": "find /tmp/batch3b -name \".clarice-*\"; printf '\\nREMOTE_END_3:%d\\n' $?\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nRuntime: heap=349296 largest=347612 image=10072 ticks=107 load=72 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=29 imports=1 relocations=1 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=25 payload=23 metadata=6 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  }
+]

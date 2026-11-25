@@ -1,0 +1,11 @@
+REPRODUCED portable unlink on1966
+PASS portable unlink: file/directory/dangling symlinks, slash guards, regular/temp cleanup, native errors and retry
+PASS: success/new/metadata, 27 fault points, 27 interruption points, short-write, disk-full and paired faults/rollback, new-file faults, stale recovery collision, cancellation, read-only, locked, 20 repeated saves; no retained allocations
+PASS 232 fork-copy/replacement cases: each native boundary, short writes, cancellation, source integrity, complete destination/recovery and closed refs
+REPRODUCED destination on 1965
+PASS cp/mv destination 511/512/1024, encoded HFS bytes, no mutation on rejection and subsequent success
+REPRODUCED remove on 1965
+PASS actual resolver + rm: final symlink slash rejection, target sentinel, ordinary slash directories, dot, low memory, I/O failure, cancellation/recovery
+PASS empty mkdir, locked source absent/overwrite, native I/O/lock/catalog failures, copy failure, normal overwrite and cross-volume move
+PASS cwd rename/ancestor/move, case/boundary, saved subshell and both sessions, encoded names and nonmutating overflow preflight
+PASS negative control: locked-source test detects the original overwrite defect

@@ -106,7 +106,19 @@ static int cli_temp_create(char *path,unsigned long cap){
   e=HCreate(0,0,name,'CLRC','TEXT');if(!e)return 0;if(e!=dupFNErr)return port_errno(e);
  }errno=EEXIST;return -1;
 }
-static int cli_remove(const char *path){char native[PATH_CAP];unsigned char name[256];int e=resolve(path,native);if(!e){pstr(name,native);e=HDelete(0,0,name);}return e?port_errno(e):0;}
+static int cli_remove(const char *path){
+ char native[PATH_CAP];unsigned char name[256];size_t n=strlen(path);
+ if(!n||n>=sizeof native)return port_errno(bdNamErr);
+ /* Do not let a separator force the final link to be followed. Native HFS
+    operands use colons; a slash in a native leaf is an ordinary character. */
+ size_t prefix=!strncmp(path,"native:",7)?7:0;char separator=prefix?':':'/';int trailing=path[n-1]==separator;
+ strcpy(native,path);while(n&&native[n-1]==separator)native[--n]=0;
+ if(n<=prefix)return port_errno(bdNamErr);
+ /* resolve_ex copies its input before writing output: reuse the path buffer. */
+ int e=resolve_ex(native,native,0,0);
+ if(!e&&trailing){CInfoPBRec p;e=info(native,&p);if(!e&&!(p.hFileInfo.ioFlAttrib&16))e=dirNFErr;}
+ if(!e){pstr(name,native);e=HDelete(0,0,name);}return e?port_errno(e):0;
+}
 /* Catalog and fork primitives; policy/utility algorithms live in /bin. */
 static unsigned long cli_mac_time(void){unsigned long n;GetDateTime(&n);return n;}
 static int cli_native_create(const char *path,unsigned long type,unsigned long creator){unsigned char p[256];pstr(p,path);return HCreate(0,0,p,creator,type);}

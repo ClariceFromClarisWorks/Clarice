@@ -2,7 +2,7 @@
 from pathlib import Path
 import subprocess
 r=Path.cwd();w=r/'work/filesystem-confidence';w.mkdir(parents=True,exist_ok=True)
-s=(r/'src/commands/files.c').read_text();code=s[s.index('static int temporary_sibling'):s.index('typedef struct CopyFrame')]
+s=subprocess.check_output(['git','show','15f2c3e:src/commands/files.c'],text=True) if '--baseline' in __import__('sys').argv else (r/'src/commands/files.c').read_text();code=s[s.index('static int temporary_sibling'):s.index('typedef struct CopyFrame')]
 pre=r'''
 #include <assert.h>
 #include <stdio.h>
@@ -11,8 +11,9 @@ pre=r'''
 #include <strings.h>
 #define PATH_CAP 512
 enum{bdNamErr=-37,dupFNErr=-48,fnfErr=-43,paramErr=-50,fLckdErr=-45,eofErr=-39,ioErr=-36};
-typedef struct {unsigned long fdType,fdCreator;unsigned short fdFlags;} Finder;
-typedef struct {struct{int ioFlAttrib,ioDirID;Finder ioFlFndrInfo;unsigned long ioFlCrDat,ioFlMdDat,ioFlLgLen,ioFlRLgLen;}hFileInfo;}CInfoPBRec;
+typedef struct {unsigned long fdType,fdCreator;unsigned short fdFlags;short fdFldr;} Finder;
+typedef struct {short fdIconID,fdUnused[3];signed char fdScript,fdXFlags;short fdComment;long fdPutAway;} Extended;
+typedef struct {struct{int ioFlAttrib,ioDirID;Finder ioFlFndrInfo;Extended ioFlXFndrInfo;unsigned long ioFlCrDat,ioFlMdDat,ioFlLgLen,ioFlRLgLen,ioFlBkDat;}hFileInfo;}CInfoPBRec;
 static int preserve=1;static unsigned long sequence;
 typedef struct {char name[512];unsigned char data[2][9000];long len[2];CInfoPBRec meta;int used;} File;
 static File fs[8];static struct{int file,fork;long pos;int open;}refs[32];
@@ -35,15 +36,22 @@ static int cli_native_set(const char*p,CInfoPBRec*b){int e=boundary();if(e)retur
 static int cli_native_lock(const char*p,int on){int e=boundary();if(e)return e;int i=find(p);assert(i>=0);fs[i].meta.hFileInfo.ioFlAttrib=on;return 0;}
 '''
 test=r'''
-static File original,old;
+static File original,old;static const char *destination;static int cross;
 static void reset(int exists){memset(fs,0,sizeof fs);memset(refs,0,sizeof refs);count=fail_at=short_at=cancel_at=polls=0;sequence=0;*diagnostic=0;file_progress_command="cp";file_progress_count=0;progress_begin();fs[0]=original;if(exists)fs[1]=old;}
 static int equal(File*a,File*b){return a->len[0]==b->len[0]&&a->len[1]==b->len[1]&&!memcmp(a->data[0],b->data[0],a->len[0])&&!memcmp(a->data[1],b->data[1],a->len[1]);}
-static void verify(int rc,int exists){assert(equal(&fs[0],&original)&&!strcmp(fs[0].name,"A:src"));for(int j=0;j<32;j++)assert(!refs[j].open);int d=find("A:dst");if(d>=0)assert(equal(&fs[d],&original)|| (exists&&equal(&fs[d],&old)));else assert(rc);if(!rc){assert(file_progress_count==1&&file_progress_bytes==12654&&file_progress_total==12654);assert(d>=0&&equal(&fs[d],&original));assert(fs[d].meta.hFileInfo.ioFlFndrInfo.fdType==original.meta.hFileInfo.ioFlFndrInfo.fdType);assert(fs[d].meta.hFileInfo.ioFlMdDat==original.meta.hFileInfo.ioFlMdDat);}if(exists){int preserved=0;for(int i=1;i<8;i++)if(fs[i].used&&(equal(&fs[i],&old)||equal(&fs[i],&original)))preserved=1;assert(preserved);}}
-int main(void){strcpy(original.name,"A:src");original.used=1;original.meta.hFileInfo.ioDirID=1;original.meta.hFileInfo.ioFlAttrib=1;original.meta.hFileInfo.ioFlFndrInfo.fdType=0x54455854;original.meta.hFileInfo.ioFlMdDat=1234;original.len[0]=8301;original.len[1]=4353;original.meta.hFileInfo.ioFlLgLen=8301;original.meta.hFileInfo.ioFlRLgLen=4353;for(int f=0;f<2;f++)for(int i=0;i<original.len[f];i++)original.data[f][i]=(i*37+f)%256;old=original;strcpy(old.name,"A:dst");old.meta.hFileInfo.ioDirID=2;old.meta.hFileInfo.ioFlAttrib=0;memset(old.data,0xEE,sizeof old.data);int cases=0;
- for(int exists=0;exists<2;exists++){reset(exists);assert(!copy_file("A:src","A:dst",&original.meta));int boundaries=count,yields=polls;verify(0,exists);cases++;
- for(int n=1;n<=boundaries;n++){reset(exists);fail_at=n;int rc=copy_file("A:src","A:dst",&original.meta);assert(rc);verify(rc,exists);cases++;}
- for(int n=1;n<=boundaries;n++){reset(exists);short_at=n;int rc=copy_file("A:src","A:dst",&original.meta);verify(rc,exists);cases++;}
- for(int n=1;n<=yields;n++){reset(exists);cancel_at=n;int rc=copy_file("A:src","A:dst",&original.meta);assert(rc==130);verify(rc,exists);assert(exists?equal(&fs[find("A:dst")],&old):find("A:dst")==-1);cases++;}
+static void verify(int rc,int exists){assert(equal(&fs[0],&original)&&!strcmp(fs[0].name,"A:src"));for(int j=0;j<32;j++)assert(!refs[j].open);int d=find(destination);if(d>=0)assert(equal(&fs[d],&original)|| (exists&&equal(&fs[d],&old)));else assert(rc);if(!rc){assert(file_progress_count==1&&file_progress_bytes==12654&&file_progress_total==12654);assert(d>=0&&equal(&fs[d],&original));assert(fs[d].meta.hFileInfo.ioFlFndrInfo.fdType==original.meta.hFileInfo.ioFlFndrInfo.fdType);assert(fs[d].meta.hFileInfo.ioFlMdDat==original.meta.hFileInfo.ioFlMdDat);
+assert(fs[d].meta.hFileInfo.ioFlBkDat==original.meta.hFileInfo.ioFlBkDat);
+Extended expected=original.meta.hFileInfo.ioFlXFndrInfo;if(cross){expected.fdIconID=expected.fdComment=0;expected.fdPutAway=0;}
+assert(!memcmp(&expected,&fs[d].meta.hFileInfo.ioFlXFndrInfo,sizeof expected));
+assert(fs[d].meta.hFileInfo.ioFlFndrInfo.fdFldr==(cross?0:original.meta.hFileInfo.ioFlFndrInfo.fdFldr));
+assert(fs[d].meta.hFileInfo.ioFlFndrInfo.fdFlags==(original.meta.hFileInfo.ioFlFndrInfo.fdFlags&~(cross?0x101:0x100)));}if(exists){int preserved=0;for(int i=1;i<8;i++)if(fs[i].used&&(equal(&fs[i],&old)||equal(&fs[i],&original)))preserved=1;assert(preserved);}}
+int main(void){strcpy(original.name,"A:src");original.used=1;original.meta.hFileInfo.ioDirID=1;original.meta.hFileInfo.ioFlAttrib=1;original.meta.hFileInfo.ioFlFndrInfo.fdType=0x54455854;original.meta.hFileInfo.ioFlMdDat=1234;original.meta.hFileInfo.ioFlBkDat=5678;
+original.meta.hFileInfo.ioFlFndrInfo.fdFlags=0x4101;original.meta.hFileInfo.ioFlFndrInfo.fdFldr=-2;
+original.meta.hFileInfo.ioFlXFndrInfo=(Extended){.fdIconID=321,.fdUnused={1,2,3},.fdScript=(signed char)0x81,.fdXFlags=7,.fdComment=234,.fdPutAway=345};original.len[0]=8301;original.len[1]=4353;original.meta.hFileInfo.ioFlLgLen=8301;original.meta.hFileInfo.ioFlRLgLen=4353;for(int f=0;f<2;f++)for(int i=0;i<original.len[f];i++)original.data[f][i]=(i*37+f)%256;old=original;strcpy(old.name,"A:dst");old.meta.hFileInfo.ioDirID=2;old.meta.hFileInfo.ioFlAttrib=0;memset(old.data,0xEE,sizeof old.data);int cases=0;
+ for(cross=0;cross<2;cross++)for(int exists=0;exists<2;exists++){destination=cross?"B:dst":"A:dst";strcpy(old.name,destination);reset(exists);assert(!copy_file("A:src",destination,&original.meta));int boundaries=count,yields=polls;verify(0,exists);cases++;
+ for(int n=1;n<=boundaries;n++){reset(exists);fail_at=n;int rc=copy_file("A:src",destination,&original.meta);assert(rc);verify(rc,exists);cases++;}
+ for(int n=1;n<=boundaries;n++){reset(exists);short_at=n;int rc=copy_file("A:src",destination,&original.meta);verify(rc,exists);cases++;}
+ for(int n=1;n<=yields;n++){reset(exists);cancel_at=n;int rc=copy_file("A:src",destination,&original.meta);assert(rc==130);verify(rc,exists);assert(exists?equal(&fs[find(destination)],&old):find(destination)==-1);cases++;}
  }printf("PASS %d fork-copy/replacement cases: each native boundary, short writes, cancellation, source integrity, complete destination/recovery and closed refs\n",cases);}
 '''
 ui=r'''

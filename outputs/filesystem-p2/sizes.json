@@ -1,0 +1,19 @@
+{
+  "build": 2026111967,
+  "core_macbinary_before": 438528,
+  "core_macbinary_after": 438656,
+  "files_image_before": 20636,
+  "files_image_after": 20792,
+  "core_text_before": 239600,
+  "core_text_after": 239768,
+  "core_data_before": 35096,
+  "core_data_after": 35088,
+  "core_bss_before": 41448,
+  "core_bss_after": 41448,
+  "files_text_before": 12796,
+  "files_text_after": 12928,
+  "files_bss": 168,
+  "unlink_stack_buffer_bytes_before": 768,
+  "unlink_stack_buffer_bytes_after": 768,
+  "unlink_extra_saved_register_bytes": 16
+}

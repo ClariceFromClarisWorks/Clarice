@@ -103,7 +103,23 @@ static int copy_file(const char *src,const char *dst,CInfoPBRec *source){
  file_progress_current(src);if(progress_enabled){file_progress_known=1;file_progress_total=(unsigned long)source->hFileInfo.ioFlLgLen+(unsigned long)source->hFileInfo.ioFlRLgLen;file_progress_show(0);}
  CInfoPBRec target,meta;char temp[PATH_CAP],backup[PATH_CAP];int exists=0,e=info(dst,&target);if(!e){exists=1;if(isdir(&target))return paramErr;if(strchr(src,':')-src==strchr(dst,':')-dst&&!strncasecmp(src,dst,strchr(src,':')-src)&&target.hFileInfo.ioDirID==source->hFileInfo.ioDirID)return paramErr;if(target.hFileInfo.ioFlAttrib&1)return fLckdErr;}else if(e!=fnfErr)return e;
  e=temporary_sibling(dst,temp);if(e)return e;e=copy_fork(src,temp,0);if(!e)e=copy_fork(src,temp,1);
- if(!e)e=info(temp,&meta);if(!e){meta.hFileInfo.ioFlFndrInfo=source->hFileInfo.ioFlFndrInfo;/* New file has no Finder position or desktop placement. */meta.hFileInfo.ioFlFndrInfo.fdFlags&=~0x0100;if(preserve){meta.hFileInfo.ioFlCrDat=source->hFileInfo.ioFlCrDat;meta.hFileInfo.ioFlMdDat=source->hFileInfo.ioFlMdDat;}e=cli_native_set(temp,&meta);}
+ if(!e)e=info(temp,&meta);if(!e){
+  meta.hFileInfo.ioFlFndrInfo=source->hFileInfo.ioFlFndrInfo;
+  meta.hFileInfo.ioFlFndrInfo.fdFlags&=~0x0100; /* Finder must initialise the new entry. */
+  if(preserve){
+   meta.hFileInfo.ioFlCrDat=source->hFileInfo.ioFlCrDat;meta.hFileInfo.ioFlMdDat=source->hFileInfo.ioFlMdDat;
+   meta.hFileInfo.ioFlBkDat=source->hFileInfo.ioFlBkDat;
+   meta.hFileInfo.ioFlXFndrInfo=source->hFileInfo.ioFlXFndrInfo;
+   size_t v=strchr(src,':')-src;
+   if((size_t)(strchr(dst,':')-dst)!=v||strncasecmp(src,dst,v)){
+    /* Desktop icon/comment IDs and home-folder IDs belong to the source
+       volume. Preserve the other extended bytes, including script flags. */
+    meta.hFileInfo.ioFlXFndrInfo.fdIconID=0;meta.hFileInfo.ioFlXFndrInfo.fdComment=0;meta.hFileInfo.ioFlXFndrInfo.fdPutAway=0;
+    meta.hFileInfo.ioFlFndrInfo.fdFlags&=~1;meta.hFileInfo.ioFlFndrInfo.fdFldr=0;
+   }
+  }
+  e=cli_native_set(temp,&meta);
+ }
  if(e){cli_native_delete(temp);return e;}
  if(exists){e=temporary_sibling(dst,backup);if(!e)e=cli_native_delete(backup);if(!e)e=cli_native_rename(dst,backup);if(e){cli_native_delete(temp);return e;}}
  e=cli_native_rename(temp,dst);if(e){if(exists){int restore=cli_native_rename(backup,dst);if(restore){errsay("copy recovery file: native:");errsay(backup);errsay("\n");}}cli_native_delete(temp);return e;}

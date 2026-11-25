@@ -1,0 +1,219 @@
+[
+  {
+    "test": "setup",
+    "command": "cd /tmp/batch3b; fsprobe seed source; mkdir -p target/sub same destination; cp -p source target/sub/sentinel; ln -s source filelink; ln -s target dirlink; ln -s absent missinglink",
+    "status": 0,
+    "expected": 0,
+    "text": "cd /tmp/batch3b; fsprobe seed source; mkdir -p target/sub same destination; cp -p source target/sub/sentinel; ln -s source filelink; ln -s target dirlink; ln -s absent missinglink; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [=====                                ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: source [==================================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_1:0\r\nbatch3b > "
+  },
+  {
+    "test": "reject slash filelink",
+    "command": "fsprobe unlink filelink/",
+    "status": 1,
+    "expected": 1,
+    "text": "fsprobe unlink filelink/; printf '\\nREMOTE_END_2:%d\\n' $?\r\nunlink errno=2\r\n\r\nREMOTE_END_2:1\r\nbatch3b > "
+  },
+  {
+    "test": "link still exists filelink",
+    "command": "readlink filelink",
+    "status": 0,
+    "expected": 0,
+    "text": "readlink filelink; printf '\\nREMOTE_END_3:%d\\n' $?\r\nsource\r\n\r\nREMOTE_END_3:0\r\nbatch3b > "
+  },
+  {
+    "test": "unlink only link filelink",
+    "command": "fsprobe unlink filelink",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe unlink filelink; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r\nREMOTE_END_4:0\r\nbatch3b > "
+  },
+  {
+    "test": "reject slash dirlink",
+    "command": "fsprobe unlink dirlink/",
+    "status": 1,
+    "expected": 1,
+    "text": "fsprobe unlink dirlink/; printf '\\nREMOTE_END_5:%d\\n' $?\r\nunlink errno=2\r\n\r\nREMOTE_END_5:1\r\nbatch3b > "
+  },
+  {
+    "test": "link still exists dirlink",
+    "command": "readlink dirlink",
+    "status": 0,
+    "expected": 0,
+    "text": "readlink dirlink; printf '\\nREMOTE_END_6:%d\\n' $?\r\ntarget\r\n\r\nREMOTE_END_6:0\r\nbatch3b > "
+  },
+  {
+    "test": "unlink only link dirlink",
+    "command": "fsprobe unlink dirlink",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe unlink dirlink; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\r\nREMOTE_END_7:0\r\nbatch3b > "
+  },
+  {
+    "test": "reject slash missinglink",
+    "command": "fsprobe unlink missinglink/",
+    "status": 1,
+    "expected": 1,
+    "text": "fsprobe unlink missinglink/; printf '\\nREMOTE_END_8:%d\\n' $?\r\nunlink errno=2\r\n\r\nREMOTE_END_8:1\r\nbatch3b > "
+  },
+  {
+    "test": "link still exists missinglink",
+    "command": "readlink missinglink",
+    "status": 0,
+    "expected": 0,
+    "text": "readlink missinglink; printf '\\nREMOTE_END_9:%d\\n' $?\r\nabsent\r\n\r\nREMOTE_END_9:0\r\nbatch3b > "
+  },
+  {
+    "test": "unlink only link missinglink",
+    "command": "fsprobe unlink missinglink",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe unlink missinglink; printf '\\nREMOTE_END_10:%d\\n' $?\r\n\r\nREMOTE_END_10:0\r\nbatch3b > "
+  },
+  {
+    "test": "targets intact",
+    "command": "cmp source target/sub/sentinel && test -d target && test ! -e missinglink && test ! -e filelink && test ! -e dirlink",
+    "status": 0,
+    "expected": 0,
+    "text": "cmp source target/sub/sentinel && test -d target && test ! -e missinglink && test ! -e filelink && test ! -e dirlink; printf '\\nREMOTE_END_11:%d\\n' $?\r\n\r\nREMOTE_END_11:0\r\nbatch3b > "
+  },
+  {
+    "test": "ordinary file and empty directory cleanup",
+    "command": "printf TEMP > tempfile; fsprobe unlink tempfile; mkdir empty; fsprobe unlink empty/; test ! -e tempfile && test ! -e empty",
+    "status": 0,
+    "expected": 0,
+    "text": "printf TEMP > tempfile; fsprobe unlink tempfile; mkdir empty; fsprobe unlink empty/; test ! -e tempfile && test ! -e empty; printf '\\nREMOTE_END_12:%d\\n' $?\r\n\r\nREMOTE_END_12:0\r\nbatch3b > "
+  },
+  {
+    "test": "missing entry failure",
+    "command": "fsprobe unlink absent",
+    "status": 1,
+    "expected": 1,
+    "text": "fsprobe unlink absent; printf '\\nREMOTE_END_13:%d\\n' $?\r\nunlink errno=2\r\n\r\nREMOTE_END_13:1\r\nbatch3b > "
+  },
+  {
+    "test": "native link operand",
+    "command": "ln -s source filelink; fsprobe unlink \"native:Sys6Unix:System Folder:Clarice Data:tmp:batch3b:filelink:\"",
+    "status": 1,
+    "expected": 1,
+    "text": "ln -s source filelink; fsprobe unlink \"native:Sys6Unix:System Folder:Clarice Data:tmp:batch3b:filelink:\"; printf '\\nREMOTE_END_14:%d\\n' $?\r\nunlink errno=2\r\n\r\nREMOTE_END_14:1\r\nbatch3b > "
+  },
+  {
+    "test": "native no-follow removal",
+    "command": "fsprobe unlink \"native:Sys6Unix:System Folder:Clarice Data:tmp:batch3b:filelink\"; test -f source",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe unlink \"native:Sys6Unix:System Folder:Clarice Data:tmp:batch3b:filelink\"; test -f source; printf '\\nREMOTE_END_15:%d\\n' $?\r\n\r\nREMOTE_END_15:0\r\nbatch3b > "
+  },
+  {
+    "test": "same-volume fallback seed",
+    "command": "cp -p source same/start; fsprobe seed same/start",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p source same/start; fsprobe seed same/start; printf '\\nREMOTE_END_16:%d\\n' $?\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [=====                                ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: source [==================================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_16:0\r\nbatch3b > "
+  },
+  {
+    "test": "same-volume parent and leaf change",
+    "command": "mv same/start destination/end && test ! -e same/start && fsprobe same source destination/end",
+    "status": 0,
+    "expected": 0,
+    "text": "mv same/start destination/end && test ! -e same/start && fsprobe same source destination/end; printf '\\nREMOTE_END_17:%d\\n' $?\r\n\rmv 0: start [>                                              ] 0 items completed\u001b[K\rmv 0: start [======                                ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rmv 0: start [===================================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rmv 1: start [====================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_17:0\r\nbatch3b > "
+  },
+  {
+    "test": "cross-volume seed",
+    "command": "cp -p source cross; fsprobe seed cross",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p source cross; fsprobe seed cross; printf '\\nREMOTE_END_18:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [=========                            ]  27% 20.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_18:0\r\nbatch3b > "
+  },
+  {
+    "test": "cross-volume move",
+    "command": "mv cross /mnt/Batch3B/moved && test ! -e cross && fsprobe cross source /mnt/Batch3B/moved",
+    "status": 0,
+    "expected": 0,
+    "text": "mv cross /mnt/Batch3B/moved && test ! -e cross && fsprobe cross source /mnt/Batch3B/moved; printf '\\nREMOTE_END_19:%d\\n' $?\r\n\rmv 0: cross [                                            ]   0% 0 B / 72.96 KiB\u001b[K\rmv 0: cross [======================                ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rmv 1: cross [====================================================] 1 items done\u001b[K\r\nPASS cross forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_19:0\r\nbatch3b > "
+  },
+  {
+    "test": "two-fork large input",
+    "command": "cp -p source big; dd if=source of=big bs=1024 seek=2048 count=1; cp -p big big-ref",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p source big; dd if=source of=big bs=1024 seek=2048 count=1; cp -p big big-ref; printf '\\nREMOTE_END_20:%d\\n' $?\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [===                                   ]  10% 8.00 KiB / 72.96 KiB\u001b[K\rcp 0: source [============================         ]  77% 56.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n1+0 records in\r\n1+0 records out\r\n\rcp 0: big [                                               ]   0% 0 B / 2.06 MiB\u001b[K\rcp 0: big [                                         ]   1% 28.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [=                                        ]   3% 80.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [==                                      ]   6% 128.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [===                                     ]   8% 180.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [====                                    ]  10% 228.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [=====                                   ]  13% 280.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [======                                  ]  15% 328.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [======                                  ]  17% 376.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [========                                ]  20% 424.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [========                                ]  22% 472.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [=========                               ]  24% 516.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [==========                              ]  26% 560.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [===========                             ]  28% 600.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [============                            ]  30% 644.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [============                            ]  32% 688.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [=============                           ]  34% 732.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [==============                          ]  36% 776.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [===============                         ]  38% 820.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [================                        ]  40% 864.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [================                        ]  42% 908.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [==================                      ]  45% 952.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [==================                      ]  47% 996.00 KiB / 2.06 MiB\u001b[K\rcp 0: big [====================                      ]  49% 1.02 MiB / 2.06 MiB\u001b[K\rcp 0: big [=====================                     ]  51% 1.06 MiB / 2.06 MiB\u001b[K\rcp 0: big [======================                    ]  53% 1.10 MiB / 2.06 MiB\u001b[K\rcp 0: big [=======================                   ]  55% 1.14 MiB / 2.06 MiB\u001b[K\rcp 0: big [=======================                   ]  57% 1.19 MiB / 2.06 MiB\u001b[K\rcp 0: big [========================                  ]  59% 1.23 MiB / 2.06 MiB\u001b[K\rcp 0: big [=========================                 ]  61% 1.27 MiB / 2.06 MiB\u001b[K\rcp 0: big [==========================                ]  63% 1.32 MiB / 2.06 MiB\u001b[K\rcp 0: big [===========================               ]  65% 1.36 MiB / 2.06 MiB\u001b[K\rcp 0: big [============================              ]  67% 1.40 MiB / 2.06 MiB\u001b[K\rcp 0: big [=============================             ]  70% 1.45 MiB / 2.06 MiB\u001b[K\rcp 0: big [==============================            ]  72% 1.49 MiB / 2.06 MiB\u001b[K\rcp 0: big [===============================           ]  74% 1.53 MiB / 2.06 MiB\u001b[K\rcp 0: big [===============================           ]  76% 1.57 MiB / 2.06 MiB\u001b[K\rcp 0: big [================================          ]  78% 1.61 MiB / 2.06 MiB\u001b[K\rcp 0: big [=================================         ]  80% 1.66 MiB / 2.06 MiB\u001b[K\rcp 0: big [==================================        ]  82% 1.70 MiB / 2.06 MiB\u001b[K\rcp 0: big [===================================       ]  84% 1.74 MiB / 2.06 MiB\u001b[K\rcp 0: big [====================================      ]  86% 1.79 MiB / 2.06 MiB\u001b[K\rcp 0: big [====================================      ]  88% 1.83 MiB / 2.06 MiB\u001b[K\rcp 0: big [=====================================     ]  90% 1.87 MiB / 2.06 MiB\u001b[K\rcp 0: big [======================================    ]  92% 1.91 MiB / 2.06 MiB\u001b[K\rcp 0: big [=======================================   ]  94% 1.96 MiB / 2.06 MiB\u001b[K\rcp 0: big [========================================  ]  96% 2.00 MiB / 2.06 MiB\u001b[K\rcp 0: big [========================================= ]  99% 2.04 MiB / 2.06 MiB\u001b[K\rcp 1: big [======================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_20:0\r\nbatch3b > "
+  },
+  {
+    "test": "failure destination seed",
+    "command": "cp -p source /mnt/Batch3B/target",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p source /mnt/Batch3B/target; printf '\\nREMOTE_END_21:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [====================                 ]  55% 40.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_21:0\r\nbatch3b > "
+  },
+  {
+    "test": "fill disposable destination",
+    "command": "dd if=source of=/mnt/Batch3B/filler bs=1024 seek=65536 count=1",
+    "status": 1,
+    "expected": 1,
+    "text": "dd if=source of=/mnt/Batch3B/filler bs=1024 seek=65536 count=1; printf '\\nREMOTE_END_22:%d\\n' $?\r\ndd: ftruncate: No space left on device\r\n\r\nREMOTE_END_22:1\r\nbatch3b > "
+  },
+  {
+    "test": "disk-full move fails",
+    "command": "mv big /mnt/Batch3B/target",
+    "status": 1,
+    "expected": 1,
+    "text": "mv big /mnt/Batch3B/target; printf '\\nREMOTE_END_23:%d\\n' $?\r\n\rmv 0: big [                                               ]   0% 0 B / 2.06 MiB\u001b[K\rmv 0: big [ >                                                 ] 0 items stopped\u001b[K\r\nmv: Mac OS error -34: Volume has no free allocation blocks\r\n\r\nREMOTE_END_23:1\r\nbatch3b > "
+  },
+  {
+    "test": "disk-full preserves source and old destination",
+    "command": "fsprobe same big big-ref && fsprobe cross source /mnt/Batch3B/target",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same big big-ref && fsprobe cross source /mnt/Batch3B/target; printf '\\nREMOTE_END_24:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nPASS cross forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_24:0\r\nbatch3b > "
+  },
+  {
+    "test": "recover space",
+    "command": "rm /mnt/Batch3B/filler",
+    "status": 0,
+    "expected": 0,
+    "text": "rm /mnt/Batch3B/filler; printf '\\nREMOTE_END_25:%d\\n' $?\r\n\rrm 1: filler [    >                                         ] 1 items completed\u001b[K\rrm 1: filler [===================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_25:0\r\nbatch3b > "
+  },
+  {
+    "test": "cancelled move recovery",
+    "command": "test \"$?\" -eq 130 && test -f big && test ! -e /mnt/Batch3B/cancelled && fsprobe same big big-ref && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$?\" -eq 130 && test -f big && test ! -e /mnt/Batch3B/cancelled && fsprobe same big big-ref && status runtime; printf '\\nREMOTE_END_26:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=322516 largest=322348 image=1204 ticks=6456 load=24 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=1 imports=1 relocations=0 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_26:0\r\nbatch3b > "
+  },
+  {
+    "test": "subsequent successful move",
+    "command": "cp -p source retry; mv retry /mnt/Batch3B/retried && fsprobe cross source /mnt/Batch3B/retried",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p source retry; mv retry /mnt/Batch3B/retried && fsprobe cross source /mnt/Batch3B/retried; printf '\\nREMOTE_END_27:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rmv 0: retry [                                            ]   0% 0 B / 72.96 KiB\u001b[K\rmv 0: retry [====================                  ]  55% 40.28 KiB / 72.96 KiB\u001b[K\rmv 1: retry [====================================================] 1 items done\u001b[K\r\nPASS cross forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_27:0\r\nbatch3b > "
+  },
+  {
+    "test": "repeated cleanup 0",
+    "command": "i=0; while test $i -lt 15; do cp -p source repeat || break; fsprobe unlink repeat || break; i=$((i+1)); done; test $i -eq 15 && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "i=0; while test $i -lt 15; do cp -p source repeat || break; fsprobe unlink repeat || break; i=$((i+1)); done; test $i -eq 15 && status runtime; printf '\\nREMOTE_END_28:%d\\n' $?\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [=====                                ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: source [==================================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [==============                       ]  38% 28.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [=====                                ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: source [==================================== ]  99% 72.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\nRuntime: heap=321004 largest=320836 image=1204 ticks=42 load=27 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=1 imports=1 relocations=0 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_28:0\r\nbatch3b > "
+  },
+  {
+    "test": "repeated cleanup 1",
+    "command": "i=0; while test $i -lt 15; do cp -p source repeat || break; fsprobe unlink repeat || break; i=$((i+1)); done; test $i -eq 15 && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "i=0; while test $i -lt 15; do cp -p source repeat || break; fsprobe unlink repeat || break; i=$((i+1)); done; test $i -eq 15 && status runtime; printf '\\nREMOTE_END_29:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [>                                             ] 0 items completed\u001b[K\rcp 0: source [=====                                ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: source [==================================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [==================                   ]  49% 36.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [==============                       ]  38% 28.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\nRuntime: heap=321004 largest=320836 image=1204 ticks=44 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=3 imports=1 relocations=0 prepare=6 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=3 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_29:0\r\nbatch3b > "
+  },
+  {
+    "test": "repeated cleanup 2",
+    "command": "i=0; while test $i -lt 15; do cp -p source repeat || break; fsprobe unlink repeat || break; i=$((i+1)); done; test $i -eq 15 && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "i=0; while test $i -lt 15; do cp -p source repeat || break; fsprobe unlink repeat || break; i=$((i+1)); done; test $i -eq 15 && status runtime; printf '\\nREMOTE_END_30:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [================                     ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\nRuntime: heap=321004 largest=320836 image=1204 ticks=43 load=28 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=2 imports=1 relocations=0 prepare=6 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=11 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_30:0\r\nbatch3b > "
+  },
+  {
+    "test": "cleanup large scratch",
+    "command": "rm big big-ref; status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "rm big big-ref; status runtime; printf '\\nREMOTE_END_31:%d\\n' $?\r\n\rrm 1: big [>                                                ] 1 items completed\u001b[K\rrm 2: big-ref [==================================================] 2 items done\u001b[K\r\nRuntime: heap=324468 largest=320908 image=13160 ticks=139 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=15 validate=1 imports=3 relocations=2 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_31:0\r\nbatch3b > "
+  }
+]

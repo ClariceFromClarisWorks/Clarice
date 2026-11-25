@@ -1,0 +1,92 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324934 largest=323302 image=37136 ticks=3074 load=46 owned-peak=21508 remaining=0\r\nLoader ticks: read=24 validate=2 imports=3 relocations=5 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=10 payload=0 metadata=1 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe new /tmp/batch3b/vi-repeat-0 && test \"$(cat /tmp/batch3b/vi-repeat-0)\" = REPEAT",
+    "status": 0,
+    "text": "fsprobe new /tmp/batch3b/vi-repeat-0 && test \"$(cat /tmp/batch3b/vi-repeat-0)\" = REPEAT; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324916 largest=323330 image=198600 ticks=4349 load=155 owned-peak=80596 remaining=0\r\nLoader ticks: read=101 validate=2 imports=4 relocations=26 prepare=12 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=16 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe new /tmp/batch3b/nano-repeat-0 && test \"$(cat /tmp/batch3b/nano-repeat-0)\" = REPEAT",
+    "status": 0,
+    "text": "fsprobe new /tmp/batch3b/nano-repeat-0 && test \"$(cat /tmp/batch3b/nano-repeat-0)\" = REPEAT; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324938 largest=323330 image=37136 ticks=3482 load=45 owned-peak=21508 remaining=0\r\nLoader ticks: read=22 validate=3 imports=3 relocations=4 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=1 record=9 payload=0 metadata=2 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe new /tmp/batch3b/vi-repeat-1 && test \"$(cat /tmp/batch3b/vi-repeat-1)\" = REPEAT",
+    "status": 0,
+    "text": "fsprobe new /tmp/batch3b/vi-repeat-1 && test \"$(cat /tmp/batch3b/vi-repeat-1)\" = REPEAT; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324956 largest=323274 image=198600 ticks=4599 load=206 owned-peak=80596 remaining=0\r\nLoader ticks: read=102 validate=0 imports=4 relocations=26 prepare=64 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=16 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe new /tmp/batch3b/nano-repeat-1 && test \"$(cat /tmp/batch3b/nano-repeat-1)\" = REPEAT",
+    "status": 0,
+    "text": "fsprobe new /tmp/batch3b/nano-repeat-1 && test \"$(cat /tmp/batch3b/nano-repeat-1)\" = REPEAT; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324968 largest=323274 image=37136 ticks=3474 load=42 owned-peak=21508 remaining=0\r\nLoader ticks: read=22 validate=1 imports=2 relocations=5 prepare=2 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe new /tmp/batch3b/vi-repeat-2 && test \"$(cat /tmp/batch3b/vi-repeat-2)\" = REPEAT",
+    "status": 0,
+    "text": "fsprobe new /tmp/batch3b/vi-repeat-2 && test \"$(cat /tmp/batch3b/vi-repeat-2)\" = REPEAT; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=324976 largest=323256 image=198600 ticks=4592 load=193 owned-peak=80596 remaining=0\r\nLoader ticks: read=101 validate=2 imports=3 relocations=27 prepare=49 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=16 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "fsprobe new /tmp/batch3b/nano-repeat-2 && test \"$(cat /tmp/batch3b/nano-repeat-2)\" = REPEAT",
+    "status": 0,
+    "text": "fsprobe new /tmp/batch3b/nano-repeat-2 && test \"$(cat /tmp/batch3b/nano-repeat-2)\" = REPEAT; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "test \"$(cat /tmp/batch3b/control-status)\" = 130 && echo prompt-recovered",
+    "status": 0,
+    "text": "test \"$(cat /tmp/batch3b/control-status)\" = 130 && echo prompt-recovered; printf '\\nREMOTE_END_1:%d\\n' $?\r\nprompt-recovered\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=324988 largest=323182 image=10056 ticks=48 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=4 imports=2 relocations=1 prepare=4 events=4 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=4 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "test \"$(cat /tmp/batch3b/command-status)\" = 130 && echo prompt-recovered",
+    "status": 0,
+    "text": "test \"$(cat /tmp/batch3b/command-status)\" = 130 && echo prompt-recovered; printf '\\nREMOTE_END_1:%d\\n' $?\r\nprompt-recovered\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=324988 largest=323182 image=10056 ticks=44 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "find /tmp/batch3b -name \".clarice-*\"",
+    "status": 0,
+    "text": "find /tmp/batch3b -name \".clarice-*\"; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "text": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=324980 largest=323182 image=10072 ticks=69 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=0 imports=2 relocations=1 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  }
+]

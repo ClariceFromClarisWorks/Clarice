@@ -15,7 +15,7 @@
 #define userCanceledErr -128
 #define dskFulErr -34
 typedef struct {struct {long ioFlAttrib,ioDirID,ioFlMdDat,ioFlLgLen,ioFlRLgLen,ioFlCrDat,ioFlFndrInfo,ioFlXFndrInfo;} hFileInfo;} CInfoPBRec;
-static struct File {char path[512];char forks[2][8192];long len[2];CInfoPBRec meta;} files[8];
+static struct File {char path[512];char forks[2][8192];long len[2];CInfoPBRec meta;long type,creator;} files[8];
 static struct Ref {int file,fork;long pos;} refs[16];
 static int operation,fail_at,fail_again,short_at,crash_at,cancel,allocated,readonly,fail_code=ioErr;
 static jmp_buf crash;
@@ -29,7 +29,7 @@ static int resolve(const char *p,char *out){strcpy(out,p);return 0;}
 static int info(const char *p,CInfoPBRec *out){int e=fault();if(e)return e;int i=find(p);if(i<0)return fnfErr;*out=files[i].meta;out->hFileInfo.ioFlLgLen=files[i].len[0];out->hFileInfo.ioFlRLgLen=files[i].len[1];return 0;}
 static int cli_native_volume(const char *p,short *v){(void)p;*v=1;return 0;}
 static int FlushVol(void *p,short v){(void)p;(void)v;return fault();}
-static int cli_native_create(const char *p,long c,long t){(void)c;(void)t;int e=fault();if(e)return e;if(readonly)return permErr;if(find(p)>=0)return dupFNErr;for(int i=0;i<8;i++)if(!*files[i].path){memset(&files[i],0,sizeof files[i]);strcpy(files[i].path,p);files[i].meta.hFileInfo.ioDirID=i+10;return 0;}return dskFulErr;}
+static int cli_native_create(const char *p,long t,long c){int e=fault();if(e)return e;if(readonly)return permErr;if(find(p)>=0)return dupFNErr;for(int i=0;i<8;i++)if(!*files[i].path){memset(&files[i],0,sizeof files[i]);strcpy(files[i].path,p);files[i].type=t;files[i].creator=c;files[i].meta.hFileInfo.ioDirID=i+10;return 0;}return dskFulErr;}
 static int cli_native_delete(const char *p){int e=fault();if(e)return e;int i=find(p);if(i<0)return fnfErr;files[i].path[0]=0;return 0;}
 static int cli_native_rename(const char *p,const char *q){int e=fault();if(e)return e;int i=find(p);if(i<0)return fnfErr;if(find(q)>=0)return dupFNErr;strcpy(files[i].path,q);return 0;}
 static int cli_native_set(const char *p,CInfoPBRec *m){int e=fault();if(e)return e;int i=find(p);if(i<0)return fnfErr;files[i].meta=*m;return 0;}
@@ -54,7 +54,7 @@ int main(void){
  for(int n=1;n<=count;n++)for(int m=n+1;m<=count+3;m++){reset(1);fail_at=n;fail_again=m;run();preserved();assert(!allocated);
   if(find(dest)<0){fail_at=fail_again=0;int old=-1;for(int j=0;j<8;j++)if(*files[j].path&&exact(j,1))old=j;assert(old>=0);char recovery[512];strcpy(recovery,files[old].path);assert(!cli_native_rename(recovery,dest));assert(exact(find(dest),1));}
 }
- reset(0);assert(!run()&&exact(find(dest),0));
+ reset(0);assert(!run()&&exact(find(dest),0));assert(files[find(dest)].type=='TEXT'&&files[find(dest)].creator=='CLRC');
  int new_count=operation;for(int n=1;n<=new_count;n++){reset(0);fail_at=n;run();int f=find(dest);assert(f<0||exact(f,0));assert(!allocated);}
  reset(1);char staged[520];void *pending=cli_replace_begin(dest,staged,sizeof staged);assert(pending);char oldname[512];strcpy(oldname,((SafeSave*)pending)->old);cli_replace_abort(pending);
  assert(!cli_native_create(oldname,0,0));assert(!cli_replace_begin(dest,staged,sizeof staged));assert(exact(find(dest),1)&&find(oldname)>=0&&!allocated);

@@ -1,0 +1,2 @@
+PASS HDA Core, installer and recovery-helper forks/Finder metadata; Release and49 utilities match inputs.
+PASS all51 USTAR members match the sealed kit.

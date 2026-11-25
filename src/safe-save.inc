@@ -30,7 +30,7 @@ static void *cli_replace_begin(const char *path,char *target,unsigned long capac
  if((e=save_absent(s->stage))||(e=save_absent(s->old))){save_report(s->stage);save_report(s->old);goto fail;}
  /* Check write permission/locked volume without truncating the source. */
  if(s->exists){e=cli_native_open(s->dest,0,1,&in);if(e)goto fail;e=cli_native_close(in);in=-1;if(e)goto fail;}
- e=cli_native_create(s->stage,'CLRC','TEXT');if(e)goto fail;s->staged=1;
+ e=cli_native_create(s->stage,'TEXT','CLRC');if(e)goto fail;s->staged=1;
  if(s->exists){
   e=cli_native_open(s->dest,1,0,&in);if(e)goto fail;
   e=cli_native_open(s->stage,1,1,&out);if(e)goto fail;
