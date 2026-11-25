@@ -1,5 +1,8 @@
 # Batch 3A — filesystem P1 corrections, build 2026111966
 
+Product **15f2c3e**, integrated local main. HTTP/AFP readback passed all51 entries
+and36 unique payloads; previous1965 index/payloads remain verified.
+
 Both defects reproduced against accepted 8d136a1 with production function bodies
 and ASan/UBSan. Oversized cp/mv operands overflowed the destination stack buffer;
 trailing separators made the real namespace resolver follow a final removal link.

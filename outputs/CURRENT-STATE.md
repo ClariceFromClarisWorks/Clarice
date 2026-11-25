@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111966**, local main: Batch3A filesystem P1 corrections.
+Latest normal build **2026111966**, product **15f2c3e**, local main: Batch3A filesystem P1 corrections.
 Encoded cp/mv destinations are checked before native work/copying; recursive
 removal rejects final symlinks with trailing separators through the existing
 no-follow path. Ordinary slash directories and links without suffixes remain.
