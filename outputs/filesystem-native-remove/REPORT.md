@@ -1,6 +1,6 @@
 # Batch 3D — native HFS removal safety
 
-Normal build2026111969, based on1968/0ab807e. Host and Snow accepted;
+Normal build2026111969, product70ca55c, based on1968/0ab807e. Host and Snow accepted;
 physical acceptance pending. No resolver/enumerator/API change.
 
 The1968 negative control reproduces the exact data loss with production removal
@@ -43,6 +43,7 @@ code13238→13274 (+36), BSS168 unchanged. Core package438656 unchanged, inspect
 unchanged. No new allocations, frame fields, persistent memory or startup work.
 Full build/import validation and seal pass. Offline Core/installer/helper forks
 and Finder metadata, Release/49 utilities and51 USTAR members match sealed inputs.
-Publication verification follows in verification.json. Previous1968 distribution
+HTTP/AFP51 entries/36 payloads, source/seal and offline packages verified
+(verification.json). Previous1968 distribution
 and recovery, unrelated work and other Snow instances preserved. No hardware
 access or GitHub push. Stop after3D.

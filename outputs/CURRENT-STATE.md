@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111969**, local main: Batch3D native HFS removal safety.
+Latest normal build **2026111969**, product **70ca55c**, local main: Batch3D native HFS removal safety.
 Removal distinguishes native colon separators from Unix slashes; a native file
 named `keep/` no longer becomes the sibling directory `keep`. Earlier final-link
 protections remain. [Focused evidence](filesystem-native-remove/REPORT.md):1968
@@ -14,8 +14,8 @@ Shared files image+124bytes (code+36); Core/inspect sizes and static memory unch
 No new allocations, frame fields or startup work. Physical acceptance pending.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Coherent1969 build and offline package
-readback pass; publication verification pending. Previous1968 recovery/distribution
+`Macintosh Exchange/Clarice/index.txt`. All51 entries/36 payloads and offline packages verified on HTTP/AFP
+(`filesystem-native-remove/verification.json`). Previous1968 recovery/distribution
 and unrelated work preserved. No GitHub push or physical hardware access.
 Stop after3D.
 
