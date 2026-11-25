@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111965**, local main: Batch 2 final closure accepted in
+Latest normal build **2026111965**, product **8d136a1**, local main: Batch 2 final closure accepted in
 normal 68000 Snow Plus/4 MiB/System 6.0.8. Clipboard endings now use the same
 presented frame as selected characters, using existing spare row bytes. Unchanged
 Preferences menu OK/Cancel avoids invented dirty state; screen-clamped no-op sizes

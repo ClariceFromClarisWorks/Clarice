@@ -1,6 +1,6 @@
 # Batch 2 final closure — build 2026111965
 
-Two narrow corrections on local main; normal 68000 Snow Plus/4 MiB/System 6.0.8.
+Product commit **8d136a1**. Two narrow corrections on local main; normal 68000 Snow Plus/4 MiB/System 6.0.8.
 No physical testing or GitHub push.
 
 - Clipboard logical endings now travel with characters through the existing
