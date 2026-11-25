@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest accepted normal build **2026111975**, local main: Batch4E Seriald
+Latest accepted normal build **2026111975**, product **a0efcc5**, local main: Batch4E Seriald
 startup cleanup. Failed initialization or service registration now retains its
 owner until native teardown succeeds; repeated stop after success is harmless.
 No new buffers, idle work or permanent allocations. Seriald file+40bytes;
@@ -15,8 +15,9 @@ logout/stop/restart and subsequent prompt recovery pass. Final matched app/syste
 heaps stable, zero retained command allocations. Prior4A–4D fixes preserved.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Coherent1975 publication pending final
-verification; prior1974 distribution/recovery retained. Optional Seriald stays
+`Macintosh Exchange/Clarice/index.txt`. Coherent1975 publication verified:51 entries/36 payloads, matching HTTP/AFP,
+source/seal and offline packages ([verification](network-4e/verification.json));
+prior1974 distribution/recovery retained. Optional Seriald stays
 separate from the standard collection. Physical native-driver acceptance pending.
 A permanently broken driver may keep safe cleanup waiting. One separate Snow
 update handoff with a connected remote session crashed; fresh-clone update with

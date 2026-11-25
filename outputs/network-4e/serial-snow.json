@@ -1,0 +1,46 @@
+[
+  {
+    "test": "netheap2; status runtime",
+    "text": "netheap2; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=323194 largest=322052 system=45602 largest=45470\r\nRuntime: heap=323368 largest=322052 image=164 ticks=29 load=26 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=2 imports=0 relocations=0 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "normal Seriald login/read cancel130/recovery/logout",
+    "cycle": 0,
+    "banner": "Clarice serial shell (unencrypted; one session)\r\nPassword: ",
+    "reply": "echo SERIAL-OK\r\nSERIAL-OK\r\n/ > ",
+    "cancel": "read x\r\n^C\r\n/ > ",
+    "status": "echo $?\r\n130\r\n/ > "
+  },
+  {
+    "test": "cat /tmp/stopped-heap; netheap2; status runtime; remote status",
+    "text": "cat /tmp/stopped-heap; netheap2; status runtime; remote status; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=353226 largest=352972 system=66302 largest=66170\r\napp=322392 largest=321960 system=45602 largest=45470\r\nRuntime: heap=322566 largest=321960 image=164 ticks=26 load=23 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=0 relocations=0 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=0 (structure included in relocations)\r\nTelnet service connected\r\nSerial service disabled\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "normal Seriald login/read cancel130/recovery/logout",
+    "cycle": 1,
+    "banner": "exit\r\nClarice serial shell (unencrypted; one session)\r\nPassword: ",
+    "reply": "echo SERIAL-OK\r\nSERIAL-OK\r\n/ > ",
+    "cancel": "read x\r\n^C\r\n/ > ",
+    "status": "echo $?\r\n130\r\n/ > "
+  },
+  {
+    "test": "cat /tmp/stopped-heap; netheap2; status runtime; remote status",
+    "text": "cat /tmp/stopped-heap; netheap2; status runtime; remote status; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=353208 largest=352954 system=66302 largest=66170\r\napp=322392 largest=322016 system=45602 largest=45470\r\nRuntime: heap=322566 largest=322016 image=164 ticks=27 load=24 owned-peak=0 remaining=0\r\nLoader ticks: read=8 validate=0 imports=0 relocations=0 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=0 (structure included in relocations)\r\nTelnet service connected\r\nSerial service disabled\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "normal Seriald login/read cancel130/recovery/logout",
+    "cycle": 2,
+    "banner": "exit\r\nClarice serial shell (unencrypted; one session)\r\nPassword: ",
+    "reply": "echo SERIAL-OK\r\nSERIAL-OK\r\n/ > ",
+    "cancel": "read x\r\n^C\r\n/ > ",
+    "status": "echo $?\r\n130\r\n/ > "
+  },
+  {
+    "test": "cat /tmp/stopped-heap; netheap2; status runtime; remote status",
+    "text": "cat /tmp/stopped-heap; netheap2; status runtime; remote status; printf '\\nREMOTE_END_1:%d\\n' $?\r\napp=353226 largest=352990 system=66302 largest=66170\r\napp=322392 largest=322016 system=45602 largest=45470\r\nRuntime: heap=322566 largest=322016 image=164 ticks=26 load=23 owned-peak=0 remaining=0\r\nLoader ticks: read=7 validate=0 imports=0 relocations=0 prepare=4 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=0 structure=0 (structure included in relocations)\r\nTelnet service connected\r\nSerial service disabled\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "test": "/tmp/serial-start; status runtime; netheap2",
+    "text": "/tmp/serial-start; status runtime; netheap2; printf '\\nREMOTE_END_1:%d\\n' $?\r\nSERIAL_START cycle=0 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=0 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=0 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=1 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=1 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=1 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=2 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=2 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=2 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=3 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=3 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=3 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=4 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=4 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=4 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nPASS native startup/registration retry, repeated teardown and stable heaps\r\nRuntime: heap=323070 largest=322144 image=6964 ticks=288 load=37 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=18 imports=2 relocations=1 prepare=0 events=1 (events included above)\r\nVerification ticks: mode=full header=0 record=5 payload=18 metadata=0 structure=0 (structure included in relocations)\r\napp=322908 largest=322144 system=45602 largest=45470\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  }
+]

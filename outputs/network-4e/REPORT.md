@@ -1,6 +1,6 @@
 # Batch 4E — Seriald startup ownership
 
-Normal68000 build2026111975, local main; baseline1974/f9b5f73.
+Normal68000 build2026111975, producta0efcc5, local main; baseline1974/f9b5f73.
 Host and disposable Snow Plus/4MiB/System6.0.8 only. No hardware or GitHub push.
 
 Seriald returned after initialization/registration failure even when native
@@ -50,5 +50,9 @@ The corrected Seriald service was not running. Failed image/log preserved locall
 no updater correction or claim of resolution. Fresh-clone handoff with services
 stopped passed. This observation is outside the narrow Seriald correction.
 
-Publication verification is recorded in verification.json after integration;
-prior1974 distribution/recovery and unrelated work remain preserved. Stop4E.
+Canonical HTTP/AFP publication verified:51 entries/36 unique payloads, source
+archive matching sealed inputs, optional services and complete offline tar/HDA.
+The unchanged optional vi entry was restored after the post-publication count
+check caught its omission from the standard-only generated index. Final sources
+match byte-for-byte; previous1974 index/payloads/recovery remain verified.
+See verification.json. Unrelated work retained; no push. Stop4E.

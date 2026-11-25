@@ -1,0 +1,10 @@
+PASS actual canonical/editor waits: bounded non-executing service polls, connect/type/disconnect progress, normal input and cancellation, no reentrant execution
+PASS service status: disabled idle has zero callbacks; active/native-error/retry/legacy status; old registration ABI and stop cleanup
+PASS independent session exports, variables, functions, arguments, read/write, exit, parser/write failure, allocation exhaustion and cleanup
+PASS bounded echo: five 1000-byte mid-line paste cycles, stalled sends, cursor/backspace, 1023-byte IAC history; no disconnect or lost bytes
+PASS listener: listening/connected/native-failure/retry/recovery; failed listener retries throttled to one second
+PASS wildcard listen: twelve unapproved-peer completions rejected before bytes/auth/session/indicator; stream rearmed, allowed peer accepted, no retained allocations
+PASS authentication: upstream PBKDF2 known answer; no pre-auth shell or pipelined execution; wrong/right password, wiped input, strict missing/malformed config; zero retained allocations
+PASS service: allocation failure, graceful logout drain, negotiated echo, idle dispatch, CRLF, overlong input rejection/recovery, interrupt, delayed abort retains buffers, reconnect and zero retained allocations
+PASS Seriald startup: partial open/reset/registration failures; repeated detach/close failures; cancellation during retry; 60 eventual teardowns; zero native owners/allocations and idempotent cleanup
+PASS native serial login, pre-auth discard, shell input, raw binary, delayed abort ownership and cleanup

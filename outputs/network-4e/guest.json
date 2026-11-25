@@ -1,0 +1,27 @@
+[
+  {
+    "command": "wget -O /tmp/serial-start http://192.168.1.112:18086/server/serial-start.clx",
+    "status": 0,
+    "text": "wget -O /tmp/serial-start http://192.168.1.112:18086/server/serial-start.clx; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\r[========                                           ]  16% 1.80 KiB / 10.86 KiB\u001b[K\r[==================================================] 100% 10.86 KiB / 10.86 KiB\u001b[K\r\nDownloaded 10.86 KB to /tmp/serial-start\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "/tmp/serial-start",
+    "status": 0,
+    "text": "/tmp/serial-start; printf '\\nREMOTE_END_2:%d\\n' $?\r\nSERIAL_START cycle=0 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=0 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=0 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=1 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=1 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=1 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=2 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=2 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=2 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=3 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=3 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=3 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=4 mode=0 rc=1 pauses=3 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=4 mode=1 rc=1 pauses=5 system_delta=0 app_delta=0 safe=1\r\nSERIAL_START cycle=4 mode=2 rc=1 pauses=9 system_delta=0 app_delta=0 safe=1\r\nPASS native startup/registration retry, repeated teardown and stable heaps\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime; netheap2",
+    "status": 0,
+    "text": "status runtime; netheap2; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=323380 largest=322410 image=6964 ticks=290 load=38 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=19 imports=1 relocations=1 prepare=2 events=3 (events included above)\r\nVerification ticks: mode=full header=0 record=4 payload=19 metadata=0 structure=1 (structure included in relocations)\r\napp=323206 largest=322410 system=45602 largest=45488\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  },
+  {
+    "command": "wget -O /tmp/seriald1975 http://192.168.1.112:18086/server/seriald.clx",
+    "status": 0,
+    "text": "wget -O /tmp/seriald1975 http://192.168.1.112:18086/server/seriald.clx; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\r[==                                                 ]   5% 1.80 KiB / 31.03 KiB\u001b[K\r[==========================            ]  70% 21.80 KiB / 31.03 KiB 21.80 KiB/s\u001b[K\r[======================================] 100% 31.03 KiB / 31.03 KiB 31.03 KiB/s\u001b[K\r\nDownloaded 31.03 KB to /tmp/seriald1975\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "command": "help appinstall",
+    "status": 0,
+    "text": "help appinstall; printf '\\nREMOTE_END_5:%d\\n' $?\r\nUsage:\r\n  appinstall setup DIRECTORY\r\n  appinstall install FILE NAME\r\n  appinstall check FILE\r\n  appinstall replace FILE NAME\r\n  appinstall repair NAME DIRECTORY\r\n  appinstall recover NAME\r\nInstall or verify commands in /bin. NAME uses 1 to 20 letters, digits, _ or -.\r\nActions:\r\n  setup         Install the offline standard collection.\r\n  install       Install one file. Like setup, keep existing files, even if\r\n                damaged.\r\n  check         Verify a file without executing it.\r\n  replace       Replace explicitly, retaining a backup.\r\n  repair        Replace with DIRECTORY/NAME.\r\n  recover       Restore .clx-NAME.old.\r\nBackups keep both forks. Replacement preserves Finder metadata; the new CLX is\r\ndata-only.\r\nExisting .old/.new files block replacement. Inspect and move them first.\r\nCLX_VERIFY=strict verifies on each launch. The installed mode uses receipts.\r\nStatus: 0 success, 1 install error, 2 usage, 126 bad CLX, 130 cancelled.\r\n\r\nREMOTE_END_5:0\r\n/ > "
+  }
+]

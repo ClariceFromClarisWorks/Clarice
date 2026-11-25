@@ -1,0 +1,1 @@
+Assertion failed: (!driver&&!allocations&&!input_open&&!output_open&&!buf_owned&&!pending), function main, file serial-host.c, line 44.
