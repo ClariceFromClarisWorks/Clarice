@@ -10,7 +10,7 @@ separate terms.
 | Component | Attribution and terms |
 | --- | --- |
 | BusyBox 1.37.0 | BusyBox contributors. Standard **wc, tr and sort** and their selected libbb code use GPL-2.0-only. Upstream archive SHA-256 `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`. See `Licenses/busybox/LICENSE`, `AUTHORS`, `src/ports/busybox-tools` and `scripts/prepare-busybox-tools.py`. |
-| sbase | suckless developers and per-file authors, MIT/ISC and retained file notices. Provides grep, sed, head, tail, cut, uniq, tee, basename, dirname, cmp, cksum, sleep, printenv, mktemp and dd, plus the explicit wc-sbase, tr-sbase and sort-sbase alternatives. Revision `c546c3a5724c81cee9a11d816a38ccdf17472129`. Preparation and Macintosh adapters are in `scripts/` and `src/ports/`. |
+| sbase | suckless developers and per-file authors, MIT/ISC and retained file notices. Provides grep, sed, head, tail, cut, uniq, tee, basename, dirname, cmp, cksum, sleep, printenv, mktemp and dd, plus the explicit wc-sbase, tr-sbase and sort-sbase alternatives. Revision `c546c3a5724c81cee9a11d816a38ccdf17472129`. Preparation and Macintosh adapters are in `scripts/` and `src/ports/`. The bundled ISC strtonum notice credits Ted Unangst and Todd Miller; additional per-file notices are preserved in the kit. |
 | musl regex and fnmatch | Rich Felker and contributors, with Ville Laurikari's TRE-derived regex; retained notices for each snapshot. Regex supports the sbase ports; the byte-oriented fnmatch adaptation serves native file inspection/traversal. See the two musl copyright files and `src/vendor/USERLAND-SOURCES.json`. |
 | One True Awk | Lucent Technologies and authors listed in `src/vendor/awk`. Revision `72e9b56caddb4a6f8d1405315a5183c26b8650a4`. Preparation and Macintosh runtime are in `scripts/prepare-awk.py` and `src/ports/awk-runtime.c`. |
 | mrsh | emersion and contributors, MIT, revision `4c81598721bc5eeb28f9faa818b3102d0471b7f6`. Parser and AST are adapted; shell execution is Clarice's Macintosh implementation. |
@@ -19,7 +19,7 @@ separate terms.
 | libtelnet | Sean Middleditch and contributors, public-domain dedication and authors in `src/commands/vendor/libtelnet`. Used with the native transport and terminal adapter. |
 | picohttpparser | Tokuhiro Matsuno, Kazuho Oku and contributors, MIT option, revision `dd573d8fa9264c646a400e96ce9f07dea6f156e4`. HTTP parsing in wget and the updater. |
 | newlib getopt | Gregory Pietsch, public-domain notice preserved in the original source and the kit. Used by BusyBox ports. |
-| Macintosh toolchain | Retro68 by Wolfgang Thaller and contributors, GPL-3.0-or-later with GCC Runtime Library Exception 3.1; Multiversal MIT; GCC runtime exception; individual newlib notices. The pinned image digest is in `scripts/build.sh`. The newlib file is the upstream notice inventory. Exact linked-runtime source revisions are unverified; the digest alone does not establish source provenance. |
+| Macintosh toolchain | Retro68 by Wolfgang Thaller and contributors, GPL-3.0-or-later with GCC Runtime Library Exception 3.1; Multiversal MIT; GCC runtime exception; individual newlib notices. The pinned image digest is in `scripts/build.sh`. The newlib file is the upstream notice inventory. Exact linked-runtime source revisions are unverified. TOOLCHAIN-PROVENANCE.md records archive hashes and corroborated candidates. |
 
 Notice filenames in the kit are under `Licenses/`. Source headers and
 upstream documentation retain per-file notices. The project uses the
@@ -65,8 +65,11 @@ into GPL-covered utilities. Clarify the linked-runtime exception and
 CLX integration boundaries for this distribution before release.
 
 The local source companion **@SOURCE_ARCHIVE@** stages the pinned
-product source, licence inventory, adaptations, compilation and
+product source, licence inventory, adaptations, build instructions and
 installation scripts, and hash-verified BusyBox 1.37.0 upstream source.
+The generated BusyBox port files carry dated modification notices where
+adapted. Its source manifest and the binary kit share the accepted seal
+identity. See SOURCE-BUILD.md and LICENSING-DECISIONS.md in the companion.
 Provide complete corresponding source alongside any binary distribution
 of the BusyBox applets under GPLv2 section 3, including the granted
 terms for required linked adapters. A pinned archive, fetch URL, or

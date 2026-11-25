@@ -69,23 +69,93 @@ def native_app(path, accepted, name, finder):
         raise ValueError('MacBinary relabelling changed a fork or Finder identity')
     return result
 
-def source_archive(path, product):
+SOURCE_DOCS = (
+    'README.md', 'INSTALL.md', 'THIRD_PARTY.md', 'RELEASE-START.md',
+    'RELEASE-NOTES.md', 'RELEASE-PACKAGING.md', 'SOURCE-BUILD.md',
+    'TOOLCHAIN-PROVENANCE.md', 'LICENSING-DECISIONS.md',
+)
+BUSYBOX_CHANGES = {
+    'sort.c': 'Reject unavailable options and poll cooperatively in key comparison.',
+    'full_read.c': 'Extract full_read from libbb/read.c; Clarice supplies safe_read.',
+    'sed.c': 'Reject in-place editing and poll the execution loops.',
+    'grep.c': 'Remove the recursive file-walking path and reject recursive options.',
+    'tee.c': 'Reject the interrupt-ignore option.',
+    'uniq.c': 'Adapt stream selection and I/O error reporting; reject output operand.',
+    'tail.c': 'Remove following and reject follow options.',
+    'cksum.c': 'Check close errors on non-stdin descriptors.',
+}
+
+def busybox_notice(change):
+    return (f'/* CLARICE MODIFICATION NOTICE (2026-11-18; recorded 2026-11-26).\n'
+            f' * Clarice modified this BusyBox 1.37.0 source: {change}\n'
+            ' * Upstream notices and licensing terms are retained.\n'
+            ' */\n').encode('ascii')
+
+def source_archive(path, product, seal, updater_sha):
     busybox = (ROOT / BUSYBOX).read_bytes()
     if sha(busybox) != BUSYBOX_SHA:
         raise ValueError('BusyBox source archive hash mismatch')
     archive = git('archive', product, 'src', 'scripts', 'assets', 'licenses',
                   'tests', 'patches')
+    with tarfile.open(fileobj=io.BytesIO(archive)) as src:
+        original = {}
+        modes = {}
+        for member in src:
+            if member.isfile():
+                original[member.name] = src.extractfile(member).read()
+                modes[member.name] = member.mode
+            elif not member.isdir():
+                raise ValueError(f'unexpected source archive member: {member.name}')
+    files = dict(original)
+    files.update({name: (ROOT/name).read_bytes() for name in SOURCE_DOCS})
+    for notice in sorted((ROOT/'licenses').rglob('*')):
+        if notice.is_file():
+            files[notice.relative_to(ROOT).as_posix()] = notice.read_bytes()
+    files[BUSYBOX] = busybox
+    # Keep the accepted application/build checkout untouched. The companion
+    # regenerates prepared files with prominent, comments-only port notices.
+    prepare = 'scripts/prepare-busybox-tools.py'
+    overlay = '\n# Release companion: preserve notices on regenerated source files.\n'
+    for name, change in BUSYBOX_CHANGES.items():
+        overlay += (f"p=w/{name!r}; p.write_bytes("
+                    f"{busybox_notice(change)!r}+p.read_bytes())\n")
+    files[prepare] += overlay.encode('ascii')
+    with tempfile.TemporaryDirectory() as directory:
+        scratch = Path(directory)
+        source_script = 'scripts/prepare-busybox-source.py'
+        inputs = (BUSYBOX, source_script, prepare, 'src/ports/busybox-tools/help.json')
+        for name in inputs:
+            dest = scratch/name
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(files[name])
+        subprocess.run([sys.executable, str(scratch/source_script)], check=True)
+        subprocess.run([sys.executable, str(scratch/prepare)], check=True)
+        for name in ('wc.c', 'tr.c', 'sort.c', 'full_read.c'):
+            leaf = 'work/busybox-tools/' + name
+            prepared = (scratch/leaf).read_bytes()
+            notice = busybox_notice(BUSYBOX_CHANGES[name]) if name in BUSYBOX_CHANGES else b''
+            if prepared != notice + (ROOT/leaf).read_bytes():
+                raise ValueError(f'{name} differs from the accepted build beyond its notice')
+            files[leaf] = prepared
+    files['BUILD-SEAL.json'] = (ROOT/'work/release/sealed.json').read_bytes()
+    manifest = dict(build=seal['build'], product_commit=product,
+                    binary_seal_identity=seal['identity'], updater_ustar_sha256=updater_sha,
+                    product_overlay={prepare: sha(original[prepare])},
+                    files={name: sha(data) for name, data in sorted(files.items())})
+    files['SOURCE-MANIFEST.json'] = (json.dumps(manifest, indent=2) + '\n').encode()
     with path.open('wb') as raw, gzip.GzipFile(filename='', fileobj=raw, mode='wb', mtime=0) as zipped:
         with tarfile.open(fileobj=zipped, mode='w', format=tarfile.PAX_FORMAT) as out:
-            with tarfile.open(fileobj=io.BytesIO(archive)) as src:
-                for member in src:
-                    if not (member.isfile() or member.isdir()):
-                        raise ValueError(f'unexpected source archive member: {member.name}')
-                    out.addfile(member, src.extractfile(member) if member.isfile() else None)
-            member = tarfile.TarInfo(BUSYBOX)
-            member.size = len(busybox)
-            member.mode = 0o644
-            out.addfile(member, io.BytesIO(busybox))
+            for name, data in sorted(files.items()):
+                member = tarfile.TarInfo(name)
+                member.size = len(data)
+                member.mode = modes.get(name, 0o644)
+                out.addfile(member, io.BytesIO(data))
+    with tarfile.open(path) as check:
+        members = check.getmembers()
+        if ({m.name for m in members} != set(files) or len(members) != len(files)
+                or any(not m.isfile() or check.extractfile(m).read() != files[m.name]
+                       for m in members)):
+            raise ValueError('source archive readback mismatch')
 
 def stage(product, accepted, updater_tar, out):
     subprocess.run(['git', '-C', str(ROOT), 'diff', '--quiet', product, '--',
@@ -135,7 +205,6 @@ def stage(product, accepted, updater_tar, out):
                       updater_ustar_sha256=release.digest(updater_tar), source_archive=source_name,
                       licensing_status='local draft; see Third Party.txt',
                       files={name: sha(data) for name, data in sorted(files.items())})
-    files['Package.json'] = (json.dumps(provenance, indent=2) + '\n').encode()
     if out.exists():
         raise FileExistsError(out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -143,6 +212,10 @@ def stage(product, accepted, updater_tar, out):
     with tempfile.TemporaryDirectory(dir=out.parent) as temp:
         draft = Path(temp) / 'draft'
         draft.mkdir()
+        source = draft / source_name
+        source_archive(source, product, seal, provenance['updater_ustar_sha256'])
+        provenance['source_sha256'] = release.digest(source)
+        files['Package.json'] = (json.dumps(provenance, indent=2) + '\n').encode()
         with zipfile.ZipFile(draft / target.name, 'w') as zip_file:
             for name, data in sorted(files.items()):
                 info = zipfile.ZipInfo(f'Clarice 0.5.0/{name}')
@@ -153,7 +226,6 @@ def stage(product, accepted, updater_tar, out):
             if (set(zip_file.namelist()) != set(expected)
                     or any(zip_file.read(name) != data for name, data in expected.items())):
                 raise ValueError('installer archive readback mismatch')
-        source_archive(draft / source_name, product)
         (draft / 'SHA256SUMS.txt').write_text(''.join(
             f'{release.digest(path)}  {path.name}\n' for path in sorted(draft.iterdir())))
         draft.rename(out)
