@@ -33,7 +33,7 @@ void format_size(char *out,unsigned long long bytes,int human);
 int app_scroll_bench(int quick);
 int app_preferences(int argc,char **argv);
 void app_run_checks(void);
-void shell_init(void);
+int shell_init(void);
 void shell_profile(void);
 void shell_prompt(char *out,size_t cap);
 int shell_run(const char *s);

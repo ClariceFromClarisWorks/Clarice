@@ -12,7 +12,8 @@ enum {keyDown=3,autoKey=5,charCodeMask=255,cmdKey=256,ControlKey=4096,everyEvent
 static unsigned long ticks;
 static int create_fail,disposed,initialised,installed,launched,init_error,install_error,cancel_in_backend,event_index,event_count,poll_empty;
 static EventRecord events[16];
-static char labels[7][256];
+static char labels[12][256];
+static int hilites[12];
 static void *GetNewDialog(int a,void*b,void*c){(void)a;(void)b;(void)c;return create_fail?0:(void*)1;}
 static void GetDialogItem(DialogPtr d,short i,short*t,Handle*h,Rect*r){(void)d;*t=0;*h=(void*)(intptr_t)i;*r=(Rect){0,0,16,100};}
 static void SetDialogItemText(Handle h,const unsigned char*s){int i=(int)(intptr_t)h;memcpy(labels[i],s+1,s[0]);labels[i][s[0]]=0;}
@@ -26,7 +27,9 @@ static void SetPort(void*p){(void)p;}
 static void ShowWindow(void*p){(void)p;}
 static void DrawDialog(void*p){(void)p;}
 static void DisposeDialog(void*p){assert(p);disposed++;}
-static void HiliteControl(void*p,int v){(void)p;(void)v;}
+static void HiliteControl(void*p,int v){hilites[(int)(intptr_t)p]=v;}
+static int GetControlHilite(void*p){return hilites[(int)(intptr_t)p];}
+static void SetControlValue(void*p,int v){(void)p;(void)v;}
 static void SetControlTitle(void*p,const unsigned char*s){(void)p;(void)s;}
 static unsigned long TickCount(void){return ticks+=2;}
 static int WaitNextEvent(int mask,EventRecord*e,int sleep,void*r){(void)mask;(void)r;if(!sleep&&poll_empty){poll_empty=0;return 0;}assert(event_index<event_count);*e=events[event_index++];poll_empty=!sleep;return 1;}
@@ -36,19 +39,26 @@ static char *LMGetApplLimit(void){return (char*)(uintptr_t)0x200000;}
 static void SetApplLimit(void*p){(void)p;}
 static void MaxApplZone(void){}
 static void MoreMasters(void){}
-int shell_install_init(void){initialised++;return init_error;}
-int shell_install_offline(char*);
+int shell_install_locations(char*c,char*d,int*f){strcpy(c,"Disk:Clarice");strcpy(d,"Disk:System:Clarice Data:");*f=0;return 0;}
+static void LMSetSFSaveDisk(short v){(void)v;}
+static void LMSetCurDirStore(long d){(void)d;}
+int shell_install_folder(const char*p,short*v,long*d){(void)p;*v=-1;*d=2;return 0;}
+int shell_install_choice(short wd,int data,char*out){(void)wd;strcpy(out,data?"Disk:Chosen:Clarice Data:":"Disk:Chosen:Clarice");return 0;}
+int shell_install_init(const char*c,const char*d){(void)c;(void)d;initialised++;return init_error;}
+int shell_install_offline(char*,int);
 static int update_native_launch(const char*p){assert(!strcmp(p,"Disk:Clarice"));launched++;return 0;}
 #include "../../src/installer-ui.inc"
-int shell_install_offline(char*p){installed++;strcpy(p,"Disk:Clarice");app_install_progress("Checking Core",3,4);return cancel_in_backend&&installer_poll()?userCanceledErr:install_error;}
+int shell_install_offline(char*p,int repair){(void)repair;installed++;strcpy(p,"Disk:Clarice");app_install_progress("Checking Core",3,4);return cancel_in_backend&&installer_poll()?userCanceledErr:install_error;}
 static void reset(void){
  installer_dialog=0;installer_running=installer_cancel=installer_choice=0;installer_step=installer_steps=installer_used=0;installer_last_poll=0;
  ticks=0;create_fail=disposed=initialised=installed=launched=init_error=install_error=cancel_in_backend=event_index=event_count=poll_empty=0;
- memset(labels,0,sizeof labels);
+ memset(labels,0,sizeof labels);memset(hilites,0,sizeof hilites);installer_fixed=installer_location_error=installer_repair=0;picker_good=0;
 }
 static void event(short w,unsigned long m,unsigned short mods){events[event_count++]=(EventRecord){w,m,mods};}
 int main(void){
  for(int n=0;n<5;n++){reset();if(!n)event(1,2,0);else event(keyDown,n==1?27:n==2?'.':n==3?'q':'c',n==4?ControlKey:cmdKey);assert(!installer_main(0));assert(disposed==1&&!initialised&&!installed&&!launched);}
+ reset();picker_good=1;event(1,7,0);event(1,8,0);event(1,2,0);assert(!installer_main(0));assert(!initialised&&!installed&&!launched);assert(!strcmp(installer_core,"Disk:Chosen:Clarice")&&!strcmp(installer_data,"Disk:Chosen:Clarice Data:"));
+ reset();installer_dialog=(void*)1;strcpy(installer_core,"Other:Clarice");strcpy(installer_data,"Disk:Clarice Data:");installer_locations();assert(!installer_ready());installer_dialog=0;
  reset();create_fail=1;assert(installer_main(0)==1&&!initialised&&!disposed);
  /* Poll receives a harmless event then no further event in the same slice. */
  reset();event(1,1,0);event(keyDown,'.',cmdKey);event(1,2,0);assert(installer_main(0)==1&&!initialised&&!installed&&!launched&&disposed==1);

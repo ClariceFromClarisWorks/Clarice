@@ -23,6 +23,7 @@ static int offline_recovery(const char *origin,const char *media,uint32_t build)
  if(strlen(root_path)+strlen(offline_helper_leaf)+13>256)return bdNamErr;strcpy(helper,root_path);strcat(helper,"etc:clarice:");strcat(helper,offline_helper_leaf);
  CInfoPBRec cat;e=info(helper,&cat);if(e==fnfErr){RecoveryFile copied;e=recovery_copy(helper_source,helper,"@helper",&copied);}if(!e)e=offline_helper_check(helper);if(e)return e;
  RecoverySnapshot s;memset(&s,0,sizeof s);strcpy(s.header.root,root_path);strcpy(s.header.origin,origin);s.header.build=build;
+ {char target[256];e=locations_core(root_path,target);if(e)return e;if(!strcmp(target,origin))s.header.format=3;}
  e=info(origin,&cat);if(e)return e;s.header.origin_id=cat.hFileInfo.ioDirID;s.header.origin_modified=cat.hFileInfo.ioFlMdDat;
  /* Catalog names are deduplicated while reading; grow only if necessary. */
  unsigned cap=RELEASE_COUNT+5;s.files=(RecoveryFile*)NewPtr(cap*sizeof *s.files);if(!s.files)return memFullErr;memset(s.files,0,cap*sizeof *s.files);s.header.count=3;

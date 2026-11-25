@@ -29,7 +29,7 @@ static int command_paths(const char *n,char *d,char*s,char*b){strcpy(d,n);return
 static void errsay(const char *s){(void)s;}
 static unsigned offline_helper_data=4,offline_helper_data_crc=123,offline_helper_resource=100,offline_helper_resource_crc=456;
 static int update_hash_fork(const char*p,int f,uint32_t*c,unsigned n){*c=f?456:123;if(corrupt==f+1)(*c)++;return corrupt==3?-39:0;}
-'''+function(o,'offline_tools_present')+'\n'+function(h,'offline_helper_check')+r'''
+'''+function(h,'offline_helper_check')+r'''
 static int cleanup(void){UpdateResult result={-128,0,0,0,1};
 '''+o[o.index('if(result.error){'):o.index('\n say("Installation complete.')]+r'''
 return 0;}
@@ -50,8 +50,6 @@ static int retry(RepoItem *items,unsigned index_size,unsigned index_crc){int e=0
 return -1;}
 int main(void){
  assert(cleanup()==-128&&staged);puts("PASS cancelled candidate retained for durable-plan retry");
- assert(offline_tools_present()==1);missing=1;assert(!offline_tools_present());missing=0;marker=1;assert(!offline_tools_present());marker=0;info_error=-36;assert(offline_tools_present()==-36);info_error=0;
- puts("PASS unchanged kit no-op, missing utility and pending update still resume");
  assert(!offline_helper_check("helper"));type='TEXT';assert(offline_helper_check("helper")==paramErr);type='APPL';creator='XXXX';assert(offline_helper_check("helper")==paramErr);creator='CLUP';
  for(corrupt=1;corrupt<=3;corrupt++)assert(offline_helper_check("helper")<0);corrupt=0;assert(!offline_helper_check("helper"));puts("PASS helper type/creator, both fork hashes and length failures");
  RepoItem cat={{"cat",0,30,40},0},ls={{"ls",0,10,20},&cat};

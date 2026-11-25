@@ -7,6 +7,7 @@
 #define RECOVERY_POLL() (app_yield()?userCanceledErr:0)
 #include "offline-recovery.inc"
 #include "update/recovery-restore.h"
+#include "offline-maintenance.inc"
 static UpdatePlan offline_plan;
 static const char *offline_slot(int n){return n==0?offline_plan.target:n==1?offline_plan.stage:offline_plan.backup;}
 static int offline_probe(void *c,int slot){(void)c;CInfoPBRec p;int e=info(offline_slot(slot),&p);return e==fnfErr?0:e?e:1;}
@@ -21,7 +22,7 @@ static int offline_marker(const char *text){
 }
 static int offline_ready(const char *target,uint32_t build){
  RepoRecord core;memset(&core,0,sizeof core);core.core=1;strcpy(core.name,"Clarice");core.version=build;char row[256],text[768];int e=repo_line(&core,row,sizeof row);if(e)return e;
- snprintf(text,sizeof text,"CLARICE-UPDATE-READY 1\n%s%s\n",row,target);return offline_marker(text);
+ int n=repo_marker_header(text,sizeof text,1,RELEASE_MANIFEST_SIZE,offline_manifest_crc);if(n<0)return n;snprintf(text+n,sizeof text-n,"%s%s\n",row,target);return offline_marker(text);
 }
 /* The same durable Core plan used by the independent helper makes rerunning
  * the offline installer finish an interrupted handoff, not start a new one. */
@@ -31,10 +32,10 @@ static int offline_resume(const char *target,int *finished){
  if(e==fnfErr){
   strcpy(path,root_path);strcat(path,"etc:clarice:update.incomplete");short ref;e=update_open(path,0,0,&ref);if(e==fnfErr)return 0;if(e)return e;
   char text[768];long bytes;e=GetEOF(ref,&bytes);if(!e&&(bytes<0||bytes>=(long)sizeof text))e=paramErr;if(!e)e=recovery_read(ref,text,bytes);int x=FSClose(ref);if(!e)e=x;if(e)return e;text[bytes]=0;
-  /* A repository-bound retry must use its original index, not this kit. */
-  if(!strncmp(text,"CLARICE-UPDATE-INCOMPLETE 2\n",28)||!strncmp(text,"CLARICE-UPDATE-READY 2\n",23)){errsay("Resume the original repository update or use Recover Clarice before installing this kit.\n");return paramErr;}
-  if(strncmp(text,"CLARICE-UPDATE-READY 1\n",23))return 0;
-  char *row=text+23,*end=strchr(row,'\n');if(!end)return paramErr;*end++=0;RepoRecord core;e=repo_record(row,&core,1);if(e||!core.core)return paramErr;char *nl=strchr(end,'\n');if(!nl||nl[1])return paramErr;*nl=0;if(strcmp(end,target))return paramErr;
+  const char *body;uint32_t size,crc;int bound;int kind=repo_marker_parse(text,&size,&crc,&body,&bound);if(kind<0)return kind;
+  if(bound&&(size!=RELEASE_MANIFEST_SIZE||crc!=offline_manifest_crc)){errsay("Resume with the original kit or repository; this source differs.\n");return paramErr;}
+  if(kind!=2)return 0;
+  char *row=(char*)body,*end=strchr(row,'\n');if(!end)return paramErr;*end++=0;RepoRecord core;e=repo_record(row,&core,1);if(e||!core.core)return paramErr;char *nl=strchr(end,'\n');if(!nl||nl[1])return paramErr;*nl=0;if(strcmp(end,target))return paramErr;
   uint32_t build;unsigned system;e=update_stamp(target,&build,&system);if(e==fnfErr)return 0;if(e)return e;if(build==core.version)*finished=1;return 0;
  }if(e)return e;
  if(pending.kind||strcmp(pending.target,target))return paramErr;offline_plan=pending;
@@ -46,24 +47,15 @@ static int offline_resume(const char *target,int *finished){
  e=info(target,&current);if(e)return e;if((uint32_t)current.hFileInfo.ioDirID!=pending.original_id||current.hFileInfo.ioFlMdDat!=pending.original_modified)return paramErr;
  e=offline_ready(target,pending.build);if(e)return e;UpdateOps ops={0,offline_probe,offline_check,offline_closed,offline_move,offline_flush};UpdateResult result=update_commit(&ops);if(!result.error)*finished=1;return result.error;
 }
-/* Install-if-absent is a no-op when every standard destination exists.
- * Do not rotate a useful rollback generation just for reopening the kit. */
-static int offline_tools_present(void){
- char marker[256];CInfoPBRec c;if(strlen(root_path)+30>sizeof marker)return bdNamErr;
- strcpy(marker,root_path);strcat(marker,"etc:clarice:update.incomplete");int e=info(marker,&c);if(!e)return 0;if(e!=fnfErr)return e;
- for(unsigned i=0;standard_commands[i];i++){char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec c;
-  int e=command_paths(standard_commands[i],dest,stage,backup);if(!e)e=info(dest,&c);if(e==fnfErr)return 0;if(e)return e;
- }return 1;
-}
-int shell_install_offline(char target[256]){
+int shell_install_offline(char target[256],int repair){
  unsigned steps=sizeof standard_commands/sizeof *standard_commands-1+4;
  app_install_progress("Checking installation and recovery",1,steps);
- char own[256],source[PATH_CAP],kit[PATH_CAP],from[PATH_CAP+8];CInfoPBRec original,cat;
+ char own[256],source[PATH_CAP],kit[PATH_CAP];CInfoPBRec original,cat;
  int e=update_application_path(own);if(e)return e;char *leaf=strrchr(own,':');if(!leaf)return bdNamErr;*++leaf=0;
  if(strlen(own)+10>=sizeof source)return bdNamErr;
  strcpy(source,own);strcat(source,"Clarice");strcpy(kit,own);strcat(kit,"Utilities");
- memset(&offline_plan,0,sizeof offline_plan);e=recovery_install_path(root_path,offline_plan.target);if(e)return e;strcpy(target,offline_plan.target);
- {int finished=0;e=offline_resume(target,&finished);if(e||finished)return e;}
+ memset(&offline_plan,0,sizeof offline_plan);e=locations_core(root_path,offline_plan.target);if(e)return e;strcpy(target,offline_plan.target);
+
  strcpy(offline_plan.stage,target);strcpy(strrchr(offline_plan.stage,':')+1,"Clarice Installing");
  strcpy(offline_plan.backup,target);strcpy(strrchr(offline_plan.backup,':')+1,"Clarice Previous");
  char origin[256];strcpy(origin,target);int migrating=0;
@@ -71,9 +63,11 @@ int shell_install_offline(char target[256]){
  if(e==fnfErr){size_t n=strlen(root_path);if(n<13||strcmp(root_path+n-13,"Clarice Data:"))return paramErr;
   memcpy(origin,root_path,n-13);strcpy(origin+n-13,"Clarice");e=info(origin,&destination);if(!e)migrating=1;else if(e==fnfErr){e=0;strcpy(origin,target);}if(e)return e;
  }else if(e)return e;
+ unsigned char manifest[RELEASE_MANIFEST_SIZE];char media[256];strcpy(media,own);media[strlen(media)-1]=0;
+ e=offline_manifest(media,manifest);if(e)return e;
  uint32_t build=0,installed=0;unsigned system=0,oldsystem=0;
  int source_busy=1;e=update_open_guard(source,&source_busy);if(e||source_busy)return e?e:fBsyErr;
- e=update_stamp(source,&build,&system);if(e)return e;SysEnvRec env;e=SysEnvirons(1,&env);if(e)return e;
+ e=update_stamp(source,&build,&system);if(e)return e;if(build!=update_be32(manifest+8))return paramErr;SysEnvRec env;e=SysEnvirons(1,&env);if(e)return e;
  if(system>(unsigned short)env.systemVersion)return paramErr;
  e=info(source,&cat);if(e)return e;if(cat.hFileInfo.ioFlFndrInfo.fdType!='APPL'||cat.hFileInfo.ioFlFndrInfo.fdCreator!='CLRC')return paramErr;
  int present=migrating?1:offline_probe(0,0),copy=1;if(present<0)return present;
@@ -82,20 +76,29 @@ int shell_install_offline(char target[256]){
   {int busy=1;e=update_open_guard(origin,&busy);if(e||busy)return e?e:fBsyErr;}
   e=update_stamp(origin,&installed,&oldsystem);if(e)return e;copy=build>installed;
  }
- if(present&&!copy&&!migrating){e=offline_tools_present();if(e<0)return e;if(e){say("Core and standard utilities already installed; kept unchanged.\n");return 0;}}
+ if(present&&build<installed){errsay("This kit is older than the installed Core. No managed files changed.\n");return paramErr;}
+ if(repair&&(!present||build!=installed||migrating)){errsay("Repair requires the kit matching the installed Core. Repair that version before upgrading.\n");return paramErr;}
+ e=offline_pending();if(e){errsay("Use the original kit to resume this installation.\n");return e;}
+ OfflineTool tools[RELEASE_COUNT];memset(tools,0,sizeof tools);uint32_t catalog_core;
+ e=offline_catalog_read(tools,&catalog_core);if(e)return e;
+ int changes;e=offline_tools_plan(kit,manifest,tools,repair,&changes);if(e)return e;
+ {int finished=0;e=offline_resume(target,&finished);if(e)return e;if(finished){if(changes)return paramErr;return 0;}}
+ if(present&&catalog_core&&catalog_core!=installed){errsay("Installed Core does not match its catalog. Use existing recovery first.\n");return paramErr;}
+ if(present&&!copy&&!migrating&&!changes){
+  /* Adopt exact legacy files into the catalog; do not rotate recovery. */
+  e=offline_tools_install(kit,manifest,tools,repair);return e?e:offline_ready(target,installed);
+ }
  if(present){
   char media[256];strcpy(media,own);size_t n=strlen(media);if(n&&media[n-1]==':')media[n-1]=0;
-  e=offline_recovery(origin,media,installed);if(e)return e;
+  if(!repair){e=offline_recovery(origin,media,installed);if(e)return e;}
   if(migrating){RecoveryFile previous;e=recovery_copy(origin,target,"@core",&previous);if(e)return e;e=info(target,&original);if(e)return e;}
   offline_plan.original_id=original.hFileInfo.ioDirID;offline_plan.original_modified=original.hFileInfo.ioFlMdDat;
   char *name=strrchr(offline_plan.stage,':')+1;snprintf(name,sizeof offline_plan.stage-(name-offline_plan.stage),".cu-%08lx-%08lx.new",(unsigned long)offline_plan.original_id,(unsigned long)build);
   strcpy(offline_plan.backup,offline_plan.stage);strcpy(offline_plan.backup+strlen(offline_plan.backup)-3,"old");
  }
  if(copy&&(e=command_absent(offline_plan.backup))){errsay("Installer: staged files retained; use Recover Clarice or inspect before retry.\n");return e;}
- e=offline_marker("CLARICE-UPDATE-INCOMPLETE 1\n");if(e)return e;
- snprintf(from,sizeof from,"native:%s",kit);
- say("Installing standard utilities. Existing files are kept.\nControl-C cancels; run Install Clarice again to resume.\n");
- e=command_setup(from);if(e)return e;
+ {char marker[128];int n=repo_marker_header(marker,sizeof marker,0,RELEASE_MANIFEST_SIZE,offline_manifest_crc);if(n<0)return n;e=offline_marker(marker);if(e)return e;}
+ e=offline_tools_install(kit,manifest,tools,repair);if(e)return e;
  if(!copy){say("Installed core is the same build or newer; kept unchanged.\n");return offline_ready(target,installed);}
  app_install_progress("Copying and checking Clarice Core",steps-2,steps);
  say("Copying and checking Clarice Core (both forks)...\n");

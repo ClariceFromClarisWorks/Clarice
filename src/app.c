@@ -1185,7 +1185,7 @@ int main(void){Rect r;MenuHandle m;EventRecord ev;unsigned long launch=TickCount
  scroll_region=NewRgn();saved_clip=NewRgn();transfer_region=NewRgn();visible_region=NewRgn();
  OpenPort(&frame_port);frame_port.portBits.baseAddr=(Ptr)frame_pixels;frame_port.portBits.rowBytes=STRIDE;SetRect(&frame_port.portBits.bounds,0,0,512,HEIGHT);frame_port.portRect=frame_port.portBits.bounds;ClipRect(&frame_port.portRect);frame_ready=1;OpenPort(&prompt_port);prompt_port.portBits.baseAddr=(Ptr)prompt_pixels;prompt_port.portBits.rowBytes=STRIDE;SetRect(&prompt_port.portBits.bounds,0,0,512,64);prompt_port.portRect=prompt_port.portBits.bounds;ClipRect(&prompt_port.portRect);SetPort(win);
  SetRect(&r,win->portRect.right-15,0,win->portRect.right+1,win->portRect.bottom-14);history_bar=NewControl(win,&r,(const unsigned char*)"\p",1,0,0,0,scrollBarProc,0);
- shell_init();shell_state_path(prefs_path,"clarice.conf","Clarice Preferences");
+ {int e=shell_init();if(e){char text[180];unsigned char message[180];snprintf(text,sizeof text,"Cannot open Clarice Data (Mac OS %d). Check the installation locations. No alternate location was created.",e);pstr(message,text);ParamText(message,0,0,0);StopAlert(151,0);return 1;}}shell_state_path(prefs_path,"clarice.conf","Clarice Preferences");
 #ifndef CLARICE_OFFLINE_INSTALLER
  load_preferences();
 #endif

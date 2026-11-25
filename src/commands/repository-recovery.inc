@@ -50,6 +50,7 @@ static int repo_recovery_prepare(RepoItem *items,const char *own,uint32_t build,
  }
  char helper[256];if(strlen(root)+strlen(update_helper_leaf)+13>256)return bdNamErr;strcpy(helper,root);strcat(helper,"etc:clarice:");strcat(helper,update_helper_leaf);e=install_helper(helper);if(e)return e;
  RecoverySnapshot s;memset(&s,0,sizeof s);strcpy(s.header.root,root);strcpy(s.header.origin,own);s.header.build=build;s.header.count=3;
+ {char target[256];e=locations_core(root,target);if(e)return e;if(!strcmp(target,own))s.header.format=3;}
  for(RepoItem *i=items;i;i=i->next)if(!i->wanted.core&&strcmp(i->wanted.name,"clarice"))s.header.count++;
  CInfoPBRec original;e=info(own,&original);if(e)return e;s.header.origin_id=original.hFileInfo.ioDirID;s.header.origin_modified=original.hFileInfo.ioFlMdDat;
  if(s.header.count>0x7fffffffUL/sizeof *s.files)return memFullErr;s.files=cli_alloc(s.header.count*sizeof *s.files);if(!s.files)return memFullErr;memset(s.files,0,s.header.count*sizeof *s.files);
@@ -61,7 +62,7 @@ static int repo_recovery_prepare(RepoItem *items,const char *own,uint32_t build,
 }
 static int repo_recovery_load(RecoverySnapshot *s,RecoveryRotation *r){char root[256];int e=resolve("/",root);if(!e)e=repo_recovery_paths(root,r);if(!e){CInfoPBRec directory;e=info(r->path[0],&directory);if(!e){e=recovery_inventory(r->path[0],s,0);if(e==fnfErr||e==dirNFErr)e=paramErr;}}if(!e&&strcmp(root,s->header.root)){recovery_dispose(s);e=paramErr;}return e;}
 static int repo_recovery_root(const char *own,char target[256]){
- char root[256];int e=resolve("/",root);if(!e)e=recovery_install_path(root,target);if(e||!strcmp(own,target))return e;
+ char root[256];int e=resolve("/",root);if(!e)e=locations_core(root,target);if(e||!strcmp(own,target))return e;
  RecoverySnapshot s;RecoveryRotation r;e=repo_recovery_load(&s,&r);if(e)return e;
  const RecoveryFile *core=0;for(uint32_t i=0;i<s.header.count;i++)if(!strcmp(s.files[i].name,"@core"))core=&s.files[i];
  if(!core)e=paramErr;else{

@@ -6,15 +6,7 @@
 #define REPO_MARKER "/etc/clarice/update.incomplete"
 extern int cli_appinstall(const char *,const char *,unsigned long);
 typedef struct RepoItem {struct RepoItem *next;RepoRecord wanted,installed;int known,needed;} RepoItem;
-typedef struct {short ref;char bytes[1024];unsigned pos,end;long complete;int eof;} RepoReader;
-static int repo_next(RepoReader *r,char *line,unsigned cap){
- unsigned used=0;for(;;){
-  if(r->pos==r->end){long n=sizeof r->bytes;int e=FSRead(r->ref,&n,r->bytes);if(e&&e!=eofErr)return e;r->pos=0;r->end=n;if(!n){r->eof=1;line[used]=0;return used?2:0;}}
-  char c=r->bytes[r->pos++];if(!c||c=='\r')return paramErr;
-  if(c=='\n'){line[used]=0;r->complete+=used+1;return 1;}
-  if(used+1>=cap)return paramErr;line[used++]=c;
- }
-}
+#include "../update/catalog-reader.h"
 static RepoItem *repo_find(RepoItem *list,const RepoRecord *r){for(;list;list=list->next)if(list->wanted.core==r->core&&!strcmp(list->wanted.name,r->name))return list;return 0;}
 static int repo_read_index(const char *path,RepoItem **list){
  RepoReader r;memset(&r,0,sizeof r);int e=open_path(path,fsRdPerm,&r.ref);if(e)return e;
@@ -100,7 +92,7 @@ int clarice_main(int argc,char **argv){
  if(!update_source_valid(source)){e=paramErr;errsay("Use an absolute mounted-file path or numeric private-network HTTP index URL.\n");goto done;}
  e=update_application_path(own);uint32_t current=0;unsigned system=0;if(!e)e=update_stamp(own,&current,&system);if(e)goto done;
  say("Checking repository...\n");e=download(source,index,0);if(e)goto done;e=repo_read_index(index,&items);if(!e)e=repo_catalog(items,0);if(!e)e=repo_catalog_members(&items);if(e)goto done;
- {char root[256];e=resolve("/",root);if(!e)e=recovery_install_path(root,repository_target);if(e)goto done;repository_migrate=strcmp(repository_target,own)!=0;}
+ {char root[256];e=resolve("/",root);if(!e)e=locations_core(root,repository_target);if(e)goto done;repository_migrate=strcmp(repository_target,own)!=0;}
  for(RepoItem *i=items;i;i=i->next){RepoRecord *r=&i->wanted;
   /* Old catalogs may still advertise an external updater. Core owns it now. */
   if(!r->core&&!strcmp(r->name,"clarice"))continue;

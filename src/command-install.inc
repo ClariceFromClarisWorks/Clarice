@@ -135,9 +135,9 @@ static int command_same_image(const char *source,const char *native){
  unsigned char x[512],y[512];while(!e&&an){long n=an>(long)sizeof x?(long)sizeof x:an,want=n;e=FSRead(a,&n,x);if(!e&&n!=want)e=ioErr;n=want;if(!e)e=FSRead(b,&n,y);if(!e&&(n!=want||memcmp(x,y,n)))e=paramErr;an-=want;if(!e&&module_poll())e=userCanceledErr;}
  if(b>=0){int z=FSClose(b);if(!e)e=z;}int z=FSClose(a);return e?e:z;
 }
-static int cli_appinstall(const char *source,const char *name,unsigned long version){
- char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec c;(void)version;
- int e=command_paths_for(name,dest,stage,backup,1);if(e)return e;
+static int command_install_resume(const char *source,const char *name,int managed){
+ char dest[PATH_CAP],stage[PATH_CAP],backup[PATH_CAP];CInfoPBRec c;
+ int e=command_paths_for(name,dest,stage,backup,managed);if(e)return e;
  e=cli_appcheck(source);if(e)return e;
  e=info(dest,&c);if(e==fnfErr){int b=info(backup,&c);if(!b)e=command_restore(backup,dest);else if(b!=fnfErr)return b;else e=0;}if(e)return e;
  /* A completed rename followed by a failed catalog append is resumable.
@@ -145,5 +145,7 @@ static int cli_appinstall(const char *source,const char *name,unsigned long vers
  int old=info(backup,&c);if(old&&old!=fnfErr)return old;
  if(!old&&!command_same_image(source,dest))return cli_appcheck(source);
  e=info(stage,&c);if(!e){if(c.hFileInfo.ioFlRLgLen)return dupFNErr;e=command_same_image(source,stage);if(e)return e;e=cli_native_delete(stage);if(e)return e;}else if(e!=fnfErr)return e;
- return command_replace_mode(name,source,1,1);
+ return command_replace_mode(name,source,1,managed);
 }
+
+static int cli_appinstall(const char *source,const char *name,unsigned long version){(void)version;return command_install_resume(source,name,1);}

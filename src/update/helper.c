@@ -48,7 +48,7 @@ int main(void){
   if(CautionAlert(152,0)!=1)return 0;
   char launch[256];e=recovery_restore(path,launch);
   if(e){char text[240];snprintf(text,sizeof text,"Recovery stopped (Mac OS %d). The recovery snapshot is retained. Quit any running Clarice and run Recover Clarice again.",e);explain(text);return 1;}
-  e=update_native_launch(launch);if(e)explain("Files restored; open Clarice at the startup-volume root.");return e?1:0;
+  e=update_native_launch(launch);if(e)explain("Files restored; open Clarice at its installed location.");return e?1:0;
  }
  strcpy(path,own);char *leaf=strrchr(path,':');if(!leaf||(size_t)(leaf-path)+1+strlen(UPDATE_PLAN_NAME)>255){explain("Invalid updater location.");return 1;}strcpy(leaf+1,UPDATE_PLAN_NAME);
  unsigned char encoded[UPDATE_PLAN_SIZE];short ref=-1;e=update_open(path,0,0,&ref);

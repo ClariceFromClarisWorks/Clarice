@@ -75,13 +75,14 @@ distribution for the first installation; repository updates subsequently maintai
 the standard tools and update Core last.
 
 **Install Clarice** opens a native welcome window before creating any installation
-files. Cancel leaves the installation unchanged. Install keeps the recommended
-locations (Core at the startup disk root; Clarice Data inside the System Folder),
+files. Cancel leaves the installation unchanged. Core and Data buttons choose folders before confirmation (recommended:
+Core at the startup disk root; Clarice Data inside the System Folder). Both must
+be on the same HFS volume. Existing installation locations are retained. Install
 then shows the current operation and completed installation steps. Cancel or
 Command-period during installation stops safely at the existing backend's polling
 points; completed utilities are retained. Run the same installer again to resume.
 No shell prompt, profile execution or terminal setup is needed for confirmation.
-Installer A is tested in System 6.0.8 Snow; System 7 testing is deferred.
+Installer B is tested in System 6 Snow; System 7 testing is deferred.
 
 ## Private repository updates
 
@@ -180,23 +181,37 @@ disabled-by-default service, not a permanently resident Core component.
 ## Offline installation — no commands or file copying required
 
 1. Open the **Clarice** distribution disk in Finder.
-2. Double-click **Install Clarice**, then click **Install**.
+2. Double-click **Install Clarice**. Keep the recommended folders or choose
+   **Core...** and **Data...**, then click **Install/Upgrade**.
 3. Wait for the file names and checking messages. Clarice opens automatically
    when installation finishes. Allow several minutes; do not reset the Mac.
 
-The Q1-002 candidate installs **Clarice** at the **startup-volume root**.
-**Clarice Data** stays in its existing System Folder location. Open the root-level
-Clarice application afterwards.
+The recommended destinations are **Clarice** at the **startup-volume root** and
+**Clarice Data** in the **System Folder**. Folder selection uses the native Save
+dialog; the application/data names remain fixed and nothing is created before
+Install. Core and Data must share one HFS volume. The System Folder file
+**Clarice Locations** records the selected native paths. Without it, legacy
+System Folder discovery applies. Do not move or rename installed locations or
+edit this checksummed record; relocation is not supported in 0.5.0.
 You can eject the distribution disk afterwards; keep it for repair.
 
 No network, command-line knowledge, archive extractor or preinstalled utility
 is needed. The installer uses the Utilities folder beside it, so it also works
 if the disk label changes. Keep the disk's files together.
 
-Existing utilities, including newer, customised or damaged files, are kept
-unchanged. Installation does not declare existing files valid. Preferences and
-user files are preserved. The installer does not run your startup profile;
-normal Clarice runs it when launched after installation.
+Upgrade verifies the kit and installed catalog. It replaces unchanged older managed
+tools, adopts exact matching legacy tools, and preserves verified newer compatible
+tools. Changed or unmanaged conflicting tools stop ordinary upgrade without
+overwriting them. Unknown files, preferences and user data stay in place.
+The installer does not run your startup profile; normal Clarice runs it after launch.
+
+For missing or changed standard tools, select **Repair missing or changed standard
+tools** using media matching the installed Core version, then upgrade separately.
+Repair preserves the verified previous snapshot and retains replaced originals
+as `.clx-NAME.old` (including both forks and Finder metadata). It does not silently
+remove an existing manual backup; an unrelated backup conflict requires inspection.
+For older media without this Repair control, use its existing `appinstall repair`
+procedure first. Repair and upgrade are deliberately separate operations.
 
 For an upgrade, quit installed Clarice first and run Install Clarice again.
 The managed previous snapshot preserves both forks, Finder metadata and creation
@@ -207,8 +222,10 @@ it is not overwritten or silently adopted. Equal/newer Core builds are not downg
 
 To roll back if Core cannot launch, quit Clarice and open **System Folder →
 Clarice Data → etc → clarice → Recovery Previous → Recover Clarice** in Finder.
+At custom destinations, start from the selected Clarice Data folder instead.
 Confirm Restore. This restores the managed files and catalog, then launches the
-root-level Core. It does not require a working Clarice application or networking.
+recorded Core destination. New V3 snapshots record that destination; V1/V2 snapshots
+retain their original startup-volume-root restoration behaviour. It does not require a working Clarice application or networking.
 Do not rename the recovery directory or remove its inventory. Damaged snapshots
 are rejected; keep offline installation media as a separate repair source.
 
@@ -219,8 +236,8 @@ applies to subsequent updates initiated by the new Core, or its offline installe
 ### Cancel and resume
 
 Click Cancel before starting, or press **Control-C** during installation. Completed
-utilities remain installed. Open **Install Clarice** again and click Install to
-resume; existing files are skipped. The current Core is kept until its replacement
+utilities remain installed. Open **Install Clarice** again with the same kit and selected operation to
+resume; verified completed files are kept. The current Core is kept until its replacement
 is fully copied, closed and checked. Ordinary cancellation needs no manual copying.
 
 After an abrupt reset or disk error, retained transaction files may need explicit

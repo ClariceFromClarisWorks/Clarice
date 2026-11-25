@@ -18,6 +18,7 @@ static void verification_failure(const char *phase,uint32_t want,uint32_t have){
 #define RECOVERY_FREE(p) cli_free(p)
 #define RECOVERY_POLL() (app_yield()?userCanceledErr:0)
 #include "../update/recovery-native.h"
+#include "../update/locations-native.h"
 #include "../update/open-guard.h"
 extern int open_path(const char *,short,short *);
 extern unsigned long NetParseIP(const char *);

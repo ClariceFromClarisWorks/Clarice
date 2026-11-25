@@ -252,7 +252,7 @@ static int recovery_prepare(RecoveryRotation *rotation,RecoverySnapshot *s,const
  /* Tool names are lowercase ASCII. These native leaves collide on HFS;
     reject before any snapshot writes, without changing legacy decoding. */
  for(uint32_t i=0;i<s->header.count;i++)if(!strcmp(s->files[i].name,"core")||!strcmp(s->files[i].name,"catalog")||!strcmp(s->files[i].name,"inventory"))return paramErr;
- s->header.format=2;int e=recovery_rotation_probe(rotation,1);if(e<0)return e;int exists=e;
+ if(s->header.format!=3)s->header.format=2;int e=recovery_rotation_probe(rotation,1);if(e<0)return e;int exists=e;
  if(exists){RecoverySnapshot pending;e=recovery_inventory(rotation->path[1],&pending,0);
   if(!e){if(strcmp(pending.header.root,s->header.root)||strcmp(pending.header.origin,s->header.origin)||pending.header.build!=s->header.build||pending.header.origin_id!=s->header.origin_id||pending.header.origin_modified!=s->header.origin_modified)e=paramErr;
    if(!e)e=recovery_verify(rotation->path[1],&pending);recovery_dispose(&pending);return e?e:recovery_rotate(rotation);}
@@ -261,6 +261,7 @@ static int recovery_prepare(RecoveryRotation *rotation,RecoverySnapshot *s,const
   x=update_open(inventory,0,0,&ref);if(x&&x!=fnfErr)return x;
   if(!x){unsigned char magic[8];int read=recovery_read(ref,magic,8);int closed=FSClose(ref);if(closed)return closed;
    if(read&&read!=eofErr)return read;if(!read&&!memcmp(magic,"CLRSNAP1",8))s->header.format=0;
+   if(!read&&!memcmp(magic,"CLRSNAP2",8))s->header.format=2;
   }
  }
  CInfoPBRec retired;e=update_info(rotation->path[0],&retired);if(!e)s->header.retired_id=retired.hFileInfo.ioDirID;else if(e!=fnfErr)return e;

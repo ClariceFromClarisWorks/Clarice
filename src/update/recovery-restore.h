@@ -29,7 +29,7 @@ static int recovery_resume_plan(const char *path,const UpdatePlan *plan){
  e=update_open(path,0,1,&ref);if(e)return e;e=recovery_write(ref,expected,sizeof expected);x=FSClose(ref);if(!e)e=x;return e?e:update_flush(path);
 }
 static int recovery_target(const RecoveryHeader *h,const char *name,char target[256]){
- if(!strcmp(name,"@core"))return recovery_install_path(h->root,target);
+ if(!strcmp(name,"@core"))return recovery_core_target(h,target);
  const char *middle=!strcmp(name,"@catalog")?"etc:clarice:installed.catalog":"bin:";
  if(strlen(h->root)+strlen(middle)+strlen(name)+1>256)return bdNamErr;
  strcpy(target,h->root);strcat(target,middle);if(strcmp(name,"@catalog"))strcat(target,name);return 0;
@@ -99,7 +99,7 @@ static int recovery_finish_restore(const RecoverySnapshot *s){
  strcpy(path,s->header.root);strcat(path,"etc:clarice:");strcat(path,UPDATE_PLAN_NAME);
  UpdatePlan plan;e=recovery_plan_read(path,&plan);
  if(!e){
-  e=recovery_install_path(s->header.root,target);if(e)return e;if(plan.kind||strcmp(target,plan.target)||plan.build<s->header.build)return paramErr;
+  e=recovery_core_target(&s->header,target);if(e)return e;if(plan.kind||strcmp(target,plan.target)||plan.build<s->header.build)return paramErr;
   const RecoveryFile *core=0;for(uint32_t i=0;i<s->header.count;i++)if(!strcmp(s->files[i].name,"@core"))core=&s->files[i];if(!core)return paramErr;
   CInfoPBRec c;e=update_info(plan.backup,&c);if(!e){if((uint32_t)c.hFileInfo.ioDirID!=plan.original_id)return paramErr;e=recovery_check_file(plan.backup,core,0);if(!e)e=recovery_delete(plan.backup);}else if(e==fnfErr)e=0;if(e)return e;
   /* Candidate remains available for diagnosis; it is not the active file.
@@ -118,6 +118,6 @@ static int recovery_restore(const char *dir,char launch[256]){
   e=recovery_restore_one(dir,&s.header,&s.files[i]);
  }
  if(!e)e=recovery_finish_restore(&s);
- if(!e)e=recovery_install_path(s.header.root,launch);recovery_dispose(&s);return e;
+ if(!e)e=recovery_core_target(&s.header,launch);recovery_dispose(&s);return e;
 }
 #endif

@@ -41,6 +41,7 @@ static void pstr(unsigned char *p,const char *s) {size_t n=strlen(s); if(n>255)n
 static void say(const char *s){emit(s,(long)asm_length(s));}
 static const char *env_get(const char *key){struct sh_env *e=env_find(sh_env,key);if(e)return e->value;if(!strcmp(key,"HOME"))return "/home";if(!strcmp(key,"PWD"))return unix_cwd;return "";}
 static int shell_relocate_cwd(const char *,const char *,int);
+#include "update/locations-native.h"
 #include "namespace.inc"
 /* GetCatInfo resolves a full pathname but ioVRefNum is an input, not a
    resolved-volume output. Bind it before callers reuse the directory ID. */
@@ -81,21 +82,40 @@ int history_search(const char *needle,int start,char *out){int i;for(i=start;i<=
 void history_shutdown(void){if(history_ref>=0){FSClose(history_ref);history_ref=-1;FlushVol(0,0);}}
 #ifdef CLARICE_OFFLINE_INSTALLER
 /* No history, profile execution or legacy-report migration for the installer. */
-int shell_install_init(void){
- self_update_resources=CurResFile();int e=namespace_install();
+int shell_install_locations(char *core,char *data,int *fixed){
+ InstallLocations p;int e=locations_read(&p);*fixed=!e;
+ if(e==fnfErr)e=locations_default(&p);if(e)return e;
+ CInfoPBRec c;if(!*fixed){e=info(p.data,&c);if(!e)*fixed=1;else if(e!=fnfErr)return e;}
+ strcpy(core,p.core);strcpy(data,p.data);return 0;
+}
+int shell_install_folder(const char *path,short *volume,long *id){
+ char parent[256];if(strlen(path)>255)return bdNamErr;strcpy(parent,path);
+ size_t n=strlen(parent);if(n&&parent[n-1]==':')parent[--n]=0;
+ char *leaf=strrchr(parent,':');if(!leaf)return bdNamErr;leaf[1]=0;
+ int e=update_volume(parent,volume);if(e)return e;CInfoPBRec c;e=update_info(parent,&c);if(e)return e;
+ if(!(c.hFileInfo.ioFlAttrib&16))return dirNFErr;*id=c.dirInfo.ioDrDirID;return 0;
+}
+int shell_install_choice(short wdref,int data,char *out){
+ WDPBRec wd;memset(&wd,0,sizeof wd);wd.ioVRefNum=wdref;int e=PBGetWDInfoSync(&wd);if(e)return e;
+ e=locations_directory(wd.ioWDVRefNum,wd.ioWDDirID,out);if(e)return e;
+ const char *leaf=data?"Clarice Data:":"Clarice";if(strlen(out)+strlen(leaf)>255)return bdNamErr;strcat(out,leaf);return 0;
+}
+int shell_install_init(const char *core,const char *data){
+ InstallLocations p;strcpy(p.core,core);strcpy(p.data,data);
+ self_update_resources=CurResFile();int e=locations_write(&p);if(!e)e=namespace_install();
  if(!e){strcpy(shell_cwd,root_path);strcpy(home_path,root_path);}return e;
 }
 #endif
-void shell_init(void){
+int shell_init(void){
  self_update_resources=CurResFile();unsigned char vol[256];short vr;WDPBRec pb;unsigned long head[2];long n=8;char path[PATH_CAP];unsigned char pn[256];
  GetVol(vol,&vr);memcpy(shell_cwd,vol+1,vol[0]);shell_cwd[vol[0]]=':';shell_cwd[vol[0]+1]=0;
  /* GetVol may return a working-directory reference; resolve its actual volume name. */
  memset(&pb,0,sizeof pb);pb.ioVRefNum=vr;pb.ioWDIndex=0;if(!PBGetWDInfoSync(&pb))vr=pb.ioWDVRefNum;
  {HParamBlockRec vp;memset(&vp,0,sizeof vp);vp.volumeParam.ioNamePtr=vol;vp.volumeParam.ioVRefNum=vr;if(!PBHGetVInfoSync(&vp)){memcpy(shell_cwd,vol+1,vol[0]);shell_cwd[vol[0]]=':';shell_cwd[vol[0]+1]=0;}}
- {int e=namespace_install();if(e)error("System Folder installation failed",e);}strcpy(shell_cwd,root_path);strcpy(home_path,root_path);migrate_reports();env_set("PATH=/bin:/usr/bin");shell_state_path(path,"clarice.history","Clarice History");pstr(pn,path);
+ {int e=namespace_install();if(e)return e;}strcpy(shell_cwd,root_path);strcpy(home_path,root_path);migrate_reports();env_set("PATH=/bin:/usr/bin");shell_state_path(path,"clarice.history","Clarice History");pstr(pn,path);
  {int e=HOpen(0,0,pn,fsRdWrPerm,&history_ref);if(e==fnfErr){e=HCreate(0,0,pn,'S6UX','DATA');if(!e)e=HOpen(0,0,pn,fsRdWrPerm,&history_ref);}if(e)history_ref=-1;}
  if(history_ref>=0){if(FSRead(history_ref,&n,head)||n!=8||head[0]!=0x53364831){SetEOF(history_ref,0);history_count=0;}else history_count=head[1];}
- else term_puts("History disk unavailable; session remains usable.\n");
+ else term_puts("History disk unavailable; session remains usable.\n");return 0;
 }
 /* Parser storage has a hard cap; expansion never executes commands. */
 static int parse(const char *s,char *buf,char **argv,char **target,int *append){int argc=0,used=0,q=0,active=0,redirect_pending=0;*target=0;*append=0;

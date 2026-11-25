@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess,tempfile
 root=Path(__file__).resolve().parents[2]
 s=(root/'src/commands/repository-client.inc').read_text()
-body=s[s.index('typedef struct RepoItem'):s.index('static int repo_marker')]
+body=s[s.index('typedef struct RepoItem'):s.index('static int repo_marker')].replace('../update/catalog-reader.h','src/update/catalog-reader.h')
 prefix=r'''
 #include <assert.h>
 #include <stdio.h>
