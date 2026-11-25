@@ -1,0 +1,16 @@
+Upstream GitHub Actions job: https://github.com/autc04/Retro68/actions/runs/41197912675/job/124527722273
+Retrieved using the authenticated GitHub workflow-job-logs API on 2026-11-26.
+Selected verbatim lines; unrelated test output and authentication setup omitted.
+This is build-log provenance, not a signed reproducible-build attestation.
+
+2026-10-31T11:42:16.8843345Z 2aa5c87e88771c6057f52bf830af9d440a5e4e36
+2026-10-31T11:42:28.9957705Z Submodule path 'multiversal': checked out '580f3309649ad4c788c048be3dff2416d7ba49f3'
+2026-10-31T11:42:29.2996015Z [command]/usr/bin/git log -1 --format=%H
+2026-10-31T11:42:29.3024369Z 2aa5c87e88771c6057f52bf830af9d440a5e4e36
+2026-10-31T11:42:29.3280403Z ##[group]Run docker build --target build -t ghcr.io/autc04/retro68-build:latest .
+2026-10-31T11:43:15.4536413Z #9 [build 1/2] ADD . /Retro68
+2026-10-31T11:43:40.4297049Z #10 [build 2/2] RUN mkdir /Retro68-build &&     mkdir /Retro68-build/bin &&     bash -c "cd /Retro68-build && bash /Retro68/build-toolchain.bash"
+2026-10-31T12:22:56.2929905Z #9 [build 1/2] ADD . /Retro68
+2026-10-31T12:22:56.2931365Z #10 [build 2/2] RUN mkdir /Retro68-build &&     mkdir /Retro68-build/bin &&     bash -c "cd /Retro68-build && bash /Retro68/build-toolchain.bash"
+2026-10-31T12:23:02.7426369Z #12 [release 2/2] COPY --from=build /Retro68-build/toolchain /Retro68-build/toolchain
+2026-10-31T12:25:39.6014918Z latest: digest: sha256:dd923969100f408943f73c9618b3c7628686aae819583eecb0ddd1837da6943c size: 1370

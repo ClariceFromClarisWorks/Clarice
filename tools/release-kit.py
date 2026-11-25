@@ -20,6 +20,14 @@ import release
 
 BUSYBOX = 'work/busybox/busybox-1.37.0.tar.bz2'
 BUSYBOX_SHA = '3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4'
+# Full pinned upstream trees retain runtime sources, build scripts and notices.
+# Source provenance is tied to this image by licenses/runtime-build-evidence.txt.
+RUNTIME_SOURCES = {
+    'Retro68-2aa5c87e88771c6057f52bf830af9d440a5e4e36.tar.gz':
+        '2b68bb7ab2440083ab78ede1c17bed8fe6bf43c4f38434ed92438d98eb0f2d95',
+    'multiversal-580f3309649ad4c788c048be3dff2416d7ba49f3.tar.gz':
+        '2534535e1eaca0a0bb360998528f0c8ba4c2e57189cf7bc56cd9e88c721aa507',
+}
 NOTICES = {
     'sbase-LICENSE.txt': 'src/vendor/sbase/LICENSE',
     'musl-regex-COPYRIGHT.txt': 'src/vendor/musl-regex/COPYRIGHT',
@@ -73,6 +81,7 @@ SOURCE_DOCS = (
     'README.md', 'INSTALL.md', 'THIRD_PARTY.md', 'RELEASE-START.md',
     'RELEASE-NOTES.md', 'RELEASE-PACKAGING.md', 'SOURCE-BUILD.md',
     'TOOLCHAIN-PROVENANCE.md', 'LICENSING-DECISIONS.md',
+    'tools/release-kit.py',
 )
 BUSYBOX_CHANGES = {
     'sort.c': 'Reject unavailable options and poll cooperatively in key comparison.',
@@ -112,6 +121,12 @@ def source_archive(path, product, seal, updater_sha):
         if notice.is_file():
             files[notice.relative_to(ROOT).as_posix()] = notice.read_bytes()
     files[BUSYBOX] = busybox
+    for name, expected in RUNTIME_SOURCES.items():
+        leaf = 'work/runtime-source/' + name
+        data = (ROOT/leaf).read_bytes()
+        if sha(data) != expected:
+            raise ValueError(f'runtime source archive hash mismatch: {name}')
+        files[leaf] = data
     # Keep the accepted application/build checkout untouched. The companion
     # regenerates prepared files with prominent, comments-only port notices.
     prepare = 'scripts/prepare-busybox-tools.py'

@@ -25,7 +25,7 @@ implying that every member is included in a binary.
 | `libm.a` | `9f6de65f7d3dd448c2d317b0449ddbb4fc9360f59f305fde5da2775c9c0256b6` |
 | `libInterface.a` (same bytes under target and Multiversal paths) | `0e2a1543400e44b6a91d6fda188c42a3980470594be9a5c06f042bd3d17aace8` |
 
-## Corroborated source candidate
+## Source revision bound to the image
 
 The upstream Linux workflow ran 11:41:47–12:25:41 UTC on the image's
 creation date and pushed the mutable `latest` tag. Its checkout was
@@ -37,20 +37,33 @@ gitlink is `580f3309649ad4c788c048be3dff2416d7ba49f3`. Its
 `custom/NavServicesAvailable.c`, `custom/cfmwrapper.c`, and `custom/glue.c`
 also match the image byte-for-byte. [Retro68 revision](https://github.com/autc04/Retro68/commit/2aa5c87e88771c6057f52bf830af9d440a5e4e36) · [Upstream Linux job](https://github.com/autc04/Retro68/actions/runs/41197912675/job/124527722273) · [Multiversal revision](https://github.com/autc04/multiversal/tree/580f3309649ad4c788c048be3dff2416d7ba49f3).
 
-For locating the candidate sources, the Retro68 `libretro` Git tree is
+For locating the sources, the Retro68 `libretro` Git tree is
 `81a6521697ebf3e6819b1a039cc480ae7cf66f4b`. The combined `gcc` tree is
 `8b96f59a7264f6582b9cd7c9fa43cc053189250d`, including the
 `gcc/libgcc` tree `578e81fd316ed19537096264e8309bd30f16c985`
 and the `gcc/newlib` tree `a40b3a0b0afc0e7c103e98e4ac7e7b84a325fac4`.
 
-The image metadata and accessible workflow data do not bind those trees
-to the shipped digest. The job log endpoint refused unauthenticated
-access (403); the digest attestation endpoint returned 404. Matching
-scripts, C files, timestamps and version strings corroborate a candidate
-but are insufficient to identify the exact source checkout for all linked
-runtime code. No candidate runtime checkout is described as corresponding
-source in the companion. Obtain digest-bound upstream build provenance or
-independently verify the linked runtime source before release.
+On 2026-11-26 the authenticated GitHub workflow-job-logs API returned the
+previously inaccessible log. It records the exact checkout and Multiversal
+revision above, building the checkout with `build-toolchain.bash`, copying
+the resulting toolchain into the release image, and pushing **the exact
+accepted image digest**. See [selected original log lines](licenses/runtime-build-evidence.txt).
+This closes the source-revision-to-image lineage gap. It is upstream build-log
+evidence, not a signed attestation or a claim of independently reproduced binaries.
+
+The companion includes both complete upstream source archives under
+`work/runtime-source/`, including their original notices and build machinery:
+
+| Archive | SHA-256 |
+| --- | --- |
+| `Retro68-2aa5c87e88771c6057f52bf830af9d440a5e4e36.tar.gz` | `2b68bb7ab2440083ab78ede1c17bed8fe6bf43c4f38434ed92438d98eb0f2d95` |
+| `multiversal-580f3309649ad4c788c048be3dff2416d7ba49f3.tar.gz` | `2534535e1eaca0a0bb360998528f0c8ba4c2e57189cf7bc56cd9e88c721aa507` |
+
+Downloaded from `https://codeload.github.com/autc04/REPOSITORY/tar.gz/REVISION`
+using the names/revisions above. Independently reconstructed Git tree hashes
+for `libretro`, `gcc/libgcc` and `gcc/newlib` match the recorded trees.
+The compiler source is included for completeness; this does not imply the
+compiler executable is shipped or that its licence automatically covers Clarice.
 
 ## Terms to carry forward
 
@@ -62,9 +75,9 @@ independently verify the linked runtime source before release.
   where stated by the relevant file notice. The exception has eligibility
   conditions and applies to marked files. It neither licences Clarice
   nor changes BusyBox's GPLv2. [GCC Runtime Library Exception 3.1](https://www.gnu.org/licenses/gcc-exception-3.1.html).
-- newlib and libm have per-component terms. Preserve the bundled
-  `COPYING.NEWLIB` inventory and confirm the actual linked source/member
-  notices against the exact source when verified.
+- newlib and libm have per-component terms. Their exact source and file
+  notices are included in the upstream archive, alongside `COPYING.NEWLIB`.
+  The source-package inclusion does not replace those licence conditions.
 - Multiversal's upstream copying terms are MIT. Preserve the copyright
   and notice for its headers/generated glue. The installed toolchain
   binary and Apple interfaces or driver images are outside the package.

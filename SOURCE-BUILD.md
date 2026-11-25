@@ -38,9 +38,18 @@ ZIP's `Package.json` identifies the matching companion by SHA-256. The
 ZIP still ships accepted binary bytes from the original seal, without
 rebuilding the application or applets for this notice correction.
 
-[TOOLCHAIN-PROVENANCE.md](TOOLCHAIN-PROVENANCE.md) distinguishes the
-exact compiler/runtime objects from corroborated source candidates.
-The current source companion does not close those source-lineage or
-rights questions. [LICENSING-DECISIONS.md](LICENSING-DECISIONS.md)
-records the remaining approval boundaries. Optional binaries and their
-external upstream archives are outside the standard installer scope.
+[TOOLCHAIN-PROVENANCE.md](TOOLCHAIN-PROVENANCE.md) binds the exact toolchain
+image to its upstream source revisions through the original build log.
+The complete Retro68 and Multiversal archives are included under
+`work/runtime-source/`, with hashes checked during staging. To inspect or
+rebuild the toolchain, extract the Retro68 archive and put the contents of
+the Multiversal archive in its `multiversal/` subdirectory. Follow upstream
+`README.md` and `build-toolchain.bash`; the upstream Dockerfile also records
+the build used for the accepted image. No toolchain or product rebuild was
+performed for this packaging-only refresh.
+
+Including the full toolchain source adds approximately 229 MiB to the host
+source download, not to the Macintosh installer or installed application.
+[LICENSING-DECISIONS.md](LICENSING-DECISIONS.md) records the unresolved
+original-code grant and combined-work licensing decision. Optional binaries
+and their external upstream archives are outside the standard installer scope.

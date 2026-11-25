@@ -19,7 +19,7 @@ separate terms.
 | libtelnet | Sean Middleditch and contributors, public-domain dedication and authors in `src/commands/vendor/libtelnet`. Used with the native transport and terminal adapter. |
 | picohttpparser | Tokuhiro Matsuno, Kazuho Oku and contributors, MIT option, revision `dd573d8fa9264c646a400e96ce9f07dea6f156e4`. HTTP parsing in wget and the updater. |
 | newlib getopt | Gregory Pietsch, public-domain notice preserved in the original source and the kit. Used by BusyBox ports. |
-| Macintosh toolchain | Retro68 by Wolfgang Thaller and contributors, GPL-3.0-or-later with GCC Runtime Library Exception 3.1; Multiversal MIT; GCC runtime exception; individual newlib notices. The pinned image digest is in `scripts/build.sh`. The newlib file is the upstream notice inventory. Exact linked-runtime source revisions are unverified. TOOLCHAIN-PROVENANCE.md records archive hashes and corroborated candidates. |
+| Macintosh toolchain | Retro68 by Wolfgang Thaller and contributors, GPL-3.0-or-later with GCC Runtime Library Exception 3.1 where marked; Multiversal MIT; GCC runtime exception; individual newlib notices. The pinned image digest is in `scripts/build.sh`. TOOLCHAIN-PROVENANCE.md records the upstream build log binding that digest to exact Retro68/Multiversal source revisions. Both complete source archives and original notices accompany the product source. |
 
 Notice filenames in the kit are under `Licenses/`. Source headers and
 upstream documentation retain per-file notices. The project uses the
@@ -76,7 +76,7 @@ terms for required linked adapters. A pinned archive, fetch URL, or
 toolchain image digest is not a substitute for resolving any missing
 corresponding source. Optional GPL editors need their own matching
 complete source and build materials when distributed. Confirm the
-rights grant and remaining runtime/source provenance before publication.
+original-code rights grant and combined-work licensing terms before publication.
 
 BusyBox licensing: https://busybox.net/license.html
 GPLv2: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html

@@ -1,0 +1,40 @@
+{
+  "build": 2026111978,
+  "product_commit": "f571f7ccd9097763ecad649005b79e3df10081ce",
+  "prior_packaging_commit": "31fb4d94d96c7ffa085e8afbc7ed173b41e1112f",
+  "staged_directory": "work/release-0.5.0-1978-runtime-source",
+  "published": false,
+  "product_rebuilt": false,
+  "source_files_verified": 1196,
+  "unchanged_binary_and_release_members": 53,
+  "notice_and_provenance_files": 25,
+  "checks": [
+    "10 existing packaging tests passed",
+    "Missing runtime archive rejected before source creation",
+    "Corrupt runtime archive rejected before source creation",
+    "All package and source manifest hashes verified",
+    "Binary kit source SHA256 link verified",
+    "libretro/libgcc/newlib Git tree hashes reconstructed and matched",
+    "Product src/scripts/assets unchanged against f571f7c"
+  ],
+  "upstream_job": "https://github.com/autc04/Retro68/actions/runs/41197912675/job/124527722273",
+  "provenance_basis": "Upstream job log binds checkout and Multiversal revision to accepted image digest; not an independent reproducible-build attestation",
+  "artifacts": {
+    "Clarice-0.5.0-2026111978-Installer.zip": {
+      "bytes": 1085500,
+      "sha256": "e2e049692f996d4e5a7e8c6e58f656602ce89d048e6d0e5ceb68c8f28216d677"
+    },
+    "Clarice-0.5.0-2026111978-Source.tar.gz": {
+      "bytes": 240067207,
+      "sha256": "15ee85d3bcbbace2214387b780d47c21b091a4808f717b0420fdfe553ea3d276"
+    },
+    "SHA256SUMS.txt": {
+      "bytes": 210,
+      "sha256": "dbd9fe88e3d18da3a9e397d8d3372177fa5f3a98fbc90195665a6b6a29f702c6"
+    }
+  },
+  "remaining": [
+    "Original-code rights and licence decision",
+    "Combined-work licensing terms; no legal-clearance claim"
+  ]
+}

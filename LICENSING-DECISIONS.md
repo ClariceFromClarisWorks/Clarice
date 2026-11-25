@@ -48,7 +48,9 @@ and [GPLv2 sections 2–3](https://www.gnu.org/licenses/old-licenses/gpl-2.0.htm
 ## Unresolved release gates
 
 - Approve licensing for original Clarice and confirm rights for contributions.
-- Resolve exact source provenance and licence scope for linked runtime objects.
+- Runtime source lineage is now recorded in TOOLCHAIN-PROVENANCE.md and the
+  matching upstream sources are supplied. Confirm the selected original-code
+  grant and combined-work terms against the retained runtime permissions.
 - Determine corresponding source scope and access for the GPL applets and
   linked Clarice interfaces and adapters. Do not claim that the mechanically
   staged source set closes those points.
