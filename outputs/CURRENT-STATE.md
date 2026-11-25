@@ -2,22 +2,22 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111968**, product **0ab807e**, local main: Batch3C HFS performance accepted in
-Snow Plus/68000/4 MiB/System6.0.8. Recursive cp/rm retain native directory identity;
-find/du avoid frames for enumerated leaves. No new cache, startup work or idle RAM.
-[Matched evidence](filesystem-perf/REPORT.md): three normal-build pairs on10/100/1,000
-files; large execution medians improve find38.9%, du41.5%, cp3.7%, rm10.7%.
-Catalog enumeration calls halve for cp/rm; find/du large-frame allocations1,011→11.
-Host allocation/catalog/copy fault tests and55 Snow acceptance records pass;
-local/remote cancellation130, prompt recovery, both forks/metadata, symlinks and
-repeated heap stability preserved. Core size unchanged; shared files+292bytes,
-inspect+356; no BSS increase. Batch3A/B correctness remains covered.
+Latest normal build **2026111969**, local main: Batch3D native HFS removal safety.
+Removal distinguishes native colon separators from Unix slashes; a native file
+named `keep/` no longer becomes the sibling directory `keep`. Earlier final-link
+protections remain. [Focused evidence](filesystem-native-remove/REPORT.md):1968
+negative control reproduces data loss; sanitizer/fault tests and42 normal68000
+Snow Plus/4MiB/System6.0.8 checks pass, including exact-entry removal, untouched
+sibling forks/metadata, cancellation130, retry and stable heap/zero command survivors.
+Matched100-file rm execution median2259→2259 guest ticks; Batch3C traversal preserved.
+Shared files image+124bytes (code+36); Core/inspect sizes and static memory unchanged.
+No new allocations, frame fields or startup work. Physical acceptance pending.
 
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. All51 manifest entries/36 payloads, source, seal and offline packages verified
-on HTTP/AFP (`filesystem-perf/verification.json`). Previous1967 distribution/recovery
-and unrelated work preserved. Physical acceptance pending. No GitHub push or
-hardware access. Stop after3C.
+`Macintosh Exchange/Clarice/index.txt`. Coherent1969 build and offline package
+readback pass; publication verification pending. Previous1968 recovery/distribution
+and unrelated work preserved. No GitHub push or physical hardware access.
+Stop after3D.
 
 ## Review remediation Batch A
 

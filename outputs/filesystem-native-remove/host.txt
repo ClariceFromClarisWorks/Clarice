@@ -1,0 +1,11 @@
+REPRODUCED: native keep/ deletes sibling keep and sentinel on1968
+PASS native literal slashes, exact sibling protection, Unix/native directory/link suffixes, missing operands, native faults, allocation failure, cancellation, retry and cleanup
+REPRODUCED destination on 1965
+PASS cp/mv destination 511/512/1024, encoded HFS bytes, no mutation on rejection and subsequent success
+REPRODUCED remove on 1965
+PASS actual resolver + rm: final symlink slash rejection, target sentinel, ordinary slash directories, dot, low memory, I/O failure, cancellation/recovery
+REPRODUCED portable unlink on1966
+PASS portable unlink: file/directory/dangling symlinks, slash guards, regular/temp cleanup, native errors and retry
+PASS deep cp/rm, 25 allocation boundaries, cancellation, copy failure and cleanup
+PASS explicit volume/parent restored after overwritten results, leaf bounds, catalog failure and retry
+PASS rm dot/dotdot operands rejected before traversal, slash suffixes, sentinels retained, normal removal unaffected

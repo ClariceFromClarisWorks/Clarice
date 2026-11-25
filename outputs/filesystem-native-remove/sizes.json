@@ -1,0 +1,21 @@
+{
+  "build": 2026111969,
+  "files.clx": {
+    "before": 21084,
+    "after": 21208
+  },
+  "inspect.clx": {
+    "before": 14284,
+    "after": 14284
+  },
+  "Clarice.bin": {
+    "before": 438656,
+    "after": 438656
+  },
+  "files_object": {
+    "text_before": 13238,
+    "text_after": 13274,
+    "bss_before": 168,
+    "bss_after": 168
+  }
+}

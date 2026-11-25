@@ -1,0 +1,294 @@
+[
+  {
+    "test": "setup",
+    "command": "mkdir -p /tmp/batch3d/keep; cp -p /tmp/batch3b/source /tmp/batch3d/keep/sentinel; cd /tmp/batch3d; cp -p keep/sentinel reference",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p /tmp/batch3d/keep; cp -p /tmp/batch3b/source /tmp/batch3d/keep/sentinel; cd /tmp/batch3d; cp -p keep/sentinel reference; printf '\\nREMOTE_END_1:%d\\n' $?\r\n\rcp 0: source [                                           ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: source [==============                       ]  38% 28.28 KiB / 72.96 KiB\u001b[K\rcp 1: source [==================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: source [===================================================] 1 items done\u001b[K\r\n\rcp 0: sentinel [                                         ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: sentinel [===============                    ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: sentinel [================================== ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: sentinel [=================================================] 1 items done\u001b[K\r\n\r\nREMOTE_END_1:0\r\nbatch3d > "
+  },
+  {
+    "test": "literal native trailing slash seed",
+    "command": "cp -p reference keep%2F; fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep/'",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference keep%2F; fsprobe same reference 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep/'; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [==============                    ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_2:0\r\nbatch3d > "
+  },
+  {
+    "test": "remove exact native file",
+    "command": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep/' && test ! -e keep%2F && test -d keep && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep/' && test ! -e keep%2F && test -d keep && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_3:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_3:0\r\nbatch3d > "
+  },
+  {
+    "test": "native slash mid/name",
+    "command": "cp -p reference 'mid%2Fname' && rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:mid/name' && test ! -e 'mid%2Fname' && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'mid%2Fname' && rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:mid/name' && test ! -e 'mid%2Fname' && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_4:%d\\n' $?\r\n\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [==============                    ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_4:0\r\nbatch3d > "
+  },
+  {
+    "test": "native slash /lead",
+    "command": "cp -p reference '%2Flead' && rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:/lead' && test ! -e '%2Flead' && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference '%2Flead' && rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:/lead' && test ! -e '%2Flead' && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_5:%d\\n' $?\r\n\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [==============                    ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_5:0\r\nbatch3d > "
+  },
+  {
+    "test": "native slash keep//",
+    "command": "cp -p reference 'keep%2F%2F' && rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep//' && test ! -e 'keep%2F%2F' && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'keep%2F%2F' && rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep//' && test ! -e 'keep%2F%2F' && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_6:%d\\n' $?\r\n\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [==============                    ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_6:0\r\nbatch3d > "
+  },
+  {
+    "test": "native slash part/.",
+    "command": "cp -p reference 'part%2F.' && rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:part/.' && test ! -e 'part%2F.' && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -p reference 'part%2F.' && rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:part/.' && test ! -e 'part%2F.' && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\rcp 0: reference [                                        ]   0% 0 B / 72.96 KiB\u001b[K\rcp 0: reference [==============                    ]  44% 32.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_7:0\r\nbatch3d > "
+  },
+  {
+    "test": "native slash directory",
+    "command": "mkdir folder%2F; cp -p reference folder%2F/child; rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:folder/' && test ! -e folder%2F && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir folder%2F; cp -p reference folder%2F/child; rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:folder/' && test ! -e folder%2F && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_8:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: child [>                                              ] 1 items completed\u001b[K\rrm 2: folder%2F [================================================] 2 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_8:0\r\nbatch3d > "
+  },
+  {
+    "test": "symlink seed",
+    "command": "ln -s keep dirlink; ln -s absent dangling",
+    "status": 0,
+    "expected": 0,
+    "text": "ln -s keep dirlink; ln -s absent dangling; printf '\\nREMOTE_END_9:%d\\n' $?\r\n\r\nREMOTE_END_9:0\r\nbatch3d > "
+  },
+  {
+    "test": "reject dirlink/",
+    "command": "rm -R 'dirlink/'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'dirlink/'; printf '\\nREMOTE_END_10:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_10:1\r\nbatch3d > "
+  },
+  {
+    "test": "unchanged sibling and links",
+    "command": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_11:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_11:0\r\nbatch3d > "
+  },
+  {
+    "test": "reject dirlink///",
+    "command": "rm -R 'dirlink///'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'dirlink///'; printf '\\nREMOTE_END_12:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_12:1\r\nbatch3d > "
+  },
+  {
+    "test": "unchanged sibling and links",
+    "command": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_13:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_13:0\r\nbatch3d > "
+  },
+  {
+    "test": "reject dirlink/.///",
+    "command": "rm -R 'dirlink/.///'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'dirlink/.///'; printf '\\nREMOTE_END_14:%d\\n' $?\r\nrm: Mac OS error -50: Invalid parameter\r\n\r\nREMOTE_END_14:1\r\nbatch3d > "
+  },
+  {
+    "test": "unchanged sibling and links",
+    "command": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_15:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_15:0\r\nbatch3d > "
+  },
+  {
+    "test": "reject dangling/",
+    "command": "rm -R 'dangling/'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'dangling/'; printf '\\nREMOTE_END_16:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_16:1\r\nbatch3d > "
+  },
+  {
+    "test": "unchanged sibling and links",
+    "command": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_17:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_17:0\r\nbatch3d > "
+  },
+  {
+    "test": "reject native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:dirlink:",
+    "command": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:dirlink:'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:dirlink:'; printf '\\nREMOTE_END_18:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_18:1\r\nbatch3d > "
+  },
+  {
+    "test": "unchanged sibling and links",
+    "command": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_19:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_19:0\r\nbatch3d > "
+  },
+  {
+    "test": "reject native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:dangling:",
+    "command": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:dangling:'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:dangling:'; printf '\\nREMOTE_END_20:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_20:1\r\nbatch3d > "
+  },
+  {
+    "test": "unchanged sibling and links",
+    "command": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$(readlink dirlink)\" = keep && test \"$(readlink dangling)\" = absent && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_21:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_21:0\r\nbatch3d > "
+  },
+  {
+    "test": "force guard",
+    "command": "rm -Rf dirlink/",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -Rf dirlink/; printf '\\nREMOTE_END_22:%d\\n' $?\r\nrm: Mac OS error -120: Directory not found\r\n\r\nREMOTE_END_22:1\r\nbatch3d > "
+  },
+  {
+    "test": "remove links only",
+    "command": "rm -R dirlink dangling && test \"$(find . -type l)\" = \"\" && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "rm -R dirlink dangling && test \"$(find . -type l)\" = \"\" && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_23:%d\\n' $?\r\n\rrm 2: dangling [>                                           ] 2 items completed\u001b[K\rrm 2: dangling [=================================================] 2 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_23:0\r\nbatch3d > "
+  },
+  {
+    "test": "ordinary directory ordinary///",
+    "command": "mkdir -p ordinary/sub; cp -p reference ordinary/sub/file; rm -R 'ordinary///' && test ! -e ordinary && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p ordinary/sub; cp -p reference ordinary/sub/file; rm -R 'ordinary///' && test ! -e ordinary && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_24:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [=============================     ]  88% 64.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: file [>                                               ] 1 items completed\u001b[K\rrm 3: ordinary [=================================================] 3 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_24:0\r\nbatch3d > "
+  },
+  {
+    "test": "ordinary directory native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:ordinary:",
+    "command": "mkdir -p ordinary/sub; cp -p reference ordinary/sub/file; rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:ordinary:' && test ! -e ordinary && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "mkdir -p ordinary/sub; cp -p reference ordinary/sub/file; rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:ordinary:' && test ! -e ordinary && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_25:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=====                             ]  16% 12.28 KiB / 72.96 KiB\u001b[K\rcp 0: reference [===============================   ]  93% 68.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: file [>                                               ] 1 items completed\u001b[K\rrm 3: ordinary [=================================================] 3 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_25:0\r\nbatch3d > "
+  },
+  {
+    "test": "missing literal missing",
+    "command": "rm -R 'missing'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'missing'; printf '\\nREMOTE_END_26:%d\\n' $?\r\nrm: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_26:1\r\nbatch3d > "
+  },
+  {
+    "test": "error recovery and untouched sentinel",
+    "command": "fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_27:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_27:0\r\nbatch3d > "
+  },
+  {
+    "test": "missing literal native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:missing/",
+    "command": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:missing/'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:missing/'; printf '\\nREMOTE_END_28:%d\\n' $?\r\nrm: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_28:1\r\nbatch3d > "
+  },
+  {
+    "test": "error recovery and untouched sentinel",
+    "command": "fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_29:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_29:0\r\nbatch3d > "
+  },
+  {
+    "test": "missing literal ",
+    "command": "rm -R ''",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R ''; printf '\\nREMOTE_END_30:%d\\n' $?\r\nrm: Mac OS error -37: Invalid file or volume name\r\n\r\nREMOTE_END_30:1\r\nbatch3d > "
+  },
+  {
+    "test": "error recovery and untouched sentinel",
+    "command": "fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_31:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_31:0\r\nbatch3d > "
+  },
+  {
+    "test": "missing literal native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep/.///",
+    "command": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep/.///'",
+    "status": 1,
+    "expected": 1,
+    "text": "rm -R 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:keep/.///'; printf '\\nREMOTE_END_32:%d\\n' $?\r\nrm: Mac OS error -43: File or path not found\r\n\r\nREMOTE_END_32:1\r\nbatch3d > "
+  },
+  {
+    "test": "error recovery and untouched sentinel",
+    "command": "fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_33:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_33:0\r\nbatch3d > "
+  },
+  {
+    "test": "no operand",
+    "command": "rm -R",
+    "status": 2,
+    "expected": 2,
+    "text": "rm -R; printf '\\nREMOTE_END_34:%d\\n' $?\r\nUsage:\r\n  rm [-frR] [--no-progress] [--] file ...\r\nDelete directly, bypassing Trash. Links themselves are removed. Cancellation\r\ncannot undo deletions.\r\nOptions:\r\n  -r, -R        Remove folders recursively using available memory.\r\n  -f            Ignore absent files. Finder locks still apply.\r\n  --no-progress\r\n    Suppress progress.\r\nProgress is shown after a short delay in interactive use. Scripts and stdout\r\nredirection suppress it.\r\nCopy bars track both forks of the current file. Counts include completed files\r\nand folders. Unknown totals use an activity bar without a prescan.\r\nStatus: 0 success, 1 file error, 2 usage, 130 interrupted.\r\n\r\nREMOTE_END_34:2\r\nbatch3d > "
+  },
+  {
+    "test": "cancel seed",
+    "command": "cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-3d",
+    "status": 0,
+    "expected": 0,
+    "text": "cp -R --no-progress /mnt/Perf/n100 /mnt/Perf/cancel-3d; printf '\\nREMOTE_END_35:%d\\n' $?\r\n\r\nREMOTE_END_35:0\r\nbatch3d > "
+  },
+  {
+    "test": "cancel response",
+    "host_ms": 29.394166999999527,
+    "text": "rm -R --no-progress /mnt/Perf/cancel-3d\r\n^C\r\nbatch3d > "
+  },
+  {
+    "test": "cancel status and recovery",
+    "command": "test \"$?\" -eq 130 && status runtime && fsprobe same reference keep/sentinel",
+    "status": 0,
+    "expected": 0,
+    "text": "test \"$?\" -eq 130 && status runtime && fsprobe same reference keep/sentinel; printf '\\nREMOTE_END_36:%d\\n' $?\r\nRuntime: heap=323612 largest=321712 image=13504 ticks=132 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=1 imports=2 relocations=3 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=12 payload=0 metadata=1 structure=2 (structure included in relocations)\r\nPASS same forks/metadata, backup=3700000002 script=9\r\n\r\nREMOTE_END_36:0\r\nbatch3d > "
+  },
+  {
+    "test": "partial tree cleanup",
+    "command": "rm -Rf --no-progress /mnt/Perf/cancel-3d; test ! -e /mnt/Perf/cancel-3d",
+    "status": 0,
+    "expected": 0,
+    "text": "rm -Rf --no-progress /mnt/Perf/cancel-3d; test ! -e /mnt/Perf/cancel-3d; printf '\\nREMOTE_END_37:%d\\n' $?\r\n\r\nREMOTE_END_37:0\r\nbatch3d > "
+  },
+  {
+    "test": "repeated cleanup 0",
+    "command": "i=0; while test $i -lt 10; do cp -p reference repeat%2F || break; rm 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:repeat/' || break; i=$((i+1)); done; test $i -eq 10 && fsprobe same reference keep/sentinel && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "i=0; while test $i -lt 10; do cp -p reference repeat%2F || break; rm 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:repeat/' || break; i=$((i+1)); done; test $i -eq 10 && fsprobe same reference keep/sentinel && status runtime; printf '\\nREMOTE_END_38:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=320312 largest=320144 image=1204 ticks=326 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=0 imports=1 relocations=0 prepare=6 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_38:0\r\nbatch3d > "
+  },
+  {
+    "test": "repeated cleanup 1",
+    "command": "i=0; while test $i -lt 10; do cp -p reference repeat%2F || break; rm 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:repeat/' || break; i=$((i+1)); done; test $i -eq 10 && fsprobe same reference keep/sentinel && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "i=0; while test $i -lt 10; do cp -p reference repeat%2F || break; rm 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:repeat/' || break; i=$((i+1)); done; test $i -eq 10 && fsprobe same reference keep/sentinel && status runtime; printf '\\nREMOTE_END_39:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [================                  ]  49% 36.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [================                  ]  49% 36.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=320312 largest=320144 image=1204 ticks=326 load=35 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=0 imports=1 relocations=0 prepare=6 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_39:0\r\nbatch3d > "
+  },
+  {
+    "test": "repeated cleanup 2",
+    "command": "i=0; while test $i -lt 10; do cp -p reference repeat%2F || break; rm 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:repeat/' || break; i=$((i+1)); done; test $i -eq 10 && fsprobe same reference keep/sentinel && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "i=0; while test $i -lt 10; do cp -p reference repeat%2F || break; rm 'native:Sys6Unix:System Folder:Clarice Data:tmp:batch3d:repeat/' || break; i=$((i+1)); done; test $i -eq 10 && fsprobe same reference keep/sentinel && status runtime; printf '\\nREMOTE_END_40:%d\\n' $?\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [================                  ]  49% 36.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\n\rcp 0: reference [>                                          ] 0 items completed\u001b[K\rcp 0: reference [=                                  ]   5% 4.00 KiB / 72.96 KiB\u001b[K\rcp 0: reference [====================              ]  60% 44.28 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================= ]  99% 72.96 KiB / 72.96 KiB\u001b[K\rcp 1: reference [================================================] 1 items done\u001b[K\r\n\rrm 1: repeat/ [>                                            ] 1 items completed\u001b[K\rrm 1: repeat/ [==================================================] 1 items done\u001b[K\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=320312 largest=320144 image=1204 ticks=328 load=36 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=3 imports=0 relocations=1 prepare=5 events=3 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=3 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_40:0\r\nbatch3d > "
+  },
+  {
+    "test": "final preserved state",
+    "command": "test -d keep && fsprobe same reference keep/sentinel && status runtime",
+    "status": 0,
+    "expected": 0,
+    "text": "test -d keep && fsprobe same reference keep/sentinel && status runtime; printf '\\nREMOTE_END_41:%d\\n' $?\r\nPASS same forks/metadata, backup=3700000002 script=9\r\nRuntime: heap=323824 largest=320176 image=1204 ticks=328 load=34 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=1 relocations=0 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=16 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_41:0\r\nbatch3d > "
+  }
+]

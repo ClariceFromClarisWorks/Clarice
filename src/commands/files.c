@@ -71,7 +71,11 @@ static int remove_one(const char *path,int depth,int onlydir){
  /* Reject dot operands before resolution erases their spelling or traversal
     deletes contents. Ignore trailing separators, as Unix rm does. */
  size_t end=strlen(path),start;if(end>=sizeof pending)return bdNamErr;
- while(end&&path[end-1]=='/')end--;start=end;while(start&&path[start-1]!='/')start--;
+ /* Match cli_remove: native HFS uses colons; every slash is a literal name
+    byte, including a final slash. Never trim it into a different operand. */
+ size_t prefix=!strncmp(path,"native:",7)?7:0;char separator=prefix?':':'/';
+ while(end>prefix&&path[end-1]==separator)end--;if(end<=prefix)return bdNamErr;
+ start=end;while(start>prefix&&path[start-1]!=separator)start--;
  if(end-start==1&&path[start]=='.')return paramErr;
  if(end-start==2&&path[start]=='.'&&path[start+1]=='.')return paramErr;
  /* A trailing separator makes the resolver follow a final link. Strip it

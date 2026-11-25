@@ -1,0 +1,74 @@
+[
+  {
+    "repeat": 0,
+    "variant": "before",
+    "status": 0,
+    "ticks": 2851,
+    "load": 73,
+    "execution": 2778,
+    "heap": 322954,
+    "largest": 322774,
+    "remaining": 0,
+    "text": "time /mnt/Perf/before/rm -R --no-progress /mnt/Perf/copy > /dev/null; result=$?; status runtime; test $result -eq 0; printf '\\nREMOTE_END_2:%d\\n' $?\r\nreal 47.71 s\r\nRuntime: heap=322954 largest=322774 image=13468 ticks=2851 load=73 owned-peak=0 remaining=0\r\nLoader ticks: read=20 validate=36 imports=3 relocations=2 prepare=2 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=36 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "repeat": 0,
+    "variant": "after",
+    "status": 0,
+    "ticks": 2336,
+    "load": 77,
+    "execution": 2259,
+    "heap": 322964,
+    "largest": 322904,
+    "remaining": 0,
+    "text": "time /mnt/Perf/after/rm -R --no-progress /mnt/Perf/copy > /dev/null; result=$?; status runtime; test $result -eq 0; printf '\\nREMOTE_END_4:%d\\n' $?\r\nreal 39.25 s\r\nRuntime: heap=322964 largest=322904 image=13504 ticks=2336 load=77 owned-peak=0 remaining=0\r\nLoader ticks: read=25 validate=34 imports=3 relocations=2 prepare=2 events=4 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=34 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+  },
+  {
+    "repeat": 1,
+    "variant": "after",
+    "status": 0,
+    "ticks": 2335,
+    "load": 76,
+    "execution": 2259,
+    "heap": 322956,
+    "largest": 322762,
+    "remaining": 0,
+    "text": "time /mnt/Perf/after/rm -R --no-progress /mnt/Perf/copy > /dev/null; result=$?; status runtime; test $result -eq 0; printf '\\nREMOTE_END_6:%d\\n' $?\r\nreal 39.23 s\r\nRuntime: heap=322956 largest=322762 image=13504 ticks=2335 load=76 owned-peak=0 remaining=0\r\nLoader ticks: read=25 validate=34 imports=3 relocations=2 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=12 payload=34 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+  },
+  {
+    "repeat": 1,
+    "variant": "before",
+    "status": 0,
+    "ticks": 2328,
+    "load": 71,
+    "execution": 2257,
+    "heap": 322960,
+    "largest": 322768,
+    "remaining": 0,
+    "text": "time /mnt/Perf/before/rm -R --no-progress /mnt/Perf/copy > /dev/null; result=$?; status runtime; test $result -eq 0; printf '\\nREMOTE_END_8:%d\\n' $?\r\nreal 38.98 s\r\nRuntime: heap=322960 largest=322768 image=13468 ticks=2328 load=71 owned-peak=0 remaining=0\r\nLoader ticks: read=21 validate=34 imports=2 relocations=3 prepare=0 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=10 payload=34 metadata=0 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+  },
+  {
+    "repeat": 2,
+    "variant": "before",
+    "status": 0,
+    "ticks": 2332,
+    "load": 73,
+    "execution": 2259,
+    "heap": 322948,
+    "largest": 322926,
+    "remaining": 0,
+    "text": "time /mnt/Perf/before/rm -R --no-progress /mnt/Perf/copy > /dev/null; result=$?; status runtime; test $result -eq 0; printf '\\nREMOTE_END_10:%d\\n' $?\r\nreal 39.06 s\r\nRuntime: heap=322948 largest=322926 image=13468 ticks=2332 load=73 owned-peak=0 remaining=0\r\nLoader ticks: read=21 validate=36 imports=2 relocations=2 prepare=1 events=5 (events included above)\r\nVerification ticks: mode=full header=0 record=11 payload=36 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\n/ > "
+  },
+  {
+    "repeat": 2,
+    "variant": "after",
+    "status": 0,
+    "ticks": 2332,
+    "load": 77,
+    "execution": 2255,
+    "heap": 322960,
+    "largest": 322780,
+    "remaining": 0,
+    "text": "time /mnt/Perf/after/rm -R --no-progress /mnt/Perf/copy > /dev/null; result=$?; status runtime; test $result -eq 0; printf '\\nREMOTE_END_12:%d\\n' $?\r\nreal 39.18 s\r\nRuntime: heap=322960 largest=322780 image=13504 ticks=2332 load=77 owned-peak=0 remaining=0\r\nLoader ticks: read=25 validate=34 imports=3 relocations=2 prepare=1 events=2 (events included above)\r\nVerification ticks: mode=full header=0 record=12 payload=34 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_12:0\r\n/ > "
+  }
+]
