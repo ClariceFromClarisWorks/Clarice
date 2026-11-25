@@ -1,0 +1,2 @@
+PASS authoritative locations: 12 I/O + disk-full + interruption boundaries; exact retry; partial stage; invalid record fails closed; immutable installed destinations
+PASS custom V3 Core/data restore: 222 I/O + disk-full + interruption boundaries; both forks, catalog, root sibling, user files and exact launch target preserved

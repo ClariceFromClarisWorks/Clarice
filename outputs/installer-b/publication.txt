@@ -1,0 +1,1 @@
+PASS seal, 51 entries (Core +49 standard +vi), 36 unique payloads, exact HTTP/AFP equality; offline archive and seal verified

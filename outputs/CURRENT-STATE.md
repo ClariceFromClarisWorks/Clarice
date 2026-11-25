@@ -1,5 +1,23 @@
 # Clarice current state
 
+## Installer B — 26 November 2026
+
+Accepted build **2026111977**, product **f67102f**, local main. Native same-volume
+Core/Data selection, authoritative 524-byte location record, legacy-compatible
+V3 custom-target recovery, catalog-aware offline upgrade and explicit matching-Core
+version tool Repair are implemented. Existing data is never relocated.
+
+Host ASan/UBSan/fault tests and normal 68000 System 6 Snow pass: custom/default
+install and relaunch, no-write Cancel, disk-full/cancellation retry, legacy upgrade,
+independent custom rollback, modified-tool refusal/repair and user/fork/metadata
+preservation. Final Core +49 tools read back against the seal. Ten repeated runs
+have zero retained command allocations and stable largest free block.
+Core CODE +1759 bytes; installer CODE +8346; partitions unchanged. Confirmation
+ready in55 guest ticks (not physical timing). HTTP/AFP 51 entries/36 payloads and
+offline packages verified; prior1976 recovery distribution retained.
+[Evidence, costs and limitations](installer-b/REPORT.md). System7/hardware deferred;
+no GitHub push. Stop after Installer B; no uninstaller work.
+
 ## Installer A — 26 November 2026
 
 Accepted build **2026111976**, product **9ef7ed7**, integrated into local main.

@@ -1,0 +1,1 @@
+PASS production catalog append/replay, torn tail/header recovery, malformed record rejection; index duplicates, truncation, allocation failure and cancellation

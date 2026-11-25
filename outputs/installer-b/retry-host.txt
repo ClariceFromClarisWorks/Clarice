@@ -1,0 +1,4 @@
+PASS cancelled candidate retained for durable-plan retry
+PASS helper type/creator, both fork hashes and length failures
+PASS bound retry rejects changed index; legacy retry validates snapshot membership/payload; cleanup
+PASS old/new markers, Ready payload and all header truncations

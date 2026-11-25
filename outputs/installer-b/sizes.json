@@ -1,0 +1,74 @@
+{
+  "core": {
+    "before": {
+      "macbinary": 440064,
+      "data": 0,
+      "resource": 439822,
+      "code": 285947,
+      "size_resource": [
+        20608,
+        786432,
+        786432
+      ]
+    },
+    "after": {
+      "macbinary": 443776,
+      "data": 0,
+      "resource": 443597,
+      "code": 287706,
+      "size_resource": [
+        20608,
+        786432,
+        786432
+      ]
+    }
+  },
+  "installer": {
+    "before": {
+      "macbinary": 435712,
+      "data": 0,
+      "resource": 435526,
+      "code": 281221,
+      "size_resource": [
+        20608,
+        786432,
+        786432
+      ]
+    },
+    "after": {
+      "macbinary": 446080,
+      "data": 0,
+      "resource": 445874,
+      "code": 289567,
+      "size_resource": [
+        20608,
+        786432,
+        786432
+      ]
+    }
+  },
+  "helper": {
+    "before": {
+      "macbinary": 76416,
+      "data": 0,
+      "resource": 76200,
+      "code": 75638,
+      "size_resource": [
+        20608,
+        163840,
+        163840
+      ]
+    },
+    "after": {
+      "macbinary": 76416,
+      "data": 0,
+      "resource": 76274,
+      "code": 75712,
+      "size_resource": [
+        20608,
+        163840,
+        163840
+      ]
+    }
+  }
+}

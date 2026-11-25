@@ -1,0 +1,5 @@
+PASS verified newer compatible utility preserved by ordinary offline upgrade
+PASS explicit repair restores damaged executable Finder codes
+PASS production offline retry accepts unchanged v2/v1 marker grammar and rejects another kit
+PASS catalog adoption retry: 349 I/O and disk-full boundaries; all 49 records complete, no leaked handles
+PASS offline policy: exact legacy adoption, full catalog, ordinary no-op, modified/unknown preservation, explicit repair plan, missing utility, damaged kit, torn catalog/header retry, cancellation and closed files

@@ -1,0 +1,22 @@
+PASS location record exact round trip, every-byte corruption, same-volume and native path bounds; V1/V2 unchanged root restoration and V3 actual Core location
+PASS authoritative locations: 12 I/O + disk-full + interruption boundaries; exact retry; partial stage; invalid record fails closed; immutable installed destinations
+PASS custom V3 Core/data restore: 222 I/O + disk-full + interruption boundaries; both forks, catalog, root sibling, user files and exact launch target preserved
+PASS explicit repair restores damaged executable Finder codes
+PASS production offline retry accepts unchanged v2/v1 marker grammar and rejects another kit
+PASS catalog adoption retry: 349 I/O and disk-full boundaries; all 49 records complete, no leaked handles
+PASS offline policy: exact legacy adoption, full catalog, ordinary no-op, modified/unknown preservation, explicit repair plan, missing utility, damaged kit, torn catalog/header retry, cancellation and closed files
+PASS native confirmation: five no-write cancellation forms; dialog allocation failure; cancellation before and during backend; one-shot success/handoff; initialization and disk-full errors; bounded progress/text
+PASS installer decision precedes terminal/shell/namespace initialization; narrow installer init excludes history and profile execution
+PASS recovery inventory codecs, startup-volume location, path/record rejection
+PASS reserved HFS snapshot names rejected before I/O; legacy codecs unchanged
+PASS unchanged CLRSNAP1 inventory: exact legacy CRC, corruption rejection, native-copy rollback
+PASS legacy interrupted inventory resumes without checksum reinterpretation
+PASS previous-helper retry: 663 error/interruption boundaries, unknown helper retained
+PASS explicit resource policy: mutable scratch accepted; payload/map/header/data corruption rejected
+PASS snapshot preparation: 429 returned-error and 429 interruption boundaries
+PASS first snapshot: 403 error and interruption boundaries
+PASS locked restore 199 errors + resets, lock restored after retry
+PASS locked source preserved, snapshot/restore lock and rotation: 404 errors + resets
+PASS renamed-command cleanup: missing replacement, changed identity/content, retry and retained snapshot
+Interrupted restore: 0 of 277 boundaries require intervention; immutable snapshot intact
+PASS production native rotation 155 failure boundaries; restore 277 failure boundaries; both forks and snapshot survive

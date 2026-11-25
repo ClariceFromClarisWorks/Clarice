@@ -1,0 +1,1 @@
+No-write chooser + Cancel: exact disk bytes equal=True, sha256=c1514235e1ab5af68557ac98886a2bf1dd3a276dc58512d2e248fdaae3bd70d3
