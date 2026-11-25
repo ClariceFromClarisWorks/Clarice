@@ -1,0 +1,17 @@
+[
+  {
+    "command": "status runtime",
+    "status": 0,
+    "output": "status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nRuntime: heap=325912 largest=325670 image=37136 ticks=5214 load=166 owned-peak=20932 remaining=0\r\nLoader ticks: read=24 validate=95 imports=3 relocations=5 prepare=7 events=7 (events included above)\r\nVerification ticks: mode=full header=0 record=32 payload=74 metadata=21 structure=3 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "test ! -e /tmp/batch2.txt",
+    "status": 0,
+    "output": "test ! -e /tmp/batch2.txt; printf '\\nREMOTE_END_2:%d\\n' $?\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "printf restored",
+    "status": 0,
+    "output": "printf restored; printf '\\nREMOTE_END_3:%d\\n' $?\r\nrestored\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

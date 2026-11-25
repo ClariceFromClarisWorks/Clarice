@@ -2,21 +2,22 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111962**, product **e57f34f**, local main: all five Batch 1 closure defects
-corrected. Escaped bracket hyphens, external HOME=/home, positional literal tilde,
-negated-pipeline failure/cancellation and receipt retention on memory refusal pass
-focused host and normal 68000 Snow Plus/4 MiB/System 6.0.8 acceptance.
-[Results and limits](batch1-closure/REPORT.md). Exact receipt preservation under
-native pressure, fast retry, genuine corruption rejection and zero retained command
-allocations verified. Warm heap/largest block stable. Core package unchanged;
-compiled text/data +32 bytes, no BSS or persistent-allocation increase.
+Latest normal build **2026111963**, local main: four Batch 2 terminal correctness
+fixes accepted in normal 68000 Snow Plus/4 MiB/System 6.0.8. Pending pixels survive
+clipped updates; mouse tracking yields to queued cancellation; copying preserves
+logical line endings; selection includes the final occupied cell.
+[Focused evidence](terminal-correctness/REPORT.md): 89 guest checks, 41 exact native
+pixel comparisons, host renderer/geometry checks, held-button cancellation with
+status 130, vi restoration and zero retained command allocations. Matched typing
+72 → 72 ticks/40 samples, worst 2 → 2; no new persistent allocation or bitmap.
+Core package +384 bytes. Physical acceptance pending.
 
-Accepted parser/CLX performance improvements retained; command-heavy 32 KiB scripts
-remain slow. [Prior measurements](userland-perf/REPORT.md). Physical acceptance pending.
+Prior Batch 1 closure and parser/CLX improvements retained; command-heavy 32 KiB
+scripts remain slow. [Prior measurements](userland-perf/REPORT.md).
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. [Publication verification](batch1-closure/verification.json)
-records the product commit, complete sealed build and preserved prior 1961 distribution.
-No GitHub push or hardware deployment. Stop after closure corrections.
+`Macintosh Exchange/Clarice/index.txt`. [Publication verification](terminal-correctness/verification.json)
+records the coherent build and preserved 1962 recovery distribution.
+No GitHub push or hardware deployment. Stop after Batch 2 correctness.
 
 ## Review remediation Batch A
 

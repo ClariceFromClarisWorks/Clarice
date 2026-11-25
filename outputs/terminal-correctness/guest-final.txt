@@ -1,0 +1,98 @@
+cat /tmp/usability.txt; printf '\nREMOTE_END_1:%d\n' $?
+PASS launch window in front
+PASS Command-C selected text
+PASS Command-V at insertion point
+PASS foreground ordered typeahead editing
+PASS foreground paste queued atomically
+PASS queued paste newline never submits
+PASS busy paste overflow fails closed
+PASS loading typeahead transferred to editor
+PASS pinwheel inverse background
+PASS hardware snapshot stock mono 4 MB and no retained allocation
+hardware 20 calls=24 ticks model=Macintosh Plus cpu=1 fpu=0 system=608
+PASS physical Ctrl-X editor
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS physical Ctrl-X editor
+PASS Option-W uses keyboard map not accented character
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS physical Ctrl-X editor
+PASS Command-X maps to Ctrl-X
+PASS Command-Option-C editor control not local abort
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS queued Ctrl-underscore keeps its control modifier
+PASS unsupported shell control is not an arrow
+PASS scrollback fills last row, no pinned prompt/cursor
+PASS copy includes last history row
+PASS shifted typing returns live and retains key
+PASS paste returns live and retains contents
+PASS foreground typeahead returns to live view
+theme requested=0 actual=0 pixel=0 input_ok=1 line_before=100 line_after=100 history_ok=1
+PASS theme immediately fills margins, preserves input and history
+theme requested=1 actual=1 pixel=1 input_ok=1 line_before=100 line_after=100 history_ok=1
+PASS theme immediately fills margins, preserves input and history
+PASS pending prompt outside partial update: exact pixels before Return
+PASS additional typing after partial update
+PASS input/cursor unchanged by update
+PASS cancellation without command execution
+PASS editor opens
+PASS editor pending row outside partial update
+PASS editor subsequent output/cursor
+PASS editor generic glyph fallback clipped update
+PASS editor close restores terminal
+PASS large history jump outside partial update
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS selection pixels
+PASS pending prompt outside partial update: exact pixels before Return
+PASS additional typing after partial update
+PASS input/cursor unchanged by update
+PASS cancellation without command execution
+PASS editor opens
+PASS editor pending row outside partial update
+PASS editor subsequent output/cursor
+PASS editor generic glyph fallback clipped update
+PASS editor close restores terminal
+PASS large history jump outside partial update
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS selection pixels
+PASS history soft wrap omits newline; real ending retained
+PASS hard line endings retained
+PASS editable command soft wrap
+PASS editable explicit newline
+PASS final occupied visible cell selectable
+PASS one-past-last selection pixels
+correctness ticks=2100 typing samples=40 total=72 worst=2 heap-delta=34
+failures=0 heap=328378
+
+REMOTE_END_1:0
+/ > 

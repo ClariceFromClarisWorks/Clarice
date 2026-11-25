@@ -1,0 +1,17 @@
+[
+  {
+    "command": "echo normal-build-1963",
+    "status": 0,
+    "output": "echo normal-build-1963; printf '\\nREMOTE_END_1:%d\\n' $?\r\nnormal-build-1963\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "output": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=325936 largest=325646 image=29992 ticks=134 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=1 imports=1 relocations=3 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=8 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "output": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=325936 largest=325646 image=29992 ticks=134 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=14 validate=1 imports=1 relocations=3 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=8 payload=0 metadata=1 structure=2 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

@@ -460,6 +460,10 @@ static void sync_history_bar(int force){
  CopyBits(&buffer,&screen,&r,&r,srcCopy,0);
 }
 static void scroll_action(ControlHandle control,short part){selection_clear();(void)control;int delta=part==inUpButton?1:part==inDownButton?-1:part==inPageUp?visible-1:part==inPageDown?1-visible:0;scrollback+=delta;if(scrollback<0)scrollback=0;if(scrollback>scroll_limit())scrollback=scroll_limit();select_start=select_end=-1;dirty=1;draw();}
+/* Leave tracking on any queued key. Normal event dispatch then preserves
+   shortcuts, control-key substitution and input ownership, without opening
+   menus or changing geometry inside a tracking loop. Never consume the key. */
+static int tracking_key_pending(void){EventRecord ev;return EventAvail(keyDownMask|autoKeyMask,&ev);}
 /* Track the view with the thumb instead of drawing an outline and waiting
    for release. Fixed storage; only changed positions repaint, at most 30 Hz. */
 static void drag_history(Point start){
@@ -470,7 +474,7 @@ static void drag_history(Point start){
  Point p=start;int value=initial;unsigned long painted=TickCount();
  if(travel<1||limit<1)return;
  selection_clear();
- do{GetMouse(&p);long next=initial+(long)(p.v-start.v)*limit/travel;if(next<0)next=0;if(next>limit)next=limit;
+ do{if(tracking_key_pending())break;GetMouse(&p);long next=initial+(long)(p.v-start.v)*limit/travel;if(next<0)next=0;if(next>limit)next=limit;
   if(next!=value){value=(int)next;scrollback=limit-value;dirty=1;
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  if(!pending)pending=TickCount();
@@ -864,7 +868,24 @@ int app_completion_more(void){
 }
 
 #define PASTED_KEY 0x8000
-static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+1)*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1)b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
+/* History records real versus visual line endings. Editable continuation
+   rows are virtual: derive their boundaries using the same wrap rule as
+   compose_input, including explicit newlines in pasted input. */
+static int selection_line_break(int row){
+ long line=drawn_first+row;
+ if(paging&&row==visible)return 0;
+ if(line<current_line)return !wrapped[line%ROWS];
+ if((busy&&!tty_reading&&!(completing&&!completion_wait))||searching)return 0;
+ char prefix[132];int lead=(int)strlen(text[current_line%ROWS])+prompt_prefix(prefix);
+ int target=(int)(line-current_line),r=lead/columns,c=lead%columns;
+ if(target<r)return 0;
+ for(int i=0;input[i];i++){
+  if(input[i]=='\n'){if(r==target)return 1;r++;c=0;}
+  else if(++c==columns){if(r==target)return 0;r++;c=0;}
+ }
+ return 0;
+}
+static void copy_selection(void){char b[ROWS*COLS];long n=0;int a=select_start<select_end?select_start:select_end,z=select_start>select_end?select_start:select_end,i;if(a<0||z<=a){ZeroScrap();PutScrap(strlen(input),'TEXT',input);return;}for(i=a;i<z&&i<(visible+1)*columns;i++){char c=last_screen[i/columns][i%columns];b[n++]=c?c:' ';if(i%columns==columns-1&&selection_line_break(i/columns))b[n++]='\r';}ZeroScrap();PutScrap(n,'TEXT',b);}
 static void insert_char(unsigned char c){size_t n=strlen(input);if(input_blocked)return;if(n>=LINE_CAP-1){input_fail("command exceeds 1023 bytes");return;}memmove(input+cursor+1,input+cursor,n-cursor+1);input[cursor++]=(char)c;dirty=1;}
 /* Validate the complete paste before changing the line. Newlines are retained
    (CR/CRLF normalized), never submitted as Return events. */
@@ -996,8 +1017,18 @@ static void selection_begin(int anchor){
  selection_clear();
  select_start=select_end=anchor;
 }
-static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>=columns)x=columns-1;if(y<0)y=0;if(y>=visible+1)y=visible+1-1;return y*columns+x;}
-static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;int maxw,maxh;geometry_limits(&maxw,&maxh);SetRect(&bounds,180,100,maxw,maxh);size=GrowWindow(win,ev->where,&bounds);if(size){fit_window((short)size,(short)(size>>16));if(layout()){filled=0;InvalRect(&win->portRect);save_preferences();}}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+1)*line_h){selection_begin(cell(p));while(StillDown()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
+static int cell(Point p){int x=(p.h-TEXT_LEFT)/cell_w,y=(p.v-TEXT_TOP)/line_h;if(x<0)x=0;if(x>columns)x=columns;if(y<0)y=0;if(y>=visible+1)y=visible+1-1;return y*columns+x;}
+/* BeginUpdate clips to the invalid region, but the compositors commit their
+   complete model. Pending changes therefore need one normal visible-region
+   paint after EndUpdate, not a clipped paint that forgets unpainted pixels. */
+static void update_window(void){
+ SetPort(win);sync_window_geometry();int pending=dirty||force_draw;
+ BeginUpdate(win);
+ if(!pending){force_draw=dirty=1;draw();}
+ EndUpdate(win);
+ if(pending){force_draw=dirty=1;draw();}
+}
+static void handle(EventRecord *ev){if(ev->what==mouseDown||ev->what==activateEvt||ev->what==updateEvt)activity_hide();WindowPtr clicked;switch(ev->what){case mouseDown:{short part=FindWindow(ev->where,&clicked);if(part==inMenuBar)menu(MenuSelect(ev->where));else if(part==inSysWindow)SystemClick(ev,clicked);else if(clicked==win){SetPort(win);if(part==inDrag){Rect bounds=qd.screenBits.bounds;bounds.top+=20;DragWindow(win,ev->where,&bounds);save_preferences();}else if(part==inGoAway){if(TrackGoAway(win,ev->where))app_quit();}else if(part==inGrow&&!editor_screen){Rect bounds;long size;int maxw,maxh;geometry_limits(&maxw,&maxh);SetRect(&bounds,180,100,maxw,maxh);size=GrowWindow(win,ev->where,&bounds);if(size){fit_window((short)size,(short)(size>>16));if(layout()){filled=0;InvalRect(&win->portRect);save_preferences();}}}else if(part==inContent){if(FrontWindow()!=win)SelectWindow(win);else{Point p=ev->where;ControlHandle control;GlobalToLocal(&p);short hit=FindControl(p,win,&control);if(hit&&control==history_bar){if(hit==inThumb)drag_history(p);else{unsigned long repeat=TickCount()+12;scroll_action(control,hit);while(StillDown()&&!tracking_key_pending()){GetMouse(&p);if(TickCount()>=repeat){if(TestControl(control,p)==hit)scroll_action(control,hit);repeat=TickCount()+3;}SystemTask();}}}else if(paging&&p.v>=TEXT_TOP+visible*line_h&&p.v<TEXT_TOP+(visible+1)*line_h){page_action=1;}else if(!editor_screen&&p.v<TEXT_TOP+(visible+1)*line_h){selection_begin(cell(p));while(StillDown()&&!tracking_key_pending()){GetMouse(&p);selection_extend(cell(p));SystemTask();}GetMouse(&p);selection_extend(cell(p));}}}}break;}
  case keyDown:case autoKey:{
 #ifdef CLARICE_NANO_PERF
  if(editor_screen){if(!ep_started){editor_metrics_reset();ep_started=1;}ep_events++;ep_event_delay+=TickCount()-ev->when;if(!ep_pending)ep_pending=ev->when;}
@@ -1029,7 +1060,7 @@ if(base)c=base;}
  }
 
  key(c,mods);break;}
- case updateEvt:if((WindowPtr)ev->message==win){hide_caret();SetPort(win);sync_window_geometry();BeginUpdate(win);force_draw=dirty=1;draw();EndUpdate(win);}break;
+ case updateEvt:if((WindowPtr)ev->message==win)update_window();break;
  case activateEvt:if((WindowPtr)ev->message==win){sync_window_geometry();background=!(ev->modifiers&activeFlag);if(editor_screen)editor_screen->dirty[editor_screen->row]=1;dirty=1;}break;
  case osEvt:if((ev->message>>24)==1){background=!(ev->message&1);dirty=force_draw=1;}break;
  default:break;}}
