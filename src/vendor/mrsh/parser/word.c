@@ -61,7 +61,7 @@ size_t peek_name(struct mrsh_parser *parser, bool in_braces) {
 	while (true) {
 		if (parser_peek(parser, NULL, i + 1) < i+1) return 0;
 
-		char c = parser->buf.data[i];
+		char c = parser_data(parser)[i];
 		if (c != '_' && !isalnum(c)) {
 			break;
 		} else if (i == 0 && isdigit(c) && !in_braces) {
@@ -83,7 +83,7 @@ size_t peek_word(struct mrsh_parser *parser, char end) {
 	while (true) {
 		if (parser_peek(parser, NULL, i + 1) < i+1) return 0;
 
-		char c = parser->buf.data[i];
+		char c = parser_data(parser)[i];
 
 		switch (c) {
 		case '\0':
@@ -124,7 +124,7 @@ bool token(struct mrsh_parser *parser, const char *str,
 		parser_read_char(parser);
 	} else {
 		size_t word_len = peek_word(parser, 0);
-		if (len != word_len || strncmp(parser->buf.data, str, word_len) != 0) {
+		if (len != word_len || strncmp(parser_data(parser), str, word_len) != 0) {
 			return false;
 		}
 		// assert(isalpha(str[i]));

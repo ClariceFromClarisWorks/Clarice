@@ -44,7 +44,7 @@ static bool parse_str(struct mrsh_parser *parser, const char *str) {
 	for (size_t i = 0; i < len; ++i) {
 		if (parser_peek(parser, NULL, i + 1) < i + 1) return 0;
 
-		if (parser->buf.data[i] != str[i]) {
+		if (parser_data(parser)[i] != str[i]) {
 			return false;
 		}
 	}
@@ -58,7 +58,7 @@ static size_t peek_literal(struct mrsh_parser *parser) {
 	while (true) {
 		if (parser_peek(parser, NULL, i + 1) < i + 1) return 0;
 
-		char c = parser->buf.data[i];
+		char c = parser_data(parser)[i];
 		// TODO: 0x, 0b prefixes
 		if (!isdigit(c)) {
 			break;
@@ -76,7 +76,7 @@ static struct mrsh_arithm_literal *literal(struct mrsh_parser *parser) {
 		return NULL;
 	}
 
-	char *str = strndup(parser->buf.data, len);
+	char *str = strndup(parser_data(parser), len);
 	if (!str) { parser_oom(parser); return NULL; }
 	parser_read(parser, NULL, len);
 
@@ -390,14 +390,14 @@ static bool parse_binop(struct mrsh_parser *parser, const char *str) {
 	for (size_t i = 0; i < len; ++i) {
 		if (parser_peek(parser, NULL, i + 1) < i + 1) return 0;
 
-		if (parser->buf.data[i] != str[i]) {
+		if (parser_data(parser)[i] != str[i]) {
 			return false;
 		}
 	}
 
 	// Make sure we don't parse "&&" as "&"
 	if (parser_peek(parser, NULL, len + 1) < len + 1) return false;
-	switch (parser->buf.data[len]) {
+	switch (parser_data(parser)[len]) {
 	case '|':
 	case '&':
 		return false;
@@ -508,7 +508,7 @@ static bool peek_assign_op(struct mrsh_parser *parser, size_t *offset,
 	for (size_t i = 0; i < len; ++i) {
 		if (parser_peek(parser, NULL, *offset + i + 1) < *offset + i + 1) return false;
 
-		if (parser->buf.data[*offset + i] != str[i]) {
+		if (parser_data(parser)[*offset + i] != str[i]) {
 			return false;
 		}
 	}

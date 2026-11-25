@@ -1,0 +1,205 @@
+{
+  "build": 2026111961,
+  "baseline_build": 2026111960,
+  "baseline_product": "98c0b8a",
+  "environment": "Snow Plus, 68000, 4 MiB, System 6.0.8; uncapped mode, observed approximately 1.5x active speed; guest TickCount timing, no hardware testing",
+  "parser": {
+    "host_before": "64 bytes: 0.000004 host CPU seconds/parse, 2080 moved bytes/parse\n8192 bytes: 0.000651 host CPU seconds/parse, 33558528 moved bytes/parse\n32768 bytes: 0.008469 host CPU seconds/parse, 536887296 moved bytes/parse\n",
+    "host_after": "64 bytes: 0.000003 host CPU seconds/parse, 0 moved bytes/parse\n8192 bytes: 0.000184 host CPU seconds/parse, 0 moved bytes/parse\n32768 bytes: 0.000844 host CPU seconds/parse, 0 moved bytes/parse\n",
+    "guest_8KiB_before_seconds": [
+      210.48,
+      209.93
+    ],
+    "guest_8KiB_after_seconds": [
+      30.95,
+      30.58
+    ],
+    "guest_32KiB_command_heavy_after_seconds": 361.81,
+    "guest_32KiB_padded_after_seconds": 17.11,
+    "guest_32KiB_before": "Not completed in bounded baseline run; no guest before/after percentage claimed."
+  },
+  "load_before": [
+    "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nreal 8.83 s\r\nRuntime: heap=325602 largest=321512 image=10056 ticks=57 load=30 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > ",
+    "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nreal 8.80 s\r\nRuntime: heap=325596 largest=321512 image=10056 ticks=58 load=30 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=0 imports=2 relocations=1 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > ",
+    "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nreal 8.85 s\r\nRuntime: heap=325596 largest=321512 image=10056 ticks=57 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=2 imports=2 relocations=1 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  ],
+  "load_after": [
+    {
+      "test": "load-0",
+      "status": 0,
+      "output": "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nreal 7.63 s\r\nRuntime: heap=325110 largest=320724 image=10056 ticks=57 load=30 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+    },
+    {
+      "test": "load-1",
+      "status": 0,
+      "output": "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nreal 7.68 s\r\nRuntime: heap=325114 largest=320724 image=10056 ticks=57 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=2 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+    },
+    {
+      "test": "load-2",
+      "status": 0,
+      "output": "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nreal 7.68 s\r\nRuntime: heap=325106 largest=320724 image=10056 ticks=57 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=2 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+    }
+  ],
+  "pressure_before": "cat /mnt/Sys6Unix/Perf/entry-low.txt; cat /mnt/Sys6Unix/Perf/entry-room.txt; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\nENTRY free=12414 largest=12262 marker=1\nENTRY free=160046 largest=12840 marker=1\nRuntime: heap=325834 largest=321512 image=10056 ticks=41 load=30 owned-peak=0 remaining=0\nLoader ticks: read=13 validate=0 imports=2 relocations=1 prepare=2 events=0 (events included above)\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=0 (structure included in relocations)\n\nREMOTE_END_1:0\n/ > ",
+  "pressure_after": [
+    {
+      "test": "pressure-entry",
+      "status": 0,
+      "output": "test ! -f /mnt/Sys6Unix/Perf/entry-low.txt; a=$?; cat /mnt/Sys6Unix/Perf/entry-room.txt; test \"$a\" = 0; printf '\\nREMOTE_END_2:%d\\n' $?\r\nENTRY free=159254 largest=13250 marker=1\r\n\r\nREMOTE_END_2:0\r\n/ > "
+    },
+    {
+      "test": "pressure-entry",
+      "status": 0,
+      "output": "test ! -f /mnt/Sys6Unix/Perf/entry-low.txt; a=$?; cat /mnt/Sys6Unix/Perf/entry-room.txt; test \"$a\" = 0; printf '\\nREMOTE_END_2:%d\\n' $?\r\nENTRY free=159254 largest=13250 marker=1\r\n\r\nREMOTE_END_2:0\r\n/ > "
+    }
+  ],
+  "acceptance": [
+    {
+      "test": "recovery-after-timeout",
+      "status": 0,
+      "output": "echo recovered; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nrecovered\r\nRuntime: heap=325950 largest=320724 image=10056 ticks=72 load=33 owned-peak=0 remaining=0\r\nLoader ticks: read=13 validate=2 imports=3 relocations=1 prepare=3 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+    },
+    {
+      "test": "pressure-entry",
+      "status": 0,
+      "output": "test ! -f /mnt/Sys6Unix/Perf/entry-low.txt; a=$?; cat /mnt/Sys6Unix/Perf/entry-room.txt; test \"$a\" = 0; printf '\\nREMOTE_END_2:%d\\n' $?\r\nENTRY free=159254 largest=13250 marker=1\r\n\r\nREMOTE_END_2:0\r\n/ > "
+    },
+    {
+      "test": "load-0",
+      "status": 0,
+      "output": "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nreal 7.63 s\r\nRuntime: heap=325110 largest=320724 image=10056 ticks=57 load=30 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=4 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+    },
+    {
+      "test": "load-1",
+      "status": 0,
+      "output": "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_4:%d\\n' $?\r\nreal 7.68 s\r\nRuntime: heap=325114 largest=320724 image=10056 ticks=57 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=2 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+    },
+    {
+      "test": "load-2",
+      "status": 0,
+      "output": "time appinstall check /bin/awk; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_5:%d\\n' $?\r\nreal 7.68 s\r\nRuntime: heap=325106 largest=320724 image=10056 ticks=57 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=2 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+    },
+    {
+      "test": "recovery-after-timeout",
+      "status": 0,
+      "output": "echo recovered; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\r\nrecovered\r\nRuntime: heap=325950 largest=320724 image=10056 ticks=57 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=11 validate=2 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=1 record=10 payload=0 metadata=1 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_1:0\r\n/ > "
+    },
+    {
+      "test": "pressure-entry",
+      "status": 0,
+      "output": "test ! -f /mnt/Sys6Unix/Perf/entry-low.txt; a=$?; cat /mnt/Sys6Unix/Perf/entry-room.txt; test \"$a\" = 0; printf '\\nREMOTE_END_2:%d\\n' $?\r\nENTRY free=159254 largest=13250 marker=1\r\n\r\nREMOTE_END_2:0\r\n/ > "
+    },
+    {
+      "test": "padding",
+      "status": 0,
+      "output": "printf '#%32764s\\n:\\n' '' > /tmp/padded32.sh; wc -c /tmp/padded32.sh; printf '\\nREMOTE_END_3:%d\\n' $?\r\n32768 /tmp/padded32.sh\r\n\r\nREMOTE_END_3:0\r\n/ > "
+    },
+    {
+      "test": "padded32",
+      "status": 0,
+      "output": "time sh /tmp/padded32.sh; r=$?; status runtime; test \"$r\" = 0; printf '\\nREMOTE_END_4:%d\\n' $?\r\nreal 17.11 s\r\nRuntime: heap=324688 largest=320724 image=14928 ticks=338 load=92 owned-peak=5716 remaining=0\r\nLoader ticks: read=12 validate=45 imports=2 relocations=2 prepare=4 events=8 (events included above)\r\nVerification ticks: mode=full header=0 record=27 payload=34 metadata=11 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+    },
+    {
+      "test": "shell",
+      "status": 0,
+      "output": "f() { for x in \"$@\"; do printf '<%s>' \"$x\"; done; }; f '' 'a b'; echo; printf '\\nREMOTE_END_5:%d\\n' $?\r\n<><a b>\r\n\r\nREMOTE_END_5:0\r\n/ > "
+    },
+    {
+      "test": "shell",
+      "status": 0,
+      "output": "printf 'one\\ntwo\\n' | while read x; do echo \"$x\"; done > /tmp/perf-flow; cat /tmp/perf-flow; printf '\\nREMOTE_END_6:%d\\n' $?\r\none\r\ntwo\r\n\r\nREMOTE_END_6:0\r\n/ > "
+    },
+    {
+      "test": "shell",
+      "status": 0,
+      "output": "echo $((2+3*4)); case 'a*' in a\\*) echo literal;; esac; printf '\\nREMOTE_END_7:%d\\n' $?\r\n14\r\nliteral\r\n\r\nREMOTE_END_7:0\r\n/ > "
+    },
+    {
+      "test": "cancel",
+      "status": 0,
+      "output": "r=$?; echo cancel=$r; echo recovered; status runtime; test \"$r\" = 130; printf '\\nREMOTE_END_8:%d\\n' $?\r\ncancel=130\r\nrecovered\r\nRuntime: heap=323076 largest=320724 image=10056 ticks=38 load=30 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+    },
+    {
+      "test": "command-heavy32",
+      "status": 0,
+      "output": "time sh /mnt/Sys6Unix/Perf/32768.sh; r=$?; status runtime; test \"$r\" = 0; printf '\\nREMOTE_END_9:%d\\n' $?\r\nreal 361.81 s\r\nRuntime: heap=323582 largest=320724 image=10056 ticks=38 load=30 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_9:0\r\n/ > "
+    },
+    {
+      "test": "post-large",
+      "status": 0,
+      "output": "echo recovered; status runtime; printf '\\nREMOTE_END_10:%d\\n' $?\r\nrecovered\r\nRuntime: heap=324818 largest=320724 image=10056 ticks=38 load=30 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=3 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_10:0\r\n/ > "
+    }
+  ],
+  "final": [
+    {
+      "test": "script8-status",
+      "status": 0,
+      "output": "time sh /mnt/Sys6Unix/Perf/8192.sh; r=$?; echo script-status=$r; test \"$r\" = 0; printf '\\nREMOTE_END_1:%d\\n' $?\r\nreal 31.65 s\r\nscript-status=0\r\n\r\nREMOTE_END_1:0\r\n/ > "
+    },
+    {
+      "test": "repeat-0",
+      "status": 0,
+      "output": "/mnt/Sys6Unix/Perf/entry.clx; r=$?; status runtime; test \"$r\" = 0; printf '\\nREMOTE_END_2:%d\\n' $?\r\nENTRY free=258940 largest=254804 marker=1\r\nRuntime: heap=324876 largest=320724 image=65912 ticks=164 load=145 owned-peak=0 remaining=0\r\nLoader ticks: read=32 validate=106 imports=0 relocations=0 prepare=2 events=14 (events included above)\r\nVerification ticks: mode=full header=0 record=5 payload=106 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+    },
+    {
+      "test": "repeat-1",
+      "status": 0,
+      "output": "/mnt/Sys6Unix/Perf/entry.clx; r=$?; status runtime; test \"$r\" = 0; printf '\\nREMOTE_END_3:%d\\n' $?\r\nENTRY free=258934 largest=254804 marker=1\r\nRuntime: heap=324870 largest=320724 image=65912 ticks=160 load=144 owned-peak=0 remaining=0\r\nLoader ticks: read=33 validate=105 imports=0 relocations=1 prepare=0 events=7 (events included above)\r\nVerification ticks: mode=full header=0 record=5 payload=105 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+    },
+    {
+      "test": "repeat-2",
+      "status": 0,
+      "output": "/mnt/Sys6Unix/Perf/entry.clx; r=$?; status runtime; test \"$r\" = 0; printf '\\nREMOTE_END_4:%d\\n' $?\r\nENTRY free=258934 largest=254804 marker=1\r\nRuntime: heap=324876 largest=320724 image=65912 ticks=158 load=142 owned-peak=0 remaining=0\r\nLoader ticks: read=32 validate=103 imports=1 relocations=0 prepare=0 events=12 (events included above)\r\nVerification ticks: mode=full header=0 record=6 payload=103 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_4:0\r\n/ > "
+    },
+    {
+      "test": "repeat-3",
+      "status": 0,
+      "output": "/mnt/Sys6Unix/Perf/entry.clx; r=$?; status runtime; test \"$r\" = 0; printf '\\nREMOTE_END_5:%d\\n' $?\r\nENTRY free=258934 largest=254804 marker=1\r\nRuntime: heap=324870 largest=320724 image=65912 ticks=160 load=144 owned-peak=0 remaining=0\r\nLoader ticks: read=32 validate=105 imports=1 relocations=0 prepare=0 events=10 (events included above)\r\nVerification ticks: mode=full header=0 record=6 payload=105 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_5:0\r\n/ > "
+    },
+    {
+      "test": "repeat-4",
+      "status": 0,
+      "output": "/mnt/Sys6Unix/Perf/entry.clx; r=$?; status runtime; test \"$r\" = 0; printf '\\nREMOTE_END_6:%d\\n' $?\r\nENTRY free=258934 largest=254804 marker=1\r\nRuntime: heap=324876 largest=320724 image=65912 ticks=162 load=145 owned-peak=0 remaining=0\r\nLoader ticks: read=32 validate=107 imports=0 relocations=0 prepare=0 events=13 (events included above)\r\nVerification ticks: mode=full header=0 record=6 payload=107 metadata=0 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_6:0\r\n/ > "
+    },
+    {
+      "test": "corrupt",
+      "status": 0,
+      "output": "cp /mnt/Sys6Unix/Perf/entry.clx /tmp/perf-bad; printf x | dd of=/tmp/perf-bad bs=1 seek=1024 conv=notrunc; appinstall check /tmp/perf-bad; r=$?; echo rejected=$r; test \"$r\" = 126; printf '\\nREMOTE_END_7:%d\\n' $?\r\n\rcp 0: entry.clx [==                                 ]   6% 4.00 KiB / 65.13 KiB\u001b[K\rcp 0: entry.clx [================================= ]  98% 64.00 KiB / 65.13 KiB\u001b[K\rcp 1: entry.clx [================================================] 1 items done\u001b[K\r\n1+0 records in\r\n1+0 records out\r\ncommand: /tmp/perf-bad: CLX payload checksum mismatch\r\nrejected=126\r\n\r\nREMOTE_END_7:0\r\n/ > "
+    },
+    {
+      "test": "recover",
+      "status": 0,
+      "output": "echo recovered; /bin/ls /tmp >/dev/null; status runtime; printf '\\nREMOTE_END_8:%d\\n' $?\r\nrecovered\r\nRuntime: heap=325312 largest=320724 image=10056 ticks=57 load=29 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=0 imports=2 relocations=2 prepare=3 events=0 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=0 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_8:0\r\n/ > "
+    }
+  ],
+  "code": {
+    "text_before": 238104,
+    "text_after": 238520,
+    "data_before": 35004,
+    "data_after": 35040,
+    "bss_before": 41452,
+    "bss_after": 41448,
+    "macbinary_before": 436864,
+    "macbinary_after": 437376,
+    "parser_transient_added_bytes_68000": 4,
+    "new_persistent_heap_blocks": 0
+  },
+  "host_tests": {
+    "shell": 48,
+    "cancellation": 3,
+    "posix": 54,
+    "parser_fault_trials": [
+      298,
+      226,
+      246,
+      174,
+      324
+    ],
+    "loader_installer": 92,
+    "pressure_and_fragmentation": true,
+    "refill_alias_reset": true,
+    "remote_session_service_serial": true
+  },
+  "offline": "Core forks/metadata, Release, 49 utilities read back from HDA; all tar members compared with sealed kit.",
+  "local_cancellation": "cat /tmp/perf-local; status runtime; printf '\\nREMOTE_END_1:%d\\n' $?\nlocal=130\nRuntime: heap=325934 largest=320724 image=10056 ticks=39 load=30 owned-peak=0 remaining=0\nLoader ticks: read=13 validate=0 imports=2 relocations=1 prepare=3 events=0 (events included above)\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=0 structure=1 (structure included in relocations)\n\nREMOTE_END_1:0\n/ > "
+}

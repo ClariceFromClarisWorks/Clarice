@@ -58,7 +58,7 @@ static size_t peek_alias(struct mrsh_parser *parser) {
 	size_t n = peek_word(parser, 0);
 
 	for (size_t i = 0; i < n; ++i) {
-		char c = parser->buf.data[i];
+		char c = parser_data(parser)[i];
 		switch (c) {
 		case '_':
 		case '!':
@@ -92,7 +92,7 @@ static void apply_aliases(struct mrsh_parser *parser) {
 			return;
 		}
 
-		char *name = strndup(parser->buf.data, alias_len);
+		char *name = strndup(parser_data(parser), alias_len);
 		if(!name){parser_oom(parser);return;}
 		const char *repl = parser->alias(name, parser->alias_user_data);
 		free(name);
@@ -100,6 +100,7 @@ static void apply_aliases(struct mrsh_parser *parser) {
 			break;
 		}
 
+		parser_compact(parser);
 		size_t trailing_len = parser->buf.len - alias_len;
 		size_t repl_len = strlen(repl);
 		if (repl_len > alias_len) {
@@ -247,7 +248,7 @@ static struct mrsh_assignment *assignment_word(struct mrsh_parser *parser) {
 	}
 
 	if(parser_peek(parser,NULL,name_len+1)<name_len+1)return 0;
-	if (parser->buf.data[name_len] != '=') {
+	if (parser_data(parser)[name_len] != '=') {
 		return NULL;
 	}
 
@@ -306,7 +307,7 @@ static struct mrsh_word *cmd_name(struct mrsh_parser *parser) {
 	// TODO: optimize this
 	for (size_t i = 0; i < keywords_len; ++i) {
 		if (strlen(keywords[i]) == word_len &&
-				strncmp(parser->buf.data, keywords[i], word_len) == 0) {
+				strncmp(parser_data(parser), keywords[i], word_len) == 0) {
 			return NULL;
 		}
 	}
@@ -858,7 +859,7 @@ static struct mrsh_function_definition *function_definition(
 	while (true) {
 		if(parser_peek(parser,NULL,i+1)<i+1)return NULL;
 
-		char c = parser->buf.data[i];
+		char c = parser_data(parser)[i];
 		if (c == '(') {
 			break;
 		} else if (!isblank(c)) {
@@ -921,7 +922,7 @@ static bool unspecified_word(struct mrsh_parser *parser) {
 	}
 
 	for (size_t i = 0; i < sizeof(reserved) / sizeof(reserved[0]); i++) {
-		if (strncmp(parser->buf.data, reserved[i], word_len) == 0 &&
+		if (strncmp(parser_data(parser), reserved[i], word_len) == 0 &&
 				word_len == strlen(reserved[i])) {
 			char err_msg[256];
 			snprintf(err_msg, sizeof(err_msg),
@@ -938,7 +939,7 @@ static bool unspecified_word(struct mrsh_parser *parser) {
 	}
 
 	if(parser_peek(parser,NULL,name_len+1)<name_len+1)return 0;
-	if (parser->buf.data[name_len] == ':') {
+	if (parser_data(parser)[name_len] == ':') {
 		parser_set_error(parser, "words that are the concatenation of a name "
 			"and a colon produce unspecified results");
 		return true;

@@ -28,8 +28,11 @@ static unsigned long port_peak,port_remaining,module_bytes,module_load_ticks,mod
 static unsigned long ticks;
 static const char *verify_policy="";
 static const char *env_get(const char *name){(void)name;return verify_policy;}
+static unsigned long heap_budget=0x7fffffffUL,heap_used,entry_free,hash_bytes;
+static long FreeMem(void){return heap_budget-heap_used;}
+static void PurgeMem(long n){(void)n;}
 static int executions,execute_status,fail_alloc_at,alloc_calls;
-static int clx_test_execute(const unsigned char *p,unsigned long n,int argc,char **argv){(void)p;(void)n;executions++;if(argc>1){argv[1]=argv[0];argv[0]=NULL;}return execute_status;}
+static int clx_test_execute(const unsigned char *p,unsigned long n,int argc,char **argv){(void)p;(void)n;entry_free=FreeMem();executions++;if(argc>1){argv[1]=argv[0];argv[0]=NULL;}return execute_status;}
 static int resolve(const char *p,char *out){if(!strncmp(p,"native:",7))p+=7;strcpy(out,p);return 0;}
 static unsigned long TickCount(void){return ticks++;}
 static char diagnostics[8192];
@@ -46,11 +49,11 @@ static int cli_prepare_stdio(void){return 0;}
 static int read_error;
 static int allocs;
 static unsigned long allocation_limit=~0UL,largest_request;
-static Ptr NewPtr(unsigned long n){if(n>largest_request)largest_request=n;if(++alloc_calls==fail_alloc_at||n>allocation_limit)return NULL;void *p=malloc(n);if(p)allocs++;return p;}
-static void DisposePtr(Ptr p){assert(p);allocs--;free(p);}
+static Ptr NewPtr(unsigned long n){if(n>largest_request)largest_request=n;if(++alloc_calls==fail_alloc_at||n>allocation_limit)return NULL;if(n>heap_budget-heap_used)return NULL;size_t *p=malloc(sizeof(size_t)+n);if(!p)return NULL;*p=n;heap_used+=n;allocs++;return (Ptr)(p+1);}
+static void DisposePtr(Ptr p){assert(p);allocs--;size_t *base=(size_t*)p-1;heap_used-=*base;free(base);}
 static char export_names[8192];
 static void *clx_import(const char *s){char key[70];snprintf(key,sizeof key,"\n%s\n",s);return !strcmp(s,"present")||strstr(export_names,key)?(void*)1:NULL;}
-static unsigned long asm_fnv1a(unsigned long h,const unsigned char *p,unsigned long n){uint32_t v=h;while(n--)v=(v^*p++)*16777619u;return v;}
+static unsigned long asm_fnv1a(unsigned long h,const unsigned char *p,unsigned long n){hash_bytes+=n;uint32_t v=h;while(n--)v=(v^*p++)*16777619u;return v;}
 static void pstr(unsigned char *p,const char *s){assert(strlen(s)<256);p[0]=strlen(s);memcpy(p+1,s,p[0]);}
 static const char *unpascal(const unsigned char *p){static char s[256];memcpy(s,p+1,p[0]);s[p[0]]=0;return s;}
 #define MAXFILES 160
@@ -104,6 +107,17 @@ static void collection_fixture(void){
  for(int j=0;standard_commands[j];j++){char p[256];snprintf(p,sizeof p,"Kit:%s",standard_commands[j]);put(p,bundle,bundle_len);}
 }
 int main(int argc,char **argv){
+ if(argc>1&&!strcmp(argv[1],"--pressure")){
+  unsigned char *image=calloc(1,65536+48);assert(image);
+  memcpy(image,"CLX1",4);clx_put32(image+4,2);clx_put32(image+8,65536);clx_put32(image+32,1);clx_put32(image+40,1);
+  clx_put32(image+24,asm_fnv1a(2166136261UL,image+48,65536));clx_put32(image+44,asm_fnv1a(2166136261UL,image,44));
+  put(source,image,65536+48);free(image);heap_budget=73728;
+  int rc=module_run(source,0,NULL);printf("pressure: status=%d executions=%d entry-free=%lu remaining=%lu\n",rc,executions,entry_free,heap_used);assert(!heap_used&&rc==126&&!executions&&module_native_error==memFullErr);
+  heap_budget=131072;allocation_limit=32768;
+  assert(module_run(source,0,NULL)==126&&!executions&&!heap_used);
+  allocation_limit=~0UL;cancel_at=1;assert(module_run(source,0,NULL)==130&&!executions&&!heap_used);
+  cancel_at=0;assert(!module_run(source,0,NULL)&&entry_free>=32768&&!heap_used);return 0;
+ }
  if(argc>1){FILE *exports=fopen(argv[1],"rb");assert(exports);size_t n=fread(export_names,1,sizeof export_names-1,exports);export_names[n]=0;fclose(exports);
   for(int a=2;a<argc;a++){reset();FILE *f=fopen(argv[a],"rb");assert(f);strcpy(files[0].name,dest);files[0].len=fread(files[0].data,1,sizeof files[0].data,f);assert(!ferror(f));fclose(f);allocation_limit=16384;alloc_calls=0;int status=command_check_native(dest);assert(!alloc_calls);if(status)fprintf(stderr,"%s: %s",argv[a],diagnostics);assert(!status);assert(!allocs&&!files[0].open);}
   printf("PASS: production loader validated %d actual command images and imports (no execution)\n",argc-2);return 0;
@@ -171,6 +185,18 @@ int main(int argc,char **argv){
  reset();i=setup();files[i].dir=1;assert(command_replace("grep",source,1));same_old(i,dest);
  reset();assert(command_replace("../grep",source,1)==bdNamErr);assert(command_replace("this-command-name-is-over-twenty",source,1)==bdNamErr);
 
+ /* Receipt digest is optional; full payload and structural checks never are. */
+ reset();make_image(bad,1,1);clx_put32(bad+16,1);clx_put32(bad+20,1);
+ clx_put32(bad+36,0);clx_put32(bad+40,2);clx_put32(bad+44,0);memcpy(bad+48,"present",8);
+ clx_put32(bad+24,asm_fnv1a(2166136261UL,bad+32,80));i=put(source,bad,112);
+ for(int receipt_needed=0;receipt_needed<2;receipt_needed++){
+  short ref;assert(!open_path(source,fsRdPerm,&ref));files[i].pos=32;
+  unsigned long digest=0;const char *reason="test";hash_bytes=0;
+  assert(!module_verify_payload(ref,4,1,1,clx_u32(bad+24),receipt_needed?&digest:NULL,&reason));
+  assert(hash_bytes==(unsigned long)(receipt_needed?156:80));assert(!FSClose(ref));
+  if(receipt_needed)assert(digest==asm_fnv1a(2166136261UL,bad+36,76));
+ }
+ files[i].data[32]^=1;assert(command_check_native(source)==126);
  /* Fast policy: the host callback stands in for executing validated 68000 code. */
  reset();i=put(dest,updated,updated_len);assert(!module_run(dest,0,0)&&!module_fast);assert(!module_run(dest,0,0)&&module_fast);assert(executions==2);
  char receipt_name[PATH_CAP];assert(clx_record_path(dest,receipt_name));int rec=find(receipt_name);assert(rec>=0&&files[rec].len==CLX_RECORD_BYTES);

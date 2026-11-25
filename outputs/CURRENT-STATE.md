@@ -2,19 +2,21 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111960**, product **98c0b8a**, local main: all eleven shell/runtime P2/P3
-findings corrected. Pipeline/control/status scope, HOME=/home, unquoted $@,
-spool rewind errors, remote logout/cancel, virtual-device isatty, exclusive-create
-cleanup, PATH skipping and ABI diagnostics pass focused host and normal68000
-Snow Plus/4MB/System6.0.8 acceptance. Prior P1 corrections retained.
-[Evidence and limits](userland-p2/REPORT.md). Zero retained command allocations;
-repeat largest block stable. Core package+512bytes, BSS+8; no new persistent heap
-blocks. Ensuring /home adds one native directory check to existing startup.
+Latest normal build **2026111961**, local main: focused parser/CLX performance batch.
+Read-cursor parsing removes repeated source moves;8 KiB Snow script210→31seconds.
+Repeated full awk checks8.83→7.66seconds by omitting an unused receipt digest;
+mandatory verification and receipt formats unchanged. Normal ls loading stays about
+30 ticks. Loader now preserves its existing recovery headroom under cumulative
+pressure; fragmented-memory execution and retry pass. No new persistent buffers.
+[Measurements and acceptance limits](userland-perf/REPORT.md). Normal 68000
+Snow Plus/4 MB/System 6.0.8 accepted; physical acceptance pending. 32 KiB command-heavy
+scripts remain slow (361.81s); no completed old-build guest comparison for that case.
+Core package+512bytes; zero retained command allocations and stable largest block.
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. Same sealed Core/49utilities plus preserved
-optional vi. [Publication verification](userland-p2/verification.json).
-Prior1959 distribution/recovery retained. Native fault injection host-only;
-physical acceptance pending. No hardware deployment or GitHub push. Stop after batch.
+`Macintosh Exchange/Clarice/index.txt`. Publication verification is recorded in
+[userland-perf/verification.json](userland-perf/verification.json), including product
+commit and preserved prior 1960 distribution. No GitHub push or hardware deployment.
+Stop after the three performance findings.
 
 ## Review remediation Batch A
 

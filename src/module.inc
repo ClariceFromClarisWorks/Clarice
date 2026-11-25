@@ -4,6 +4,7 @@ static pascal OSErr module_kill_io(short ref){ParamBlockRec pb;memset(&pb,0,size
 extern unsigned long asm_fnv1a(unsigned long,const unsigned char *,unsigned long);
 #endif
 /* CLX1: bounded, relocatable native commands, independently loaded per run. */
+#include "heap-admission.h"
 /* Loader-owned headers, NewPtr blocks and validated relocation sites are even.
    68000 move.l needs word alignment, not four-byte alignment. */
 static unsigned long clx_u32(const unsigned char *p){
@@ -63,7 +64,7 @@ static int module_native_error;
    Separate stack frame: ordinary command launches do not reserve this buffer. */
 static __attribute__((noinline)) int module_verify_payload(short ref,unsigned long size,unsigned long nr,unsigned long ni,unsigned long expected,unsigned long *metadata_hash,const char **reason){
   unsigned char block[2048] __attribute__((aligned(2)));unsigned long checksum=2166136261UL,previous=0;long length;int e;
-  *metadata_hash=2166136261UL;
+  if(metadata_hash)*metadata_hash=2166136261UL;
   for(unsigned long left=size;left;){length=left>sizeof block?sizeof block:left;long want=length;
    e=FSRead(ref,&length,block);if(e||length!=want){return e?e:ioErr;}
    checksum=clx_hash(checksum,block,length);left-=length;
@@ -72,7 +73,7 @@ static __attribute__((noinline)) int module_verify_payload(short ref,unsigned lo
   for(unsigned long i=0;i<nr;){
    unsigned long count=nr-i;if(count>sizeof block/12)count=sizeof block/12;
    length=count*12;long want=length;e=FSRead(ref,&length,block);if(e||length!=want){return e?e:ioErr;}
-   checksum=clx_hash(checksum,block,length);*metadata_hash=clx_hash(*metadata_hash,block,length);
+   checksum=clx_hash(checksum,block,length);if(metadata_hash)*metadata_hash=clx_hash(*metadata_hash,block,length);
    for(unsigned long j=0;j<count;j++,i++){unsigned char *r=block+j*12;
     unsigned long at=clx_u32(r),kind=clx_u32(r+4),target=clx_u32(r+8);
     if((at&1)||at>size-4||(i&&at<previous+4))return paramErr;previous=at;
@@ -83,7 +84,7 @@ static __attribute__((noinline)) int module_verify_payload(short ref,unsigned lo
   for(unsigned long i=0;i<ni;){
    unsigned long count=ni-i;if(count>sizeof block/64)count=sizeof block/64;
    length=count*64;long want=length;e=FSRead(ref,&length,block);if(e||length!=want){return e?e:ioErr;}
-   checksum=clx_hash(checksum,block,length);*metadata_hash=clx_hash(*metadata_hash,block,length);
+   checksum=clx_hash(checksum,block,length);if(metadata_hash)*metadata_hash=clx_hash(*metadata_hash,block,length);
    for(unsigned long j=0;j<count;j++,i++){char *name=(char*)block+j*64;
     if(!memchr(name,0,64)||!*name)return paramErr;
     if(!clx_import(name)){*reason="incompatible runtime imports";return paramErr;}
@@ -142,11 +143,15 @@ static int module_load_source(const char *path,int argc,char **argv,int execute,
  if(*env_get("CLX_TEST_LEGACY_CHECK"))stream_check=0;
 #endif
  if(stream_check){
-  e=module_verify_payload(ref,size,nr,ni,clx_u32(header+24),&metadata_hash,&reason);
+  e=module_verify_payload(ref,size,nr,ni,clx_u32(header+24),eligible&&!matched?&metadata_hash:0,&reason);
   if(e){if(e==userCanceledErr)status=130;goto close;}goto verified;
  }
  if(execute&&cli_prepare_stdio()){reason="insufficient stdio memory";goto close;}
  if(execute)module_bytes=size;
+ /* Reserve the same recovery space as command allocations. NewPtr still
+    decides whether each block fits contiguously; no executable-size ceiling. */
+ unsigned long extra=nr*12+ni*64;
+ if(!embedded&&!native_heap_room(size+(extra?extra:1),32768L,1)){e=memFullErr;reason="insufficient loader recovery memory";goto close;}
 #ifdef CLARICE_NANO_PERF
  unsigned long alloc_started=TickCount();
 #endif
@@ -155,7 +160,7 @@ static int module_load_source(const char *path,int argc,char **argv,int execute,
  perf_image_ticks=TickCount()-alloc_started;alloc_started=TickCount();
 #endif
 if(!file){e=memFullErr;reason="insufficient application memory";goto close;}
- unsigned long extra=nr*12+ni*64;meta=embedded?file+size:(unsigned char*)NewPtr(extra?extra:1);
+ meta=embedded?file+size:(unsigned char*)NewPtr(extra?extra:1);
 #ifdef CLARICE_NANO_PERF
  perf_meta_ticks=TickCount()-alloc_started;
 #endif
@@ -200,6 +205,7 @@ verified:
     the caller's pointer ownership; strings remain writable as required by C. */
  phase=TickCount();
  if(argc<0||(unsigned long)argc>0x7fffffffUL/sizeof(char*)-1){reason="invalid argument count";goto close;}
+ if(!native_heap_room(((unsigned long)argc+1)*sizeof(char*),32768L,1)){e=memFullErr;reason="insufficient loader recovery memory";goto close;}
  command_argv=(char**)NewPtr(((unsigned long)argc+1)*sizeof(char*));
  if(!command_argv){e=memFullErr;reason="insufficient argument memory";goto close;}
  if(argc)memcpy(command_argv,argv,(unsigned long)argc*sizeof(char*));command_argv[argc]=0;

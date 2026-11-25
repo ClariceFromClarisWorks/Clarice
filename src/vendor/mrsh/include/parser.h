@@ -47,6 +47,7 @@ struct mrsh_parser {
 	bool oom;
 
 	struct mrsh_buffer buf; // internal read buffer
+	size_t read_pos; // consumed prefix; compact only for refill or alias replacement
 	struct mrsh_position pos;
 
 	struct {
@@ -67,6 +68,11 @@ struct mrsh_parser {
 };
 
 typedef struct mrsh_word *(*word_func)(struct mrsh_parser *parser, char end);
+
+static inline char *parser_data(struct mrsh_parser *parser) {
+	return parser->buf.data + parser->read_pos;
+}
+void parser_compact(struct mrsh_parser *parser);
 
 size_t parser_peek(struct mrsh_parser *parser, char *buf, size_t size);
 char parser_peek_char(struct mrsh_parser *parser);

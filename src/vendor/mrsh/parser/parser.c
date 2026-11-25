@@ -141,10 +141,18 @@ static ssize_t parser_peek_buffer(struct mrsh_parser *parser, size_t size) {
 	return n_read;
 }
 
+void parser_compact(struct mrsh_parser *parser) {
+	if (!parser->read_pos) return;
+	parser->buf.len -= parser->read_pos;
+	memmove(parser->buf.data, parser_data(parser), parser->buf.len);
+	parser->read_pos = 0;
+}
+
 size_t parser_peek(struct mrsh_parser *parser, char *buf, size_t size) {
 	if (buf) memset(buf, 0, size);
 	if (parser->oom) return 0;
-	if (size > parser->buf.len) {
+	if (size > parser->buf.len - parser->read_pos) {
+		parser_compact(parser);
 		size_t n_more = size - parser->buf.len;
 
 		ssize_t n_read;
@@ -171,7 +179,7 @@ size_t parser_peek(struct mrsh_parser *parser, char *buf, size_t size) {
 	}
 
 	if (buf != NULL) {
-		memcpy(buf, parser->buf.data, size);
+		memcpy(buf, parser_data(parser), size);
 	}
 	return size;
 }
@@ -185,21 +193,20 @@ char parser_peek_char(struct mrsh_parser *parser) {
 size_t parser_read(struct mrsh_parser *parser, char *buf, size_t size) {
 	size_t n = parser_peek(parser, buf, size);
 	if (n > 0) {
-		if (memchr(parser->buf.data, '\0', n)) {
+		if (memchr(parser_data(parser), '\0', n)) {
 			parser_set_error(parser, "unexpected end of input");
 			return 0;
 		}
 		for (size_t i = 0; i < n; ++i) {
 			++parser->pos.offset;
-			if (parser->buf.data[i] == '\n') {
+			if (parser_data(parser)[i] == '\n') {
 				++parser->pos.line;
 				parser->pos.column = 1;
 			} else {
 				++parser->pos.column;
 			}
 		}
-		memmove(parser->buf.data, parser->buf.data + n, parser->buf.len - n);
-		parser->buf.len -= n;
+		parser->read_pos += n;
 
 		parser->continuation_line = false;
 	}
@@ -302,7 +309,7 @@ again:;
 			for (j = 0; str[j] != '\0'; ++j) {
 				size_t n = j + 1;
 				size_t n_read = parser_peek(parser, NULL, n);
-				if (n != n_read || parser->buf.data[j] != str[j]) {
+				if (n != n_read || parser_data(parser)[j] != str[j]) {
 					break;
 				}
 			}
@@ -395,6 +402,7 @@ bool mrsh_parser_continuation_line(struct mrsh_parser *parser) {
 
 void mrsh_parser_reset(struct mrsh_parser *parser) {
 	parser->buf.len = 0;
+	parser->read_pos = 0;
 	parser->oom = false;
 	parser_set_error(parser,NULL);
 	parser->has_sym = false;
