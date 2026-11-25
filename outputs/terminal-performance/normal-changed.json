@@ -1,0 +1,12 @@
+[
+  {
+    "command": "cat /etc/clarice/clarice.conf",
+    "status": 0,
+    "output": "cat /etc/clarice/clarice.conf; printf '\\nREMOTE_END_1:%d\\n' $?\r\n# Clarice preferences; read at launch. Values are not shell commands.\r\ncontrol=option\r\nfont=Monaco\r\nsize=9\r\ncolours=dark\r\nscrollback=128\r\n# Windowed content geometry; columns follow font and width.\r\nwidth=380\r\nheight=220\r\nx=3\r\ny=41\r\nfill=0\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "output": "status runtime; printf '\\nREMOTE_END_2:%d\\n' $?\r\nRuntime: heap=303016 largest=301602 image=10056 ticks=44 load=31 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=2 imports=2 relocations=1 prepare=4 events=2 (events included above)\r\nVerification ticks: mode=fast header=0 record=10 payload=0 metadata=2 structure=0 (structure included in relocations)\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  }
+]

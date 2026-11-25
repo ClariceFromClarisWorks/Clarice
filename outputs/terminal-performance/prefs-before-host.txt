@@ -1,0 +1,7 @@
+Assertion failed: (!layouts&&!saves&&!paints), function main, file prefs-host.c, line 62.
+Traceback (most recent call last):
+  File "/Users/williamprestwich/Documents/ChatGPT/Clarice-Main-SelfUpdate-Merge/tests/terminal/preferences-noop.py", line 57, in <module>
+    subprocess.run(['cc','-fsanitize=address,undefined','-Isrc',str(p),'-o',str(out/'prefs-host')],check=True);subprocess.run([str(out/'prefs-host')],check=True)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/williamprestwich/Documents/ChatGPT/Clarice-Main-SelfUpdate-Merge/work/terminal-performance/prefs-host']' died with <Signals.SIGABRT: 6>.

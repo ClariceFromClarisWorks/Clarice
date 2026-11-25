@@ -1,0 +1,4 @@
+Using multiversal interfaces
+   text	   data	    bss	    dec	    hex	filename
+ 238884	  35060	  41448	 315392	  4d000	/src/work/terminal-performance/before.code.bin.gdb
+ 239328	  35080	  41448	 315856	  4d1d0	/src/work/build/Clarice.code.bin.gdb

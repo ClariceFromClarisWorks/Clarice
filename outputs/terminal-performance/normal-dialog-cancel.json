@@ -1,0 +1,12 @@
+[
+  {
+    "command": "cksum /etc/clarice/clarice.conf",
+    "status": 0,
+    "output": "cksum /etc/clarice/clarice.conf; printf '\\nREMOTE_END_1:%d\\n' $?\r\n3182539551 230 /etc/clarice/clarice.conf\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "echo dialog-cancel-recovered",
+    "status": 0,
+    "output": "echo dialog-cancel-recovered; printf '\\nREMOTE_END_2:%d\\n' $?\r\ndialog-cancel-recovered\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "command": "cat /tmp/perf-cancel",
+    "status": 0,
+    "output": "cat /tmp/perf-cancel; printf '\\nREMOTE_END_1:%d\\n' $?\r\n130\r\n\r\nREMOTE_END_1:0\r\n/ > "
+  },
+  {
+    "command": "echo recovered",
+    "status": 0,
+    "output": "echo recovered; printf '\\nREMOTE_END_2:%d\\n' $?\r\nrecovered\r\n\r\nREMOTE_END_2:0\r\n/ > "
+  },
+  {
+    "command": "status runtime",
+    "status": 0,
+    "output": "status runtime; printf '\\nREMOTE_END_3:%d\\n' $?\r\nRuntime: heap=303020 largest=301442 image=10056 ticks=40 load=32 owned-peak=0 remaining=0\r\nLoader ticks: read=12 validate=1 imports=2 relocations=1 prepare=5 events=1 (events included above)\r\nVerification ticks: mode=fast header=0 record=11 payload=0 metadata=1 structure=1 (structure included in relocations)\r\n\r\nREMOTE_END_3:0\r\n/ > "
+  }
+]

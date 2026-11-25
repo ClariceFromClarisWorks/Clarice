@@ -130,6 +130,10 @@ static void glyph_planes_end(void);
 /* Prompt is made only from cached shell state, with room left for input. */
 static int prompt_prefix(char *out){if(tty_reading){out[0]=0;return 0;}if(continuing){strcpy(out,"> ");return 2;}char full[132];shell_prompt(full,sizeof full);int n=strlen(full),limit=columns/2;if(limit<2)limit=2;if(n>limit){memcpy(out,full+n-limit,limit);out[0]='~';out[limit]=0;return limit;}strcpy(out,full);return n;}
 /* Cursor is composed into the offscreen row, then copied with its text. */
+#ifdef CLARICE_USABILITY_DIAGNOSTICS
+static unsigned long ux_rows,ux_pixels,ux_moves,ux_writes,ux_layouts,ux_saves;
+static int ux_wrap_legacy,ux_dialog_action;
+#endif
 static void hide_caret(void){dirty=1;}
 #ifdef CLARICE_SELECTION_DIAGNOSTICS
 static int scroll_probe_legacy;
@@ -238,7 +242,11 @@ static void grid_window(int cols,int rows,int cw,int lh){
  long w=(long)cols*cw+TEXT_LEFT+16,h=(long)rows*lh+TEXT_TOP;
  fit_window(w>maxw?maxw:(int)w,h>maxh?maxh:(int)h);
 }
-static int layout(void){activity_hide();Rect r=win->portRect;int previous_columns=columns,previous_visible=visible,was_scrolled=scrollback!=0;long anchor=viewport_live_first()-scrollback;if(anchor<oldest_line)anchor=oldest_line;
+static int layout(void){
+#ifdef CLARICE_USABILITY_DIAGNOSTICS
+ ux_layouts++;
+#endif
+activity_hide();Rect r=win->portRect;int previous_columns=columns,previous_visible=visible,was_scrolled=scrollback!=0;long anchor=viewport_live_first()-scrollback;if(anchor<oldest_line)anchor=oldest_line;
  /* Continuation rows of the editable command are virtual: reflow only owns
     committed history. Anchor these by input byte position, not a history index. */
  int input_anchor=-1;
@@ -302,6 +310,9 @@ static unsigned long align_ticks;
 #define ALIGN_LEGACY 0
 #endif
 static void present_native_row(const Rect *original,const Rect *dest){
+#ifdef CLARICE_USABILITY_DIAGNOSTICS
+ ux_rows++;ux_pixels+=(long)(dest->right-dest->left)*(dest->bottom-dest->top);
+#endif
  Rect adjusted=*original;const Rect *source=&adjusted;
  int stride=win->portBits.rowBytes&0x3fff,px=dest->left-win->portBits.bounds.left,py=dest->top-win->portBits.bounds.top,width=dest->right-dest->left,height=dest->bottom-dest->top;
  /* Short changed spans already copy cheaply; shifting them regressed the
@@ -339,6 +350,9 @@ static int scroll_window_rows(int shift){
  Rect area,source,dest;SetRect(&area,TEXT_LEFT,TEXT_TOP,TEXT_LEFT+columns*cell_w,TEXT_TOP+visible*line_h);
  if(!region_contains(win->visRgn,&area)||!region_contains(win->clipRgn,&area))return 0;
  source=dest=area;if(shift>0){source.top+=shift*line_h;dest.bottom-=shift*line_h;}else{source.bottom+=shift*line_h;dest.top-=shift*line_h;}
+ #ifdef CLARICE_USABILITY_DIAGNOSTICS
+ ux_moves+=(long)(dest.right-dest.left)*(dest.bottom-dest.top);
+#endif
  SetPort(win);ForeColor(blackColor);BackColor(whiteColor);DRAW_STAMP(move_start);CopyBits(&win->portBits,&win->portBits,&source,&dest,srcCopy,0);
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  frame_detail[0]+=TickCount()-move_start;
@@ -349,6 +363,17 @@ static int scroll_window_rows(int shift){
 static int planes_enabled=2;
 #include "native-glyphs.inc"
 static unsigned long scroll_exposed_ticks,scroll_exposed_worst;
+/* Only extend scrolling to a one-row live-input advance. Both carets stay
+   in the excluded bottom row; copied rows retain their pixel/model pairing.
+   The normal diff then paints exposed input and any newly completed character.
+   Selection, caret-in-source and visibility guards still apply at the caller. */
+static int input_wrap_scroll(char screen[40][COLS],long first,int prompt){
+#ifdef CLARICE_USABILITY_DIAGNOSTICS
+ if(ux_wrap_legacy)return 0;
+#endif
+ return !scrollback&&first==drawn_first+1&&prompt==drawn_prompt-1&&
+  last_screen[visible][COLS-1]&&screen[visible][COLS-1];
+}
 static void draw_native(void){unsigned long exposed_start=0;int row,x;char screen[40][COLS] __attribute__((aligned(2)));long first=current_line-visible+1-scrollback;int prompt_row=visible;if(first<0){first=0;prompt_row=(int)current_line;}int selection_a=select_start<select_end?select_start:select_end,selection_b=select_start>select_end?select_start:select_end;
  if(!win)return;SetPort(win);ForeColor(inverse?whiteColor:blackColor);BackColor(inverse?blackColor:whiteColor);DRAW_STAMP(native_stage);compose_input(screen,&first,&prompt_row);DRAW_ADD(0,native_stage);
 #ifdef CLARICE_DRAW_DIAGNOSTICS
@@ -357,7 +382,7 @@ static void draw_native(void){unsigned long exposed_start=0;int row,x;char scree
  /* Copy overlapping pixels without ScrollRect's exposed-area erase. Rows are
     composed offscreen below, so a scroll never blanks text before replacing it.
     Obscured/partially clipped views redraw from the bounded text model. */
- if(!force_draw&&select_start<0&&!scroll_area_has_caret()&&prompt_row>=visible&&drawn_prompt>=visible&&first!=drawn_first&&labs(first-drawn_first)<visible&&prefer_pixel_scroll(screen,(int)(first-drawn_first))){
+ if(!force_draw&&select_start<0&&!scroll_area_has_caret()&&((prompt_row>=visible&&drawn_prompt>=visible)||input_wrap_scroll(screen,first,prompt_row))&&first!=drawn_first&&labs(first-drawn_first)<visible&&prefer_pixel_scroll(screen,(int)(first-drawn_first))){
   int shift=(int)(first-drawn_first);
   if(scroll_window_rows(shift)){
    exposed_start=TickCount();
@@ -659,6 +684,9 @@ static int preference_number(const char *s){int n=0;if(!*s)return -1;for(;*s;s++
 #include "preferences-format.h"
 static int fill_window(void);
 static void save_preferences(void);
+/* A failed/missing save must remain retryable even when the next request
+   equals the live settings. No resident preference copy or filesystem probe. */
+static unsigned char preferences_unsaved=1;
 static void prefs_snapshot(struct ClaricePrefs *p){
  unsigned char font[256];Point origin={0,0};GetFontName(font_id,font);memcpy(p->font,font+1,font[0]);p->font[font[0]]=0;
  SetPort(win);LocalToGlobal(&origin);p->size=font_size;p->inverse=inverse;p->retained=retained;p->fill=filled;p->control=control_mode;
@@ -667,9 +695,9 @@ static void prefs_snapshot(struct ClaricePrefs *p){
 }
 static void prefs_sibling(char *out,const char *suffix){strcpy(out,prefs_path);char *end=strrchr(out,':');strcpy(end?end+1:out,suffix);}
 static void load_preferences(void){
- unsigned char name[256];char data[PREFS_TEXT_MAX+1];short ref;long n=PREFS_TEXT_MAX+1;struct ClaricePrefs p;int legacy=0;
+ unsigned char name[256];char data[PREFS_TEXT_MAX+1];short ref;long n=PREFS_TEXT_MAX+1;struct ClaricePrefs p;int legacy=0,recovered=0;
  pstr(name,prefs_path);if(HOpen(0,0,name,fsRdPerm,&ref)){
-  char backup[PATH_CAP];prefs_sibling(backup,"clarice.conf.bak");pstr(name,backup);if(HOpen(0,0,name,fsRdPerm,&ref))return;
+  char backup[PATH_CAP];prefs_sibling(backup,"clarice.conf.bak");pstr(name,backup);if(HOpen(0,0,name,fsRdPerm,&ref))return;recovered=1;
  }
  OSErr e=FSRead(ref,&n,data);FSClose(ref);if((e&&e!=eofErr)||n>PREFS_TEXT_MAX)return;prefs_snapshot(&p);
  unsigned char *d=(unsigned char*)data;
@@ -681,24 +709,37 @@ static void load_preferences(void){
  }else if(!prefs_parse(&p,data,n))return;
  short id;pstr(name,p.font);if(installed_font(name,&id))font_id=id;font_size=p.size;inverse=p.inverse;retained=p.retained;control_mode=p.control;
  {Point origin={0,0};SetPort(win);LocalToGlobal(&origin);if(origin.h!=p.x||origin.v!=p.y)MoveWindow(win,p.x,p.y,1);}fit_window(p.width,p.height);
- if(p.fill)fill_window();if(legacy)save_preferences();
+ if(p.fill)fill_window();preferences_unsaved=legacy||recovered;if(legacy)save_preferences();
 }
 /* Write/flush a new file before replacing the old one. Keep the previous
    committed file as .bak, also used to recover an interrupted rename. */
 static void save_preferences(void){
+#ifdef CLARICE_USABILITY_DIAGNOSTICS
+ ux_saves++;
+#endif
 #ifdef CLARICE_OFFLINE_INSTALLER
  return; /* Installer geometry/theme must not rewrite user preferences. */
 #endif
+ preferences_unsaved=1;
  struct ClaricePrefs p;char data[1024],tmp[PATH_CAP],backup[PATH_CAP];unsigned char name[256],tn[256],bn[256],base[256];short ref;int e;long n;
  prefs_snapshot(&p);n=prefs_format(data,sizeof data,&p);if(n<0||n>=(long)sizeof data)return;long want=n;
  prefs_sibling(tmp,"clarice.conf.new");prefs_sibling(backup,"clarice.conf.bak");pstr(name,prefs_path);pstr(tn,tmp);pstr(bn,backup);
  HDelete(0,0,tn);e=HCreate(0,0,tn,'S6UX','TEXT');if(!e)e=HOpen(0,0,tn,fsWrPerm,&ref);
- if(!e){e=FSWrite(ref,&n,data);if(!e&&n!=want)e=ioErr;int close=FSClose(ref);if(!e)e=close;}if(!e)e=shell_flush_native(prefs_path);
+ if(!e){
+#ifdef CLARICE_USABILITY_DIAGNOSTICS
+ ux_writes++;
+#endif
+ e=FSWrite(ref,&n,data);if(!e&&n!=want)e=ioErr;int close=FSClose(ref);if(!e)e=close;}if(!e)e=shell_flush_native(prefs_path);
  if(!e){/* Only remove backup when the primary still exists. */
   short old;int exists=HOpen(0,0,name,fsRdPerm,&old);if(!exists){FSClose(old);e=HDelete(0,0,bn);if(e==fnfErr)e=0;pstr(base,"clarice.conf.bak");if(!e)e=shell_rename(name,base);}else if(exists!=fnfErr)e=exists;
   if(!e){const char *tail=strrchr(prefs_path,':');pstr(base,tail?tail+1:prefs_path);e=shell_rename(tn,base);if(e)shell_rename(bn,base);}
  }
- if(e){HDelete(0,0,tn);{char msg[110];snprintf(msg,sizeof msg,"Preferences save failed (%d); previous file retained.\n",e);term_puts(msg);}}shell_flush_native(prefs_path);
+ if(e){HDelete(0,0,tn);{char msg[110];snprintf(msg,sizeof msg,"Preferences save failed (%d); previous file retained.\n",e);term_puts(msg);}}int flushed=shell_flush_native(prefs_path);preferences_unsaved=e||flushed;
+ if(!e&&flushed){char msg[100];snprintf(msg,sizeof msg,"Preferences flush failed (%d); retry saving.\n",flushed);term_puts(msg);}
+}
+static int unchanged_preferences(void){
+ if(preferences_unsaved)save_preferences();
+ return preferences_unsaved?1:0;
 }
 int app_pager_begin(void){if(shell_session_remote_io())return 0;int old=page_mode;page_mode=1;page_start=current_line;app_activity_interactive(1);return old;}
 int app_pager_end(int old){if(shell_session_remote_io())return 0;int quit=cancelled&&!interrupted&&!done;if(quit)cancelled=0;page_mode=old;app_activity_interactive(0);return quit;}
@@ -755,14 +796,18 @@ static pascal void draw_pref_popup(DialogPtr d,short item){
 static int dialog_popup(DialogPtr d,int item,MenuHandle m,int selected){short type;Handle h;Rect r;GrafPtr old;GetPort(&old);SetPort(d);GetDialogItem(d,item,&type,&h,&r);Point pt={r.top,r.left};LocalToGlobal(&pt);CalcMenuSize(m);HiliteMenu(0);long choice=PopUpMenuSelect(m,pt.v,pt.h,selected);SetPort(old);int result=(short)choice;return result?result:selected;}
 static void popup_title(DialogPtr d,int item,MenuHandle m,int selected){short type;Handle h;Rect r;int k=popup_slot(item);pref_popup_menus[k]=m;pref_popup_choices[k]=selected;GetDialogItem(d,item,&type,&h,&r);SetDialogItem(d,item,userItem,(Handle)draw_pref_popup,&r);draw_pref_popup(d,item);}
 static void preferences_window(void){
- sync_window_geometry();hide_caret();DialogPtr d=GetNewDialog(140,0,(WindowPtr)-1);if(!d){SysBeep(1);return;}
+ sync_window_geometry();DialogPtr d=GetNewDialog(140,0,(WindowPtr)-1);if(!d){SysBeep(1);return;}
  MenuHandle fonts=GetMenuHandle(132),lines=GetMenuHandle(134),controls=GetMenuHandle(136);
  unsigned char name[256],other[256];char b[256];short item=0;int chosen=1,cap=retained==32?1:retained==64?2:3,ctrl=control_mode+1;
  GetFontName(font_id,name);for(int i=1;i<=CountMItems(fonts);i++){GetMenuItemText(fonts,i,other);if(other[0]==name[0]&&!memcmp(other+1,name+1,name[0]))chosen=i;}
  popup_title(d,5,fonts,chosen);snprintf(b,sizeof b,"%d",font_size);dialog_text(d,7,b);snprintf(b,sizeof b,"%d",columns);dialog_text(d,9,b);snprintf(b,sizeof b,"%d",visible+1);dialog_text(d,19,b);
  SetControlValue(dialog_control(d,10),inverse);SetControlValue(dialog_control(d,13),filled);popup_title(d,12,lines,cap);popup_title(d,15,controls,ctrl);
  SelectDialogItemText(d,7,0,32767);
- while(item!=2){ModalDialog(0,&item);
+ while(item!=2){
+#ifdef CLARICE_USABILITY_DIAGNOSTICS
+  if(ux_dialog_action){item=ux_dialog_action;ux_dialog_action=0;}else
+#endif
+  ModalDialog(0,&item);
   if(item==16||item==17){shell_run(item==16?"/bin/telnetd --preferences":"/bin/seriald --preferences");SetPort(d);}
   if(item==10||item==13){ControlHandle c=dialog_control(d,item);SetControlValue(c,!GetControlValue(c));}
   if(item==5){chosen=dialog_popup(d,5,fonts,chosen);popup_title(d,5,fonts,chosen);}
@@ -771,7 +816,12 @@ static void preferences_window(void){
   if(item==1){char size[256],cols[256],rows[256];short id;dialog_read(d,7,size);dialog_read(d,9,cols);dialog_read(d,19,rows);GetMenuItemText(fonts,chosen,name);
    int n=preference_number(size),count=preference_number(cols),rowcount=preference_number(rows);if(!installed_font(name,&id)||n<6||n>24||count<1||rowcount<1){StopAlert(141,0);continue;}
    int want_fill=GetControlValue(dialog_control(d,13)),dark=GetControlValue(dialog_control(d,10));
-   int change_grid=count!=columns||rowcount!=visible+1;SetPort(win);TextFont(id);TextSize(n);FontInfo f;GetFontInfo(&f);int width=CharWidth('M'),fixed=1;
+   int change_grid=count!=columns||rowcount!=visible+1;
+   if(!change_grid&&id==font_id&&n==font_size&&want_fill==filled&&dark==inverse&&
+      retained==(cap==1?32:cap==2?64:128)&&control_mode==ctrl-1){
+    DisposeDialog(d);SetPort(win);unchanged_preferences();return;
+   }
+   SetPort(win);TextFont(id);TextSize(n);FontInfo f;GetFontInfo(&f);int width=CharWidth('M'),fixed=1;
    for(int c=32;c<127;c++)if(CharWidth(c)!=width)fixed=0;if(!fixed)width=f.widMax;if(width<1)width=6;
    int height=f.ascent+f.descent+f.leading;if(height<1)height=12;TextFont(font_id);TextSize(font_size);
    DisposeDialog(d);SetPort(win);Point previous={0,0};LocalToGlobal(&previous);int was_filled=filled;Rect saved=normal_bounds;
@@ -787,7 +837,8 @@ static void preferences_window(void){
    InvalRect(&win->portRect);save_preferences();return;
   }
  }
- DisposeDialog(d);SetPort(win);dirty=force_draw=1;
+ /* Window Manager invalidation restores only the covered area on Cancel. */
+ DisposeDialog(d);SetPort(win);
 }
 
 int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char name[256];GetFontName(font_id,name);if(name[0]>31)name[0]=31;name[name[0]+1]=0;snprintf(b,sizeof b,"Font %.31s, %d point; %d columns x %d rows\nColours %s\n",name+1,font_size,columns,visible+1,inverse?"white on black":"black on white");term_puts(b);snprintf(b,sizeof b,"Scrollback %d lines; rendering automatic\nControl key: %s (physical Control always works)\n",retained,control_name(control_mode));term_puts(b);return 0;}
@@ -796,11 +847,11 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
  if(!strcmp(argv[1],"fonts")){MenuHandle m=GetMenuHandle(132);short i;for(i=1;i<=CountMItems(m);i++){unsigned char name[256];GetMenuItemText(m,i,name);term_write((char*)name+1,name[0]);term_puts("\n");}return 0;}
  Point previous={0,0};SetPort(win);LocalToGlobal(&previous);
  if(!strcmp(argv[1],"fill")){if(!fill_window())return 1;}
- else if(argc==3&&!strcmp(argv[1],"font")){unsigned char name[256];short id;pstr(name,argv[2]);if(!installed_font(name,&id)){term_puts("Font is not installed. Use prefs fonts.\n");return 2;}font_id=id;}
- else if(argc==3&&!strcmp(argv[1],"size")){int size=preference_number(argv[2]);if(size<6||size>24)return 2;font_size=size;}
- else if(argc==3&&!strcmp(argv[1],"colours")){if(!strcmp(argv[2],"dark"))inverse=1;else if(!strcmp(argv[2],"light"))inverse=0;else return 2;}
- else if(argc==3&&!strcmp(argv[1],"control")){int k=control_parse(argv[2]);if(k<0)return 2;control_mode=k;}
- else if(argc==3&&!strcmp(argv[1],"scrollback")){int n=preference_number(argv[2]);if(n!=32&&n!=64&&n!=128)return 2;retained=n;if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;scrollback=0;}
+ else if(argc==3&&!strcmp(argv[1],"font")){unsigned char name[256];short id;pstr(name,argv[2]);if(!installed_font(name,&id)){term_puts("Font is not installed. Use prefs fonts.\n");return 2;}if(id==font_id)return unchanged_preferences();font_id=id;}
+ else if(argc==3&&!strcmp(argv[1],"size")){int size=preference_number(argv[2]);if(size<6||size>24)return 2;if(size==font_size)return unchanged_preferences();font_size=size;}
+ else if(argc==3&&!strcmp(argv[1],"colours")){int dark;if(!strcmp(argv[2],"dark"))dark=1;else if(!strcmp(argv[2],"light"))dark=0;else return 2;if(dark==inverse)return unchanged_preferences();inverse=dark;}
+ else if(argc==3&&!strcmp(argv[1],"control")){int k=control_parse(argv[2]);if(k<0)return 2;if(k==control_mode)return unchanged_preferences();control_mode=k;}
+ else if(argc==3&&!strcmp(argv[1],"scrollback")){int n=preference_number(argv[2]);if(n!=32&&n!=64&&n!=128)return 2;if(n==retained)return unchanged_preferences();retained=n;if(current_line-retained+1>oldest_line)oldest_line=current_line-retained+1;scrollback=0;}
 
 #ifdef CLARICE_DRAW_DIAGNOSTICS
  else if(argc==3&&!strcmp(argv[1],"cache")){if(!strcmp(argv[2],"on"))render_mode=2;else if(!strcmp(argv[2],"off"))render_mode=0;else return 2;}
@@ -808,13 +859,13 @@ int app_preferences(int argc,char **argv){char b[256];if(argc==1){unsigned char 
 #else
  else if(!strcmp(argv[1],"cache")||!strcmp(argv[1],"renderer")){term_puts("Rendering is selected automatically.\n");return 2;}
 #endif
- else if(argc==3&&(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))){int n=preference_number(argv[2]);if(n<1)return 2;grid_window(!strcmp(argv[1],"columns")?n:columns,!strcmp(argv[1],"rows")?n:visible+1,cell_w,line_h);}
+ else if(argc==3&&(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows"))){int n=preference_number(argv[2]);if(n<1)return 2;if(n==(!strcmp(argv[1],"columns")?columns:visible+1))return unchanged_preferences();grid_window(!strcmp(argv[1],"columns")?n:columns,!strcmp(argv[1],"rows")?n:visible+1,cell_w,line_h);}
  else {term_puts("prefs [window | fonts | font name | size 6..24 | colours dark/light | control control/option/command | scrollback 32/64/128 | columns N | rows N | fill]\n");return 2;}
  /* Grid-only changes reuse the existing font glyphs, as manual resizing does. */
  if(!strcmp(argv[1],"columns")||!strcmp(argv[1],"rows")){if(!layout()){MoveWindow(win,previous.h,previous.v,1);return 1;}filled=0;}else if(!font_layout())return 1;
  SetPort(win);InvalRect(&win->portRect);save_preferences();term_present();
  /* The forced visible repaint is complete; do not paint it again on updateEvt. */
- ValidRect(&win->portRect);return 0;}
+ ValidRect(&win->portRect);return preferences_unsaved?1:0;}
 int app_yield(void){shell_service_poll(0);EventRecord ev;unsigned long now=TickCount();if(now-last_yield<2)return (shell_session_active()?shell_session_cancelled():cancelled)||done;int ui=shell_session_ui_begin();unsigned long t=TickCount();for(int i=0;i<16&&!cancelled&&!done;i++){if(!WaitNextEvent(everyEvent,&ev,0,0))break;handle(&ev);}event_ticks+=TickCount()-t;if(dirty&&TickCount()-last_paint>=output_paint_ticks){
 #ifdef CLARICE_DRAW_DIAGNOSTICS
 if(output_paint_ticks==listing_paint_interval&&out_col)listing_partial_frames++;
@@ -990,8 +1041,8 @@ static void menu(long choice){short id=(short)(choice>>16),item=(short)choice;if
  if(id==129){if(item==1&&!editor_screen)app_clear();if(item==2)key(3,(editor_screen||serial_input==2)?cmdKey:0);if(item==4&&!busy)preferences_window();if(item==6)app_quit();}
  if(id==130){if(item==1)copy_selection();if(item==2)paste();if(item==4&&!busy)history_move(-1);if(item==5&&!busy)history_move(1);}
  if(id==131&&!busy){if(item==1)app_run_checks();if(item==2)app_metrics(0);}
- if(id==132){unsigned char name[256];GetMenuItemText(GetMenuHandle(132),item,name);GetFNum(name,&font_id);font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}
- if(id==133&&!editor_screen){if(item==1)inverse=!inverse;if(item==2)fill_window();if(item==4)font_size=9;if(item==5)font_size=12;if(item==6)font_size=14;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}
+ if(id==132){unsigned char name[256];GetMenuItemText(GetMenuHandle(132),item,name);short id;GetFNum(name,&id);if(id==font_id)unchanged_preferences();else {font_id=id;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}}
+ if(id==133&&!editor_screen){if((item==4&&font_size==9)||(item==5&&font_size==12)||(item==6&&font_size==14))unchanged_preferences();else {if(item==1)inverse=!inverse;if(item==2)fill_window();if(item==4)font_size=9;if(item==5)font_size=12;if(item==6)font_size=14;font_layout();SetPort(win);InvalRect(&win->portRect);save_preferences();}}
  HiliteMenu(0);dirty=1;}
 /* Moving a fixed selection anchor changes only the interval between the old
    and new endpoints. Invert those pixels once per row; keep an enabled cache

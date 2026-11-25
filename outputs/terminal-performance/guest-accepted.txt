@@ -1,0 +1,265 @@
+cat /tmp/usability.txt; printf '\nREMOTE_END_1:%d\n' $?
+PASS launch window in front
+PASS Command-C selected text
+PASS Command-V at insertion point
+PASS foreground ordered typeahead editing
+PASS foreground paste queued atomically
+PASS queued paste newline never submits
+PASS busy paste overflow fails closed
+PASS loading typeahead transferred to editor
+PASS pinwheel inverse background
+PASS hardware snapshot stock mono 4 MB and no retained allocation
+hardware 20 calls=23 ticks model=Macintosh Plus cpu=1 fpu=0 system=608
+PASS physical Ctrl-X editor
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS physical Ctrl-X editor
+PASS Option-W uses keyboard map not accented character
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS physical Ctrl-X editor
+PASS Command-X maps to Ctrl-X
+PASS Command-Option-C editor control not local abort
+PASS Ctrl-underscore is a control byte, not an arrow
+PASS Command-C keeps Macintosh copy
+PASS serial Ctrl-C delivered remotely
+PASS serial Command-period local cancellation
+PASS queued Ctrl-underscore keeps its control modifier
+PASS unsupported shell control is not an arrow
+PASS scrollback fills last row, no pinned prompt/cursor
+PASS copy includes last history row
+PASS shifted typing returns live and retains key
+PASS paste returns live and retains contents
+PASS foreground typeahead returns to live view
+theme requested=0 actual=0 pixel=0 input_ok=1 line_before=100 line_after=100 history_ok=1
+PASS theme immediately fills margins, preserves input and history
+theme requested=1 actual=1 pixel=1 input_ok=1 line_before=100 line_after=100 history_ok=1
+PASS theme immediately fills margins, preserves input and history
+PASS pending prompt outside partial update: exact pixels before Return
+PASS additional typing after partial update
+PASS input/cursor unchanged by update
+PASS cancellation without command execution
+PASS editor opens
+PASS editor pending row outside partial update
+PASS editor subsequent output/cursor
+PASS editor generic glyph fallback clipped update
+PASS editor close restores terminal
+PASS large history jump outside partial update
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS selection pixels
+PASS pending prompt outside partial update: exact pixels before Return
+PASS additional typing after partial update
+PASS input/cursor unchanged by update
+PASS cancellation without command execution
+PASS editor opens
+PASS editor pending row outside partial update
+PASS editor subsequent output/cursor
+PASS editor generic glyph fallback clipped update
+PASS editor close restores terminal
+PASS large history jump outside partial update
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS incremental history scroll pixels
+PASS selection pixels
+PASS history soft wrap omits newline; real ending retained
+PASS hard line endings retained
+PASS editable command soft wrap
+PASS editable explicit newline
+PASS final occupied visible cell selectable
+PASS one-past-last selection pixels
+correctness ticks=2102 typing samples=40 total=72 worst=2 heap-delta=34
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PERF wrap variant=0 samples=12 ticks=244 worst=21 event-to-visible=21 rows=288 raster-pixels=1221000 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PERF wrap variant=1 samples=12 ticks=271 worst=24 event-to-visible=24 rows=288 raster-pixels=1221000 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PERF wrap variant=2 samples=12 ticks=109 worst=10 event-to-visible=10 rows=24 raster-pixels=104544 moved-pixels=1149984 saves=0 writes=0 layouts=0
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PASS queued boundary character processed once
+PASS wrap-boundary exact pixels
+PASS unwrap backspace exact pixels
+PERF wrap variant=3 samples=12 ticks=110 worst=10 event-to-visible=10 rows=24 raster-pixels=104544 moved-pixels=1149984 saves=0 writes=0 layouts=0
+PERF columns variant=0 samples=1 ticks=0 worst=0 event-to-visible=0 rows=0 raster-pixels=0 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS unchanged prefs succeeds
+PERF rows variant=0 samples=1 ticks=0 worst=0 event-to-visible=0 rows=0 raster-pixels=0 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS unchanged prefs succeeds
+PERF size variant=0 samples=1 ticks=0 worst=0 event-to-visible=0 rows=0 raster-pixels=0 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS unchanged prefs succeeds
+PERF colours variant=0 samples=1 ticks=0 worst=0 event-to-visible=0 rows=0 raster-pixels=0 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS unchanged prefs succeeds
+PERF control variant=0 samples=1 ticks=0 worst=0 event-to-visible=0 rows=0 raster-pixels=0 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS unchanged prefs succeeds
+PERF dialog-ok variant=0 samples=1 ticks=56 worst=56 event-to-visible=0 rows=0 raster-pixels=0 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS unchanged dialog avoids layout/save
+PASS dialog restoration pixels
+PERF dialog-cancel variant=0 samples=1 ticks=52 worst=52 event-to-visible=0 rows=0 raster-pixels=0 moved-pixels=0 saves=0 writes=0 layouts=0
+PASS unchanged dialog avoids layout/save
+PASS dialog restoration pixels
+PASS unchanged size menu avoids layout/save
+PASS failed save stays retryable without layout
+PASS same-value retry durably saves
+failures=0 heap=324752
+
+REMOTE_END_1:0
+/ > 

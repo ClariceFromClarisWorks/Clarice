@@ -2,22 +2,26 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111963**, local main: four Batch 2 terminal correctness
-fixes accepted in normal 68000 Snow Plus/4 MiB/System 6.0.8. Pending pixels survive
-clipped updates; mouse tracking yields to queued cancellation; copying preserves
-logical line endings; selection includes the final occupied cell.
-[Focused evidence](terminal-correctness/REPORT.md): 89 guest checks, 41 exact native
-pixel comparisons, host renderer/geometry checks, held-button cancellation with
-status 130, vi restoration and zero retained command allocations. Matched typing
-72 → 72 ticks/40 samples, worst 2 → 2; no new persistent allocation or bitmap.
-Core package +384 bytes. Physical acceptance pending.
+Latest normal build **2026111964**, local main: Batch 2 performance accepted in
+normal 68000 Snow Plus/4 MiB/System 6.0.8. Guarded live-input pixel scrolling reduces
+wrap-boundary reconstruction from 24 rows to 2; equal Preferences skip layout,
+redraw and disk writes while failed saves remain retryable. Prior Batch 2
+clipped-update, tracking cancellation and clipboard corrections remain intact.
+[Focused evidence](terminal-performance/REPORT.md): matched 12-event light/dark
+wrap draw totals 244/271 → 109/110 guest ticks; worst queued-to-visible 21/24 → 10/10.
+Ordinary typing unchanged. Equal CLI preferences 76–81 → below one tick, zero
+layouts/saves/writes. 245 guest checks (139 exact pixel comparisons), host failure/
+geometry tests, normal wrapped input, OK/Cancel, theme/geometry restart persistence,
+vi restoration, both cancellation shortcuts and zero retained command allocations.
+Warm heap/largest-block stable. No new bitmap or heap allocation; one-byte save
+retry flag; code/data +464 bytes, Core package +512 bytes. Physical acceptance pending.
 
 Prior Batch 1 closure and parser/CLX improvements retained; command-heavy 32 KiB
 scripts remain slow. [Prior measurements](userland-perf/REPORT.md).
 Canonical HTTP: `http://192.168.1.112:8089/full/index.txt`; AFP:
-`Macintosh Exchange/Clarice/index.txt`. [Publication verification](terminal-correctness/verification.json)
-records the coherent build and preserved 1962 recovery distribution.
-No GitHub push or hardware deployment. Stop after Batch 2 correctness.
+`Macintosh Exchange/Clarice/index.txt`. Publication verification is recorded in
+`terminal-performance/verification.json`; previous 1963 recovery material retained.
+No GitHub push or hardware deployment. Stop after these two performance findings.
 
 ## Review remediation Batch A
 
