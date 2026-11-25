@@ -1,6 +1,6 @@
 # Batch 1 closure corrections — build 2026111962
 
-Baseline 1961/6effb1d. Five reported defects reproduced, corrected without changing
+Accepted product **e57f34f**, local main. Baseline 1961/6effb1d. Five reported defects reproduced, corrected without changing
 parser, loader, receipt or runtime formats. No physical hardware access.
 
 | Finding | Small correction and acceptance |
@@ -34,3 +34,6 @@ Offline HDA readback verifies both Core forks/Finder fields, Release and all 49
 utilities; tar files match the sealed kit. All standard utility payloads are unchanged.
 Publication checks and product identity: [verification](verification.json).
 No GitHub push or hardware deployment; stop after these five corrections.
+
+Publication verified: 51 catalog entries/36 unique payloads, exact HTTP/AFP equality,
+sealed offline/source packages and preserved prior 1961 index and payloads.

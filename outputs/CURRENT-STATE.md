@@ -2,7 +2,7 @@
 
 ## Integrated development distribution — 25 November 2026
 
-Latest normal build **2026111962**, local main: all five Batch 1 closure defects
+Latest normal build **2026111962**, product **e57f34f**, local main: all five Batch 1 closure defects
 corrected. Escaped bracket hyphens, external HOME=/home, positional literal tilde,
 negated-pipeline failure/cancellation and receipt retention on memory refusal pass
 focused host and normal 68000 Snow Plus/4 MiB/System 6.0.8 acceptance.
