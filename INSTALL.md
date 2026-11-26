@@ -38,17 +38,13 @@ Maintainer workflow (one source, no independent AFP builds):
 
 1. Integrate accepted source and tests; allocate a new build ID for changed bytes.
 2. Run `sh scripts/build.sh` (fresh output directory, complete inventory, seal).
-   Run optional vi builds sequentially after the full build: both build paths
-   prepare the same temporary BusyBox source tree.
 3. Publish into a fresh staging directory with `scripts/repository.py`.
-   Add accepted optional vi using `tests/busybox/publish.py` only after validating
-   its CLX against the current imports; retain its version if bytes are unchanged.
 4. Use `scripts/repository.py CANONICAL --mirror-from STAGE`. This validates
    length/CRC/content-name hashes, copies immutable payloads and versioned index,
    then atomically replaces the active index. Existing versions cannot mutate.
 5. Mirror CANONICAL to the mounted `Macintosh Exchange/Clarice` using the same
    command. No rebuilding, repacking or editing the AFP index independently.
-6. Verify every HTTP/AFP payload against the sealed build and optional-app hash.
+6. Verify every HTTP/AFP payload against the sealed build.
    If AFP is unavailable or fails, report it as pending; do not claim parity.
 
 The current host canonical directory is
@@ -175,8 +171,8 @@ those checks or introduce a general dependency resolver.
 Networking clients and diagnostics are **Standard Unix Utilities**, installed as
 external commands in Clarice Data (`/bin`), not part of Clarice Core. This includes
 `ipconfig`/network status, `ping`, hostname-aware `wget`, `ftp` and `telnet`.
-The 0.5.0 draft installer contains 49 standard commands. This is a development candidate:
-consolidated physical-SE acceptance is pending; no release has been published.
+The 0.5.1 development installer contains 50 standard commands, including
+BusyBox vi. System 6.0.8 is the target.
 
 Core works without an installed or configured networking stack. Network commands
 use the available native Macintosh stack and report unavailable services; no
@@ -185,7 +181,7 @@ Core. Shared transport and DNS support is loaded on demand with the commands,
 without networking startup work or idle-memory overhead in Core.
 
 Use the same offline installer, `appinstall`, external repair sources and recovery
-rules below for these utilities. BusyBox vi and nano are optional, independently installed applications.
+rules below for these utilities and BusyBox vi.
 Optional Telnetd and Seriald components require separate installation and
 configuration.
 
@@ -336,15 +332,12 @@ or previous options such as `-o`, `-m` and `-C`. BusyBox sort rejects
 `-o/-M/-V/-m/-S/-T`; redirect output to a separate file. A failed or cancelled
 redirected command may leave partial output; never redirect over its input.
 
-BusyBox vi remains independently installable, not part of the standard utility set.
-
-## Optional BusyBox vi
+## BusyBox vi
 
 The upstream BusyBox1.37.0 editor is an independent CLX runtime1.9 application,
-not part of Core. Build with `scripts/build-busybox-vi.sh`; install
-`work/busybox/vi.clx` through the existing repository as `vi`, or use
-`appinstall install /mnt/DISK/vi.clx vi` for an absent command. Replacing an
-existing vi is an explicit update/replacement and retains its recovery copy.
+loaded on demand. The full build invokes `scripts/build-busybox-vi.sh`.
+Both the offline installer and managed updater install `/bin/vi`. The
+ordinary installer ownership checks also apply to an existing vi.
 See [installation and tested limitations](outputs/busybox-completion/README.md).
 
 Use `vi FILE`, `i`, Escape (or Ctrl-[), `:wq`; `:q!` deliberately discards edits. Abnormal

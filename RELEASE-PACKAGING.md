@@ -1,5 +1,12 @@
 # Staging Clarice 0.5.0
 
+For the local 0.5.1 development kit, seal build 2026111979 and pass
+`--version 0.5.1` to `tools/release-kit.py` with the matching product commit,
+offline readback and updater USTAR. Then pass the staged ZIP to
+`tools/classic-installer.py`. Verify the 50-command inventory, including vi,
+before using either installer. The examples below record the historical
+0.5.0 handoff.
+
 ## Required internal Macintosh handoff
 
 Never hand off an HDA as an installer. HDA files are emulator/test fixtures;

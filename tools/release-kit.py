@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import io
 import json
+import re
 from pathlib import Path
 import struct
 import subprocess
@@ -136,10 +137,14 @@ def source_archive(path, product, seal, updater_sha):
         overlay += (f"p=w/{name!r}; p.write_bytes("
                     f"{busybox_notice(change)!r}+p.read_bytes())\n")
     files[prepare] += overlay.encode('ascii')
+    with_vi = any(record['name'] == 'vi' for record in seal['commands'])
+    vi_prepare = 'scripts/prepare-busybox-vi.py'
     with tempfile.TemporaryDirectory() as directory:
         scratch = Path(directory)
         source_script = 'scripts/prepare-busybox-source.py'
         inputs = (BUSYBOX, source_script, prepare, 'src/ports/busybox-tools/help.json')
+        if with_vi:
+            inputs += (vi_prepare, 'src/ports/busybox/upstream.patch')
         for name in inputs:
             dest = scratch/name
             dest.parent.mkdir(parents=True, exist_ok=True)
@@ -153,6 +158,13 @@ def source_archive(path, product, seal, updater_sha):
             notice = busybox_notice(BUSYBOX_CHANGES[name]) if name in BUSYBOX_CHANGES else b''
             if prepared != notice + (ROOT/leaf).read_bytes():
                 raise ValueError(f'{name} does not match the accepted prepared input')
+            files[leaf] = prepared
+        if with_vi:
+            subprocess.run([sys.executable, str(scratch/vi_prepare)], check=True)
+            leaf = 'work/busybox/vi.c'
+            prepared = (scratch/leaf).read_bytes()
+            if prepared != (ROOT/leaf).read_bytes():
+                raise ValueError('vi.c does not match the accepted prepared input')
             files[leaf] = prepared
     files['BUILD-SEAL.json'] = (ROOT/'work/release/sealed.json').read_bytes()
     manifest = dict(build=seal['build'], product_commit=product,
@@ -174,12 +186,12 @@ def source_archive(path, product, seal, updater_sha):
                        for m in members)):
             raise ValueError('source archive readback mismatch')
 
-def stage(product, accepted, updater_tar, out):
+def stage(product, accepted, updater_tar, out, version):
     subprocess.run(['git', '-C', str(ROOT), 'diff', '--quiet', product, '--',
                     'src', 'scripts', 'assets'], check=True)
     seal = release.verified(ROOT)
     build = seal['build']
-    stem = f'Clarice-0.5.0-{build}'
+    stem = f'Clarice-{version}-{build}'
     source_name = f'{stem}-Source.tar.gz'
     kit = ROOT / 'work/distribution/kit'
     core = (ROOT / 'work/build/Clarice.bin').read_bytes()
@@ -218,7 +230,7 @@ def stage(product, accepted, updater_tar, out):
                        ('Third Party.txt', 'THIRD_PARTY.md')]:
         value = (ROOT / path).read_text().replace('@SOURCE_ARCHIVE@', source_name)
         files[name] = value.replace('\n', '\r').encode('mac_roman', errors='replace')
-    provenance = dict(build=build, product_commit=product, seal_identity=seal['identity'],
+    provenance = dict(build=build, release_version=version, product_commit=product, seal_identity=seal['identity'],
                       updater_ustar_sha256=release.digest(updater_tar), source_archive=source_name,
                       licensing_status='GPL-2.0-only original contributions; third-party permission review pending; see Third Party.txt',
                       files={name: sha(data) for name, data in sorted(files.items())})
@@ -235,11 +247,11 @@ def stage(product, accepted, updater_tar, out):
         files['Package.json'] = (json.dumps(provenance, indent=2) + '\n').encode()
         with zipfile.ZipFile(draft / target.name, 'w') as zip_file:
             for name, data in sorted(files.items()):
-                info = zipfile.ZipInfo(f'Clarice 0.5.0/{name}')
+                info = zipfile.ZipInfo(f'Clarice {version}/{name}')
                 info.external_attr = 0o100644 << 16
                 zip_file.writestr(info, data, compress_type=zipfile.ZIP_DEFLATED)
         with zipfile.ZipFile(draft / target.name) as zip_file:
-            expected = {f'Clarice 0.5.0/{name}': data for name, data in files.items()}
+            expected = {f'Clarice {version}/{name}': data for name, data in files.items()}
             if (set(zip_file.namelist()) != set(expected)
                     or any(zip_file.read(name) != data for name, data in expected.items())):
                 raise ValueError('installer archive readback mismatch')
@@ -255,6 +267,9 @@ if __name__ == '__main__':
     parser.add_argument('--offline-readback', required=True, type=Path)
     parser.add_argument('--updater-tar', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--version', default='0.5.0')
     a = parser.parse_args()
+    if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', a.version):
+        parser.error('version must have three numeric components')
     product = git('rev-parse', '--verify', a.product + '^{commit}').decode().strip()
-    stage(product, a.offline_readback, a.updater_tar, a.output)
+    stage(product, a.offline_readback, a.updater_tar, a.output, a.version)

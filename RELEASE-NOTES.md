@@ -1,13 +1,16 @@
-# Clarice 0.5.0
+# Clarice 0.5.1 development notes
 
-Build **2026111978** · Product commit **f571f7c**
+Build **2026111979** adds BusyBox 1.37.0 `vi` to the standard utility set.
+Both a fresh offline installation and a managed update install it as
+`/bin/vi`. The collection now contains 50 standard utility names.
 
-Validated target: **Macintosh SE, stock 8 MHz 68000, 4 MB RAM, System 6.0.8**. System 7 and PowerBook acceptance are deferred.
+The editor remains a demand-loaded CLX utility. Its byte-oriented editing,
+limited ex commands, fork-preserving HFS saves and best-effort unsaved
+text recovery use the existing port. Use `vi --help` for supported options
+and limitations. The corresponding-source archive accompanies the GPLv2
+installer. Third-party notices are retained.
 
-- Native shell, HFS tools, width-aware help, Preferences and 49 standard utilities. Shell pipelines use sequential disk spools. The installer includes Core and Recover Clarice. Optional vi and nano are outside this release kit.
-- On the Macintosh, expand `Clarice-1978-Installer.sit.bin` with StuffIt Expander, keep the extracted folder together, then open **Install Clarice**. Quit the running Core before upgrading. For Repair, use matching-build media. For rollback, launch **Recover Clarice** from the installed Data folder's **Recovery Previous** snapshot.
-- Large text jobs can be very slow on an 8 MHz SE and may exhaust the available contiguous heap. The earlier hardware baseline recorded particularly slow regex grep and 64 KiB sort memory failures. Scrolling and redraw can lag during sustained terminal output.
-- The physical SE has intermittently reported **“Coprocessor not installed”**, including on build 2026111978. The cause remains unknown. The release carries this reliability risk.
-- Original Clarice contributions within the project owner's authority use GPL-2.0-only. Third-party terms and attribution remain in the kit. The complete corresponding-source archive and SHA-256 manifest are available alongside both installer formats.
-
-The installer archives preserve the verified 1978 payloads and their embedded staging-era notes. This page reflects the final release status.
+This is a local development candidate targeting a 68000 with 4 MiB RAM
+and System 6.0.8. The previously reported intermittent physical-SE
+coprocessor exception remains unresolved. The published 0.5.0 release
+continues to be available at its existing tag.

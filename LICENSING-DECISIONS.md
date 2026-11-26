@@ -35,7 +35,7 @@ covers only separable original contributions within the owner's authority:
 - Upstream trees and adaptations in `src/vendor/`, `src/commands/vendor/`,
   `src/commands/remote/vendor/`, `src/update/vendor/` and the port
   subtrees. This includes BusyBox and sbase edits, musl regex and fnmatch,
-  mrsh parser changes, One True Awk, E-Kermit, and optional vi and nano.
+  mrsh parser changes, One True Awk, E-Kermit, and the BusyBox vi port and optional nano.
   Keep upstream rights and notices intact. Review any separately licensable
   Clarice contributions in mixed files before naming them in the grant.
 - The JetBrains Mono-derived bitmap material in `assets/font/`, runtime
@@ -49,8 +49,8 @@ upstream headers and licences remain intact.
 
 ## BusyBox CLX and Core
 
-Standard `wc`, `tr` and `sort` are BusyBox GPL-2.0-only applets, built as
-`bbwc`, `bbtr` and `bbsort`. Each is a relocatable link of the selected
+Standard `wc`, `tr`, `sort` and `vi` are distributed as BusyBox GPL-2.0-only
+CLX builds. Each is a relocatable link of the selected
 BusyBox applet/libbb code, Clarice entry and port objects, library objects
 and libgcc as selected by the linker. Clarice Core loads and relocates CLX
 in its own address space and calls its entry point. Undefined-symbol
@@ -78,8 +78,8 @@ without that source access. No unfulfilled written-source-offer is substituted.
   and exceptions in [TOOLCHAIN-PROVENANCE.md](TOOLCHAIN-PROVENANCE.md).
 - Optional GNU nano is GPL-3.0-or-later. GPL-2.0-only Core cannot simply be
   assumed compatible with an in-process GPLv3 editor. No nano binary is in
-  this kit; resolve that combination before distributing it. Optional vi
-  and other tools require their own matching source and permission review.
+  this kit. The standard vi kit retains the upstream vi.c grant, BusyBox
+  licensing terms, port configuration and modified source.
 - Apple-driver images remain excluded without an exact redistribution grant.
 - The owner authorised publication of the verified 1978 set on GitHub.
   Use the matching installer, corresponding source and checksums together.

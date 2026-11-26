@@ -24,6 +24,7 @@ shutil.copyfile(root/'work/build/Clarice.bin',out/'Clarice.bin')
 shutil.copyfile(root/'THIRD_PARTY.md',out/'Third Party.txt')
 shutil.copytree(root/'licenses',out/'Licenses',dirs_exist_ok=True)
 for name,source in {
+ 'GPL-2.0.txt':'LICENSE',
  'sbase-LICENSE.txt':'src/vendor/sbase/LICENSE',
  'musl-COPYRIGHT.txt':'src/vendor/musl-regex/COPYRIGHT',
  'awk-LICENSE.txt':'src/vendor/awk/LICENSE',

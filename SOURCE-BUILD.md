@@ -1,6 +1,6 @@
 # Building the Clarice 0.5.0 source companion
 
-The source companion follows accepted build 2026111978, product f571f7c.
+The 0.5.1 source companion follows sealed development build 2026111979.
 It includes the pinned project source and its executable build scripts,
 assets, tests, licences, and the verified BusyBox 1.37.0 upstream archive
 in `work/busybox/`. Extract it to a new directory. Use Docker with AMD64
@@ -12,7 +12,7 @@ sh scripts/build.sh
 sh scripts/build-installer.sh
 ```
 
-The full build selects all 49 standard utilities and builds the native
+The full build selects all 50 standard utilities, including BusyBox vi, and builds the native
 recovery helper and built-in updater. It seals Core and utilities in
 `work/release/sealed.json`, stages the collection, and produces the
 separate updater USTAR. The native installer is the subsequent
@@ -38,12 +38,15 @@ inputs only by the new notices. The companion also includes byte-identical
 prepared configuration, help and selected headers. These files are in
 `work/busybox-tools/` for inspection. The build regenerates them.
 
+The full build also runs `scripts/build-busybox-vi.sh` with profiling
+disabled. The companion supplies the BusyBox 1.37.0 sources, the exact
+prepared `work/busybox/vi.c`, the dated change notice and patch, the
+configuration, runtime adapters and packaging scripts.
+
 `SOURCE-MANIFEST.json` identifies all staged source files, the original
 preparer's hash, accepted binary seal identity, and updater USTAR hash.
 `BUILD-SEAL.json` is the accepted original binary manifest. The install
-ZIP's `Package.json` identifies the matching companion by SHA-256. The
-ZIP still ships accepted binary bytes from the original seal, without
-rebuilding the application or applets for this notice correction.
+ZIP's `Package.json` identifies the matching companion by SHA-256. The ZIP and native installer ship the application and utilities from this seal.
 
 [TOOLCHAIN-PROVENANCE.md](TOOLCHAIN-PROVENANCE.md) binds the exact toolchain
 image to its upstream source revisions through the original build log.
@@ -58,7 +61,6 @@ performed for this packaging-only refresh.
 Including the full toolchain source adds approximately 229 MiB to the host
 source download, not to the Macintosh installer or installed application.
 [LICENSING-DECISIONS.md](LICENSING-DECISIONS.md) records the effective GPL-2.0-only grant for original
-Clarice contributions and the scope of the authorised kit. The GitHub
-v0.5.0 release supplies this exact companion alongside the binaries under
-GPLv2 section 3(a). Optional binaries
+Clarice contributions and the scope of the kit. Supply this exact source
+companion alongside the binaries under GPLv2 section 3(a). Optional binaries
 and their external upstream archives are outside the standard installer scope.

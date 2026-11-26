@@ -20,9 +20,14 @@ hcopy -r "/src/work/distribution/kit/Read Me.txt" ":Read Me"
 hattrib -t TEXT -c ttxt ":Read Me"
 hcopy -r "/src/work/distribution/kit/Third Party.txt" ":Third Party"
 hmkdir :Licenses
-for f in /src/work/distribution/kit/Licenses/*; do
- test -f "$f" || continue
- hcopy -r "$f" ":Licenses:$(basename "$f")"
+licences=/src/work/distribution/kit/Licenses
+find "$licences" -mindepth 1 -type d | LC_ALL=C sort | while IFS= read -r dir; do
+ native=$(printf "%s" "${dir#"$licences"/}" | tr / :)
+ hmkdir ":Licenses:$native"
+done
+find "$licences" -type f | while IFS= read -r f; do
+ native=$(printf "%s" "${f#"$licences"/}" | tr / :)
+ hcopy -r "$f" ":Licenses:$native"
 done
 humount
 '

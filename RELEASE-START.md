@@ -1,19 +1,16 @@
-Clarice 0.5.0 installation kit
+Clarice 0.5.1 development installer
 ================================
 
 Local release draft. See Third Party.txt for redistribution status.
-Requires an existing 68k Macintosh System 6 or System 7 installation,
-HFS and enough free application memory. System 6.0.8 on a 4 MB 68000
-is the tested build 2026111978 emulator configuration.
+Use an existing System 6.0.8 HFS installation on a 68000 with 4 MiB RAM.
+This local build 2026111979 includes BusyBox vi and 49 other utilities.
 
-For internal System 6 testing, use Clarice-1978-Installer.sit.bin from
-http://192.168.1.112:8089/full/ or Macintosh Exchange/Clarice.
-Expand it using StuffIt Expander on the Macintosh. Keep the extracted
-folder together, quit the installed Clarice, then open Install Clarice.
-The three applications are already decoded. No HDA or SD-card removal.
+On the Macintosh, expand Clarice-1979-Installer.sit.bin with a
+StuffIt-compatible extractor. The applications in that archive are
+already decoded. Keep the extracted folder together and open
+Install Clarice after quitting the current Core.
 
-The ZIP below is a maintainer/source-staging format, not the internal
-Macintosh installer handoff:
+For the maintainer ZIP, follow these transfer steps:
 
 1. Unzip the kit on a modern computer. Copy the complete Clarice 0.5.0
    folder to a writable HFS volume visible to the Macintosh. Transfer

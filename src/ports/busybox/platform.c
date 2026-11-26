@@ -1,3 +1,7 @@
+/*
+ * Clarice BusyBox vi adapter, added and modified 2026-11-18 through
+ * 2026-11-24. Includes adapted libbb routines credited below.
+ */
 #include "../../help-output.h"
 #include <Files.h>
 #include <Errors.h>

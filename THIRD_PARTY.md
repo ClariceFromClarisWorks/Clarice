@@ -1,6 +1,6 @@
 # Clarice 0.5.0 attribution and redistribution
 
-Distribution for build 2026111978, product commit f571f7c.
+Distribution for the 0.5.1 development build 2026111979.
 The installed inventory is defined by `src/standard-commands.inc` and
 the release manifest. Retained research source and optional tools have
 separate terms.
@@ -9,7 +9,7 @@ separate terms.
 
 | Component | Attribution and terms |
 | --- | --- |
-| BusyBox 1.37.0 | BusyBox contributors. Standard **wc, tr and sort** and their selected libbb code use GPL-2.0-only. Upstream archive SHA-256 `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`. See `Licenses/busybox/LICENSE`, `AUTHORS`, `src/ports/busybox-tools` and `scripts/prepare-busybox-tools.py`. |
+| BusyBox 1.37.0 | BusyBox contributors. Standard **wc, tr, sort and vi** with their selected libbb code are distributed under GPL-2.0-only. Upstream archive SHA-256 `3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4`. See `Licenses/busybox/LICENSE`, `AUTHORS`, `src/ports/busybox-tools` and `scripts/prepare-busybox-tools.py`. |
 | sbase | suckless developers and per-file authors, MIT/ISC and retained file notices. Provides grep, sed, head, tail, cut, uniq, tee, basename, dirname, cmp, cksum, sleep, printenv, mktemp and dd, plus the explicit wc-sbase, tr-sbase and sort-sbase alternatives. Revision `c546c3a5724c81cee9a11d816a38ccdf17472129`. Preparation and Macintosh adapters are in `scripts/` and `src/ports/`. The bundled ISC strtonum notice credits Ted Unangst and Todd Miller; additional per-file notices are preserved in the kit. |
 | musl regex and fnmatch | Rich Felker and contributors, with Ville Laurikari's TRE-derived regex; retained notices for each snapshot. Regex supports the sbase ports; the byte-oriented fnmatch adaptation serves native file inspection/traversal. See the two musl copyright files and `src/vendor/USERLAND-SOURCES.json`. |
 | One True Awk | Lucent Technologies and authors listed in `src/vendor/awk`. Revision `72e9b56caddb4a6f8d1405315a5183c26b8650a4`. Preparation and Macintosh runtime are in `scripts/prepare-awk.py` and `src/ports/awk-runtime.c`. |
@@ -29,16 +29,17 @@ by the kit.
 
 ## Optional editors and development tools
 
-- The optional repository **vi** is the BusyBox 1.37.0 editor by Sterling
-  Huxley and contributors, with corresponding BusyBox GPL-2.0-only
-  obligations. It is not a standard installer utility. Its existing
-  optional repository build is 2026111951. See `src/ports/busybox` and
-  `scripts/prepare-busybox-vi.py`. Berkeley/Heirloom ex/vi and xvi are
-  comparison ports; their notices remain under `Licenses/vi` and
-  `Licenses/xvi`. This product includes software developed by the
-  University of California, Berkeley and its contributors where the
-  Berkeley prototype is distributed. The prototype retains the
-  Caldera attribution and copying terms in its own notice.
+- The standard **vi** is the existing BusyBox 1.37.0 editor by Sterling
+  Huxley and contributors, previously distributed separately as build
+  2026111951. Its upstream vi.c notice specifies GPLv2 or later. The
+  BusyBox combination is distributed under GPL-2.0-only, with the
+  per-file notices retained. The companion includes the pinned upstream
+  archive, prepared vi.c, dated patch, configuration, selected libbb
+  source, CLX adapters and build/install scripts.
+  See `src/ports/busybox` and `scripts/build-busybox-vi.sh`.
+  Berkeley/Heirloom ex/vi and xvi are historical comparison sources.
+  The Berkeley prototype retains its University of California, Berkeley
+  attribution and Caldera copying terms in its own notice.
 - GNU nano 9.2 is an optional source port, GPL-3.0-or-later, with
   GNU helper files under their own retained terms including LGPL.
   The accepted generated configuration is under
@@ -79,8 +80,8 @@ The BusyBox GPLv2 applets link Clarice port objects and use Core services
 in-process. The companion includes Core and interface source as well as
 applet source. Supply the matching companion with binaries under GPLv2
 section 3(a), on the same medium or with equivalent download access in the
-same place. Package.json records its SHA-256. The official GitHub v0.5.0
-release supplies the exact installer and source companion together.
+same place. Package.json records its SHA-256. Publish the exact matching installer and companion together if the
+development kit is approved for release.
 Optional GPL editors require their own matching source and build materials;
 the GPLv3 nano / GPLv2-only Core combination is not cleared by this grant.
 

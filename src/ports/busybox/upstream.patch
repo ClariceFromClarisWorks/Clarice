@@ -1,5 +1,17 @@
 --- a/editors/vi.c
 +++ b/editors/vi.c
+@@ -4,6 +4,11 @@
+  * Copyright (C) 2000, 2001 Sterling Huxley <sterling@europa.com>
+  *
+  * Licensed under GPLv2 or later, see file LICENSE in this source tree.
++ *
++ * Clarice modifications, 2026-11-18, 2026-11-19 and 2026-11-24:
++ * Adapt options, screen refresh, growth and safe save to the Clarice CLX
++ * runtime; preserve unsaved text on orderly interruption.
++ * Upstream copyright and licence notices remain in force.
+  */
+ //
+ //Things To Do:
 @@ -391,6 +391,7 @@
  	char *edit_file__cur_line;
  #endif

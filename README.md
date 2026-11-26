@@ -47,9 +47,9 @@ private images are outside the installer ZIP.
   Core itself can work offline. HTTP, FTP and Telnet are plain text. The
   collection also includes `serial` and E-Kermit. Remote server modules
   require independent installation and configuration.
-- Optional BusyBox `vi` and GNU nano are independently built and installed.
-  They are outside the 49 standard names. See [editor limits](INSTALL.md)
-  and [attribution](THIRD_PARTY.md).
+- The 0.5.1 development kit installs BusyBox 1.37.0 `vi` as its 50th
+  standard utility. The published 0.5.0 kit has 49 utilities.
+  See [editor limits](INSTALL.md) and [attribution](THIRD_PARTY.md).
 
 ## Terminal and capacity
 

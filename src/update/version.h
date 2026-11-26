@@ -1,3 +1,3 @@
 /* Monotonic private development build identifier, not a published release. */
-#define CLARICE_UPDATE_BUILD 2026111978
+#define CLARICE_UPDATE_BUILD 2026111979
 #define CLARICE_UPDATE_FORMAT 1

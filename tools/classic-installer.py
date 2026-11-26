@@ -18,12 +18,16 @@ def sha(data):
 
 def stage(source, output, sit):
     with zipfile.ZipFile(source) as archive:
-        prefix = 'Clarice 0.5.0/'
         names = archive.namelist()
+        if not names or '/' not in names[0]:
+            raise ValueError('missing release ZIP root')
+        prefix = names[0].split('/', 1)[0] + '/'
         if len(names) != len(set(names)) or any(not n.startswith(prefix) for n in names):
             raise ValueError('unexpected ZIP inventory')
         files = {n[len(prefix):]: archive.read(n) for n in names}
     manifest = json.loads(files.pop('Package.json'))
+    if prefix != f"Clarice {manifest.get('release_version', '0.5.0')}/":
+        raise ValueError('release ZIP root does not match the manifest')
     if set(files) != set(manifest['files']) or any(sha(v) != manifest['files'][k] for k, v in files.items()):
         raise ValueError('release ZIP checksum/inventory mismatch')
     build = manifest['build']
