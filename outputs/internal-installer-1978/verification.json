@@ -1,0 +1,21 @@
+{
+  "build": 2026111978,
+  "product_commit": "f571f7ccd9097763ecad649005b79e3df10081ce",
+  "utilities": 49,
+  "native_apps": 3,
+  "notices": 25,
+  "all_data_and_resource_forks_verified": true,
+  "finder_type_creator_verified": true,
+  "macbinary_crc_verified": true,
+  "bytes": 1471744,
+  "sha256": "0f40ddf2d81b61221a9e0026f85f593f5965a88fd4f22ed2b62b5bc6eb20d3e1",
+  "independent_decoder": "unar 1.10.8; AppleDouble resource entry decoded",
+  "hardware_test": false,
+  "http": "http://192.168.1.112:8089/full/Clarice-1978-Installer.sit.bin",
+  "http_download_verified": true,
+  "afp": "/Volumes/Private/Macintosh Exchange/Clarice/Clarice-1978-Installer.sit.bin",
+  "afp_readback_verified": true,
+  "active_indexes_unchanged": true,
+  "exact_inventory_files": 82,
+  "packager_commit": "821ae5ea6d0c76ab83ac0942e12f398aa5944250"
+}

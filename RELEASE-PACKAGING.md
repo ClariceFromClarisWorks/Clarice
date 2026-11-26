@@ -1,5 +1,30 @@
 # Staging the Clarice 0.5.0 draft
 
+## Required internal Macintosh handoff
+
+Never hand off an HDA as an installer. HDA files are emulator/test fixtures;
+internal users must be able to download and install entirely within System 6.
+Convert the verified staging ZIP with the existing upstream StuffIt packager:
+
+```sh
+python3 tools/classic-installer.py \
+  work/release-0.5.0-1978-runtime-source/Clarice-0.5.0-2026111978-Installer.zip \
+  work/se-installer-1978-final
+```
+
+This packages native Core, Install Clarice and Recover Clarice applications,
+Release, all 49 standard utilities and the notices as a StuffIt 1.5.1-compatible
+archive wrapped in MacBinary. No application recompilation or new build ID is
+needed for this packaging-only conversion. Independently extract and compare
+every file, application fork and Finder type/creator before copying the same
+immutable `.sit.bin` to canonical HTTP and AFP. Verify both downloads before
+handing over the URL. Preserve older recovery material; do not offer HDA links.
+
+Current internal kit: `http://192.168.1.112:8089/full/Clarice-1978-Installer.sit.bin`
+and `Macintosh Exchange/Clarice/Clarice-1978-Installer.sit.bin`.
+
+## Maintainer/source staging
+
 Use the integrated product build 2026111978, product commit f571f7c,
 and its accepted local seal and native offline readback. The staging
 tool deliberately leaves the original product inputs, USTAR, private

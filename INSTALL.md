@@ -1,9 +1,13 @@
 # Installing Clarice 0.5.0
 
-For the local installer ZIP, follow [Start Here](RELEASE-START.md) to
-place the kit on HFS and decode the three MacBinary applications. Then
-follow the offline installation steps below from that Finder folder.
-The private update and disk workflows below remain useful to maintainers.
+Internal installations use the complete System 6-accessible StuffIt/MacBinary
+kit. Download `http://192.168.1.112:8089/full/Clarice-1978-Installer.sit.bin`
+or copy the same file from `Macintosh Exchange/Clarice`. Expand it with
+StuffIt Expander on the Macintosh, quit the installed Clarice, and open
+**Install Clarice** in the extracted folder. Keep the entire folder together.
+The applications already have their native resource forks and Finder types.
+No SD-card removal, HDA mounting or modern-computer extraction is required.
+HDA files retained from older work are recovery/test fixtures, not installer handoffs.
 
 ## Canonical development distribution
 
