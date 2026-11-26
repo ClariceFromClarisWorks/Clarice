@@ -2,14 +2,16 @@
 
 Clarice is a native command-line environment for 68k Macintosh computers
 running System 6 or System 7. It uses HFS, the Macintosh Toolbox and the
-installed system fonts. The 0.5.0 local release draft is **build 2026111978**,
-product commit **f571f7c**. Its tested emulator baseline is a normal 68000,
-System 6.0.8 and 4 MiB RAM. System 7 and physical acceptance of this exact
-build are pending. Earlier physical-SE results apply to build 2026111965.
+installed system fonts. Release 0.5.0 is **build 2026111978**, product
+commit **f571f7c**. The validated target is the stock 8 MHz Macintosh SE
+with 4 MiB RAM and System 6.0.8. System 7 and PowerBook acceptance are
+deferred. See the release notes for the unresolved physical-SE exception.
 
 ## Install and maintain
 
-The local installer ZIP contains three MacBinary applications, the release
+The [v0.5.0 release](https://github.com/ClariceFromClarisWorks/Clarice/releases/tag/v0.5.0)
+provides a native StuffIt installer, installer ZIP, corresponding source
+and SHA-256 checksums. The installer ZIP contains three MacBinary applications, the release
 manifest, all 49 standard utilities and recursively packaged notices.
 [Start Here](RELEASE-START.md) explains how to unpack it, transfer the files
 to HFS and decode the applications with both forks intact. Open **Install
@@ -70,7 +72,7 @@ Scripts and utilities are not a blanket claim of POSIX or GNU conformance.
 ## Source and evidence
 
 [Third-party attribution and redistribution gates](THIRD_PARTY.md) ·
-[Draft release notes](RELEASE-NOTES.md) ·
+[Release notes](RELEASE-NOTES.md) ·
 [Current state and acceptance](outputs/CURRENT-STATE.md) ·
 [Architecture](outputs/ARCHITECTURE.md).
 
@@ -78,5 +80,7 @@ For local builds, use the pinned 68000 Docker image in `scripts/build.sh`,
 then run that script and `scripts/build-installer.sh`. Development disk tools
 under `scripts/` are for local testing. [Release staging and checks](RELEASE-PACKAGING.md)
 describes reusing an accepted build for the ZIP without changing the updater.
-No blanket redistribution grant covers original Clarice code. See
-[THIRD_PARTY.md](THIRD_PARTY.md) for the remaining release gates.
+Original Clarice contributions within the owner's authority are licensed
+**GPL-2.0-only**. See [LICENSE](LICENSE), the
+[project scope notice](licenses/Clarice-GPL-2.0-only.txt), and
+[remaining third-party permission checks](LICENSING-DECISIONS.md).

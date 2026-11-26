@@ -1,0 +1,24 @@
+Clarice — original material licensing notice
+SPDX-License-Identifier: GPL-2.0-only
+
+Effective 26 November 2026, the project owner licenses original Clarice
+material for which they have authority under the GNU General Public License,
+version 2 only. You may redistribute and modify that material under those
+terms. It is provided WITHOUT ANY WARRANTY, including the implied warranties
+of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the
+source companion or Licenses/GPL-2.0.txt in the installer for the full terms.
+
+This grant covers the owner's original contributions to Core, shell,
+terminal, runtime, native utilities, installer/updater/recovery, interfaces,
+adapters, build and packaging scripts, tests, documentation and artwork.
+In mixed files it covers only those original contributions. Existing upstream
+licences, copyright notices, exceptions and attributions remain applicable
+to third-party portions. It does not relicense third-party code or claim
+rights over contributions the owner is not authorised to license.
+
+Project attribution: Clarice.
+This is a project credit, not a claim that the project name is a legal
+copyright holder or that contributors assigned their rights. No personal
+name or invented copyright holder is added. Required existing notices must
+be preserved. See LICENSING-DECISIONS.md and THIRD_PARTY.md for scope,
+third-party permissions and outstanding redistribution review.

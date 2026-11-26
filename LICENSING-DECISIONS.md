@@ -1,58 +1,92 @@
-# Decisions required for public redistribution
+# Clarice 0.5.0 licensing decisions
 
-No project licence is granted by this record. The product tree has no
-project-wide original-code licence. Existing upstream licences and
-notices remain attached to their components. Commit authorship can
-help identify contributors for an audit; it does not establish who owns
-or may licence a contribution.
+## Adopted decision — 26 November 2026
 
-## Original project contributions to scope
+The user explicitly authorised **GPL-2.0-only** for original Clarice code
+and other original project material where they have authority. This replaces
+the unissued MIT/Expat draft; it is an effective grant within that scope,
+not a pending choice of licence. The grant is in
+[the project notice](licenses/Clarice-GPL-2.0-only.txt), with the complete
+GPLv2 terms in [LICENSE](LICENSE).
 
-| Path family | Clarice-authored material to include in a grant or review |
+Use the project credit **Clarice** without repeating the user's personal
+name. This credit is not an invented copyright owner or a rights assignment.
+No required existing copyright notice is removed. Git authorship and
+historical provenance are preserved; neither establishes ownership alone.
+
+## Grant scope and third-party boundaries
+
+This inventory covers accepted product `f571f7c`. The grant applies to the
+owner's original contributions in these areas, including mixed files only
+to the extent of their authority. It does not assert ownership of imports.
+Unverified third-party permissions remain open rather than being covered by
+a blanket project licence.
+
+| Scope | Original contributions covered by the grant |
 | --- | --- |
-| `src/app.c`, `src/shell.c`, `src/sh.inc`, `src/kernels.S`, native filesystem and terminal files | Application, userland execution, memory/UI/terminal handling and 68000 code. Preserve separately credited imports and modifications from mrsh and other upstream code. |
-| `src/commands/`, `src/module.inc`, `src/clx-*.inc` and associated headers | Native commands and CLX loader, ABI, import tables and shared services. Vendored networking and parsing libraries retain their own terms. |
-| `src/offline*.inc`, `src/update/`, `src/Installer.r` and related Macintosh resources | Installer/uninstaller, Core updates and recovery, resource definitions, and authored adaptations. Keep upstream code and notices identified separately. |
-| `src/ports/`, especially `busybox-tools`, runtime, terminal, path and compatibility code | Authored adapters, configuration, help, macros, glue and edits to imported code. Identify each contributor's rights and scope for the exact applets and libraries. |
-| `assets/`, authored `scripts/`, `tests/`, `patches/`, `tools/` and documentation included in a deliverable | Original art, build and installation logic, tests, and documents requiring a grant. Upstream fonts, separately licensed helpers, and other vendored files retain their own terms. |
+| Shell, terminal and native runtime | `src/sh.inc` expressly identifies itself as the original Clarice execution adapter. The candidate scope also includes the authored portions of `src/app.c`, `src/shell.c`, `src/shell-*.inc`, `src/kernels.S`, `src/namespace.inc`, `src/streams.inc`, and other project terminal, filesystem and UI code. The mrsh parser and AST keep their existing MIT attribution. |
+| Native utilities, networking and CLX | Authored portions of `src/commands/`, `src/module.inc`, `src/clx-*.inc`, and the service and session interfaces. Vendored libraries, copied declarations or implementations, and upstream-derived portions require their own treatment. |
+| Installer, updater, recovery and art | Authored portions of `src/Installer.r`, `src/installer-ui.inc`, `src/offline-*.inc`, `src/self-update.inc`, and non-vendor files in `src/update/`. `src/Icons.r` expressly identifies the original Clarice icon artwork and its generator, `scripts/make-icon.py`. |
+| Build scripts, adapters and documentation | Authored build, packaging, test and documentation material in the companion. Review `scripts/prepare-*.py`, `src/ports/` and port patches at the contribution level, especially any generated code and snippets copied from upstream. |
 
-The rights holders must choose the scope and terms of this grant and
-confirm contribution permissions for the files and adaptations actually
-distributed. This inventory is path-based. It assigns neither ownership
-nor a licence to contributors or original files.
+The following third-party material retains its existing terms. The grant
+covers only separable original contributions within the owner's authority:
 
-## BusyBox CLX and Core linkage
+- Upstream trees and adaptations in `src/vendor/`, `src/commands/vendor/`,
+  `src/commands/remote/vendor/`, `src/update/vendor/` and the port
+  subtrees. This includes BusyBox and sbase edits, musl regex and fnmatch,
+  mrsh parser changes, One True Awk, E-Kermit, and optional vi and nano.
+  Keep upstream rights and notices intact. Review any separately licensable
+  Clarice contributions in mixed files before naming them in the grant.
+- The JetBrains Mono-derived bitmap material in `assets/font/`, runtime
+  source archives, external test material and upstream tool patches or
+  helpers. Keep their original notices. Confirm provenance and permission
+  for any remaining externally sourced contribution before redistribution.
 
-The standard GPLv2 applets are BusyBox `wc`, `tr`, and `sort` (the
-`bbwc`, `bbtr`, and `bbsort` build images). Their build links selected
-libbb objects, Clarice entry and adapter objects, selected newlib objects
-and libgcc. The build packs those relocatable outputs as CLX1 files.
-Clarice Core loads and relocates CLX in its own application address space,
-resolves imports to live Clarice service entry points, and calls the
-command entry point. The standard applets use those services, for
-example file access, output, cancellation and invocation memory.
-Undefined-symbol inspection of the accepted applet objects confirmed
-imports such as `cli_file_open`, `cli_alloc`, `cli_free`, `cli_write`,
-`app_yield` and `fprintf` for all three images. Separate files,
-independent packaging and lifecycle do not establish
-that the programs are legally separate works.
+No blanket per-file SPDX rewrite is made: it would obscure mixed-file
+provenance. The project-level scope notice applies to original contributions;
+upstream headers and licences remain intact.
 
-Review the authored linked adapters and what interface and Core material
-must be covered or supplied for this distribution. Confirm that any
-original-code licence grants and runtime exceptions are compatible with
-the BusyBox GPLv2 obligations. Optional BusyBox vi would require a
-separate matching review and source distribution. GNU nano and other
-optional binaries are outside this kit. See [BusyBox licensing](https://busybox.net/license.html)
-and [GPLv2 sections 2–3](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+## BusyBox CLX and Core
 
-## Unresolved release gates
+Standard `wc`, `tr` and `sort` are BusyBox GPL-2.0-only applets, built as
+`bbwc`, `bbtr` and `bbsort`. Each is a relocatable link of the selected
+BusyBox applet/libbb code, Clarice entry and port objects, library objects
+and libgcc as selected by the linker. Clarice Core loads and relocates CLX
+in its own address space and calls its entry point. Undefined-symbol
+inspection of the accepted applets found imports such as `cli_file_open`,
+`cli_alloc`, `cli_free`, `cli_write`, `app_yield` and `fprintf`. These
+are live in-process service calls for files, allocation, output and
+cancellation. Separate files and independent installation establish how
+the kit is packaged. The original Core and adapter contributions are now offered under GPLv2
+only as well; no separate-file exemption is relied upon.
 
-- Approve licensing for original Clarice and confirm rights for contributions.
-- Runtime source lineage is now recorded in TOOLCHAIN-PROVENANCE.md and the
-  matching upstream sources are supplied. Confirm the selected original-code
-  grant and combined-work terms against the retained runtime permissions.
-- Determine corresponding source scope and access for the GPL applets and
-  linked Clarice interfaces and adapters. Do not claim that the mechanically
-  staged source set closes those points.
-- Keep Apple-driver images excluded unless specific permission for the exact
-  driver is independently established.
+The release source companion includes the whole accepted Core source,
+interfaces and adapters, not just the three applets, together with pinned
+upstream sources, exact generated build inputs and build/install scripts.
+The selected delivery method is GPLv2 section 3(a): accompany binaries with
+this matching source on the same distribution medium; for downloads provide
+equivalent access to the exact companion in the same place. Package.json
+binds its name and SHA-256. Do not distribute the installer or updater alone
+without that source access. No unfulfilled written-source-offer is substituted.
+
+## Release scope and distribution
+
+- The focused release review resolved the contribution and linked-runtime
+  checks for the accepted standard kit. The original grant stays within
+  the project owner's authority. Retain the recorded runtime permissions
+  and exceptions in [TOOLCHAIN-PROVENANCE.md](TOOLCHAIN-PROVENANCE.md).
+- Optional GNU nano is GPL-3.0-or-later. GPL-2.0-only Core cannot simply be
+  assumed compatible with an in-process GPLv3 editor. No nano binary is in
+  this kit; resolve that combination before distributing it. Optional vi
+  and other tools require their own matching source and permission review.
+- Apple-driver images remain excluded without an exact redistribution grant.
+- The owner authorised publication of the verified 1978 set on GitHub.
+  Use the matching installer, corresponding source and checksums together.
+  The earlier private distribution and prior review archives remain separate.
+  Mechanical packaging verification does not independently reproduce the
+  accepted binaries.
+
+References: [BusyBox licensing](https://busybox.net/license.html),
+[GPLv2 terms](LICENSE). The earlier MIT draft and review artifacts are
+historical only and are not part of the new installer/source companion.

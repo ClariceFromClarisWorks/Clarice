@@ -56,7 +56,7 @@ def stage(source, output, sit):
         'Do not run Uninstall or delete Clarice Data. Repair requires a matching-version kit.\r'
         'If interrupted, retain the kit and retry. Preserve the previous working installation.\r'
         'No HDA, disk-image mounting, modern computer extraction or SD-card removal is needed.\r'
-        'Physical acceptance is pending. This is not a public release.\r'
+        'Local review draft. Public redistribution approval is pending.\r'
         'See Third Party.txt for redistribution restrictions.\r'
     ).encode('mac_roman')
     for name, data in files.items():

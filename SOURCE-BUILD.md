@@ -21,6 +21,12 @@ separate updater USTAR. The native installer is the subsequent
 in [RELEASE-START.md](RELEASE-START.md) for staging decoded applications.
 No Apple disk, ROM or driver is needed for this build.
 
+To convert a staged ZIP into a classic installer archive, see
+[RELEASE-PACKAGING.md](RELEASE-PACKAGING.md). The companion includes the
+wrapper script. The separate host-side [sit packager](https://github.com/thecloudexpanse/sit/tree/821ae5ea6d0c76ab83ac0942e12f398aa5944250)
+at revision `821ae5ea6d0c76ab83ac0942e12f398aa5944250` creates the StuffIt
+container on macOS. Its binary is outside the Clarice release.
+
 For the BusyBox applets alone, use `sh scripts/build-busybox-tools.sh`.
 It unpacks the included upstream archive and regenerates the selected
 configuration, help, source and libbb inputs. The companion's
@@ -28,8 +34,9 @@ configuration, help, source and libbb inputs. The companion's
 notices to generated modified sources. This is the only executable
 product-source overlay. The prepared `wc.c` and `tr.c` are unchanged;
 the prepared `sort.c` and `full_read.c` differ from the accepted build
-inputs only by the new notices. The staged forms are in
-`work/busybox-tools/` for inspection; the build regenerates them.
+inputs only by the new notices. The companion also includes byte-identical
+prepared configuration, help and selected headers. These files are in
+`work/busybox-tools/` for inspection. The build regenerates them.
 
 `SOURCE-MANIFEST.json` identifies all staged source files, the original
 preparer's hash, accepted binary seal identity, and updater USTAR hash.
@@ -50,6 +57,8 @@ performed for this packaging-only refresh.
 
 Including the full toolchain source adds approximately 229 MiB to the host
 source download, not to the Macintosh installer or installed application.
-[LICENSING-DECISIONS.md](LICENSING-DECISIONS.md) records the unresolved
-original-code grant and combined-work licensing decision. Optional binaries
+[LICENSING-DECISIONS.md](LICENSING-DECISIONS.md) records the effective GPL-2.0-only grant for original
+Clarice contributions and the scope of the authorised kit. The GitHub
+v0.5.0 release supplies this exact companion alongside the binaries under
+GPLv2 section 3(a). Optional binaries
 and their external upstream archives are outside the standard installer scope.

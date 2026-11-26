@@ -1,6 +1,6 @@
 # Clarice 0.5.0 attribution and redistribution
 
-Distribution draft for build 2026111978, product commit f571f7c.
+Distribution for build 2026111978, product commit f571f7c.
 The installed inventory is defined by `src/standard-commands.inc` and
 the release manifest. Retained research source and optional tools have
 separate terms.
@@ -54,29 +54,35 @@ by the kit.
   Macinclaude portions retain MIT terms. Snow is MIT. Their binaries
   and Apple ROM or System media are outside the kit.
 
+- The host-side sit packager used for the StuffIt wrapper is by Ken
+  McLeod and other contributors. Its BSD notices and earlier credits
+  remain with the upstream source. The tool is used only to create
+  the archive and its executable is outside the installer kit.
+  See SOURCE-BUILD.md for the exact revision.
+
 ## Original Clarice code and corresponding source
 
-The product tree has no project-wide licence grant for original Clarice
-code. The listed third-party permissions apply to their respective
-components. There is no blanket permission to redistribute Clarice by
-virtue of a public source repository. Obtain the rights holders'
-explicit grant and confirm compatibility for Clarice adapters linked
-into GPL-covered utilities. Clarify the linked-runtime exception and
-CLX integration boundaries for this distribution before release.
+Original Clarice contributions within the project owner's authority are
+licensed **GPL-2.0-only**, effective 26 November 2026. Project credit: Clarice.
+See Licenses/Clarice-GPL-2.0-only.txt and Licenses/GPL-2.0.txt in the kit,
+and LICENSE and LICENSING-DECISIONS.md in the source companion.
+Third-party components retain the terms and required notices listed above;
+the project credit does not claim ownership of their contributions.
 
-The local source companion **@SOURCE_ARCHIVE@** stages the pinned
+The matching source companion **@SOURCE_ARCHIVE@** stages the pinned
 product source, licence inventory, adaptations, build instructions and
 installation scripts, and hash-verified BusyBox 1.37.0 upstream source.
 The generated BusyBox port files carry dated modification notices where
 adapted. Its source manifest and the binary kit share the accepted seal
 identity. See SOURCE-BUILD.md and LICENSING-DECISIONS.md in the companion.
-Provide complete corresponding source alongside any binary distribution
-of the BusyBox applets under GPLv2 section 3, including the granted
-terms for required linked adapters. A pinned archive, fetch URL, or
-toolchain image digest is not a substitute for resolving any missing
-corresponding source. Optional GPL editors need their own matching
-complete source and build materials when distributed. Confirm the
-original-code rights grant and combined-work licensing terms before publication.
+The BusyBox GPLv2 applets link Clarice port objects and use Core services
+in-process. The companion includes Core and interface source as well as
+applet source. Supply the matching companion with binaries under GPLv2
+section 3(a), on the same medium or with equivalent download access in the
+same place. Package.json records its SHA-256. The official GitHub v0.5.0
+release supplies the exact installer and source companion together.
+Optional GPL editors require their own matching source and build materials;
+the GPLv3 nano / GPLv2-only Core combination is not cleared by this grant.
 
 BusyBox licensing: https://busybox.net/license.html
 GPLv2: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html

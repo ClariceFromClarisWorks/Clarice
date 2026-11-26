@@ -29,6 +29,7 @@ RUNTIME_SOURCES = {
         '2534535e1eaca0a0bb360998528f0c8ba4c2e57189cf7bc56cd9e88c721aa507',
 }
 NOTICES = {
+    'GPL-2.0.txt': 'LICENSE',
     'sbase-LICENSE.txt': 'src/vendor/sbase/LICENSE',
     'musl-regex-COPYRIGHT.txt': 'src/vendor/musl-regex/COPYRIGHT',
     'musl-fnmatch-COPYRIGHT.txt': 'src/vendor/musl-fnmatch/COPYRIGHT',
@@ -78,10 +79,10 @@ def native_app(path, accepted, name, finder):
     return result
 
 SOURCE_DOCS = (
-    'README.md', 'INSTALL.md', 'THIRD_PARTY.md', 'RELEASE-START.md',
+    'LICENSE', 'README.md', 'INSTALL.md', 'THIRD_PARTY.md', 'RELEASE-START.md',
     'RELEASE-NOTES.md', 'RELEASE-PACKAGING.md', 'SOURCE-BUILD.md',
     'TOOLCHAIN-PROVENANCE.md', 'LICENSING-DECISIONS.md',
-    'tools/release-kit.py',
+    'tools/release-kit.py', 'tools/classic-installer.py',
 )
 BUSYBOX_CHANGES = {
     'sort.c': 'Reject unavailable options and poll cooperatively in key comparison.',
@@ -145,12 +146,13 @@ def source_archive(path, product, seal, updater_sha):
             dest.write_bytes(files[name])
         subprocess.run([sys.executable, str(scratch/source_script)], check=True)
         subprocess.run([sys.executable, str(scratch/prepare)], check=True)
-        for name in ('wc.c', 'tr.c', 'sort.c', 'full_read.c'):
+        for name in ('wc.c', 'tr.c', 'sort.c', 'full_read.c',
+                     'config.h', 'help.h', 'unicode.h', 'xregex.h'):
             leaf = 'work/busybox-tools/' + name
             prepared = (scratch/leaf).read_bytes()
             notice = busybox_notice(BUSYBOX_CHANGES[name]) if name in BUSYBOX_CHANGES else b''
             if prepared != notice + (ROOT/leaf).read_bytes():
-                raise ValueError(f'{name} differs from the accepted build beyond its notice')
+                raise ValueError(f'{name} does not match the accepted prepared input')
             files[leaf] = prepared
     files['BUILD-SEAL.json'] = (ROOT/'work/release/sealed.json').read_bytes()
     manifest = dict(build=seal['build'], product_commit=product,
@@ -218,7 +220,7 @@ def stage(product, accepted, updater_tar, out):
         files[name] = value.replace('\n', '\r').encode('mac_roman', errors='replace')
     provenance = dict(build=build, product_commit=product, seal_identity=seal['identity'],
                       updater_ustar_sha256=release.digest(updater_tar), source_archive=source_name,
-                      licensing_status='local draft; see Third Party.txt',
+                      licensing_status='GPL-2.0-only original contributions; third-party permission review pending; see Third Party.txt',
                       files={name: sha(data) for name, data in sorted(files.items())})
     if out.exists():
         raise FileExistsError(out)

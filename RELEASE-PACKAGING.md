@@ -1,4 +1,4 @@
-# Staging the Clarice 0.5.0 draft
+# Staging Clarice 0.5.0
 
 ## Required internal Macintosh handoff
 
@@ -8,8 +8,8 @@ Convert the verified staging ZIP with the existing upstream StuffIt packager:
 
 ```sh
 python3 tools/classic-installer.py \
-  work/release-0.5.0-1978-runtime-source/Clarice-0.5.0-2026111978-Installer.zip \
-  work/se-installer-1978-final
+  work/release-0.5.0-1978-gpl/Clarice-0.5.0-2026111978-Installer.zip \
+  work/se-installer-1978-gpl
 ```
 
 This packages native Core, Install Clarice and Recover Clarice applications,
@@ -35,8 +35,8 @@ python3 scripts/release.py check
 python3 tools/release-kit.py --product f571f7c \
   --offline-readback work/installer-c/offline-readback \
   --updater-tar work/installer-c/publication/Clarice-1978.tar \
-  --output work/release-0.5.0-1978-complete-source
-(cd work/release-0.5.0-1978-complete-source && shasum -a 256 -c SHA256SUMS.txt)
+  --output work/release-0.5.0-1978-gpl
+(cd work/release-0.5.0-1978-gpl && shasum -a 256 -c SHA256SUMS.txt)
 ```
 
 The offline-readback directory contains the extracted MacBinary Core,
@@ -58,10 +58,10 @@ build and installation instructions, notices and the verified upstream
 archive. The package manifest records the companion SHA-256. See
 [SOURCE-BUILD.md](SOURCE-BUILD.md) and [TOOLCHAIN-PROVENANCE.md](TOOLCHAIN-PROVENANCE.md).
 
-The licensing questions in [THIRD_PARTY.md](THIRD_PARTY.md) block public
-redistribution clearance. The ZIP, source archive and SHA-256 list are
-local draft artifacts. System 7 and physical validation of build 1978
-remain separate acceptance work.
+The approved GitHub release uses the verified GPL-2.0-only ZIP, native
+StuffIt and matching source archives. Use the public release notes for the
+final System 6 acceptance and residual physical reliability status. The
+verified package bytes retain the earlier staging-era documentation.
 
 ## Verification for this draft
 
@@ -80,16 +80,16 @@ remain separate acceptance work.
   SHA-256 checksums. No public disk image was staged. See the local
   output directory's `SHA256SUMS.txt` for the new draft artifacts.
 
-## Source and notice refresh
+## GPLv2 source and notice refresh
 
-The refreshed installer carries 24 notices. The companion contains
-1,192 files, including its manifest. Independent readback checked their
-hashes, the Git product bytes and executable modes, the dated
-comments-only BusyBox overlay, and the prepared source against the
-accepted build inputs. All 53 binary and release-manifest ZIP members
-matched the earlier installer ZIP byte-for-byte. The accepted updater
-USTAR still matches the seal. The host package, collection, manifest
-and journal tests passed again. No product binary was rebuilt.
+The GPL-2.0-only project grant replaces the unissued MIT draft. Preserve
+all third-party notice bytes. Stage to the separate `1978-gpl` directories
+above, keeping earlier packages as historical evidence. The source companion
+includes the root LICENSE, scoped grant, accepted BusyBox generated inputs,
+Core/interfaces and pinned runtime sources. See LICENSING-DECISIONS.md.
 
-The refreshed work directory is separate from the earlier local
-installer draft, private driver-containing HDA and recovery artifacts.
+Deliver the exact matching source companion with the binaries on the same
+medium, or offer equivalent download access at the same location under GPLv2
+section 3(a). The native kit retains the source filename and SHA-256 in its
+Package.json. The approved publication destination for this
+set is the GitHub v0.5.0 release.

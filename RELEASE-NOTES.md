@@ -1,35 +1,13 @@
-# Clarice 0.5.0 draft release notes
+# Clarice 0.5.0
 
-Build **2026111978**, product commit **f571f7c**. These notes describe a
-locally staged release kit. Publication and redistribution clearance are
-separate release gates.
+Build **2026111978** · Product commit **f571f7c**
 
-- Native 68000 Macintosh shell and HFS tools for an existing System 6/7
-  installation. Use System 6.0.8 and 4 MiB RAM as the tested baseline.
-  The Core requests a 768 KiB application partition. System 7 and physical
-  acceptance of this exact build remain pending. Earlier physical Macintosh
-  SE testing used build 2026111965.
-- The graphical installer creates or upgrades the selected Core and Data
-  locations on one HFS volume. The offline kit includes Core, Recover
-  Clarice and all 49 standard utility names. Optional vi and nano are
-  separate, with their own prerequisites and limitations.
-- Width-aware help, terminal editing, history, scrollback and Preferences
-  support the normal 66-column window. HFS files keep Macintosh metadata
-  and forks where supported. Shell pipelines are finite HFS spools. Unix
-  process/job control and concurrent pipelines are outside the shell's scope.
-- The standard collection includes ICMP, HTTP, passive FTP, Telnet,
-  serial and Kermit clients. Network tools require a working Macintosh
-  TCP/IP setup. HTTP, FTP and Telnet are plain-text protocols. Optional
-  remote server components require separate installation and configuration.
-- Quit the running Core before an offline upgrade. Keep the installer
-  folder together and preserve Clarice Data. Use matching-Core media for
-  explicit repairs. Run the snapshot's Recover Clarice from Recovery
-  Previous for rollback. The updater's USTAR is a separate machine input.
-- Prior hardware evidence recorded slow default-regex grep, 64 KiB sort
-  memory failures and unresolved older system exceptions. Large workloads
-  remain constrained by available contiguous heap. Installer C passed
-  System 6 Snow and host checks. These results do not qualify physical
-  performance or reliability of build 1978.
+Validated target: **Macintosh SE, stock 8 MHz 68000, 4 MB RAM, System 6.0.8**. System 7 and PowerBook acceptance are deferred.
 
-Installation steps: Start Here.txt. Attribution, corresponding source
-and release gates: Third Party.txt.
+- Native shell, HFS tools, width-aware help, Preferences and 49 standard utilities. Shell pipelines use sequential disk spools. The installer includes Core and Recover Clarice. Optional vi and nano are outside this release kit.
+- On the Macintosh, expand `Clarice-1978-Installer.sit.bin` with StuffIt Expander, keep the extracted folder together, then open **Install Clarice**. Quit the running Core before upgrading. For Repair, use matching-build media. For rollback, launch **Recover Clarice** from the installed Data folder's **Recovery Previous** snapshot.
+- Large text jobs can be very slow on an 8 MHz SE and may exhaust the available contiguous heap. The earlier hardware baseline recorded particularly slow regex grep and 64 KiB sort memory failures. Scrolling and redraw can lag during sustained terminal output.
+- The physical SE has intermittently reported **“Coprocessor not installed”**, including on build 2026111978. The cause remains unknown. The release carries this reliability risk.
+- Original Clarice contributions within the project owner's authority use GPL-2.0-only. Third-party terms and attribution remain in the kit. The complete corresponding-source archive and SHA-256 manifest are available alongside both installer formats.
+
+The installer archives preserve the verified 1978 payloads and their embedded staging-era notes. This page reflects the final release status.
