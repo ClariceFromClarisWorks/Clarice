@@ -1,4 +1,4 @@
-# Clarice 0.5.0 attribution and redistribution
+# Clarice 0.5.1 attribution and redistribution
 
 Distribution for the 0.5.1 development build 2026111979.
 The installed inventory is defined by `src/standard-commands.inc` and
@@ -81,7 +81,7 @@ in-process. The companion includes Core and interface source as well as
 applet source. Supply the matching companion with binaries under GPLv2
 section 3(a), on the same medium or with equivalent download access in the
 same place. Package.json records its SHA-256. Publish the exact matching installer and companion together if the
-development kit is approved for release.
+kit is approved for publication.
 Optional GPL editors require their own matching source and build materials;
 the GPLv3 nano / GPLv2-only Core combination is not cleared by this grant.
 

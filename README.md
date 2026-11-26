@@ -5,7 +5,9 @@ running System 6 or System 7. It uses HFS, the Macintosh Toolbox and the
 installed system fonts. Release 0.5.0 is **build 2026111978**, product
 commit **f571f7c**. The validated target is the stock 8 MHz Macintosh SE
 with 4 MiB RAM and System 6.0.8. System 7 and PowerBook acceptance are
-deferred. See the release notes for the unresolved physical-SE exception.
+deferred. The prepared 0.5.1 kit uses build 2026111979 and includes vi
+as its 50th standard utility. See [release notes](RELEASE-NOTES.md) for
+physical acceptance and the unresolved physical-SE exception.
 
 ## Install and maintain
 

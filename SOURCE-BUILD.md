@@ -1,6 +1,6 @@
-# Building the Clarice 0.5.0 source companion
+# Building the Clarice 0.5.1 source companion
 
-The 0.5.1 source companion follows sealed development build 2026111979.
+The 0.5.1 source companion follows accepted build 2026111979.
 It includes the pinned project source and its executable build scripts,
 assets, tests, licences, and the verified BusyBox 1.37.0 upstream archive
 in `work/busybox/`. Extract it to a new directory. Use Docker with AMD64

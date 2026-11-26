@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage a fork-safe distribution draft from an already accepted build."""
+"""Stage a fork-safe distribution from an already accepted build."""
 import argparse
 import binascii
 import gzip
@@ -186,7 +186,7 @@ def source_archive(path, product, seal, updater_sha):
                        for m in members)):
             raise ValueError('source archive readback mismatch')
 
-def stage(product, accepted, updater_tar, out, version):
+def stage(product, accepted, updater_tar, out, version, final=False):
     subprocess.run(['git', '-C', str(ROOT), 'diff', '--quiet', product, '--',
                     'src', 'scripts', 'assets'], check=True)
     seal = release.verified(ROOT)
@@ -230,9 +230,12 @@ def stage(product, accepted, updater_tar, out, version):
                        ('Third Party.txt', 'THIRD_PARTY.md')]:
         value = (ROOT / path).read_text().replace('@SOURCE_ARCHIVE@', source_name)
         files[name] = value.replace('\n', '\r').encode('mac_roman', errors='replace')
+    licensing = ('GPL-2.0-only original contributions; see Third Party.txt for applicable licences and source terms'
+                 if final else
+                 'GPL-2.0-only original contributions; third-party permission review pending; see Third Party.txt')
     provenance = dict(build=build, release_version=version, product_commit=product, seal_identity=seal['identity'],
                       updater_ustar_sha256=release.digest(updater_tar), source_archive=source_name,
-                      licensing_status='GPL-2.0-only original contributions; third-party permission review pending; see Third Party.txt',
+                      licensing_status=licensing,
                       files={name: sha(data) for name, data in sorted(files.items())})
     if out.exists():
         raise FileExistsError(out)
@@ -268,8 +271,9 @@ if __name__ == '__main__':
     parser.add_argument('--updater-tar', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--version', default='0.5.0')
+    parser.add_argument('--final', action='store_true', help='Use final release-kit wording')
     a = parser.parse_args()
     if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', a.version):
         parser.error('version must have three numeric components')
     product = git('rev-parse', '--verify', a.product + '^{commit}').decode().strip()
-    stage(product, a.offline_readback, a.updater_tar, a.output, a.version)
+    stage(product, a.offline_readback, a.updater_tar, a.output, a.version, a.final)

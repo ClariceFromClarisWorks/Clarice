@@ -1,4 +1,8 @@
-# Installing Clarice 0.5.0
+# Installing Clarice
+
+For the prepared 0.5.1 kit (build 2026111979), start with the included
+**Start Here.txt** and use the matching 0.5.1 installer and source companion.
+The HTTP and AFP paths below refer to the existing private distribution.
 
 Internal installations use the complete System 6-accessible StuffIt/MacBinary
 kit. Download `http://192.168.1.112:8089/full/Clarice-1978-Installer.sit.bin`

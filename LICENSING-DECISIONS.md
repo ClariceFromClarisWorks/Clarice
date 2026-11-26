@@ -62,7 +62,7 @@ the kit is packaged. The original Core and adapter contributions are now offered
 only as well; no separate-file exemption is relied upon.
 
 The release source companion includes the whole accepted Core source,
-interfaces and adapters, not just the three applets, together with pinned
+interfaces and adapters together with pinned
 upstream sources, exact generated build inputs and build/install scripts.
 The selected delivery method is GPLv2 section 3(a): accompany binaries with
 this matching source on the same distribution medium; for downloads provide

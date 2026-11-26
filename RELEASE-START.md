@@ -1,9 +1,9 @@
-Clarice 0.5.1 development installer
-================================
+Clarice 0.5.1 installer
+=======================
 
-Local release draft. See Third Party.txt for redistribution status.
+See Third Party.txt for licence and attribution details.
 Use an existing System 6.0.8 HFS installation on a 68000 with 4 MiB RAM.
-This local build 2026111979 includes BusyBox vi and 49 other utilities.
+Build 2026111979 includes BusyBox vi and 49 other utilities.
 
 On the Macintosh, expand Clarice-1979-Installer.sit.bin with a
 StuffIt-compatible extractor. The applications in that archive are
@@ -12,7 +12,7 @@ Install Clarice after quitting the current Core.
 
 For the maintainer ZIP, follow these transfer steps:
 
-1. Unzip the kit on a modern computer. Copy the complete Clarice 0.5.0
+1. Unzip the kit on a modern computer. Copy the complete Clarice 0.5.1
    folder to a writable HFS volume visible to the Macintosh. Transfer
    the .bin files, Release and Utilities in binary mode.
 2. In that folder, use a MacBinary-aware tool to decode all three
@@ -38,4 +38,4 @@ that snapshot's helper and files together. Retain a separate backup.
 
 The updater USTAR is a separate machine-readable input. The ZIP is
 the Finder installation kit. It contains no Apple driver or system media.
-Matching source materials: @SOURCE_ARCHIVE@ (stage alongside this ZIP).
+Matching source: @SOURCE_ARCHIVE@ (keep available alongside the installer).

@@ -16,7 +16,7 @@ import zipfile
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
-def stage(source, output, sit):
+def stage(source, output, sit, final=False):
     with zipfile.ZipFile(source) as archive:
         names = archive.namelist()
         if not names or '/' not in names[0]:
@@ -51,8 +51,13 @@ def stage(source, output, sit):
         subprocess.run(['xattr', '-wx', 'com.apple.FinderInfo', finder.hex(), str(path)], check=True)
         native[name] = dict(macbinary_sha256=sha(data), data_sha256=sha(data[128:128+dl]),
                             resource_sha256=sha(data[offset:offset+rl]), finder=identity.decode())
+    version = manifest.get('release_version', '0.5.0')
+    title = (f'Clarice {version} installer - build {build}' if final
+             else f'Clarice {build} - internal System 6 testing kit')
+    distribution = (f'Matching source: {manifest["source_archive"]}\r'
+                    if final else 'Local review draft. Public redistribution approval is pending.\r')
     files['Start Here.txt'] = (
-        f'Clarice {build} - internal System 6 testing kit\r\r'
+        f'{title}\r\r'
         'Expand the .sit.bin with StuffIt Expander on the Macintosh.\r'
         'Keep this complete folder together. The applications are already decoded.\r'
         'Quit the installed Clarice, then open Install Clarice in this folder.\r'
@@ -60,7 +65,7 @@ def stage(source, output, sit):
         'Do not run Uninstall or delete Clarice Data. Repair requires a matching-version kit.\r'
         'If interrupted, retain the kit and retry. Preserve the previous working installation.\r'
         'No HDA, disk-image mounting, modern computer extraction or SD-card removal is needed.\r'
-        'Local review draft. Public redistribution approval is pending.\r'
+        f'{distribution}'
         'See Third Party.txt for redistribution restrictions.\r'
     ).encode('mac_roman')
     for name, data in files.items():
@@ -96,5 +101,6 @@ if __name__ == '__main__':
     p.add_argument('source', type=Path)
     p.add_argument('output', type=Path)
     p.add_argument('--sit', type=Path, default=Path('work/sit-packager/sit'))
+    p.add_argument('--final', action='store_true', help='Use final release-kit wording')
     a = p.parse_args()
-    stage(a.source, a.output, a.sit)
+    stage(a.source, a.output, a.sit, a.final)

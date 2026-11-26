@@ -1,11 +1,12 @@
-# Staging Clarice 0.5.0
+# Clarice release packaging
 
-For the local 0.5.1 development kit, seal build 2026111979 and pass
-`--version 0.5.1` to `tools/release-kit.py` with the matching product commit,
-offline readback and updater USTAR. Then pass the staged ZIP to
-`tools/classic-installer.py`. Verify the 50-command inventory, including vi,
-before using either installer. The examples below record the historical
-0.5.0 handoff.
+For 0.5.1, use the accepted 2026111979 seal at product commit d44e891.
+Run `tools/release-kit.py --version 0.5.1 --final` with the sealed build,
+accepted offline readback and matching updater USTAR. Pass the resulting ZIP
+to `tools/classic-installer.py --final`, then independently extract and
+verify all three applications, the 50 utilities and the nested notices.
+Verify the SHA-256 manifest and matching source bindings. The examples
+below document the historical 0.5.0 handoff.
 
 ## Required internal Macintosh handoff
 
